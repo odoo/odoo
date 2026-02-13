@@ -4,32 +4,35 @@ import useStore from "../../hooks/store_hook.js";
 import { Dialog } from "./dialog.js";
 import { LoadingFullScreen } from "../loading_full_screen.js";
 
-const { Component, xml, useState, toRaw } = owl;
+const { Component, xml, signal } = owl;
 
 export class SixTerminalDialog extends Component {
-    static props = {};
     static components = { Dialog, LoadingFullScreen };
 
-    setup() {
-        this.store = toRaw(useStore());
-        this.state = useState({ waitRestart: false });
-        this.form = useState({ terminal_id: this.store.base.six_terminal });
-    }
+    store = useStore();
+
+    waitRestart = signal(false);
+
+    form = {
+        terminal_id: signal(this.store.base().six_terminal),
+    };
 
     async configureSix() {
         try {
-            if (!this.form.terminal_id) {
+            if (!this.form.terminal_id()) {
                 return;
             }
 
             const data = await this.store.rpc({
                 url: "/iot_drivers/six_payment_terminal_add",
                 method: "POST",
-                params: this.form,
+                params: {
+                    terminal_id: this.form.terminal_id(),
+                },
             });
 
             if (data.status === "success") {
-                this.state.waitRestart = true;
+                this.waitRestart.set(true);
             }
         } catch {
             console.warn("Error while fetching data");
@@ -43,7 +46,7 @@ export class SixTerminalDialog extends Component {
             });
 
             if (data.status === "success") {
-                this.state.waitRestart = true;
+                this.waitRestart.set(true);
             }
         } catch {
             console.warn("Error while clearing configuration");
@@ -52,7 +55,7 @@ export class SixTerminalDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <LoadingFullScreen t-if="this.state.waitRestart">
+        <LoadingFullScreen t-if="this.waitRestart()">
             <t t-set-slot="body">
                 Your IoT Box is currently processing your request. Please wait.
             </t>
@@ -73,8 +76,8 @@ export class SixTerminalDialog extends Component {
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.terminal_id" t-on-click="configureSix">Configure</button>
-                <button class="btn btn-secondary btn-sm" t-on-click="disconnectSix">Disconnect current</button>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!this.form.terminal_id()" t-on-click="this.configureSix">Configure</button>
+                <button class="btn btn-secondary btn-sm" t-on-click="this.disconnectSix">Disconnect current</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </Dialog>

@@ -4,22 +4,20 @@ import useStore from "../../hooks/store_hook.js";
 import { LoadingFullScreen } from "../loading_full_screen.js";
 import { Dialog } from "./dialog.js";
 
-const { Component, xml, onWillStart, useState } = owl;
+const { Component, xml, onWillStart, signal } = owl;
 
 export class DebuggingToolsDialog extends Component {
-    static props = {};
     static components = { Dialog, LoadingFullScreen };
 
-    setup() {
-        this.store = useStore();
-        this.state = useState({
-            password: "",
-            loading: false,
-            remoteDebug: false,
-            remoteDebugToken: "",
-            loadingRemoteDebug: false,
-        });
+    store = useStore();
 
+    password = signal("");
+    loading = signal(false);
+    remoteDebug = signal(false);
+    remoteDebugToken = signal("");
+    loadingRemoteDebug = signal(false);
+
+    setup() {
         onWillStart(async () => {
             await this.isRemoteDebugEnabled();
         });
@@ -28,9 +26,9 @@ export class DebuggingToolsDialog extends Component {
     async isRemoteDebugEnabled() {
         try {
             const data = await this.store.rpc({ url: "/iot_drivers/is_remote_debug_enabled" });
-            this.state.remoteDebug = data.enabled;
-            if (!this.state.remoteDebug) {
-                this.state.remoteDebugToken = "";
+            this.remoteDebug.set(data.enabled);
+            if (!this.remoteDebug()) {
+                this.remoteDebugToken.set("");
             }
         } catch {
             console.warn("Error while fetching data");
@@ -39,31 +37,31 @@ export class DebuggingToolsDialog extends Component {
 
     async generatePassword() {
         try {
-            this.state.loading = true;
+            this.loading.set(true);
 
             const data = await this.store.rpc({
                 url: "/iot_drivers/generate_password",
                 method: "POST",
             });
 
-            this.state.password = data.password;
-            this.state.loading = false;
+            this.password.set(data.password);
+            this.loading.set(false);
         } catch {
             console.warn("Error while fetching data");
         }
     }
 
     async enableRemoteDebug() {
-        if (!this.state.remoteDebugToken) {
+        if (!this.remoteDebugToken()) {
             return;
         }
-        this.state.loadingRemoteDebug = true;
+        this.loadingRemoteDebug.set(true);
         try {
             await this.store.rpc({
                 url: "/iot_drivers/enable_remote_debug",
                 method: "POST",
                 params: {
-                    auth_token: this.state.remoteDebugToken,
+                    auth_token: this.remoteDebugToken(),
                 },
             });
             // Wait 2 seconds to let remote debug start
@@ -72,11 +70,11 @@ export class DebuggingToolsDialog extends Component {
         } catch {
             console.warn("Error while enabling remote debugging");
         }
-        this.state.loadingRemoteDebug = false;
+        this.loadingRemoteDebug.set(false);
     }
 
     async disableRemoteDebug() {
-        this.state.loadingRemoteDebug = true;
+        this.loadingRemoteDebug.set(true);
         try {
             await this.store.rpc({
                 url: "/iot_drivers/disable_remote_debug",
@@ -88,7 +86,7 @@ export class DebuggingToolsDialog extends Component {
         } catch {
             console.warn("Error while disabling remote debugging");
         }
-        this.state.loadingRemoteDebug = false;
+        this.loadingRemoteDebug.set(false);
     }
 
     static template = xml`
@@ -99,7 +97,7 @@ export class DebuggingToolsDialog extends Component {
             btnName="'Debugging Tools'">
             <t t-set-slot="body">
                 <h6>Remote Debug</h6>
-                <div t-if="!state.remoteDebug" class="alert alert-warning fs-6" role="alert">
+                <div t-if="!this.remoteDebug()" class="alert alert-warning fs-6" role="alert">
                     This allows someone who give a Tailscale authentication key to gain remote access to your IoT Box,
                     and thus your entire local network. Only enable this for someone you trust.
                 </div>
@@ -108,25 +106,25 @@ export class DebuggingToolsDialog extends Component {
                     The owner of the Tailscale authentication key can access both the IoT Box and your local network.
                 </div>
                 <div class="d-flex flex-row gap-2 mb-4">
-                    <input t-model="this.state.remoteDebugToken" placeholder="Authentication key" class="form-control" t-att-disabled="state.remoteDebug"/>
+                    <input t-model="this.remoteDebugToken" placeholder="Authentication key" class="form-control" t-att-disabled="this.remoteDebug()"/>
                     <button
                         type="submit"
                         class="btn btn-sm"
-                        t-att-class="state.remoteDebug ? 'btn-primary' : 'btn-secondary'"
-                        t-on-click="state.remoteDebug ? disableRemoteDebug : enableRemoteDebug"
+                        t-att-class="this.remoteDebug() ? 'btn-primary' : 'btn-secondary'"
+                        t-on-click="this.remoteDebug() ? this.disableRemoteDebug : this.enableRemoteDebug"
                     >
-                    <div t-if="state.loadingRemoteDebug" class="spinner-border spinner-border-sm" role="status">
+                    <div t-if="this.loadingRemoteDebug()" class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <t t-else="" t-esc="state.remoteDebug ? 'Disable' : 'Enable'" />
+                    <t t-else="" t-out="this.remoteDebug() ? 'Disable' : 'Enable'" />
                 </button>
                 </div>
 
                 <h6 class="mt-3">System password</h6>
                 <div class="d-flex flex-row gap-2 mb-4">
-                    <input placeholder="Password" t-att-value="this.state.password" class="form-control" readonly="readonly" />
-                    <button class="btn btn-secondary btn-sm" t-on-click="generatePassword">
-                        <div t-if="this.state.loading" class="spinner-border spinner-border-sm" role="status">
+                    <input placeholder="Password" t-att-value="this.password()" class="form-control" readonly="readonly" />
+                    <button class="btn btn-secondary btn-sm" t-on-click="this.generatePassword">
+                        <div t-if="this.loading()" class="spinner-border spinner-border-sm" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                         <t t-else="">Generate</t>
@@ -134,7 +132,7 @@ export class DebuggingToolsDialog extends Component {
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="button" t-att-class="'btn btn-sm btn-' + (state.remoteDebug ? 'secondary' : 'primary')" data-bs-dismiss="modal">Close</button>
+                <button type="button" t-att-class="'btn btn-sm btn-' + (this.remoteDebug() ? 'secondary' : 'primary')" data-bs-dismiss="modal">Close</button>
             </t>
         </Dialog>
     </t>
