@@ -8,6 +8,16 @@ li.oe-nested {
         padding: 0.5rem;
     }
 }
+
+.table-bordered {
+    > :not(caption) > * {
+        border-width: 1px 0;
+        > * {
+            border-width: 0 1px;
+        }
+    }
+}
+
 $sizes: '', 'xs-', 'sm-', 'md-', 'lg-', 'xl-', 'xxl-';
 .o_text_columns {
     max-width: 100% !important;
