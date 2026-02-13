@@ -155,7 +155,7 @@
                                     </button>
                                 </div>
                                 <div class="tab-content" id="o_payment_tabcontent">
-                                    <div t-if="payment_state == 'in_payment'" class="alert alert-danger mt-2">
+                                    <div t-if="payment_state == 'in_payment'" class="alert alert-warning mt-2">
                                         A payment has already been made on this invoice, please make sure to not pay twice.
                                     </div>
                                     <div
@@ -209,8 +209,8 @@
                                 <div t-if="show_epd" class="alert alert-success">
                                     Early Payment Discount of <span t-out="epd_discount_amount_currency" t-options="{'widget': 'monetary', 'display_currency': currency}"/> has been applied.
                                 </div>
-                                <div t-if="payment_state == 'in_payment'" class="alert alert-danger">
-                                    A payment has already been made on this invoice, please make sure to not pay twice.
+                                <div t-if="payment_state == 'in_payment'" class="alert alert-warning">
+                                    Amount of <span t-out="unreconciled_paid_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/> is already paid on this invoice, please make sure to not pay twice.
                                 </div>
                                 <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
                                     <t t-call="payment.summary_item"

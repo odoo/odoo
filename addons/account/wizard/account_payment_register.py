@@ -81,6 +81,14 @@ class AccountPaymentRegister(models.TransientModel):
     )
     custom_user_amount = fields.Monetary(currency_field='currency_id')
     custom_user_currency_id = fields.Many2one(comodel_name='res.currency')
+    unreconciled_paid_amount = fields.Monetary(currency_field="currency_id", compute="_compute_unreconciled_paid_amount")
+    exchange_rate = fields.Float(
+        compute="_compute_exchange_rate",
+        digits=(12, 6),
+        readonly=True,
+        store=False
+    )
+    exchange_rate_currency_code = fields.Char(compute="_compute_exchange_rate")
 
     # == Fields given through the context ==
     line_ids = fields.Many2many('account.move.line', 'account_payment_register_move_line_rel', 'wizard_id', 'line_id',
@@ -590,16 +598,19 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.show_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
             wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
-    @api.depends('line_ids')
+    @api.depends('line_ids', 'unreconciled_paid_amount')
     def _compute_actionable_errors(self):
         for wizard in self:
             actionable_errors = {}
-            if unpaid_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: p.state == 'in_process'):
-                actionable_errors['unpaid_matched_payments'] = {
-                    'message': self.env._("There are payments in progress. Make sure you don't pay twice."),
-                    'action_text': self.env._("Check them"),
-                    'action': unpaid_matched_payments._get_records_action(name=self.env._("Payments")),
-                    'level': 'danger',
+            if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'in_process'):
+                actionable_errors['unreconciled_matched_payments'] = {
+                    'message': self.env._("Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay twice.",
+                        amount=wizard.unreconciled_paid_amount,
+                        currency=wizard.currency_id.symbol,
+                    ),
+                    'action_text': self.env._("Check payments"),
+                    'action': unreconciled_matched_payments._get_records_action(name=self.env._("Payments")),
+                    'level': 'warning',
                 }
             wizard.actionable_errors = actionable_errors
 
@@ -746,14 +757,17 @@ class AccountPaymentRegister(models.TransientModel):
 
         self.amount = self.custom_user_amount
 
-    @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'installments_mode')
+    @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'installments_mode', 'unreconciled_paid_amount')
     def _compute_amount(self):
         for wizard in self:
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date or wizard.custom_user_amount:
                 wizard.amount = wizard.amount
             else:
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
-                wizard.amount = total_amount_values['amount_by_default']
+                if total_amount_values['epd_applied']:
+                    wizard.amount = total_amount_values['amount_by_default']
+                else:
+                    wizard.amount = max(0.0, total_amount_values['amount_by_default'] - wizard.unreconciled_paid_amount)
 
     @api.depends('amount')
     def _compute_installments_mode(self):
@@ -916,6 +930,42 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_is_register_payment_on_draft(self):
         for wizard in self:
             wizard.is_register_payment_on_draft = any(l.parent_state == 'draft' for l in wizard.line_ids)
+
+    @api.depends('line_ids.move_id.reconciled_payment_ids', 'company_id', 'currency_id')
+    def _compute_unreconciled_paid_amount(self):
+        for wizard in self:
+            paid_payments = wizard.line_ids.move_id.reconciled_payment_ids.filtered(
+                lambda p: (
+                    not p.is_reconciled
+                    and not p.is_matched
+                    and p.state == 'in_process'
+                )
+            )
+            wizard.unreconciled_paid_amount = sum(
+                payment.currency_id._convert(
+                    payment.amount,
+                    wizard.currency_id,
+                    wizard.company_id,
+                    payment.date
+                )
+                for payment in paid_payments
+            )
+
+    @api.depends('company_currency_id', 'source_currency_id', 'currency_id', 'payment_date', 'company_id')
+    def _compute_exchange_rate(self):
+        for wizard in self:
+            target_currency = wizard.currency_id if wizard.currency_id != wizard.company_currency_id else wizard.source_currency_id
+            if target_currency != wizard.company_currency_id:
+                wizard.exchange_rate = self.env['res.currency']._get_conversion_rate(
+                    from_currency=wizard.company_currency_id,
+                    to_currency=target_currency,
+                    company=wizard.company_id,
+                    date=wizard.payment_date,
+                )
+                wizard.exchange_rate_currency_code = target_currency.name
+            else:
+                wizard.exchange_rate = 1.0
+                wizard.exchange_rate_currency_code = wizard.company_currency_id.name
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
