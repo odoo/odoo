@@ -24,7 +24,7 @@
         width: auto;
     }
 
-    &:where(:not(.o_carousel_multi_items)) {
+    &:where(:not(.o_carousel_multi_items)) > :where(:not(.container-fluid)) {
         .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
             .s_dynamic_snippet_arrows {
                 @include media-breakpoint-up(lg) {
