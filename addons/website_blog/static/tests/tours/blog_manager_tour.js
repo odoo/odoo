@@ -40,6 +40,9 @@ registerWebsitePreviewTour(
             run: "editor Manager Blog Test Title",
         },
         {
+            trigger: ".o-snippets-menu:has(.o_customize_tab)",
+        },
+        {
             content: "Edit blog content.",
             trigger: ":iframe #o_wblog_post_content p",
             run: "editor Manager Blog Test Content",
