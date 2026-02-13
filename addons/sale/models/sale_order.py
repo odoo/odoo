@@ -69,6 +69,7 @@ class SaleOrder(models.Model):
         string="Status",
         readonly=True, copy=False, index=True,
         tracking=3,
+        group_expand=True,
         default='draft')
     locked = fields.Boolean(default=False, copy=False, help="Locked orders cannot be modified.")
 
