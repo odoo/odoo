@@ -138,6 +138,16 @@ class PerfFilter(logging.Filter):
             record.perf_info = "- - -"
         return True
 
+
+class SessionIdentifierFilter(logging.Filter):
+
+    def filter(self, record):
+        if session_identifier := getattr(threading.current_thread(), "session_identifier", False):
+            record.sess_info = f"[{session_identifier[:8]}]"
+            delattr(threading.current_thread(), "session_identifier")
+        return True
+
+
 class ColoredPerfFilter(PerfFilter):
     def format_perf(self, query_count, query_time, remaining_time):
         def colorize_time(time, format, low=1, high=5):
@@ -177,6 +187,7 @@ class LogRecord(logging.LogRecord):
     def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None, **kwargs):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
         self.perf_info = ""
+        self.sess_info = ""
         self.dbname = getattr(threading.current_thread(), 'dbname', '?')
 
 
@@ -233,7 +244,7 @@ def init_logger():
     resetlocale()
 
     # create a format for log messages and dates
-    format = '%(asctime)s %(process)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s'
+    format = '%(asctime)s %(process)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s %(sess_info)s'
     # Normal Handler on stderr
     handler = logging.StreamHandler()
 
@@ -279,6 +290,7 @@ def init_logger():
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)
+    logging.getLogger('werkzeug').addFilter(SessionIdentifierFilter())
 
     if tools.config['log_db']:
         db_levels = {
