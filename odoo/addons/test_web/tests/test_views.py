@@ -1,7 +1,7 @@
 from odoo.tests import Form, common
 
 from odoo.exceptions import ValidationError
-from odoo.addons.base.tests.test_views import ViewCase
+from odoo.addons.base.tests.test_ir_ui_view import ViewCase
 
 
 @common.tagged('at_install', '-post_install', 'groups')

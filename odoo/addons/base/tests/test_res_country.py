@@ -1,4 +1,4 @@
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase, tagged, Form
 
 
 @tagged('-at_install', 'post_install')
@@ -66,3 +66,11 @@ class TestResCountryState(TransactionCase):
                     self.env['res.country.state'].name_search(name, operator='in'),
                     [(altan.id, altan.display_name)]
                 )
+
+
+class TestResCountryForm(TransactionCase):
+    def test_create_res_country(self):
+        country_form = Form(self.env['res.country'])
+        country_form.name = 'a country'
+        country_form.code = 'ZX'
+        country_form.save()

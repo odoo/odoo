@@ -797,3 +797,11 @@ class TestApiKeys(UsersCommonCase):
         with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
             self.env['res.users.apikeys'].with_user(SUPERUSER_ID).generate(
                 self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+
+
+class TestResUsersForm(TransactionCase):
+    def test_create_res_users(self):
+        user_form = Form(self.env['res.users'])
+        user_form.login = 'a user login'
+        user_form.name = 'a user name'
+        user_form.save()

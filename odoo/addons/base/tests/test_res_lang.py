@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import tagged, TransactionCase, Form
 from odoo.exceptions import UserError
 
 
@@ -170,3 +170,12 @@ class test_res_lang(TransactionCase):
         # Another special case, /my is reserved to portal controller
         my_MM = ResLang._activate_lang('my_MM')
         self.assertEqual(my_MM.url_code, 'mya')
+
+
+class TestResLangForm(TransactionCase):
+    def test_create_res_lang(self):
+        lang_form = Form(self.env['res.lang'])
+        # lang_form.url_code = 'LANG'  # invisible field, tested in http_routing
+        lang_form.name = 'a lang name'
+        lang_form.code = 'a lang code'
+        lang_form.save()
