@@ -92,14 +92,14 @@
             action="'productPageContainerOrder'"
             applyTo="'#product_detail_main'"
         >
-            <BuilderButton
-                actionParam="{ previewClass: ''}"
-                actionValue="'regular'"
+            <BuilderButtonLtrRtl position="'start'"
+                actionParam="{ sameDir: { previewClass: '' }, diffDir: { previewClass: 'flex-lg-row-reverse' } }"
+                actionValue="{ sameDir: 'regular', diffDir: 'inverse' }"
                 iconImg="'/website/static/src/img/snippets_options/image_left.svg'"
             />
-            <BuilderButton
-                actionParam="{ previewClass: 'flex-lg-row-reverse'}"
-                actionValue="'inverse'"
+            <BuilderButtonLtrRtl position="'end'"
+                actionParam="{ sameDir: { previewClass: 'flex-lg-row-reverse' }, diffDir: { previewClass: '' } }"
+                actionValue="{ sameDir: 'inverse', diffDir: 'regular' }"
                 iconImg="'/website/static/src/img/snippets_options/image_right.svg'"
             />
         </BuilderButtonGroup>
@@ -146,8 +146,17 @@
     >
 	    <BuilderRow label.translate="Thumbnails" level="1">
 	        <BuilderButtonGroup action="'websiteConfig'" id="'o_wsale_thumbnail_pos'">
-	            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }" title="Left"></BuilderButton>
-	            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title="Bottom"></BuilderButton>
+                <BuilderButtonLtrRtl t-if="this.langDir.frontend === this.langDir.backend"
+                    position="'start'"
+                    icon="'fa-fw fa-long-arrow-left'"
+                    actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }"
+                />
+                <BuilderButton icon="'fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title.translate="Bottom"/>
+                <BuilderButtonLtrRtl t-if="this.langDir.frontend !== this.langDir.backend"
+                    position="'end'"
+                    icon="'fa-fw fa-long-arrow-right'"
+                    actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }"
+                />
 	        </BuilderButtonGroup>
 	    </BuilderRow>
     </t>

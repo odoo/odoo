@@ -14,9 +14,13 @@
     </BuilderRow>
     <BuilderRow t-if="getItemValue('card_width') !== '100%'" label.translate="Alignment" level="1">
         <BuilderButtonGroup action="'setCardAlignment'">
-            <BuilderButton icon="'fa-align-left'" title.translate="Left" actionParam="'me-auto'"/>
+            <BuilderButtonLtrRtl position="'start'"
+                actionParam="{ sameDir: 'me-auto', diffDir: 'ms-auto' }"
+                icon="'fa-align-left'"/>
             <BuilderButton icon="'fa-align-center'" title.translate="Center" actionParam="'mx-auto'"/>
-            <BuilderButton icon="'fa-align-right'" title.translate="Right" actionParam="'ms-auto'"/>
+            <BuilderButtonLtrRtl position="'end'"
+                actionParam="{ sameDir: 'ms-auto', diffDir: 'me-auto' }"
+                icon="'fa-align-right'"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

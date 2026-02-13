@@ -20,10 +20,27 @@
         </div>
         <BuilderRow label.translate="Re-order" t-if="this.displayReOrder">
             <BuilderButtonGroup action="'changeSequence'">
-                <BuilderButton actionValue="'top'" title.translate="Push to top" className="'fa fa-fw fa-angle-double-left'" />
-                <BuilderButton actionValue="'up'" title.translate="Push up" className="'fa fa-fw fa-angle-left ms-1'" />
-                <BuilderButton actionValue="'down'" title.translate="Push down" className="'fa fa-fw fa-angle-right mx-1'" />
-                <BuilderButton actionValue="'bottom'" title.translate="Push to bottom" className="'fa fa-fw fa-angle-double-right'" />
+                <t t-set="pushTop">Push to top</t>
+                <t t-set="pushBottom">Push to bottom</t>
+                <t t-set="pushUp">Push up</t>
+                <t t-set="pushDown">Push down</t>
+                <t t-set="areFrontendBackendSame" t-value="this.langDir.frontend === this.langDir.backend"/>
+                <BuilderButton
+                    actionValue="areFrontendBackendSame ? 'top' : 'bottom'"
+                    title="areFrontendBackendSame ? pushTop : pushBottom"
+                    icon="'fa-fw fa-angle-double-left'" />
+                <BuilderButton
+                    actionValue="areFrontendBackendSame ? 'up' : 'down'"
+                    title="areFrontendBackendSame ? pushUp : pushDown"
+                    icon="'fa-fw fa-angle-left'" className="'ms-1'" />
+                <BuilderButton
+                    actionValue="areFrontendBackendSame ? 'down' : 'up'"
+                    title="areFrontendBackendSame ? pushDown : pushUp"
+                    icon="'fa-fw fa-angle-right'" className="'mx-1'" />
+                <BuilderButton
+                    actionValue="areFrontendBackendSame ? 'bottom' : 'top'"
+                    title="areFrontendBackendSame ? pushBottom : pushTop"
+                    icon="'fa-fw fa-angle-double-right'" />
             </BuilderButtonGroup>
         </BuilderRow>
     </t>

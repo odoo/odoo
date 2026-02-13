@@ -9,8 +9,12 @@
 
         <BuilderRow label.translate="Position" level="1" t-if="isActiveItem('toggle_card_img_opt')">
             <BuilderButtonGroup applyTo="'.s_card'">
-                <BuilderButton title.translate="Left" classAction="'flex-lg-row'" iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
-                <BuilderButton title.translate="Right" classAction="'flex-lg-row-reverse'" iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
+                <BuilderButtonLtrRtl position="'start'"
+                    classAction="{ sameDir: 'flex-lg-row', diffDir: 'flex-lg-row-reverse' }"
+                    iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
+                <BuilderButtonLtrRtl position="'end'"
+                    classAction="{ sameDir: 'flex-lg-row-reverse', diffDir: 'flex-lg-row' }"
+                    iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
             </BuilderButtonGroup>
         </BuilderRow>
 

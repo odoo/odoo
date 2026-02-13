@@ -17,8 +17,14 @@
 
     <BuilderRow label.translate="Layout">
         <BuilderButtonGroup applyTo="':scope > .row'">
-            <BuilderButton title.translate="Left" id="'media_left_opt'" classAction="''" iconImg="'/website/static/src/img/snippets_options/image_left.svg'"/>
-            <BuilderButton title.translate="Right" classAction="'flex-row-reverse'" iconImg="'/website/static/src/img/snippets_options/image_right.svg'"/>
+            <BuilderButtonLtrRtl position="'start'"
+                id="this.langDir.backend === 'ltr' ? 'media_left_opt' : ''"
+                classAction="{ sameDir: '', diffDir: 'flex-row-reverse' }"
+                iconImg="'/website/static/src/img/snippets_options/image_left.svg'"/>
+            <BuilderButtonLtrRtl position="'end'"
+                id="this.langDir.backend === 'ltr' ? '' : 'media_left_opt'"
+                classAction="{ sameDir: 'flex-row-reverse', diffDir: '' }"
+                iconImg="'/website/static/src/img/snippets_options/image_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Image Size">

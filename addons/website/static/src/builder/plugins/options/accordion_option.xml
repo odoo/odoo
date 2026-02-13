@@ -54,8 +54,12 @@
         </BuilderRow>
         <BuilderRow label.translate="Position" level="1" applyTo="':scope > .accordion-item > .accordion-header'">
             <BuilderButtonGroup>
-                <BuilderButton title.translate="Left" classAction="'justify-content-end flex-row-reverse o_icons_position_reversed'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-                <BuilderButton title.translate="Right" classAction="'justify-content-between'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+                <BuilderButtonLtrRtl position="'start'"
+                    classAction="{ sameDir: 'justify-content-end flex-row-reverse o_icons_position_reversed', diffDir: 'justify-content-between' }"
+                    iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
+                <BuilderButtonLtrRtl position="'end'"
+                    classAction="{ sameDir: 'justify-content-between', diffDir: 'justify-content-end flex-row-reverse o_icons_position_reversed' }"
+                    iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
             </BuilderButtonGroup>
         </BuilderRow>
     </BuilderContext>

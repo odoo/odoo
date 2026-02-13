@@ -18,12 +18,34 @@
             t-on-click="() => this.onClick()"
             t-on-pointerenter="() => this.onPointerEnter(props.id)"
             t-on-pointerleave="() => this.onPointerLeave(props.id)">
-            <Image t-if="props.iconImg" src="props.iconImg" attrs="{alt:props.iconImgAlt}"/>
+            <Image t-if="props.iconImg" src="props.iconImg" attrs="{ alt: props.iconImgAlt, ...props.iconImgAttrs }"/>
             <i t-if="props.icon" t-att-class="iconClassName" role="img"/>
             <t t-if="props.label"  t-out="props.label"/>
             <t t-slot="default"/>
         </button>
     </BuilderComponent>
+</t>
+
+<t t-name="html_builder.BuilderButtonLtrRtl">
+    <t t-set="areFrontendBackendSame" t-value="this.langDir.frontend === this.langDir.backend"/>
+    <BuilderButton
+        title="this.title"
+        id="this.props.id"
+        actionParam="areFrontendBackendSame ? this.actionParam.sameDir : this.actionParam.diffDir"
+        actionValue="areFrontendBackendSame ? this.actionValue.sameDir : this.actionValue.diffDir"
+        classAction="areFrontendBackendSame ? this.classAction.sameDir : this.classAction.diffDir"
+        styleAction="areFrontendBackendSame ? this.styleAction.sameDir : this.styleAction.diffDir"
+        styleActionValue="areFrontendBackendSame ? this.styleActionValue.sameDir : this.styleActionValue.diffDir"
+        attributeAction="areFrontendBackendSame ? this.attributeAction.sameDir : this.attributeAction.diffDir"
+        attributeActionValue="areFrontendBackendSame ? this.attributeActionValue.sameDir : this.attributeActionValue.diffDir"
+        dataAttributeAction="areFrontendBackendSame ? this.dataAttributeAction.sameDir : this.dataAttributeAction.diffDir"
+        dataAttributeActionValue="areFrontendBackendSame ? this.dataAttributeActionValue.sameDir : this.dataAttributeActionValue.diffDir"
+        className="areFrontendBackendSame ? this.className.sameDir : this.className.diffDir"
+        icon="this.props.icon"
+        iconImg="this.props.iconImg"
+        iconImgAttrs="this.iconImgAttrs">
+        <t t-slot="default"/>
+    </BuilderButton>
 </t>
 
 </templates>
