@@ -1552,20 +1552,7 @@ class DiscussChannel(models.Model):
             partners=message.author_id,
             post_joined_message=False,
         )
-        notification = (
-            Markup('<div class="o_mail_notification">%s</div>')
-            % _(
-                "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-            )
-        ) % {
-            "user": self.env.user.display_name,
-            "goto": Markup(
-                "<a href='#' class='o_channel_redirect' data-oe-id='%s' data-oe-model='discuss.channel'>"
-            )
-            % sub_channel.id,
-            "goto_end": Markup("</a>"),
-            "thread_name": sub_channel.name,
-        }
+        notification = Markup('<div class="o_mail_notification" data-oe-type="thread_creation" data-oe-id="%s"></div>') % sub_channel.id
         self.message_post(
             body=notification, message_type="notification", subtype_xmlid="mail.mt_comment"
         )

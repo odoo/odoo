@@ -6,9 +6,11 @@ import {
     decorateEmojis,
     EMOJI_REGEX,
     generateEmojisOnHtml,
+    generateMentionElement,
     prepareBodyForEditing,
     htmlToTextContentInline,
 } from "@mail/utils/common/format";
+import { getOuterHtml } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
@@ -16,6 +18,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { createDocumentFragmentFromContent, createElementWithContent } from "@web/core/utils/html";
+import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
 import { markup } from "@odoo/owl";
@@ -211,6 +214,18 @@ export class Message extends Record {
     message_type;
     /** @type {string|undefined} */
     notificationType;
+    channelAsThreadCreationNotification = fields.One("discuss.channel", {
+        /** @this {import("models").Message} */
+        compute() {
+            if (this.notificationType !== "thread_creation") {
+                return;
+            }
+            return createDocumentFragmentFromContent(this.body).querySelector(
+                ".o_mail_notification"
+            )?.dataset.oeId;
+        },
+        inverse: "threadCreationMessages",
+    });
     create_date = fields.Datetime();
     write_date = fields.Datetime();
     /** @type {undefined|Boolean} */
@@ -470,6 +485,23 @@ export class Message extends Record {
                 return this.thread?.channel?.parent_channel_id
                     ? _t("%(user)s changed the thread name to %(name)s", params)
                     : _t("%(user)s changed the channel name to %(name)s", params);
+            }
+            if (this.notificationType === "thread_creation") {
+                const threadChannel = this.channelAsThreadCreationNotification;
+                const threadLink = generateMentionElement({
+                    className: "o_channel_redirect",
+                    id: Number(threadChannel?.id),
+                    model: "discuss.channel",
+                    text: threadChannel?.displayName ?? _t("New Thread"),
+                });
+                return getOuterHtml(
+                    renderToElement("mail.Message.threadCreationNotification", {
+                        threadCreationPrefix: _t("%(user)s started a thread: ", {
+                            user: this.authorName,
+                        }),
+                        threadLink: getOuterHtml(threadLink),
+                    })
+                );
             }
             if (this.isEmpty) {
                 return _t("This message has been removed");

@@ -439,9 +439,21 @@ export class DiscussChannel extends Record {
     member_count;
     /** @type {string} */
     name;
+    threadCreationMessages = fields.Many("mail.message", {
+        inverse: "channelAsThreadCreationNotification",
+    });
+    hasThreadCreationNotification = fields.Attr(false, {
+        /** @this {import("models").DiscussChannel} */
+        compute() {
+            return this.threadCreationMessages.length;
+        },
+    });
     /** ⚠️ {@link AwaitChatHubInit} */
     get shouldSubscribeToBusChannel() {
-        return this.chatWindow?.isOpen;
+        return (
+            this.chatWindow?.isOpen ||
+            (this.hasThreadCreationNotification && this.parent_channel_id)
+        );
     }
     get isChatChannel() {
         return this.chatChannelTypes.includes(this.channel_type);
