@@ -72,6 +72,13 @@
                         type="object"
                         invisible="move_type != 'out_invoice' or l10n_tr_nilvera_send_status != 'succeed'"/>
             </xpath>
+            <group id="header_left_group" position="inside">
+                <field name="l10n_tr_public_spending_unit_id"
+                       widget="res_partner_many2one"
+                       readonly="state != 'draft'"
+                       invisible="move_type != 'out_invoice' or l10n_tr_gib_invoice_scenario != 'KAMU'"
+                       required="move_type == 'out_invoice' and l10n_tr_gib_invoice_scenario == 'KAMU'"/>
+            </group>
         </field>
     </record>
 

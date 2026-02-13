@@ -137,6 +137,20 @@ class AccountMoveSend(models.AbstractModel):
                 'action': moves_with_invalid_name._get_records_action(name=_("Check name on Invoice(s)")),
             }
 
+        if public_spending_units_missing_vat := tr_nilvera_moves.l10n_tr_public_spending_unit_id.filtered(lambda rec:
+            not rec.vat
+            or not rec.street
+            or not rec.city
+            or not rec.state_id
+            or not rec.country_id,
+        ):
+            alerts['tr_public_spending_units_missing_vat'] = {
+                'level': 'danger',
+                'message': _("For Public Sector e-Invoices, the Public Spending Unit must have a valid address and Tax ID defined."),
+                'action_text': _("View Partner(s)"),
+                'action': public_spending_units_missing_vat._get_records_action(name=_("Check VAT on Partner(s)")),
+            }
+
         exemption_702 = self.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
         # Warning alert if product is missing CTSP Number
         tr_export_moves = tr_nilvera_moves.filtered(
