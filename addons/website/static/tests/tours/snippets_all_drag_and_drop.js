@@ -32,6 +32,8 @@ if (searchParams) {
 }
 
 registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
+    // should not have any "characterData", "remove" or "add" mutations in current step when you update the selection
+    undeterministicTour_doNotCopy: true,
     steps: () => {
         let steps = [];
         let n = 0;
