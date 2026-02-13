@@ -99,7 +99,7 @@ class CertificateCertificate(models.Model):
         attachments = self.env['ir.attachment'].search([
             ('res_model', '=', 'certificate.key'),
             ('res_field', '=', 'content'),
-            ('res_id', 'in', self.ids)
+            ('res_id', 'in', self.private_key_id.ids),
         ])
         content_to_key_id = {(att.datas, att.company_id.id): att.res_id for att in attachments}
 
