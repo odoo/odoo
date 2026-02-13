@@ -1,4 +1,6 @@
 import { fields, Record } from "@mail/model/export";
+
+import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 
 /**
@@ -183,6 +185,10 @@ export class RtcSession extends Record {
 
     get mainVideoStream() {
         return this.isMainVideoStreamActive && this.videoStreams.get(this.mainVideoStreamType);
+    }
+
+    get muteSoundLabel() {
+        return this.is_deaf ? _t("Unmute Sound") : _t("Mute Sound");
     }
 
     get isMainVideoStreamActive() {

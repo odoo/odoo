@@ -29,7 +29,7 @@
             </label>
             <button t-if="store.rtc.selfSession" class="btn border-transparent d-flex" t-on-click="() => this.store.rtc.toggleDeafen()">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer">
-                    <span class="text-truncate text-wrap">Deafen</span>
+                    <span class="text-truncate text-wrap pe-2" t-out="store.rtc.selfSession.muteSoundLabel"/>
                 </label>
                 <div class="flex-grow-1"/>
                 <div class="form-check form-switch">

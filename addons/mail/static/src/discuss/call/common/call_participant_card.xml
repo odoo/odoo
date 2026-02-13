@@ -61,7 +61,7 @@
                     <span t-if="rtcSession.is_muted and !rtcSession.is_deaf" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': isSmall, 'p-2': !isSmall }" title="muted" aria-label="muted">
                         <i class="fa fa-microphone-slash"/>
                     </span>
-                    <span t-if="rtcSession.is_deaf" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': isSmall, 'p-2': !isSmall }" title="deaf" aria-label="deaf">
+                    <span t-if="rtcSession.is_deaf" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': isSmall, 'p-2': !isSmall }" title="sound muted " aria-label="sound muted">
                         <i class="fa fa-deaf"/>
                     </span>
                     <span t-if="hasMediaError" class="o-discuss-CallParticipantCard-overlay-replayButton o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle" t-att-class="{'o-minimized p-1': isSmall, 'p-2': !isSmall }" title="media player Error" t-on-click.stop="onClickReplay">

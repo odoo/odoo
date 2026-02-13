@@ -483,7 +483,7 @@ test("Systray icon shows latest action", async () => {
     await click("[title='Mute']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
     await click("[title='Voice Settings']");
-    await click(".dropdown-menu button:contains('Deafen')");
+    await click(".dropdown-menu button:contains('Mute Sound')");
     await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
@@ -1187,13 +1187,13 @@ test("discuss sidebar call participant shows appropriate status icon", async () 
     );
     await contains("button[title='Unmute']");
     await click("button[title='Voice Settings']");
-    await click(".dropdown-menu button:contains('Deafen')");
+    await click(".dropdown-menu button:contains('Mute Sound')");
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-deaf");
     await contains(
         ".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-microphone-slash",
         { count: 0 }
     );
-    await click("button[title='Undeafen']");
+    await click("button[title='Unmute Sound']");
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-deaf", {
         count: 0,
     });
