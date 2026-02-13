@@ -4,7 +4,29 @@
     <template
         id="payment_confirmation_status"
         inherit_id="website_sale.payment_confirmation_status"
-    >
+    >   
+        <div id="order_confirmation_banner" position="attributes">
+            <attribute name="t-attf-class" add="alert #{
+                (tx_sudo.state == 'pending' and tx_sudo.provider_id.custom_mode == 'on_site' and 'alert-success') or
+                (tx_sudo.state == 'pending' and 'alert-info') or
+                (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
+                (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
+                (tx_sudo.state == 'authorized' and 'alert-success') or
+                'alert-danger'}"/>
+        </div>
+        <div id="pending_tx_message" position="replace">
+            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
+                <t t-if="order.commitment_date and order.commitment_date.date() != datetime.date.today()">
+                    Your order will be ready on <span t-field="order.commitment_date" t-options='{"widget": "date"}'/>.
+                </t>
+                <t t-else="">
+                    Your order will be ready soon.
+                </t>
+            </t>
+            <t t-else="">
+                <t>$0</t> <!-- Replaced by old content. -->
+            </t>
+        </div>
         <div id="order_reference" position="replace">
             <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
                 <div class="mt-2">
