@@ -84,7 +84,7 @@ export class CashMovePopup extends Component {
 
         this.props.close();
         this.notification.add(
-            _t("Successfully made a cash %s of %s.", type, formattedAmount),
+            _t("Successfully made a cash %s of %s.", translatedType, formattedAmount),
             3000
         );
     }
