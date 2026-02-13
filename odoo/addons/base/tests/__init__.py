@@ -2,7 +2,6 @@
 
 from . import common
 from . import test_base
-from . import test_deprecation
 from . import test_format_address_mixin
 from . import test_groups
 from . import test_avatar_mixin
