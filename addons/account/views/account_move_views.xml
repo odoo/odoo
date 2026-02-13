@@ -856,7 +856,8 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    invisible="not payment_count">
+                                    invisible="not payment_count"
+                                    groups="account.group_account_readonly">
                                     <field name="payment_count" string="Payments" widget="statinfo"/>
                             </button>
                             <button name="open_reconcile_view"
