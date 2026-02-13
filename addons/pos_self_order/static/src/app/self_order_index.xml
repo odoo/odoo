@@ -38,6 +38,9 @@
             <t t-set-slot="orderHistory" route="`/pos-self/${selfOrder.config.id}/orders`">
                 <OrdersHistoryPage />
             </t>
+            <t t-set-slot="optional_product" route="`/pos-self/${selfOrder.config.id}/optional-product/{int:id}`" t-slot-scope="url">
+                <OptionalProductPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
+            </t>
         </Router>
         <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center text-center">
             Hey, looks like you forgot to create products or add them to pos_config. Please add them before using the Self Order

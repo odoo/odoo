@@ -3,7 +3,7 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
-import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
+import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
 import { CategoryListPopup } from "@pos_self_order/app/components/category_list_popup/category_list_popup";
 import { useCategoryScrollSpy } from "../../utils/category_scrollspy_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
@@ -14,7 +14,7 @@ let savedScrollTop = 0;
 
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
-    static components = { OrderWidget, ProductNameWidget };
+    static components = { OrderWidget, ProductCard };
     static props = {};
 
     setup() {
@@ -116,13 +116,6 @@ export class ProductListPage extends Component {
         );
     }
 
-    isProductAvailable(product) {
-        if (product.pos_categ_ids.length === 0) {
-            return true;
-        }
-        return product.pos_categ_ids.some((categ) => this.selfOrder.isCategoryAvailable(categ.id));
-    }
-
     get topSelectedCategory() {
         return this.selectedCategory?.parent_id || this.selectedCategory;
     }
@@ -162,7 +155,7 @@ export class ProductListPage extends Component {
         }
 
         return products.filter(
-            (product) => product.self_order_available && this.isProductAvailable(product)
+            (product) => product.self_order_available && this.selfOrder.isProductAvailable(product)
         );
     }
 
@@ -199,36 +192,7 @@ export class ProductListPage extends Component {
     }
 
     selectProduct(product, target) {
-        if (!product.self_order_available || !this.isProductAvailable(product)) {
-            return;
-        }
-        if (product.isCombo()) {
-            const { show, selectedCombos } = this.selfOrder.showComboSelectionPage(product);
-            if (show) {
-                this.router.navigate("combo_selection", { id: product.id });
-            } else {
-                this.flyToCart(target);
-                this.selfOrder.addToCart(
-                    product,
-                    1,
-                    "",
-                    {},
-                    {},
-                    selectedCombos.map((combo) => ({
-                        ...combo,
-                        qty: 1,
-                    }))
-                );
-            }
-        } else if (product.isConfigurable()) {
-            this.router.navigate("product", { id: product.id });
-        } else {
-            if (!this.selfOrder.ordering) {
-                return;
-            }
-            this.flyToCart(target);
-            this.selfOrder.addToCart(product, 1);
-        }
+        this.selfOrder.selectProduct(product, { target });
     }
 
     displayCategoryList(categories) {
@@ -237,91 +201,6 @@ export class ProductListPage extends Component {
             onCategorySelected: (cat) => {
                 this.selectCategory(cat);
             },
-        });
-    }
-
-    flyToCart(target) {
-        const productEl = target.closest(".o_self_product_box");
-
-        const toOrder = document.querySelector(".to-order");
-        if (!toOrder || window.getComputedStyle(toOrder).display === "none" || !productEl) {
-            return;
-        }
-
-        const ANIMATION_CONFIG = {
-            flyDuration: "900ms",
-            cartDuration: "200ms",
-            flyEasing: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-            initialScale: ".65",
-            finalScale: "0.05",
-            cartScale: "1.08",
-            rotation: "5deg",
-        };
-
-        const cardRect = productEl.getBoundingClientRect();
-        const toOrderRect = toOrder.getBoundingClientRect();
-        const offsetTop = toOrderRect.top - cardRect.top;
-        const offsetLeft = toOrderRect.left - cardRect.left;
-
-        const clonedPic = productEl.cloneNode(true);
-        const initialStyles = {
-            top: `${cardRect.top}px`,
-            left: `${cardRect.left}px`,
-            width: `${cardRect.width}px`,
-            height: `${cardRect.height}px`,
-            transform: "scale(1)",
-            opacity: "1",
-            transition: `all ${ANIMATION_CONFIG.flyDuration} ${ANIMATION_CONFIG.flyEasing}`,
-            pointerEvents: "none",
-        };
-
-        const wrapper = document.createElement("div");
-        Object.assign(wrapper.style, initialStyles);
-        wrapper.classList.add("position-fixed", "o_self_product_list_page", "shadow-lg", "z-1");
-        wrapper.appendChild(clonedPic);
-
-        const infosDiv = clonedPic.querySelector(".product-infos");
-        if (infosDiv) {
-            Object.assign(infosDiv.style, {
-                transform: "scale(0.9)",
-                transition: `all ${ANIMATION_CONFIG.flyDuration} ${ANIMATION_CONFIG.flyEasing}`,
-            });
-        }
-
-        document.body.appendChild(wrapper);
-
-        requestAnimationFrame(() => {
-            wrapper.style.transform = `scale(${ANIMATION_CONFIG.initialScale})`;
-            requestAnimationFrame(() => {
-                wrapper.style.transform = `
-                    translateY(${offsetTop}px) 
-                    translateX(${offsetLeft}px) 
-                    scale(${ANIMATION_CONFIG.finalScale}) 
-                    rotate(${ANIMATION_CONFIG.rotation})
-                `;
-                wrapper.style.opacity = "0";
-
-                if (infosDiv) {
-                    infosDiv.style.transform = "scale(0.7)";
-                }
-
-                const cartAnimation = {
-                    transform: `scale(${ANIMATION_CONFIG.cartScale})`,
-                    transition: `transform ${ANIMATION_CONFIG.cartDuration} ${ANIMATION_CONFIG.flyEasing}`,
-                };
-                Object.assign(toOrder.style, cartAnimation);
-
-                setTimeout(() => {
-                    Object.assign(toOrder.style, {
-                        transform: "scale(1)",
-                        transition: `transform ${ANIMATION_CONFIG.cartDuration} ${ANIMATION_CONFIG.flyEasing}`,
-                    });
-                }, parseInt(ANIMATION_CONFIG.cartDuration));
-            });
-        });
-
-        wrapper.addEventListener("transitionend", () => {
-            wrapper.remove();
         });
     }
 }

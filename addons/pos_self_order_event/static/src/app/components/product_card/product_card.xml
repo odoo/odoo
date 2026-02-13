@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_self_order_event.ProductListPage" t-inherit="pos_self_order.ProductListPage" t-inherit-mode="extension">
+    <t t-name="pos_self_order_event.ProductCard" t-inherit="pos_self_order.ProductCard" t-inherit-mode="extension">
         <xpath expr="//span[hasclass('o-so-tabular-nums')]" position="replace">
             <t t-if="product?.event_id">
-                <span class="o-so-tabular-nums fs-4 fw-bold text-primary" t-out="ticketAvailabilityText(product)"/>
+                <span class="o-so-tabular-nums fs-4 fw-bold text-primary" t-out="ticketAvailabilityText"/>
             </t>
             <t t-else="">$0</t>
         </xpath>

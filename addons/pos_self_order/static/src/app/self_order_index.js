@@ -12,6 +12,7 @@ import { ConfirmationPage } from "@pos_self_order/app/pages/confirmation_page/co
 import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
 import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/stand_number_page";
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
+import { OptionalProductPage } from "@pos_self_order/app/pages/optional_product_page/optional_product_page";
 import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/loading_overlay";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { init as initDebugFormatters } from "@point_of_sale/app/utils/debug-formatter";
@@ -34,6 +35,7 @@ export class selfOrderIndex extends Component {
         LandingPage,
         LoadingOverlay,
         MainComponentsContainer,
+        OptionalProductPage,
     };
 
     setup() {

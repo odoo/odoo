@@ -27,15 +27,27 @@ class ProductTemplate(models.Model):
             load=False
         )
 
-        combo_products = self.browse(p['id'] for p in products if p["type"] == "combo")
-        combo_products_choice = self.search_read(
-            [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
-            fields,
-            limit=config.get_limited_product_count(),
-            order='is_favorite DESC,pos_sequence,name',
-            load=False
-        )
-        products.extend(combo_products_choice)
+        optional_product_ids, combo_product_ids, loaded_product_ids = set(), [], []
+        for product in products:
+            optional_product_ids.update(product['pos_optional_product_ids'])
+            loaded_product_ids.append(product['id'])
+            if product['type'] == 'combo':
+                combo_product_ids.append(product['id'])
+
+        combo_products = self.browse(combo_product_ids).exists().combo_ids.combo_item_ids.product_id.product_tmpl_id.ids
+        if products_to_load := ((optional_product_ids | set(combo_products)) - set(loaded_product_ids)):
+            additional_products = self.search_read(
+                [
+                    *self.env['product.template']._check_company_domain(config.company_id),
+                    ('available_in_pos', '=', True),
+                    ('sale_ok', '=', True),
+                    ('self_order_available', '=', True),
+                    ('id', 'in', list(products_to_load)),
+                ],
+                fields,
+                load=False
+            )
+            products.extend(additional_products)
         self._process_pos_self_ui_products(products)
 
         return products

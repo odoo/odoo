@@ -154,6 +154,10 @@ export class ProductPage extends Component {
             this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
         );
 
+        if (this.productTemplate.pos_optional_product_ids.length) {
+            this.router.navigate("optional_product", { id: this.productTemplate.id });
+            return;
+        }
         this.goBack();
     }
 
