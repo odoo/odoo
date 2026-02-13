@@ -324,14 +324,15 @@ class HrExpense(models.Model):
                 ).ids
             )
         for expense in self:
-            if not expense.company_id:
-                # This would be happening when emptying the required company_id field, triggering the "onchange"s.
-                # This would lead to fields being set as editable, instead of using the env company,
-                # recomputing the interface just to be blocked when trying to save we choose not to recompute anything
-                # and wait for a proper company to be inputted.
-                continue
-            if expense.state not in {'draft', 'submitted', 'approved'} and not self.env.su:
-                # Not editable
+            if (
+                not expense.company_id
+                or (expense.state not in {'draft', 'submitted', 'approved'} and not self.env.su)
+            ):
+                # When emptying the required company_id field, onchanges are triggered.
+                # To avoid recomputing the interface without a company (which could
+                # temporarily make fields editable), we do not recompute anything and wait
+                # for a proper company to be set. The interface is also made not editable
+                # when the state is not draft/submitted/approved and the user is not a superuser.
                 expense.is_editable = False
                 continue
 
