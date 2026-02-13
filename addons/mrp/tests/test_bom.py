@@ -157,6 +157,7 @@ class TestBoM(TestMrpCommon):
         mrp_order_form.product_id = self.product_7_3
         mrp_order = mrp_order_form.save()
         self.assertEqual(mrp_order.bom_id, test_bom)
+        self.assertEqual(mrp_order.bom_id.operation_ids[0].time_total, 165)
         self.assertEqual(len(mrp_order.workorder_ids), 1)
         self.assertEqual(mrp_order.workorder_ids.operation_id, test_bom.operation_ids[0])
         self.assertEqual(len(mrp_order.move_byproduct_ids), 1)
