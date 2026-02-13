@@ -1648,3 +1648,37 @@ class TestVariantsExclusion(ProductVariantsCommon):
         ]
         self.assertEqual(len(product_template.product_variant_ids), 2)
         self.assertTrue(variant_to_archive.active)
+
+    def test_supplierinfo_with_dynamic_attribute(self):
+        """
+        Ensure that supplierinfo.product_id is never automatically set when
+        variants are created dynamically.
+
+        The supplierinfo should remain template-level (product_id = False)
+        unless the user explicitly assigns a specific variant manually,
+        even if only one variant exists initially.
+        """
+        product_template = self.env['product.template'].create({
+            'name': 'Test dynamic',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.dynamic_attribute.id,
+                    'value_ids': [Command.set(self.dynamic_attribute.value_ids.ids)],
+                }),
+            ]
+        })
+        self.assertFalse(product_template.product_variant_ids)
+
+        supplierinfo = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner.id,
+            'product_tmpl_id': product_template.id,
+        })
+        self.assertFalse(product_template.product_variant_ids)
+
+        product_template._create_product_variant(product_template.attribute_line_ids.product_template_value_ids[0])
+        self.assertEqual(len(product_template.product_variant_ids), 1)
+        self.assertFalse(supplierinfo.product_id)
+
+        product_template._create_product_variant(product_template.attribute_line_ids.product_template_value_ids[1])
+        self.assertEqual(len(product_template.product_variant_ids), 2)
+        self.assertFalse(supplierinfo.product_id)
