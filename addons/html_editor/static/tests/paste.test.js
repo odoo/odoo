@@ -3212,6 +3212,7 @@ describe("link", () => {
                 contentAfter: "<pre>http://www.xyz.com[]</pre>",
             });
         });
+
         test("should not merge consecutive pastes of the same URL into a single anchor", async () => {
             await testEditor({
                 contentBefore: "<p>[]</p>",
@@ -3221,6 +3222,16 @@ describe("link", () => {
                 },
                 contentAfter:
                     '<p><a href="http://www.xyz.com">http://www.xyz.com</a><a href="http://www.xyz.com">http://www.xyz.com</a>[]</p>',
+            });
+        });
+
+        test("should paste and transform an URL between backticks", async () => {
+            await testEditor({
+                contentBefore: "<p>ab[]cd</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "`http://www.xyz.com`");
+                },
+                contentAfter: '<p>ab`<a href="http://www.xyz.com">http://www.xyz.com</a>`[]cd</p>',
             });
         });
     });
