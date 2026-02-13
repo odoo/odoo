@@ -47,6 +47,7 @@ import {
 import { isCSSColor } from '@web/core/utils/colors';
 import { EmojiPicker } from '@web/core/emoji_picker/emoji_picker';
 import { Tooltip } from "@web/core/tooltip/tooltip";
+import { fixInvalidHTML } from "../editor/odoo-editor/src/OdooEditor";
 
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -344,7 +345,7 @@ export class Wysiwyg extends Component {
 
         this.$editable ??= this.$el;
         if (options.value) {
-            this.$editable.html(options.value);
+            this.$editable.html(fixInvalidHTML(options.value));
         }
 
         this._isDocumentStale = false;
