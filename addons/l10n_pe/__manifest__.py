@@ -20,6 +20,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/account_tax_view.xml',
+        'views/res_city_view.xml',
         'views/portal_address_templates.xml',
         'data/l10n_latam_document_type_data.xml',
         'data/res.city.csv',

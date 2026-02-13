@@ -35,7 +35,7 @@ export class LeadGenerationDropdown extends Component {
         this.state = useState({
             dropdownContentElements: [
                 {
-                    description: _t("Search in our directory of 300.000+ companies"),
+                    description: _t("Search in our directory of 580M+ entities"),
                     hasAccess: user.isAdmin,
                     icon: "/crm/static/src/img/lead_sourcing.png",
                     sequence: 10,
@@ -45,7 +45,7 @@ export class LeadGenerationDropdown extends Component {
                     title: _t("Lead Sourcing"),
                 },
                 {
-                    description: _t("Turn visitors into leads"),
+                    description: _t("Turn visitors into leads via a form"),
                     hasAccess: user.isAdmin,
                     icon: "/crm/static/src/img/website.png",
                     sequence: 20,
@@ -65,7 +65,7 @@ export class LeadGenerationDropdown extends Component {
                     title: _t("Email Marketing"),
                 },
                 {
-                    description: _t("Create leads on specific answers"),
+                    description: _t("Qualify leads with a Survey"),
                     hasAccess: user.isAdmin,
                     icon: "/crm/static/src/img/survey.png",
                     sequence: 40,
@@ -75,7 +75,7 @@ export class LeadGenerationDropdown extends Component {
                     title: _t("Send a Survey"),
                 },
                 {
-                    description: _t("Generate leads from any email you get"),
+                    description: _t("Generate leads from Outlook & Gmail"),
                     hasAccess: true,
                     icon: "/crm/static/src/img/mail_plugins.png",
                     sequence: 50,
@@ -85,6 +85,17 @@ export class LeadGenerationDropdown extends Component {
                     status: MODULE_STATUS.INSTALLED,
                     title: _t("Mail plugins"),
                 },
+                {
+                    description: _t("Import leads from a CSV or Excel file"),
+                    hasAccess: true,
+                    icon: "/crm/static/src/img/settings.png",
+                    sequence: 60,
+                    moduleName: "Lead Import",
+                    moduleXmlId: "base.module_crm",
+                    onClick: () => this.redirectToImport(),
+                    status: MODULE_STATUS.INSTALLED,
+                    title: _t("Import leads from CSV"),
+                }
             ],
         });
         this.dropdown = useDropdownState();
@@ -165,17 +176,7 @@ export class LeadGenerationDropdown extends Component {
     }
 
     get sortedDropdownContentElements() {
-        return this.state.dropdownContentElements
-            .filter(({ status, hasAccess }) => status !== MODULE_STATUS.NOT_INSTALLED && hasAccess)
-            .toSorted((a, b) => a.sequence - b.sequence)
-            .concat(
-                this.state.dropdownContentElements
-                    .filter(
-                        ({ status, hasAccess }) =>
-                            status === MODULE_STATUS.NOT_INSTALLED || !hasAccess
-                    )
-                    .toSorted((a, b) => a.sequence - b.sequence)
-            );
+        return this.state.dropdownContentElements.toSorted((a, b) => a.sequence - b.sequence)
     }
 
     onClickAction(element) {
@@ -229,6 +230,15 @@ export class LeadGenerationDropdown extends Component {
             type: "ir.actions.act_url",
             url: "https://www.odoo.com/documentation/19.0/applications/general/integrations/mail_plugins.html",
             target: "new",
+        });
+    }
+
+    redirectToImport() {
+        const { context, resModel } = this.env.searchModel;
+        this.action.doAction({
+            type: "ir.actions.client",
+            tag: "import",
+            params: { active_model: resModel, context },
         });
     }
 }

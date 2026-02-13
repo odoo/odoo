@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
+from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
@@ -718,6 +720,12 @@ class CrmLead(models.Model):
             partner_phone_formatted = self.partner_id._phone_format(fname='phone') or self.partner_id.phone or False
             return lead_phone_formatted != partner_phone_formatted
         return False
+
+    def _evaluate_context_from_action(self, action):
+        context_str = action.get('context', '{}')
+        context_str = re.sub(r'\buid\b', str(self.env.uid), context_str)
+        context_str = re.sub(r'\bactive_id\b', str(self.id), context_str)
+        return literal_eval(context_str)
 
     # ------------------------------------------------------------
     # ORM

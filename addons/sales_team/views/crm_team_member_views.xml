@@ -23,7 +23,7 @@
         <field name="arch" type="xml">
             <list string="Sales Men" sample="1">
                 <field name="crm_team_id"/>
-                <field name="user_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
             </list>
         </field>
     </record>
@@ -59,10 +59,10 @@
                         </aside>
                         <main class="ms-3">
                             <field name="user_id" class="fw-bold fs-5"/>
-                            <a type="open" class="nav-link p-0"><field name="crm_team_id"/></a>
-                            <div class="d-flex align-items-baseline text-break">
-                                <i class="fa fa-envelope me-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
-                            </div>
+                            <a type="open" class="nav-link p-0" name="crm_team_id_field">
+                                <i class="fa fa-fw me-1 fa-users text-primary" title="Sales Team"/>
+                                <field name="crm_team_id"/>
+                            </a>
                         </main>
                     </t>
                 </templates>
@@ -77,7 +77,7 @@
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='crm_team_id']" position="replace">
+            <xpath expr="//a[@name='crm_team_id_field']" position="replace">
             </xpath>
         </field>
     </record>
@@ -110,22 +110,26 @@
                         <field name="user_id" class="flex-grow-1" placeholder="e.g. John Doe"
                             options="{'no_quick_create': True}"/>
                     </h1>
-                    <group name="crm_team_id">
-                        <field id="crm_team_id" name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                    <group name="crm_team_id" class="mb-0">
+                        <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
+                            <i class="fa fa-fw me-1 fa-users text-primary" title="Sales Team"/>
+                            <field id="crm_team_id" name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"
+                                   placeholder="Sales Team" nolabel="1"/>
+                        </div>
                     </group>
                     <group name="member_partner_info">
                         <div class="d-flex flex-column flex-grow-1">
-                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
-                                <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                <field name="email" nolabel="1"/>
-                            </div>
-                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
-                                <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                <field name="phone" nolabel="1"/>
-                            </div>
                             <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id" groups="base.group_multi_company">
                                 <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
                                 <field name="company_id"/>
+                            </div>
+                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
+                                <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                <field name="email" nolabel="1" placeholder="Email"/>
+                            </div>
+                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
+                                <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                <field name="phone" nolabel="1" placeholder="Phone"/>
                             </div>
                         </div>
                     </group>

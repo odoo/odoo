@@ -66,7 +66,7 @@
                                             </aside>
                                             <main class="ms-3">
                                                 <field name="name" class="fw-bold fs-5"/>
-                                                <div class="d-flex align-items-baseline text-break">
+                                                <div class="d-flex align-items-baseline text-break" invisible="not email">
                                                     <i class="fa fa-envelope me-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
                                                 </div>
                                             </main>
@@ -210,7 +210,7 @@
     <record id="crm_team_action_config" model="ir.actions.act_window">
         <field name="name">Sales Teams</field>
         <field name="res_model">crm.team</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

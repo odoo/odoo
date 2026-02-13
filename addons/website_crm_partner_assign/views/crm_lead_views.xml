@@ -70,7 +70,7 @@
             <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="partner_assigned_id" optional="show"/>
+                    <field name="partner_assigned_id" widget="many2one_avatar_user" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -80,13 +80,13 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="arch" type="xml">
-                <filter name="company" position="after">
+                <filter name="salesperson" position="after">
                     <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by': 'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned_leads" position="after">
                     <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
-                <field name="campaign_id" position="after">
+                <field name="team_id" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
             </field>
