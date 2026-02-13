@@ -2,6 +2,7 @@ import logging
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.mail.tests.common import MailCase
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged, new_test_user
@@ -313,6 +314,28 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             'customer_rank': 1,
         })
         partner.unlink()
+
+    def test_unauthorized_account_audit_trail(self):
+        account = (
+            self.env['account.account']
+            .with_user(SUPERUSER_ID)
+            .create({'name': 'foo', 'code': '111111'})
+            .with_user(self.env.user)
+        )
+        account.invalidate_recordset()
+        self.env['mail.message'].sudo().create({
+            'model': 'account.account',
+            'res_id': account.id,
+            'body': 'lolo a vu le fifi de papa',
+            'author_id': self.partner.id,
+            'message_type': 'notification',
+        })
+        # similar to domain in action_account_audit_trail_report
+        # should raise no error when the user access it
+        self.env['mail.message'].search([
+            ('message_type', '=', 'notification'),
+            ('model', '=', 'account.account'),
+        ])
 
 
 @tagged('post_install', '-at_install')

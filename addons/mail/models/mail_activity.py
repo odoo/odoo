@@ -15,6 +15,7 @@ from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
+from .mail_message import MAX_COMODELS_FOR_DOMAIN, _find_allowed_doc_ids, exists_in_cache
 
 _logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
@@ -219,15 +220,19 @@ class MailActivity(models.Model):
         model_docid_actids = defaultdict(lambda: defaultdict(list))
         forbidden_ids = []
         for activity in activities.sudo():
-            if activity.res_model:
+            if activity.res_model and activity.res_id:
                 model_docid_actids[activity.res_model][activity.res_id].append(activity.id)
             elif activity.user_id.id != self.env.uid:
                 forbidden_ids.append(activity.id)
 
-        for doc_model, docid_actids in model_docid_actids.items():
-            allowed = self.env['mail.message']._filter_records_for_message_operation(doc_model, docid_actids, operation)
-            for document_id in [doc_id for doc_id in docid_actids if doc_id not in allowed.ids]:
-                forbidden_ids.extend(docid_actids[document_id])
+        allowed = _find_allowed_doc_ids(self.env, model_docid_actids, operation)
+        forbidden_ids.extend(
+            act_id
+            for docid_actids in model_docid_actids.values()
+            for act_ids in docid_actids.values()
+            for act_id in act_ids
+            if act_id not in allowed
+        )
 
         if forbidden_ids:
             forbidden = self.browse(forbidden_ids)
@@ -362,24 +367,82 @@ class MailActivity(models.Model):
             logic is detailed in :meth:`~._check_access`.
             Superusers bypass this and perform a standard search.
         """
+        domain = Domain(domain).optimize(self)
 
         if any(
             condition.field_expr == 'date_done' and condition.value
-            for condition in Domain(domain).iter_conditions()
+            for condition in domain.iter_conditions()
         ):
             kwargs['active_test'] = False
 
         # Rules do not apply to administrator or when we search only activities assigned to the current user
         domain = Domain(domain).optimize(self)
-        if self.env.su or bypass_access or tuple(condition_values(self, 'user_id', domain) or ()) == (self.env.uid,):
+        if self.env.su or bypass_access or domain.is_false() or tuple(condition_values(self, 'user_id', domain) or ()) == (self.env.uid,):
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
         if self.env.context.get('_read_groupby'):
             raise ValueError("Cannot group by mail.activity")
 
-        # retrieve activities and filter using their security rules
-        query = super()._search(domain, offset, limit, order, **kwargs)
-        records = self._fetch_query(query, [self._fields[f] for f in SECURITY_FIELDS])
-        return records._filtered_access('read')._as_query(ordered=bool(order))
+        # search by ids
+        if (ids := condition_values(self, 'id', domain)) is not None:
+            if (not order or order[:2] == 'id') and domain.map_conditions(lambda d: Domain.TRUE if d.field_expr == 'id' and d.operator == 'in' else d).is_true():
+                # trivial domain, can skip search, in most cases check access removes inexisting records
+                records = exists_in_cache(self.browse(ids), hint_field='res_model')
+                records = records._filtered_access('read')
+                if order:
+                    records = records.sorted(order)
+            else:
+                records = self.browse(super()._search(domain, order=order, **kwargs))
+                records = records._filtered_access('read')
+            if offset > 0:
+                records = records[offset:]
+            if limit is not None:
+                records = records[:limit]
+            return records._as_query(ordered=bool(order))
+
+        # searching for all messages or a subset of models
+        res_model_names = condition_values(self, 'res_model', domain) or ()
+        if not (0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN):
+            query = super()._search(domain, offset, limit, order, **kwargs)
+            records = self._fetch_query(query, [self._fields[f] for f in SECURITY_FIELDS])
+            return records._filtered_access('read')._as_query(ordered=bool(order))
+
+        # search by model and res_id
+        sec_domain = Domain('user_id', '=', self.env.uid)
+        env = self.with_context(active_test=False).env
+        for res_model_name in res_model_names:
+            if res_model_name not in env:
+                continue
+            comodel = env[res_model_name]
+            codomain = Domain('res_model', '=', comodel._name)
+            comodel_res_ids = condition_values(self, 'res_id', domain.map_conditions(
+                lambda cond: codomain & cond if cond.field_expr == 'res_model' else cond
+            ))
+            # similar implementation to what is in mail.message._search
+            comodel_domain = Domain.FALSE
+            comodel_domain_remaining = Domain.TRUE
+            for domain_operation, doc_operation in comodel._mail_get_operation_for_mail_message_operation('read'):
+                domain_operation, comodel_domain_remaining = (
+                    comodel_domain_remaining & domain_operation,
+                    comodel_domain_remaining & ~domain_operation,
+                )
+                if not comodel.has_access(doc_operation):
+                    continue
+                if doc_operation == 'read':
+                    comodel_rule = Domain.TRUE  # covered by the search below
+                else:
+                    comodel_rule = self.env['ir.rule']._compute_domain(comodel._name, doc_operation)
+                comodel_domain |= (domain_operation & comodel_rule)
+            if comodel_res_ids is not None:
+                comodel_domain &= Domain('id', 'in', comodel_res_ids)
+            comodel_domain = comodel_domain.optimize_full(comodel.sudo())
+            query = comodel._search(comodel_domain)
+            if query.is_empty():
+                continue
+            if query.where_clause:
+                codomain &= Domain('res_id', 'any!', query)
+            sec_domain |= codomain
+
+        return super()._search(domain & sec_domain, offset, limit, order, **kwargs)
 
     @api.depends('summary', 'activity_type_id')
     def _compute_display_name(self):
