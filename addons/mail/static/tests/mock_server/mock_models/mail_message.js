@@ -10,6 +10,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 
+const { DateTime } = luxon;
+
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 
 export class MailMessage extends models.ServerModel {
@@ -568,30 +570,43 @@ export class MailMessage extends models.ServerModel {
         if (search_term || is_notification !== undefined) {
             res.count = this.search_count(domain);
         }
+
+        // TODO User setting to sort by date other than create_date?
+        const _browse = (id) => this.filter(item => item.id == id)?.[0];
+        const _domain = (message, date_oper, id_oper) => [
+            "|",
+            ["create_date", date_oper, message.create_date],
+            "&",
+            ["create_date", "=", message.create_date],
+            ["id", id_oper || date_oper, message.id],
+        ];
+        const _sort_asc = (m1, m2) => (DateTime.fromJSDate(m1.create_date).ts - DateTime.fromJSDate(m2.create_date).ts) || (m1.id - m2.id);
+        const _sort_desc = (m1, m2) => (DateTime.fromJSDate(m2.create_date).ts - DateTime.fromJSDate(m1.create_date).ts) || (m2.id - m1.id);
+
         if (around !== undefined) {
-            const messagesBefore = this._filter(domain.concat([["id", "<=", around]])).sort(
-                (m1, m2) => m2.id - m1.id
-            );
-            messagesBefore.length = Math.min(messagesBefore.length, limit / 2);
-            const messagesAfter = this._filter(domain.concat([["id", ">", around]])).sort(
-                (m1, m2) => m1.id - m2.id
-            );
-            messagesAfter.length = Math.min(messagesAfter.length, limit / 2);
-            const messages = messagesAfter
-                .concat(messagesBefore.reverse())
-                .sort((m1, m2) => m2.id - m1.id);
-            return { ...res, messages };
+            limit /= 2;
+            if (around && (around = _browse(around))) {
+                const messagesBefore = this._filter(domain.concat(_domain(around, "<", "<="))).sort(_sort_desc);
+                messagesBefore.length = Math.min(messagesBefore.length, limit);
+                const messagesAfter = this._filter(domain.concat(_domain(around, ">"))).sort(_sort_asc);
+                messagesAfter.length = Math.min(messagesAfter.length, limit);
+                res.messages = messagesAfter.concat(messagesBefore.reverse()).sort(_sort_desc);
+            } else {
+                let messages = this._filter(domain).sort(_sort_asc);
+                messages.length = Math.min(messages.length, limit);
+                res.messages = messages.sort(_sort_desc);
+            }
+        } else {
+            if (before && (before = _browse(before))) {
+                domain.push(..._domain(before, "<"));
+            }
+            if (after && (after = _browse(after))) {
+                domain.push(..._domain(after, ">"));
+            }
+            let messages = this._filter(domain).sort(_sort_desc);
+            messages.length = Math.min(messages.length, limit);
+            res.messages = messages;
         }
-        if (before) {
-            domain.push(["id", "<", before]);
-        }
-        if (after) {
-            domain.push(["id", ">", after]);
-        }
-        const messages = this._filter(domain).sort((m1, m2) => m2.id - m1.id);
-        // pick at most 'limit' messages
-        messages.length = Math.min(messages.length, limit);
-        res.messages = messages;
         return res;
     }
 

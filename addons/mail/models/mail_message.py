@@ -984,17 +984,30 @@ class MailMessage(models.Model):
             domain &= message_domain
         if search_term or is_notification is not None:
             res["count"] = self.search_count(domain)
+
+        # TODO User setting to sort by date other than create_date?
+        def _domain(message, date_oper, id_oper=''):
+            return Domain('create_date', date_oper, message.create_date) | (Domain('create_date', '=', message.create_date) & Domain('id', id_oper or date_oper, message.id))
+        _order_asc = 'create_date ASC, id ASC'
+        _order_desc = 'create_date DESC, id DESC'
+        _sort_key = lambda m: (m.create_date, m.id)
+
         if around is not None:
-            messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
-            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
-        if before:
-            domain &= Domain('id', '<', before)
-        if after:
-            domain &= Domain('id', '>', after)
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
-            res["messages"] = res["messages"].sorted('id', reverse=True)
+            limit /= 2
+            if around and (around := self.browse(around).exists()):
+                messages_before = self.search(domain & _domain(around, '<', '<='), limit=limit, order=_order_desc)
+                messages_after = self.search(domain & _domain(around, '>', '>'), limit=limit, order=_order_asc).sorted(_sort_key, reverse=True)
+                return {**res, "messages": (messages_after + messages_before)}
+            else:
+                res["messages"] = self.search(domain, limit=limit, order=_order_asc).sorted(_sort_key, reverse=True)
+        else:
+            if before and (before := self.browse(before).exists()):
+                domain &= _domain(before, '<', '<')
+            if after and (after := self.browse(after).exists()):
+                domain &= _domain(after, '>', '>')
+            res["messages"] = self.search(domain, limit=limit, order=_order_asc if after else _order_desc)
+            if after:
+                res["messages"] = res["messages"].sorted(_sort_key, reverse=True)
         return res
 
     def _get_tracking_values_domain(self, search_term):
