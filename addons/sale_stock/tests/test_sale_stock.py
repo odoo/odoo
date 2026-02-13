@@ -2725,3 +2725,82 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         invoice.action_post()
 
         self.assertEqual(invoice.state, 'posted')
+
+    def test_manufacturing_quantity_update_multi_warehouse_route(self):
+        """
+        When a product has an MTO, and a confirmed sales order creates a manufacturing order
+        check to make sure incoming moves are calculated correctly if the delivery moves between
+        multiple warehouses.
+        """
+        warehouse1 = self.env['stock.warehouse'].create({
+            'partner_id': self.partner_a.id,
+            'name': 'warehouse 1',
+            'code': 'WH1',
+        })
+        warehouse2 = self.env['stock.warehouse'].create({
+            'partner_id': self.partner_a.id,
+            'name': 'warehouse 2',
+            'code': 'WH2',
+        })
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        route_manufacture, route_mto = self.env['stock.route'].create([
+            {
+                'name': 'Manufacture Test',
+                'rule_ids': [
+                    Command.create({
+                        'name': 'WH2 Manufacture',
+                        'action': 'manufacture',
+                        'picking_type_id': warehouse2.manu_type_id.id,
+                        'location_src_id': warehouse2.lot_stock_id.id,
+                        'location_dest_id': warehouse2.lot_stock_id.id,
+                        'procure_method': 'make_to_stock',
+                        'warehouse_id': False,
+                    })
+                ],
+            },
+            {
+                'name': 'Replenish on Order (MTO) Test',
+                'rule_ids': [
+                    Command.create({
+                        'name': 'Transit to Customer',
+                        'action': 'pull',
+                        'picking_type_id': warehouse1.out_type_id.id,
+                        'location_src_id': warehouse1.lot_stock_id.id,
+                        'location_dest_id': customer_location.id,
+                        'procure_method': 'make_to_order',
+                        'warehouse_id': warehouse1.id,
+                    }),
+                    Command.create({
+                        'name': 'WH2 to WH(1)',
+                        'action': 'pull',
+                        'picking_type_id': warehouse1.int_type_id.id,
+                        'location_src_id': warehouse2.lot_stock_id.id,
+                        'location_dest_id': warehouse1.lot_stock_id.id,
+                        'procure_method': 'mts_else_mto',
+                        'warehouse_id': False,
+                    }),
+                ],
+            },
+        ])
+        self.new_product.route_ids = [Command.set([route_manufacture.id, route_mto.id])]
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+            'order_line': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1.0,
+                'route_ids': [route_manufacture.id, route_mto.id],
+            })],
+        })
+
+        sale_order.action_confirm()
+        sale_order.order_line.write({
+            'product_uom_qty': 2
+        })
+
+        mo_id = sale_order.mrp_production_ids.id
+        manufacturing_order = self.env['mrp.production'].search([('id', '=', mo_id)])
+        mo_quantity = manufacturing_order.product_qty
+
+        self.assertEqual(mo_quantity, 2)
