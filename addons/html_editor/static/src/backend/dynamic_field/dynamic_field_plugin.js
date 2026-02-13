@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { FieldSelectorPopover } from "@html_editor/backend/dynamic_field/field_selector_popover";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { DynamicTablePlugin } from "./dynamic_table_plugin";
 
 const QWEB_T_OUT = ["t-field", "t-out", "t-esc"];
 const DUMMY_CONTENT_ATTRS = ["data-oe-demo", "data-oe-expression-readable"];
@@ -14,6 +15,7 @@ const DUMMY_CONTENT_ATTRS = ["data-oe-demo", "data-oe-expression-readable"];
 export class DynamicFieldPlugin extends Plugin {
     static id = "dynamicField";
     static dependencies = ["selection", "history", "overlay", "dom", "toolbar", QWebPlugin.id];
+    static shared = ["getResModel", "getFieldPath"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -132,7 +134,7 @@ export class DynamicFieldPlugin extends Plugin {
             element: target,
         });
 
-        const resModel = this.getResModel(target);
+        const { resModel, basePath } = await this.getResModel(target);
         const fullPath = target.getAttribute(this.fieldAttribute) || "";
         const initialPath = fullPath.substring(fullPath.indexOf(".") + 1);
 
@@ -151,7 +153,7 @@ export class DynamicFieldPlugin extends Plugin {
                 close: () => this.fieldPopover.close(),
                 validate: async ({ path, label, fieldInfo }) => {
                     if (path !== initialPath) {
-                        const fullPath = this.getFieldPath(target, path);
+                        const fullPath = this.getFieldPath(target, basePath, path);
                         await this.setFieldAttributes(target, path, fullPath, fieldInfo);
                         await this.config.dynamicFieldPostprocess?.({
                             path: fullPath,
@@ -192,7 +194,7 @@ export class DynamicFieldPlugin extends Plugin {
         });
 
         const target = this.getPopoverTarget(false);
-        const resModel = this.getResModel(target);
+        const { resModel, basePath } = await this.getResModel(target);
         this.fieldPopover.open({
             target,
             props: {
@@ -206,7 +208,7 @@ export class DynamicFieldPlugin extends Plugin {
                     const selection = this.dependencies.selection.preserveSelection();
 
                     const el = this.document.createElement(this.fieldTagName);
-                    const fullPath = this.getFieldPath(target, path);
+                    const fullPath = this.getFieldPath(target, basePath, path);
                     await this.setFieldAttributes(el, path, fullPath, fieldInfo);
                     el.setAttribute("data-oe-demo", label);
                     el.innerText = label;
@@ -237,12 +239,30 @@ export class DynamicFieldPlugin extends Plugin {
         return !["one2many", "boolean", "many2many"].includes(fieldDef.type);
     }
 
-    getResModel(element) {
-        return this.resModel;
+    async getResModel(element) {
+        const path = [];
+        let parent = element.closest("table > tbody > tr[t-foreach]");
+        while (parent) {
+            path.unshift([parent.getAttribute("t-foreach"), parent.getAttribute("t-as")]);
+
+            parent = parent.parentNode.closest("table > tbody > tr[t-foreach]");
+        }
+
+        let resModel = this.resModel;
+        let variableName = "object";
+
+        for (const [fullPath, childVariableName] of path) {
+            const vars = fullPath.split(".");
+            const { fieldDef } = await this.services.field.loadFieldInfo(resModel, vars[1]);
+            resModel = fieldDef.relation;
+            variableName = childVariableName;
+        }
+
+        return { resModel, basePath: variableName };
     }
 
-    getFieldPath(element, fieldPath) {
-        return `object.${fieldPath}`;
+    getFieldPath(element, basePath, fieldPath) {
+        return `${basePath}.${fieldPath}`;
     }
 
     async setFieldAttributes(el, fieldPath, fullPath, fieldInfo) {
@@ -327,4 +347,4 @@ export class DynamicFieldPlugin extends Plugin {
     }
 }
 
-export const DYNAMIC_FIELD_PLUGINS = [QWebPlugin, DynamicFieldPlugin];
+export const DYNAMIC_FIELD_PLUGINS = [QWebPlugin, DynamicFieldPlugin, DynamicTablePlugin];
