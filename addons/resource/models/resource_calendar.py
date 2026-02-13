@@ -86,14 +86,13 @@ class ResourceCalendar(models.Model):
         ('variable', 'Variable')],
         string='Calendar Type', default='fixed', required=True)
 
+    def _get_attendances_to_unlink(self, next_schedule_type=None):
+        return self.attendance_ids.filtered(lambda a: bool(a.date) if (next_schedule_type or a.calendar_id.schedule_type) != "variable" else not a.date)
+
     @api.constrains('attendance_ids', 'schedule_type')
     def _check_attendance_ids(self):
-        if self.attendance_ids.filtered(lambda a: bool(a.date) if a.calendar_id.schedule_type == "fixed" else not a.date):
+        if self._get_attendances_to_unlink():
             raise ValidationError(self.env._("You cannot have attendances based on weekday and date in the same calendar"))
-
-    # --------------------------------------------------
-    # Compute Methods
-    # --------------------------------------------------
 
     def write(self, vals):
         vals['attendance_ids'] = [
@@ -106,8 +105,9 @@ class ResourceCalendar(models.Model):
     def _auto_attendance_clean(self):
         self._get_attendances_to_unlink().unlink()
 
-    def _get_attendances_to_unlink(self, next_schedule_type=None):
-        return self.attendance_ids.filtered(lambda a: bool(a.date) if (next_schedule_type or a.calendar_id.schedule_type) == "fixed" else not a.date)
+    # --------------------------------------------------
+    # Compute Methods
+    # --------------------------------------------------
 
     @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
     def _compute_full_time_required_hours(self):
