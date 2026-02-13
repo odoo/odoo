@@ -56,10 +56,11 @@ class TestCorsLivechat(HttpCase):
         )
         self.authenticate(None, None)
         self.make_jsonrpc_request(
-            "/im_livechat/cors/channel/messages",
+            "/im_livechat/cors/channel/mark_as_read",
             {
                 "guest_token": data["store_data"]["Store"]["guest_token"],
                 "channel_id": data["channel_id"],
+                "last_message_id": 0,
             },
         )
 
@@ -75,9 +76,10 @@ class TestCorsLivechat(HttpCase):
         self.authenticate(None, None)
         with self.assertRaises(JsonRpcException, msg="werkzeug.exceptions.NotFound"):
             self.make_jsonrpc_request(
-                "/im_livechat/cors/channel/messages",
+                "/im_livechat/cors/channel/mark_as_read",
                 {
                     "guest_token": guest.access_token,
                     "channel_id": data["channel_id"],
+                    "last_message_id": 0,
                 },
             )

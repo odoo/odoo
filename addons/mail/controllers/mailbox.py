@@ -1,32 +1,27 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo.fields import Domain
 from odoo.http import request
+from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store
 
 
-class MailboxController(http.Controller):
-    @http.route("/mail/inbox/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
-    def discuss_inbox_messages(self, fetch_params=None):
-        domain = [("needaction", "=", True)]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
-        messages = res.pop("messages")
-        store = Store()
-        store.add(messages, "_store_message_fields", fields_params={"inbox_fields": True})
-        return {**res, "data": store.get_result(), "messages": messages.ids}
-
-    @http.route("/mail/history/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
-    def discuss_history_messages(self, fetch_params=None):
-        domain = [("needaction", "=", False)]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
-        messages = res.pop("messages")
-        store = Store().add(messages, "_store_message_fields")
-        return {**res, "data": store.get_result(), "messages": messages.ids}
-
-    @http.route("/mail/starred/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
-    def discuss_starred_messages(self, fetch_params=None):
-        domain = [("starred_partner_ids", "in", [request.env.user.partner_id.id])]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
-        messages = res.pop("messages")
-        store = Store().add(messages, "_store_message_fields")
-        return {**res, "data": store.get_result(), "messages": messages.ids}
+class MailboxController(WebclientController):
+    @classmethod
+    def _process_request_for_logged_in_user(self, store: Store, name, params):
+        """Override to mailbox messages."""
+        super()._process_request_for_logged_in_user(store, name, params)
+        message_fetch_domain = None
+        if name == "/mail/inbox/messages":
+            message_fetch_domain = Domain("needaction", "=", True)
+            request.update_context(add_inbox_fields=True)
+        if name == "/mail/history/messages":
+            message_fetch_domain = Domain("needaction", "=", False)
+        if name == "/mail/starred/messages":
+            message_fetch_domain = Domain("starred_partner_ids", "in", [request.env.user.partner_id.id])
+        if message_fetch_domain:
+            self._resolve_messages(
+                store,
+                domain=message_fetch_domain,
+                fetch_params=params and params.get("fetch_params"),
+            )

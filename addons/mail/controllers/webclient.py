@@ -37,6 +37,9 @@ class WebclientController(ThreadController):
 
     @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
+        # aggregate of messages to return, to batch them in a single query when all the fetch params
+        # have been processed
+        request.update_context(messages=request.env["mail.message"], add_inbox_fields=False)
         for fetch_param in fetch_params:
             name, params, data_id = (
                 (fetch_param, None, None)
@@ -49,6 +52,14 @@ class WebclientController(ThreadController):
                 self._process_request_for_logged_in_user(store, name, params)
             if request.env.user._is_internal():
                 self._process_request_for_internal_user(store, name, params)
+        if messages := request.env.context["messages"]:
+            store.add(
+                messages,
+                "_store_message_fields",
+                fields_params={"inbox_fields": True}
+                if request.env.context["add_inbox_fields"]
+                else None,
+            )
         store.data_id = None
 
     @classmethod
@@ -121,6 +132,19 @@ class WebclientController(ThreadController):
             if lost:
                 lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
             store.add(valid.mail_message_id, "_store_notification_fields")
+        if name == "/mail/thread/messages":
+            if thread := self._get_thread_with_access(
+                params["thread_model"],
+                params["thread_id"],
+                mode="read",
+            ):
+                messages = self._resolve_messages(
+                    store,
+                    thread=thread,
+                    fetch_params=params.get("fetch_params"),
+                )
+                if not request.env.user._is_public():
+                    messages.set_message_done()
 
     @classmethod
     def _process_request_for_internal_user(self, store: Store, name, params):
@@ -181,3 +205,31 @@ class WebclientController(ThreadController):
     @classmethod
     def _get_supported_avatar_card_models(self):
         return ["res.users", "res.partner"]
+
+    @classmethod
+    def _resolve_messages(
+        self,
+        store: Store,
+        /,
+        *,
+        domain=None,
+        thread=None,
+        fetch_params=None,
+        add_to_store=True,
+        sudo=False,
+    ):
+        fetch_res = (
+            request.env["mail.message"]
+            .sudo(sudo)
+            ._message_fetch(domain, thread=thread, **(fetch_params or {}))
+        )
+        messages = fetch_res.pop("messages")
+        if add_to_store:
+            request.update_context(messages=request.env.context["messages"] | messages)
+        store.resolve_data_request(
+            lambda res: (
+                [res.attr(k, v) for k, v in fetch_res.items()],
+                res.many("messages", [], value=messages),
+            ),
+        )
+        return messages

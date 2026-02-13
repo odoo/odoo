@@ -678,19 +678,22 @@ export class Store extends BaseStore {
      * @param {true|false|undefined} is_notification
      */
     async searchMessagesInThread(searchTerm, thread, before, is_notification) {
-        const { count, data, messages } = await rpc(thread.getFetchRoute(), {
-            ...thread.getFetchParams(),
-            fetch_params: {
-                is_notification,
-                search_term: await prettifyMessageText(searchTerm), // formatted like message_post
-                before,
+        const { count, messages } = await this.fetchStoreData(
+            thread.getFetchRoute(),
+            {
+                ...thread.getFetchParams(),
+                fetch_params: {
+                    is_notification,
+                    search_term: await prettifyMessageText(searchTerm), // formatted like message_post
+                    before,
+                },
             },
-        });
-        this.insert(data);
+            { readonly: thread.model === "mail.box", requestData: true }
+        );
         return {
             count,
             loadMore: messages.length === this.FETCH_LIMIT,
-            messages: this["mail.message"].insert(messages),
+            messages,
         };
     }
 }

@@ -74,9 +74,7 @@ test("sanity check", async () => {
     await start();
     await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     await openDiscuss("mail.box_inbox");
-    await waitStoreFetch(["channels_as_member"], {
-        stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'],
-    });
+    await waitStoreFetch(["channels_as_member", "/mail/inbox/messages"]);
     await contains(".o-mail-DiscussSidebar");
     await contains("h4:contains('Congratulations, your inbox is empty')");
 });
@@ -383,15 +381,18 @@ test("No load more when fetch below fetch limit of 60", async () => {
             res_id: channelId,
         });
     }
-    onRpcBefore("/discuss/channel/messages", (args) => {
-        expect.step("/discuss/channel/messages");
-        expect(args.fetch_params.limit).toBe(60);
-    });
+    listenStoreFetch("/discuss/channel/messages", { logParams: ["/discuss/channel/messages"] });
     await start();
     await openDiscuss(channelId);
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
+        ],
+    ]);
     await contains(".o-mail-Message", { count: 29 });
     await contains("button:text('Load More')", { count: 0 });
-    await expect.waitForSteps(["/discuss/channel/messages"]);
+    await waitStoreFetch([]);
 });
 
 test("show date separator above mesages of similar date", async () => {
@@ -739,14 +740,11 @@ test("initially load messages from inbox", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    onRpcBefore("/mail/inbox/messages", (args) => {
-        expect.step("/discuss/inbox/messages");
-        expect(args.fetch_params.limit).toBe(30);
-    });
+    listenStoreFetch("/mail/inbox/messages", { logParams: ["/mail/inbox/messages"] });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
-    await expect.waitForSteps(["/discuss/inbox/messages"]);
+    await waitStoreFetch([["/mail/inbox/messages", { fetch_params: { limit: 30 } }]]);
 });
 
 test("default active id on mailbox", async () => {
@@ -2063,9 +2061,11 @@ test("failure on loading messages should display error", async () => {
         channel_type: "channel",
         name: "General",
     });
-
-    onRpc("/discuss/channel/messages", () => Promise.reject());
-
+    listenStoreFetch("/discuss/channel/messages", {
+        onRpc() {
+            return Promise.reject();
+        },
+    });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread:has(:text('An error occurred while fetching messages.'))");
@@ -2077,9 +2077,11 @@ test("failure on loading messages should prompt retry button", async () => {
         channel_type: "channel",
         name: "General",
     });
-
-    onRpc("/discuss/channel/messages", () => Promise.reject());
-
+    listenStoreFetch("/discuss/channel/messages", {
+        onRpc() {
+            return Promise.reject();
+        },
+    });
     await start();
     await openDiscuss(channelId);
     await contains("button:text('Click here to retry')");
@@ -2109,13 +2111,16 @@ test("failure on loading more messages should display error and prompt retry but
     pyEnv["discuss.channel.member"].write([selfMember.id], {
         new_message_separator: messageIds.at(-1) + 1,
     });
-    onRpcBefore("/discuss/channel/messages", () => {
-        if (messageFetchShouldFail) {
-            return Promise.reject();
-        }
+    listenStoreFetch("/discuss/channel/messages", {
+        onRpc() {
+            if (messageFetchShouldFail) {
+                return Promise.reject();
+            }
+        },
     });
     await start();
     await openDiscuss(channelId);
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 30 });
     messageFetchShouldFail = true;
     await click("button:text('Load More')");
@@ -2148,13 +2153,16 @@ test("Retry loading more messages on failed load more messages should load more 
     pyEnv["discuss.channel.member"].write([selfMember.id], {
         new_message_separator: messageIds.at(-1) + 1,
     });
-    onRpcBefore("/discuss/channel/messages", () => {
-        if (messageFetchShouldFail) {
-            return Promise.reject();
-        }
+    listenStoreFetch("/discuss/channel/messages", {
+        onRpc() {
+            if (messageFetchShouldFail) {
+                return Promise.reject();
+            }
+        },
     });
     await start();
     await openDiscuss(channelId);
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 30 });
     messageFetchShouldFail = true;
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -2162,8 +2170,10 @@ test("Retry loading more messages on failed load more messages should load more 
     await contains("button:text('Click here to retry')");
     messageFetchShouldFail = false;
     await click("button:text('Click here to retry')");
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 60 });
     await scroll(".o-mail-Thread", 0);
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 90 });
 });
 
