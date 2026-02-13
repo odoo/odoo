@@ -257,6 +257,7 @@ class SchemaBuilder:
             ... )
             >>> person.add_nested(works_for=org_ref)
         """
+        # TODO: Maybe just lower the schema_type and add it to the id_value(URL)?
         ref = SchemaBuilder(schema_type)
         ref.values['@id'] = id_value
         return ref
@@ -282,6 +283,13 @@ def create_breadcrumbs(items: list[tuple[str, str] | None]) -> SchemaBuilder:
     """
     # Filter out None items
     valid_items = [item for item in items if item is not None]
+
+    # TODO: Is there any limitation?
+    # if len(valid_items) == 0:
+    #     return None
+    # elif len(valid_items) > 3:
+    #     raise ValueError("BreadcrumbList should have between 1 and 3 items")
+    # Do we even have limitations? Let's decide in 2nd round cleanup
 
     list_items = []
     for position, (name, url) in enumerate(valid_items, start=1):

@@ -177,7 +177,6 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
 
-        base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
         )
@@ -188,12 +187,13 @@ class ProductProduct(models.Model):
             product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
         )
 
+        base_url = website.get_base_url()
         offer = SchemaBuilder(
             "Offer",
             price=price,
             price_currency=website.currency_id.name,
         )
-        seller = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
+        seller = SchemaBuilder.create_id_reference("OnlineStore", f"{base_url}/#onlinestore")
 
         if seller:
             offer.add_nested(seller=seller)
@@ -208,14 +208,6 @@ class ProductProduct(models.Model):
 
         if self.website_meta_description or self.description_sale:
             product.set(description=self.website_meta_description or self.description_sale)
-
-        if website.is_view_active("website_sale.product_comment") and self.rating_count:
-            rating = SchemaBuilder(
-                "AggregateRating",
-                rating_value=self.sudo().rating_avg,
-                review_count=self.rating_count,
-            )
-            product.add_nested(aggregate_rating=rating)
 
         return product
 

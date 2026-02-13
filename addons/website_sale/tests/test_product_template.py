@@ -48,7 +48,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         })
         website = self.website
         with MockRequest(website.env, website=website):
-            schema_data = product_template._to_structured_data(self.website)[1]
+            schema_data = product_template._to_structured_data(self.website)
             markup_data = schema_data._render()
         self.assertEqual(markup_data['@type'], 'ProductGroup')
         self.assertEqual(len(markup_data['hasVariant']), 2)
@@ -57,7 +57,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         product_template = self.env['product.template'].create({'name': 'Test product'})
         website = self.website
         with MockRequest(website.env, website=website):
-            schema_data = product_template._to_structured_data(self.website)[1]
+            schema_data = product_template._to_structured_data(self.website)
             markup_data = schema_data._render()
         self.assertEqual(markup_data['@type'], 'Product')
 

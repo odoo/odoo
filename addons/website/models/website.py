@@ -2415,53 +2415,64 @@ class Website(models.CachedModel):
     @api.model
     def organization_structured_data(self, company, with_id=False):
         """
-        Generate structured data for the organization's information.
+        Generate structured data for the organization.
 
         Args:
-            company (res.company): The company for which to generate structured data.
-                If None, uses the website's company.
+            company (res.company): The company for which to generate structured data
+            with_id (bool): Whether to include @id reference
+
         Returns:
-            SchemaBuilder: The structured data schema builder for the organization.
+            SchemaBuilder: The structured data schema builder for the organization
         """
-        if not company:
-            return False
-        company_name = company.name
-        base_url = company.website_id.get_base_url()
+        return self._build_organization_schema(company.name, "Organization", company, company.id, with_id)
 
-        org = SchemaBuilder(
-            "Organization",
-            name=company_name,
-            url=base_url,
-        )
+    def _build_organization_schema(
+        self,
+        name,
+        schema_type="Organization",
+        social_links=None,
+        company_id=None,
+        with_id=False,
+    ):
+        """
+        Build organization schema (works for Organization, OnlineStore, LocalBusiness, etc.)
+
+        Args:
+            name (str): Organization/store name
+            schema_type (str): Schema type (e.g., "Organization", "OnlineStore")
+            social_links (recordset): Record with social_* fields (website or company)
+            company_id (int): Company ID for logo
+            with_id (bool): Whether to include @id reference
+
+        Returns:
+            SchemaBuilder: The organization schema
+        """
+        base_url = self.get_base_url()
+        schema = SchemaBuilder(schema_type, name=name, url=base_url)
+
         if with_id:
-            org.set(id=f"{base_url}/#organization")
+            schema.set(id=f"{base_url}/#{schema_type.lower()}")
 
-        same_as = list(filter(None, [
-            self.social_facebook,
-            self.social_linkedin,
-            self.social_twitter,
-            self.social_instagram,
-            self.social_tiktok,
-            self.social_youtube,
-            self.social_github,
-            self.social_discord,
-        ]))
+        if social_links:
+            same_as = [
+                link for link in [
+                    social_links.social_facebook,
+                    social_links.social_linkedin,
+                    social_links.social_twitter,
+                    social_links.social_instagram,
+                    social_links.social_tiktok,
+                    social_links.social_youtube,
+                    social_links.social_github,
+                    social_links.social_discord,
+                ] if link
+            ]
+            if same_as:
+                schema.set(same_as=same_as)
 
-        if same_as:
-            org.set(same_as=same_as)
+        logo_url = f"{base_url}/logo.png?company={company_id or self.company_id.id}"
+        schema.add_nested(logo=SchemaBuilder("ImageObject", url=logo_url))
 
-        logo_url = f"{base_url}/logo.png?company={company.id}"
-        logo = SchemaBuilder("ImageObject", url=logo_url)
-        org.add_nested(logo=logo)
-
-        # contact_point = self.contact_structured_data(company)
-        # if contact_point:
-        #     org.add_nested(contact_point=contact_point)
-        # address = self.postal_address_structured_data(company)
-        # if address:
-        #     org.add_nested(address=address)
-
-        return org
+        return schema
 
     @api.model
     def contact_structured_data(self, company):
@@ -2469,20 +2480,17 @@ class Website(models.CachedModel):
         Generate structured data for the contact point of a company.
 
         Args:
-            company (res.company): The company for which to generate contact point structured data.
+            company (res.company): The company for which to generate contact point structured data
+
         Returns:
-            SchemaBuilder: The structured data schema builder for the contact point.
+            SchemaBuilder or None: The structured data schema builder for the contact point
         """
         if not company:
-            return False
+            return None
         telephone = (company.phone or '').strip() or None
         email = (company.email or '').strip() or None
         if telephone or email:
-            return SchemaBuilder(
-                "ContactPoint",
-                telephone=telephone,
-                email=email,
-            )
+            return SchemaBuilder("ContactPoint", telephone=telephone, email=email)
         return None
 
     @api.model
@@ -2491,12 +2499,14 @@ class Website(models.CachedModel):
         Generate structured data for the postal address of a company.
 
         Args:
-            company (res.company): The company for which to generate postal address structured data.
+            company (res.company): The company for which to generate postal address structured data
+
         Returns:
-            SchemaBuilder: The structured data schema builder for the postal address.
+            SchemaBuilder or None: The structured data schema builder for the postal address
         """
         if not company:
-            return False
+            return None
+
         street = (company.street or '').strip() or None
         street2 = (company.street2 or '').strip() or None
         city = (company.city or '').strip() or None
@@ -2504,7 +2514,7 @@ class Website(models.CachedModel):
         state = company.state_id.code if company.state_id else None
         country = company.country_id.code if company.country_id else None
 
-        if street or street2 or city or zip_code or state or country:
+        if any([street, street2, city, zip_code, state, country]):
             return SchemaBuilder(
                 "PostalAddress",
                 street_address=" ".join(filter(None, [street, street2])),

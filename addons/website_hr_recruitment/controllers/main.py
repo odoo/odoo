@@ -191,7 +191,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     def job(self, job, **kwargs):
         job_structured_data = job._to_structured_data()
         return request.render("website_hr_recruitment.detail", {
-            'job_structured_data': job_structured_data,
+            'job_structured_data': job_structured_data.render_json(),
             'job': job,
             'main_object': job,
         })

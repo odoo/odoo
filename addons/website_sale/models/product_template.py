@@ -1027,47 +1027,67 @@ class ProductTemplate(models.Model):
         return price, pricelist_rule_id
 
     def _to_structured_data(self, website):
+        """ Generate JSON-LD markup data for the current product template.
+
+        If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
+        Otherwise, the markup data generation is delegated to the variant to use the
+        https://schema.org/Product schema.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
         self.ensure_one()
 
-        org = website.organization_structured_data(website.company_id, with_id=True)
         if self.product_variant_count == 1:
-            return [org, self.product_variant_id._to_structured_data(website)]
-
-        base_url = website.get_base_url()
-        brand = f"{base_url}/#organization"
-        product_group_id = (
-            self.default_code
-            or (self.product_variant_ids[:1].default_code)
-            or f"TEMPLATE-{self.id}"
-        )
-        group = SchemaBuilder(
-            "ProductGroup",
-            name=self.name,
-            url=f"{base_url}{self.website_url}",
-            image=f"{base_url}{website.image_url(self, 'image_1920')}",
-            description=self.description_sale,
-            product_group_id=product_group_id,
-        )
-        brand_obj = SchemaBuilder.create_id_reference("Organization", brand)
-        if brand_obj:
-            group.add_nested(brand=brand_obj)
-
-        # perf: temporal solution to avoid slowness when product have many variants and pricelist rules
-        limit = self.env['ir.config_parameter'].sudo().get_int('website_sale.markup_data_limit_variants') or None
-        if limit:
-            product_variant_ids = self.product_variant_ids[:limit]
+            markup_data = self.product_variant_id._to_structured_data(website)
         else:
-            product_variant_ids = self.product_variant_ids
+            # perf: temporal solution to avoid slowness when product have many variants and
+            # pricelist rules
+            limit = self.env['ir.config_parameter'].sudo().get_int(
+                'website_sale.markup_data_limit_variants'
+            ) or None
+            if limit:
+                product_variant_ids = self.product_variant_ids[:limit]
+            else:
+                product_variant_ids = self.product_variant_ids
 
-        group.add_nested(has_variant=[
-            variant._to_structured_data(website)
-            for variant in product_variant_ids
-        ])
+            base_url = website.get_base_url()
+            product_group_id = (
+                self.default_code
+                or (self.product_variant_ids[:1].default_code)
+                or f"TEMPLATE-{self.id}"
+            )
+            product_group = SchemaBuilder(
+                "ProductGroup",
+                name=self.name,
+                url=f"{base_url}{self.website_url}",
+                image=f"{base_url}{website.image_url(self, 'image_1920')}",
+                description=self.description_sale,
+                product_group_id=product_group_id,
+            )
+            brand_obj = SchemaBuilder.create_id_reference("OnlineStore", f"{base_url}/#onlinestore")
+            if brand_obj:
+                product_group.add_nested(brand=brand_obj)
 
-        if self.description_ecommerce:
-            group.set(description=text_from_html(self.description_ecommerce))
+            product_group.add_nested(has_variant=[
+                variant._to_structured_data(website)
+                for variant in product_variant_ids
+            ])
 
-        return [org, group]
+            if self.description_ecommerce:
+                product_group.set(description=text_from_html(self.description_ecommerce))
+            markup_data = product_group
+
+        if website.is_view_active('website_sale.product_comment') and self.rating_count:
+            rating = SchemaBuilder(
+                "AggregateRating",
+                rating_value=self.sudo().rating_avg,
+                review_count=self.rating_count,
+            )
+            markup_data.add_nested(aggregate_rating=rating)
+
+        return markup_data
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.

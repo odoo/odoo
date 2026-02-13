@@ -100,10 +100,10 @@
 
 <!-- Job Detail -->
 <template id="detail" name="Job Detail" track="1">
-    <t t-call="website.layout">
-        <t t-set="head">
-            <script type="application/ld+json"><t t-out="job_structured_data.render_json()"/></script>
-        </t>
+    <t t-set="head">
+        <script t-if="job_structured_data" type="application/ld+json" t-out="job_structured_data"/>
+    </t>
+    <t t-call="website.layout" head="head">
         <!-- Topbar -->
         <nav class="navbar navbar-light border-top shadow-sm d-print-none">
             <div class="container">

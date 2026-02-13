@@ -540,10 +540,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
-            values['markup_data_json'] = json_scriptsafe.dumps([
+            values['markup_data_json'] = SchemaBuilder.render_structured_data_list([
                 website._prepare_ecommerce_store_markup_data(),
                 self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
-            ], indent=2)
+            ])
         values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
@@ -811,18 +811,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _prepare_product_values(self, product, category, **kwargs):
         website = request.website
         ProductCategory = request.env['product.public.category']
-        product_markup_data = product._to_structured_data(request.website)
         category = (
             (category and ProductCategory.browse(int(category)).exists())
             or product.public_categ_ids[:1]
         )
         markup_data = [
-            website._prepare_ecommerce_store_markup_data(), product._to_markup_data(website)
+            website._prepare_ecommerce_store_markup_data(), product._to_structured_data(website)
         ]
         if category:
             # Add breadcrumb's SEO data.
-            product_markup_data.append(self._prepare_breadcrumb_markup_data(
-                request.website.get_base_url(), category, product,
+            markup_data.append(self._prepare_breadcrumb_markup_data(
+                website.get_base_url(), category
             ))
 
         if (last_attributes_search := request.session.get('attribute_values', [])):
@@ -863,16 +862,26 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
-            'product_markup_data': SchemaBuilder.render_structured_data_list(product_markup_data),
+            'markup_data_json': SchemaBuilder.render_structured_data_list(markup_data),
             'shop_path': SHOP_PATH,
         }
 
-    def _prepare_breadcrumb_markup_data(self, base_url, category, product):
-        return create_breadcrumbs([
-            ("All products", f"{base_url}{SHOP_PATH}"),
-            (category.name, f"{base_url}{self._get_shop_path(category)}"),
-            (product.name, f"{base_url}{product.website_url}"),
-        ])
+    def _prepare_breadcrumb_markup_data(self, base_url, category):
+        """Generate JSON-LD breadcrumb markup data for the given category.
+
+        See https://schema.org/BreadcrumbList.
+
+        :param str base_url: The base URL of the current website.
+        :param product.public.category category: The current product category.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        # Doubtful, Current implementation is not good
+        breadcrumbs = [
+            (cat.name, f'{base_url}{self._get_shop_path(cat)}')
+            for cat in category.parents_and_self
+        ]
+        return create_breadcrumbs(breadcrumbs)
 
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',

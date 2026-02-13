@@ -1175,26 +1175,13 @@ class Website(models.Model):
         :return: The JSON-LD markup data.
         :rtype: dict
         """
-        self.ensure_one()
-        socials = [
-            self.social_twitter,
-            self.social_facebook,
-            self.social_github,
-            self.social_linkedin,
-            self.social_youtube,
-            self.social_instagram,
-            self.social_tiktok,
-        ]
-        base_url = self.get_base_url()
-
-        return {
-            '@context': 'https://schema.org',
-            '@type': 'OnlineStore',
-            'name': self.name,
-            'url': base_url,
-            'logo': f"{base_url}/logo.png?company={self.company_id.id}",
-            'sameAs': [social for social in socials if social],
-        }
+        return self._build_organization_schema(
+            name=self.name,
+            schema_type="OnlineStore",
+            social_links=self,
+            company_id=self.company_id.id,
+            with_id=False
+        )
 
     def _get_ecommerce_store_markup_json(self):
         """Generate JSON-LD markup data for the company of the website.
@@ -1202,4 +1189,5 @@ class Website(models.Model):
         :return: The JSON-LD markup data.
         :rtype: dict
         """
-        return json_scriptsafe.dumps(self._prepare_ecommerce_store_markup_data(), indent=2)
+        markup_data = self._prepare_ecommerce_store_markup_data()
+        return markup_data.render_json()
