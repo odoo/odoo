@@ -331,6 +331,11 @@ export class CalendarCommonRenderer extends Component {
         }
         return true;
     }
+
+    isEventPlanned(event) {
+        return DateTime.now() < event.end;
+    }
+
     eventClassNames({ el, event }) {
         const classesToAdd = [];
         classesToAdd.push("o_event");
@@ -353,8 +358,8 @@ export class CalendarCommonRenderer extends Component {
             if (record.duration <= 0.25) {
                 classesToAdd.push("o_event_oneliner");
             }
-            if (DateTime.now() >= record.end) {
-                classesToAdd.push("o_past_event");
+            if (!this.isEventPlanned(record)) {
+                classesToAdd.push("o_unplanned_event");
             }
 
             if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {

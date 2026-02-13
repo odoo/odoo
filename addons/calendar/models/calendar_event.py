@@ -45,6 +45,7 @@ SORT_ALIASES = {
 }
 
 RRULE_TYPE_SELECTION_UI = [
+    ('none', 'None'),
     ('daily', 'Daily'),
     ('weekly', 'Weekly'),
     ('monthly', 'Monthly'),
@@ -216,7 +217,7 @@ class CalendarEvent(models.Model):
         string='Reminders', ondelete="restrict",
         help="Notifications sent to all attendees to remind of the meeting.")
     # RECURRENCE FIELD
-    recurrency = fields.Boolean('Recurrent')
+    recurrency = fields.Boolean(compute='_compute_recurrency', readonly=False, store=True)
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index='btree_not_null')
     follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
@@ -232,7 +233,7 @@ class CalendarEvent(models.Model):
     # If some of these fields are set and recurrence_id does not exists,
     # a `calendar.recurrence.rule` will be dynamically created.
     rrule = fields.Char('Recurrent Rule', compute='_compute_recurrence', readonly=False)
-    rrule_type_ui = fields.Selection(RRULE_TYPE_SELECTION_UI, string='Repeat',
+    rrule_type_ui = fields.Selection(RRULE_TYPE_SELECTION_UI, string='Repetition',
                                      compute="_compute_rrule_type_ui",
                                      readonly=False,
                                      help="Let the event automatically repeat at that interval")
@@ -485,17 +486,21 @@ class CalendarEvent(models.Model):
         """
         return [True] * len(vals_list)
 
-    @api.depends('recurrence_id', 'recurrency')
+    @api.depends('rrule_type_ui')
+    def _compute_recurrency(self):
+        for event in self:
+            event.recurrency = event.rrule_type_ui not in ('none', False)
+
+    @api.depends('recurrence_id')
     def _compute_rrule_type_ui(self):
         defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
         for event in self:
-            if event.recurrency:
-                if event.recurrence_id:
-                    event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
-                else:
-                    event.rrule_type_ui = defaults["rrule_type"]
+            if event.recurrence_id:
+                event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
+            else:
+                event.rrule_type_ui = defaults["rrule_type"]
 
-    @api.depends('recurrence_id', 'recurrency', 'rrule_type_ui')
+    @api.depends('recurrence_id', 'rrule_type_ui')
     def _compute_recurrence(self):
         recurrence_fields = self._get_recurrent_fields()
         false_values = {field: False for field in recurrence_fields}  # computes need to set a value
@@ -834,7 +839,7 @@ class CalendarEvent(models.Model):
             super().write(values)
             self._sync_activities(fields=values.keys())
 
-        # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
+        # We reapply recurrence for future events.
         if recurrence_update_setting not in ['self_only', 'all_events'] and not future_edge_case and not break_recurrence:
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
@@ -1336,7 +1341,7 @@ class CalendarEvent(models.Model):
                 recurrence_vals += [dict(values, base_event_id=event.id, calendar_event_ids=[(4, event.id)])]
             elif future:
                 to_update |= event.recurrence_id._split_from(event, values)
-        self.write({'recurrency': True, 'follow_recurrence': True})
+        self.write({'follow_recurrence': True})
         to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
         return to_update._apply_recurrence()
 

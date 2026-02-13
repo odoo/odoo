@@ -52,10 +52,27 @@ export class AttendeeCalendarController extends CalendarController {
 
     getQuickCreateFormViewProps(record) {
         const props = super.getQuickCreateFormViewProps(record);
+        const context = { ...props.context, ...this.props.context};
+        if (!context.default_partner_ids || context.default_partner_ids.length === 0) {
+            const partnerFiltersEl = document.querySelector(".o_calendar_filter[data-name='partner_ids']");
+            const partnerIds = [];
+            if (partnerFiltersEl) {
+                Array.from(partnerFiltersEl.querySelectorAll(".o_calendar_filter_item")).reduce(
+                    (acc, current) => {
+                        if (current.querySelector("[type='checkbox']").checked === true) {
+                            acc.push(parseInt(current.dataset.value));
+                        }
+                        return acc;
+                    },
+                    partnerIds
+                )
+            }
+            context.default_partner_ids = partnerIds;
+        }
         return {
             ...props,
             size: "md",
-            context: { ...props.context, ...this.props.context },
+            context: context,
             onRecordSave: async (record) => {
                 const updates = {
                     ...(!record.data.name && { name: _t("(No Title)") }),

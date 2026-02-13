@@ -5226,7 +5226,7 @@ test(`calendar show past events with background blur`, async () => {
         arch: `<calendar date_start="start" mode="week"/>`,
     });
     expect(`.o_event`).toHaveCount(5);
-    expect(`.fc-event.o_past_event`).toHaveCount(4);
+    expect(`.fc-event.o_unplanned_event`).toHaveCount(4);
 });
 
 test.tags("desktop");

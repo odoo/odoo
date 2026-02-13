@@ -168,7 +168,7 @@ test("Display closed tasks as past event", async () => {
     });
     await mountView(calendarMountParams);
     expect(".o_event").toHaveCount(4);
-    expect(".o_event.o_past_event").toHaveCount(3);
+    expect(".o_event.o_unplanned_event").toHaveCount(3);
 });
 
 test("tasks to schedule should not be visible in the sidebar if no default project set in the context", async () => {
