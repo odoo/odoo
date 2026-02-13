@@ -158,7 +158,7 @@ test("should get ready to type in strikeThrough", async () => {
     await testEditor({
         contentBefore: `<p>ab[]cd</p>`,
         stepFunction: strikeThrough,
-        contentAfterEdit: `<p>ab<s data-oe-zws-empty-inline="">[]\u200B</s>cd</p>`,
+        contentAfterEdit: `<p>ab<s data-oe-zws-empty-inline="">\u200B[]</s>cd</p>`,
         contentAfter: `<p>ab[]cd</p>`,
     });
 });
@@ -167,7 +167,7 @@ test("should get ready to type in not underline", async () => {
     await testEditor({
         contentBefore: `<p><s>ab[]cd</s></p>`,
         stepFunction: strikeThrough,
-        contentAfterEdit: `<p><s>ab</s><span data-oe-zws-empty-inline="">[]\u200B</span><s>cd</s></p>`,
+        contentAfterEdit: `<p><s>ab</s><span data-oe-zws-empty-inline="">\u200B[]</span><s>cd</s></p>`,
         contentAfter: `<p><s>ab[]cd</s></p>`,
     });
 });
@@ -258,7 +258,7 @@ test("should remove empty strikeThrough when changing selection", async () => {
 
     strikeThrough(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>ab<s data-oe-zws-empty-inline="">[]\u200B</s>cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<s data-oe-zws-empty-inline="">\u200B[]</s>cd</p>`);
 
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
@@ -274,7 +274,7 @@ test("should not add history step for strikethrough on collapsed selection", asy
     // step. The empty inline tag is temporary: auto-cleaned if unused. We want
     // to avoid having a phantom step in the history.
     await press(["ctrl", "5"]);
-    expect(getContent(el)).toBe(`<p>abcd<s data-oe-zws-empty-inline="">[]\u200B</s></p>`);
+    expect(getContent(el)).toBe(`<p>abcd<s data-oe-zws-empty-inline="">\u200B[]</s></p>`);
 
     await insertText(editor, "A");
     expect(getContent(el)).toBe(`<p>abcd<s>A[]</s></p>`);
