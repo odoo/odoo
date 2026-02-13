@@ -144,7 +144,9 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
             const lineDetails = {
                 uuid: orderline.uuid,
                 name: orderline.getFullProductName(),
-                basic_name: orderline.product_id.name,
+                basic_name: order.config_id.module_pos_restaurant
+                    ? orderline.product_id.name
+                    : orderline.product_id.display_name,
                 isCombo: Boolean(orderline?.combo_line_ids?.length),
                 combo_parent_uuid: orderline?.combo_parent_id?.uuid,
                 product_id: product.id,

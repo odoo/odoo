@@ -141,6 +141,16 @@ describe("pos_store.js", () => {
             expect(order2.lines[1].id).toBeOfType("number");
         });
 
+        test("getOrderChanges", async () => {
+            const store = await setupPosEnv();
+            const product = store.models["product.product"].get(5);
+            product.display_name = "001 TEST";
+            await getFilledOrder(store);
+            const result = store.getOrderChanges();
+            const [line] = Object.values(result.orderlines);
+            expect(line.basic_name).toBe("001 TEST");
+        });
+
         test("sync no network should not raise error", async () => {
             const store = await setupPosEnv();
             const order = await getFilledOrder(store);
