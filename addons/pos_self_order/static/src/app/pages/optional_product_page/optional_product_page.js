@@ -13,6 +13,7 @@ export class OptionalProductPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+        this.historyState = history.state;
 
         if (!this.productTemplate || !this.optionalProducts.length) {
             this.goBack();
@@ -21,7 +22,7 @@ export class OptionalProductPage extends Component {
 
         this.state = useState({
             showStickyTitle: false,
-            optionalProductQtyById: {},
+            optionalProductQtyById: this.historyState.optionalProductQtys || {},
         });
 
         this.scrollContainerRef = useRef("scrollContainer");
@@ -47,9 +48,17 @@ export class OptionalProductPage extends Component {
     }
 
     selectOptionalProduct(product, target) {
+        const historyState = {
+            redirectPage: "optional_product",
+            params: { id: this.productTemplate.id },
+            state: {
+                optionalProductQtys: { ...this.state.optionalProductQtyById },
+            },
+        };
         this.selfOrder.selectProduct(product, {
             target,
             destination: ".back-btn",
+            historyState,
         });
         const newQty = (this.state.optionalProductQtyById[product.id] || 0) + 1;
         this.state.optionalProductQtyById[product.id] = newQty;

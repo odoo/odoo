@@ -920,7 +920,7 @@ export class SelfOrder extends Reactive {
         if (product.isCombo()) {
             const { show, selectedCombos } = this.showComboSelectionPage(product);
             if (show) {
-                this.router.navigate("combo_selection", { id: product.id });
+                this.router.navigate("combo_selection", { id: product.id }, opts.historyState);
                 return;
             }
             flyToCart(opts.target, opts.destination);
@@ -942,9 +942,9 @@ export class SelfOrder extends Reactive {
             this.addToCart(product, 1);
         }
         if (product.isConfigurable()) {
-            this.router.navigate("product", { id: product.id });
-        } else if (product.pos_optional_product_ids.length) {
-            this.router.navigate("optional_product", { id: product.id });
+            this.router.navigate("product", { id: product.id }, opts.historyState);
+        } else if (product.pos_optional_product_ids.length && !opts.historyState?.redirectPage) {
+            this.router.navigate("optional_product", { id: product.id }, opts.historyState);
         }
     }
 }
