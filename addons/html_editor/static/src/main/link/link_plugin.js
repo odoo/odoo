@@ -287,8 +287,15 @@ export class LinkPlugin extends Plugin {
             cleanZWChars(selection.textContent()) === cleanZWChars(node.innerText),
 
         /** Handlers */
-        beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
-        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        beforeinput_handlers: [
+            withSequence(5, this.onBeforeInputPrepareConvertToLink.bind(this)),
+            this.onBeforeInputFixFirefoxSelection.bind(this),
+            withSequence(20, this.onBeforeInputConvertToLink.bind(this)),
+        ],
+        input_handlers: [
+            this.onInputDeleteNormalizeLink.bind(this),
+            this.onInputConvertToLink.bind(this),
+        ],
         before_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
         delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
@@ -1084,36 +1091,17 @@ export class LinkPlugin extends Plugin {
         }
     }
 
-    onBeforeInput(ev) {
-        if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
-            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
-            if (nodeForSelectionRestore) {
-                this.dependencies.selection.setCursorStart(nodeForSelectionRestore);
-                this.dependencies.history.addStep();
-            }
+    onBeforeInputPrepareConvertToLink(ev) {
+        if (
+            ev.inputType === "insertParagraph" ||
+            ev.inputType === "insertLineBreak" ||
+            (ev.inputType === "insertText" && ev.data === " ")
+        ) {
+            this.convertToLink = this.prepareConvertToLink();
         }
-        if (ev.inputType === "insertText" && ev.data === " ") {
-            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
-            if (nodeForSelectionRestore) {
-                // Since we manually insert a space here, we will be adding a history step
-                // after link creation with selection at the end of the link and another
-                // after inserting the space. So first undo will remove the space, and the
-                // second will undo the link creation.
-                this.dependencies.selection.setSelection({
-                    anchorNode: nodeForSelectionRestore,
-                    anchorOffset: 0,
-                });
-                this.dependencies.history.addStep();
-                nodeForSelectionRestore.textContent =
-                    "\u00A0" + nodeForSelectionRestore.textContent;
-                this.dependencies.selection.setSelection({
-                    anchorNode: nodeForSelectionRestore,
-                    anchorOffset: 1,
-                });
-                this.dependencies.history.addStep();
-                ev.preventDefault();
-            }
-        }
+    }
+
+    onBeforeInputFixFirefoxSelection(ev) {
         // Firefox: avoid corrupted selection inside link.
         const selection = this.document.getSelection();
         if (
@@ -1128,6 +1116,26 @@ export class LinkPlugin extends Plugin {
             selection.collapse(selection.anchorNode, offset);
         }
         this.updateCurrentLinkSyncState();
+    }
+
+    onBeforeInputConvertToLink(ev) {
+        if (this.convertToLink) {
+            if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
+                this.convertToLink();
+                this.dependencies.history.addStep();
+                delete this.convertToLink;
+            }
+        }
+    }
+
+    onInputConvertToLink(ev) {
+        if (this.convertToLink) {
+            if (ev.inputType === "insertText" && ev.data === " ") {
+                this.convertToLink();
+                this.dependencies.history.addStep();
+                delete this.convertToLink;
+            }
+        }
     }
 
     onInputDeleteNormalizeLink() {
@@ -1170,8 +1178,23 @@ export class LinkPlugin extends Plugin {
     /**
      * Inserts a link in the editor. Called after pressing space or (shif +) enter.
      * Performs a regex check to determine if the url has correct syntax.
+     * TODO Delete in master: kept for stable
      */
     handleAutomaticLinkInsertion() {
+        const convertToLink = this.prepareConvertToLink();
+        if (convertToLink) {
+            return convertToLink();
+        }
+    }
+
+    /**
+     * If a link must be inserted after pressing space or (shift +) enter,
+     * returns information that will be needed to insert the link.
+     * Performs a regex check to determine if the url has correct syntax.
+     *
+     * @returns {Function} that performs the link conversion
+     */
+    prepareConvertToLink() {
         let selection = this.dependencies.selection.getEditableSelection();
         if (
             isHtmlContentSupported(selection) &&
@@ -1199,15 +1222,19 @@ export class LinkPlugin extends Plugin {
                     startOffset,
                     startOffset + match[0].length
                 );
-                const link = this.createLink(url, text);
                 // split the text node and replace the url text with the link
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
-                selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
-                if (link.getAttribute("href") === link.textContent) {
-                    this.newlyInsertedLinks.add(link);
-                }
-                return nodeForSelectionRestore;
+                const link = this.createLink(url, text);
+                return () => {
+                    textNodeToReplace.splitText(match[0].length); // this will keep the space (that will have been added in the meantime)
+                    textNodeToReplace.parentNode.replaceChild(link, textNodeToReplace);
+                    if (link.getAttribute("href") === link.textContent) {
+                        this.newlyInsertedLinks.add(link);
+                    }
+                    // TODO Remove in master: kept for stable
+                    return nodeForSelectionRestore;
+                };
             }
         }
     }
