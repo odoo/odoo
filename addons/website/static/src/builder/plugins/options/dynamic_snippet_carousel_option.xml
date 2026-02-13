@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.DynamicSnippetCarouselOption" t-inherit="website.DynamicSnippetOption">
-    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+    <xpath expr="//BuilderRow[*[@id=&quot;'section_title_opt'&quot;]]" position="after">
         <BuilderRow label.translate="Arrow Position">
             <BuilderSelect>
                 <BuilderSelectItem classAction="''">Default</BuilderSelectItem>
@@ -16,7 +16,7 @@
 	        <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false" id="'speed_opt'"/>
 	    </BuilderRow>
         <BuilderRow label.translate="Scrolling Mode" t-if="numberOfRecords > 1">
-            <BuilderButtonGroup preview="false">
+            <BuilderButtonGroup id="'scroll_opt'" preview="false">
                 <BuilderButton classAction="''">All</BuilderButton>
                 <BuilderButton classAction="'o_carousel_multi_items'">Single</BuilderButton>
             </BuilderButtonGroup>

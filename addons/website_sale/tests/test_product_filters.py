@@ -302,7 +302,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
     def test_newest_products_filter(self):
         """Check the newest products filter.
 
-        When showing variants, the filter should return 16 variants with repeating templates.
+        When showing variants, the filter should return 24 variants with repeating templates.
         When hiding variants, the filter should return 16 templates, all unique.
 
         This filter is unique in that it's defined in `data/data.xml`, and hence can't be called
@@ -318,8 +318,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             with_variants = dyn_filter._prepare_values(search_domain=[])
             self.assertEqual(
                 len(with_variants),
-                16,
-                "When displaying newest variants, 16 records should be shown",
+                24,
+                "When displaying newest variants, 24 records should be shown",
             )
             self.assertLess(
                 len({p['product_template_id'] for p in with_variants}),

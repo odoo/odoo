@@ -91,8 +91,8 @@ class WebsiteSnippetFilter(models.Model):
         res_id = options.get('res_id')
         # The "limit" field is there to prevent loading an arbitrary number of
         # records asked by the client side. This here makes sure you can always
-        # load at least 16 records as it is what the editor allows.
-        max_limit = max(self.limit, 16)
+        # load at least 24 records as it is what the editor allows.
+        max_limit = max(self.limit, 24)
         limit = limit and min(limit, max_limit) or max_limit
         single_record_filter = limit == 1 and model_name and res_id
 

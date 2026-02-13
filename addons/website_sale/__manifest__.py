@@ -114,6 +114,7 @@
             'website_sale/static/src/scss/website_sale_wishlist.options.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml',
+            'website_sale/static/src/snippets/s_dynamic_snippet_products/000.xml',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
 

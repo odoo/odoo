@@ -4,6 +4,15 @@ import { registry } from "@web/core/registry";
 export class DynamicSnippetProducts extends DynamicSnippetCarousel {
     static selector = ".s_dynamic_snippet_products";
 
+    setup() {
+        super.setup();
+        this.el.classList.add("o_carousel_multi_items"); // force single mode
+        const orientation = this.el.dataset.setOrientation || "carousel";
+        this.templateKey = orientation === "grid"
+            ? "website_sale.s_dynamic_snippet.grid.layout"
+            : "website.s_dynamic_snippet.carousel";
+    }
+
     /**
      * Gets the category search domain
      */
@@ -90,6 +99,23 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
         )?.dataset?.productTemplateId);
         return Object.assign(super.getRpcParameters(...arguments), {
             productTemplateId: productTemplateId || undefined,
+        });
+    }
+
+    /**
+     * @override
+     */
+    getQWebRenderOptions() {
+        const dataset = this.el.dataset;
+
+        const numberOfGridColumns = parseInt(dataset.gridColumns) || 4;
+        const numberOfMobileColumns = parseInt(dataset.mobileColumns) || 1;
+        const gap = dataset.gridGap || "1rem";
+
+        return Object.assign(super.getQWebRenderOptions(...arguments), {
+            gridColumns: numberOfGridColumns,
+            mobileColumns: numberOfMobileColumns,
+            gridGap: gap,
         });
     }
 }
