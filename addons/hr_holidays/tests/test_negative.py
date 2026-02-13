@@ -91,3 +91,46 @@ class TestNegative(TestHrHolidaysCommon):
                 one_day_leave.with_user(self.user_hrmanager_id).write({
                     'date_to': datetime(2023, 10, 24),
                 })
+
+    def test_negative_allocation_not_allowed(self):
+        """Negative allocation should fail when leave type doesn't allow it."""
+        leave_type_no_negative = self.env['hr.leave.type'].create({
+            'name': 'No Negative Allowed',
+            'requires_allocation': True,
+            'company_id': self.company.id,
+            'allows_negative': False,
+        })
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.allocation'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': leave_type_no_negative.id,
+                'number_of_days': -3,
+            })
+
+    def test_negative_allocation_exceeds_limit_days(self):
+        """Negative allocation exceeding limit should fail."""
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.allocation'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': -6,  # exceeds max_allowed_negative of 5
+            })
+
+    def test_negative_allocation_exceeds_limit_hours(self):
+        """Negative allocation exceeding limit should fail (hours)."""
+        leave_type_hours = self.env['hr.leave.type'].create({
+            'name': 'Negative Hours',
+            'requires_allocation': True,
+            'company_id': self.company.id,
+            'allows_negative': True,
+            'max_allowed_negative': 10,
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+        # hours_per_day is 8, so -2 days = -16 hours (exceeds limit of 10)
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.allocation'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': leave_type_hours.id,
+                'number_of_days': -2,
+            })
