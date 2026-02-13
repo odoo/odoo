@@ -14,26 +14,34 @@ patch(ProductCard.prototype, {
     get totalFutureSlots() {
         return (
             this.props.product.event_id?.event_slot_ids?.filter(
-                (slot) => slot.start_datetime > DateTime.now()
+                (slot) =>
+                    slot.start_datetime > DateTime.now() &&
+                    (!slot.event_id.seats_limited || slot.seats_available)
             )?.length || 0
         );
     },
-    get totalTicketSeats() {
+    get totalAvailableSeats() {
         const event = this.props.product.event_id;
         const eventTickets = event?.event_ticket_ids;
+        const hasUnlimitedTickets = eventTickets?.some((ticket) => ticket.seats_max === 0);
+        const ticketsSeatsAvailable = eventTickets?.reduce(
+            (acc, ticket) => acc + ticket.seats_available,
+            0
+        );
 
-        if (!eventTickets?.length) {
+        // Event = unlimited seats, Tickets = total is unlimited
+        if (!eventTickets?.length || (!event.seats_limited && hasUnlimitedTickets)) {
             return 0;
         }
-        if (eventTickets?.some((ticket) => ticket.seats_max === 0)) {
-            if (!event.seats_limited) {
-                return 0;
-            }
-            return event.seats_available > 0 ? event.seats_available : -1;
+        // Event = limited seats, Tickets = total is unlimited
+        if (event.seats_limited && hasUnlimitedTickets) {
+            return event.seats_available || -1;
         }
-        if (event.seats_limited && !event.seats_max) {
-            return -1;
+        // Event = unlimited seats, Tickets = total is limited
+        if (!event.seats_limited && !hasUnlimitedTickets) {
+            return ticketsSeatsAvailable || -1;
         }
-        return eventTickets.reduce((acc, ticket) => acc + ticket.seats_available, 0) || -1;
+        // Event = limited seats, Tickets = total is limited
+        return Math.min(event.seats_available, ticketsSeatsAvailable) || -1;
     },
 });

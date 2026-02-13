@@ -127,8 +127,10 @@ patch(ProductScreen.prototype, {
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
                 if (ticket.seats_max === 0) {
-                    acc[ticket.id] = event.seats_limited ? event.seats_available : "unlimited";
+                    // Ticket = unlimited seats
+                    acc[ticket.id] = "unlimited";
                 } else {
+                    // Ticket = limited seats
                     acc[ticket.id] = ticket.seats_available;
                 }
                 return acc;
