@@ -85,7 +85,7 @@ test("should show bold button highlighted after applying format when selection i
     await contains(".btn[name='bold']").click();
 
     expect(".btn[name='bold']").toHaveClass("active");
-    expect(getContent(el)).toBe(`<p>te<strong data-oe-zws-empty-inline="">[]\u200B</strong>st</p>`);
+    expect(getContent(el)).toBe(`<p>te<strong data-oe-zws-empty-inline="">\u200B[]</strong>st</p>`);
 });
 
 test("toolbar closes when selection leaves editor", async () => {
