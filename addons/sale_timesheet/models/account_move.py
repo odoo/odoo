@@ -23,6 +23,7 @@ class AccountMove(models.Model):
     timesheet_total_duration = fields.Integer("Timesheet Total Duration",
         compute='_compute_timesheet_total_duration', compute_sudo=True,
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+    display_timesheet_portal_link = fields.Boolean(compute='_compute_display_timesheet_portal_link')
 
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
@@ -55,6 +56,16 @@ class AccountMove(models.Model):
         mapped_data = dict(timesheet_data)
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice, 0)
+
+    @api.depends('partner_id.user_ids')
+    def _compute_display_timesheet_portal_link(self):
+        signup_invitation_scope = self.env['res.users']._get_signup_invitation_scope()
+        for invoice in self:
+            invoice.display_timesheet_portal_link = (
+                invoice.timesheet_count and (
+                    signup_invitation_scope == 'b2c' or any(user.share for user in self.partner_id.user_ids)
+                )
+            )
 
     def action_view_timesheet(self):
         self.ensure_one()
