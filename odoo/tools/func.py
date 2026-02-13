@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import functools
 import typing
+import warnings
 from collections.abc import Callable  # noqa: TC003
 from inspect import Parameter, getsourcefile, signature
 
@@ -12,6 +13,7 @@ __all__ = [
     'lazy',
     'lazy_classproperty',
     'reset_cached_properties',
+    'deprecated',
 ]
 
 
@@ -237,3 +239,39 @@ class lazy:
     def __aenter__(self): return self._value.__aenter__()
     def __aexit__(self, exc_type, exc_value, traceback):
         return self._value.__aexit__(exc_type, exc_value, traceback)
+
+
+try:
+    # available since python 3.13
+    from warnings import deprecated
+except ImportError:
+    # simplified version
+    class deprecated:
+        def __init__(
+            self,
+            message: str,
+            /,
+            *,
+            category: type[Warning] | None = DeprecationWarning,
+            stacklevel: int = 1,
+        ) -> None:
+            self.message = message
+            self.category = category
+            self.stacklevel = stacklevel
+
+        def __call__(self, obj, /):
+            message = self.message
+            category = self.category
+            stacklevel = self.stacklevel
+            if category is None:
+                obj.__deprecated__ = message
+                return obj
+            if callable(obj):
+                @functools.wraps(obj)
+                def wrapper(*args, **kwargs):
+                    warnings.warn(message, category=category, stacklevel=stacklevel + 1)
+                    return obj(*args, **kwargs)
+
+                obj.__deprecated__ = wrapper.__deprecated__ = message
+                return wrapper
+            raise TypeError(f"@deprecated decorator cannot be applied to {obj!r}")
