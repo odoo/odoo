@@ -614,9 +614,7 @@ class HrAttendance(models.Model):
                 previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
 
                 expected_worked_hours = sum(
-                    att.employee_id.resource_calendar_id.attendance_ids.filtered(
-                        lambda a: a.dayofweek == str(check_in_datetime.weekday())
-                    ).mapped("duration_hours")
+                    att.employee_id.resource_calendar_id.get_attendances(check_in_datetime).mapped("duration_hours")
                 )
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
