@@ -609,6 +609,17 @@ class MrpWorkcenterProductivity(models.Model):
                 raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
             underperformance_timers.write({'loss_id': underperformance_type.id})
 
+    # In the Enterprise function, this should be the code used.
+    # Since it should also check that the employee should have a hourly cost and not just set it without checking it.
+    # Causing the employee cost to be 0 instead of the workcenter price, please fix in Enterprise.
+    @api.depends("employee_id.hourly_cost")
+    def _compute_employee_cost(self):
+        for time in self:
+            time.employee_cost = (
+                time.employee_id.hourly_cost
+                if time.employee_id and time.employee_id.hourly_cost > 0
+                else time.workcenter_id.employee_costs_hour
+            )
 
 class MrpWorkcenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
