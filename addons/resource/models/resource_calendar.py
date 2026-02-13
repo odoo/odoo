@@ -588,6 +588,8 @@ class ResourceCalendar(models.Model):
         for resource in resources_list:
             if resource and resource._is_fully_flexible():
                 continue
+            elif resource and resource._is_flexible():
+                resources_work_intervals[resource.id] = Intervals([(start_dt, end_dt, self.env['resource.calendar'])]) - self._leave_intervals(start_dt, end_dt, resource, domain, tz)
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end
             work_intervals = [start_dt] + list(chain.from_iterable(work_intervals)) + [end_dt]
