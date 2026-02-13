@@ -26,11 +26,11 @@
                     <tbody>
                         <tr>
                             <td name="td_mrp_bom" t-out="data['name']"/>
-                            <td class="text-end" t-out="data['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
+                            <td class="text-end" t-out="data['quantity']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                             <td class="text-start" groups="uom.group_uom" t-out="data['uom_name']"/>
                             <td t-if="data['forecast_mode']" class="text-center">
-                                <t t-out="data['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
-                                <t t-out="data['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
+                                <t t-out="data['quantity_available']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> /
+                                <t t-out="data['quantity_on_hand']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                             </td>
                             <td t-if="data['forecast_mode']" class="text-center">
                                 <t t-if="data['status']">
@@ -105,13 +105,13 @@
                 </td>
                 <td class="text-end">
                     <t t-if="l['type'] == 'operation'" t-out="l['quantity']" t-options='{"widget": "float_time"}'/>
-                    <t t-else="" t-out="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
+                    <t t-else="" t-out="l['quantity']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                 </td>
                 <td class="text-start" groups="uom.group_uom" t-out="l['uom']"/>
                 <td t-if="data['forecast_mode']" class="text-center">
                     <t t-if="l.get('is_storable', False)">
-                        <t t-out="l['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
-                        <t t-out="l['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
+                        <t t-out="l['quantity_available']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> /
+                        <t t-out="l['quantity_on_hand']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                     </t>
                 </td>
                 <td t-if="data['forecast_mode']" class="text-center">

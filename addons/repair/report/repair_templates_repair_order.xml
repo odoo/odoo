@@ -55,7 +55,7 @@
                                     <p t-if="line.repair_line_type == 'recycle'">(<i>Recycle</i>) <span t-field="line.product_id" data-oe-demo="Product C"/></p>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="line.product_uom_qty">5</span>
+                                    <span t-field="line.product_uom_qty" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}">5</span>
                                     <span groups="uom.group_uom" t-field="line.uom_id.name">Units</span>
                                 </td>
                             </tr>

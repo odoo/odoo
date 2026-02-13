@@ -149,17 +149,17 @@
             <td t-if="data['show_replenishments']" class="text-center" t-out="line.get('formatted_state', '')"/>
             <td t-attf-class="text-end {{ data['get_color'](line.get('quantity_decorator')) }}">
                 <t t-if="line.get('model') == 'mrp.workorder'" t-out="line['quantity']" t-options="{'widget': 'float_time'}"/>
-                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
             </td>
             <td t-if="data['show_uom']" class="text-start" t-out="line['uom_name']"/>
             <td t-if="data['show_availabilities']" class="text-end">
                 <t t-if="line.get('quantity_on_hand', False) is not False">
-                    <t t-out="line['quantity_free']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/> /
-                    <t t-out="line['quantity_on_hand']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                    <t t-out="line['quantity_free']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> /
+                    <t t-out="line['quantity_on_hand']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                 </t>
             </td>
             <td t-if="data['show_availabilities']" class="text-end">
-                <t t-if="line.get('quantity_reserved', False) is not False" t-out="line['quantity_reserved']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                <t t-if="line.get('quantity_reserved', False) is not False" t-out="line['quantity_reserved']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
             </td>
             <td t-if="data['show_receipts']" class="text-end">
                 <span t-if="line.get('receipt')" t-att-class="data['get_color'](line['receipt'].get('decorator'))" t-out="line['receipt']['display']"/>
@@ -209,7 +209,7 @@
                 </td>
                 <td t-if="data['show_replenishments']" class="text-center"/>
                 <td t-attf-class="text-end {{ data['get_color'](summary.get('quantity_decorator')) }}">
-                    <t t-if="summary.get('done')" t-out="summary['quantity']" t-options="{'widget': 'float', 'precision': operations[0].get('uom_precision', 0)}"/>
+                    <t t-if="summary.get('done')" t-out="summary['quantity']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                     <t t-else="" t-out="summary['quantity']" t-options="{'widget': 'float_time'}"/>
                 </td>
                 <td t-if="data['show_uom']" class="text-start" t-out="summary['uom_name']"/>
