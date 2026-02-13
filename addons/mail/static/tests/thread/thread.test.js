@@ -5,19 +5,20 @@ import {
     dragenterFiles,
     insertText,
     isInViewportOf,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     scroll,
     start,
     startServer,
     triggerEvents,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
-import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -587,9 +588,7 @@ test("chat window header should not have unread counter for non-channel thread",
 test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    onRpcBefore("/discuss/channel/messages", (args) =>
-        expect.step(`load messages - ${args["channel_id"]}`)
-    );
+    listenStoreFetch("/discuss/channel/messages", { logParams: ["/discuss/channel/messages"] });
     await start();
     pyEnv["mail.message"].create([
         {
@@ -605,15 +604,24 @@ test("Thread messages are only loaded once", async () => {
     ]);
     await openDiscuss();
     await click("button:text('General')");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelIds[0], fetch_params: { limit: 60, around: 0 } },
+        ],
+    ]);
     await contains(".o-mail-Message-content:text('Message on channel1')");
     await click("button:text('Sales')");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelIds[1], fetch_params: { limit: 60, around: 0 } },
+        ],
+    ]);
     await contains(".o-mail-Message-content:text('Message on channel2')");
     await click("button:text('General')");
+    await waitStoreFetch();
     await contains(".o-mail-Message-content:text('Message on channel1')");
-    await expect.waitForSteps([
-        `load messages - ${channelIds[0]}`,
-        `load messages - ${channelIds[1]}`,
-    ]);
 });
 
 test.tags("focus required");
@@ -767,13 +775,18 @@ test("can be marked as read while loading", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const loadDeferred = new Deferred();
-    onRpc("/discuss/channel/messages", () => loadDeferred);
+    const loadDeferred = Promise.withResolvers();
+    listenStoreFetch("/discuss/channel/messages", {
+        async onRpc() {
+            await loadDeferred.promise;
+        },
+    });
     await start();
     await openDiscuss();
     await contains(".o-discuss-badge:text('1')");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('Demo')");
     loadDeferred.resolve();
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-discuss-badge", { count: 0 });
 });
 

@@ -16,8 +16,8 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
-import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { queryFirst } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
@@ -46,15 +46,22 @@ test("new message from operator displays unread counter", async () => {
         })
     );
     setupChatHub({ opened: [channelId] });
-    onRpc("/discuss/channel/messages", () => expect.step("/discuss/channel/message"));
     const userId = serverState.userId;
-    listenStoreFetch(["init_messaging", "init_livechat", "discuss.channel"]);
+    listenStoreFetch([
+        "init_messaging",
+        "init_livechat",
+        "discuss.channel",
+        "/discuss/channel/messages",
+    ]);
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
-    await waitStoreFetch(["init_messaging", "init_livechat", "discuss.channel"], {
-        stepsAfter: ["/discuss/channel/message"],
-    });
+    await waitStoreFetch([
+        "init_messaging",
+        "init_livechat",
+        "discuss.channel",
+        "/discuss/channel/messages",
+    ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>
         rpc("/mail/message/post", {

@@ -66,6 +66,15 @@ class DiscussChannelWebclientController(WebclientController):
                 [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
             ):
                 member.is_favorite = params["is_favorite"]
+        if name == "/discuss/channel/messages":
+            channel = request.env["discuss.channel"].search([("id", "=", params["channel_id"])])
+            if channel:
+                messages = self._resolve_messages(
+                    store,
+                    thread=channel,
+                    fetch_params=params.get("fetch_params"),
+                )
+                messages.set_message_done()
         resolve_channel = request.env["discuss.channel"]
         if name == "/discuss/channel/pin":
             if member := request.env["discuss.channel.member"].search_fetch(
@@ -88,9 +97,10 @@ class DiscussChannelWebclientController(WebclientController):
                 params.get("default_display_mode", False),
                 params.get("name", ""),
             )
-        store.resolve_data_request(
-            lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
-        )
+        if resolve_channel:
+            store.resolve_data_request(
+                lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
+            )
 
     @classmethod
     def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
@@ -126,19 +136,6 @@ class ChannelController(http.Controller):
         if not channel or not data:
             raise NotFound()
         channel.write({"image_128": data})
-
-    @http.route("/discuss/channel/messages", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_channel_messages(self, channel_id, fetch_params=None):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
-            raise NotFound()
-        res = request.env["mail.message"]._message_fetch(domain=None, thread=channel, **(fetch_params or {}))
-        messages = res.pop("messages")
-        if not request.env.user._is_public():
-            messages.set_message_done()
-        store = Store().add(messages, "_store_message_fields")
-        return {**res, "data": store.get_result(), "messages": messages.ids}
 
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context

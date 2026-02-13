@@ -79,4 +79,4 @@ class TestInboxPerformance(HttpCase, MailCommon):
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
         with self.assertQueryCount(42):
-            self.make_jsonrpc_request("/mail/inbox/messages")
+            self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})

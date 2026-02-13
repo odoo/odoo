@@ -32,7 +32,9 @@ test("can create a new channel", async () => {
             expect.step(`${route} - ${JSON.stringify(args)}`);
         }
     });
-    listenStoreFetch(undefined, { logParams: ["/discuss/create_channel"] });
+    listenStoreFetch(undefined, {
+        logParams: ["/discuss/create_channel", "/discuss/channel/messages"],
+    });
     await start();
     await openDiscuss();
     await waitStoreFetch([
@@ -57,18 +59,27 @@ test("can create a new channel", async () => {
         ["channel_id", "=", channelId],
         ["partner_id", "=", serverState.partnerId],
     ]);
-    await waitStoreFetch([["/discuss/create_channel", { name: "abc" }]], {
-        stepsAfter: [
-            `/discuss/channel/messages - ${JSON.stringify({
-                channel_id: channelId,
-                fetch_params: { limit: 60, around: selfMember.new_message_separator },
-            })}`,
-            `/discuss/channel/members - ${JSON.stringify({
-                channel_id: channelId,
-                known_member_ids: [selfMember.id],
-            })}`,
+    await waitStoreFetch(
+        [
+            ["/discuss/create_channel", { name: "abc" }],
+            [
+                "/discuss/channel/messages",
+                {
+                    channel_id: channelId,
+                    fetch_params: { limit: 60, around: selfMember.new_message_separator },
+                },
+            ],
         ],
-    });
+        {
+            ignoreOrder: true,
+            stepsAfter: [
+                `/discuss/channel/members - ${JSON.stringify({
+                    channel_id: channelId,
+                    known_member_ids: [selfMember.id],
+                })}`,
+            ],
+        }
+    );
 });
 
 test("can make a DM chat", async () => {
@@ -93,7 +104,7 @@ test("can make a DM chat", async () => {
         }
     });
     listenStoreFetch(undefined, {
-        logParams: ["/discuss/get_or_create_chat"],
+        logParams: ["/discuss/get_or_create_chat", "/discuss/channel/messages"],
     });
     await start();
     await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
@@ -109,15 +120,18 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')");
     await contains(".o-mail-Message", { count: 0 });
     const [channelId] = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
-    await waitStoreFetch([["/discuss/get_or_create_chat", { partners_to: [partnerId] }]], {
-        stepsAfter: [
-            `/discuss/channel/messages - ${JSON.stringify({
-                channel_id: channelId,
-                fetch_params: { limit: 60, around: 0 },
-            })}`,
+    await waitStoreFetch(
+        [
+            ["/discuss/get_or_create_chat", { partners_to: [partnerId] }],
+            [
+                "/discuss/channel/messages",
+                { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
+            ],
         ],
-        stepsBefore: [`/discuss/search - {"term":""}`, `/discuss/search - {"term":"mario"}`],
-    });
+        {
+            stepsBefore: [`/discuss/search - {"term":""}`, `/discuss/search - {"term":"mario"}`],
+        }
+    );
 });
 
 test("can create a group chat conversation", async () => {

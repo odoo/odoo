@@ -396,41 +396,43 @@ export class Thread extends Record {
             this.isLoaded = true;
             return [];
         }
-        let res;
         try {
-            res = await this.fetchMessagesData({ after, around, before });
+            const { messages } = await this.fetchMessagesData({ after, around, before });
             this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
+            return messages.reverse();
         } catch (e) {
             this.hasLoadingFailed = true;
             this.hasLoadingFailedError = e;
+            throw e;
+        } finally {
             this.isLoaded = true;
             this.status = "ready";
-            throw e;
         }
-        this.store.insert(res.data);
-        const msgs = this.store["mail.message"].insert(res.messages.reverse());
-        this.isLoaded = true;
-        this.status = "ready";
-        return msgs;
     }
 
     /**
      * @param {{after: Number, before: Number}}
-     * @returns {Promise<{data: any, messages: number[]}>}
+     * @returns {Promise<{messages: number[]}>}
      */
     async fetchMessagesData({ after, around, before } = {}) {
         // ordered messages received: newest to oldest
-        return await rpc(this.getFetchRoute(), {
-            ...this.getFetchParams(),
-            fetch_params: {
-                limit:
-                    !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
-                after,
-                around,
-                before,
+        return await this.store.fetchStoreData(
+            this.getFetchRoute(),
+            {
+                ...this.getFetchParams(),
+                fetch_params: {
+                    limit:
+                        !around && around !== 0
+                            ? this.store.FETCH_LIMIT
+                            : this.store.FETCH_LIMIT * 2,
+                    after,
+                    around,
+                    before,
+                },
             },
-        });
+            { readonly: this.model === "mail.box", requestData: true }
+        );
     }
 
     /** @param {"older"|"newer"} epoch */

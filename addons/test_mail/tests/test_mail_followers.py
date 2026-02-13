@@ -981,9 +981,9 @@ class UnfollowLinkTest(MailCommon, HttpCase):
         )
         # The user doesn't follow the record
         self.authenticate(self.env.user.login, self.env.user.login)
-        message_data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
-        self.assertFalse(message_data["mail.thread"][0]["selfFollower"])
-        self.assertFalse(message_data.get("mail.followers"), "Should not have void followers data")
+        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
+        self.assertFalse(data["mail.thread"][0]["selfFollower"])
+        self.assertFalse(data.get("mail.followers"), "Should not have void followers data")
         self.assertFalse(test_record.with_user(self.user_employee).message_is_follower)
 
         # The user follows the record
@@ -991,15 +991,15 @@ class UnfollowLinkTest(MailCommon, HttpCase):
         follower = test_record.message_follower_ids.filtered(
             lambda follower: follower.partner_id == self.env.user.partner_id
         )
-        message_data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
-        self.assertEqual(message_data["mail.followers"], [
+        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
+        self.assertEqual(data["mail.followers"], [
             {
                 "id": follower.id,
                 "is_active": True,
                 "partner_id": self.env.user.partner_id.id,
             },
         ])
-        self.assertEqual(message_data["mail.thread"][0]["selfFollower"], follower.id, "Should have follower ID")
+        self.assertEqual(data["mail.thread"][0]["selfFollower"], follower.id, "Should have follower ID")
 
     @mute_logger('odoo.addons.base.models', 'odoo.addons.mail.controllers.mail', 'odoo.http', 'odoo.models')
     def test_notification_email_unfollow_link(self):

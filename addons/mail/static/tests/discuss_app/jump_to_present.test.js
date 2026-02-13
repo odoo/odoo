@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, press, queryFirst, tick } from "@odoo/hoot-dom";
+import { animationFrame, press, queryFirst, tick } from "@odoo/hoot-dom";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import {
@@ -9,13 +9,14 @@ import {
     defineMailModels,
     insertText,
     isInViewportOf,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     patchUiSize,
     scroll,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 
@@ -187,14 +188,32 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
     pyEnv["discuss.channel.member"].write([selfMember.id], {
         new_message_separator: newestMessageId + 1,
     });
-    onRpcBefore("/discuss/channel/messages", tick); // small delay
+    listenStoreFetch("/discuss/channel/messages", {
+        logParams: ["/discuss/channel/messages"],
+        async onRpc() {
+            await tick();
+        },
+    });
     await start();
     await openDiscuss(channelId);
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, around: 103 } },
+        ],
+    ]);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, around: 1 } },
+        ],
+        ["/discuss/channel/messages", { channel_id: channelId, fetch_params: { limit: 30 } }],
+    ]);
 });
 
 test("Post message when seeing old message should jump to present", async () => {
@@ -264,24 +283,26 @@ test("when triggering jump to present, keeps showing old messages until recent o
             pinned_at: i === 0 ? "2020-02-12 08:30:00" : undefined,
         });
     }
-    let slowMessageFetchDeferred;
-    onRpcBefore("/discuss/channel/messages", async () => {
-        expect.step("/discuss/channel/messages");
-        await slowMessageFetchDeferred;
+    let slowMessageFetchDeferred = Promise.withResolvers();
+    slowMessageFetchDeferred.resolve();
+    listenStoreFetch("/discuss/channel/messages", {
+        async onRpc() {
+            await slowMessageFetchDeferred.promise;
+        },
     });
     await start();
     await openDiscuss(channelId);
-    await expect.waitForSteps(["/discuss/channel/messages"]);
+    await waitStoreFetch("/discuss/channel/messages");
     await click("[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel a[role='button']:text('Jump')");
     await contains(".o-mail-Thread .o-mail-Message:has(:text('first-message'))");
     await animationFrame();
-    slowMessageFetchDeferred = new Deferred();
+    slowMessageFetchDeferred = Promise.withResolvers();
     await click("[title='Jump to Present']");
     await animationFrame();
-    await expect.waitForSteps(["/discuss/channel/messages"]);
     await contains(".o-mail-Thread .o-mail-Message:has(:text('first-message'))");
     slowMessageFetchDeferred.resolve();
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Thread .o-mail-Message:has(:text('first-message'))", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
