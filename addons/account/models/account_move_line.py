@@ -813,7 +813,10 @@ class AccountMoveLine(models.Model):
                     # Ignore date and display_type filters as they do not impact the cumulated balance
                     if (
                         (field == 'date' and operator in ('>=', '<=', '=', '>', '<'))
-                        or (field == 'display_type' and operator == 'not in' and value == ('line_section', 'line_subsection', 'line_note'))
+                        or (
+                            field == 'display_type' and operator == 'not in' and isinstance(value, (set, list, tuple))
+                            and len(set(value) - {'line_section', 'line_subsection', 'line_note'}) == 0
+                        )
                     ):
                         continue
                 # Ignore AND operators
