@@ -125,6 +125,7 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     get popoverProps() {
         const props = { ...this.props };
         delete props.isEditable;
+        delete props.relation;
         return props;
     }
 
