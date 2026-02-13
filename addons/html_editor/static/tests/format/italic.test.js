@@ -103,7 +103,7 @@ test("should get ready to type in italic", async () => {
     await testEditor({
         contentBefore: `<p>ab[]cd</p>`,
         stepFunction: italic,
-        contentAfterEdit: `<p>ab<em data-oe-zws-empty-inline="">[]\u200B</em>cd</p>`,
+        contentAfterEdit: `<p>ab<em data-oe-zws-empty-inline="">\u200B[]</em>cd</p>`,
         contentAfter: `<p>ab[]cd</p>`,
     });
 });
@@ -112,7 +112,7 @@ test("should get ready to type in not italic", async () => {
     await testEditor({
         contentBefore: `<p><em>ab[]cd</em></p>`,
         stepFunction: italic,
-        contentAfterEdit: `<p><em>ab</em><span data-oe-zws-empty-inline="">[]\u200B</span><em>cd</em></p>`,
+        contentAfterEdit: `<p><em>ab</em><span data-oe-zws-empty-inline="">\u200B[]</span><em>cd</em></p>`,
         contentAfter: `<p><em>ab[]cd</em></p>`,
     });
 });
@@ -130,7 +130,7 @@ test("should remove empty italic tag when changing selection", async () => {
 
     italic(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>ab<em data-oe-zws-empty-inline="">[]\u200B</em>cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<em data-oe-zws-empty-inline="">\u200B[]</em>cd</p>`);
 
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
@@ -192,7 +192,7 @@ test("should not add history step for italic on collapsed selection", async () =
     // step. The empty inline tag is temporary: auto-cleaned if unused. We want
     // to avoid having a phantom step in the history.
     await press(["ctrl", "i"]);
-    expect(getContent(el)).toBe(`<p>abcd<em data-oe-zws-empty-inline="">[]\u200B</em></p>`);
+    expect(getContent(el)).toBe(`<p>abcd<em data-oe-zws-empty-inline="">\u200B[]</em></p>`);
 
     await insertText(editor, "A");
     expect(getContent(el)).toBe(`<p>abcd<em>A[]</em></p>`);
