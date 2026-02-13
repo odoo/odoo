@@ -104,10 +104,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                     "channel_member_id",
                     makeKwArgs({
                         fields: ["channel"].concat(
-                            this.env["discuss.channel.member"]._to_store_persona([
-                                "name",
-                                ...this.env["res.partner"]._get_store_im_status_fields(),
-                            ])
+                            this.env["discuss.channel.member"]._to_store_persona(["name"])
                         ),
                     })
                 ),

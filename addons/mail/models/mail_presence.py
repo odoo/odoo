@@ -97,14 +97,14 @@ class MailPresence(models.Model):
         :param im_status: 'online', 'away' or 'offline'
         """
         for presence in self:
-            target = bus_target or presence.guest_id or presence.user_id.partner_id
+            target = bus_target or presence.guest_id or presence.user_id
             target._bus_send(
                 "bus.bus/im_status_updated",
                 {
                     "presence_status": im_status or presence.status,
                     "im_status": target.im_status,
                     "guest_id": presence.guest_id.id,
-                    "partner_id": presence.user_id.partner_id.id,
+                    "user_id": presence.user_id.id,
                 },
                 subchannel="presence" if not bus_target else None,
             )

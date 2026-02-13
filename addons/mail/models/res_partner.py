@@ -27,9 +27,6 @@ class ResPartner(models.Model):
     # tracked field used for chatter logging purposes
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
-    # sudo: res.partner - can access presence of accessible partner
-    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
-    offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
@@ -37,33 +34,6 @@ class ResPartner(models.Model):
         for partner in self:
             # replace any successive \n with a single comma
             partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
-
-    @api.depends("user_ids.manual_im_status", "user_ids.presence_ids.status")
-    def _compute_im_status(self):
-        for partner in self:
-            all_status = partner.user_ids.presence_ids.mapped(
-                lambda p: "offline" if p.status == "offline" else p.user_id.manual_im_status or p.status
-            )
-            partner.im_status = (
-                "online"
-                if "online" in all_status
-                else "away"
-                if "away" in all_status
-                else "busy"
-                if "busy" in all_status
-                else "offline"
-                if partner.user_ids
-                else "im_partner"
-            )
-            partner.offline_since = (
-                max(partner.user_ids.presence_ids.mapped("last_poll"), default=None)
-                if partner.im_status == "offline"
-                else None
-            )
-        odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
-        odoobot = self.env['res.partner'].browse(odoobot_id)
-        if odoobot in self:
-            odoobot.im_status = 'bot'
 
     # pseudo computes
 
@@ -236,15 +206,6 @@ class ResPartner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def _get_im_status_access_token(self):
-        """Return a scoped access token for the `im_status` field. The token is used in
-        `ir_websocket._prepare_subscribe_data` to grant access to presence channels.
-
-        :rtype: str
-        """
-        self.ensure_one()
-        return limited_field_access_token(self, "im_status", scope="mail.presence")
-
     def _get_mention_token(self):
         """Return a scoped limited access token that indicates the current partner
         can be mentioned in messages.
@@ -258,25 +219,20 @@ class ResPartner(models.Model):
         res.attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token())
         res.attr("write_date")
 
-    def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("im_status")
-        res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
-        res.one("main_user_id", "_store_im_status_fields")
-
     def _store_mention_fields(self, res: Store.FieldList):
         res.attr("mention_token", lambda p: p._get_mention_token())
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.extend(["name", "partner_share"])
         self._store_avatar_fields(res)
-        self._store_im_status_fields(res)
+        res.many("user_ids", "_store_im_status_fields")
         if res.is_for_internal_users():
             res.extend(["email", "phone", "tz"])
 
     def _store_partner_fields(self, res: Store.FieldList):
         res.extend(["active", "is_company", "name"])
         self._store_avatar_fields(res)
-        self._store_im_status_fields(res)
+        res.many("user_ids", "_store_im_status_fields", sudo=True)
         # sudo: to access portal user of another company in chatter
         res.one("main_user_id", "_store_main_user_fields", sudo=True)
         if res.is_for_internal_users():

@@ -402,20 +402,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "avatar_128_access_token": self.user_root.partner_id._get_avatar_128_access_token(),
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "im_status_access_token": self.user_root.partner_id._get_im_status_access_token(),
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
                     "tz": "Europe/Brussels",
+                    "user_ids": [],
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
                     "active": True,
                     "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
                     "id": self.users[0].partner_id.id,
-                    "im_status": 'online',
-                    "im_status_access_token": self.users[0].partner_id._get_im_status_access_token(),
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
                     "tz": "Europe/Brussels",
@@ -431,6 +428,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "id": self.users[0].id,
                     "employee_ids": [self.employees[0].id],
+                    "im_status": "online",
+                    "im_status_access_token": self.users[0]._get_im_status_access_token(),
                     "is_admin": False,
                     "is_livechat_manager": False,
                     "notification_type": "inbox",
@@ -1658,13 +1657,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "e.e@example.com",
                 "id": user.partner_id.id,
-                "im_status": "online",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
+                # "im_status": "online",
+                # "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "Ernest Employee",
                 "tz": "Europe/Brussels",
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1684,17 +1684,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "country_id": self.env.ref("base.in").id,
                 "id": user.partner_id.id,
-                "im_status": "offline",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
+                # "im_status": "offline",
+                # "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "is_public": False,
                 "main_user_id": user.id,
                 "name": "test1",
                 "mention_token": user.partner_id._get_mention_token(),
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
-                res["offline_since"] = False
                 res["user_livechat_username"] = False
                 res["email"] = user.email
             return res
@@ -1703,11 +1703,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 return {
                     "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                     "id": user.partner_id.id,
-                    "im_status": "offline",
-                    "im_status_access_token": user.partner_id._get_im_status_access_token(),
                     "name": "test2",
-                    "main_user_id": user.id,
                     "mention_token": user.partner_id._get_mention_token(),
+                    "user_ids": [user.id],
                     "write_date": fields.Datetime.to_string(user.partner_id.write_date),
                 }
             return {
@@ -1715,13 +1713,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "test2@example.com",
                 "id": user.partner_id.id,
-                "im_status": "offline",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test2",
                 "tz": False,
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[3]:
@@ -1730,13 +1727,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test3",
                 "tz": False,
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
         if user == self.users[12]:
@@ -1745,13 +1741,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test12",
                 "tz": False,
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[14]:
@@ -1760,13 +1755,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test14",
                 "tz": False,
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[15]:
@@ -1775,13 +1769,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
-                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test15",
                 "tz": False,
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.user_root:
@@ -1846,21 +1839,69 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _res_for_user(self, user, only_inviting=False):
         if user == self.users[0]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "online",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "share": False,
+            }
         if user == self.users[1]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "offline",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "offline_since": False,
+                "share": False,
+            }
         if user == self.users[2]:
             if only_inviting:
-                return {"id": user.id, "employee_ids": user.employee_ids.ids}
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+                return {
+                    "id": user.id,
+                    "employee_ids": user.employee_ids.ids,
+                    "im_status": "offline",
+                    "im_status_access_token": user._get_im_status_access_token(),
+                }
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "offline",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "share": False,
+            }
         if user == self.users[3]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "offline",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "share": False,
+            }
         if user == self.users[12]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "offline",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "share": False,
+            }
         if user == self.users[14]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "offline",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "share": False,
+            }
         if user == self.users[15]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {
+                "id": user.id,
+                "employee_ids": user.employee_ids.ids,
+                "im_status": "offline",
+                "im_status_access_token": user._get_im_status_access_token(),
+                "share": False,
+            }
         if user == self.user_root:
             return {"id": user.id, "share": False}
         return {}

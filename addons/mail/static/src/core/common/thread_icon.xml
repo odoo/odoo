@@ -17,10 +17,7 @@
         <t t-elif="channel?.showImStatus and channel?.channel_type?.includes('chat') and correspondent">
             <t name="chat">
                 <t name="chat_static">
-                    <ImStatus t-if="correspondent.im_status" className="class" member="correspondent" size="props.size" typing="props.typing"/>
-                    <div t-else="" class="d-flex rounded-circle bg-inherit">
-                        <i class="fa-fw" t-att="attr" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
-                    </div>
+                    <ImStatus className="class" member="correspondent" size="props.size" typing="props.typing"/>
                 </t>
             </t>
         </t>

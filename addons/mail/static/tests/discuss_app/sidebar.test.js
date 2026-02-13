@@ -361,10 +361,8 @@ test("sidebar: open channel and leave it", async () => {
 test.tags("focus required");
 test("chat - channel should count unread message", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        name: "Demo",
-        im_status: "offline",
-    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "offline" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
@@ -786,10 +784,8 @@ test("chat - states: the active category item should be visible even if the cate
 
 test("chat - avatar: should have correct avatar", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        name: "Demo",
-        im_status: "offline",
-    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "offline" });
     const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     pyEnv["discuss.channel"].create({
         channel_member_ids: [

@@ -464,8 +464,8 @@ test("chat window: TAB cycle with 3 open chat windows", async () => {
 test("chat window should open when receiving a new DM", async () => {
     mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "online", name: "DemoUser" });
-    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const partnerId = pyEnv["res.partner"].create({ name: "DemoUser" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({

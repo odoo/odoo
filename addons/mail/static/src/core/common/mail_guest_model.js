@@ -22,7 +22,7 @@ export class MailGuest extends Record {
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
-            (newStatus) => record.updateImStatus(newStatus),
+            (newStatus) => (record.im_status = newStatus),
             Store.IM_STATUS_DEBOUNCE_DELAY
         );
         return record;
@@ -61,8 +61,11 @@ export class MailGuest extends Record {
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
         onUpdate() {
-            if (this.eq(this.store.self_guest) && this.im_status === "offline" && this.id < 0) {
-                this.store.env.services.im_status.updateBusPresence();
+            if (this.im_status === "offline") {
+                if (this.eq(this.store.self_guest) && this.id < 0) {
+                    this.store.env.services.im_status.updateBusPresence();
+                }
+                this.offline_since = DateTime.now();
             }
         },
     });
@@ -103,13 +106,6 @@ export class MailGuest extends Record {
             guest_id: this.id,
             name,
         });
-    }
-
-    updateImStatus(newStatus) {
-        if (newStatus === "offline") {
-            this.offline_since = DateTime.now();
-        }
-        this.im_status = newStatus;
     }
 }
 

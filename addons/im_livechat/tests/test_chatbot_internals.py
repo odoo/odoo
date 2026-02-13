@@ -250,12 +250,10 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "avatar_128_access_token": self.chatbot_script.operator_partner_id._get_avatar_128_access_token(),
                     "country_id": False,
                     "id": self.chatbot_script.operator_partner_id.id,
-                    "im_status": "im_partner",
-                    "im_status_access_token": self.chatbot_script.operator_partner_id._get_im_status_access_token(),
                     "is_public": False,
-                    "main_user_id": False,
                     "mention_token": self.chatbot_script.operator_partner_id._get_mention_token(),
                     "name": "Testing Bot",
+                    "user_ids": [],
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(
                         self.chatbot_script.operator_partner_id.write_date

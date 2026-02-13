@@ -1,11 +1,5 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-import {
-    fields,
-    getKwArgs,
-    makeKwArgs,
-    serverState,
-    webModels,
-} from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, makeKwArgs, webModels } from "@web/../tests/web_test_helpers";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
@@ -189,19 +183,6 @@ export class ResPartner extends webModels.ResPartner {
         return store.get_result();
     }
 
-    compute_im_status(partner) {
-        if (partner.im_status) {
-            return partner.im_status;
-        }
-        if (partner.id === serverState.odoobotId) {
-            return "bot";
-        }
-        if (!partner.user_ids.length) {
-            return "im_partner";
-        }
-        return "offline";
-    }
-
     /* override */
     _compute_display_name() {
         super._compute_display_name();
@@ -330,7 +311,10 @@ export class ResPartner extends webModels.ResPartner {
             "active",
             "is_company",
             mailDataHelpers.Store.one("main_user_id", ["share"]),
-            ...this._get_store_im_status_fields(),
+            mailDataHelpers.Store.many(
+                "user_ids",
+                this.env["res.users"]._get_store_im_status_fields()
+            ),
         ];
     }
 
@@ -455,14 +439,10 @@ export class ResPartner extends webModels.ResPartner {
             "name",
             "phone",
             "tz",
-            ...this._get_store_im_status_fields(),
-        ];
-    }
-
-    _get_store_im_status_fields() {
-        return [
-            mailDataHelpers.Store.attr("im_status", (p) => this.compute_im_status(p)),
-            mailDataHelpers.Store.attr("im_status_access_token", (p) => p.id),
+            mailDataHelpers.Store.many(
+                "user_ids",
+                this.env["res.users"]._get_store_im_status_fields()
+            ),
         ];
     }
 }

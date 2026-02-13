@@ -21,7 +21,7 @@ class TestIrWebsocket(WebsocketCase):
         websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
         self.subscribe(
             websocket,
-            [f"odoo-presence-res.partner_{bob.partner_id.id}"],
+            [f"odoo-presence-res.users_{bob.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
         # offline => online
@@ -31,7 +31,7 @@ class TestIrWebsocket(WebsocketCase):
         self.assertEqual(message["type"], "bus.bus/im_status_updated")
         self.assertEqual(message["payload"]["im_status"], "online")
         self.assertEqual(message["payload"]["presence_status"], "online")
-        self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+        self.assertEqual(message["payload"]["user_id"], bob.id)
         # online => away
         away_timer_later = datetime.now() + timedelta(seconds=AWAY_TIMER + 1)
         with freeze_time(away_timer_later):
@@ -41,7 +41,7 @@ class TestIrWebsocket(WebsocketCase):
             self.assertEqual(message["type"], "bus.bus/im_status_updated")
             self.assertEqual(message["payload"]["im_status"], "away")
             self.assertEqual(message["payload"]["presence_status"], "away")
-            self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+            self.assertEqual(message["payload"]["user_id"], bob.id)
         # away => online
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
@@ -51,7 +51,7 @@ class TestIrWebsocket(WebsocketCase):
             self.assertEqual(message["type"], "bus.bus/im_status_updated")
             self.assertEqual(message["payload"]["im_status"], "online")
             self.assertEqual(message["payload"]["presence_status"], "online")
-            self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+            self.assertEqual(message["payload"]["user_id"], bob.id)
         # online => online, nothing happens
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
@@ -74,7 +74,7 @@ class TestIrWebsocket(WebsocketCase):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.subscribe(
             websocket,
-            [f"odoo-presence-res.partner_{bob.partner_id.id}"],
+            [f"odoo-presence-res.users_{bob.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
         self.trigger_notification_dispatching([(bob.partner_id, "presence")])
@@ -88,4 +88,4 @@ class TestIrWebsocket(WebsocketCase):
         self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
         self.assertEqual(notification["message"]["payload"]["im_status"], "online")
         self.assertEqual(notification["message"]["payload"]["presence_status"], "online")
-        self.assertEqual(notification["message"]["payload"]["partner_id"], bob.partner_id.id)
+        self.assertEqual(notification["message"]["payload"]["user_id"], bob.id)

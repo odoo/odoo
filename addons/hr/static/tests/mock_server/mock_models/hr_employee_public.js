@@ -19,10 +19,8 @@ export class HrEmployeePublic extends models.ServerModel {
             "show_hr_icon_display",
             mailDataHelpers.Store.one("user_id", [
                 "share",
-                mailDataHelpers.Store.one(
-                    "partner_id",
-                    this.env["res.partner"]._get_store_im_status_fields()
-                ),
+                "partner_id",
+                ...this.env["res.users"]._get_store_im_status_fields(),
             ]),
             "work_email",
             mailDataHelpers.Store.one("work_location_id", ["location_type", "name"]),

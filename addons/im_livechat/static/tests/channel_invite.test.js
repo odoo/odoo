@@ -70,13 +70,11 @@ test("Available operators come first", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "Harry",
-        im_status: "offline",
-        user_ids: [pyEnv["res.users"].create({ name: "Harry" })],
+        user_ids: [pyEnv["res.users"].create({ name: "Harry", im_status: "offline" })],
     });
     const ronId = pyEnv["res.partner"].create({
         name: "Ron",
-        im_status: "online",
-        user_ids: [pyEnv["res.users"].create({ name: "Available operator" })],
+        user_ids: [pyEnv["res.users"].create({ name: "Available operator", im_status: "online" })],
     });
     pyEnv["im_livechat.channel"].create({
         available_operator_ids: [Command.create({ partner_id: ronId })],
@@ -104,13 +102,11 @@ test("Partners invited most frequently by the current user come first", async ()
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "John",
-        im_status: "offline",
-        user_ids: [pyEnv["res.users"].create({ name: "John" })],
+        user_ids: [pyEnv["res.users"].create({ name: "John", im_status: "offline" })],
     });
     pyEnv["res.partner"].create({
         name: "Albert",
-        im_status: "offline",
-        user_ids: [pyEnv["res.users"].create({ name: "Albert" })],
+        user_ids: [pyEnv["res.users"].create({ name: "Albert", im_status: "offline" })],
     });
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     pyEnv["discuss.channel"].create({
@@ -206,8 +202,7 @@ test("Operator invite shows livechat_username", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "John",
-        im_status: "offline",
-        user_ids: [pyEnv["res.users"].create({ name: "John" })],
+        user_ids: [pyEnv["res.users"].create({ name: "John", im_status: "offline" })],
         user_livechat_username: "Johnny",
     });
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });

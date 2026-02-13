@@ -4,7 +4,7 @@ import { fields, makeKwArgs, serverState, webModels } from "@web/../tests/web_te
 import { serializeDate, today } from "@web/core/l10n/dates";
 
 export class ResUsers extends webModels.ResUsers {
-    im_status = fields.Char({ default: "online" });
+    im_status = fields.Char({ default: "offline" });
     notification_type = fields.Selection({
         selection: [
             ["email", "Handle by Emails"],
@@ -57,12 +57,12 @@ export class ResUsers extends webModels.ResUsers {
                                         "name",
                                         "tz",
                                         "user",
-                                        ...ResPartner._get_store_im_status_fields(),
                                     ],
                                 })
                             ),
                             "notification_type",
                             "signature",
+                            ...this._get_store_im_status_fields(),
                         ],
                     })
                 ),
@@ -205,6 +205,13 @@ export class ResUsers extends webModels.ResUsers {
             ];
         }
         return Object.values(userActivitiesByModelName);
+    }
+
+    _get_store_im_status_fields() {
+        return [
+            mailDataHelpers.Store.attr("im_status"),
+            mailDataHelpers.Store.attr("im_status_access_token", (p) => p.id),
+        ];
     }
 
     _get_store_avatar_card_fields() {

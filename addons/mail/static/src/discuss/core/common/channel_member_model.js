@@ -176,7 +176,10 @@ export class ChannelMember extends Record {
     }
 
     get isOnline() {
-        return this.store.onlineMemberStatuses.includes(this.im_status);
+        return (
+            this.partner_id?.eq(this.store.odoobot) ||
+            this.store.onlineMemberStatuses.includes(this.im_status)
+        );
     }
 
     /**

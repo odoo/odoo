@@ -1,5 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { fields } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 export class ResUsers extends mailModels.ResUsers {
     employee_id = fields.Many2one({ relation: "hr.employee" });
@@ -19,4 +20,13 @@ export class ResUsers extends mailModels.ResUsers {
         relation: "hr.work.location",
     });
     job_title = fields.Char({ related: "employee_id.job_title" });
+
+    _get_store_im_status_fields() {
+        return [
+            mailDataHelpers.Store.many(
+                "employee_ids",
+                this.env["hr.employee"]._get_store_im_status_fields()
+            ),
+        ];
+    }
 }

@@ -14,8 +14,8 @@ class ImStatusController(http.Controller):
         user._bus_send(
             "bus.bus/im_status_updated",
             {
-                "im_status": user.partner_id.im_status,
-                "partner_id": user.partner_id.id,
+                "im_status": user.im_status,
+                "user_id": user.id,
             },
             subchannel="presence",
         )

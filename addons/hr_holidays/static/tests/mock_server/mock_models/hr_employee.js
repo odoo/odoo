@@ -20,4 +20,8 @@ export class HrEmployee extends hrModels.HrEmployee {
             department_id: 11,
         },
     ];
+
+    _get_store_im_status_fields() {
+        return [...super._get_store_im_status_fields(), "leave_date_to"];
+    }
 }

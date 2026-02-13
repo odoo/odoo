@@ -9,13 +9,13 @@ defineHrHolidaysModels();
 test("on leave members are categorised correctly in online/offline", async () => {
     const pyEnv = await startServer();
     const [partnerId1, partnerId2, partnerId3] = pyEnv["res.partner"].create([
-        { name: "Online Partner", im_status: "online" },
-        { name: "On Leave Online", im_status: "online" },
-        { name: "On Leave Idle", im_status: "away" },
+        { name: "Online Partner" },
+        { name: "On Leave Online" },
+        { name: "On Leave Idle" },
     ]);
     const [userId2, userId3] = pyEnv["res.users"].create([
-        { partner_id: partnerId2 },
-        { partner_id: partnerId3 },
+        { partner_id: partnerId2, im_status: "online" },
+        { partner_id: partnerId3, im_status: "away" },
     ]);
     pyEnv["hr.employee"].create([
         { user_id: serverState.userId, leave_date_to: "2023-01-02" },
