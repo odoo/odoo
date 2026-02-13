@@ -706,17 +706,17 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(len(new_message), 1,
                          'Should have generated a tracking value')
         tracking_value_list = [
-            ('boolean_field', 'boolean', 0, 1),
-            ('char_field', 'char', False, 'char_value'),
-            ('date_field', 'date', False, today_dt),
-            ('datetime_field', 'datetime', False, now),
-            ('float_field', 'float', 0, 3.22),
-            ('float_field_with_digits', 'float', 0, 3.00001),
-            ('integer_field', 'integer', 0, 42),
-            ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
-            ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
-            ('selection_field', 'selection', '', 'FIRST'),
-            ('text_field', 'text', False, 'text_value'),
+            ('boolean_field', 'boolean', 0, 1, {}),
+            ('char_field', 'char', False, 'char_value', {}),
+            ('date_field', 'date', False, today_dt, {}),
+            ('datetime_field', 'datetime', False, now, {}),
+            ('float_field', 'float', 0, 3.22, {}),
+            ('float_field_with_digits', 'float', 0, 3.00001, {}),
+            ('integer_field', 'integer', 0, 42, {}),
+            ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner, {}),
+            ('monetary_field', 'monetary', False, 42.42, {'currency': self.env.ref('base.USD')}),
+            ('selection_field', 'selection', '', 'FIRST', {}),
+            ('text_field', 'text', False, 'text_value', {}),
         ]
         self.assertMessageFields(
             new_message, {
@@ -725,7 +725,7 @@ class TestTrackingInternals(MailCommon):
         )
         # check formatting for all field types
         formatted_values_all = new_message.sudo().tracking_value_ids._tracking_value_format()
-        for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
+        for (field_name, field_type, _, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
             currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
             precision = None if field_name != 'float_field_with_digits' else (10, 8)
             with self.subTest(field_name=field_name):
@@ -744,7 +744,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             test_record.message_ids[0], {
                 'tracking_values': [
-                    ('monetary_field', 'monetary', 42.42, (200.25, self.company_2.currency_id)),
+                    ('monetary_field', 'monetary', 42.42, 200.25, {'currency': self.company_2.currency_id}),
                 ],
             }
         )
@@ -834,10 +834,10 @@ class TestTrackingInternals(MailCommon):
                 'author_id': self.partner_employee,
                 'tracking_values': [
                     ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', ('properties', 'Properties: Property Date', 'date'), datetime(2024, 1, 3, 0, 0, 0), False),
-                    ('properties', ('properties', 'Properties: Property Datetime', 'datetime'), datetime(2024, 1, 2, 12, 59, 1), False),
-                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA, BB', ''),
-                    ('properties', ('properties', 'Properties: Property M2M', 'many2many'), 'Record 0, Record 1, Record 2', ''),
+                    ('properties', 'properties', datetime(2024, 1, 3, 0, 0, 0), False, {'prop_field_string': 'Properties: Property Date', 'prop_type': 'date'}),
+                    ('properties', 'properties', datetime(2024, 1, 2, 12, 59, 1), False, {'prop_field_string': 'Properties: Property Datetime', 'prop_type': 'datetime'}),
+                    ('properties', 'properties', 'AA, BB', '', {'prop_field_string': 'Properties: Property Tags', 'prop_type': 'tags'}),
+                    ('properties', 'properties', 'Record 0, Record 1, Record 2', '', {'prop_field_string': 'Properties: Property M2M', 'prop_type': 'many2many'}),
                 ],
             }
         )
@@ -866,9 +866,9 @@ class TestTrackingInternals(MailCommon):
                 'author_id': self.partner_employee,
                 'tracking_values': [
                     ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
-                    ('properties', ('properties', 'Properties: Property M2O', 'many2one'), self.properties_linked_records[0], False),
-                    ('properties', ('properties', 'Properties: Property Int', 'integer'), 1337, False),
-                    ('properties', ('properties', 'Properties: Property Char', 'char'), 'char value', False),
+                    ('properties', 'properties', self.properties_linked_records[0], False, {'prop_field_string': 'Properties: Property M2O', 'prop_type': 'many2one'}),
+                    ('properties', 'properties', 1337, False, {'prop_field_string': 'Properties: Property Int', 'prop_type': 'integer'}),
+                    ('properties', 'properties', 'char value', False, {'prop_field_string': 'Properties: Property Char', 'prop_type': 'char'}),
                 ],
             }
         )
@@ -919,7 +919,7 @@ class TestTrackingInternals(MailCommon):
                 'author_id': self.partner_employee,
                 'tracking_values': [
                     ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA', ''),
+                    ('properties', 'properties', 'AA', '', {'prop_field_string': 'Properties: Property Tags', 'prop_type': 'tags'}),
                 ],
             }
         )
@@ -1091,7 +1091,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(new_message, {'tracking_values': [
             ('secret', 'char', False, 'secret'),
             ('', 'integer', 0, self.env.uid),
-            (('', {'name': 'Removed'}), 'integer', 30, 35),
+            ('', 'integer', 30, 35, {'field_info': {'desc': 'Old integer', 'name': 'Removed', 'sequence': 35, 'type': 'integer'}}),
         ]})
         trackings = new_message.sudo().tracking_value_ids
 

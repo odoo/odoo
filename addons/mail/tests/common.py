@@ -812,6 +812,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 # tracking values themselves, a shortcut
                 elif fname == 'tracking_values':
                     self.assertTracking(message, fvalue, strict=True)
+                # body content: not strict equal, just check given content is inside it
+                elif fname == 'body_content':
+                    self.assertIn(fvalue, message['body'])
                 else:
                     self.assertEqual(
                         message[fname], fvalue,
@@ -1043,23 +1046,25 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             for t in tracking_values
         )
         if strict:
-            exp_fnames = sorted([i[0][0] if isinstance(i[0], tuple) else i[0] for i in data])
+            exp_fnames = sorted([i[0] or '' for i in data])
             fnames = sorted([t.field_id.name or '' for t in tracking_values])
             info = f'Field names: expected {exp_fnames}, received {fnames}'
             self.assertEqual(len(tracking_values), len(data),
                              f'Tracking: invalid number of tracking: {info}\n{tracking_info}')
 
-        for field_name, value_type, old_value, new_value in data:
-            # allow giving field_info in addition to field_name (a bit hackish but easier
-            # than updating all calls)
-            if isinstance(field_name, tuple):
-                field_name, field_info = field_name
+        for tracking_values_info in data:
+            if len(tracking_values_info) == 5:
+                field_name, value_type, old_value, new_value, additional_info = tracking_values_info
             else:
-                field_info = {}
+                field_name, value_type, old_value, new_value = tracking_values_info
+                additional_info = {}
+            # retrieve optional field info, used notably for dummy tracking or properties
+            field_info = additional_info.get('field_info')
 
             # for property fields, value_type is a tuple for the embed property value
-            if isinstance(value_type, tuple):
-                value_type, prop_field_string, prop_type = value_type
+            if value_type == 'properties':
+                prop_field_string = additional_info['prop_field_string']
+                prop_type = additional_info['prop_type']
                 tracking = tracking_values.filtered(lambda track: track.field_id.name == field_name and prop_field_string == (track.field_info or {}).get('desc'))
                 self.assertEqual(
                     len(tracking), 1,
@@ -1073,19 +1078,27 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                         tracking = tracking_values.filtered(lambda track: not track.field_id and track.field_info and track.field_info['name'] == field_info['name'])
                     else:
                         tracking = tracking_values.filtered(lambda track: not track.field_id and not track.field_info)
-                self.assertEqual(len(tracking), 1, f'Tracking: not found for {field_name}\n{tracking_info}')
+                self.assertEqual(len(tracking), 1, f'Tracking: not found for {field_name}({field_info or {}})\n{tracking_info}')
                 if tracking.field_id and value_type != tracking.field_id.ttype:
                     _logger.warning(
-                        'Invalid type given to tracking check for %s, received %s, expected %s',
-                        tracking.field_id.name, value_type, tracking.field_id.ttype
+                        'Invalid type given when checking on tracking for \'%s\', received %s, expected %s',
+                        tracking.field_id.name, value_type, tracking.field_id.ttype,
                     )
+                if tracking.field_info:
+                    missing_keys = tracking.field_info.keys() - (field_info or {}).keys()
+                    if missing_keys:
+                        _logger.warning(
+                            'Missing "field_info" check on tracking for \'%s\', now mandatory: add %s',
+                            tracking.field_id.name or tracking.field_info.get('name', 'Unnamed'), missing_keys,
+                        )
 
             self.assertTrackingValue(
                 tracking, prop_field_string or field_name, prop_type or value_type,
                 old_value, new_value,
+                additional_info=additional_info,
             )
 
-    def assertTrackingValue(self, tracking, field_name, value_type, old_value, new_value):
+    def assertTrackingValue(self, tracking, field_name, value_type, old_value, new_value, additional_info=None):
         suffix_mapping = {
             'boolean': 'integer',
             'char': 'char',
@@ -1099,7 +1112,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             'tags': 'char',
             'text': 'text',
         }
-        msg_base = f'Tracking: {field_name} ({value_type}): '
+        msg_base = f'Tracking: {field_name} ({(additional_info or {}).get('field_info', {})})({value_type}): '
         if value_type in suffix_mapping:
             old_value_fname = f'old_value_{suffix_mapping[value_type]}'
             new_value_fname = f'new_value_{suffix_mapping[value_type]}'
@@ -1113,12 +1126,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.assertEqual(tracking.old_value_char, (old_value and old_value.display_name) or '')
             self.assertEqual(tracking.new_value_char, (new_value and new_value.display_name) or '')
         elif value_type == 'monetary':
-            new_value, currency = new_value
+            currency = (additional_info or {})['currency']
             self.assertEqual(tracking.currency_id, currency)
             self.assertEqual(tracking.old_value_float, old_value)
             self.assertEqual(tracking.new_value_float, new_value)
         else:
             self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
+
+        if (additional_info or {}).get('field_info'):
+            for key, val in additional_info['field_info'].items():
+                self.assertEqual(tracking.field_info[key], val)
 
 
 class MailCase(common.TransactionCase, MockEmail, BusCase):
