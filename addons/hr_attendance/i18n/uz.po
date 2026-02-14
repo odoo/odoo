@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -373,6 +373,12 @@ msgstr "Davomat"
 #, fuzzy
 msgid "Attendance Approver"
 msgstr "Davomat tasdiqlovchisi"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Attendance Error"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -810,6 +816,12 @@ msgid "Connect an RFID reader, and scan a token."
 msgstr "RFID o‘quvchini ulang va tokenni skanerlang."
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Connection lost. Check in/out could not be recorded."
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
 #, fuzzy
 msgid ""
@@ -986,12 +998,10 @@ msgstr "Ko‘rsatish vaqti"
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-#, fuzzy
 msgid ""
-"Do not have access, user cannot edit the attendances that are not his own."
+"Do not have access, user cannot edit the attendances that are not their own "
+"or if they are not the attendance manager of the employee."
 msgstr ""
-"Ruxsat yo‘q, foydalanuvchi o‘ziga tegishli bo‘lmagan davomat ma'lumotlarini "
-"tahrirlay olmaydi."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2761,3 +2771,10 @@ msgstr "narxi bilan"
 #, fuzzy
 msgid "with optional PIN code"
 msgstr "ixtiyoriy PIN kodi bilan"
+
+#, fuzzy
+#~ msgid ""
+#~ "Do not have access, user cannot edit the attendances that are not his own."
+#~ msgstr ""
+#~ "Ruxsat yo‘q, foydalanuvchi o‘ziga tegishli bo‘lmagan davomat "
+#~ "ma'lumotlarini tahrirlay olmaydi."

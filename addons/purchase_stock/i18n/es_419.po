@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 20:30+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-11 17:42+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/purchase_stock/es_419/>\n"
@@ -314,6 +314,16 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"Define si las solicitudes de cotización se deben agrupar según la recepción "
+"esperada, excepto en las operaciones de triangulación de órdenes.\n"
+"     Al ordenar: El sistema agrupará las necesidades de reabastecimiento, "
+"excepto para la fabricación sobre pedido.\n"
+"     Diario: El sistema agrupará las necesidades de reabastecimiento si la "
+"recepción esperada es el mismo día.\n"
+"     Semanal: El sistema agrupará las necesidades de reabastecimiento si la "
+"recepción esperada es en la misma semana o el mismo día de la semana.\n"
+"     Siempre: El sistema siempre agrupará las necesidades de "
+"reabastecimiento."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -349,7 +359,6 @@ msgstr "Tipo de ubicación de destino"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
@@ -508,7 +517,6 @@ msgstr "Agrupar solicitud de cotización"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
@@ -981,11 +989,6 @@ msgid "Stock Rule"
 msgstr "Regla de inventario"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "Valoración de existencias"
-
-#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Reporte de regla de inventario"
@@ -1323,6 +1326,9 @@ msgstr "ordenado en lugar de"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "debe reabastecer este producto de forma manual."
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Valoración de existencias"
 
 #~ msgid ""
 #~ "Define if RFQ should be grouped         together based on expected "

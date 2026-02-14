@@ -5,13 +5,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-10-21 09:32+0000\n"
+"PO-Revision-Date: 2026-02-12 13:36+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "pos_online_payment_self_order/pl/>\n"
@@ -19,9 +19,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_res_config_settings
@@ -55,7 +55,7 @@ msgstr "Płatność online"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Order"
-msgstr "Zamówienie"
+msgstr "Zamów"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -67,7 +67,7 @@ msgstr "Zapłać"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Zapłać przy kasie"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -82,13 +82,13 @@ msgstr "Metody płatności"
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transakcja płatnicza"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
-msgstr ""
+msgstr "Płatność w toku"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -109,7 +109,7 @@ msgstr "Metody płatności punktu sprzedaży"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Zeskanuj kod QR, aby dokonać płatności"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -121,7 +121,7 @@ msgstr "Samodzielna płatność online"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.js:0
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Nie można opłacić bieżącego zamówienia (być może zostało już opłacone)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -140,8 +140,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Metoda płatności online używana do samodzielnego zamawiania w konfiguracji "
+"PoS musi mieć co najmniej jednego opublikowanego dostawcę usług płatniczych "
+"obsługującego walutę tej konfiguracji PoS."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Skorzystaj z opcji samodzielnego składania zamówień i płatności online"

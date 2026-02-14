@@ -4,13 +4,13 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-12-30 12:59+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2026-02-11 17:43+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays_attendance/fi/>\n"
@@ -150,6 +150,7 @@ msgstr "Työntekijä"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Employee Overtime"
 msgstr "Työntekijöiden ylityöt"
 
@@ -216,7 +217,7 @@ msgstr "Tehtävänimike"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Last 2 Months"
-msgstr ""
+msgstr "Viimeiset 2 kuukautta"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_ir_ui_menu
@@ -226,7 +227,7 @@ msgstr "Valikko"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Missing Hours"
-msgstr ""
+msgstr "Puuttuvat tunnit"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
@@ -258,7 +259,7 @@ msgstr "Ylityön vähennyskelpoisuus"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_rule
 msgid "Overtime Rule"
-msgstr ""
+msgstr "Ylityösääntö"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
@@ -269,7 +270,7 @@ msgstr "Tehdyltä työtunnilta"
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
 msgid "Remaining Extra Hours:"
-msgstr ""
+msgstr "Jäljellä olevat ylimääräiset tunnit:"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
@@ -305,13 +306,13 @@ msgstr "Vapaiden ajankohta"
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_attendance_report_action
 #: model:ir.ui.menu,name:hr_holidays_attendance.hr_leave_attendance_report
 msgid "Time Off Ledger"
-msgstr ""
+msgstr "Vapaiden kirjanpito"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
 msgid "Time Off Taken from Extra Hours:"
-msgstr ""
+msgstr "Ylityötunneista otetut vapaat:"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
@@ -332,18 +333,13 @@ msgstr "Vapaat"
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
 msgid "Total Compensable Extra Hours:"
-msgstr ""
+msgstr "Korvattavat ylitunnit yhteensä:"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
 msgid "Total Extra Hours Worked:"
-msgstr ""
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
-msgid "Total Overtime"
-msgstr "Ylityöt yhteensä"
+msgstr "Ylityötunnit yhteensä:"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
@@ -358,7 +354,7 @@ msgstr "Tehdyt tunnit"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
 msgid "Worked Hours - Expected Hours + Approved Time Off"
-msgstr ""
+msgstr "Työtunnit – odotetut tunnit + hyväksytyt vapaat"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__schedule_id
@@ -387,6 +383,9 @@ msgstr "Sinulla ei ole riittävästi ylimääräisiä tunteja tämän loman hake
 #: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
 msgid "every worked hour."
 msgstr "jokaista tehtyä työtuntia kohden."
+
+#~ msgid "Total Overtime"
+#~ msgstr "Ylityöt yhteensä"
 
 #~ msgid "Attendance"
 #~ msgstr "Läsnäolo"
