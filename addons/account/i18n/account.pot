@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-06 18:35+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-13 18:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -734,13 +734,6 @@ msgstr ""
 msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted behavior.</span>"
 msgstr ""
 
 #. module: account
@@ -12186,14 +12179,6 @@ msgid "Onboarding Step"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't"
-" change it anymore."
-msgstr ""
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -19258,6 +19243,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19566,6 +19558,13 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
 msgstr ""
 
 #. module: account
