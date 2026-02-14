@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import float_is_zero, float_repr, float_round, float_compare
+from odoo.tools import float_is_zero, float_repr, float_round, float_compare, split_every
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 from datetime import datetime
@@ -143,30 +143,35 @@ class ProductProduct(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
 
-        for product in self:
-            at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
-            if at_date:
-                at_date = at_date.replace(hour=23, minute=59, second=59)
-                product = product.with_context(at_date=at_date)
-            valuated_product = product.sudo(False)._with_valuation_context()
-            qty_valued = valuated_product.qty_available
-            qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
-            if product.lot_valuated:
-                product.total_value = product._get_value_from_lots()
-            elif product.uom_id.is_zero(qty_valued):
-                product.total_value = 0
-            elif product.uom_id.is_zero(qty_available):
-                product.total_value = product.standard_price * qty_valued
-            elif product.cost_method == 'standard':
-                standard_price = product.standard_price
+        for product_batch in split_every(100, self):
+            for product in product_batch:
+                at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
                 if at_date:
-                    standard_price = product._get_standard_price_at_date(at_date)
-                product.total_value = standard_price * qty_valued
-            elif product.cost_method == 'average':
-                product.total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
-            else:
-                product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
-            product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
+                    at_date = at_date.replace(hour=23, minute=59, second=59)
+                    product = product.with_context(at_date=at_date)
+                valuated_product = product.sudo(False)._with_valuation_context()
+                qty_valued = valuated_product.qty_available
+                qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
+                if product.lot_valuated:
+                    product.total_value = product._get_value_from_lots()
+                elif product.uom_id.is_zero(qty_valued):
+                    product.total_value = 0
+                elif product.uom_id.is_zero(qty_available):
+                    product.total_value = product.standard_price * qty_valued
+                elif product.cost_method == 'standard':
+                    standard_price = product.standard_price
+                    if at_date:
+                        standard_price = product._get_standard_price_at_date(at_date)
+                    product.total_value = standard_price * qty_valued
+                elif product.cost_method == 'average':
+                    product.total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
+                else:
+                    product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
+                product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
+
+            # PERF avoid memoryerror
+            self.env['stock.move'].invalidate_model()
+            self.env['stock.move.line'].invalidate_model()
 
     @api.model_create_multi
     def create(self, vals_list):
