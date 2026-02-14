@@ -2454,9 +2454,9 @@ class AccountMove(models.Model):
                     'message': message,
                 }
             if (
-                self.is_purchase_document(include_receipts=True)
-                and (zero_lines := self.invoice_line_ids.filtered(lambda line: line.price_total == 0))
-                and len(zero_lines) >= 2
+                    self.is_purchase_document(include_receipts=True)
+                    and (zero_lines := self.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line.price_total == 0))
+                    and len(zero_lines) >= 2
             ):
                 alerts['account_remove_empty_lines'] = {
                     'level': 'info',
