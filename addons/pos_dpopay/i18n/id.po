@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 12:44+0000\n"
+"PO-Revision-Date: 2026-02-14 12:25+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_dpopay/id/>\n"
@@ -25,16 +25,20 @@ msgid ""
 "Bearer token used for authenticating requests. Automatically refreshed when "
 "expired."
 msgstr ""
+"Token bearer digunakan untuk mengautentikasi permintaan. Otomatis direfresh "
+"saat kadaluwarsa."
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
 msgid "Card"
-msgstr ""
+msgstr "Kartu"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
 msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
 msgstr ""
+"Centang ini untuk menggunakan environment sandbox DPO Pay untuk tujuan "
+"testing."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
@@ -43,11 +47,16 @@ msgid ""
 "Card - regular card payments\n"
 "Mobile Money - M-Pesa / Airtel Mobile Money"
 msgstr ""
+"Pilih metode pembayaran yang diizinkan:\n"
+"Kartu - pembayaran kartu reguler\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
 msgid "Customer's phone number used to complete the Mobile Money payment."
 msgstr ""
+"Nomor telepon pelanggan yang digunakan untuk menyelesaikan pembayaran Mobile "
+"Money."
 
 #. module: pos_dpopay
 #: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
@@ -115,12 +124,13 @@ msgstr "Aktifkan Mode Test"
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
 msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
-msgstr ""
+msgstr "Masukkan header value Chain-ID (contoh., DPO-DTM-Testing)"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
 msgstr ""
+"Masukkan Merchant ID yang diberikan oleh DPO Pay (contoh., 123456789012)."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
@@ -128,6 +138,8 @@ msgid ""
 "Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
 "XXXXXXXX)."
 msgstr ""
+"Masukkan Terminal ID unik (TID) dari DPO Pay POS terminal Anda "
+"(contoh., XXXXXXXX)."
 
 #. module: pos_dpopay
 #. odoo-javascript
@@ -174,7 +186,7 @@ msgstr "Endpoint tidak valid"
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
 msgid "Mobile Money"
-msgstr ""
+msgstr "Mobile Money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
@@ -221,17 +233,17 @@ msgstr "RRN"
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
 msgid "Reference number required for Mobile Money refund transactions."
-msgstr ""
+msgstr "Referensi nomor diperlukan untuk transaksi refund Mobile Money."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
 msgid "Retrieval Reference Number generated for the DPO Pay transaction."
-msgstr ""
+msgstr "Nomor Referensi Pengambilan dibuat untuk transaksi DPO Pay."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
 msgid "The Client ID provided by DPO Pay for authenticating requests."
-msgstr ""
+msgstr "Client ID yang disediakan oleh DPO Pay untuk permintaan autentikasi."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_secret
@@ -239,6 +251,8 @@ msgid ""
 "The Client Secret provided by DPO Pay for secure access. Keep it "
 "confidential."
 msgstr ""
+"Client Secret yang disediakan oleh DPO Pay untuk akses aman. Jaga "
+"kerahasiaannya."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref

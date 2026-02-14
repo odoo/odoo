@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 12:26+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:10+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/hr/"
 "id/>\n"
@@ -935,7 +935,7 @@ msgstr "Approver"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__4
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1276,7 +1276,7 @@ msgstr "Absensi/POS"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__8
 msgid "August"
-msgstr ""
+msgstr "Agustus"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -1499,6 +1499,12 @@ msgid ""
 msgstr ""
 "Tidak dapat memodifikasi lebih dari satu tanggal kontrak versi dengan lebih "
 "dari satu kontrak sekaligus."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Cannot search or group by hr_presence state: too many employees (%s)"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2012,7 +2018,7 @@ msgstr "Debug and resolve software issues"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__12
 msgid "December"
-msgstr ""
+msgstr "Desember"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2178,7 +2184,7 @@ msgstr "Jumlah Anak Buang Langsung"
 #: model:ir.model.fields,help:hr.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Bawahan langsung dan tidak langsung"
 
 #. module: hr
 #. odoo-javascript
@@ -2504,7 +2510,7 @@ msgstr "Tipe Karyawan"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "Akun bank karyawan untuk membayar gaji"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2634,6 +2640,9 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"Masukkan Nomor Identifikasi Nasional karyawan yang diterbitkan oleh "
+"pemerintah (contoh., Aadhaar, SIN, KTP). Ini akan digunakan untuk rekaman "
+"resmi dan pematuhan hukum."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2716,12 +2725,12 @@ msgstr "Habis Masa Berlaku pada"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity__technical_usage__hr_expiring_contract
 msgid "Expiring Contract"
-msgstr ""
+msgstr "Kontrak yang akan Berakhir"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity__technical_usage__hr_expiring_work_permit
 msgid "Expiring Work Permit"
-msgstr ""
+msgstr "Izin Kerya yang akan Berakhir"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__export_id
@@ -2802,7 +2811,7 @@ msgstr "Keluarga"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__2
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
@@ -3199,7 +3208,7 @@ msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
 msgid "If checked, the related user will be removed from the system."
-msgstr ""
+msgstr "Bila dicentang, user terkait akan dihapus dari sistem."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3386,7 +3395,7 @@ msgstr "It prioritizes data-driven decision-making"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__1
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
@@ -3439,12 +3448,12 @@ msgstr "Pekerjaan"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__7
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
@@ -3680,7 +3689,7 @@ msgstr "Manajer dari karyawan %s tidak diatur."
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__3
 msgid "March"
-msgstr ""
+msgstr "Maret"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -3719,7 +3728,7 @@ msgstr "Demo master untuk software kami"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__5
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
@@ -3955,7 +3964,7 @@ msgstr "Tidak Bekerja"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
 msgid "Not specified"
-msgstr ""
+msgstr "Tidak ditentukan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3967,7 +3976,7 @@ msgstr "Catatan"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__11
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
@@ -4037,7 +4046,7 @@ msgstr "Jumlah karyawan baru yang Anda harapkan untuk direkrut."
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: hr
 #. odoo-javascript
@@ -4831,7 +4840,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__9
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
@@ -5116,7 +5125,7 @@ msgstr "Field teknis, apakah utnuk membuat karyawan"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_activity__technical_usage
 msgid "Technical identifier"
-msgstr ""
+msgstr "Pengidentifikasi teknis"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view

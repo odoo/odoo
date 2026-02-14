@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 12:20+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:10+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/hr/"
 "ja/>\n"
@@ -235,8 +235,8 @@ msgid ""
 "label=\"Full Chart\"/>\n"
 "                                                Full Chart"
 msgstr ""
-"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-label="
-"\"Full Chart\"/>\n"
+"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
+"label=\"Full Chart\"/>\n"
 "                        全体図"
 
 #. module: hr
@@ -446,8 +446,8 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
-"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">組織図</sp"
-"an>"
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">組織図</"
+"span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1498,6 +1498,12 @@ msgid ""
 msgstr ""
 "複数の異なる契約について、契約日の複数バージョンを同時に変更することはできま"
 "せん。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Cannot search or group by hr_presence state: too many employees (%s)"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2627,7 +2633,8 @@ msgid ""
 "Enter the employee's National Identification Number issued by the government "
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
-msgstr "政府発行の従業員の国民識別番号(例：Aadhaar、SIN、NIN)を入力してください。これ"
+msgstr ""
+"政府発行の従業員の国民識別番号(例：Aadhaar、SIN、NIN)を入力してください。これ"
 "は公式記録および法令遵守のために使用されます。"
 
 #. module: hr
@@ -3199,7 +3206,8 @@ msgstr "チェックされた場合、関連ユーザはシステムから削除
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
+msgstr ""
+"有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
 "きます。"
 
 #. module: hr
@@ -5182,7 +5190,7 @@ msgstr "契約には開始日が必要です。"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The contract of %(employee_name)s is about to expire."
-msgstr ""
+msgstr "%(employee_name)s の契約期限がまもなくです。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -5202,7 +5210,7 @@ msgstr "従業員%sはユーザにリンクしている必要があります。"
 msgid ""
 "The employee is already in contract on %s. Please select a date outside "
 "existing contracts"
-msgstr ""
+msgstr "従業員は既に%s で契約中です。既存の契約期間外の日付を選択してください"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -5229,7 +5237,7 @@ msgstr "以下のフィールドは%sにより修正されました"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "The following users have been archived: %s"
-msgstr ""
+msgstr "以下のユーザはアーカイブされました：%s"
 
 #. module: hr
 #. odoo-python
@@ -5238,6 +5246,8 @@ msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
 msgstr ""
+"以下のユーザは、まだ別の有効な従業員と関連付けられているため、アーカイブされ"
+"ていません:%s"
 
 #. module: hr
 #. odoo-python
@@ -5273,13 +5283,13 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_wage_positive
 msgid "The wage must be a positive value."
-msgstr ""
+msgstr "賃金は正の値にしてください。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The work permit of %(employee_name)s is about to expire."
-msgstr ""
+msgstr "%(employee_name)s の就労許可証がまもなく期限切れとなります。"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
@@ -5297,6 +5307,7 @@ msgstr "この従業員はユーザを既に持っています。"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
 msgstr ""
+"このフィールド%(field_name)s は、このモデル (hr.version) に存在しません。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -5364,7 +5375,7 @@ msgstr "本日の活動"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
-msgstr ""
+msgstr "合計"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -5375,13 +5386,13 @@ msgstr "予測合計数"
 #. odoo-python
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
 msgid "Total percentage allocation must equal 100%."
-msgstr ""
+msgstr "割り当てられた割合の合計は100％でなければなりません。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Total salary distribution on bank accounts must be exactly 100%."
-msgstr ""
+msgstr "銀行口座への給与配分の合計は、必ず100％でなければなりません。"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -5482,7 +5493,7 @@ msgstr "ユーザ"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "User Archive Notification"
-msgstr ""
+msgstr "ユーザアーカイブ通知"
 
 #. module: hr
 #. odoo-python
@@ -5493,12 +5504,12 @@ msgstr "ユーザ作成通知"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
 msgid "User Employee"
-msgstr ""
+msgstr "ユーザ従業員"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "User Timezone"
-msgstr ""
+msgstr "ユーザタイムゾーン"
 
 #. module: hr
 #. odoo-python
@@ -5515,7 +5526,7 @@ msgstr "従業員 %s には、同じメールアドレスのユーザが既に�
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
-msgstr ""
+msgstr "ユーザの有効"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5554,12 +5565,12 @@ msgstr "ベルギーの有効なワークパーミット"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "View employee"
-msgstr ""
+msgstr "従業員を表示"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "ビザと就労許可"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -5569,7 +5580,7 @@ msgstr "ビザの有効期限"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expire"
-msgstr ""
+msgstr "ビザの有効期限切れ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -5662,7 +5673,8 @@ msgstr "この仕事の素晴らしい点"
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
-msgstr "その従業員が、有効ユーザの所属部門またはその子部門のメンバであるかどうか。"
+msgstr ""
+"その従業員が、有効ユーザの所属部門またはその子部門のメンバであるかどうか。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee
@@ -5839,6 +5851,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "    We can redirect you to the public employee list."
 msgstr ""
+"「従業員」（hr.employee）レコードへのアクセスは許可されていません。\n"
+"    公開従業員リストへリダイレクトします。"
 
 #. module: hr
 #. odoo-python
@@ -5871,6 +5885,8 @@ msgid ""
 "You cannot delete contact that are linked to an employee, please archive "
 "them instead."
 msgstr ""
+"従業員に関連付けられている連絡先は削除できません。代わりにアーカイブしてくだ"
+"さい。"
 
 #. module: hr
 #. odoo-python
@@ -5881,6 +5897,10 @@ msgid ""
 "\n"
 "Affected contact(s): %(names)s"
 msgstr ""
+"従業員に関連付けられている連絡先は削除できません。\n"
+"代わりにアーカイブしてください。\n"
+"\n"
+"影響を受ける連絡先：%(names)s"
 
 #. module: hr
 #. odoo-python
@@ -5893,6 +5913,7 @@ msgstr "このドキュメントへのアクセス権がありません。"
 #: code:addons/hr/models/hr_export_mixin.py:0
 msgid "You must be logged in a %(country_code)s company to use this feature"
 msgstr ""
+"この機能を使用するには%(country_code)s会社にログインしている必要があります"
 
 #. module: hr
 #. odoo-python
@@ -6009,7 +6030,7 @@ msgstr "登録された従業員にリンクした住所"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "bachelor"
-msgstr ""
+msgstr "大学卒"
 
 #. module: hr
 #. odoo-python
@@ -6037,7 +6058,7 @@ msgstr "医者"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. 1234"
-msgstr ""
+msgstr "例：1234"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -6047,7 +6068,7 @@ msgstr "例: ビル2、 リモート、など。"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Engineering, Commerce, Business Administration, ..."
-msgstr ""
+msgstr "例：工学、商学、経営学、..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -6086,12 +6107,12 @@ msgstr "例: myprivateemail@example.com"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "here"
-msgstr ""
+msgstr "ここ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
 msgid "hr.mixin"
-msgstr ""
+msgstr "hr.mixin"
 
 #. module: hr
 #. odoo-python
@@ -6114,7 +6135,7 @@ msgstr "既婚"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "master"
-msgstr ""
+msgstr "修士号"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__miles
@@ -6125,13 +6146,13 @@ msgstr "mi"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "other"
-msgstr ""
+msgstr "その他"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
 msgid "people"
-msgstr ""
+msgstr "人"
 
 #. module: hr
 #. odoo-python
@@ -6143,7 +6164,7 @@ msgstr "従業員への制限"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "to see those employees."
-msgstr ""
+msgstr "該当する従業員を表示するため。"
 
 #. module: hr
 #. odoo-python

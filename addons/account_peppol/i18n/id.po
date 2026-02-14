@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-02-07 12:14+0000\n"
+"PO-Revision-Date: 2026-02-14 12:04+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_peppol/id/>\n"
@@ -623,6 +623,8 @@ msgid ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
 msgstr ""
+"Faktur tagih-sendiri / nota kredit apa pun yang diterima melalui Peppol akan "
+"dibuat di draft di jurnal ini. Default adalah jurnal sales pertama."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1025,6 +1027,9 @@ msgid ""
 "Peppol.You can still disable reception by disabling the self-billing "
 "document types below."
 msgstr ""
+"Bila diaktifkan, Anda akan dapat mengirim dan menerima faktur ditagih-"
+"sendiri melalui Peppol. Anda masih dapat menonaktifkan penerimaan dengan "
+"menonaktifkan tipe dokumen ditagih-sendiri di bawah."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_activate_self_billing_sending
@@ -1032,6 +1037,8 @@ msgid ""
 "If activated, you will be able to send vendor bills as self-billed invoices "
 "via Peppol."
 msgstr ""
+"Bila diaktifkan, Anda akan dapat mengirim tagihan vendor sebagai faktur "
+"tagih-sendiri via Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1181,7 +1188,7 @@ msgstr "Odoo"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_eas__odemo
 msgid "Odoo Demo ID"
-msgstr ""
+msgstr "ID Demo Odoo"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1212,7 +1219,7 @@ msgstr "Perusahaan Induk"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "Partner tidak dapat menerima format"
 
 #. module: account_peppol
 #. odoo-python
@@ -1223,12 +1230,12 @@ msgstr "Partner tidak memiliki konfigurasi Peppol valid."
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "Partner tidak di Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Partner di Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1238,7 +1245,7 @@ msgstr "Pending Reception"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -1518,6 +1525,9 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Kontak email utama untuk koneksi Peppol terkait komunikasi dan notifikasi.\n"
+"Secara tepatnya, email ini digunakan oleh Odoo untuk reconnect ke akun "
+"Peppol Anda pada kasus perubahan database."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1557,7 +1567,7 @@ msgstr "Daftar sebagai penerima"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
 msgid "Register this company on peppol"
-msgstr ""
+msgstr "Daftarkan perusahaan ini di peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1622,17 +1632,17 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Send from parent company"
-msgstr ""
+msgstr "Kirim dari perusahaan induk"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_and_receiving
 msgid "Sending & Receiving"
-msgstr ""
+msgstr "Mengirim & Menerima"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_only
 msgid "Sending Only"
-msgstr ""
+msgstr "Hanya Mengirim"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -2027,6 +2037,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Field ini digunakan untuk mengindikasikan bahwa edi user token tidak sinkron "
+"dengan proxy server. Ini ditetapkan sebagai True saat token butuh direfresh "
+"atau diupdate."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2038,7 +2051,7 @@ msgstr "Faktur ini juga telah"
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "This number is used for identification purposes only."
-msgstr ""
+msgstr "Angka ini digunakan hanya untuk tujuan identifikasi."
 
 #. module: account_peppol
 #. odoo-python
@@ -2089,7 +2102,7 @@ msgstr "Tidak dapat memverifikasi digest value."
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "Tidak dicentang"
 
 #. module: account_peppol
 #. odoo-python

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-07 12:41+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:24+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/id/>\n"
@@ -807,17 +807,6 @@ msgstr ""
 "style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted "
-"behavior.</span>"
-msgstr ""
-"<br/>\n"
-"                        <span>Silakan pastikan ini adalah perilaku yang "
-"diinginkan.</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
@@ -870,6 +859,49 @@ msgid ""
 "        </div>\n"
 "                    "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"            <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                Kepada\n"
+"                <t t-if=\"object.partner_id.parent_id\">\n"
+"                    <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>),\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>,\n"
+"                </t>\n"
+"                <br/><br/>\n"
+"                Berikut\n"
+"                <t t-if=\"object.name\">\n"
+"                    nota kredit tagihan mandiri Anda <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    nota kredit tagihan mandiri\n"
+"                </t>\n"
+"                <t t-if=\"object.invoice_origin\">\n"
+"                    (dengan referensi: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"                </t>\n"
+"                sejumlah <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"                dari <t t-out=\"object.company_id.name or "
+"''\">PerusahaanAnda</t>.\n"
+"                <br/><br/>\n"
+"                Jangan ragu untuk menghubungi kami bila Anda memiliki "
+"pertanyaan apa pun.\n"
+"                <t t-if=\"not is_html_empty(object.invoice_user_id.signature)"
+"\">\n"
+"                    <br/><br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell "
+"Admin</t></div>\n"
+"                </t>\n"
+"            </p>\n"
+"        </div>\n"
+"                    "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -941,6 +973,73 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kepada\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\">\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>,\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Berikut\n"
+"        <t t-if=\"object.name\">\n"
+"            faktur Anda <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            faktur\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (dengan referensi: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        sejumlah <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        dari <t t-out=\"object.company_id.name or ''\">PerusahaanAnda</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Faktur ini sudah dibayar.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Silakan remit pembayaran secepat Anda bisa melakukan.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Silakan gunakan komunikasi berikut untuk pembayaran Anda: "
+"<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    di akun <strong t-"
+"out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: Anda dapat meninjau timesheet Anda <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">dari portal.</"
+"a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Jangan ragu untuk menghubungi kami bila Anda memiliki pertanyaan apa "
+"pun.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_invoice
@@ -999,6 +1098,60 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kepada\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\">\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>,\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Berikut\n"
+"        <t t-if=\"object.name\">\n"
+"            faktur tagihan mandiri Anda <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            faktur tagihan mandiri\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (dengan referensi: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        sejumlah <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        dari <t t-out=\"object.company_id.name or ''\">PerusahaanAnda</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Faktur tagihan mandiri sudah dibayar.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: Anda dapat meninjau timesheet Anda <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">dari portal.</"
+"a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Jangan ragu untuk menghubungi kami bila Anda memiliki pertanyaan apa "
+"pun.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1041,6 +1194,44 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kepada\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Berikut\n"
+"        <t t-if=\"object.name\">\n"
+"            nota kredit Anda <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            nota kredit\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (dengan referensi: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        sejumlah <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        dari <t t-out=\"object.company_id.name or ''\">PerusahaanAnda</t>.\n"
+"        <br/><br/>\n"
+"        Jangan ragu untuk menghubungi kami bila Anda memiliki pertanyaan apa "
+"pun.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1068,6 +1259,29 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kepada <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/>\n"
+"        Terima kasih atas pembayaran Anda.\n"
+"        Berikut kwitansi pembayaran Anda <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"sejumlah\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> dari <t t-out=\"object.company_id.name or ''\">PerusahaanAnda</t>.\n"
+"        <br/><br/>\n"
+"        Jangan ragu untuk menghubungi kami bila Anda memiliki pertanyaan apa "
+"pun.\n"
+"        <br/><br/>\n"
+"        Salam hormat,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -3817,7 +4031,7 @@ msgstr "Analitik"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__anomaly
 msgid "Anomaly"
-msgstr ""
+msgstr "Anomali"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
@@ -4096,7 +4310,7 @@ msgstr "Auto-Complete"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a previous bill or refund."
-msgstr ""
+msgstr "Selesaikan otomatis dari tagihan sebelumnya atau refund."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -7898,6 +8112,8 @@ msgid ""
 "During perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"Pada valuasi perpetual, akun ini akan memegang perbedaan harga antara harga "
+"standar dan harga tagihan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
@@ -8033,6 +8249,8 @@ msgid ""
 "Email addresses that will receive copy for sent and received invoices. "
 "Separate entries with ';'."
 msgstr ""
+"Alamat-alamat email yang akan menerima salinan untuk dikirim dan menerima "
+"faktur. Pisah entri dengan ';'."
 
 #. module: account
 #. odoo-javascript
@@ -8352,12 +8570,12 @@ msgstr "Entri-entri selisih kurs:"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr ""
+msgstr "Kecualikan entri jurnal ini dari laporan follow-up."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
 msgid "Exclude this journal item from follow-up reports."
-msgstr ""
+msgstr "Kecualikan barang jurnal ini dari laporan follow-up."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -9704,6 +9922,8 @@ msgid ""
 "If checked, the lines below this section will not be displayed in reports "
 "and portal."
 msgstr ""
+"Bila dicentang, baris-baris di bawah bagian ini tidak akan ditampilkan di "
+"laporan dan portla."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_prices
@@ -9711,6 +9931,8 @@ msgid ""
 "If checked, the prices of the lines below this section will not be displayed "
 "in reports and portal."
 msgstr ""
+"Bila dicentang, harga dari baris-baris di bawah bagian ini tidak akan "
+"dicentang di laporan dan portal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11578,7 +11800,7 @@ msgstr "Layanan izin atau komputer (seperti perbaikan atau upgrade)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
 msgid "Limit the date for the Residual (at date) fields."
-msgstr ""
+msgstr "Batasi tanggal untuk field Residual (di tanggal)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -11865,6 +12087,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manual: Bayar atau Dibayar dengan metode apa pun di luar Odoo.\n"
+"Payment Providers: Setiap provider pembayaran memiliki Metode Pembayaran "
+"sendiri. Minta transaksi di/ke kartu berkat token pembayaran yang disimpan "
+"oleh partner saat membeli atau berlangganan online.\n"
+"Check: Bayar tagihan dengan memeriksa dan mencetak dari Odoo.\n"
+"Batch Deposit: Kumpulkan beberapa pemeriksaan pelanggan, membuat dan "
+"menyerahkan sekaligus batch deposit ke bank Anda. Modul "
+"account_batch_payment diperlukan.\n"
+"SEPA Credit Transfer: Bayar di SEPA zone dengan menyerahkan file SEPA Credit "
+"Transfer ke bank Anda. Modul account_iso20022 diperlukan.\n"
+"SEPA Direct Debit: Dibayar di SEPA zone berkat mandat yang partner Anda akan "
+"berikan ke Anda. Modul account_iso20022 diperlukan.\n"
+"U.S. ISO20022: Bayar di AS dengan menyerahkan file ISO20022 ke bank Anda. "
+"Modul account_iso20022 diperlukan.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
@@ -12971,16 +13207,6 @@ msgid "Onboarding Step"
 msgstr "Langkah Onboarding"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-"Setelah dokumen diposting sekali, tipe-nya ditetapkan dan Anda tidak dapat "
-"mengubahnya lagi."
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -13202,6 +13428,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) untuk dipilih saat mengirimkan email. "
+"Bila tidak ditetapkan, bahasa utama partner akan digunakan. Ini biasanya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"contoh. {{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -13964,7 +14194,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Pembayaran yang telah direkonsiliasi dengan faktur ini."
 
 #. module: account
 #: model:account.group,name:account.2_us_group_61
@@ -14062,7 +14292,7 @@ msgstr "Pilih nilai tukar pada tanggal tertentu"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__text
 msgid "Plain Text"
-msgstr ""
+msgstr "Teks Polos"
 
 #. module: account
 #. odoo-python
@@ -15340,7 +15570,7 @@ msgstr "Bulatkan per Baris"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
 msgid "Round per Tax"
-msgstr ""
+msgstr "Round per Tax"
 
 #. module: account
 #. odoo-javascript
@@ -16666,7 +16896,7 @@ msgstr "Summary Data"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__supervised
 msgid "Supervised"
-msgstr ""
+msgstr "Diawasi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
@@ -17196,7 +17426,7 @@ msgstr "Pajak"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_taxes_and_fiscal_menu
 msgid "Taxes & Fiscal"
-msgstr ""
+msgstr "Pajak & Fiskal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17888,6 +18118,8 @@ msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
+"Entri ini menggunakan akun (%(accounts_codes_names)s) dari perusahaan yang "
+"berbeda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -18226,6 +18458,7 @@ msgstr "Halaman yang diminta tidak valid, atau sudah tidak tersedia lagi."
 msgid ""
 "The residual amount (at date) on a journal item expressed in its currency."
 msgstr ""
+"Jumlah residual (di tanggal) pada item jurnal diekspresikan di mata uangnya."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__residual_at_date
@@ -18233,6 +18466,8 @@ msgid ""
 "The residual amount (at date) on a journal item expressed in the company "
 "currency."
 msgstr ""
+"Jumlah residual (di tanggal) di item jurnal diekspresikan di mata uang "
+"perusahaan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -18836,6 +19071,8 @@ msgid ""
 "This journal is for self-billing invoices. Invoices will be created using a "
 "different sequence per partner."
 msgstr ""
+"Jurnal ini untuk faktur self-billing. Faktur akan dibuat menggunakan urutan "
+"yang berbeda per partner."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -19463,7 +19700,7 @@ msgstr "Identifier unik untuk baris ini."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
 msgid "Unique transaction identifier assigned by the initiating party"
-msgstr ""
+msgstr "Pengidentifikasi transaksi unik ditugaskan ke pihak yang memulai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -20581,6 +20818,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -20959,6 +21203,13 @@ msgid ""
 msgstr ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21766,6 +22017,22 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                        <span>Please make sure that this is a wanted "
+#~ "behavior.</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                        <span>Silakan pastikan ini adalah perilaku yang "
+#~ "diinginkan.</span>"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr ""
+#~ "Setelah dokumen diposting sekali, tipe-nya ditetapkan dan Anda tidak "
+#~ "dapat mengubahnya lagi."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

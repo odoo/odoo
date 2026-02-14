@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:50+0000\n"
+"PO-Revision-Date: 2026-02-14 12:21+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock/id/>\n"
@@ -417,6 +417,21 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* Vendor: Lokasi virtual mewakili sumber lokasi untuk produk yang datang "
+"dari vendor Anda\n"
+"* Virtual: Lokasi virtual digunakan untuk membuat struktur hierarki untuk "
+"gudang Anda dengan mengumpulkan lokasi anaknya. Tidak dapat langsung "
+"memiliki produk\n"
+"* Internal: Lokasi fisik di dalam gudang Anda,\n"
+"* Pelanggan: Lokasi virtual mewakili lokasi tujuan untuk produk yang dikirim "
+"ke pelanggan Anda\n"
+"* Inventory Loss: Lokasi virtual yang bertindak sebagai bandingan untuk "
+"operasi inventaris yang selesai untuk membetulkan tingkat stok "
+"(inventaris Fisik)\n"
+"* Produksi: Lokasi bandingan virtual untuk operasi produksi. Contoh, lokasi "
+"ini mengonsumsi komponen dan memproduksi produk yang selesai\n"
+"* Transit: Lokasi bandingan yang harus digunakan untuk operasi inter-company "
+"atau inter-warehouse"
 
 #. module: stock
 #. odoo-python
@@ -1516,7 +1531,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Secepatnya, dengan pesanan yang tertunda"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
@@ -2265,6 +2280,11 @@ msgid ""
 "delays, or trigger it just-in-time\n"
 "                                ('0 days') to avoid overstocking."
 msgstr ""
+"Konfigurasikan horizon Anda untuk memicu peraturan pemesanan ulang lebih "
+"dulu untuk mendapatkan\n"
+"                                awal mula pada pemulihan dan mencegah delay, "
+"atau memicunya tepat-waktu\n"
+"                                ('0 hari') untuk menghindari overstocking."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2801,7 +2821,7 @@ msgstr "Tanggal pada mana replenishment seharusnya terjadi."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_adjustment_name__counting_date
 msgid "Date at which the resulting moves will be dated."
-msgstr ""
+msgstr "Tanggal di mana pergerakkan yang dihasilkan akan diberikan tanggal."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -2816,6 +2836,11 @@ msgid ""
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
+"Anda harus memesan sebelum tanggal ini untuk menghindari jatuh di bawah "
+"minimum. Bila Anda tidak memiliki apa pun untuk dipesan selagi deadline "
+"ditemukan, ini mungkin terjadi karena kedatangan masa depan diharapkan "
+"setelah kuantitas minimum dicapai (kemungkinan stockout). Periksa Laporan "
+"Forecast."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -3577,6 +3602,8 @@ msgstr ""
 msgid ""
 "Dummy field to store procurement values to propagate them to later steps"
 msgstr ""
+"Dummy field untuk menyimpan value pengadaan untuk disebarkan ke langkah-"
+"langkah nanti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
@@ -3632,6 +3659,8 @@ msgid ""
 "Either the route set directly or the one computed to be used by this "
 "replenishment"
 msgstr ""
+"Baik rute yang ditetapkan langsung atau yang dihitung untuk digunakan di "
+"pemulihan ini"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -4364,7 +4393,7 @@ msgstr "Bila SN yang sama adalah di Quant lain"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_request_count__show_expected_quantity
 msgid "If the user can see the expected quantity or not"
-msgstr ""
+msgstr "Bila user dapat melihat kuantitas yang disarankan atau tidak"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -4510,6 +4539,8 @@ msgid ""
 "If ticked, packages to move will be directly displayed in Barcode instead of "
 "the products they contain"
 msgstr ""
+"Bila dicentang, paket untuk digerakkan akan langsung ditampilkan di Barcode "
+"alih-alih produk yang mereka miliki"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4517,6 +4548,8 @@ msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
 msgstr ""
+"Bila dicentang, Anda akan dapat memilih paket atau tipe paket mana untuk "
+"digunakan dan dimasukkan dalam kemasan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -5073,12 +5106,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_delivery_count_value
 msgid "Kpi Stock Delivery Count Value"
-msgstr ""
+msgstr "Kpi Stock Delivery Count Value"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_receipt_count_value
 msgid "Kpi Stock Receipt Count Value"
-msgstr ""
+msgstr "Kpi Stock Receipt Count Value"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -6367,7 +6400,7 @@ msgstr "Terbuka"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_type_code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Category"
-msgstr ""
+msgstr "Kategori Operasi"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
@@ -7073,7 +7106,7 @@ msgstr "Operasi Picking"
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Kebijakan Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -7148,7 +7181,7 @@ msgstr "Rute yang dipilih"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Prefiks penomoran dari dokumen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -8406,7 +8439,7 @@ msgstr "Tipe Pengembalian"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_type__package_use__reusable
 msgid "Reusable Box (totes)"
-msgstr ""
+msgstr "Kotak Dapat Digunakan Ulang (totes)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__package_use
@@ -9507,7 +9540,7 @@ msgstr "Stok untuk Direservasi:"
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Stock level to reach when replenishing."
-msgstr ""
+msgstr "Tingkat stok untuk diraih saat memulihkan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -9874,7 +9907,7 @@ msgstr "Frekuensi (hari) inventaris untuk sebuah lokasi harus non-negatif"
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "The minimum Stock level that will trigger a replenishment."
-msgstr ""
+msgstr "Tingkat Stok minimal yang akan memicu pemulihan."
 
 #. module: stock
 #. odoo-python
@@ -10165,6 +10198,8 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by an inventory adjustment."
 msgstr ""
+"Lokasi ini akan digunakan sebagai lokasi sumber untuk pergerakkan stok yang "
+"dibuat oleh penyesuaian inventaris."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10173,6 +10208,8 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by a manufacturing order."
 msgstr ""
+"Lokasi ini akan digunakan sebagai lokasi sumber untuk pergerakkan stok yang "
+"dibuat oleh pesanan manufaktur."
 
 #. module: stock
 #. odoo-python
@@ -10415,7 +10452,7 @@ msgstr "Untuk Dipesan Manual"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_to_max
 msgid "To Order to Reach Max"
-msgstr ""
+msgstr "Untuk Pesan untuk Mencapai Maks"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10669,12 +10706,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package__picking_ids
 msgid "Transfers in which the Package is set as Destination Package"
-msgstr ""
+msgstr "Transfer di mana Paket ditetapkan sebagai Paket Tujuan"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
 msgid "Transit"
-msgstr ""
+msgstr "Transit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -10712,7 +10749,7 @@ msgstr "Picu pemulihan untuk produk yang dihapus."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__replenish_location
 msgid "Trigger replenishment suggestions for this location when required"
-msgstr ""
+msgstr "Picu saran pemulihan untuk lokasi ini saat diperlukan"
 
 #. module: stock
 #. odoo-javascript

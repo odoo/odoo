@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-16 18:37+0000\n"
-"PO-Revision-Date: 2026-01-17 12:50+0000\n"
+"PO-Revision-Date: 2026-02-14 12:16+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "product/vi/>\n"
@@ -1343,6 +1343,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Số lượng hiện tại của sản phẩm.\n"
+"Trong ngữ cảnh với một Vị trí tồn kho, số lượng này bao gồm hàng hoá được "
+"lưu trữ tại vị trí này, hoặc bất kỳ vị trí phụ nào.\n"
+"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ "
+"trong Vị trí tồn kho của Kho hàng này, hoặc bất kỳ vị trí phụ nào\n"
+"được lưu trữ tại Vị trí tồn kho trong Kho hàng của Xưởng này, hoặc bất kỳ vị "
+"trí phụ nào.\n"
+"Nếu không, số lượng này bao gồm hàng hoá được lưu trữ trong bất kỳ Vị trí "
+"tồn kho nào có loại 'nội bộ'."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_custom
@@ -1837,6 +1846,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Số lượng dự kiến (được tính bằng Số lượng hiện có - Số lượng sắp xuất + Số "
+"lượng sắp nhập - Số lượng cần loại bỏ)\n"
+"Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng được lưu trữ trong "
+"vị trí này, hoặc các vị trí phụ của nó.\n"
+"Đối với một Kho hàng, số lượng này bao gồm số lượng được lưu trữ trong Vị "
+"trí tồn kho của Kho hàng này, hoặc các vị trí phụ của nó.\n"
+"Nếu không, số lượng này bao gồm số lượng được lữu trữ trong bất kỳ Vị trí "
+"tồn kho nào có loại là 'nội bộ'."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -3529,6 +3546,13 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"Số lượng sản phẩm sắp nhập theo kế hoạch. \n"
+"Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng hàng về vị trí "
+"này, hoặc các vị trí con của nó.\n"
+"Đối với một Kho hàng, số lượng này bao gồm số lượng hàng về Vị trí tồn kho "
+"của Kho hàng này, hoặc các vị trí con của nó.\n"
+"Nếu không, số lượng này bao gồm số lượng hàng về bất kỳ Vị trí tồn kho nào "
+"có loại là 'nội bộ'."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__outgoing_qty
@@ -3541,6 +3565,13 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Số lượng sản phẩm sắp xuất theo kế hoạch. \n"
+"Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng hàng xuất khỏi vị "
+"trí này, hoặc các vị trí con của nó.\n"
+"Đối với một Kho hàng, số lượng này bao gồm số lượng hàng xuất khỏi Vị trí "
+"tồn kho của Kho hàng này, hoặc các vị trí con của nó.\n"
+"Nếu không, số lượng này bao gồm số lượng hàng xuất khỏi bất kỳ Vị trí tồn "
+"kho nào có loại là 'nội bộ'."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -4996,7 +5027,7 @@ msgstr "attribute_id"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: product
 #. odoo-javascript

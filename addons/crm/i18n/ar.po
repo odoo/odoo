@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:24+0000\n"
+"PO-Revision-Date: 2026-02-14 12:05+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/crm/ar/"
 ">\n"
@@ -331,6 +331,29 @@ msgid ""
 "</t>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"مرحباً <t t-out=\"object.partner_id and object.partner_id.name or ''\">Acme "
+"Corporation</t>،<br/><br/>\n"
+"مرحباً بكم إلى <t t-out=\"object.company_id.name or ''\">شركتي (سان فرانسيسكو)"
+"</t>.\n"
+"نحن مسرورون بلقائك! الآن بعد انضمامك إلينا، ستكتشف ما بوسع <t t-out="
+"\"object.company_id.name or ''\">شركتي (سان فرانسيسكو)</t> القيام به. اسمي "
+"هو <t t-out=\"object.user_id.name or ''\">مارك ديمو</t> وسأساعدك على تحقيق "
+"الاستفادة القصوى من برنامج أودو. هل يمكننا تحديد موعد لتجربة سريعة قريبًا؟<br/"
+">\n"
+"لا تتردد في التواصل معنا في أي وقت!<br/><br/>\n"
+"مع وافر الشكر والتقدير،<br/>\n"
+"<t t-if=\"object.user_id\">\n"
+"    <b><t t-out=\"object.user_id.name or ''\">مارك ديمو</t></b>\n"
+"    <br/>البريد الإلكتروني: <t t-out=\"object.user_id.email or ''\""
+">mark.brown23@example.com</t>\n"
+"    <br/>رقم الهاتف: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    <t t-out=\"object.company_id.name or ''\">شركتي (سان فرانسيسكو)</t>\n"
+"</t>\n"
+"        </t>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -610,12 +633,14 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the "
 "<b>first team by default.</b>"
 msgstr ""
+"نظرًا لأنك لست عضوًا في أي فريق من فِرَق المبيعات، يتم عرض مخطط سير العمل الخاص "
+"<b>بأول فريق بشكل افتراضي.</b>"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
 msgid "Ask your Team Leader to get access"
-msgstr ""
+msgstr "اطلب من قائد فريقك منحك صلاحيات الوصول"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -753,12 +778,12 @@ msgstr "تحليل أنشطة إدارة علاقات العملاء"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_recurring_plan
 msgid "CRM Recurring Revenue Plan"
-msgstr ""
+msgstr "خطة الإيرادات المتكررة لبرنامج إدارة علاقات العملاء"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "CRM Stage"
-msgstr ""
+msgstr "مرحلة إدارة علاقات العملاء (CRM) "
 
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
@@ -1047,7 +1072,7 @@ msgstr "تحويل العميل المهتم إلى فرصة (بشكل فردي)
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Convert into an Opportunity to see it in your Pipeline"
-msgstr ""
+msgstr "حوّلها إلى فرصة حتى تتمكن من رؤيتها في مخطط سير عملك "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1142,7 +1167,7 @@ msgstr "إنشاء خطة متكررة"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Create a landing page"
-msgstr ""
+msgstr "أنشئ صفحة رئيسية "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
@@ -1179,7 +1204,7 @@ msgstr "أنشئ فرصة حتى تبدأ باستخدام مخطط سير عم�
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Create leads on specific answers"
-msgstr ""
+msgstr "أنشئ عملاء محتملين بناءً على إجابات محددة"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -1257,7 +1282,7 @@ msgstr "تاريخ الإغلاق"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "عدد الأيام منذ آخر مرة تم فيها تحديث هذا المورد"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1267,7 +1292,7 @@ msgstr "الأيام"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "أيام الانتظار دون إجراء تغيير"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1282,7 +1307,7 @@ msgstr "أيام الإقفال"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "عدد الأيام حتى تصل إلى مرحلة الركود "
 
 #. module: crm
 #. odoo-python
@@ -1393,7 +1418,7 @@ msgstr "هل أنت متأكد من أنك ترغب في تحديث هذه ال�
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Do you want to install the \"%(module_name)s\" App?"
-msgstr ""
+msgstr "هل ترغب في تثبيت تطبيق \"%(module_name)s\"؟"
 
 #. module: crm
 #. odoo-javascript
@@ -1463,7 +1488,7 @@ msgstr "فئة نطاق البريد الإلكتروني"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Email Marketing"
-msgstr ""
+msgstr "التسويق عبر البريد الإلكتروني"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1592,7 +1617,7 @@ msgstr "حقول إضافية..."
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Failed to install \"%(module_name)s\""
-msgstr ""
+msgstr "تعذر تثبيت تطبيق \"%(module_name)s\" "
 
 #. module: crm
 #. odoo-javascript
@@ -1623,7 +1648,7 @@ msgstr "حقول يمكن استخدامها لاحتساب تصنيف العم�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Fold by Default"
-msgstr ""
+msgstr "الطي بشكل افتراضي "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1653,6 +1678,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"بالنسبة لفريق المبيعات، لا يوجد ما هو أسوأ من نضوب العملاء المحتملين. لحسن "
+"الحظ، يمكنك ببضع نقرات فقط إنشاء عملاء محتملين يستهدفون احتياجاتك على وجه "
+"التحديد: حجم الشركة، قطاع الأعمال، إلخ. لمساعدتك على اختبار هذه الخاصية، "
+"سنوفر لك 20 رصيد مجانًا."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1694,13 +1723,13 @@ msgstr "الأنشطة المستقبلية"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
 msgid "Generate Leads"
-msgstr ""
+msgstr "إنشاء العملاء المهتمين"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Generate leads from any email you get"
-msgstr ""
+msgstr "أنشئ عملاء محتملين من رسائل البريد الإلكتروني التي تتلقاها "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
@@ -1747,6 +1776,9 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"قم بتمييز الفرص التي لم يتم تحديثها منذ عدة أيام.         عيّن القيمة كـ 0 "
+"لتعطيل هذه الخاصية. لن يؤثر تغيير هذا المعامل على حالة/تاريخ انتهاء صلاحية "
+"الموارد التي تم تحديثها آخر مرة قبل هذا التغيير."
 
 #. module: crm
 #. odoo-javascript
@@ -1868,7 +1900,7 @@ msgstr "استيراد قالب للعملاء المهتمين والفرص"
 #. odoo-javascript
 #: code:addons/crm/static/src/webclient/share_target/crm_share_target_item.xml:0
 msgid "In sales team"
-msgstr ""
+msgstr "في فريق المبيعات"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1896,7 +1928,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Installing \"%(module_name)s\""
-msgstr ""
+msgstr "جاري تثبيت \"%(module_name)s\" "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
@@ -2133,7 +2165,7 @@ msgstr "تاريخ بداية تصنيف العملاء المهتمين في ا
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Lead Sourcing"
-msgstr ""
+msgstr "استقطاب العملاء المهتمين "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2163,7 +2195,7 @@ msgstr "تم إنشاء عميل مهتم/فرصة"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_creation_message
 msgid "Lead/Opportunity created<br/>"
-msgstr ""
+msgstr "تم إنشاء العميل المهتم/الفرصة<br/> "
 
 #. module: crm
 #. odoo-python
@@ -2408,7 +2440,7 @@ msgstr "الإيرادات الشهرية المتكررة"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Mail plugins"
-msgstr ""
+msgstr "مكونات البريد الإضافية"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2431,6 +2463,8 @@ msgid ""
 "Manage members or partners. Members get levels and pricelists, partners "
 "allow lead assignment and commission plans."
 msgstr ""
+"قم بإدارة الأعضاء أو الشركاء، بحيث يحصل الأعضاء على مستويات مختلفة وقوائم "
+"أسعار، بينما يسمح الشركاء بإسناد العملاء المحتملين وتعيين خطط العمولات. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_action
@@ -2743,7 +2777,7 @@ msgstr "لم يتم العثور على أي بيانات!"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
-msgstr ""
+msgstr "دون أي مسارات جانبية أو تأخير - من %(stage_name)s مباشرة إلى الفوز! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -2844,11 +2878,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"عدد العملاء المحتملين الذين تم إسنادهم إلى هذا العضو خلال الـ 24 ساعة "
+"الماضية (باستثناء الفرص الضائعة)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "عدد العملاء المحتملين الذين تم إسنادهم إلى هذا العضو في آخر 30 يوم "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3104,7 +3140,7 @@ msgstr "قيد الانتظار"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "لقد تطلب ذلك بعض الجهد بالفعل — لكنك نجحت! أحسنت!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3379,12 +3415,12 @@ msgstr "هاتف Ringover VOIP"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "قيد الانتظار لفترة طويلة"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Rotting in"
-msgstr ""
+msgstr "سيصبح راكداً في"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3485,7 +3521,7 @@ msgstr "البحث في الفرص"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Search in our directory of 300.000+ companies"
-msgstr ""
+msgstr "ابحث في دليلنا الذي يضم أكثر من 300.000 شركة"
 
 #. module: crm
 #. odoo-javascript
@@ -3507,19 +3543,19 @@ msgstr "قم بتحديد عميلين مهتمين/فرصتين من القائ
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Select or create a contact..."
-msgstr ""
+msgstr "اختر أو أنشئ جهة اتصال..."
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Send a Survey"
-msgstr ""
+msgstr "أرسل استطلاعاً "
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Send an email and get leads from replies"
-msgstr ""
+msgstr "أرسل بريدًا إلكترونيًا وأنشئ عملاءً محتملين من الردود"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3592,7 +3628,7 @@ msgstr "إظهار الفرص فقط"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Show to all teams"
-msgstr ""
+msgstr "عرض لجميع الفرق"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
@@ -3925,6 +3961,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"العميل المحتمل الجديد الذي تم إنشاؤه عن طريق %(creation_source)s تم إسناده "
+"تلقائيًا إلى قائد الفريق %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4014,12 +4052,14 @@ msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
 "tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"للعمل باستخدام نظام إدارة علاقات العملاء، عليك <a name=\"%d\" type=\"action\""
+" tabindex=\"-1\">الانضمام إلى فريق.</a> "
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "To work with the CRM, you should join a team."
-msgstr ""
+msgstr "للعمل باستخدام نظام إدارة علاقات العملاء (CRM)، عليك الانضمام إلى فريق."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4068,7 +4108,7 @@ msgstr "جرب إرسال بريد إلكتروني"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Turn visitors into leads"
-msgstr ""
+msgstr "حوّل الزوار إلى عملاء محتملين"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -4312,7 +4352,7 @@ msgstr "التجربة المجانية الترحيبية"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "What are the requirements to move an opportunity to this stage?"
-msgstr ""
+msgstr "ما هي المتطلبات اللازمة لنقل فرصة إلى هذه المرحلة؟"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -4345,19 +4385,19 @@ msgstr "رابحة/ضائعة"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "واو، كان ذلك سريعاً. لقد تمت الصفقة بسهولة تامة! "
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "تهانينا لأول صفقة ناجحة من %(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "نعم! أفضل صفقة للفريق خلال الأيام السبعة الماضية."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4398,7 +4438,7 @@ msgstr "لقد حطمت للتو رقمك القياسي خلال الـ7 أيا
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "لقد حققت للتو أول انتصار لك في %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4416,13 +4456,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "لقد حققت سلسلة انتصارات متتالية. 3 صفقات في 3 أيام، تهانينا!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "أنت في قمة أدائك! فزت بصفقتك الخامسة اليوم 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4448,7 +4488,7 @@ msgstr "مثال: \"شهري\""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. (555) 555-0199"
-msgstr ""
+msgstr "على سبيل المثال (555) 555-0199"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4458,7 +4498,7 @@ msgstr "مثلًا: تسعير المنتج"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Qualification"
-msgstr ""
+msgstr "على سبيل المثال: التأهيل"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -4473,7 +4513,7 @@ msgstr "مثل https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. john.doe@email.com"
-msgstr ""
+msgstr "على سبيل المثال: john.doe@email.com"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -4506,7 +4546,7 @@ msgstr "يحتوي على قيمة"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "البريد الإلكتروني الوارد"
 
 #. module: crm
 #. odoo-python

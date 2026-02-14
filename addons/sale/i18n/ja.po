@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 12:31+0000\n"
+"PO-Revision-Date: 2026-02-14 12:16+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/sale/"
 "ja/>\n"
@@ -4996,7 +4996,7 @@ msgstr "販売情報"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "販売明細行警告メッセージ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -5840,7 +5840,8 @@ msgstr ""
 msgid ""
 "The following sale orders %(invalid_orders) can't be delivered. Cancelled "
 "all deliveries."
-msgstr ""
+msgstr "次の販売オーダ%(invalid_orders) cは出荷できません。すべての出荷をキャンセルし"
+"ました。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5940,7 +5941,7 @@ msgstr "プロダクト(%(product)s)に互換性のない値があります:%(va
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
-msgstr ""
+msgstr "販売オーダは期限切れです。"
 
 #. module: sale
 #. odoo-python
@@ -6169,7 +6170,7 @@ msgstr "合計: %s"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "在庫追跡"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -6305,7 +6306,7 @@ msgstr "税の更新"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
 msgid "Upload Request For Quotation"
-msgstr ""
+msgstr "見積依頼をアップロード"
 
 #. module: sale
 #. odoo-python
@@ -6332,7 +6333,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send pro forma to prospects"
-msgstr ""
+msgstr "販売担当者が見込み顧客に仮請求書を送付する際に使用されます"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -6362,7 +6363,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid "Validity"
-msgstr ""
+msgstr "有効性"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -6390,7 +6391,7 @@ msgstr "詳細を見る"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "View Other Providers"
-msgstr ""
+msgstr "他のプロバイダーを表示"
 
 #. module: sale
 #. odoo-python
@@ -6406,7 +6407,7 @@ msgstr "バーチャル"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "バーチャル利用可能日時"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -6460,7 +6461,7 @@ msgstr "ウェブサイト通信履歴"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Yes, cancel order"
-msgstr ""
+msgstr "はい、オーダをキャンセルします"
 
 #. module: sale
 #. odoo-python
@@ -6723,6 +6724,9 @@ msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
 "== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and '保留中のオーダ' or 'オーダ' }} {{ object.name or '該当なし"
+"' }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -6730,6 +6734,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro "
 "Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '仮請求"
+"書' or 'オーダ'}} (Ref {{ object.name or '該当なし' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -6737,6 +6743,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '見積' "
+"or 'オーダ' }} {{ object.name or '該当なし' }}"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

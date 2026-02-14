@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-01-13 16:04+0000\n"
+"PO-Revision-Date: 2026-02-14 12:20+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "spreadsheet/vi/>\n"
@@ -4294,6 +4294,9 @@ msgid ""
 "Given a general exponential form of y = b*m^x for a curve fit, calculates b "
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
 msgstr ""
+"Cho một hàm số mũ tổng quát y = b*m^x trong quá trình fitting đường cong, "
+"hàm này sẽ tính toán giá trị b nếu TRUE hoặc ép giá trị b thành 1 và chỉ "
+"tính toán các giá trị m nếu FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4303,6 +4306,9 @@ msgid ""
 "TRUE or forces b to be 0 and only calculates the m values if FALSE, i.e. "
 "forces the curve fit to pass through the origin."
 msgstr ""
+"Cho dạng tuyến tính tổng quát của y = m*x+b cho điều chỉnh đường cong, tính "
+"b nếu TRUE hoặc buộc b bằng 0 và chỉ tính giá trị m nếu FALSE, tức là buộc "
+"khớp đường cong đi qua gốc tọa độ."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4775,6 +4781,9 @@ msgid ""
 "specified range) is sorted, in which case the closest match for search_key "
 "will be returned."
 msgstr ""
+"Cho biết liệu cột cần tìm kiếm (cột đầu tiên của phạm vi đã chỉ định) có "
+"được sắp xếp hay không. Trong trường hợp cột được sắp xếp, kết quả tìm kiếm "
+"sẽ trả về giá trị khớp gần nhất với khóa tìm kiếm (search_key)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4784,6 +4793,9 @@ msgid ""
 "range) is sorted, in which case the closest match for search_key will be "
 "returned."
 msgstr ""
+"Cho biết liệu hàng cần tìm kiếm (hàng đầu tiên của phạm vi đã chỉ định) có "
+"được sắp xếp hay không. Trong trường hợp hàng đó được sắp xếp, kết quả khớp "
+"gần nhất với search_key sẽ được trả về."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6318,6 +6330,12 @@ msgid ""
 "returned from the last row or column in the array. If search_key is not "
 "found, a non-exact match may be returned."
 msgstr ""
+"Một phương pháp sử dụng hàm này là cung cấp một hàng hoặc cột được sắp xếp "
+"search_array để tìm kiếm search_key với đối số thứ hai là result_range. Một "
+"cách khác là kết hợp hai đối số này thành một search_array trong đó hàng "
+"hoặc cột đầu tiên được tìm kiếm và giá trị được trả về từ hàng hoặc cột cuối "
+"cùng trong mảng. Nếu không tìm thấy search_key, kết quả trùng khớp không "
+"chính xác có thể được trả về."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7291,6 +7309,9 @@ msgid ""
 "plain text, and \"v\" (for value) if the cell contains any other type of "
 "data."
 msgstr ""
+"Trả về loại dữ liệu trong ô được tham chiếu. Các giá trị sau được trả về: "
+"\"b\" cho ô trống, \"l\" (cho nhãn) nếu ô chứa văn bản thuần túy, và \"v\" "
+"(cho giá trị) nếu ô chứa bất kỳ loại dữ liệu nào khác."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8912,6 +8933,8 @@ msgid ""
 "The date for which to determine the ISO week number. Must be a reference to "
 "a cell containing a date, a function returning a date type, or a number."
 msgstr ""
+"Ngày dùng để xác định số tuần ISO. Phải là tham chiếu đến ô chứa ngày, hàm "
+"trả về kiểu ngày hoặc số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8920,6 +8943,8 @@ msgid ""
 "The date for which to determine the day of the week. Must be a reference to "
 "a cell containing a date, a function returning a date type, or a number."
 msgstr ""
+"Ngày để xác định ngày trong tuần. Phải là tham chiếu đến một ô chứa ngày, "
+"một hàm trả về kiểu ngày, hoặc một số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8928,6 +8953,8 @@ msgid ""
 "The date for which to determine the week number. Must be a reference to a "
 "cell containing a date, a function returning a date type, or a number."
 msgstr ""
+"Ngày dùng để xác định số tuần. Phải là tham chiếu đến ô chứa ngày, hàm trả "
+"về kiểu dữ liệu ngày hoặc số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9152,6 +9179,8 @@ msgid ""
 "The end date to consider in the calculation. Must be a reference to a cell "
 "containing a DATE, a function returning a DATE type, or a number."
 msgstr ""
+"Ngày kết thúc cần xem xét trong tính toán. Phải là tham chiếu đến một ô chứa "
+"giá trị DATE, một hàm trả về kiểu DATE hoặc một số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9160,6 +9189,8 @@ msgid ""
 "The end date to consider in the calculation. Must be a reference to a cell "
 "containing a date, a function returning a date type, or a number."
 msgstr ""
+"Ngày kết thúc cần xem xét trong tính toán. Phải là tham chiếu đến một ô chứa "
+"ngày, một hàm trả về kiểu ngày hoặc một số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9547,6 +9578,10 @@ msgid ""
 "however, if occurrence_number is specified, only the indicated instance of "
 "search_for is replaced."
 msgstr ""
+"Việc thay thế chuỗi search_for trong chuỗi text_to_search bằng chuỗi "
+"replace_with. Theo mặc định, tất cả các lần xuất hiện của search_for sẽ được "
+"thay thế; tuy nhiên, nếu chỉ định occurrence_number, chỉ có lần xuất hiện "
+"được chỉ định của search_for sẽ được thay thế."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10464,6 +10499,10 @@ msgid ""
 "only a single row or column and should not be used if using the "
 "search_result_array method."
 msgstr ""
+"Phạm vi mà từ đó trả về kết quả. Giá trị được trả về tương ứng với vị trí "
+"tìm thấy search_key trong search_range. Phạm vi này chỉ được phép có một "
+"hàng hoặc cột duy nhất và không được sử dụng nếu dùng phương thức "
+"search_result_array."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10831,6 +10870,11 @@ msgid ""
 "-1 finds the smallest value greater than or equal to search_key when range "
 "is sorted in descending order."
 msgstr ""
+"Phương pháp tìm kiếm là một số 1, 0 hoặc -1 chỉ định giá trị cần trả về. 1 "
+"tìm giá trị lớn nhất nhỏ hơn hoặc bằng search_key khi dãy được sắp xếp theo "
+"thứ tự tăng dần. 0 tìm giá trị chính xác khi dãy không được sắp xếp. -1 tìm "
+"giá trị nhỏ nhất lớn hơn hoặc bằng search_key khi dãy được sắp xếp theo thứ "
+"tự giảm dần."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10957,6 +11001,8 @@ msgid ""
 "The start date to consider in the calculation. Must be a reference to a cell "
 "containing a DATE, a function returning a DATE type, or a number."
 msgstr ""
+"Ngày bắt đầu cần xem xét trong tính toán. Phải là tham chiếu đến một ô chứa "
+"giá trị DATE, một hàm trả về loại DATE hoặc một số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10965,6 +11011,8 @@ msgid ""
 "The start date to consider in the calculation. Must be a reference to a cell "
 "containing a date, a function returning a date type, or a number."
 msgstr ""
+"Ngày bắt đầu cần xem xét trong tính toán. Phải là tham chiếu đến một ô chứa "
+"ngày, một hàm trả về kiểu dữ liệu ngày, hoặc một số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12952,6 +13000,10 @@ msgid ""
 "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
 "values are added between consecutive delimiters."
 msgstr ""
+"Có nên loại bỏ các tin nhắn văn bản trống khỏi kết quả chia tách hay không. "
+"Hành vi mặc định là coi \n"
+"        các dấu phân cách liên tiếp là một (nếu TRUE). Nếu FALSE, các giá "
+"trị ô trống sẽ được thêm vào giữa các dấu phân cách liên tiếp."
 
 #. module: spreadsheet
 #. odoo-javascript

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:36+0000\n"
+"PO-Revision-Date: 2026-02-14 12:15+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/fr/>\n"
@@ -24,8 +24,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
@@ -149,7 +149,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "%s left"
-msgstr ""
+msgstr "%s restant"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -212,7 +212,7 @@ msgstr "0014-001-00001"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "1 Hour"
-msgstr ""
+msgstr "1 heure"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -263,7 +263,7 @@ msgstr "1234567890"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "2 Hours"
-msgstr ""
+msgstr "2 heures"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -279,7 +279,7 @@ msgstr "38.83"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "4 Hours"
-msgstr ""
+msgstr "4 heures"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2121,7 +2121,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Checking Local Network Access permission..."
-msgstr ""
+msgstr "Vérification de l'autorisation d'accès au réseau local..."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -3438,6 +3438,8 @@ msgid ""
 "Do you want to stop the snooze early and make the product available again "
 "immediately?"
 msgstr ""
+"Voulez-vous arrêter la mise en attente plus tôt et rendre le produit à "
+"nouveau disponible immédiatement ?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4040,7 +4042,7 @@ msgstr "Masquer l'utilisation des terminaux de paiement"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Hide details"
-msgstr ""
+msgstr "Masquer les détails"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
@@ -4651,7 +4653,7 @@ msgstr "Lampe LED"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 msgid "LNA Permission status"
-msgstr ""
+msgstr "Statut d’autorisation LNA"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -4924,7 +4926,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Local Network Access"
-msgstr ""
+msgstr "Accès au réseau local"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4935,6 +4937,11 @@ msgid ""
 "feature. Please note that IOS devices do not support Local Network Access "
 "yet."
 msgstr ""
+"La configuration de l’accès au réseau local est activée, mais votre "
+"navigateur n’est pas basé sur Chromium. Veuillez utiliser un navigateur "
+"compatible Chromium pour bénéficier de cette fonctionnalité. Veuillez noter "
+"que les appareils iOS ne prennent pas encore en charge l’accès au réseau "
+"local."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4951,13 +4958,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Local Network Access is not configured for this POS."
-msgstr ""
+msgstr "L'accès au réseau local n'est pas configuré pour ce PdV."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid "Local Network Access permission granted."
-msgstr ""
+msgstr "Accès au réseau local accordé."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4978,6 +4985,9 @@ msgid ""
 "might not work properly. Please allow Local Network Access in your browser "
 "settings."
 msgstr ""
+"L’autorisation d’accès au réseau local n’a pas encore été accordée. Certains "
+"périphériques matériels pourraient ne pas fonctionner correctement. Veuillez "
+"autoriser l’accès au réseau local dans les paramètres de votre navigateur."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5049,7 +5059,7 @@ msgstr "Tableau magnétique"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "Make %s unavailable for:"
-msgstr ""
+msgstr "Rendre %s indisponible pour :"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -5390,7 +5400,7 @@ msgstr "Numéro suivant :"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Next session"
-msgstr ""
+msgstr "Session suivante"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5819,7 +5829,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Oops!"
-msgstr ""
+msgstr "Oups !"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6258,7 +6268,7 @@ msgstr "Ligne de commande PdV depuis la configuration n°%s"
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
 msgid "POS: Product Snooze cleanup"
-msgstr ""
+msgstr "PdV : Nettoyage des mises en veille produits"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7756,7 +7766,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Reload data"
-msgstr ""
+msgstr "Recharger les données"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8520,7 +8530,7 @@ msgstr "Afficher les images de la catégorie dans l'interface Point de Vente."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Show details"
-msgstr ""
+msgstr "Afficher les détails"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -8581,7 +8591,7 @@ msgstr "Petite étagère"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Snooze"
-msgstr ""
+msgstr "Mise en veille"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
@@ -8655,6 +8665,8 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
+"Une erreur s’est produite… Si vous êtes vraiment bloqué, partagez le rapport "
+"avec notre service d’assistance"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -8763,7 +8775,7 @@ msgstr "Arrêter le lecteur de codes-barres"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Stop Snooze"
-msgstr ""
+msgstr "Arrêter la mise en veille"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -10666,6 +10678,8 @@ msgid ""
 "You can not archive this journal because it is set on the following payment "
 "method : %s."
 msgstr ""
+"Vous ne pouvez pas archiver ce journal car il est défini sur le mode de "
+"paiement suivant : %s."
 
 #. module: point_of_sale
 #. odoo-javascript

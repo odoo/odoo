@@ -13,24 +13,24 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-10-21 14:23+0000\n"
+"PO-Revision-Date: 2026-02-14 12:15+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "project_timesheet_holidays/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -45,7 +45,7 @@ msgstr "Pozycje analityczne"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
@@ -125,12 +125,11 @@ msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
-#, fuzzy
 msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
-"Domyślne zadanie używane podczas automatycznego generowania timesheets "
+"Domyślne zadanie używane podczas automatycznego generowania ewidencji czasu "
 "poprzez wnioski o czas wolny. Możesz określić inne zadanie dla każdego typu "
 "czasu wolnego indywidualnie."
 
@@ -159,7 +158,7 @@ msgstr "Zadanie w czasie wolnym"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Liczba typów urlopów"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -176,12 +175,23 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Użyj tych słów kluczowych w tytule, aby ustawić nowe zadania:\n"
+"\n"
+"        30h Przydziel 30 godzin na wykonanie zadania\n"
+"        #tagi Ustaw tagi dla zadania\n"
+"        @użytkownik Przypisz zadanie do użytkownika\n"
+"        ! Ustaw średni priorytet zadania\n"
+"        !! Ustaw wysoki priorytet zadania\n"
+"        !!! Ustaw pilny priorytet zadania\n"
+"\n"
+"        Pamiętaj, aby używać właściwego formatu i kolejności, np. Popraw "
+"ekran konfiguracji 5h #funkcja #v16 @Maciej !!"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "View Time Off"
-msgstr ""
+msgstr "Zobacz urlopy"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -199,6 +209,7 @@ msgstr ""
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
+"Nie możesz usuwać ewidencji czasu, która jest połączona z globalnym urlopem."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -225,4 +236,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
-msgstr ""
+msgstr "allow_timesheets"

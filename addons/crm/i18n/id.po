@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:25+0000\n"
+"PO-Revision-Date: 2026-02-14 12:09+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "crm/id/>\n"
@@ -1265,7 +1265,7 @@ msgstr "Tanggal Tutup"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Jumlah hari semenjak sumber daya ini terakhir diupdate"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1756,6 +1756,10 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Highlight peluang yang belum diupdate selama jumlah hari ini.         "
+"Tetapkan menjadi 0 untuk menonaktifkan. Mengubah parameter ini tidak akan "
+"berdampak pada tanggal terakhir sumber daya diupdate/status membusuk sebelum "
+"perubahan ini."
 
 #. module: crm
 #. odoo-javascript
@@ -2858,11 +2862,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Jumlah lead yang ditugaskan ke anggota ini dalam 24 jam terakhir "
+"(terkecuali lead gagal)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "Jumlah lead yang ditugaskan ke anggota ini dalam 30 hari terakhir"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter

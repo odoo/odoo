@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:14+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "mail/id/>\n"
@@ -1475,7 +1475,7 @@ msgstr "Kontak Tambahan"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__channel_role__admin
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -1682,7 +1682,7 @@ msgstr "Semua"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__all
 msgid "All Activities"
-msgstr ""
+msgstr "Semua Kegiatan"
 
 #. module: mail
 #. odoo-javascript
@@ -2393,7 +2393,7 @@ msgstr "Sibuk"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "By Emails"
-msgstr ""
+msgstr "Melalui Email"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2577,6 +2577,9 @@ msgid ""
 "in your messages. Type '::' followed by the name of your shortcut "
 "(e.g. ::hello) to use in your messages."
 msgstr ""
+"Tanggapan otomatis yang akan secara otomatis dimasukkan dengan konten lebih "
+"panjang di pesan Anda. Ketik '::' diikuti nama shortcut Anda "
+"(contoh. ::hello) untuk menggunakannya di pesan Anda."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -3721,7 +3724,7 @@ msgstr "Tanggalwaktu pada mana pesan disemat"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Jumlah hari semenjak sumber daya ini terakhir diupdate"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -6083,7 +6086,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_sfu_server
 msgid "If you want to setup SFU server for large group calls."
-msgstr ""
+msgstr "Bila Anda ingin setup server SFU untuk panggilan kelompok lebih besar."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -7494,7 +7497,7 @@ msgstr "Rapat"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
 msgid "Member Actions"
-msgstr ""
+msgstr "Tindakan Member"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__member_count
@@ -7514,7 +7517,7 @@ msgstr "Anggota"
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
-msgstr ""
+msgstr "Anggota-anggota dari mana nama channel dihitung saat field nama kosong."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -8350,7 +8353,7 @@ msgstr "Tidak ada user yang ditemukan"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__technical_usage__none
 msgid "Non Technical"
-msgstr ""
+msgstr "Non Teknis"
 
 #. module: mail
 #. odoo-python
@@ -9005,6 +9008,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) untuk dipilih saat mengirimkan email. "
+"Bila tidak ditetapkan, bahasa utama partner akan digunakan. Ini biasanya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"contoh. {{ object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -9079,7 +9086,7 @@ msgstr "Diluar-kantor"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
 msgid "Out-of-office Message"
-msgstr ""
+msgstr "Pesan sedang di Luar Kantor"
 
 #. module: mail
 #. odoo-javascript
@@ -9194,7 +9201,7 @@ msgstr "Terlambat"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__own
 msgid "Own Activities"
-msgstr ""
+msgstr "Kegiatan Sendiri"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
@@ -9604,6 +9611,9 @@ msgid ""
 "- By Emails: notifications are sent to your email address\n"
 "- In Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Kebijakan pada bagaimana untuk menangani notifikasi Chatter:\n"
+"- Secara Email: notifikasi dikirim ke alamat email Anda\n"
+"- Di Odoo: notifikasi muncul di Inbox Odoo Anda"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -9787,6 +9797,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Cegah mengirim pesan ke kontak yang di-blacklist. Nonaktifkan hanya saat "
+"betul-betul diperlukan."
 
 #. module: mail
 #. odoo-javascript
@@ -10043,7 +10055,7 @@ msgstr "Penerima"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
 msgid "Recipient email address"
-msgstr ""
+msgstr "Alamat email penerima"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -10177,7 +10189,7 @@ msgstr "Hapus"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Remove Admin"
-msgstr ""
+msgstr "Hapus Admin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -10193,13 +10205,13 @@ msgstr "Hapus Pengikut"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Remove Member"
-msgstr ""
+msgstr "Hapus Anggota"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Remove Owner"
-msgstr ""
+msgstr "Hapus Pemilik"
 
 #. module: mail
 #. odoo-javascript
@@ -11197,7 +11209,7 @@ msgstr "Jenis server POP."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Set Admin"
-msgstr ""
+msgstr "Tetapkan Admin"
 
 #. module: mail
 #. odoo-javascript
@@ -11209,7 +11221,7 @@ msgstr "Tetapkan Email"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Set Owner"
-msgstr ""
+msgstr "Tetapkan Pemilik"
 
 #. module: mail
 #. odoo-javascript
@@ -11823,7 +11835,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__technical_usage
 msgid "Technical identifier"
-msgstr ""
+msgstr "Pengidentifikasi Teknis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__template_ids
@@ -12257,6 +12269,8 @@ msgid ""
 "The role of the member in the channel. The owner can add and remove admins. "
 "The owner and admins can edit the channel and its members."
 msgstr ""
+"Peran anggota di channel. Pemilik dapat menambahkan atau menghapus admin. "
+"Pemilik dan admin dapat mengedit channel dan anggotanya."
 
 #. module: mail
 #. odoo-python
@@ -13964,6 +13978,12 @@ msgid ""
 "All Activities: the synchronization user will count the all the activities "
 "of this type, whatever their owner"
 msgstr ""
+"Apakah tipe aktivitas ini akan ditampilkan diKPI Provider API.\n"
+"None: tidak pernah menampilkan tipe aktivitas ini\n"
+"Own Activities: user sinkronisasi hanya akan menghitung aktivitas tipe "
+"mereka sendiri\n"
+"All Activities: user sinkronisasi akan menghitung semua aktivitas tipe ini, "
+"siapa pun pemiliknya"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients

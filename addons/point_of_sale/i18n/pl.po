@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-01-16 05:50+0000\n"
+"PO-Revision-Date: 2026-02-14 12:16+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/pl/>\n"
@@ -52,8 +52,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
@@ -175,7 +175,7 @@ msgstr "%sma łączną kwotę %s, czy na pewno chcesz usunąć to zamówienie?"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "%s left"
-msgstr ""
+msgstr "zostało %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -238,7 +238,7 @@ msgstr "0014-001-00001"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "1 Hour"
-msgstr ""
+msgstr "1 godzina"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -289,7 +289,7 @@ msgstr "1234567890"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "2 Hours"
-msgstr ""
+msgstr "2 godziny"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -305,7 +305,7 @@ msgstr "38.83"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "4 Hours"
-msgstr ""
+msgstr "4 godziny"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3443,6 +3443,8 @@ msgid ""
 "Do you want to stop the snooze early and make the product available again "
 "immediately?"
 msgstr ""
+"Czy chcesz wcześniej wyłączyć funkcję drzemki i natychmiast ponownie "
+"udostępnić produkt?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5036,7 +5038,7 @@ msgstr "Tablica magnetyczna"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "Make %s unavailable for:"
-msgstr ""
+msgstr "Ustaw %s niedostępne dla:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -5375,7 +5377,7 @@ msgstr "Następny numer:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Next session"
-msgstr ""
+msgstr "Następna sesja"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6231,7 +6233,7 @@ msgstr "Linia zamówienia PoS z konfiguracji #%s"
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
 msgid "POS: Product Snooze cleanup"
-msgstr ""
+msgstr "PoS: Czyszczenie funkcji \"uśpienia\" produktu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7775,7 +7777,7 @@ msgstr "Poproś o fakturę"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Request sent"
-msgstr "Żądanie wysłane"
+msgstr "Wysłano zapytanie"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8547,7 +8549,7 @@ msgstr "Mała półka"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Snooze"
-msgstr ""
+msgstr "Uśpij"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
@@ -8727,7 +8729,7 @@ msgstr "Zatrzymaj skaner kodów kreskowych"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Stop Snooze"
-msgstr ""
+msgstr "Zatrzymaj uśpienie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -10592,6 +10594,8 @@ msgid ""
 "You can not archive this journal because it is set on the following payment "
 "method : %s."
 msgstr ""
+"Nie można zarchiwizować tego dziennika, ponieważ jest on ustawiony na "
+"następującą metodę płatności: %s."
 
 #. module: point_of_sale
 #. odoo-javascript

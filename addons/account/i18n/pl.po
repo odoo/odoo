@@ -57,8 +57,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-07 12:42+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:24+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/pl/>\n"
@@ -854,16 +854,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s# </b>Rata w wysokości <b>%(amount)s</b> należna w dniu <b "
 "style='color: #704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted "
-"behavior.</span>"
-msgstr ""
-"<br/>\n"
-"                        <span>Upewnij się, że to pożądane zachowanie.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -11241,7 +11231,7 @@ msgstr "Wiersze faktur"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr "Faktura zapłacona"
+msgstr "Faktura opłacona"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_template_pdf_report_id
@@ -13610,16 +13600,6 @@ msgstr "Wdrażanie układu dokumentu"
 #: model:ir.model,name:account.model_onboarding_onboarding_step
 msgid "Onboarding Step"
 msgstr "Krok wdrożenia"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-"Jak tylko dokument zostanie opublikowany, jego typ ustalony i nie możesz go "
-"już zmienić."
 
 #. module: account
 #. odoo-javascript
@@ -18551,6 +18531,7 @@ msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
+"Wpis wykorzystuje konta (%(accounts_codes_names)s) należące do innej firmy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -21247,6 +21228,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -21626,6 +21614,13 @@ msgid ""
 msgstr ""
 "Nie można przełączyć konta, aby zapobiec uzgodnieniu, jeśli niektóre "
 "częściowe uzgodnienia są nadal w toku."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22433,6 +22428,22 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Samodzielnie rozliczana faktura (nr ref. "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                        <span>Please make sure that this is a wanted "
+#~ "behavior.</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                        <span>Upewnij się, że to pożądane zachowanie.</"
+#~ "span>"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr ""
+#~ "Jak tylko dokument zostanie opublikowany, jego typ ustalony i nie możesz "
+#~ "go już zmienić."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

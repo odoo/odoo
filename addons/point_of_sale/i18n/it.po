@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-07 12:30+0000\n"
+"PO-Revision-Date: 2026-02-14 12:15+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/it/>\n"
@@ -25,8 +25,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
@@ -150,7 +150,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "%s left"
-msgstr ""
+msgstr "%s resto"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -213,7 +213,7 @@ msgstr "0014-001-00001"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "1 Hour"
-msgstr ""
+msgstr "1 ora"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -264,7 +264,7 @@ msgstr "1234567890"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "2 Hours"
-msgstr ""
+msgstr "2 ore"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -280,7 +280,7 @@ msgstr "38.83"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "4 Hours"
-msgstr ""
+msgstr "4 ore"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3417,6 +3417,8 @@ msgid ""
 "Do you want to stop the snooze early and make the product available again "
 "immediately?"
 msgstr ""
+"Vuoi interrompere lo stand-by in anticipo e rendere nuovamente disponibile "
+"il prodotto immediatamente?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5025,7 +5027,7 @@ msgstr "Lavagna magnetica"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 msgid "Make %s unavailable for:"
-msgstr ""
+msgstr "Rendi %s non disponibile per:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -5364,7 +5366,7 @@ msgstr "Numero successivo:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Next session"
-msgstr ""
+msgstr "Prossima sessione"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6228,7 +6230,7 @@ msgstr "Riga ordine POS da configurazione #%s"
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
 msgid "POS: Product Snooze cleanup"
-msgstr ""
+msgstr "Punto vendita: pulizia dei prodotti in stand-by"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6831,7 +6833,7 @@ msgstr "Stampante Punto Vendita"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_product_template_snooze
 msgid "Point of Sale Product Snooze"
-msgstr "Punto vendita Prodotto Snooze"
+msgstr "Prodotto stand-by punto vendita"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -8547,7 +8549,7 @@ msgstr "Mensola piccola"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Snooze"
-msgstr ""
+msgstr "Stand-by"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
@@ -8728,7 +8730,7 @@ msgstr "Blocca lettore codice a barre"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Stop Snooze"
-msgstr ""
+msgstr "Interrompi stand-by"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -10618,6 +10620,8 @@ msgid ""
 "You can not archive this journal because it is set on the following payment "
 "method : %s."
 msgstr ""
+"Non è possibile archiviare questo registro perché è impostato sul seguente "
+"metodo di pagamento: %s."
 
 #. module: point_of_sale
 #. odoo-javascript
