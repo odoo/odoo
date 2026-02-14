@@ -121,30 +121,29 @@ export class PowerButtonsPlugin extends Plugin {
 
     updatePowerButtons() {
         this.powerButtonsContainer.classList.add("d-none");
-        const { editableSelection, currentSelectionIsInEditable } =
+        const { documentSelection, editableSelection, currentSelectionIsInEditable } =
             this.dependencies.selection.getSelectionData();
         if (!currentSelectionIsInEditable) {
             return;
         }
-        const block = closestBlock(editableSelection.anchorNode);
-        const element = closestElement(editableSelection.anchorNode);
+        const block = closestBlock(documentSelection.anchorNode);
         const blockRect = block.getBoundingClientRect();
         const editableRect = this.editable.getBoundingClientRect();
         if (
-            editableSelection.isCollapsed &&
+            documentSelection.isCollapsed &&
             block?.matches(baseContainerGlobalSelector) &&
             editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
             !descendants(block).some(isEditorTab) &&
             !this.services.ui.isSmall &&
-            !closestElement(editableSelection.anchorNode, "td, th, li") &&
+            !closestElement(documentSelection.anchorNode, "td, th, li") &&
             !block.style.textAlign &&
             this.getResource("power_buttons_visibility_predicates").every((predicate) =>
-                predicate(editableSelection)
+                predicate(documentSelection)
             )
         ) {
             this.powerButtonsContainer.classList.remove("d-none");
-            const direction = closestElement(element, "[dir]")?.getAttribute("dir");
+            const direction = closestElement(block, "[dir]")?.getAttribute("dir");
             this.powerButtonsContainer.setAttribute("dir", direction);
             // Hide/show buttons based on their availability.
             for (const [{ isAvailable }, buttonElement] of this.descriptionToElementMap.entries()) {

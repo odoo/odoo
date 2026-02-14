@@ -362,7 +362,7 @@ describe("save translation", () => {
     beforeEach(async () => {
         onRpc("/website/field/translation/update", async (data) => {
             const { params } = await data.json();
-            expect.step(params.translations.fr_BE);
+            expect.step({ [params.record_id[0]]: params.translations.fr_BE });
             return true;
         });
     });
@@ -391,7 +391,7 @@ describe("save translation", () => {
             })} ${getTranslateEditable({ inWrap: "def", sourceSha: srcSha2 })}`,
         });
         await modifyBothTextsAndSave(getEditor());
-        expect.verifySteps([{ srcSha1: "a1bc", srcSha2: "d1ef" }]);
+        expect.verifySteps([{ 526: { srcSha1: "a1bc", srcSha2: "d1ef" } }]);
     });
 
     test("save translation of contents of different views", async () => {
@@ -403,7 +403,22 @@ describe("save translation", () => {
             })} ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}`,
         });
         await modifyBothTextsAndSave(getEditor());
-        expect.verifySteps([{ srcSha1: "a1bc" }, { srcSha2: "d1ef" }]);
+        expect.verifySteps([{ 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
+    });
+
+    test("save delayed translation even if not dirty", async () => {
+        const websiteContent = `
+            ${getTranslateEditable({ inWrap: "abc", oeId: 1, sourceSha: srcSha1 })}
+            ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}
+            ${getTranslateEditable({ inWrap: "ghi", oeId: 2, sourceSha: "srcSha3" })}
+            ${getTranslateEditable({ inWrap: "jkl", oeId: 3, sourceSha: "srcSha4" })}
+            ${getTranslateEditable({ inWrap: "mno", oeId: 4, sourceSha: "srcSha5" })}
+        `.replace(/ translate_branding">(?!jkl<)/g, ' o_delay_translation translate_branding">');
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: websiteContent,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ 4: {} }, { 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
     });
 });
 

@@ -9,13 +9,13 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:32+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-06 09:13+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "account_tax_python/fi/>\n"
@@ -41,14 +41,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Veroryhmä: Vero on joukko aliveroja.\n"
+"    - Veroryhmä: Vero on joukko osaveroja.\n"
 "    - Kiinteä: Veron määrä pysyy samana hinnasta riippumatta.\n"
-"    - Prosenttiosuus: Veron määrä on % of hinnasta:\n"
-"        esim. 100 * (1 + 10 %) = 110 (ei sisällä hintaa)\n"
-"        esim. 110 / (1 + 10 %) = 100 (sisältyy hintaan)\n"
-"    - Prosenttiosuuden sisältävä vero: Veron määrä jaetaan hinnalla:\n"
-"        esim. 180 / (1 - 10%) = 200 (ei sisälly hintaa)\n"
-"        esim. 200 * (1 - 10 %) = 180 (sisältyy hintaan)\n"
+"    - Prosenttiosuus: Veron määrä on % hinnasta:\n"
+"        esim. 100 * (1 + 10%) = 110 (ei sisällä hintaa)\n"
+"        esim. 110 / (1 + 10%) = 100 (hinta sisältyy)\n"
+"    - Prosenttiosuusvero sisältyy: Veron määrä on osa hinnasta:\n"
+"        esim. 180 / (1 - 10%) = 200 (ei sisällä hintaa)\n"
+"        esim. 200 * (1 - 10%) = 180 (hinta sisältyy)\n"
 "        "
 
 #. module: account_tax_python
@@ -63,10 +63,10 @@ msgid ""
 msgstr ""
 "Laske veron määrä.\n"
 "\n"
-":param base: liukuluku, todellinen määrä, johon vero kohdistetaan\n"
+":param base: liukuluku, todellinen määrä johon veroa sovelletaan\n"
 ":param price_unit: liukuluku\n"
 ":param quantity: liukuluku\n"
-":param product: Tuotetta edustava objekti\n"
+":param product: Tuotetta edustava kohde\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
@@ -92,7 +92,7 @@ msgstr "Kaava"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr "Kaavasta purettu info"
+msgstr "Kaavan purkutiedot"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
@@ -115,19 +115,19 @@ msgstr "Virheellinen kaava"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Kwargs are not allowed"
-msgstr "Avainsanaparametrejä (kwargs) ei sallita"
+msgstr "Kwargit eivät ole sallittuja"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only int, float or None are allowed as constant values"
-msgstr "Vain int-, float- tai None-arvot ovat sallittuja vakioarvoja"
+msgstr "Vain int, float tai None ovat sallittuja vakioarvoja"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr "Vain perustyypit ovat sallittuja Python-verokaavan yhteydessä."
+msgstr "Vain primitiivityypit ovat sallittuja Python-verokaavan kontekstissa."
 
 #. module: account_tax_python
 #. odoo-python
@@ -139,7 +139,7 @@ msgstr "Vain product['string'] tai uom['string'] -lukuoikeus on sallittu"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr "Vain lukuoikeus tunnisteisii sallitaan"
+msgstr "Tunnisteille sallitaan vain lukuoikeus"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -149,7 +149,7 @@ msgstr "Vero"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 msgid "Tax Computation"
-msgstr "Verojen laskenta"
+msgstr "Verolaskenta"
 
 #. module: account_tax_python
 #. odoo-python

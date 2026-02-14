@@ -430,7 +430,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
 
     if (!ignoreLoading) {
         insertSnippetSteps.push({
-            trigger: ":iframe:not(:has(.o_loading_screen))",
+            trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
         });
     }
 

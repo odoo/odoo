@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from lxml import etree
 from odoo import fields, Command
 from odoo.tests import HttpCase, tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, misc
 from odoo.tools.safe_eval import datetime
 
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
@@ -494,6 +494,32 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'zip': '8010',
         }])
 
+    def test_import_bill(self):
+        partner = self.env['res.partner'].create({
+            'name': "My Belgian Partner",
+            'vat': "BE0477472701",
+            'email': "mypartner@email.com",
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """<xpath expr="(//*[local-name()='LegalMonetaryTotal']/*[local-name()='TaxExclusiveAmount'])" position="replace">
+        <TaxExclusiveAmount currencyID="EUR"><!--Some valid XML
+comment-->1000.0</TaxExclusiveAmount></xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_purchase"])
+        self.assertRecordValues(imported_invoice.invoice_line_ids, [{
+            'amount_currency': 1000.00,
+            'quantity': 1.0}])
+
     def test_import_discount(self):
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
@@ -520,10 +546,10 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
 
     def test_export_xml_with_multiple_invoices(self):
-        partner = self.env['res.partner'].create({
-            'name': 'Test Partner',
-            'invoice_edi_format': 'ubl_bis3',
-            'country_id': self.env.ref('base.be').id,
+        partner = self._create_partner_be(invoice_edi_format='ubl_bis3')
+        self.company_data['company'].partner_id.write({
+            'peppol_eas': '0230',
+            'peppol_endpoint': 'C2584563200',
         })
         invoices = self.env['account.move'].create([
             {
@@ -637,34 +663,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             for tax, node in zip(taxes, root.findall('.//{*}TaxTotal/{*}TaxSubtotal/{*}TaxCategory')):
                 self.assertEqual(node.findtext('.//{*}ID') or False, tax.ubl_cii_tax_category_code)
                 self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
-
-    def test_bank_details_import(self):
-        acc_number = '1234567890'
-        partner_bank = self.env['res.partner.bank'].create({
-            'active': False,
-            'acc_number': acc_number,
-            'partner_id': self.partner_a.id
-        })
-        invoice = self.env['account.move'].create({
-            'partner_id': self.partner_a.id,
-            'move_type': 'in_invoice',
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
-        })
-        # will not raise sql constraint because the sql is not commited yet
-        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
-        self.assertEqual(invoice.partner_bank_id, partner_bank, "Partner bank must be the same")
-        self.assertTrue(partner_bank.active, "Partner bank must be the activated")
-
-    def test_bank_details_import_duplicate(self):
-        acc_number = '1234567890'
-        invoice = self.env['account.move'].create({
-            'partner_id': self.partner_a.id,
-            'move_type': 'in_invoice',
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
-        })
-        # Importing should not try to create multiple partner bank records with the same account number.
-        # It would cause a traceback due to a unique constraint on the (sanitized) account number, partner pair.
-        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number, acc_number])
 
     def test_oin_code(self):
         partner = self.partner_a
@@ -780,3 +778,13 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         xml_tree = etree.fromstring(xml_content)
         partner_name = xml_tree.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', self.ubl_namespaces)
         self.assertEqual(partner_name.text, 'partner_a')
+
+    def test_import_vendor_bill_empty_description(self):
+        with misc.file_open(f'{self.test_module}/tests/test_files/bis3/test_vendor_bill_empty_description.xml', 'rb') as file:
+            file_read = file.read()
+        attachment_id = self.env['ir.attachment'].create({
+            'name': 'test_file_no_item_description.xml',
+            'raw': file_read,
+        }).id
+        imported_bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment_id)
+        self.assertTrue(imported_bill)

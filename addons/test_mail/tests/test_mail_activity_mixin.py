@@ -601,10 +601,17 @@ class TestActivityMixin(TestActivityCommon):
         with patch.object(MailActivity, 'unlink', lambda self: None):
             test_record.unlink()
         self.assertTrue(act.exists())
-        self.assertFalse(act.sudo().active)
+        self.assertFalse(act.active)
         self.assertFalse(test_record.exists())
-        self.assertFalse(self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
-            [('active', '=', False)]))
+
+        self.env.invalidate_all()
+        self.assertEqual(
+            self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
+                [('active', '=', False)]), act,
+            'Should consider unassigned activity on removed record = access without crash'
+        )
+        self.env.invalidate_all()
+        _dummy = act.with_user(self.user_admin).read(['summary'])
 
 
 @tests.tagged('mail_activity', 'mail_activity_mixin')

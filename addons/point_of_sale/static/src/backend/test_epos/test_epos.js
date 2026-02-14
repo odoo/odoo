@@ -1,8 +1,9 @@
-import { Component } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
 const EPSON_ERRORS = {
     DeviceNotFound: _t(
@@ -29,6 +30,10 @@ export class TestEPos extends Component {
     setup() {
         super.setup();
         this.notification = useService("notification");
+        this.orm = useService("orm");
+        onWillStart(async () => {
+            odoo.use_lna = (await this.orm.call("pos.printer", "use_local_network_access")).use_lna;
+        });
     }
 
     _getReceipt() {
@@ -59,14 +64,26 @@ export class TestEPos extends Component {
                 );
                 return;
             }
-            const url = window.location.protocol + "//" + printer_ip;
+            const protocol = odoo.use_lna ? "http:" : window.location.protocol;
+            const url = protocol + "//" + printer_ip;
             this.address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
-            // Parse response
-            const result = await fetch(this.address, {
+            const params = {
                 method: "POST",
                 body: this._getReceipt(),
                 signal: AbortSignal.timeout(15000),
-            });
+            };
+            if (odoo.use_lna) {
+                params.targetAddressSpace = "local";
+                let lnaStatus = "pending";
+                await initLNA(this.notification, (status) => {
+                    lnaStatus = status;
+                });
+                if (lnaStatus === "danger") {
+                    return;
+                }
+            }
+            // Parse response
+            const result = await fetch(this.address, params);
             const body = await result.text();
             const parser = new DOMParser();
             const parsedBody = parser.parseFromString(body, "application/xml");

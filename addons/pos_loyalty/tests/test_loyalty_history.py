@@ -120,6 +120,14 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         new_pos_order.confirm_coupon_programs(coupon_data)
         check_coupon(40, 2)
 
+    def test_programs_loaded(self):
+        eur_currency = self.setup_other_currency('EUR')
+        usd_loyalty = self.env['loyalty.program'].create({'name': "USD program"})
+        eur_loyalty = self.env['loyalty.program'].create({'name': "EUR program", 'currency_id': eur_currency.id})
+        loaded_programs = self.main_pos_config._get_program_ids()
+        self.assertIn(usd_loyalty, loaded_programs)
+        self.assertNotIn(eur_loyalty, loaded_programs)
+
     def test_gift_card_partner(self):
         """ Test that the gift card's partner is correctly set as the customer who bought it."""
         test_partner = self.env['res.partner'].create({'name': 'Test Partner'})

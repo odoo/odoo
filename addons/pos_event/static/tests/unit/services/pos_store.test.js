@@ -8,9 +8,11 @@ test("createDummyProductForEvents", async () => {
     const store = await setupPosEnv();
     const models = store.models;
     const eventProducts = models["product.template"].filter((product) => product._event_id);
-    const event = models["event.event"].get(1);
+    const events = models["event.event"].getAll();
 
     // Check if a dummy product for the event is created
-    expect(eventProducts).toHaveLength(1);
-    expect(eventProducts[0].event_id).toEqual(event);
+    expect(eventProducts).toHaveLength(events.length);
+    for (const product of eventProducts) {
+        expect(product.event_id).toEqual(events.find((event) => event.id === product._event_id));
+    }
 });

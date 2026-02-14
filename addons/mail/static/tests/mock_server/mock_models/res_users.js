@@ -49,8 +49,10 @@ export class ResUsers extends webModels.ResUsers {
                             "im_status",
                             "is_admin",
                             mailDataHelpers.Store.one("main_user_id", ["notification_type"]),
+                            mailDataHelpers.Store.one("main_user_id", ["signature"]),
                             "name",
                             "notification_type",
+                            "signature",
                             "user",
                         ],
                     })

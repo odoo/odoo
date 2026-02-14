@@ -11,6 +11,7 @@ export class MentionList extends Component {
     static props = {
         onSelect: { type: Function },
         close: { type: Function, optional: true },
+        thread: { optional: true },
         type: { type: String },
     };
     static defaultProps = {
@@ -31,29 +32,33 @@ export class MentionList extends Component {
         this.ref = useAutofocus({ mobile: true });
 
         useEffect(
-            () => {
-                if (!this.state.searchTerm) {
+            (term, delimiter, thread) => {
+                if (!term) {
                     this.state.options = [];
                     return;
                 }
                 this.sequential(async () => {
                     this.state.isFetching = true;
                     try {
-                        await this.suggestionService.fetchSuggestions({
-                            delimiter: this.props.type === "partner" ? "@" : "#",
-                            term: this.state.searchTerm,
-                        });
+                        await this.suggestionService.fetchSuggestions(
+                            { delimiter, term },
+                            { thread }
+                        );
                     } finally {
                         this.state.isFetching = false;
                     }
-                    const { suggestions } = this.suggestionService.searchSuggestions({
-                        delimiter: this.props.type === "partner" ? "@" : "#",
-                        term: this.state.searchTerm,
-                    });
+                    const { suggestions } = this.suggestionService.searchSuggestions(
+                        { delimiter, term },
+                        { thread }
+                    );
                     this.state.options = suggestions;
                 });
             },
-            () => [this.state.searchTerm]
+            () => [
+                this.state.searchTerm,
+                this.props.type === "partner" ? "@" : "#",
+                this.props.thread,
+            ]
         );
     }
 
@@ -81,22 +86,25 @@ export class MentionList extends Component {
         };
         switch (this.props.type) {
             case "partner":
-                this.state.options.forEach((option) => {
-                    props.options.push({
-                        label: option.name,
-                        partner: option,
-                    });
+                props.optionTemplate = "mail.Composer.suggestionPartner";
+                props.options = this.state.options.map((suggestion) => {
+                    return {
+                        label: suggestion.name,
+                        partner: suggestion,
+                        classList: "o-mail-Composer-suggestion",
+                    };
                 });
                 break;
-            case "channel": {
-                this.state.options.forEach((option) => {
-                    props.options.push({
-                        label: option.name,
-                        channel: option,
-                    });
+            case "channel":
+                props.optionTemplate = "mail.Composer.suggestionThread";
+                props.options = this.state.options.map((suggestion) => {
+                    return {
+                        label: suggestion.displayName,
+                        thread: suggestion,
+                        classList: "o-mail-Composer-suggestion",
+                    };
                 });
                 break;
-            }
         }
         return props;
     }

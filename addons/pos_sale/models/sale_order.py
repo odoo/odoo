@@ -128,22 +128,31 @@ class SaleOrderLine(models.Model):
             'write_date', 'product_custom_attribute_value_ids'
         ]
 
-    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
 
     def _prepare_qty_delivered(self):
         delivered_qties = super()._prepare_qty_delivered()
-        for sale_line in self:
-            if sale_line.product_id.type == 'service':
-                continue
-            pos_lines = sale_line.sudo().pos_order_line_ids.filtered(
-                lambda order_line: order_line.order_id.state not in ['cancel', 'draft']
-            )
-            if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
-                pos_qty = sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines), 0)
-                if pos_qty != 0:
-                    delivered_qties[sale_line] += pos_qty
+
+        def _get_pos_delivered_qty(sale_line, pos_lines):
+            if all(picking.state == "done" for picking in pos_lines.order_id.picking_ids):
+                # Sum converted quantities from POS to sale order UoM
+                return sum(self._convert_qty(sale_line, pos_line.qty, "p2s") for pos_line in pos_lines)
+            return 0
+
+        def line_filter(line):
+            return line.order_id.state not in ["cancel", "draft"]
+
+        for sale_line in self.filtered(lambda line: line.product_id.type != "service"):
+            pos_line_ids = sale_line.sudo().pos_order_line_ids
+            pos_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.filtered(line_filter))
+            if pos_qty != 0:
+                delivered_qties[sale_line] += pos_qty
+
+            refund_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.refund_orderline_ids.filtered(line_filter))
+            if refund_qty != 0:
+                delivered_qties[sale_line] += refund_qty
         return delivered_qties
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')

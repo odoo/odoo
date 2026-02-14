@@ -19,12 +19,14 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
         cls.other_currency = cls.setup_other_currency('EUR')
 
         # TIN number is required
-        cls.company_data['company'].write({
+        cls.company_data['company'].partner_id.write({
             'vat': 'C2584563200',
             'state_id': cls.env.ref('base.state_my_jhr').id,
             'street': 'that one street, 5',
             'city': 'Main city',
             'phone': '+60123456789',
+            'peppol_eas': '0230',
+            'peppol_endpoint': 'C2584563200',
         })
         cls.partner_a.write({
             'vat': 'C2584563201',
@@ -33,6 +35,8 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
             'street': 'that other street, 3',
             'city': 'Main city',
             'phone': '+60123456786',
+            'peppol_eas': '0230',
+            'peppol_endpoint': 'C2584563201',
         })
 
         cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)

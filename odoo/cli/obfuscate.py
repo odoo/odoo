@@ -69,7 +69,7 @@ class Obfuscate(Command):
         return SQL("""CASE WHEN starts_with(%(field_name)s, 'odoo_cyph_') THEN pgp_sym_decrypt(decode(substring(%(field_name)s, 11)::text, 'base64'), %(pwd)s) ELSE %(field_name)s END""", field_name=sql_field, pwd=password)
 
     def check_field(self, table, field):
-        qry = "SELECT udt_name FROM information_schema.columns WHERE table_name=%s AND column_name=%s"
+        qry = "SELECT udt_name FROM information_schema.columns WHERE table_name=%s AND column_name=%s AND table_schema = current_schema"
         self.cr.execute(qry, [table, field])
         if self.cr.rowcount == 1:
             res = self.cr.fetchone()
@@ -81,7 +81,10 @@ class Obfuscate(Command):
         return False
 
     def get_all_fields(self):
-        qry = "SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public' AND udt_name IN ['text', 'varchar', 'jsonb'] AND NOT table_name LIKE 'ir_%' ORDER BY 1,2"
+        qry = (
+            "SELECT table_name, column_name FROM information_schema.columns"
+            " WHERE table_schema = current_schema AND udt_name IN ('text', 'varchar', 'jsonb') AND NOT table_name LIKE 'ir_%' ORDER BY 1,2"
+        )
         self.cr.execute(qry)
         return self.cr.fetchall()
 

@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
-import { stepUtils } from "@web_tour/tour_utils";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
@@ -16,6 +15,20 @@ registry.category("web_tour.tours").add('sale_signature', {
         content: "click sign",
         trigger: 'a:contains("Sign")',
         run: "click",
+    },
+    {
+        content: "clear the signature name",
+        trigger: '.modal .o_web_sign_name_and_signature input',
+        run: "clear",
+    },
+    {
+        content: "check submit is disabled when name is empty",
+        trigger: '.modal .o_portal_sign_submit:disabled',
+    },
+    {
+        content: "reset signature name",
+        trigger: '.modal .o_web_sign_name_and_signature input',
+        run: "fill Joel Willis",
     },
     {
         content: "check submit is enabled",
@@ -62,7 +75,10 @@ registry.category("web_tour.tours").add('sale_signature', {
 
 registry.category("web_tour.tours").add("sale_signature_without_name", {
     steps: () => [
-        stepUtils.waitIframeIsReady(),
+        {
+            content: "Wait for interactions to load",
+            trigger: `body[is-ready=true], :iframe body[is-ready=true]`,
+        },
         {
             content: "Sign & Pay",
             trigger:

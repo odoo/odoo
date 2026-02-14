@@ -859,7 +859,6 @@ class PosOrder(models.Model):
 
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
-        rounding_method = pos_config.rounding_method
         move_type = 'out_invoice' if not any(order.is_refund for order in self) else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
@@ -883,11 +882,13 @@ class PosOrder(models.Model):
             'fiscal_position_id': fiscal_position.id,
             'invoice_line_ids': self._prepare_invoice_lines(move_type),
             'invoice_payment_term_id': invoice_payment_term_id,
-            'invoice_cash_rounding_id': rounding_method.id,
         }
         if is_single_order and self.refunded_order_id.account_move:
             vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
             vals['reversed_entry_id'] = self.refunded_order_id.account_move.id
+
+        if pos_config.cash_rounding and (not pos_config.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
+            vals['invoice_cash_rounding_id'] = pos_config.rounding_method.id
 
         if any(order.floating_order_name for order in self):
             vals.update({'narration': ', '.join(self.filtered('floating_order_name').mapped('floating_order_name'))})
@@ -1065,15 +1066,28 @@ class PosOrder(models.Model):
         })
         reversal_entry.action_post()
 
-        pos_account_receivable = self.company_id.account_default_pos_receivable_account_id
-        account_receivable = self.payment_ids.payment_method_id.receivable_account_id
-        reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
-        payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
-        lines_to_reconcile = defaultdict(lambda: self.env['account.move.line'])
-        for line in (reversal_entry_receivable | payment_receivable):
-            lines_to_reconcile[line.account_id] |= line
-        for line in lines_to_reconcile.values():
-            line.filtered(lambda l: not l.reconciled).reconcile()
+        partner = self.partner_id.commercial_partner_id
+        accounts = (
+            self.company_id.account_default_pos_receivable_account_id |
+            self.payment_ids.mapped('payment_method_id.receivable_account_id') |
+            partner.property_account_receivable_id
+        )
+
+        candidate_lines = reversal_entry.line_ids
+        if payment_moves.line_ids:
+            candidate_lines |= payment_moves.line_ids
+        else:
+            candidate_lines |= self.session_move_id.line_ids.filtered(
+                lambda l: l.partner_id == partner and l.account_id == partner.property_account_receivable_id
+            )
+
+        lines_by_account = {}
+        for line in candidate_lines:
+            if line.account_id in accounts and not line.reconciled:
+                lines_by_account.setdefault(line.account_id, self.env['account.move.line'])
+                lines_by_account[line.account_id] |= line
+        for lines in lines_by_account.values():
+            lines.reconcile()
 
     def action_pos_order_invoice(self):
         self.ensure_one()
@@ -1096,6 +1110,9 @@ class PosOrder(models.Model):
     def _get_invoice_post_context(self):
         return {"skip_invoice_sync": True}
 
+    def _get_payments(self):
+        return self.payment_ids.sudo().with_company(self.company_id)
+
     def _generate_pos_order_invoice(self):
         if not self.env['res.company']._with_locked_records(self, allow_raising=False):
             raise UserError(_("Some orders are already being invoiced. Please try again later."))
@@ -1112,7 +1129,7 @@ class PosOrder(models.Model):
         for session, orders in self.grouped('session_id').items():
             is_session_closed = session.state == 'closed'
             for order in orders:
-                order_payments = order.payment_ids.sudo().with_company(company)
+                order_payments = order._get_payments()
                 payment_moves = order_payments._create_payment_moves(is_session_closed)
                 all_payment_moves |= payment_moves
                 if is_session_closed:
@@ -1150,8 +1167,14 @@ class PosOrder(models.Model):
         today_orders.write({'state': 'cancel'})
         for config in today_orders.config_id:
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+        draft_orders = self.filtered(lambda o: o.state == 'draft')
+        if draft_orders:
+            draft_orders.write({'state': 'cancel'})
+            for config in draft_orders.mapped('config_id'):
+                config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+
         return {
-            'pos.order': self._load_pos_data_read(today_orders, self.config_id)
+            'pos.order': self._load_pos_data_read(draft_orders, self.config_id)
         }
 
     def _get_open_order(self, order):
@@ -1487,7 +1510,7 @@ class PosOrderLine(models.Model):
     ], string='Price Type', default='original')
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
-    total_cost = fields.Float(string='Total cost', digits='Product Price', readonly=True)
+    total_cost = fields.Float(string='Total cost', min_display_digits='Product Price', readonly=True)
     is_total_cost_computed = fields.Boolean(help="Allows to know if the total cost has already been computed or not")
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True, index=True)

@@ -24,6 +24,10 @@ class SetCategoryImageAction extends BuilderAction {
     static id = 'setCategoryImage';
     static dependencies = ['media', 'builderOptions'];
 
+    setup() {
+        this.canTimeout = false;
+    }
+
     async apply({ editingElement: el }) {
         const categoryId = el.dataset.categoryId;
         const categoryImage = el.querySelector('[name="category_image"]');

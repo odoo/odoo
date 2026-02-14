@@ -1047,6 +1047,7 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             PartnerList.clickPartner("A simple PoS man!"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("15:00"),
+            Chrome.presetTimingSlotIs("15:00"),
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             Chrome.clickOrders(),

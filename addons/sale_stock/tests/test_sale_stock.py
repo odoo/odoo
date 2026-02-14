@@ -2668,3 +2668,27 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         lot.invalidate_recordset()
         self.assertEqual(lot.with_user(user).sale_order_count, 1)
         self.assertEqual(lot.with_user(user).sale_order_ids, sale_order_2)
+
+    def test_invoice_zero_quantity_after_delivery_fifo(self):
+        """
+        Posting an invoice with quantity = 0 after delivery
+        """
+        self.env.company.write({
+            'cost_method': 'fifo',
+            'inventory_valuation': 'real_time',
+        })
+
+        sale = self._get_new_sale_order(product=self.new_product, amount=1)
+        sale.action_confirm()
+
+        picking = sale.picking_ids
+        self.assertEqual(len(picking), 1)
+
+        picking.move_ids.quantity = 1
+        picking.button_validate()
+
+        invoice = sale._create_invoices()
+        invoice.invoice_line_ids.quantity = 0
+        invoice.action_post()
+
+        self.assertEqual(invoice.state, 'posted')

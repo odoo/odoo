@@ -321,6 +321,7 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
     setup() {
         super.setup();
         this.reload = false;
+        this.canTimeout = false;
     }
     apply({ editingElement: productDetailMainEl }) {
         // Emulate click on the main image of the carousel.
@@ -360,6 +361,10 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
 export class ProductAddExtraImageAction extends BaseProductPageAction {
     static id = "productAddExtraImage";
     static dependencies = [...super.dependencies, "media"];
+    setup() {
+        super.setup();
+        this.canTimeout = false;
+    }
     async apply({ editingElement: el }) {
         // Prompts the user for images, then saves the new images.
         if (this.model === "product.template") {

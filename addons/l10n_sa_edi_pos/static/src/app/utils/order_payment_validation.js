@@ -14,10 +14,12 @@ patch(OrderPaymentValidation.prototype, {
 
         // note: isSACompany guarantees order.is_to_invoice()
         // expect for cases like deposit and settlement
+        // Skip if invoice is not mandatory(Ex: settlement)
+        // Skips entirely if journal is not onboarded or electronic invoicing is not selected
         if (
             this.order.isInvoiceMandatoryForSA() &&
             this.order.finalized &&
-            this.order.l10n_sa_invoice_edi_state !== "sent"
+            !this.order.l10n_sa_invoice_qr_code_str
         ) {
             const orderError = _t(
                 "%s by going to Backend > Orders > Invoice",

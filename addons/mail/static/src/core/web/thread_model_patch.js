@@ -68,14 +68,17 @@ const threadPatch = {
                 });
             }
         } else {
-            this.store.env.services.action.doAction({
-                type: "ir.actions.act_window",
-                res_id: this.id,
-                res_model: this.model,
-                views: [[false, "form"]],
-            });
+            this.store.env.services.action.doAction(this.openRecordActionRequest);
         }
         return true;
+    },
+    get openRecordActionRequest() {
+        return {
+            type: "ir.actions.act_window",
+            res_id: this.id,
+            res_model: this.model,
+            views: [[false, "form"]],
+        };
     },
     async unpin() {
         await this.store.chatHub.initPromise;

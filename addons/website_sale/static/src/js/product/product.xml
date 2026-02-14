@@ -9,7 +9,7 @@
         </QuantityButtons>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if">this.props.can_be_sold</attribute>
-            <attribute name="class" remove="btn-secondary" add="btn-outline-primary" separator=" "/>
+            <attribute name="class" remove="btn-secondary" add="btn-outline-primary text-nowrap" separator=" "/>
         </button>
         <xpath
             expr="//button[@name='sale_product_configurator_add_button']/*[hasclass('oi-plus')]"
@@ -18,7 +18,7 @@
             <attribute name="class" remove="oi oi-plus" add="fa fa-shopping-cart" separator=" "/>
         </xpath>
         <span name="add_button" position="replace">
-            <span name="add_button" class="ms-2 d-none d-md-inline">Add to Cart</span>
+            <span name="add_button" class="ms-2 d-none d-lg-inline">Add to Cart</span>
         </span>
 
         <button name="sale_product_configurator_add_button" position="after">

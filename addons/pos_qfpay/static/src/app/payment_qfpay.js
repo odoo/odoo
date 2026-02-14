@@ -109,7 +109,7 @@ export class PaymentQFpay extends PaymentInterface {
         const response = data.response;
         const line = this.pendingQFpayline;
         let lineMismatch = false;
-        if (response.notify_type === "cancel") {
+        if (response.notify_type === "refund") {
             lineMismatch =
                 !line ||
                 !line.pos_order_id.refunded_order_id.payment_ids.find(

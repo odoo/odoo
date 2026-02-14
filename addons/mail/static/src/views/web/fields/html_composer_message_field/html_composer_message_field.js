@@ -60,6 +60,10 @@ export class HtmlComposerMessageField extends HtmlMailField {
             }
             this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
         };
+        config.thread = this.env.services["mail.store"]?.Thread.get({
+            model: this.props.record.data.model,
+            id: JSON.parse(this.props.record.data.res_ids || "[]")[0],
+        });
         return config;
     }
 

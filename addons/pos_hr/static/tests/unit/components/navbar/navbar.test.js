@@ -6,13 +6,18 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("showCreateProductButton", async () => {
+test("showCreateProductButtonWithAdmin", async () => {
     const store = await setupPosEnv();
-    const comp = await mountWithCleanup(Navbar, {});
     const admin = store.models["hr.employee"].get(2);
     store.setCashier(admin);
+    const comp = await mountWithCleanup(Navbar, {});
     expect(comp.showCreateProductButton).toBe(true);
+});
+
+test("showCreateProductButtonWithNonAdmin", async () => {
+    const store = await setupPosEnv();
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
+    const comp = await mountWithCleanup(Navbar, {});
     expect(comp.showCreateProductButton).toBe(false);
 });

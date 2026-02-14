@@ -65,7 +65,7 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         self.assertEqual(last_order.partner_id.street, 'Rue du Bronx 90')
         self.assertEqual(last_order.partner_id.zip, '9999')
         self.assertEqual(last_order.partner_id.city, 'New York')
-        self.assertEqual(last_order.partner_id.phone, '0490 90 43 90')
+        self.assertEqual(last_order.partner_id.phone, '+32490904390')
 
     def test_preset_with_slot_tour(self):
         resource_calendar = self.env['resource.calendar'].create({

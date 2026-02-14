@@ -45,7 +45,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Cover Image" t-if="isSingleMode">
+    <BuilderRow label.translate="Cover Image" t-if="isSingleMode and !!showCoverImage?.()">
         <BuilderButtonGroup>
             <BuilderButton title.translate="Left" classAction="'s_dynamic_snippet_cover_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
             <BuilderButton title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>

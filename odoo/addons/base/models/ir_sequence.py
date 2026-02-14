@@ -34,9 +34,8 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
         raise UserError(_("Step must not be zero."))
     cr.execute(
         "SELECT relname FROM pg_class"
-        "  JOIN pg_namespace n ON pg_class.relnamespace = n.oid"
         " WHERE relkind = %s AND relname = %s"
-        "   AND n.nspname = current_schema",
+        "   AND relnamespace = current_schema::regnamespace",
         ('S', seq_name)
     )
     if not cr.fetchone():

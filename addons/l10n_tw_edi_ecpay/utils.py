@@ -21,6 +21,22 @@ def transfer_time(time_before):
     return ecpay_time.astimezone(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S")
 
 
+def convert_utc_time_to_tw_time(utc_datetime):
+    """
+        Converts UTC datetime object to a TW date string.
+
+        :param utc_datetime: datetime.datetime(2026, 1, 23, 18, 0, 0)
+        :return: "2026-01-24"
+    """
+    if utc_datetime.tzinfo is None:
+        utc_datetime = pytz.utc.localize(utc_datetime)
+
+    tw_tz = pytz.timezone('Asia/Taipei')
+    tw_time = utc_datetime.astimezone(tw_tz)
+
+    return tw_time.strftime("%Y-%m-%d")
+
+
 def encrypt(data, cipher):
     padder = padding.PKCS7(128).padder()
     padded_data = padder.update(data.encode("utf-8")) + padder.finalize()

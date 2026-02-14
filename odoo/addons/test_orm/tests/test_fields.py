@@ -3230,6 +3230,29 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 self.assertIn(new_name, self.env['res.partner']._fields)
                 self.assertIn(new_name, self.env['res.users']._fields)
 
+    def test_100_rename_custom_field_inherited(self):
+        manual_origin = self.env["ir.model.fields"].create({
+            "name": "x_manual_hazel",
+            "model_id": self.env["ir.model"]._get("test_orm.related").id,
+            "ttype": "char",
+        })
+        self.assertEqual(manual_origin.state, "manual")
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", "x_manual_hazel")
+        self.assertTrue(manual_inherited.exists())
+        self.assertEqual(manual_inherited.state, "base")
+
+        with self.assertRaisesRegex(UserError, r'cannot be removed'):
+            manual_inherited.unlink()
+
+        manual_origin.name = 'x_manual_hazel_2'
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", 'x_manual_hazel')
+        self.assertFalse(manual_inherited)
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", 'x_manual_hazel_2')
+        self.assertTrue(manual_inherited.exists())
+
+        manual_origin.unlink()
+        self.assertFalse(manual_inherited.exists())
+
     def test_cache_key_invalidation(self):
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A'})
@@ -4343,6 +4366,7 @@ class TestSelectionOndelete(TransactionCase):
     MODEL_REQUIRED = 'test_orm.model_selection_required'
     MODEL_NONSTORED = 'test_orm.model_selection_non_stored'
     MODEL_WRITE_OVERRIDE = 'test_orm.model_selection_required_for_write_override'
+    MODEL_COMPANY_DEPENDENT = 'test_orm.model_selection_company_dependent'
 
     def setUp(self):
         super().setUp()
@@ -4490,6 +4514,39 @@ class TestSelectionOndelete(TransactionCase):
 
         self._unlink_option(self.MODEL_WRITE_OVERRIDE, 'divinity')
         self.assertEqual(rec.my_selection, 'foo')
+
+    def test_ondelete_company_dependent_null_implicit_with_multicompany(self):
+        Model = self.env[self.MODEL_COMPANY_DEPENDENT]
+        company_2 = self.env['res.company'].create({'name': 'Test Company'})
+
+        # create records with the extended selection option
+        records = r1, r2, r3 = Model.create([
+            {'my_selection': 'manual'},
+            {'my_selection': 'auto'},
+            {'my_selection': 'semi_auto'},
+        ])
+
+        # set different values for company_2
+        r1.with_company(company_2).write({'my_selection': 'semi_auto'})
+        r2.with_company(company_2).write({'my_selection': 'semi_auto'})
+        r3.with_company(company_2).write({'my_selection': 'manual'})
+
+        # sanity checks before unlink
+        self.assertEqual(records.mapped("my_selection"), ["manual", "auto", "semi_auto"])
+        self.assertEqual(
+            records.with_company(company_2).mapped("my_selection"),
+            ["semi_auto", "semi_auto", "manual"],
+        )
+
+        # simulates a module uninstall
+        self._unlink_option(self.MODEL_COMPANY_DEPENDENT, 'semi_auto')
+
+        # test that values are removed from all the companies
+        self.assertEqual(records.mapped("my_selection"), ["manual", "auto", False])
+        self.assertEqual(
+            records.with_company(company_2).mapped("my_selection"),
+            [False, False, "manual"],
+        )
 
 
 @tagged('selection_ondelete_advanced')

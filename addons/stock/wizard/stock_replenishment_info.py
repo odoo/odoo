@@ -162,7 +162,7 @@ class StockReplenishmentInfo(models.TransientModel):
                 [('company_id', '=', replenishment_report.orderpoint_id.company_id.id)],
             ])
             quantity_out = self.env['stock.move']._read_group(
-                Domain.AND([domain, [('location_dest_id.usage', '=', 'customer')]]),
+                Domain.AND([domain, [('location_dest_id.usage', 'in', ['customer', 'production'])]]),
                 aggregates=['product_qty:sum'],
             )[0][0] or 0.0
             quantity_returned = self.env['stock.move']._read_group(

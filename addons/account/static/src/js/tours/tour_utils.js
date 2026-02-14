@@ -8,7 +8,7 @@ export function showProductColumn() {
         },
         {
             content: "Show product column",
-            trigger: '.o-dropdown-item input[name="product_id"]',
+            trigger: '.o-dropdown-item input[name="product_id"], .o-dropdown-item input[name="product_template_id"]',
             run: function (actions) {
                 if (!this.anchor.checked) {
                     actions.click();
@@ -69,6 +69,7 @@ export function addSectionFromProductCatalog() {
             trigger: '.o-kanban-button-back',
             run: 'click',
         },
+        ...showProductColumn(),
         {
             content: "Ensure Section is first row",
             trigger: '.o_section_and_note_list_view tr:nth-child(1).o_is_line_section',

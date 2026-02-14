@@ -288,9 +288,6 @@ class AccountJournal(models.Model):
     incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
         string="Send Copy To",
         help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
-        compute='_compute_incoming_einvoice_notification_email',
-        store=True,
-        readonly=False,
     )
 
     _code_company_uniq = models.Constraint(
@@ -536,16 +533,6 @@ class AccountJournal(models.Model):
         for journal in self:
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
-
-    @api.depends('company_id', 'type')
-    def _compute_incoming_einvoice_notification_email(self):
-        for journal in self:
-            if (
-                journal.type == 'purchase'
-                and not journal.incoming_einvoice_notification_email
-                and journal.company_id.email
-            ):
-                journal.incoming_einvoice_notification_email = journal.company_id.email
 
     @api.depends('type')
     def _compute_show_fetch_in_einvoices_button(self):

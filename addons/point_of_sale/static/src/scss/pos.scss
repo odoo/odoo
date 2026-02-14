@@ -29,8 +29,14 @@ select > option {
 
 .btn-secondary {
     --btn-bg: #F4F4F4;
-    --btn-border-color: #F4F4F4;
+    --btn-border-color: #cccccc;
     --btn-color: #{$o-gray-900};
+    --btn-disabled-bg: var(--btn-bg);
+    --btn-disabled-color: #{$o-gray-700};
+    --btn-disabled-border-color: var(--btn-border-color);
+    &:disabled, &.disabled {
+        filter: saturate(0);
+    }
 }
 
 .bg-secondary {

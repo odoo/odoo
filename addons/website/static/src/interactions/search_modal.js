@@ -8,6 +8,9 @@ export class SearchModal extends Interaction {
             "t-on-shown.bs.modal": () => this.el.querySelector(".search-query").focus(),
         },
     };
+    destroy() {
+        Modal.getInstance(this.el)?.hide();
+    }
 }
 
 registry.category("public.interactions").add("website.search_modal", SearchModal);

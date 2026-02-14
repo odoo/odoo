@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:37+0000\n"
-"PO-Revision-Date: 2026-01-23 07:33+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2026-02-05 08:03+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/ja/>\n"
@@ -185,7 +185,7 @@ msgstr "会社"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "最初の配送オーダの完了日"
+msgstr "最初の出荷オーダの完了日"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -220,7 +220,7 @@ msgstr "配送"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "配送オーダ"
+msgstr "出荷オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
@@ -251,7 +251,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
@@ -268,7 +267,7 @@ msgstr "表示名"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr "配送数量ウィジェット"
+msgstr "数量ウィジェットを表示"
 
 #. module: sale_stock
 #. odoo-python
@@ -333,7 +332,7 @@ msgstr "本日の無料数量"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr "配送完了"
+msgstr "出荷完了"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -358,7 +357,6 @@ msgstr "遅延しているピッキングがあります"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
@@ -379,7 +377,7 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"すべてのプロダクトを一度に配送する場合、配送オーダはプロダクトのリードタイム"
+"すべてのプロダクトを一度に配送する場合、出荷オーダはプロダクトのリードタイム"
 "が最も長い順序で予定されます。それ以外の場合は、最短のものを基準とします。"
 
 #. module: sale_stock
@@ -444,7 +442,7 @@ msgstr "仕訳明細"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr "最終配送オーダ"
+msgstr "最終出荷オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
@@ -519,7 +517,7 @@ msgstr "利用不可"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
-msgstr "配送されていません"
+msgstr "未出荷"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -544,7 +542,7 @@ msgstr "On"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Partially Delivered"
-msgstr "一部配送済み"
+msgstr "一部出荷済"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -564,7 +562,7 @@ msgstr "プロダクトの移動(在庫移動ライン)"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr "本日利用可能な数量"
+msgstr "本日利用可能数量"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -767,11 +765,6 @@ msgid "Stock Rules report"
 msgstr "在庫ルールレポート"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "在庫評価"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "在庫ルールレポート"
@@ -927,6 +920,9 @@ msgstr "代わりに処理"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "が遅れます。"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "在庫評価"
 
 #~ msgid "<strong>Customer Reference:</strong>"
 #~ msgstr "<strong>顧客参照:</strong>"

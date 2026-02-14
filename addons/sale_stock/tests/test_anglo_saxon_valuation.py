@@ -6,41 +6,16 @@ from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonValuation(TestStockValuationCommon):
+class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.account_income = cls.company.income_account_id
         cls.partner_b = cls.env['res.partner'].create({'name': 'Partner B'})
-
-    def _inv_adj_two_units(self, product):
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product.id,  # tracking serial
-            'inventory_quantity': 2,
-            'location_id': self.stock_location.id,
-        }).action_apply_inventory()
-
-    def _so_deliver(self, product, quantity=1, price=1, picking=True):
-        so_2 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'warehouse_id': self.warehouse.id,
-            'order_line': [Command.create({
-                'name': product.name,
-                'product_id': product.id,
-                'product_uom_qty': quantity,
-                'price_unit': price,
-                'tax_ids': False,
-            })],
-        })
-        so_2.action_confirm()
-        if picking:
-            so_2.picking_ids.move_ids.write({'quantity': quantity, 'picked': True})
-            so_2.picking_ids.button_validate()
-        return so_2
 
     def _fifo_in_one_eight_one_ten(self):
         # Put two items in stock.
@@ -1386,3 +1361,33 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
                 {'credit': 0, 'debit': 500},
             ]
         )
+
+    def test_cogs_valued_by_lots(self):
+        self.product_avco_auto.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product_avco_auto.write({
+            'lot_valuated': True,
+            'tracking': 'lot',
+        })
+        self.lot1, self.lot2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': self.product_avco_auto.id},
+            {'name': 'lot2', 'product_id': self.product_avco_auto.id},
+        ])
+        self._make_in_move(self.product_avco_auto, 2, 10, lot_ids=[self.lot1])
+        self._make_in_move(self.product_avco_auto, 2, 16, lot_ids=[self.lot2])
+        self.assertEqual(self.product_avco_auto.standard_price, 13)
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.standard_price, 16)
+        so = self._so_deliver(self.product_avco_auto, 1, 1)
+        invoice = so._create_invoices()
+        invoice.action_post()
+        invoice_cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(
+            invoice_cogs_lines,
+            [
+                {'credit': 10, 'debit': 0},
+                {'credit': 0, 'debit': 10},
+            ]
+        )
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.standard_price, 16)
+        self.assertEqual(self.product_avco_auto.standard_price, 14)

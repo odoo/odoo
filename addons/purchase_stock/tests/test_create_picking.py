@@ -892,6 +892,7 @@ class TestCreatePicking(ProductVariantsCommon):
         """
         Check the product price update from receiving discounted goods.
         """
+        self.env['product.value'].search([('product_id', '=', self.product_id_1.id)]).unlink()
         self.product_id_1.categ_id = self.env['product.category'].create({
             'name': 'average',
             'property_cost_method': 'average',

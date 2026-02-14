@@ -310,7 +310,7 @@ class WebsiteAssets(models.AbstractModel):
             if regex.search(updatedFileContent):
                 updatedFileContent = re.sub(regex, replacement, updatedFileContent)
             else:
-                updatedFileContent = re.sub(r'( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent)
+                updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
 
         self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
 

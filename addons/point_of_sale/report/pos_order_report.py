@@ -66,10 +66,10 @@ class ReportPosOrder(models.Model):
                 l.id AS id,
                 1 AS nbr_lines, -- number of lines in order line is always 1
                 s.date_order AS date,
-                ROUND((l.price_subtotal) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
+                ROUND((l.price_subtotal * CASE WHEN s.is_refund THEN -1 ELSE 1 END) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
                 l.qty AS product_qty,
                 l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
-                ROUND((l.price_subtotal_incl) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
+                ROUND((l.price_subtotal_incl * CASE WHEN s.is_refund THEN -1 ELSE 1 END) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
                 (l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
                 CASE
                     WHEN l.qty * u.factor = 0 THEN NULL

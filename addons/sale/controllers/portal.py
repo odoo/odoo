@@ -179,7 +179,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         }
 
         # Payment values
-        if order_sudo._has_to_be_paid() or payment_amount:
+        if order_sudo._has_to_be_paid() or (payment_amount and not order_sudo.is_expired):
             values.update(self._get_payment_values(
                 order_sudo,
                 is_down_payment=self._determine_is_down_payment(
@@ -187,6 +187,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 ),
                 payment_amount=payment_amount,
             ))
+        else:
+            values['payment_amount'] = None
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history_session_key = 'my_quotations_history'
@@ -233,9 +235,6 @@ class CustomerPortal(payment_portal.PaymentPortal):
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_id
         currency = order_sudo.currency_id
-
-        if order_sudo.is_expired:
-            raise ValidationError(_("The sale order has expired."))
 
         if is_down_payment:
             if payment_amount and payment_amount < order_sudo.amount_total:

@@ -7,6 +7,7 @@ def convert_field(cr, model, field, target_model):
                     FROM information_schema.columns
                    WHERE table_name = %s
                      AND column_name = %s
+                     AND table_schema = current_schema
                """, (table, field))
     if not cr.fetchone():
         return
