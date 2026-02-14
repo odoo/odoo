@@ -1895,6 +1895,15 @@ class MrpProduction(models.Model):
         self.ensure_one()
         return True
 
+    def _set_lots_to_finished_moves(self):
+        self.ensure_one()
+        finish_moves = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel'))
+        # the finish move can already be completed by the workorder.
+        for move in finish_moves:
+            if move.has_tracking != 'none' and not move.lot_ids:
+                move.lot_ids = self.lot_producing_ids.ids
+            move.quantity = self.uom_id.round(self.qty_producing - self.qty_produced, rounding_method='HALF-UP')
+
     def _post_inventory(self, cancel_backorder=False):
         moves_to_do, moves_not_to_do, moves_to_cancel = set(), set(), set()
         for move in self.move_raw_ids:
@@ -1914,15 +1923,7 @@ class MrpProduction(models.Model):
             for key, values in tools_groupby(moves_to_do, key=lambda m: m.raw_material_production_id.id)
         ])
         for order in self:
-            finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
-            # the finish move can already be completed by the workorder.
-            for move in finish_moves:
-                if move.has_tracking != 'none' and not move.lot_ids:
-                    move.lot_ids = order.lot_producing_ids.ids
-                move.quantity = order.uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
-                extra_vals = order._prepare_finished_extra_vals()
-                if extra_vals:
-                    move.move_line_ids.write(extra_vals)
+            order._set_lots_to_finished_moves()
             # workorder duration need to be set to calculate the price of the product
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
