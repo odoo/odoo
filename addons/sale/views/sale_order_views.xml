@@ -599,6 +599,13 @@
                                 <field name="tax_id"/>
                                 <field name="company_id"/>
                                 <field name="tax_calculation_rounding_method"/>
+                                <!--
+                                    We need the sequence field to be here
+                                    because we want to be able to overwrite the default sequence value in the JS
+                                    in order for new lines to be added at the correct position.
+                                    NOTE: at some point we want to fix this in the framework so that an invisible field is not required.
+                                -->
+                                <field name="sequence" invisible="1"/>
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>

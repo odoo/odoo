@@ -36,6 +36,8 @@ function compareRecords(r1, r2, orderBy, fields) {
     return 0;
 }
 
+const DEFAULT_HANDLE_FIELD = "sequence";
+
 export class StaticList extends DataPoint {
     static type = "StaticList";
 
@@ -72,6 +74,10 @@ export class StaticList extends DataPoint {
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
+        if (!this.handleField && DEFAULT_HANDLE_FIELD in this.fields) {
+            this.handleField = DEFAULT_HANDLE_FIELD;
+        }
+
     }
 
     // -------------------------------------------------------------------------
