@@ -11,6 +11,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools import float_compare, float_repr, float_round, cleanup_xml_node, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1244,23 +1245,27 @@ class AccountMove(models.Model):
         move_line.name = " ".join(get_text(element, './/Descrizione').split())
 
         # Product.
+        company_domain = self.env['res.company']._check_company_domain(company)
         if elements_code := element.xpath('.//CodiceArticolo'):
             for element_code in elements_code:
                 type_code = element_code.xpath('.//CodiceTipo')[0]
                 code = element_code.xpath('.//CodiceValore')[0]
-                product = self.env['product.product'].search([('barcode', '=', code.text)])
+                product = self.env['product.product'].search(expression.AND([company_domain, [('barcode', '=', code.text)]]))
                 if (product and type_code.text == 'EAN'):
                     move_line.product_id = product
                     break
                 if partner:
-                    product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)], limit=2)
+                    product_supplier = self.env['product.supplierinfo'].search(expression.AND([
+                        company_domain,
+                        [('partner_id', '=', partner.id), ('product_code', '=', code.text)]
+                    ]), limit=2)
                     if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
                         move_line.product_id = product_supplier.product_id
                         break
             if not move_line.product_id:
                 for element_code in elements_code:
                     code = element_code.xpath('.//CodiceValore')[0]
-                    product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
+                    product = self.env['product.product'].search(expression.AND([company_domain, [('default_code', '=', code.text)]]), limit=2)
                     if product and len(product) == 1:
                         move_line.product_id = product
                         break

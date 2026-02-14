@@ -987,8 +987,9 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         if len(self.company_id) > 1:
             raise UserError(_("You cannot invoice orders belonging to different companies."))
+        is_picking_created = self._should_create_picking_real_time()
         self.write({'to_invoice': True})
-        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
+        if not is_picking_created and self._should_create_picking_real_time() and self.session_id.state != 'closed':
             self._create_order_picking()
         return self._generate_pos_order_invoice()
 
@@ -1160,7 +1161,10 @@ class PosOrder(models.Model):
         return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
 
     def _should_create_picking_real_time(self):
-        return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
+        return not self.session_id.update_stock_at_closing or self._force_create_picking_real_time()
+
+    def _force_create_picking_real_time(self):
+        return self.company_id.anglo_saxon_accounting and self.to_invoice
 
     def _create_order_picking(self):
         self.ensure_one()

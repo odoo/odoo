@@ -1,20 +1,43 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
-  <ext:UBLExtensions>
+    <ext:UBLExtensions>
     <ext:UBLExtension>
       <ext:ExtensionContent>
         <hrextac:HRFISK20Data>
           <hrextac:HRTaxTotal>
-            <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
+            <cbc:TaxAmount currencyID="EUR">51.00</cbc:TaxAmount>
             <hrextac:HRTaxSubtotal>
               <cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
+              <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+              <hrextac:HRTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Name>HR:PDV25</cbc:Name>
+                <cbc:Percent>25.0</cbc:Percent>
+                <hrextac:HRTaxScheme>
+                  <cbc:ID>VAT</cbc:ID>
+                </hrextac:HRTaxScheme>
+              </hrextac:HRTaxCategory>
+            </hrextac:HRTaxSubtotal>
+            <hrextac:HRTaxSubtotal>
+              <cbc:TaxableAmount currencyID="EUR">200.00</cbc:TaxableAmount>
+              <cbc:TaxAmount currencyID="EUR">26.00</cbc:TaxAmount>
+              <hrextac:HRTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Name>HR:PDV13</cbc:Name>
+                <cbc:Percent>13.0</cbc:Percent>
+                <hrextac:HRTaxScheme>
+                  <cbc:ID>VAT</cbc:ID>
+                </hrextac:HRTaxScheme>
+              </hrextac:HRTaxCategory>
+            </hrextac:HRTaxSubtotal>
+            <hrextac:HRTaxSubtotal>
+              <cbc:TaxableAmount currencyID="EUR">300.00</cbc:TaxableAmount>
               <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
               <hrextac:HRTaxCategory>
-                <cbc:ID>E</cbc:ID>
-                <cbc:Name>HR:E</cbc:Name>
+                <cbc:ID>K</cbc:ID>
+                <cbc:Name>HR:K</cbc:Name>
                 <cbc:Percent>0.0</cbc:Percent>
-                <cbc:TaxExemptionReasonCode>VATEX-EU-143</cbc:TaxExemptionReasonCode>
-                <cbc:TaxExemptionReason>Exempt based on article 143 of Council Directive 2006/112/EC</cbc:TaxExemptionReason>
+                <cbc:TaxExemptionReason>Exempt from VAT due to delivery within the EU</cbc:TaxExemptionReason>
                 <hrextac:HRTaxScheme>
                   <cbc:ID>VAT</cbc:ID>
                 </hrextac:HRTaxScheme>
@@ -22,7 +45,7 @@
             </hrextac:HRTaxSubtotal>
           </hrextac:HRTaxTotal>
           <hrextac:HRLegalMonetaryTotal>
-            <cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
+            <cbc:TaxExclusiveAmount currencyID="EUR">600.00</cbc:TaxExclusiveAmount>
             <hrextac:OutOfScopeOfVATAmount currencyID="EUR">0.00</hrextac:OutOfScopeOfVATAmount>
           </hrextac:HRLegalMonetaryTotal>
         </hrextac:HRFISK20Data>
@@ -30,7 +53,7 @@
     </ext:UBLExtension>
   </ext:UBLExtensions>  
   <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0</cbc:CustomizationID>
-  <cbc:ProfileID>P1</cbc:ProfileID>
+  <cbc:ProfileID>P99:Test custom process type</cbc:ProfileID>
   <cbc:ID>1/1/1</cbc:ID>
   <cbc:CopyIndicator>false</cbc:CopyIndicator>
   <cbc:IssueDate>2025-01-02</cbc:IssueDate>
@@ -139,15 +162,36 @@
     <cbc:Note>Payment terms: Immediate Payment</cbc:Note>
   </cac:PaymentTerms>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="EUR">51.00</cbc:TaxAmount>
     <cac:TaxSubtotal>
       <cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>25.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">200.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">26.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>13.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">300.00</cbc:TaxableAmount>
       <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
       <cac:TaxCategory>
-        <cbc:ID>E</cbc:ID>
+        <cbc:ID>K</cbc:ID>
         <cbc:Percent>0.0</cbc:Percent>
-        <cbc:TaxExemptionReasonCode>VATEX-EU-143</cbc:TaxExemptionReasonCode>
-        <cbc:TaxExemptionReason>Exempt based on article 143 of Council Directive 2006/112/EC</cbc:TaxExemptionReason>
+        <cbc:TaxExemptionReason>Exempt from VAT due to delivery within the EU</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -155,11 +199,11 @@
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
-    <cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="EUR">100.00</cbc:TaxInclusiveAmount>
+    <cbc:LineExtensionAmount currencyID="EUR">600.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">600.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">651.00</cbc:TaxInclusiveAmount>
     <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
-    <cbc:PayableAmount currencyID="EUR">100.00</cbc:PayableAmount>
+    <cbc:PayableAmount currencyID="EUR">651.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
@@ -172,11 +216,9 @@
         <cbc:ItemClassificationCode listID="CG">01.11.11</cbc:ItemClassificationCode>
       </cac:CommodityClassification>
       <cac:ClassifiedTaxCategory>
-        <cbc:ID>E</cbc:ID>
-        <cbc:Name>HR:E</cbc:Name>
-        <cbc:Percent>0.0</cbc:Percent>
-        <cbc:TaxExemptionReasonCode>VATEX-EU-143</cbc:TaxExemptionReasonCode>
-        <cbc:TaxExemptionReason>Exempt based on article 143 of Council Directive 2006/112/EC</cbc:TaxExemptionReason>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Name>HR:PDV25</cbc:Name>
+        <cbc:Percent>25.0</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -184,6 +226,53 @@
     </cac:Item>
     <cac:Price>
       <cbc:PriceAmount currencyID="EUR">100.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>product_a</cbc:Description>
+      <cbc:Name>product_a</cbc:Name>
+      <cac:CommodityClassification>
+        <cbc:ItemClassificationCode listID="CG">01.11.11</cbc:ItemClassificationCode>
+      </cac:CommodityClassification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Name>HR:PDV13</cbc:Name>
+        <cbc:Percent>13.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">200.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>3</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">300.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>product_a</cbc:Description>
+      <cbc:Name>product_a</cbc:Name>
+      <cac:CommodityClassification>
+        <cbc:ItemClassificationCode listID="CG">01.11.11</cbc:ItemClassificationCode>
+      </cac:CommodityClassification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>K</cbc:ID>
+        <cbc:Name>HR:K</cbc:Name>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReason>Exempt from VAT due to delivery within the EU</cbc:TaxExemptionReason>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">300.0</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
 </Invoice>

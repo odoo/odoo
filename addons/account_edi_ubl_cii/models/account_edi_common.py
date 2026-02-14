@@ -497,8 +497,6 @@ class AccountEdiCommon(models.AbstractModel):
         return partner, logs
 
     def _import_partner_bank(self, invoice, bank_details):
-        """ Retrieve the bank account, if no matching bank account is found, create it """
-        # clear the context, because creation of partner when importing should not depend on the context default values
         bank_details = list(set(map(sanitize_account_number, bank_details)))
         body = _("The following bank account numbers got retrieved during the import : %s", ", ".join(bank_details))
         invoice.with_context(no_new_invoice=True).message_post(body=body)
