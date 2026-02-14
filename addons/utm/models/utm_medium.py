@@ -5,8 +5,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-import re
-
 
 class UtmMedium(models.Model):
     _name = 'utm.medium'
@@ -28,40 +26,20 @@ class UtmMedium(models.Model):
             vals['name'] = new_name
         return super().create(vals_list)
 
-    @property
-    def SELF_REQUIRED_UTM_MEDIUMS_REF(self):
-        return {
-            'utm.utm_medium_email': 'Email',
-            'utm.utm_medium_direct': 'Direct',
-            'utm.utm_medium_website': 'Website',
-            'utm.utm_medium_twitter': 'X',
-            'utm.utm_medium_facebook': 'Facebook',
-            'utm.utm_medium_linkedin': 'LinkedIn'
-        }
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_medium_record(self):
-        for medium in self.SELF_REQUIRED_UTM_MEDIUMS_REF:
-            utm_medium = self.env.ref(medium, raise_if_not_found=False)
+        utm_medium_xml_ids = [
+            key
+            for key, (_label, model)
+            in self.env['utm.mixin'].SELF_REQUIRED_UTM_REF.items()
+            if model == 'utm.medium'
+        ]
+
+        for xml_id in utm_medium_xml_ids:
+            utm_medium = self.env.ref(xml_id, raise_if_not_found=False)
             if utm_medium and utm_medium in self:
                 raise UserError(_(
                     "Oops, you can't delete the Medium '%s'.\n"
                     "Doing so would be like tearing down a load-bearing wall \u2014 not the best idea.",
                     utm_medium.name
                 ))
-
-    def _fetch_or_create_utm_medium(self, name, module='utm'):
-        name_normalized = re.sub(r"[\s|.]", "_", name.lower())
-        try:
-            return self.env.ref(f'{module}.utm_medium_{name_normalized}')
-        except ValueError:
-            utm_medium = self.sudo().env['utm.medium'].create({
-                'name': self.SELF_REQUIRED_UTM_MEDIUMS_REF.get(f'{module}.utm_medium_{name_normalized}', name)
-            })
-            self.sudo().env['ir.model.data'].create({
-                'name': f'utm_medium_{name_normalized}',
-                'module': module,
-                'res_id': utm_medium.id,
-                'model': 'utm.medium',
-            })
-            return utm_medium

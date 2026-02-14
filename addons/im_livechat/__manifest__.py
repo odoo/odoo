@@ -22,6 +22,7 @@ Help your customers with this chat, and analyse their feedback.
         "data/im_livechat_channel_data.xml",
         "data/im_livechat_chatbot_data.xml",
         'data/digest_data.xml',
+        'data/utm_data.xml',
         'views/chatbot_script_answer_views.xml',
         'views/chatbot_script_step_views.xml',
         'views/chatbot_script_views.xml',

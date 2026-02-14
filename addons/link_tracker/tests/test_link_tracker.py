@@ -142,6 +142,28 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         for fname, value in expected_values_5.items():
             self.assertEqual(new_tracker[fname], value)
 
+        # Test with UTM values
+        utm_campaign = self.env['utm.campaign'].create({'name': 'Christmas Campaign'})
+        utm_medium = self.env.ref('utm.utm_medium_email')
+        utm_source = self.env.ref('utm.utm_source_mailing')
+        utm_reference = self.env.user
+        values_6 = {
+            'url': 'https://odoo.com/shop/18',
+            'label': 'This time with UTMs',
+            'campaign_id': utm_campaign.id,
+            'medium_id': utm_medium.id,
+            'source_id': utm_source.id,
+            'utm_reference': utm_reference,
+        }
+        link_trackers_utm = self.env['link.tracker'].search_or_create([values_6, values_6])
+        link_tracker_utm = link_trackers_utm[0]
+        link_tracker_utm_dupe = link_trackers_utm[1]
+        self.assertEqual(link_tracker_utm, link_tracker_utm_dupe)
+        self.assertEqual(link_tracker_utm.campaign_id, utm_campaign)
+        self.assertEqual(link_tracker_utm.medium_id, utm_medium)
+        self.assertEqual(link_tracker_utm.source_id, utm_source)
+        self.assertEqual(link_tracker_utm.utm_reference, utm_reference)
+
     def test_constraint(self):
         campaign_id = self.env['utm.campaign'].search([], limit=1)
 
@@ -203,11 +225,13 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         campaign = self.env['utm.campaign'].create({'name': 'campaign'})
         source = self.env['utm.source'].create({'name': 'source'})
         medium = self.env['utm.medium'].create({'name': 'medium'})
+        utm_reference = self.env.user
 
         expected_utm_params = {
             'utm_campaign': campaign.name,
             'utm_source': source.name,
             'utm_medium': medium.name,
+            'utm_reference': f'res.users,{utm_reference.id}',
         }
 
         # URL to an external website -> UTM parameters should no be added
@@ -217,6 +241,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'campaign_id': campaign.id,
             'source_id': source.id,
             'medium_id': medium.id,
+            'utm_reference': utm_reference,
             'title': 'Title',
         })
         self.assertLinkParams(
@@ -265,6 +290,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
     def test_url_encoding(self):
         """Test that the redirect URL is properly encoded."""
+        user_reference = self.env.user
         campaign = self.env['utm.campaign'].create({'name': 'campai.gn...'})
         source = self.env['utm.source'].create({'name': 'source...'})
         medium = self.env['utm.medium'].create({'name': 'medium'})
@@ -274,7 +300,9 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'campaign_id': campaign.id,
             'source_id': source.id,
             'medium_id': medium.id,
+            'utm_reference': user_reference,
         })
         self.assertIn('utm_campaign=campai.gn%2E%2E%2E', link.redirected_url)
         self.assertIn('utm_source=source%2E%2E%2E', link.redirected_url)
         self.assertIn('utm_medium=medium', link.redirected_url)
+        self.assertIn(f'utm_reference=res.users%2C{user_reference.id}', link.redirected_url)

@@ -40,7 +40,6 @@ class MailingMailing(models.Model):
     _inherit = ['mail.thread',
                 'mail.activity.mixin',
                 'mail.render.mixin',
-                'utm.source.mixin'
     ]
     _order = 'calendar_date DESC'
     _rec_name = "subject"
@@ -119,6 +118,11 @@ class MailingMailing(models.Model):
         compute='_compute_medium_id', readonly=False, store=True,
         ondelete='restrict',
         help="UTM Medium: delivery method (email, sms, ...)")
+    source_id = fields.Many2one(
+        'utm.source', string='Source',
+        compute='_compute_source_id', readonly=False, store=True,
+        ondelete='restrict',
+        help="UTM Source: source tracking (mass_mailing, newsletter, mass_sms, ...)")
     state = fields.Selection(
         [('draft', 'Draft'), ('in_queue', 'In Queue'),
          ('sending', 'Sending'), ('done', 'Sent')],
@@ -196,6 +200,7 @@ class MailingMailing(models.Model):
     ab_testing_schedule_datetime = fields.Datetime(
         related="campaign_id.ab_testing_schedule_datetime", readonly=False,
         default=lambda self: fields.Datetime.now() + relativedelta(days=1))
+    ab_testing_version_name = fields.Char('A/B Testing Version', copy=False)
     ab_testing_winner_selection = fields.Selection(
         related="campaign_id.ab_testing_winner_selection", readonly=False,
         default="opened_ratio",
@@ -392,7 +397,13 @@ class MailingMailing(models.Model):
     def _compute_medium_id(self):
         for mailing in self:
             if mailing.mailing_type == 'mail' and not mailing.medium_id:
-                mailing.medium_id = self.env['utm.medium']._fetch_or_create_utm_medium('email').id
+                mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_email').id
+
+    @api.depends('mailing_type')
+    def _compute_source_id(self):
+        for mailing in self:
+            if mailing.mailing_type == 'mail' and not mailing.source_id:
+                mailing.source_id = self.env['utm.mixin']._utm_ref('utm.utm_source_mailing').id
 
     @api.depends('mailing_model_id')
     def _compute_reply_to_mode(self):
@@ -863,7 +874,6 @@ class MailingMailing(models.Model):
             raise ValueError(_("A/B test option has not been enabled"))
         final_mailing = self.copy({
             'ab_testing_pc': 100,
-            'name': _(" %(subject)s (final)", subject=self.name)  # Add suffix on name to show it's the final mailing
         })
         self.campaign_id.ab_testing_winner_mailing_id = final_mailing
         final_mailing.action_launch()
@@ -931,7 +941,10 @@ class MailingMailing(models.Model):
 
     def _get_link_tracker_values(self):
         self.ensure_one()
-        vals = {'mass_mailing_id': self.id}
+        vals = {
+            'mass_mailing_id': self.id,
+            'utm_reference': f'{self._name},{self.id}',
+        }
 
         if self.campaign_id:
             vals['campaign_id'] = self.campaign_id.id
@@ -1122,7 +1135,10 @@ class MailingMailing(models.Model):
         for mass_mailing in self:
             html = mass_mailing.body_html if mass_mailing.body_html else ''
 
-            vals = {'mass_mailing_id': mass_mailing.id}
+            vals = {
+                'mass_mailing_id': mass_mailing.id,
+                'utm_reference': f'{mass_mailing._name},{mass_mailing.id}',
+            }
 
             if mass_mailing.campaign_id:
                 vals['campaign_id'] = mass_mailing.campaign_id.id

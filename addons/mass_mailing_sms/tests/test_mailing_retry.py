@@ -19,7 +19,6 @@ class TestMailingRetrySMS(MassSMSCommon, CronMixinCase):
     @users('user_marketing')
     def test_sms_retry_immediate_trigger(self):
         mailing = self.env['mailing.mailing'].create({
-            'name': 'TestMailing',
             'subject': 'Test',
             'mailing_type': 'sms',
             'body_plaintext': 'Coucou hibou',

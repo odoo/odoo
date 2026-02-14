@@ -15,12 +15,25 @@ class UtmMixin(models.AbstractModel):
     _name = 'utm.mixin'
     _description = 'UTM Mixin'
 
+    @api.model
+    def _selection_target_model(self):
+        return [
+            (model.model, model.name)
+            for model
+            in self.env['ir.model'].sudo().search([])
+            if not model.is_transient()
+        ]
+
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null',
                                   help="This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', 'Source', index='btree_not_null',
                                 help="This is the source of the link, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one('utm.medium', 'Medium', index='btree_not_null',
                                 help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad")
+    # This is the (optional) reference to the originating record (e.g: the social post, the mailing)
+    utm_reference = fields.Reference(string='UTM Reference',
+                                     selection='_selection_target_model',
+                                     index=True)  # will be used extensively for statistics (e.g: how many leads did this mailing generate)
 
     @api.model
     def default_get(self, fields):
@@ -37,10 +50,21 @@ class UtmMixin(models.AbstractModel):
                 if request:
                     # ir_http dispatch saves the url params in a cookie
                     value = request.cookies.get(cookie_name)
-                # if we receive a string for a many2one, we search/create the id
                 if field.type == 'many2one' and isinstance(value, str) and value:
+                    # if we receive a string for a many2one, we search/create the id
                     record = self._find_or_create_record(field.comodel_name, value)
                     value = record.id
+                elif field.type == 'reference' and isinstance(value, str) and value:
+                    # sanitize the value first, the ORM will crash if ill-formatted
+                    # we prefer to just void the field if so, as UTMs are optional
+                    # see 'fields_reference#convert_to_cache'
+                    try:
+                        res_model, res_id = value.split(',')
+                    except ValueError:
+                        value = False
+                    else:
+                        if not res_model in self.env or not self.env[res_model].browse(int(res_id)).exists():
+                            value = False
                 if value:
                     values[field_name] = value
         return values
@@ -57,6 +81,7 @@ class UtmMixin(models.AbstractModel):
             ('utm_campaign', 'campaign_id', 'odoo_utm_campaign'),
             ('utm_source', 'source_id', 'odoo_utm_source'),
             ('utm_medium', 'medium_id', 'odoo_utm_medium'),
+            ('utm_reference', 'utm_reference', 'odoo_utm_reference'),
         ]
 
     def _tracking_models(self):
@@ -178,3 +203,50 @@ class UtmMixin(models.AbstractModel):
         if match:
             return match.group(1), int(match.group(2) or '1')
         return name, 1
+
+    def _utm_ref(self, xml_id):
+        """" Special "ref" implementation for utm records (utm.source/utm.medium).
+        For xml_ids in 'SELF_REQUIRED_UTM_REF', we create them if they don't exist.
+
+        This allows functional flows to use static UTM data records and keep clean
+        statistics/reporting. """
+        utm_record = self.env.ref(xml_id, raise_if_not_found=False)
+
+        if not utm_record and xml_id in self.SELF_REQUIRED_UTM_REF:
+            try:
+                module, xml_name = xml_id.split('.')
+            except ValueError:
+                raise ValueError(f'Malformed xml_id: {xml_id}. Should be "module.name".')
+
+            label, model = self.SELF_REQUIRED_UTM_REF[xml_id]
+            utm_record = self.sudo().env[model].create({
+                self.env[model]._rec_name: label
+            })
+
+            # create matching data record
+            self.sudo().env['ir.model.data'].create({
+                'name': xml_name,
+                'module': module,
+                'res_id': utm_record.id,
+                'model': model,
+            })
+
+        return utm_record
+
+    @property
+    def SELF_REQUIRED_UTM_REF(self):
+        return {
+            'utm.utm_medium_direct': ('Direct', 'utm.medium'),
+            'utm.utm_medium_email': ('Email', 'utm.medium'),
+            'utm.utm_medium_social_media': ('Social Media', 'utm.medium'),
+            'utm.utm_medium_website': ('Website', 'utm.medium'),
+            'utm.utm_source_facebook': ('Facebook', 'utm.source'),
+            'utm.utm_source_instagram': ('Instagram', 'utm.source'),
+            'utm.utm_source_linkedin': ('LinkedIn', 'utm.source'),
+            'utm.utm_source_livechat': ('Livechat', 'utm.source'),
+            'utm.utm_source_mailing': ('Mass Mailing', 'utm.source'),
+            'utm.utm_source_referral': ('Referral', 'utm.source'),
+            'utm.utm_source_survey': ('Survey', 'utm.source'),
+            'utm.utm_source_twitter': ('X', 'utm.source'),
+            'utm.utm_source_youtube': ('YouTube', 'utm.source'),
+        }

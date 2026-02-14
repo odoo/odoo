@@ -17,6 +17,11 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(created_lead.team_id, self.sale_team)
         self.assertEqual(created_lead.type, 'opportunity')
 
+        # UTMs
+        self.assertEqual(created_lead.utm_reference, self.chatbot_script)
+        self.assertEqual(created_lead.source_id, self.env.ref("im_livechat.utm_source_chatbot"))
+        self.assertFalse(created_lead.campaign_id)
+
     def test_chatbot_create_lead_portal_user(self):
         self.authenticate(self.user_portal.login, self.user_portal.login)
         self.step_create_lead.write({'crm_team_id': self.sale_team_with_lead})
@@ -29,6 +34,11 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
 
         self.assertEqual(created_lead.team_id, self.sale_team_with_lead)
         self.assertEqual(created_lead.type, 'lead')
+
+        # UTMs
+        self.assertEqual(created_lead.utm_reference, self.chatbot_script)
+        self.assertEqual(created_lead.source_id, self.env.ref("im_livechat.utm_source_chatbot"))
+        self.assertFalse(created_lead.campaign_id)
 
     def test_chatbot_create_lead_company(self):
         self.user_portal.write({"company_ids": self.company_2, "company_id": self.company_2})

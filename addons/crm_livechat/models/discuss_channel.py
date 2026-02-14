@@ -62,7 +62,6 @@ class DiscussChannel(models.Model):
             else:
                 customers |= customer
 
-        utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
         return self.env['crm.lead'].create({
             "origin_channel_id": self.id,
             'name': html2plaintext(key[5:]),
@@ -71,7 +70,8 @@ class DiscussChannel(models.Model):
             'team_id': False,
             'description': self._get_channel_history(),
             'referred': partner.name,
-            'source_id': utm_source and utm_source.id,
+            'source_id': self.env['utm.mixin']._utm_ref('utm.utm_source_livechat').id,
+            'medium_id': self.env['utm.mixin']._utm_ref('utm.utm_medium_website').id,
         })
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):

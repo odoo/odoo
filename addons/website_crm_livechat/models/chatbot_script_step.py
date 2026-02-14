@@ -13,4 +13,5 @@ class ChatbotScriptStep(models.Model):
         if discuss_channel.livechat_visitor_id:
             values['name'] = _("%s's New Lead", discuss_channel.livechat_visitor_id.display_name)
             values['visitor_ids'] = [(4, discuss_channel.livechat_visitor_id.id)]
+            values['medium_id'] = self.env['utm.mixin']._utm_ref("utm.utm_medium_website").id
         return values

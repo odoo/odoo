@@ -18,22 +18,21 @@ class TestMailComposerMassMailing(TestMailComposer, common.TestMassMailCommon):
     def test_mail_composer_mailing_creation(self):
         """Check mailing configuration created through the mail composer."""
         for use_exclusion_list in (True, False):
-            mass_mailing_name = f'Test Create Mass Mailing From Composer (use_exclusion_list: {use_exclusion_list})'
+            mass_mailing_subject = f'Test Create Mass Mailing From Composer (use_exclusion_list: {use_exclusion_list})'
             composer = self.env['mail.compose.message'].with_context(
                 self._get_web_context(self.test_records)
             ).create({
                 'body': '<p>Body</p>',
-                'mass_mailing_name': mass_mailing_name,
-                'subject': 'Test',
+                'subject': mass_mailing_subject,
+                'mass_mailing_create': True,
                 'use_exclusion_list': use_exclusion_list,
             })
             composer._action_send_mail()
-            mailing = self.env['mailing.mailing'].search([('name', '=', mass_mailing_name)])
+            mailing = self.env['mailing.mailing'].search([('subject', '=', mass_mailing_subject)])
             self.assertTrue(mailing)
             self.assertEqual(mailing.body_html, '<p>Body</p>')
             self.assertEqual(mailing.mailing_domain, f"[('id', 'in', {self.test_records.ids})]")
             self.assertEqual(mailing.mailing_model_name, self.test_record._name)
             self.assertEqual(mailing.sent_date, fields.Datetime.now())
             self.assertEqual(mailing.state, 'done')
-            self.assertEqual(mailing.subject, 'Test')
             self.assertEqual(mailing.use_exclusion_list, use_exclusion_list)

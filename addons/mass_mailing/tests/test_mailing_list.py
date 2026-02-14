@@ -194,7 +194,6 @@ class TestMailingContactImport(MassMailCommon):
         ])
 
         self.env['mailing.mailing'].create({
-            'name': 'Test',
             'subject': 'Test',
             'contact_list_ids': (first_list | second_list).ids,
         })

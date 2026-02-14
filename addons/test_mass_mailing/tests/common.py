@@ -21,7 +21,6 @@ class TestMassMailCommon(MassSMSCommon):
         # enforce last update by user_marketing to match _process_mass_mailing_queue
         # taking last writer as user running a batch
         cls.mailing_bl = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
-            'name': 'SourceName',
             'subject': 'MailingSubject',
             # `+ ""` is for insuring that _prepend_preview rule out that case
             'preview': 'Hi {{ object.name + "" }} :)',
@@ -44,7 +43,6 @@ class TestMassMailCommon(MassSMSCommon):
         })
 
         cls.mailing_sms = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
-            'name': 'XMas SMS',
             'subject': 'Xmas SMS for {object.name}',
             'mailing_model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'mailing_type': 'sms',

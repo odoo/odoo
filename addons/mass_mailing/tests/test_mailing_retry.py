@@ -19,7 +19,6 @@ class TestMailingRetry(MassMailCommon, CronMixinCase):
     @users('user_marketing')
     def test_mailing_retry_immediate_trigger(self):
         mailing = self.env['mailing.mailing'].create({
-            'name': 'TestMailing',
             'subject': 'Test',
             'mailing_type': 'mail',
             'body_html': '<div>Hello</div>',

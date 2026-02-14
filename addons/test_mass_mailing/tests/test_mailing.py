@@ -19,7 +19,6 @@ class TestMassMailing(TestMassMailCommon):
             'body_html': '<p>Test</p>',
             'mailing_domain': [('id', 'in', self.user_employee.partner_id.ids)],
             'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
-            'name': 'test',
             'subject': 'Test author',
         })
         mailing_2 = mailing.copy({'user_id': self.user_marketing_1.id})
@@ -51,7 +50,6 @@ class TestMassMailing(TestMassMailCommon):
             })
 
         mailing = self.env['mailing.mailing'].create({
-            'name': 'TestName',
             'subject': 'TestSubject',
             'body_html': 'Hello <t t-out="object.name" />',
             'reply_to_mode': 'new',
@@ -228,7 +226,6 @@ class TestMassMailing(TestMassMailCommon):
                     'mailing_domain': [('id', 'in', test_records.ids)],
                     'mailing_model_id': self.env['ir.model']._get_id(dst_model),
                     'mailing_type': 'mail',
-                    'name': 'SourceName',
                     'preview': 'Hi ${object.name} :)',
                     'reply_to_mode': 'update',
                     'subject': 'MailingSubject',
@@ -388,13 +385,10 @@ class TestMassMailing(TestMassMailCommon):
             'alias_model_id': self.env['ir.model']._get('mailing.test.utm').id
         })
 
-        source = self.env['utm.source'].create({'name': 'Source test'})
-        medium = self.env['utm.medium'].create({'name': 'Medium test'})
         campaign = self.env['utm.campaign'].create({'name': 'Campaign test'})
         subject = 'MassMailingTestUTM'
 
         mailing = self.env['mailing.mailing'].create({
-            'name': 'UTMTest',
             'subject': subject,
             'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'reply_to_mode': 'new',
@@ -402,8 +396,6 @@ class TestMassMailing(TestMassMailCommon):
             'keep_archives': True,
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
             'contact_list_ids': [(4, self.mailing_list_1.id)],
-            'source_id': source.id,
-            'medium_id': medium.id,
             'campaign_id': campaign.id
         })
 
@@ -421,8 +413,9 @@ class TestMassMailing(TestMassMailCommon):
         self.assertEqual(len(mailing_test_utms), 2)
         for test_utm in mailing_test_utms:
             self.assertEqual(test_utm.campaign_id, campaign)
-            self.assertEqual(test_utm.source_id, source)
-            self.assertEqual(test_utm.medium_id, medium)
+            self.assertEqual(test_utm.medium_id, self.env.ref('utm.utm_medium_email'))
+            self.assertEqual(test_utm.source_id, self.env.ref('utm.utm_source_mailing'))
+            self.assertEqual(test_utm.utm_reference, mailing)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -585,7 +578,6 @@ class TestMassMailing(TestMassMailCommon):
         mailing = self.env['mailing.mailing'].create({
             'mailing_domain': [('name', 'ilike', 'test_duplicates %')],
             'mailing_model_id': self.env.ref('test_mass_mailing.model_mailing_test_partner').id,
-            'name': 'test duplicates',
             'subject': 'test duplicates',
         })
 
@@ -618,7 +610,6 @@ class TestMassMailing(TestMassMailCommon):
             'body_html': '<p>Marketing stuff for ${object.name}</p>',
             'mailing_domain': [('id', 'in', test_records.ids)],
             'mailing_model_id': self.env['ir.model']._get_id('mailing.test.partner.unstored'),
-            'name': 'test',
             'subject': 'Blacklisted',
         })
 
@@ -680,7 +671,6 @@ class TestMassMailing(TestMassMailCommon):
 
         # create mass mailing record
         mailing = self.env['mailing.mailing'].create({
-            'name': 'SourceName',
             'subject': 'MailingSubject',
             'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,

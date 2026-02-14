@@ -29,7 +29,6 @@ class TestMailingTest(TestMassMailCommon):
             'mailing_domain': [('id', 'in', cls.test_records.ids)],
             'mailing_model_id': cls.env['ir.model']._get_id('mailing.test.blacklist'),
             'mailing_type': 'mail',
-            'name': 'TestButton',
             'preview': 'Preview {{ object.name }}',
             'subject': 'Subject {{ object.name }}',
         })
@@ -203,7 +202,6 @@ class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
         self._setup_sms_twilio(self.user_marketing.company_id)
 
         mailing = self.env['mailing.mailing'].create({
-            'name': 'TestButton',
             'subject': 'Subject {{ object.name }}',
             'preview': 'Preview {{ object.name }}',
             'state': 'draft',

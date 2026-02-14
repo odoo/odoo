@@ -25,7 +25,6 @@ class TestMassMailValues(MassSMSCommon):
     def test_mailing_computed_fields(self):
         # Create on res.partner, with default values for computed fields
         mailing = self.env['mailing.mailing'].create({
-            'name': 'TestMailing',
             'subject': 'Test',
             'mailing_type': 'sms',
             'body_plaintext': 'Coucou hibou',
@@ -72,7 +71,6 @@ class TestMassMailValues(MassSMSCommon):
             'body_plaintext': 'Coucou hibou',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
             'mailing_type': 'sms',
-            'name': 'TestMailing',
             'subject': 'Test',
         })
         base_url = self.env['mailing.mailing'].get_base_url()

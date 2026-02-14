@@ -13,7 +13,7 @@
         'sms',
     ],
     'data': [
-        'data/utm.xml',
+        'data/utm_data.xml',
         'security/ir.model.access.csv',
         'report/mailing_trace_report_views.xml',
         'views/mailing_list_views.xml',

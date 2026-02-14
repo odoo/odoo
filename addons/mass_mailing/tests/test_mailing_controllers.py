@@ -28,7 +28,6 @@ class TestMailingControllersCommon(MassMailCommon, HttpCase):
             'mailing_domain': [],
             'mailing_model_id': cls.env['ir.model']._get_id('mailing.contact'),
             'mailing_type': 'mail',
-            'name': 'TestMailing on Contacts',
             'subject': 'TestMailing on Contacts',
         })
         cls.test_mailing_on_documents = cls.env['mailing.mailing'].create({
@@ -36,7 +35,6 @@ class TestMailingControllersCommon(MassMailCommon, HttpCase):
             'mailing_domain': [],
             'mailing_model_id': cls.env['ir.model']._get_id('res.partner'),
             'mailing_type': 'mail',
-            'name': 'TestMailing on Documents',
             'subject': 'TestMailing on Documents',
         })
         cls.test_mailing_on_lists = cls.env['mailing.mailing'].create({
@@ -44,7 +42,6 @@ class TestMailingControllersCommon(MassMailCommon, HttpCase):
             'contact_list_ids': [(4, cls.mailing_list_1.id), (4, cls.mailing_list_2.id)],
             'mailing_model_id': cls.env['ir.model']._get_id('mailing.list'),
             'mailing_type': 'mail',
-            'name': 'TestMailing on Lists',
             'reply_to': cls.email_reply_to,
             'subject': 'TestMailing on Lists',
         })
