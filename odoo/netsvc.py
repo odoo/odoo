@@ -162,7 +162,40 @@ class ColoredPerfFilter(PerfFilter):
         return COLOR_PATTERN % (30 + cursor_mode_color, 40 + DEFAULT, cursor_mode)
 
 
-class ColoredFormatter(logging.Formatter):
+class ContextAwareFormatter(logging.Formatter):
+
+    def _get_info_from_request(self, request):
+        if http_request := getattr(request, 'httprequest', None):
+            return {
+                'ip': http_request.environ['REMOTE_ADDR'],
+                'ua': http_request.environ.get('HTTP_USER_AGENT', ''),
+                'sid': request.session.sid[:7],
+            }
+        return {}
+
+    def _get_info_from_env(self, env):
+        return {
+            'db': env.cr.dbname,
+            'uid': env.uid,
+        }
+
+    def format(self, record):
+        ctx = {}
+
+        if hasattr(record, 'request'):
+            ctx.update(self._get_info_from_request(record.request))
+        if hasattr(record, 'env'):
+            ctx.update(self._get_info_from_env(record.env))
+
+        if not ctx:
+            return super().format(record)
+
+        record.msg += ' [%s]'
+        record.args += (json.dumps(ctx),)
+        return super().format(record)
+
+
+class ColoredFormatter(ContextAwareFormatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
@@ -273,7 +306,7 @@ def init_logger():
         formatter = ColoredFormatter(format)
         perf_filter = ColoredPerfFilter()
     else:
-        formatter = logging.Formatter(format)
+        formatter = ContextAwareFormatter(format)
         perf_filter = PerfFilter()
         werkzeug.serving._log_add_style = False
     handler.setFormatter(formatter)

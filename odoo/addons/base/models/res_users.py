@@ -755,10 +755,10 @@ class ResUsers(models.Model):
                     user.tz = tz
                 user._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for login:%s from %s", login, ip)
+            _logger.info("Login failed for login:%s from %s", login, ip, extra={'request': request, 'env': self.env})
             raise
 
-        _logger.info("Login successful for login:%s from %s", login, ip)
+        _logger.info("Login successful for login:%s from %s", login, ip, extra={'request': request, 'env': self.env})
 
         return auth_info
 
