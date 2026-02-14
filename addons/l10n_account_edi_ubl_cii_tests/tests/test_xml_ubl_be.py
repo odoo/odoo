@@ -1174,6 +1174,9 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         # source: base-negative-inv-correction.xml
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_invoice_negative_amounts.xml',
             amount_total=1656.25, amount_tax=331.25, list_line_subtotals=[25, 2800, -1500], move_type='in_refund')
+        # source: base-creditnote-correction.xml with ignored LineExtensionAmount
+        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_invoice_ignore_lineextensionamount.xml',
+            amount_total=1000, amount_tax=0, list_line_subtotals=[1000])
         # source: vat-category-E.xml
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_tax_exempt_gbp.xml',
             amount_total=1200, amount_tax=0, list_line_subtotals=[1200], currency_id=self.env.ref('base.GBP').id)

@@ -7,15 +7,15 @@
 # Nurlan Farajov, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # erpgo translator <jumshud@erpgo.az>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # ERPGo Odoo <erpgo.odoo@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:36+0000\n"
-"PO-Revision-Date: 2026-01-17 08:20+0000\n"
-"Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
+"POT-Creation-Date: 2026-02-12 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 17:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-17/"
 "account/az/>\n"
 "Language: az\n"
@@ -11435,7 +11435,7 @@ msgstr "Məhsullar"
 #. module: account
 #: model:account.account,name:account.1_to_receive_rec
 msgid "Products to receive"
-msgstr ""
+msgstr "Qəbul olunmalı məhsullar"
 
 #. module: account
 #. odoo-javascript
@@ -14009,6 +14009,15 @@ msgid ""
 msgstr ""
 "Jurnal üzrə istinad modelinin və istinad növünün kombinasiyası yerinə "
 "yetirilməyib"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -16954,7 +16963,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a document which has been posted once."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
 msgstr ""
 
 #. module: account

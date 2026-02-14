@@ -7,15 +7,15 @@
 # Wil Odoo, 2025
 # Sarah Park, 2025
 #
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 10:51+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-12 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 08:07+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/account/"
 "ko/>\n"
 "Language: ko\n"
@@ -9486,7 +9486,7 @@ msgstr "3월"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_margin
 msgid "Margin"
-msgstr "이윤"
+msgstr "마진"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14320,6 +14320,15 @@ msgid ""
 msgstr "전표에 대해 참조 모델과 참조 유형을 조합시키도록 구현되지 않았습니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "이 유통 항목이 속해 있는 회사입니다."
@@ -17369,8 +17378,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "문서 게시가 완료된 경우에는 유형을 변경할 수 없습니다."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18031,6 +18041,10 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 결제 영수증 (참조 {{ object.name or 'n/a' }})"
+
+#, python-format
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr "문서 게시가 완료된 경우에는 유형을 변경할 수 없습니다."
 
 #, python-format
 #~ msgid ""
