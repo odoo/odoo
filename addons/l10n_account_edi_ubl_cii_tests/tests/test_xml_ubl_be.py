@@ -477,6 +477,16 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'invoice_lines': [{'price_subtotal': x} for x in (25, 2800, -1500)],
             },
         )
+        # source: base-creditnote-correction.xml with ignored LineExtensionAmount
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_invoice_ignore_lineextensionamount.xml',
+            invoice_vals={
+                'amount_total': 1000,
+                'amount_tax': 0,
+                'invoice_lines': [{'price_subtotal': 1000}],
+            }
+        )
         # source: vat-category-E.xml
         self._assert_imported_invoice_from_file(
             subfolder=subfolder,
