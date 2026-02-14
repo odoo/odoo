@@ -169,9 +169,14 @@ sudo nano /etc/odoo/odoo.conf
 
 Parámetros importantes en `odoo.conf`:
 
+> ⚠️ **ADVERTENCIA DE SEGURIDAD:** El parámetro `admin_passwd` es la contraseña
+> maestra que otorga acceso completo a la gestión de bases de datos (crear,
+> duplicar, eliminar). **Nunca** uses un valor débil como `admin` en producción.
+> El script de instalación genera una contraseña aleatoria automáticamente.
+
 ```ini
 [options]
-admin_passwd = TU_CONTRASEÑA_MAESTRA
+admin_passwd = TU_CONTRASEÑA_MAESTRA_SEGURA
 db_host = False
 db_port = False
 db_user = odoo

@@ -167,8 +167,7 @@ fi
 # Clonar el repositorio completo de Odoo
 if [ -d "${ODOO_DIR}" ]; then
     log_warn "El directorio ${ODOO_DIR} ya existe. Actualizando con git pull..."
-    cd "${ODOO_DIR}"
-    git pull
+    su - "${ODOO_USER}" -s /bin/bash -c "cd ${ODOO_DIR} && git pull"
 else
     git clone --depth 1 --branch "${ODOO_BRANCH}" "${ODOO_REPO}" "${ODOO_DIR}"
     log_info "Repositorio de Odoo clonado correctamente en ${ODOO_DIR}."
@@ -189,11 +188,14 @@ log_info "Paso 6/6: Creando configuración e iniciando Odoo..."
 # Crear directorio de configuración
 mkdir -p "$(dirname "${ODOO_CONF}")"
 
+# Generar una contraseña maestra aleatoria
+ADMIN_PASSWD=$(python3 -c "import secrets; print(secrets.token_urlsafe(16))")
+
 # Crear archivo de configuración
 cat > "${ODOO_CONF}" <<EOF
 [options]
-; Contraseña maestra para operaciones de base de datos
-admin_passwd = admin
+; Contraseña maestra para operaciones de base de datos (cámbiala si es necesario)
+admin_passwd = ${ADMIN_PASSWD}
 db_host = False
 db_port = False
 db_user = ${ODOO_USER}
@@ -260,7 +262,8 @@ echo "    sudo systemctl restart odoo   # Reiniciar Odoo"
 echo "    sudo systemctl status odoo    # Ver estado"
 echo "    sudo journalctl -u odoo -f    # Ver logs en tiempo real"
 echo ""
-echo "  IMPORTANTE: Cambia la contraseña maestra en ${ODOO_CONF}"
-echo "              (parámetro admin_passwd) antes de usar en producción."
+echo "  IMPORTANTE: Tu contraseña maestra (admin_passwd) es:"
+echo "    ${ADMIN_PASSWD}"
+echo "  Guárdala en un lugar seguro. Puedes cambiarla en ${ODOO_CONF}"
 echo ""
 echo "============================================================================="
