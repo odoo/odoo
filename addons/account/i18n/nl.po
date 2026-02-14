@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 11:59+0000\n"
+"POT-Creation-Date: 2026-02-13 18:37+0000\n"
+"PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-3/account/"
 "nl/>\n"
@@ -5289,7 +5289,7 @@ msgstr "Configureren"
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Configureer je document lay-out"
+msgstr "Configureer de lay-out van je document"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -16336,7 +16336,8 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"De fiscale positie bepaald de btw/rekeningen gebruikt voor dit contact."
+"De fiscale positie bepaalt de btw/rekeningen die worden gebruikt voor dit "
+"contact."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -18969,6 +18970,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19371,9 +19379,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
 msgstr ""
-"Je kunt het type van een document niet wijzigen nadat het eenmaal is gepost."
 
 #. module: account
 #. odoo-python
@@ -20126,6 +20134,11 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Betaalbewijs (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr ""
+#~ "Je kunt het type van een document niet wijzigen nadat het eenmaal is "
+#~ "gepost."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

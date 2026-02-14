@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 11:57+0000\n"
+"PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "hi/>\n"
@@ -342,6 +342,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* नया: स्टॉक मूव बन गया है, लेकिन अभी कन्फर्म नहीं हुआ है.\n"
+"* दूसरे मूव का इंतज़ार: इससे पहले किसी और स्टॉक मूव का पूरा होना ज़रूरी है.\n"
+"* इंतज़ार: मूव की पुष्टि हो चुकी है, लेकिन प्रॉडक्ट अभी रिज़र्व नहीं हो पा रहा है.\n"
+"* उपलब्ध: प्रॉडक्ट रिज़र्व हो गया है और मूव के लिए तैयार है.\n"
+"* पूरा हुआ: प्रॉडक्ट भेज दिया गया है और ट्रांसफ़र कन्फर्म हो चुका है।"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -2325,7 +2330,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_uid
 msgid "Created by"
-msgstr "द्वारा निर्मित"
+msgstr "इन्होंने बनाया"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__create_date
@@ -3548,6 +3553,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"आने वाले समय के लिए अनुमानित स्टॉक (गणना: हाथ में उपलब्ध मात्रा - बाहर जाने वाली + आने वाली)\n"
+"अगर आप एक खास जगह देख रहे हैं, तो इसमें वहां का और उससे जुड़ी छोटी जगहों का सामान गिना जाएगा.\n"
+"अगर एक वेयरहाउस देख रहे हैं, तो उसके मुख्य स्टॉक और जुड़ी जगहों का सामान शामिल होगा.\n"
+"बाकी मामलों में, 'आंतरिक' टाइप की सभी जगहों का सामान इसमें जुड़ता है।"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -3560,6 +3569,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"अनुमानित स्टॉक की गिनती (कुल उपलब्ध स्टॉक में से बुक किए गए स्टॉक को घटाकर)\n"
+"एक ही स्टॉक लोकेशन होने पर, इसमें उस लोकेशन या उसके सब-लोकेशन में स्टोर सामान शामिल है.\n"
+"एक ही वेयरहाउस होने पर, इसमें उस वेयरहाउस के स्टॉक लोकेशन या उसके सब-लोकेशन में स्टोर सामान शामिल है.\n"
+"बाकी स्थितियों में, सिर्फ 'इंटरनल' टाइप वाले स्टोर में रखा सामान ही गिना जाएगा।"
 
 #. module: stock
 #. odoo-javascript
@@ -7232,6 +7245,11 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"पहले से तय किए गए बाहर जाने वाले प्रॉडक्ट माल की कुल संख्या.\n"
+"एक स्टॉक लोकेशन के मामले में, इसमें इस लोकेशन या इसके चिल्ड्रन लोकेशन से बाहर जाने वाला माल शामिल है.\n"
+"एक वेयरहाउस के मामले में, इसमें इस वेयरहाउस के स्टॉक लोकेशन या इसके चिल्ड्रन लोकेशन से बाहर जाने वाला सामान "
+"शामिल है.\n"
+"नहीं, तो इसमें 'इंटरनल' प्रकार के किसी भी स्टॉक लोकेशन से बाहर जाने वाला सामान शामिल है।"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity

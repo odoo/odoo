@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 11:59+0000\n"
+"POT-Creation-Date: 2026-02-13 18:37+0000\n"
+"PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/ja/>\n"
@@ -9925,7 +9925,7 @@ msgstr "次の間: "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
 msgid "Is greater than or equal to"
-msgstr "次以上:"
+msgstr "以上"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -10204,7 +10204,7 @@ msgstr "6月"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr "KPIプロバイダー"
+msgstr "KPI生成元"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -13864,7 +13864,7 @@ msgstr "取消日"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Review"
-msgstr "レビュー"
+msgstr "確認"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
@@ -18632,6 +18632,13 @@ msgstr "これ以前の仕訳の追加・変更はできません: %(lock_date_i
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19012,8 +19019,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "一度記帳されたドキュメントの種類を変更することはできません。"
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19748,6 +19756,9 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 支払受領書 (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr "一度記帳されたドキュメントの種類を変更することはできません。"
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

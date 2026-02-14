@@ -8,13 +8,13 @@
 # Larissa Manderfeld, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:36+0000\n"
-"PO-Revision-Date: 2025-10-15 00:20+0000\n"
+"PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "es/>\n"
@@ -22,9 +22,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -649,20 +649,21 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimado/a <t t-out=\"object.partner_id.name or ''\">Brandon "
-"Freeman</t>,<br/><br/>\n"
-"         Nos complace informarle que hemos enviado su pedido.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
-"object.carrier_tracking_ref\">\n"
-"            Su referencia de rastreo es\n"
+"Freeman</t>:<br/><br/>\n"
+"         Nos complace informarle de que hemos enviado su pedido.\n"
+"        <t t-if="
+"\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">"
+"\n"
+"            La referencia de seguimiento es\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-"
-"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value="
+"\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
-"out=\"line[0] or ''\"/>\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" "
+"t-out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
@@ -676,13 +677,14 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Encontrará más detalles en la orden de entrega adjunta.<br/><br/>\n"
+"        Encontrará más información en el albarán de entrega adjunto.<br/><br/"
+">\n"
 "        Gracias,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -828,7 +830,7 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_value text-muted\">\n"
-"                                            Pronosticado\n"
+"                                            Previsto\n"
 "                                        </span>"
 
 #. module: stock
@@ -3859,7 +3861,7 @@ msgstr "Fecha pronosticada prevista"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
-msgstr "Inventario pronosticado"
+msgstr "Inventario previsto"
 
 #. module: stock
 #. odoo-python
@@ -3869,7 +3871,7 @@ msgstr "Inventario pronosticado"
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 msgid "Forecasted Quantity"
-msgstr "Cantidad pronosticada"
+msgstr "Cantidad prevista"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
@@ -3888,7 +3890,7 @@ msgstr "Informe pronosticado"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 msgid "Forecasted Stock"
-msgstr "Stock pronosticado"
+msgstr "Stock previsto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
@@ -8858,7 +8860,7 @@ msgstr "Mostrar operaciones detalladas"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_forecasted_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_forecasted_qty_status_button
 msgid "Show Forecasted Qty Status Button"
-msgstr "Mostrar botón de estado de cantidad pronosticada"
+msgstr "Mostrar botón de estado de cantidad prevista"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
@@ -9582,7 +9584,7 @@ msgstr "Se han generado las siguientes órdenes de reposición"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "The forecasted quantity of"
-msgstr "La cantidad pronosticada de"
+msgstr "La cantidad prevista de"
 
 #. module: stock
 #. odoo-javascript
@@ -10221,7 +10223,7 @@ msgstr "Demanda total"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Forecasted"
-msgstr "Total pronosticado"
+msgstr "Total previsto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree

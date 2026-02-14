@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 11:59+0000\n"
+"POT-Creation-Date: 2026-02-13 18:37+0000\n"
+"PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-3/account/es_419/>\n"
@@ -13468,7 +13468,7 @@ msgstr "Cantidad:"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
 msgid "Quarterly"
-msgstr "Trimestralmente"
+msgstr "Trimestral"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_mode
@@ -16335,7 +16335,7 @@ msgstr "El asiento está protegido con un hash inalterable."
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
-msgstr ""
+msgstr "El asiento usa cuentas (%(accounts_codes_names)s) de otra empresa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -19022,6 +19022,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19421,8 +19428,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "No puede cambiar el tipo de un documento si se ha registrado una vez."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20177,6 +20185,10 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Pago recibido (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr ""
+#~ "No puede cambiar el tipo de un documento si se ha registrado una vez."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

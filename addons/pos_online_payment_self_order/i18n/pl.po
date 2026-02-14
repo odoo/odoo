@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2026-01-14 18:41+0000\n"
+"PO-Revision-Date: 2026-02-14 11:29+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-3/"
 "pos_online_payment_self_order/pl/>\n"
@@ -22,8 +22,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_online_payment_self_order
@@ -70,7 +70,7 @@ msgstr "Zapłać"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Zapłać przy kasie"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -91,7 +91,7 @@ msgstr "Transakcja płatnicza"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
-msgstr ""
+msgstr "Płatność w toku"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -112,7 +112,7 @@ msgstr "Metody płatności punktu sprzedaży"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Zeskanuj kod QR, aby dokonać płatności"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -124,7 +124,7 @@ msgstr "Samodzielna płatność online"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.js:0
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Nie można opłacić bieżącego zamówienia (być może zostało już opłacone)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -143,8 +143,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Metoda płatności online używana do samodzielnego zamawiania w konfiguracji "
+"PoS musi mieć co najmniej jednego opublikowanego dostawcę usług płatniczych "
+"obsługującego walutę tej konfiguracji PoS."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Skorzystaj z opcji samodzielnego składania zamówień i płatności online"

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 11:59+0000\n"
+"POT-Creation-Date: 2026-02-13 18:37+0000\n"
+"PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/it/>\n"
@@ -16339,6 +16339,8 @@ msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
+"La registrazione utilizza conti (%(accounts_codes_names)s) di un'azienda "
+"diversa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -19020,6 +19022,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19423,8 +19432,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "Non puoi modificare il tipo di un documento già registrato."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20180,6 +20190,9 @@ msgid ""
 msgstr ""
 "Ricevuta di pagamento {{ object.company_id.name }} (rif. {{ object.name or "
 "'n/d' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr "Non puoi modificare il tipo di un documento già registrato."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

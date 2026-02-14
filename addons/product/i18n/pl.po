@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2026-01-15 16:46+0000\n"
+"PO-Revision-Date: 2026-02-14 11:30+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-3/"
 "product/pl/>\n"
@@ -120,7 +120,7 @@ msgstr "'Etykiety produktów - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.uom_id.name)"
-msgstr ""
+msgstr "„Opakowania produktów – %s ” % (object.uom_id.name)"
 
 #. module: product
 #. odoo-python
@@ -228,6 +228,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
+">Skontaktuj się z nami</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -298,7 +300,7 @@ msgstr "<span class=\"o_stat_text\"> Produkty</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Packaging Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kody kreskowe opakowań</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -411,6 +413,8 @@ msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
 msgstr ""
+"Pozycja cennika z „Innym cennikiem” jako podstawą musi mieć identyfikator "
+"base_pricelist_id."
 
 #. module: product
 #. odoo-python
@@ -558,6 +562,8 @@ msgstr "Dodaj do produktów"
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
 msgstr ""
+"Dodatkowe opakowania dla tego produktu, które mogą być wykorzystane do "
+"sprzedaży"
 
 #. module: product
 #: model:res.groups,name:product.group_product_manager
@@ -875,6 +881,11 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
+"Zmiana jednostki miary dla produktu spowoduje zastosowanie przeliczenia 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Wszystkie istniejące rekordy (Zamówienia sprzedaży, Zamówienia zakupu itp.) "
+"wykorzystujące ten produkt zostaną zaktualizowane poprzez zastąpienie nazwy "
+"jednostki."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -1164,12 +1175,12 @@ msgstr "Utworzono"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
 msgid "Cubic Feet (ft³)"
-msgstr ""
+msgstr "Stopy sześcienne (ft³)"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
 msgid "Cubic Meters (m³)"
-msgstr ""
+msgstr "Metry sześcienne (m³)"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -1495,7 +1506,7 @@ msgstr "Opisowa nazwa reguły dla tej pozycji cennika."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr "Dodatkowa Zawartość"
+msgstr "Dodatkowa treść"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
@@ -1969,14 +1980,14 @@ msgstr "Jest publicznym dokumentem"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms (kg)"
-msgstr ""
+msgstr "Kilogramy (kg)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "Labels cannot be printed for products of service type"
-msgstr ""
+msgstr "Nie można drukować etykiet dla produktów typu usługa"
 
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
@@ -2529,7 +2540,7 @@ msgstr "Określ wariant produktu, dla którego ta reguła powinna być stosowana
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
 msgid "Pounds (lb)"
-msgstr ""
+msgstr "Funty (lb)"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -3380,7 +3391,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "The cost of a product can't be negative."
-msgstr ""
+msgstr "Koszt produktu nie może być ujemny."
 
 #. module: product
 #: model:product.template,description_sale:product.desk_organizer_product_template
@@ -3927,7 +3938,7 @@ msgstr "Widoczne dla wszystkich"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__visible_to_customers
 msgid "Visible to customers"
-msgstr ""
+msgstr "Widoczne dla klientów"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
@@ -3990,12 +4001,12 @@ msgstr "Etykieta jednostki miary wagi"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "What to expect ?"
-msgstr ""
+msgstr "Czego możesz się spodziewać?"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
 msgid "Whether the tag is displayed to customers."
-msgstr ""
+msgstr "Czy tag jest wyświetlany klientom."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -4276,7 +4287,7 @@ msgstr "Należy ustawić wartość dodatnią."
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid "attribute_id"
-msgstr ""
+msgstr "attribute_id"
 
 #. module: product
 #. odoo-javascript
