@@ -46,16 +46,20 @@ fi
 # PASO 1: Actualizar la distribución de Ubuntu
 # =============================================================================
 log_info "Paso 1/6: Actualizando la distribución de Ubuntu..."
-apt update
-apt upgrade -y
-apt dist-upgrade -y
+apt-get update
+apt-get upgrade -y
+apt-get dist-upgrade -y
+dpkg --configure -a
+apt-get --fix-broken install -y
+apt-get clean
+apt-get update
 log_info "Sistema actualizado correctamente."
 
 # =============================================================================
 # PASO 2: Instalar paquetes base del sistema
 # =============================================================================
 log_info "Paso 2/6: Instalando paquetes base del sistema..."
-apt install -y --no-install-recommends \
+apt-get install -y --no-install-recommends \
     git \
     python3-full \
     python3-pip \
@@ -85,7 +89,7 @@ log_info "Paquetes base instalados correctamente."
 # PASO 3: Instalar dependencias de Python y fuentes para Odoo
 # =============================================================================
 log_info "Paso 3/6: Instalando dependencias de Python y fuentes para Odoo..."
-apt install -y --no-install-recommends \
+apt-get install -y --no-install-recommends \
     python3-asn1crypto \
     python3-babel \
     python3-cbor2 \
@@ -139,7 +143,7 @@ log_info "Dependencias de Python y fuentes instaladas correctamente."
 # PASO 4: Instalar y configurar PostgreSQL
 # =============================================================================
 log_info "Paso 4/6: Instalando y configurando PostgreSQL..."
-apt install -y postgresql postgresql-client
+apt-get install -y postgresql postgresql-client
 systemctl enable postgresql
 systemctl start postgresql
 
