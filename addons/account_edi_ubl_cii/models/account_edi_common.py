@@ -631,6 +631,9 @@ class AccountEdiCommon(models.AbstractModel):
         lines_values = []
         for line_tree in tree.iterfind(xpath):
             line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
+            if line_values is None:
+                continue
+
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(
                 invoice, line_values, invoice.journal_id.type,
             )
@@ -657,8 +660,12 @@ class AccountEdiCommon(models.AbstractModel):
                 'deferred_end_date': end_date,
             }
 
+        line_vals = self._retrieve_line_vals(tree, document_type, qty_factor)
+        if line_vals is None:
+            return None
+
         return {
-            **self._retrieve_line_vals(tree, document_type, qty_factor),
+            **line_vals,
             **deferred_values,
         }
 
@@ -774,8 +781,11 @@ class AccountEdiCommon(models.AbstractModel):
         # line_net_subtotal (mandatory)
         price_subtotal = None
         line_total_amount_node = tree.find(xpath_dict['line_total_amount'])
-        if line_total_amount_node is not None:
-            price_subtotal = float(line_total_amount_node.text)
+        if line_total_amount_node is None or line_total_amount_node.text is None or not line_total_amount_node.text.strip():
+            return None
+        price_subtotal = float(line_total_amount_node.text)
+        if price_subtotal == 0:
+            return None
 
         # quantity
         quantity = delivered_qty * qty_factor
