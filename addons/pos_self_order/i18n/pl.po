@@ -6,15 +6,15 @@
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
 #
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 02:34+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-02-14 09:12+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "pos_self_order/pl/>\n"
 "Language: pl\n"
@@ -22,9 +22,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -65,7 +65,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
 msgid "<sup title=\"Only works for kiosk and mobile\">?</sup>"
-msgstr ""
+msgstr "<sup title=\"Działa tylko w trybie kiosku lub mobilnym\">?</sup>"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -120,12 +120,12 @@ msgstr "Wszystkie elementy zostaną usunięte z koszyka."
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Allow self-order customers to set their order for takeout."
-msgstr ""
+msgstr "Daj klientom możliwość składania zamówień na wynos samodzielnie."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Allow takeout order"
-msgstr ""
+msgstr "Zezwól na zamówienia na wynos"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -176,13 +176,13 @@ msgstr "Dostępne pomiędzy"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr ""
+msgstr "Dostępne w trybie samodzielnym"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr ""
+msgstr "Dostępne w trybie samodzielnego zamawiania"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -424,7 +424,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Eat In"
-msgstr ""
+msgstr "Na miejscu"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -438,6 +438,8 @@ msgstr "Edytuj"
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
+"Aktywuj menu OR w ustawieniach restauracji, aby otrzymać darmowe kody QR na "
+"stoliki."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -486,13 +488,13 @@ msgstr "Standardowe"
 #: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
 #: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
-msgstr ""
+msgstr "Pobierz kody QR"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid "Get QR codes"
-msgstr ""
+msgstr "Pobierz kody QR"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -751,7 +753,7 @@ msgstr "Nie dostępny/e"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr ""
+msgstr "Niedostępne w trybie samodzielnym"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -849,13 +851,13 @@ msgstr "Strefa odbioru"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Please wait until the price is loaded"
-msgstr ""
+msgstr "Poczekaj na załadowanie się ceny"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_session.py:0
 msgid "PoS Order by Session"
-msgstr ""
+msgstr "Zamówienie PoS wg. sesji"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -1094,13 +1096,13 @@ msgstr "URL Samodzielnego Zamawiania"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Self Takeaway"
-msgstr ""
+msgstr "Samodzielne na wynos"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Self-Order"
-msgstr ""
+msgstr "Samodzielne zamawianie"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1175,7 +1177,7 @@ msgstr "Tracker stolika:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Table detective time!"
-msgstr ""
+msgstr "Pobawmy się w stolikowego detektywa!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1186,7 +1188,7 @@ msgstr "Stolik:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Take Out"
-msgstr ""
+msgstr "Na wynos"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1234,12 +1236,12 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
 msgid "The product will be available after this hour."
-msgstr ""
+msgstr "Produkt będzie dostępny po tej godzinie."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_until
 msgid "The product will be available until this hour."
-msgstr ""
+msgstr "Produkt będzie dostępny po tej godzinie."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1320,7 +1322,7 @@ msgstr "Tak"
 #. odoo-python
 #: code:addons/pos_self_order/controllers/orders.py:0
 msgid "You are not authorized to remove this order"
-msgstr ""
+msgstr "Nie masz uprawnień, aby usunąć to zamówienie"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1358,7 +1360,7 @@ msgstr "Twój wybór"
 #. odoo-python
 #: code:addons/pos_self_order/controllers/orders.py:0
 msgid "Your order does not exist or has been removed"
-msgstr ""
+msgstr "Twoje zamówienie nie istnieje lub zostało usunięte"
 
 #. module: pos_self_order
 #. odoo-javascript

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"POT-Creation-Date: 2026-02-12 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Raz Omer Hussein, 2025\n"
 "Language-Team: Kurdish (https://app.transifex.com/odoo/teams/41243/ku/)\n"
@@ -15216,6 +15216,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 msgid ""
 "The expense is accounted for when a vendor bill is validated, except in "
@@ -17786,6 +17794,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18126,8 +18141,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "ناتوانیت جۆری بەڵگەنامەیەک بگۆڕیت کە جارێک پۆست کراوە."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18799,6 +18815,9 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr "ناتوانیت جۆری بەڵگەنامەیەک بگۆڕیت کە جارێک پۆست کراوە."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "ئەم ڕێکخستنە ناتوانرێت بگۆڕدرێت دوای دروستکردنی فاکتورە."

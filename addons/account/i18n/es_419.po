@@ -11,14 +11,14 @@
 # Fernanda Alvarez, 2025
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 10:40+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-02-12 18:38+0000\n"
+"PO-Revision-Date: 2026-02-14 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/account/es_419/>\n"
 "Language: es_419\n"
@@ -13067,7 +13067,7 @@ msgstr "Cantidad:"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
 msgid "Quarterly"
-msgstr "Trimestralmente"
+msgstr "Trimestral"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_mode
@@ -15933,6 +15933,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "El asiento está protegido con un hash inalterable."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr "El asiento usa cuentas (%(accounts_codes_names)s) de otra empresa."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 msgid ""
 "The expense is accounted for when a vendor bill is validated, except in "
@@ -18761,6 +18769,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19150,8 +19165,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "No puede cambiar el tipo de un documento si se ha registrado una vez."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19856,6 +19872,10 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Pago recibido (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr ""
+#~ "No puede cambiar el tipo de un documento si se ha registrado una vez."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"
