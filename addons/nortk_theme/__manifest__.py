@@ -4,7 +4,8 @@
     'version': '19.0.1.0.0',
     'category': 'Themes/Backend',
     'author': "Iván Chavero",
-    'depends': ['web'],
+    'auto_install': True,
+    'depends': ['base', 'web'],
     'data': [],
     'assets': {
         # 'web.assets_backend' is the main bundle for the Odoo interface
@@ -13,7 +14,7 @@
         ],
         # Frontend (Login, Database Selector, Website)
         'web.assets_frontend': [
-            'nortk_theme/static/src/scss/dark_mode.scss',
+            'nortk_theme/static/src/scss/nortk.scss',
         ],
     },
     'installable': True,
