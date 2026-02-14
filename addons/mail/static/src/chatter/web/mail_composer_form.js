@@ -32,7 +32,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
                 if (
                     el &&
                     isInEdition &&
-                    this.props.record.data.composition_comment_option === "reply_all"
+                    this.props.record.data.composition_comment_option !== "forward"
                 ) {
                     const element = el.querySelector(".note-editable[contenteditable]");
                     if (element) {

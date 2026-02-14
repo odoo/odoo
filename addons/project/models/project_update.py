@@ -22,7 +22,7 @@ class ProjectUpdate(models.Model):
     _name = 'project.update'
     _description = 'Project Update'
     _order = 'id desc'
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def default_get(self, fields):

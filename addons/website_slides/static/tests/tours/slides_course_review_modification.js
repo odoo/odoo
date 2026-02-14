@@ -272,7 +272,12 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']"
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
+            run: "hover && click #chatterRoot:shadow button[name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",

@@ -81,6 +81,17 @@ export class Message extends Record {
             )?.dataset.oDatetime;
         },
     });
+    /** attachments not already clearly visible in the body, unlike inlined images */
+    extra_body_attachment_ids = fields.Attr("ir.attachment", {
+        compute() {
+            const parsedBody = new DOMParser().parseFromString(this.body, "text/html");
+            const inlinedImageAttachmentIds = [
+                ...parsedBody.querySelectorAll("img[data-attachment-id]"),
+            ].map((img) => parseInt(img.dataset.attachmentId));
+
+            return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
+        },
+    });
     hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {
@@ -140,6 +151,8 @@ export class Message extends Record {
         },
     });
     partner_ids = fields.Many("res.partner");
+    /** @type {string} */
+    reply_to;
     subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("mail.thread");
     threadAsNeedaction = fields.One("mail.thread", {
@@ -337,7 +350,11 @@ export class Message extends Record {
         const name = this.thread?.display_name;
         const threadName = name ? name.trim().toLowerCase() : "";
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
-        const candidates = new Set([defaultSubject, threadName]);
+        // suggested is expected to not change much so it's best to consider it the default for display purposes
+        const suggestedSubject = this.thread?.suggestedSubject
+            ? this.thread.suggestedSubject.toLowerCase()
+            : "";
+        const candidates = new Set([defaultSubject, threadName, suggestedSubject]);
         return candidates.has(this.subject?.toLowerCase());
     }
 

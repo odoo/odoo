@@ -44,7 +44,7 @@
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log" class="d-flex gap-3">
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Followers only" class="w-auto flex-grow-1"
                                 invisible="composition_comment_option == 'forward' or (composition_comment_option != 'reply_all' and not context.get('clicked_on_full_composer', False))"
-                                context="{'form_view_ref': 'base.view_partner_simple_form'}"
+                                context="{'form_view_ref': 'base.view_partner_simple_form', 'show_email': True}"
                                 options="{'on_tag_click': 'open_form'}"/>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add recipients..." class="w-auto flex-grow-1"
                                 required="composition_comment_option == 'forward' or (composition_comment_option != 'reply_all' and not context.get('clicked_on_full_composer', False) and composition_mode == 'comment' and not notified_bcc_contains_share)"
@@ -99,8 +99,8 @@
                                 invisible="(composition_mode != 'comment' or composition_batch or not scheduled_date) or partner_ids_all_have_email"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
-                        <field name="template_id" widget="mail_composer_template_selector"/>
                         <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_batch or composition_mode != 'comment'"/>
+                        <field name="template_id" widget="mail_composer_template_selector"/>
                     </footer>
                 </form>
             </field>

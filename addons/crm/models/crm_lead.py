@@ -28,8 +28,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'campaign_id',
     'medium_id',
     'source_id',
-    # Mail mixin
-    'email_cc',
     # description
     'name',
     'user_id',
@@ -87,7 +85,8 @@ class CrmLead(models.Model):
     _name = 'crm.lead'
     _description = "Lead"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc',
+    _inherit = [
+                'mail.thread.subject.suggested',
                 'mail.thread.blacklist',
                 'mail.thread.phone',
                 'mail.activity.mixin',

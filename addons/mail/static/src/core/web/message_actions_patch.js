@@ -38,8 +38,10 @@ registerMessageAction("reply-all", {
             message_id: message.id,
         });
         const recipientIds = recipients.map((r) => r.id);
-        const emailFrom = message.author_id?.email || message.email_from;
-        const [name, email] = parseEmail(emailFrom);
+        // usually reply_to is what you want people to see as being "from"
+        // showing this avoids "leaking" the actual user when reply_to is an alias
+        const emailFrom = message.reply_to || message.email_from || message.author_id?.email;
+        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
@@ -50,11 +52,13 @@ registerMessageAction("reply-all", {
             email,
             message,
             name: name || email,
+            signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
         });
         const context = {
             default_body: body,
             default_composition_mode: "comment",
             default_composition_comment_option: "reply_all",
+            default_email_add_signature: false,
             default_partner_ids: recipientIds,
         };
         messageActionOpenFullComposer(_t("Reply All"), context, owner);
@@ -65,9 +69,11 @@ registerMessageAction("forward", {
     condition: ({ message, thread }) => message.canForward(thread),
     icon: "fa fa-share",
     name: _t("Forward"),
-    onSelected: async ({ message, owner, store }) => {
-        const emailFrom = message.author_id?.email || message.email_from;
-        const [name, email] = parseEmail(emailFrom);
+    onSelected: async ({ message, owner, store, thread }) => {
+        // usually reply_to is what you want people to see as being "from"
+        // showing this avoids "leaking" the actual user when reply_to is an alias
+        const emailFrom = message.reply_to || message.email_from || message.author_id?.email;
+        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
@@ -78,6 +84,7 @@ registerMessageAction("forward", {
             email,
             message,
             name: name || email,
+            signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
         });
         const attachmentIds = message.attachment_ids.map((a) => a.id);
         const newAttachmentIds = await store.env.services.orm.call(
@@ -93,6 +100,7 @@ registerMessageAction("forward", {
             default_body: body,
             default_composition_mode: "comment",
             default_composition_comment_option: "forward",
+            default_email_add_signature: false,
         };
         messageActionOpenFullComposer(_t("Forward Message"), context, owner);
     },

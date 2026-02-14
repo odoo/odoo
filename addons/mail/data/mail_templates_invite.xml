@@ -10,7 +10,8 @@
             <xpath expr="//div[@t-out='message.body']" position="replace">
                 <div style="font-size:13px;">
                     <div class="o-mail-invite-openingMessage">
-                        <t t-out='message.author_id.name'/> (<t t-out='message.author_id.email'/>) added you as a follower of this <t t-out="model_description"/>.
+                        <t t-out='message.author_id.name'/> (<t t-out='message.author_id.email'/>) added you as a follower.
+                        <br/>You'll now receive updates for this <t t-out="model_description"/>.
                     </div>
                     <br t-if="len(message.body) > 0"/>
                     <div style="color:grey;">
@@ -29,7 +30,8 @@
         <template id="mail_notification_multi_invite" inherit_id="mail.mail_notification_invite" primary="True">
             <xpath expr="//div[hasclass('o-mail-invite-openingMessage')]" position="replace">
                 <div>
-                    <t t-out='message.author_id.name'/> (<t t-out='message.author_id.email'/>) added you as a follower of <t t-out="model_description"/> listed below:
+                    <t t-out='message.author_id.name'/> (<t t-out='message.author_id.email'/>) added you as a follower.
+                    <br/>You'll now receive updates for the following <t t-out="model_description"/>:
                 </div>
             </xpath>
         </template>

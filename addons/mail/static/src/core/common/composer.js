@@ -6,7 +6,6 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
-import { getOuterHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
@@ -33,7 +32,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
-    createElementWithContent,
     htmlFormatList,
     htmlJoin,
     isHtmlEmpty,
@@ -571,7 +569,7 @@ export class Composer extends Component {
         return {};
     }
 
-    async onClickFullComposer(ev) {
+    async onClickFullComposerGetAction() {
         const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
             allRecipients.push(...this.thread.additionalRecipients);
@@ -603,18 +601,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.thread.effectiveSelf.main_user_id?.signature;
-        if (signature) {
-            const divElement = document.createElement("div");
-            divElement.setAttribute("data-o-mail-quote", "1");
-            divElement.append(
-                document.createElement("br"),
-                document.createTextNode("-- "),
-                document.createElement("br"),
-                ...createElementWithContent("div", signature).childNodes
-            );
-            signature = getOuterHtml(divElement);
-        }
+        const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
             this.props.composer.emailAddSignature ? signature : ""
@@ -676,6 +663,11 @@ export class Composer extends Component {
                 fullComposerBus: this.fullComposerBus,
             },
         };
+        return { action, options };
+    }
+
+    async onClickFullComposer(ev) {
+        const { action, options } = await this.onClickFullComposerGetAction();
         await this.env.services.action.doAction(action, options);
         this.state.isFullComposerOpen = true;
     }

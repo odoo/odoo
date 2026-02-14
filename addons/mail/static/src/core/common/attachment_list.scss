@@ -1,9 +1,9 @@
 .o-mail-AttachmentContainer {
-    &.o-inMessage.o-isImage {
+    &.o-inMessage.o-isImage:not(.o-inChatter) {
         min-width: 13em;
         min-height: 10em;
     }
-    &:not(.o-inMessage.o-isImage) {
+    &:not(.o-inMessage.o-isImage), &.o-inChatter.o-inMessage.o-isImage {
         width: 13em;
         height: 10em;
     }

@@ -469,6 +469,29 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     return markupsafe.Markup(sanitized)
 
 # ----------------------------------------------------------
+# lxml manipulation helpers
+# ----------------------------------------------------------
+
+
+def lxml_remove_element_preserve_tail(element, tail_separator='\n'):
+    """Remove an lxml element, mutating its parent tree and preserving its tail."""
+    parent_element = element.getparent()
+    if parent_element is None:
+        return False
+    # combine element tail with sibling tail or parent text
+    # this is safe as both are escaped xml text and will again be serialized as such
+    if element.tail:
+        tail = element.tail and element.tail.strip()
+        if tail:
+            previous_sibling = element.getprevious()
+            if previous_sibling is not None:
+                previous_sibling.tail = (previous_sibling.tail or '') + tail_separator + tail
+            else:
+                parent_element.text = (parent_element.text or '') + tail_separator + tail
+    parent_element.remove(element)
+    return True
+
+# ----------------------------------------------------------
 # HTML/Text management
 # ----------------------------------------------------------
 
@@ -518,6 +541,22 @@ def html_keep_url(text):
         idx = item.end()
     final += text[idx:]
     return final
+
+
+def html_remove_xpath(body, xpath_expression):
+    """Remove all elements matching some xpath."""
+    BodyClass = type(body)
+    parsed_body_root = html.fragment_fromstring(body, create_parent='div')
+    xpath_elements = parsed_body_root.xpath(xpath_expression)
+    for element in xpath_elements:
+        if element != parsed_body_root:
+            lxml_remove_element_preserve_tail(element)
+    # if the input body was already a single node with no trailing string, avoid adding wrapper div
+    root_children = parsed_body_root.getchildren()
+    if len(root_children) == 1 and not root_children[0].tail:
+        parsed_body_root = root_children[0]
+    final_body = html.tostring(parsed_body_root, encoding='unicode')
+    return BodyClass(final_body)
 
 
 def html_to_inner_content(html):

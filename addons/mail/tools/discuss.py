@@ -192,10 +192,13 @@ class Store:
             self.data[model_name][index]["_DELETE"] = True
         return self
 
-    def get_client_action(self):
+    def get_client_action(self, next_action=None):
         """Gets client action to insert this store in the client."""
         return {
-            "params": self.get_result(),
+            "params": {
+                "store_values": self.get_result(),
+                "next_action": next_action,
+            },
             "tag": "mail.store_insert",
             "type": "ir.actions.client",
         }

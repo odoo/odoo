@@ -207,7 +207,6 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 self.assertFalse(new_partner_customer)
 
                 self.assertIn('Please call me as soon as possible', task.description)
-                self.assertEqual(task.email_cc, f'"New Cc" <new.cc@test.agrolait.com>, {self.partner_2.email_formatted}, {self.partner_1.email_formatted}, "New Customer" <new.customer@test.agrolait.com>')
                 self.assertEqual(task.name, f'Test from {author.email_formatted}')
                 self.assertEqual(task.partner_id, author)
                 self.assertEqual(task.project_id, self.project_followers)
@@ -319,17 +318,17 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                         }
                     ]
                 expected_all += [
-                    {  # mail.thread.cc: email_cc field
-                        'create_values': {},
-                        'email': 'new.cc@test.agrolait.com',
-                        'name': 'New Cc',
-                        'partner_id': new_partner_cc.id,
-                    },
                     {  # incoming email other recipients (new.customer)
                         'create_values': {},
                         'email': 'new.customer@test.agrolait.com',
                         'name': 'New Customer',
                         'partner_id': new_partner_customer.id,
+                    },
+                    {  # Email CC without a partner
+                        'create_values': {},
+                        'email': 'new.cc@test.agrolait.com',
+                        'name': 'New Cc',
+                        'partner_id': new_partner_cc.id,
                     },
                     # other CC (partner_2) and customer (partner_id) already follower
                 ]
@@ -412,11 +411,6 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                     cc=f'"Another Cc" <another.cc@test.agrolait.com>, {self.partner_3.email}',
                     target_model='project.task',
                 )
-                self.assertEqual(
-                    task.email_cc,
-                    '"Another Cc" <another.cc@test.agrolait.com>, valid.poilboeuf@gmail.com, "New Cc" <new.cc@test.agrolait.com>, '
-                    '"Valid Poilvache" <valid.other@gmail.com>, "Valid Lelitre" <valid.lelitre@agrolait.com>, "New Customer" <new.customer@test.agrolait.com>',
-                    'Updated with new Cc')
                 self.assertEqual(len(task.message_ids), 4, 'Incoming email + acknowledgement + chatter reply + customer reply')
                 self.assertEqual(
                     task.message_partner_ids,
@@ -607,8 +601,6 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             self.assertNotIn(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")
             # sender should not be added as user in the task
             self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
-            # internal users in cc of mail shoudl be added in email_cc field
-            self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
 
     def test_task_creation_removes_email_signatures(self):
         """

@@ -9,6 +9,10 @@
     // WIDGET_CONTAINER_WIDTH in movenode_plugin.js should be enforced
     // to ensure enough space for the drag&drop feature of the editor.
     $movenode-horizontal-padding: 25px;
+    
+    .modal-dialog:has(.o_mail_composer_form_view) {
+        --modal-width: 75vw;
+    }
     .modal-content:has(.o_mail_composer_form_view) {
         .modal-header {
             padding-left: $movenode-horizontal-padding;
@@ -23,8 +27,15 @@
         }
         .o_mail_composer_message {
             .note-editable {
+                min-height: 60vh !important;
                 padding-left: 0;
                 padding-right: 0;
+                
+                &:not(.o_field_highlight) {
+                    &:hover, &:focus {
+                        --o-input-border-color: transparent;
+                    }
+                }
             }
         }
     }

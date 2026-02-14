@@ -58,13 +58,12 @@
                 </div>
             </div>
             <t t-if="state.composerType">
-                <t t-if="state.composerType === 'message'">
-                    <div class="d-flex py-1 ps-3">
-                        <span class="flex-shrink-0 text-end fw-bold px-2" style="width:46px">To: </span>
-                        <RecipientsInput thread="state.thread"/>
-                    </div>
-                </t>
-                <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
+                <Composer composer="state.thread.composer"
+                    autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'"
+                    onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback"
+                    dropzoneRef="rootRef" thread="state.thread" type="state.composerType" t-key="props.threadId"
+                    withMessageFields="true"
+                />
             </t>
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">

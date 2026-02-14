@@ -15,6 +15,7 @@
                      t-att-title="attachment.name ? attachment.name : undefined"
                      t-att-class="{
                         'o-inMessage': env.inMessage,
+                        'o-inChatter': env.inChatter,
                         'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
                         'o-viewable': attachment.isViewable,
@@ -30,12 +31,25 @@
                         src="getImageUrl(attachment)"
                         paused="attachment.gifPaused"
                         alt="attachment.name"
-                        class="'o-mail-AttachmentImage img img-fluid w-100 rounded-3 ' + (env.inMessage ? 'object-fit-contain o-inMessage' : 'object-fit-cover')"
+                        class="
+                            'o-mail-AttachmentImage img img-fluid w-100 rounded-3' 
+                            + (env.inMessage ? ' o-inMessage' : '')
+                            + (env.inChatter ? ' o-inChatter' : '')
+                            + (!env.inChatter and env.inMessage ? ' object-fit-contain' : '')
+                            + (!env.inChatter and !env.inMessage ? '  object-fit-cover' : '')
+                            + (env.inChatter ? ' object-fit-scale-down' : '')
+                        "
                     />
                     <img
                         t-elif="attachment.isImage"
                         class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
-                        t-att-class="{ 'object-fit-contain o-inMessage': env.inMessage, 'object-fit-cover': !env.inMessage }"
+                        t-att-class="{
+                            'o-inMessage': env.inMessage,
+                            'o-inChatter': env.inChatter,
+                            'object-fit-contain': !env.inChatter and env.inMessage,
+                            'object-fit-cover': !env.inChatter and !env.inMessage,
+                            'object-fit-scale-down': env.inChatter,
+                        }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
                         t-on-load="onImageLoaded"

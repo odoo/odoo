@@ -11,6 +11,7 @@ import hmac
 import json
 import lxml
 import logging
+import textwrap
 import time
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
@@ -34,7 +35,7 @@ from odoo.fields import Domain
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, SQL,
-    ormcache, is_list_of,
+    OrderedSet, ormcache, is_list_of,
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
@@ -3051,7 +3052,7 @@ class MailThread(models.AbstractModel):
         :rtype: str
         """
         self.ensure_one()
-        return self.display_name
+        return textwrap.shorten(self.display_name or '', width=100, placeholder="...")
 
     def _message_create(self, values_list):
         """ Low-level helper to create mail.message records. It is mainly used
@@ -3483,36 +3484,72 @@ class MailThread(models.AbstractModel):
             recipients_ids = recipients_group['recipients_ids']
             recipients_to_emails = {r['id']: r['email_normalized'] for r in recipients_group['recipients_data']}
 
+            # Only keep one recipient per email address to avoid sending the exact
+            # same email to the same address in a row. Recipients not in "deduplicated"
+            # list will have a canceled notification.
+            # If a chunk only contains canceled notifications, no MailMail is created
+            # to avoid pointless work.
+            email_to_deduplicated_recipient_id = {
+                email_address: recipient_id for recipient_id, email_address in reversed(recipients_to_emails.items())
+                if recipient_id
+            }
+            deduplicated_recipient_ids = set(email_to_deduplicated_recipient_id.values())
+
             # create MailMail for partners
             for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
-                mail_values = self._notify_by_email_get_final_mail_values(
-                    recipients_ids_chunk,
-                    base_mail_values,
-                    additional_values={'body_html': mail_body}
-                )
-                new_email = SafeMail.create(mail_values)
-
-                if new_email and recipients_ids_chunk:
-                    notif_create_values += [{
+                deduplicated_recipient_ids_chunk = [pid for pid in recipients_ids_chunk if pid in deduplicated_recipient_ids]
+                if deduplicated_recipient_ids_chunk:
+                    mail_values = self._notify_by_email_get_final_mail_values(
+                        deduplicated_recipient_ids_chunk,
+                        base_mail_values,
+                        additional_values={'body_html': mail_body}
+                    )
+                    new_email = SafeMail.create(mail_values)
+                else:
+                    new_email = SafeMail.browse()
+                notif_create_values += [
+                    {
                         'mail_mail_id': new_email.id,
                         'res_partner_id': recipient_id,
                         'mail_email_address': recipients_to_emails.get(recipient_id),
                         **base_notification_values,
-                    } for recipient_id in recipients_ids_chunk]
+                    } | (
+                        {
+                            'failure_type': 'mail_dup',
+                            'notification_status': 'canceled',
+                        }
+                        if recipient_id not in deduplicated_recipient_ids_chunk
+                        else {}
+                    )
+                    for recipient_id in recipients_ids_chunk
+                ]
                 emails += new_email
             # create MailMail for email-only recipients
             if recipients_emails:
-                mail_values = self._notify_by_email_get_final_mail_values(
-                    [], base_mail_values,
-                    additional_values={'body_html': mail_body},
-                )
-                mail_values['email_to'] = ','.join(recipients_emails)
-                new_email = SafeMail.create(mail_values)
-                notif_create_values += [{
+                deduplicated_email_addresses = OrderedSet(recipients_emails) - email_to_deduplicated_recipient_id.keys()
+                if deduplicated_email_addresses:
+                    mail_values = self._notify_by_email_get_final_mail_values(
+                        [], base_mail_values,
+                        additional_values={'body_html': mail_body},
+                    )
+                    mail_values['email_to'] = ','.join(deduplicated_email_addresses)
+                    new_email = SafeMail.create(mail_values)
+                else:
+                    new_email = SafeMail.browse()
+                new_notif_create_values = [{
                     'mail_email_address': email,
                     'mail_mail_id': new_email.id,
                     **base_notification_values,
                 } for email in recipients_emails]
+                # mark all but the first occurrence of a given normalized email as cancelled (duplicate)
+                success_notif_emails = set(email_to_deduplicated_recipient_id.keys())
+                for notif in new_notif_create_values:
+                    if (email := notif['mail_email_address']) not in success_notif_emails:
+                        success_notif_emails.add(email)
+                    else:
+                        notif['notification_status'] = 'canceled'
+                        notif['failure_type'] = 'mail_dup'
+                notif_create_values += new_notif_create_values
                 emails += new_email
 
         if notif_create_values:
@@ -3706,7 +3743,7 @@ class MailThread(models.AbstractModel):
         # record, model
         if not model_description:
             model_description = record_wlang._get_model_description(msg_vals['model'] if 'model' in msg_vals else message.model)
-        record_name = force_record_name or message.with_context(lang=lang).record_name
+        record_name = textwrap.shorten(force_record_name or message.with_context(lang=lang).record_name or '', width=100, placeholder='...')
 
         # tracking: in case of missing value, perform search (skip only if sure we don't have any)
         check_tracking = msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self)
@@ -5078,6 +5115,8 @@ class MailThread(models.AbstractModel):
         if "contact_fields" in request_list:
             res.attr("primary_email_field", lambda t: t._mail_get_primary_email_field())
             res.attr("partner_fields", lambda t: t._mail_get_partner_fields())
+        if "defaultSubject" in request_list:
+            res.attr("defaultSubject", lambda t: t._message_compute_subject())
         if "followers" in request_list:
             count_by_tid = {"groupby": ["res_id"], "aggregates": ["__count"]}
             domain = Domain("res_id", "in", self.ids) & Domain("res_model", "=", self._name)
@@ -5181,7 +5220,7 @@ class MailThread(models.AbstractModel):
         sudo()._message_update_content(), which means these parameters should be either inoffensive
         or safely handled by these methods. Parameters requiring special processing need to be
         manually handled in _prepare_message_data."""
-        return {"email_add_signature", "message_type", "subtype_xmlid"}
+        return {"email_add_signature", "message_type", "subject", "subtype_xmlid"}
 
     @api.model
     def _get_allowed_access_params(self):

@@ -100,6 +100,8 @@ export class Thread extends Record {
     counter = 0;
     counter_bus_id = 0;
     /** @type {string} */
+    defaultSubject;
+    /** @type {string} */
     description;
     /** @type {string} */
     display_name;
@@ -204,6 +206,12 @@ export class Thread extends Record {
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
     suggestedRecipients = fields.Attr([]);
+    /** @type {Boolean|undefined} */
+    showSubjectInSmallComposer;
+    /** 
+     * similar to suggested recipients, except for the subject and optional per model.
+    @type {String|undefined} */
+    suggestedSubject;
     /** @type {String[]|undefined} */
     partner_fields;
     /** @type {String|undefined} */

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import lxml.html
 
 from ast import literal_eval
 from datetime import timedelta
@@ -1246,23 +1247,73 @@ class TestComposerInternals(TestMailComposer):
 
     @users('employee')
     def test_mail_composer_save_template(self):
-        self.env['mail.compose.message'].with_context(
+        cases = [
+            ('<p>Template Body</p>', None, 'Basic template'),
+            ('''
+            <div class="o_mail_reply_container">
+                <p>&lt;John&gt; "John@local.lan" wrote on 2005-01-01:</p>
+                <div>Oh, Hi Bob</div>
+            </div>
+            ''', '<div></div>', 'Reply-only Template'),
+            ('''
+            <p>We will get back to you in a few days.</p>
+            <div class="o_mail_reply_container">
+                <p>&lt;John&gt; "John@local.lan" wrote on 2005-01-01:</p>
+                <div>Oh, Hi Bob</div>
+            </div>
+            <div data-o-mail-quote-container="1">
+                <br>
+                <div data-o-mail-quote="1" class="o-signature-container">
+                    <div data-o-mail-quote="1">
+                        <br data-o-mail-quote="1">--
+                        Bob, of Lancaster
+                    </div>
+                </div>
+            </div>
+            ''',
+            '''
+            <div><p>We will get back to you in a few days.</p>
+            <div data-o-mail-quote-container="1">
+                <br>
+                <div data-o-mail-quote="1" class="o-signature-container">
+                    <div data-o-mail-quote="1">
+                        <br data-o-mail-quote="1">--
+                        Bob, of Lancaster
+                    </div>
+                </div>
+            </div>
+            </div>''',
+            'Reply-included Template'
+            ),
+        ]
+        composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record, add_web=False)
         ).create({
-            'template_name': 'My Template',
             'subject': 'Template Subject',
-            'body': '<p>Template Body</p>',
-        }).create_mail_template()
+        })
+        for input_body, template_body, case_name in cases:
+            with self.subTest(case=case_name):
+                composer.write({
+                    'body': input_body,
+                    'template_name': case_name,
+                })
+                composer.create_mail_template()
 
-        # Test: email_template subject, body_html, model
-        template = self.env['mail.template'].search([
-            ('model', '=', self.test_record._name),
-            ('name', '=', 'My Template')
-        ], limit=1)
+                template = composer.template_id
 
-        self.assertEqual(template.name, 'My Template')
-        self.assertFalse(template.subject)
-        self.assertEqual(template.body_html, '<p>Template Body</p>', 'email_template incorrect body_html')
+                self.assertEqual(template.name, case_name)
+                self.assertFalse(template.subject)
+                self.assertEqual(
+                    lxml.html.tostring(lxml.html.fromstring(str(template.body_html))).decode(),
+                    lxml.html.tostring(lxml.html.fromstring(template_body if template_body is not None else input_body)).decode(),
+                    'The template should remove all content that was hidden in the composer preview.'
+                    'Unless the composer preview only contained that hidden element.'
+                )
+                self.assertEqual(
+                    lxml.html.tostring(lxml.html.fromstring(str(composer.body))).decode(),
+                    lxml.html.tostring(lxml.html.fromstring(input_body)).decode(),
+                    'The composer body should not change after saving a template.'
+                )
 
     @users('employee')
     def test_mail_composer_schedule_message(self):
