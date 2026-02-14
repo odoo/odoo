@@ -6,3 +6,8 @@ RUN dnf -y install /tmp/odoo.rpm && \
 		dnf clean all
 
 USER odoo
+
+ENV DB_NAME odoo
+ENV CONFIG_FILE /etc/odoo/odoo.conf
+
+ENTRYPOINT ./odoo-bin --config=${CONFIG_FILE} -d ${DB_NAME}
