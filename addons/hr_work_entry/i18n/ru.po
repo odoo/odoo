@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-29 11:11+0000\n"
+"PO-Revision-Date: 2026-02-11 16:32+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/ru/>\n"
@@ -19,9 +19,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural="
+"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 "
+": n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_work_entry
@@ -63,6 +63,9 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
 "red will be skipped because they have at least one validated work entry."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Сотрудники, "
+"отмеченные красным, будут пропущены, так как у них есть хотя бы одна "
+"утвержденная рабочая запись."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -111,13 +114,13 @@ msgstr "Добавить"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
 msgid "Added to Monthly Pay"
-msgstr ""
+msgstr "Добавлено к ежемесячной выплате"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Additional Description..."
-msgstr ""
+msgstr "Дополнительное описание..."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_additional_paid
@@ -164,7 +167,7 @@ msgstr "Brief Holiday (Birth)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
 msgid "CTO"
-msgstr ""
+msgstr "Отгул"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -197,6 +200,8 @@ msgid ""
 "Check this setting if you want the hours to be considered as extra time and "
 "added as a bonus to the basic salary."
 msgstr ""
+"Выберите этот параметр, если хотите, чтобы часы учитывались как "
+"дополнительные часы и добавлялись в качестве бонуса к базовой зарплате."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -269,7 +274,7 @@ msgstr "Дата создания:"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
 msgid "Credit Time"
-msgstr "Время кредита"
+msgstr "Credit Time"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -310,7 +315,7 @@ msgstr "Disability due to illness (IMSS)"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
 msgid "Display Code"
-msgstr ""
+msgstr "Отображать код"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
@@ -344,7 +349,7 @@ msgstr "Продолжительность"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Duration must be positive and cannot exceed 24 hours."
-msgstr ""
+msgstr "Длительность должна быть положительной и не может превышать 24 часа."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
@@ -387,7 +392,7 @@ msgstr "Договор с Сотрудником"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
 msgid "Employee Record"
-msgstr ""
+msgstr "Карточка сотрудника"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
@@ -433,7 +438,7 @@ msgstr "От"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
 msgid "GTO"
-msgstr ""
+msgstr "Ежегодный оплачиваемый отпуск"
 
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
@@ -470,7 +475,7 @@ msgstr "HR Тип Ввода данных о работе"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
 msgid "HW"
-msgstr ""
+msgstr "Фактически отработанные часы"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
@@ -500,12 +505,12 @@ msgstr "Hourly Salary in case of Illness"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt_hourly
 msgid "Hourly Salary in case of Maternity / Paternity Leave"
-msgstr ""
+msgstr "Hourly Salary in case of Maternity / Paternity Leave"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt_hourly
 msgid "Hourly Salary in case of Military Leave"
-msgstr ""
+msgstr "Hourly Salary in case of Military Leave"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
@@ -525,6 +530,8 @@ msgstr "ID"
 msgid ""
 "If checked, the work entry is counted as work time in the working schedule"
 msgstr ""
+"Если флажок установлен, рабочая запись учитывается как рабочее время в "
+"графике работы"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -539,16 +546,18 @@ msgstr ""
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
 msgid "If you want the hours should be paid double, the rate should be 200%."
 msgstr ""
+"Если вы хотите, чтобы часы оплачивались в двойном размере, ставка должна "
+"составлять 200%."
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
 msgid "In Conflict"
-msgstr ""
+msgstr "Конфликт данных"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
 msgid "In Payslip"
-msgstr ""
+msgstr "В расчетном листке"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -557,6 +566,9 @@ msgid ""
 "In order to regenerate the work entries, you need to provide the wizard with "
 "an employee_id, a date_from and a date_to."
 msgstr ""
+"Чтобы заново сформировать записи о работе, необходимо указать в мастере "
+"идентификатор сотрудника (employee_id), дату начала (date_from) и дату "
+"окончания (date_to)."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
@@ -576,7 +588,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
 msgid "Is Checked"
-msgstr ""
+msgstr "Флажок установлен"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
@@ -682,13 +694,13 @@ msgstr "Medical Leave for Care of Children Diagnosed with Cancer (IMSS)"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_version.py:0
 msgid "Missing date or duration on work entry"
-msgstr ""
+msgstr "В рабочей записи отсутствует дата или длительность"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_version.py:0
 msgid "Missing timezone for work entries generation."
-msgstr ""
+msgstr "Не указан часовой пояс для генерации рабочих записей."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
@@ -717,6 +729,8 @@ msgstr "Нет данных для отображения"
 msgid ""
 "No work entry can be regenerated in this range of dates and these employees."
 msgstr ""
+"Рабочие записи для выбранных сотрудников в данном диапазоне дат не могут "
+"быть сформированы повторно."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -731,12 +745,12 @@ msgstr "Notice (Unprovided)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
 msgid "OT"
-msgstr ""
+msgstr "Сверхурочная работа"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
 msgid "OoC"
-msgstr ""
+msgstr "Вне контракта"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
@@ -786,7 +800,7 @@ msgstr "Overtime: Saturday"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday_pto
 msgid "Overtime: Saturday & Public Time Off"
-msgstr ""
+msgstr "Overtime: Saturday & Public Time Off"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday
@@ -796,12 +810,12 @@ msgstr "Overtime: Sunday"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday_pto
 msgid "Overtime: Sunday & Public Time Off"
-msgstr ""
+msgstr "Overtime: Sunday & Public Time Off"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
 msgid "PTO"
-msgstr ""
+msgstr "Оплачиваемый отпуск"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
@@ -849,12 +863,12 @@ msgstr "Paternity Time Off (Legal)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_company
 msgid "Paternity Time Off (Paid by Company)"
-msgstr ""
+msgstr "Paternity Time Off (Paid by Company)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
 msgid "Pay rate"
-msgstr ""
+msgstr "Ставка оплаты"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
@@ -928,7 +942,7 @@ msgstr "Сброс"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
 msgid "Reset Selected Work Entries"
-msgstr ""
+msgstr "Сбросить выбранные рабочие записи"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -953,7 +967,7 @@ msgstr "Retro Regular Pay Hours"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
 msgid "STO"
-msgstr ""
+msgstr "Больничный"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
@@ -968,12 +982,12 @@ msgstr "Salary in case of Illness"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt
 msgid "Salary in case of Maternity / Paternity Leave"
-msgstr ""
+msgstr "Salary in case of Maternity / Paternity Leave"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt
 msgid "Salary in case of Military Leave"
-msgstr ""
+msgstr "Salary in case of Military Leave"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
@@ -1004,7 +1018,7 @@ msgstr "Установить"
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
 msgid "Set to Draft"
-msgstr ""
+msgstr "Сбросить в черновик"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
@@ -1025,12 +1039,12 @@ msgstr "Sick Leave (Unpaid)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
 msgid "Sick Leave 0"
-msgstr ""
+msgstr "Больничный 0"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_50_entry_type
 msgid "Sick Leave 50"
-msgstr ""
+msgstr "Больничный 50"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_sick_leave_80
@@ -1045,27 +1059,27 @@ msgstr "Отсутствие по болезни"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
 msgid "Sick Time Off (Paid at 80%)"
-msgstr ""
+msgstr "Sick Time Off (Paid at 80%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
 msgid "Sick Time Off (Without Guaranteed Salary)"
-msgstr ""
+msgstr "Sick Time Off (Without Guaranteed Salary)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
 msgid "Sick Time Off Day 1-3 (Paid at 25%)"
-msgstr ""
+msgstr "Sick Time Off Day 1-3 (Paid at 25%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_55
 msgid "Sick Time Off Day 4-10 (Paid at 55%)"
-msgstr ""
+msgstr "Sick Time Off Day 4-10 (Paid at 55%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
 msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
-msgstr ""
+msgstr "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
@@ -1080,7 +1094,7 @@ msgstr "Sick Time off (Unpaid)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "Simple Holiday Pay - Variable Salary"
-msgstr ""
+msgstr "Simple Holiday Pay - Variable Salary"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
@@ -1113,7 +1127,7 @@ msgstr "Разделить"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar_controller.js:0
 msgid "Split Work Entry"
-msgstr ""
+msgstr "Разделить рабочую запись"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1122,6 +1136,8 @@ msgid ""
 "Split work entry duration has to be less than the existing work entry "
 "duration."
 msgstr ""
+"Длительность разделенной рабочей записи должна быть меньше длительности "
+"исходной записи."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -1150,7 +1166,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "The amount of work on the day should not exceed 24 hours."
-msgstr ""
+msgstr "Количество рабочих часов в день не должно превышать 24 часа."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1169,6 +1185,8 @@ msgstr ""
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid "The same code cannot be associated to multiple work entry types (%s)"
 msgstr ""
+"Один и тот же код не может быть связан с несколькими типами рабочих записей "
+"(%s)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__display_code
@@ -1176,6 +1194,8 @@ msgstr ""
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
 msgstr ""
+"Этот код можно изменить, он используется только для отображения "
+"(максимум 3 символа)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -1227,7 +1247,7 @@ msgstr "Тип"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
 msgid "UN"
-msgstr ""
+msgstr "Неоплачиваемый отпуск"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1392,13 +1412,13 @@ msgstr "Вы не можете изменить страну этого типа
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "You can't split a work entry with less than 1 hour."
-msgstr ""
+msgstr "Вы не можете разделить рабочую запись длительностью менее 1 часа."
 
 #. module: hr_work_entry
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
 msgid "You cannot edit a validated work entry"
-msgstr ""
+msgstr "Вы не можете редактировать утвержденную рабочую запись"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

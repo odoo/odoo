@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-13 15:31+0000\n"
+"PO-Revision-Date: 2026-02-11 16:30+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_payment/pl/>\n"
@@ -34,8 +34,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: account_payment
@@ -65,8 +65,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Pay Now</span>"
 msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-"
-"inline\">Zapłać Teraz</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\""
+">Zapłać Teraz</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -94,12 +94,12 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/>Zapłacone"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Opłacono"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/>Oczekujące"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Oczekuje"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -136,15 +136,14 @@ msgid ""
 msgstr ""
 "<strong>Uwaga!</strong>Trwa proces zwrotu pieniędzy za tę płatność.\n"
 "Poczekaj chwilę na jego przetworzenie. Jeśli po kilku minutach zwrot nadal "
-"jest w toku\n"
-"po kilku minutach, sprawdź konfigurację swojego dostawcy płatności."
+"jest w toku, sprawdź konfigurację swojego dostawcy płatności."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
 msgstr ""
-"Zniżka zostanie zastosowana, jeśli klient zapłaci przed dniem %s włącznie."
+"Zniżka zostanie zastosowana, jeśli klient zapłaci przed datą %s włącznie."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -239,7 +238,7 @@ msgstr "Waluta"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
 msgid "Discount Date"
-msgstr "Data rabatu"
+msgstr "Data zniżki"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
@@ -336,8 +335,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"W trybie testowym przez testowy interfejs płatniczy przetwarzane są fałszywe "
-"płatności.\n"
+"Testowe płatności przetwarzane są w trybie testowym przez testowy interfejs "
+"płatniczy.\n"
 "Ten tryb jest zalecany podczas konfigurowania dostawcy."
 
 #. module: account_payment
@@ -395,7 +394,7 @@ msgstr "Data ostatniej aktualizacji"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr "Maksymalna dopuszczalny zwrot"
+msgstr "Maksymalny dopuszczalny zwrot"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
@@ -447,7 +446,7 @@ msgstr "Zaległe faktury powinny mieć tego samego partnera."
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
 msgid "Partial"
-msgstr "Częściowo"
+msgstr "Częściowy"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -536,7 +535,7 @@ msgstr "Transakcja płatnicza"
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr "Transakcje płatności"
+msgstr "Transakcje płatnicze"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment
@@ -559,7 +558,7 @@ msgstr "Dostawca"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Reference"
-msgstr "Odnośnik"
+msgstr "Referencja"
 
 #. module: account_payment
 #. odoo-python
@@ -735,7 +734,7 @@ msgstr "Transakcje"
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
 msgid "Unsupported"
-msgstr "Niewspierana"
+msgstr "Nieobsługiwana"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -756,9 +755,9 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Nie możesz usunąć metody płatności, która jest powiązana z dostawcą w trybie "
-"włączenia lub trybie testowym.\n"
-"Powiązany/-i dostawca/-y: %s"
+"Nie możesz usunąć metody płatności, która jest powiązana z operatorem w "
+"trybie włączenia lub trybie testowym.\n"
+"Powiązany/-i operator/-zy: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -791,7 +790,7 @@ msgstr "do zapłaty za %s dni"
 #. odoo-javascript
 #: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "due today"
-msgstr "Do zapłaty dziś"
+msgstr "do zapłaty dziś"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -801,7 +800,7 @@ msgstr "został zastosowany."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
-msgstr "Zaległa"
+msgstr "zaległa"
 
 #~ msgid "Code"
 #~ msgstr "Kod"

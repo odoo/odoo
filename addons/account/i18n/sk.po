@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-04 07:55+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-11 21:56+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/account/"
 "sk/>\n"
@@ -186,7 +186,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
+msgstr "%(name)s - Návrh v hodnote (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -198,7 +198,7 @@ msgstr "%(name)s splátka #%(number)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(name)s%(ref)s v hodnote %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -798,17 +798,6 @@ msgstr ""
 "#704A66;'>%(date)s</b>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted "
-"behavior.</span>"
-msgstr ""
-"<br/>\n"
-"                        <span>Prosím uistite sa, že ide o požadované "
-"správanie..</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
@@ -1388,6 +1377,11 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Zmazať všetky duplicity</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Zmazať duplikát</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -5182,7 +5176,7 @@ msgstr "Na základe platby"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Basic"
-msgstr "modul: účtovnictvo"
+msgstr "Fakturácia a banky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
@@ -10090,7 +10084,7 @@ msgstr "Ako je počítaná celková suma dane na objednávkach a faktúrach"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "ICE:"
-msgstr ""
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -11002,7 +10996,7 @@ msgstr "Faktúra č."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoice Analysis"
-msgstr "Analýza faktúry"
+msgstr "Analýza faktúr"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__invoice_count
@@ -13582,16 +13576,6 @@ msgid "Onboarding Step"
 msgstr "Kroky úvodného nastavenia"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-"Po prvom zaúčtovaní dokumentu je jeho typ definitívne stanovený a už ho "
-"nemožno zmeniť."
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -15956,7 +15940,7 @@ msgstr "Zaokrúhľovanie za riadok"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
 msgid "Round per Tax"
-msgstr "Zaokrúhliť na daň"
+msgstr "Zaokrúhľovanie za daň"
 
 #. module: account
 #. odoo-javascript
@@ -16786,7 +16770,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr "Zobraziť účtovné funkcie - iba na čítanie"
+msgstr "Účtovníctvo - Iba čítanie"
 
 #. module: account
 #. odoo-javascript
@@ -16825,7 +16809,7 @@ msgstr "Zobraziť tlačidlá stavu e-faktúry"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
-msgstr "Zobraziť všetky účtovné funkcie"
+msgstr "Účtovníctvo"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -18488,7 +18472,7 @@ msgstr "Záznam je zabezpečený nezmeniteľným hash kódom."
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
-msgstr ""
+msgstr "Záznam používa účty (%(accounts_codes_names)s) z inej spoločnosti."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -21160,6 +21144,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -21532,6 +21523,13 @@ msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové párovania."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use an archived account."
 msgstr "Nemôžete použiť archivovaný účet."
@@ -21645,6 +21643,8 @@ msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
 msgstr ""
+"Vzorky môžete použiť iba v demo režime, skúste namiesto toho nahrať jednu zo "
+"svojich faktúr."
 
 #. module: account
 #. odoo-python
@@ -22344,6 +22344,22 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selfbilling faktúra (Ref. {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                        <span>Please make sure that this is a wanted "
+#~ "behavior.</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                        <span>Prosím uistite sa, že ide o požadované "
+#~ "správanie..</span>"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr ""
+#~ "Po prvom zaúčtovaní dokumentu je jeho typ definitívne stanovený a už ho "
+#~ "nemožno zmeniť."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

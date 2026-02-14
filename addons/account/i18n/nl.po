@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-02 13:44+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-11 17:41+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/nl/"
 ">\n"
@@ -793,17 +793,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> termijnen van <b>%(amount)s</b> verschuldigd op <b "
 "style='color: #704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted "
-"behavior.</span>"
-msgstr ""
-"<br/>\n"
-"                        <span>Zorg ervoor dat dit het gewenste gedrag is.</"
-"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6346,7 +6335,7 @@ msgstr "Configureren"
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Configureer je document lay-out"
+msgstr "Configureer de lay-out van je document"
 
 #. module: account
 #. odoo-javascript
@@ -13644,16 +13633,6 @@ msgid "Onboarding Step"
 msgstr "Onboardingstap"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-"Als een document eenmaal geplaatst is, staat het type vast en kun je het "
-"niet meer veranderen."
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -18617,7 +18596,8 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"De fiscale positie bepaald de btw/rekeningen gebruikt voor dit contact."
+"De fiscale positie bepaalt de btw/rekeningen die worden gebruikt voor dit "
+"contact."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -21282,6 +21262,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -21664,6 +21651,13 @@ msgid ""
 msgstr ""
 "Je kunt niet wisselen van rekening om het afletteren te voorkomen als "
 "gedeeltelijke afletteringen nog in behandeling zijn."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22486,6 +22480,22 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                        <span>Please make sure that this is a wanted "
+#~ "behavior.</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                        <span>Zorg ervoor dat dit het gewenste gedrag is."
+#~ "</span>"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr ""
+#~ "Als een document eenmaal geplaatst is, staat het type vast en kun je het "
+#~ "niet meer veranderen."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

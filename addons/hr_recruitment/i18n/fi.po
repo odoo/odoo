@@ -39,7 +39,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-01-23 13:46+0000\n"
+"PO-Revision-Date: 2026-02-11 16:31+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/fi/>\n"
@@ -865,7 +865,7 @@ msgstr "Lisää työntekijöitä työpaikkaan"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_talent_pool_add_applicants
 msgid "Add applicants to talent pool"
-msgstr "Lisää työntekijä kykyhakemistoon"
+msgstr "Lisää hakijat osaajapankkiin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1219,7 +1219,7 @@ msgstr "Työtehtävien mukaan"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_talent_pools
 msgid "By Talent Pools"
-msgstr ""
+msgstr "Osaajapankkien perusteella"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -1388,7 +1388,7 @@ msgstr "Luo työntekijä"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_talent_pool.py:0
 msgid "Create Talent"
-msgstr ""
+msgstr "Luo osaaja"
 
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_res_partner
@@ -1478,16 +1478,20 @@ msgid ""
 "disable.  Changing this parameter will not affect the rotting status/date of "
 "resources last updated before this change."
 msgstr ""
+"Päivien lukumäärä, minkä jälkeen tämän vaiheen hakijat vanhentuvat.         "
+"Aseta arvoksi 0 poistaaksesi käytöstä.  Tämän parametrin muuttaminen ei "
+"vaikuta sitä edeltävän viimeisimmän päivityksen resurssien vanhentumistilaan/"
+"päivämäärään."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Päivien lukumäärä tämän resurssin viimeisimmän päivityksen jälkeen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Päivää erääntymisestä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -1502,7 +1506,7 @@ msgstr "Päiviä avaamiseen"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Päivää erääntymiseen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
@@ -1589,7 +1593,9 @@ msgstr "Osastot"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 msgid "Describe the talent pool and common traits among talent pool applicants"
-msgstr "Kuvaile kykyhakemistoa ja yhteisiä piirteitä hakijoiden keskuudessa"
+msgstr ""
+"Kuvaile osaajapankkia sekä yhteisiä piirteitä osaajapankin hakijoiden "
+"keskuudessa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
@@ -1674,9 +1680,7 @@ msgstr "Näyttönimi"
 #. odoo-python
 #: code:addons/hr_recruitment/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Sinulla ei ole pääsyoikeutta. Ohita tämä tieto käyttäjien  "
-"koostesähköpostissa"
+msgstr "Ei pääsyoikeutta, ohita tämä tieto käyttäjän koostesähköpostissa"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -1814,7 +1818,7 @@ msgstr "Työntekijä luotu:"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
 msgid "Employee linked to the applicant."
-msgstr "Hakijaan kytkeytyvä työntekijä"
+msgstr "Työntekijään linkitetty hakija."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -1846,7 +1850,7 @@ msgstr "Odotettu"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_degree
 msgid "Expected Degree"
-msgstr ""
+msgstr "Odotettu tutkinto"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
@@ -2107,7 +2111,7 @@ msgid ""
 "mailing anymore, from any list"
 msgstr ""
 "Jos sähköpostiosoite on mustalla listalla, yhteystieto ei vastaanota "
-"postituksia miltään postituslistalta."
+"massaviestejä miltään postituslistalta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
@@ -2348,7 +2352,7 @@ msgstr "Kanban voimassa"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_waiting
 msgid "Kanban Waiting"
-msgstr ""
+msgstr "Kanban-odotus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
@@ -2619,7 +2623,7 @@ msgstr "Uusi palkattu työntekijä"
 #: model:mail.message.subtype,name:hr_recruitment.mt_talent_new
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
 msgid "New Talent"
-msgstr ""
+msgstr "Uusi osaaja"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
@@ -2665,7 +2669,7 @@ msgstr "Ei kokousta"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
 msgid "No Talents in the pool yet"
-msgstr "Hakemistossa ei ole vielä kykyjä tai osaajia"
+msgstr "Osaajapankissa ei ole vielä osaajia"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2699,7 +2703,7 @@ msgstr "Sääntöjä ei ole määritelty."
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
 msgid "No talent pools yet"
-msgstr "Ei vielä kykyhakemistoja"
+msgstr "Ei vielä osaajapankkeja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2737,7 +2741,7 @@ msgstr "Uusien hakemusten määrä työnkulussa (yleensä ensimmäisessä vaihee
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__open_application_count
 msgid "Number of applications that are still ongoing (not hired or refused)"
-msgstr ""
+msgstr "Yhä käynnissä olevien hakuprosessien määrä (ei palkattu tai hylätty)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -2811,7 +2815,7 @@ msgstr "Verkkoilmoitus"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__open_application_count
 msgid "Open Application Count"
-msgstr ""
+msgstr "Avointen hakemusten määrä"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_view_tree_inherit
@@ -2838,6 +2842,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Valinnainen käännöskieli (ISO-koodi) sähköpostia lähetettäessä. Jos sitä ei "
+"ole määritetty, käytetään pääyhteistyökumppanin kieltä. Tämän pitäisi "
+"yleensä olla sopivan kielen tarjoava paikkamerkki, esim. {{ "
+"object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2848,7 +2856,7 @@ msgstr "Tai keskustele tästä hakijasta yksityisesti kollegojesi kanssa."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_waiting
 msgid "Orange Kanban Label"
-msgstr ""
+msgstr "Oranssi Kanban-nimike"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3193,7 +3201,7 @@ msgstr "Ansioluettelon sisältö"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_rotting
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Rotting"
-msgstr ""
+msgstr "Erääntyminen"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3270,7 +3278,7 @@ msgstr "Tulos"
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_score_range
 msgid "Score should be between 0 and 100%"
-msgstr ""
+msgstr "Pisteiden tulisi olla 0 ja 100% välillä"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3290,7 +3298,7 @@ msgstr "Toinen haastattelu"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Select the campaign the applicant was part of"
-msgstr ""
+msgstr "Valitse kampanja, johon hakija osallistui"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__address_id
@@ -3442,7 +3450,7 @@ msgstr "Määritä hylätyt hakijat..."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Spontaneous application"
-msgstr ""
+msgstr "Spontaani hakemus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3478,8 +3486,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
-"Hakijan edeltävä vaihe ennen nykyistä vaihetta. Käytetään analysoidessa "
-"hävittyjä tapauksia."
+"Hakijan edellinen vaihe ennen nykyistä vaihetta. Käytetään hävittyjen "
+"tapausten analysoimiseksi."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -3552,34 +3560,34 @@ msgstr "Kyky"
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__talent_pool_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Talent Pool"
-msgstr "Kykyhakemisto"
+msgstr "Osaajapankki"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_count
 msgid "Talent Pool Count"
-msgstr "Kykyhakemiston määrä"
+msgstr "Osaajapankkien lukumäärä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__description
 msgid "Talent Pool Description"
-msgstr "Kykyhakemiston kuvaus"
+msgstr "Osaajapankin kuvaus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Talent Pools"
-msgstr "Kykyhakemistot"
+msgstr "Osaajapankit"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_talent_new
 msgid "Talent created"
-msgstr ""
+msgstr "Osaaja luotu"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Talent must belong to at least one Talent Pool."
-msgstr ""
+msgstr "Osaajan on kuuluttava vähintään yhteen osaajapankkiin."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
@@ -3669,7 +3677,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__no_of_talents
 msgid "The number of talents in this talent pool."
-msgstr "Kykyjen määrä tässä kykyhakemistossa"
+msgstr "Osaajien määrä tässä osaajapankissa."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__regex
@@ -4111,12 +4119,12 @@ msgstr "tunniste"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "in<br/>progress"
-msgstr ""
+msgstr "käynnissä<br/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "new<br/>applications"
-msgstr ""
+msgstr "uudet<br/>hakemukset"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -4137,12 +4145,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_list
 msgid "talent pool"
-msgstr "kykyhakemisto"
+msgstr "osaajapankki"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/>recruit"
-msgstr ""
+msgstr "rekrytoi<br/>"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "

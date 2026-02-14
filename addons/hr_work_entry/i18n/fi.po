@@ -4,13 +4,13 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-29 14:27+0000\n"
+"PO-Revision-Date: 2026-02-11 17:43+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/fi/>\n"
@@ -311,7 +311,7 @@ msgstr "Sairaudesta johtuva työkyvyttömyys (IMSS)"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
 msgid "Display Code"
-msgstr ""
+msgstr "Näytä koodi"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
@@ -345,7 +345,7 @@ msgstr "Kesto"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Duration must be positive and cannot exceed 24 hours."
-msgstr ""
+msgstr "Keston on oltava positiivinen eikä se saa olla yli 24 tuntia."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
@@ -370,7 +370,7 @@ msgstr "Opintovapaa"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
 msgid "Emergency Leave"
-msgstr ""
+msgstr "Hätävapaa"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_employee
@@ -388,7 +388,7 @@ msgstr "Työsopimus"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
 msgid "Employee Record"
-msgstr ""
+msgstr "Työntekijätiedot"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
@@ -434,7 +434,7 @@ msgstr "Alkaen"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
 msgid "GTO"
-msgstr ""
+msgstr "Yleinen vapaa"
 
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
@@ -471,7 +471,7 @@ msgstr "HR-työkirjauksen tyyppi"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
 msgid "HW"
-msgstr ""
+msgstr "Etätyö"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
@@ -539,17 +539,17 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
 msgid "If you want the hours should be paid double, the rate should be 200%."
-msgstr ""
+msgstr "Aseta prosentiksi 200% jos haluat tunnit maksettavan tuplana."
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
 msgid "In Conflict"
-msgstr ""
+msgstr "Ristiriidassa"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
 msgid "In Payslip"
-msgstr ""
+msgstr "Palkkalaskelmassa"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -558,6 +558,8 @@ msgid ""
 "In order to regenerate the work entries, you need to provide the wizard with "
 "an employee_id, a date_from and a date_to."
 msgstr ""
+"Luodaksesi työkirjaukset uudelleen, sinun on annettava ohjatulle toiminnolle "
+"employee_id, date_from ja date_to."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
@@ -677,19 +679,19 @@ msgstr "Lääketieteellinen apu"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss
 msgid "Medical Leave for Care of Children Diagnosed with Cancer (IMSS)"
-msgstr ""
+msgstr "Syöpädiagnoosin saaneen lapsen hoitoon liittyvä sairausloma (IMSS)"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_version.py:0
 msgid "Missing date or duration on work entry"
-msgstr ""
+msgstr "Työkirjauksesta puuttuu päivämäärä tai kesto"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_version.py:0
 msgid "Missing timezone for work entries generation."
-msgstr ""
+msgstr "Aikavyöhyke puuttuu työkirjausten luomiseksi."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
@@ -718,6 +720,8 @@ msgstr "Ei näytettäviä tietoja"
 msgid ""
 "No work entry can be regenerated in this range of dates and these employees."
 msgstr ""
+"Työkirjausta ei voi luoda uudelleen tälle ajanjaksolle ja näille "
+"työntekijöille."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -732,12 +736,12 @@ msgstr "Ilmoitus (ei annettu)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
 msgid "OT"
-msgstr ""
+msgstr "Ylityöt"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
 msgid "OoC"
-msgstr ""
+msgstr "Sopimuksen ulkopuolinen"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
@@ -767,7 +771,7 @@ msgstr "Ylityötunnit"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
 msgid "Overtime Hours (Paid at 150%)"
-msgstr ""
+msgstr "Ylityötunnit (palkka 150%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
@@ -802,7 +806,7 @@ msgstr "Ylityö: Sunnuntai & Julkinen vapaapäivä"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
 msgid "PTO"
-msgstr ""
+msgstr "Palkallinen vapaa"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
@@ -840,7 +844,7 @@ msgstr "Isyysloma"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
 msgid "Paternity Leave 80%"
-msgstr ""
+msgstr "Isyysvapaa 80%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
@@ -855,7 +859,7 @@ msgstr "Isyysloma (yrityksen maksama)"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
 msgid "Pay rate"
-msgstr ""
+msgstr "Palkkataso"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
@@ -929,7 +933,7 @@ msgstr "Nollaa"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
 msgid "Reset Selected Work Entries"
-msgstr ""
+msgstr "Nollaa valitut työkirjaukset"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -954,7 +958,7 @@ msgstr "Takautuvat säännölliset palkkatunnit"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
 msgid "STO"
-msgstr ""
+msgstr "Sairausloma"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
@@ -1005,12 +1009,12 @@ msgstr "Täytä"
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
 msgid "Set to Draft"
-msgstr ""
+msgstr "Aseta luonnokseksi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
-msgstr ""
+msgstr "Sairausloma (100% palkallinen)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
@@ -1021,7 +1025,7 @@ msgstr "Sairausloma (75% palkallinen)"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
 msgid "Sick Leave (Unpaid)"
-msgstr ""
+msgstr "Sairausloma (palkaton)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
@@ -1046,7 +1050,7 @@ msgstr "Sairauspoissaolot"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
 msgid "Sick Time Off (Paid at 80%)"
-msgstr ""
+msgstr "Sairausloma (80% palkallinen)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
@@ -1066,7 +1070,7 @@ msgstr "Sairauloman päivät 4–10 (55% palkallinen)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
 msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
-msgstr "Sairausloma enintään 52 viikkoa (55% sosiaaliturvan maksama)"
+msgstr "Sairausloma 52 viikkoon asti (55% sosiaaliturvan maksama)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
@@ -1114,7 +1118,7 @@ msgstr "Jaa"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar_controller.js:0
 msgid "Split Work Entry"
-msgstr ""
+msgstr "Työkirjauksen jako"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1123,6 +1127,8 @@ msgid ""
 "Split work entry duration has to be less than the existing work entry "
 "duration."
 msgstr ""
+"Jaetun työkirjauksen keston on oltava lyhyempi kuin olemassa olevan "
+"työkirjauksen kesto."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -1151,7 +1157,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "The amount of work on the day should not exceed 24 hours."
-msgstr ""
+msgstr "Päivän työajan ei pitäisi ylittää 24 tuntia."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1177,6 +1183,8 @@ msgstr "Samaa koodia ei voi liittää useisiin työmerkintätyyppeihin (%s)"
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
 msgstr ""
+"Tätä koodia voi muuttaa, se on vain näyttötarkoitukseen "
+"(enintään 3 kirjainta)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -1228,7 +1236,7 @@ msgstr "Tyyppi"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
 msgid "UN"
-msgstr ""
+msgstr "Palkaton vapaa"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1393,13 +1401,13 @@ msgstr "Et voi vaihtaa tämän työkirjauksen tyypin maata."
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "You can't split a work entry with less than 1 hour."
-msgstr ""
+msgstr "Et voi jakaa alle tunnin mittaista työkirjausta."
 
 #. module: hr_work_entry
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
 msgid "You cannot edit a validated work entry"
-msgstr ""
+msgstr "Et voi muokata vahvistettua työkirjausta"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

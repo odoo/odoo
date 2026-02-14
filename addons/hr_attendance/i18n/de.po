@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-28 12:27+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-13 09:16+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "hr_attendance/de/>\n"
@@ -341,6 +341,12 @@ msgstr "Anwesenheit"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_search_view
 msgid "Attendance Approver"
 msgstr "Anwesenheitsgenehmiger"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Attendance Error"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -721,6 +727,12 @@ msgid "Connect an RFID reader, and scan a token."
 msgstr "Verbinden Sie einen RFID-Leser und scannen Sie ein Token."
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Connection lost. Check in/out could not be recorded."
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
 msgid ""
 "Controls how the rates from the different rules that apply are combined.\n"
@@ -877,10 +889,9 @@ msgstr "Anzeigezeit"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
-"Do not have access, user cannot edit the attendances that are not his own."
+"Do not have access, user cannot edit the attendances that are not their own "
+"or if they are not the attendance manager of the employee."
 msgstr ""
-"Kein Zugriff! Benutzer kann die Anwesenheiten, die nicht seine eigenen sind, "
-"nicht bearbeiten."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2402,6 +2413,12 @@ msgstr "mit einem Satz von"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "mit optionalem PIN-Code"
+
+#~ msgid ""
+#~ "Do not have access, user cannot edit the attendances that are not his own."
+#~ msgstr ""
+#~ "Kein Zugriff! Benutzer kann die Anwesenheiten, die nicht seine eigenen "
+#~ "sind, nicht bearbeiten."
 
 #~ msgid "a specific duration"
 #~ msgstr "eine bestimmte Dauer"
