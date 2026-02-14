@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-07 13:35+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2026-02-14 13:34+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/it/>\n"
@@ -12005,16 +12005,6 @@ msgid "Onboarding Step"
 msgstr "Fase formazione iniziale"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-"Una volta che un documento è stato registrato, è come se il suo tipo fosse "
-"scalfito nella pietra e non è più possibile modificarlo."
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -16406,6 +16396,8 @@ msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
+"La registrazione utilizza conti (%(accounts_codes_names)s) di un'altra "
+"azienda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -19061,6 +19053,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19460,6 +19459,13 @@ msgid ""
 msgstr ""
 "Impossibile cambiare conto per evitare la riconciliazione, alcune "
 "riconciliazioni parziali sono ancora in sospeso."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20215,6 +20221,13 @@ msgid ""
 msgstr ""
 "Ricevuta di pagamento {{ object.company_id.name }} (rif. {{ object.name or "
 "'n/d' }})"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr ""
+#~ "Una volta che un documento è stato registrato, è come se il suo tipo "
+#~ "fosse scalfito nella pietra e non è più possibile modificarlo."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:35+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
 "PO-Revision-Date: 2026-02-07 13:15+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -22,8 +22,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
@@ -905,8 +905,8 @@ msgid ""
 "Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
 "line '%(line)s'."
 msgstr ""
-"No fue posible obtener el impuesto con exigibilidad coincidente: "
-"\"%(exigibility)s\" para la línea \"%(line)s\"."
+"No fue posible obtener el impuesto con exigibilidad coincidente: \"%"
+"(exigibility)s\" para la línea \"%(line)s\"."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -993,6 +993,12 @@ msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
 "El campo \"Número de cuenta depurado\" es necesario en el banco del "
 "destinatario."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "The following bank account numbers got retrieved during the import : %s"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1110,6 +1116,22 @@ msgstr ""
 "Debe incluir al menos un impuesto por cada línea en la factura. [BR-CO-04]. "
 "Deberá categorizar cada línea de la factura (BG-25) por código de categoría "
 "de IVA del artículo facturado (BT-151)."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+"customer '%s'."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+"company '%s'."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format

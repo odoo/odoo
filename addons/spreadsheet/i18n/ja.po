@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 13:33+0000\n"
+"PO-Revision-Date: 2026-02-14 13:32+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "spreadsheet/ja/>\n"
@@ -4731,7 +4731,7 @@ msgstr "無効なシート名: %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Invalid units of measure ('%s')"
-msgstr "無効な測定範囲 ('%s')"
+msgstr "無効な単位 ('%s')"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4749,7 +4749,7 @@ msgstr "値の逆余弦ラジアン表記。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Inverse cotangent of a value."
-msgstr "値の逆コタンジェント。"
+msgstr "値の逆余接。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4810,7 +4810,7 @@ msgstr "空である"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is equal to"
-msgstr "次と等しい:"
+msgstr "等しい"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4822,25 +4822,25 @@ msgstr "次以上:"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is greater than"
-msgstr "次より大きい:"
+msgstr "より大きい"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is less or equal to"
-msgstr "次以下:"
+msgstr "以下"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is less than"
-msgstr "次より小さい:"
+msgstr "より小さい"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is not between"
-msgstr "次の間にない:"
+msgstr "範囲外"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4852,7 +4852,7 @@ msgstr "空ではない"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is not equal to"
-msgstr "次と等しくない:"
+msgstr "等しくない"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5029,7 +5029,7 @@ msgstr "以下。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Less than."
-msgstr "未満。"
+msgstr "より小さい"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5041,13 +5041,13 @@ msgstr "ライト"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Light blue"
-msgstr "明るい青"
+msgstr "薄い青"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Light green"
-msgstr "ライトグリーン"
+msgstr "薄い緑"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5230,7 +5230,7 @@ msgstr "数学"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Matrix is not invertible"
-msgstr "行列は反転できません"
+msgstr "行列は逆行列を持ちません"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5273,7 +5273,7 @@ msgstr "テーブル状の範囲からの値の最大値。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Maximum value in a numeric dataset."
-msgstr "数値データセット内の最大値。"
+msgstr "データセット内の最大数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5327,7 +5327,7 @@ msgstr "メニューバー"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Merge cells"
-msgstr "セルをマージ"
+msgstr "セルを結合"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5345,9 +5345,8 @@ msgstr ""
 msgid ""
 "Merged cells found in the spill zone. Please unmerge cells before using "
 "array formulas."
-msgstr ""
-"マージされたセルがスピルゾーンに見つかりました。配列式を使用する前に、セルの"
-"結合を解除して下さい。"
+msgstr "スピル領域に結合されたセルが見つかりました。配列数式を使用する前に、セルの結"
+"合を解除してください。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5440,7 +5439,7 @@ msgstr "分"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Minute component of a specific time."
-msgstr "特定の時間の分のコンポーネント。"
+msgstr "特定の時刻の分(分成分)。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5507,7 +5506,7 @@ msgstr "月 & 年"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Month of the year a specific date falls in"
-msgstr "特定の日がみなされる月"
+msgstr "特定の日付が属する月"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5603,19 +5602,19 @@ msgstr "負の値"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Net present value given to non-periodic cash flows.."
-msgstr "非周期キャッシュフローに与えられる正味現在価値"
+msgstr "非定期のキャッシュフローに基づく正味現在価値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Net working days between two dates (specifying weekends)."
-msgstr "二つの日付（指定週末）の間の正味営業日。"
+msgstr "2 つの日付の間の正味稼働日数(週末を指定)。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Net working days between two provided days."
-msgstr "2提供日の間の純営業日。"
+msgstr "指定した 2 つの日付の間の正味稼働日数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5651,7 +5650,7 @@ msgstr "計算なし"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No columns"
-msgstr "カラムなし"
+msgstr "列なし"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6167,7 +6166,7 @@ msgstr "正の値"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Power"
-msgstr "電力"
+msgstr "べき乗"
 
 #. module: spreadsheet
 #. odoo-javascript

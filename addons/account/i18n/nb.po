@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/"
@@ -11454,14 +11454,6 @@ msgid "Onboarding Step"
 msgstr "Onboarding trinn"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -18308,6 +18300,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18684,6 +18683,13 @@ msgid ""
 msgstr ""
 "Du kan ikke bytte konto for å forhindre avstemmingen hvis noen delvise "
 "avstemminger fortsatt venter."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python

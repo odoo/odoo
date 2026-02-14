@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
 "PO-Revision-Date: 2026-01-23 16:18+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -11983,16 +11983,6 @@ msgid "Onboarding Step"
 msgstr "Paso de incorporación"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
-"Una vez que se ha publicado un documento, su tipo queda fijado y ya no se "
-"puede cambiar."
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -19035,6 +19025,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19430,6 +19427,13 @@ msgid ""
 msgstr ""
 "No puede cambiar una cuenta para evitar la conciliación si todavía hay "
 "pendientes algunas conciliaciones parciales."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20185,6 +20189,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comprobante de pago (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr ""
+#~ "Una vez que se ha publicado un documento, su tipo queda fijado y ya no se "
+#~ "puede cambiar."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

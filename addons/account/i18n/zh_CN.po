@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
 "PO-Revision-Date: 2026-02-07 13:35+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -11518,14 +11518,6 @@ msgid "Onboarding Step"
 msgstr "入门步骤"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr "文件只要经历过一次过账，其类型就会固定下来，您不可再更改。"
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -18220,6 +18212,13 @@ msgstr "您不能在以下各项之前添加/修改分录：%(lock_date_info)s�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18559,6 +18558,13 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr "如果部分对账未结，则不能将科目切换为防止对账。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19274,6 +19280,11 @@ msgstr "{{ object.company_id.name }}发票(Ref {{ object.name or 'n/a' }})"
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }}付款收据(Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Once a document has been posted once, its type is set in stone and you "
+#~ "can't change it anymore."
+#~ msgstr "文件只要经历过一次过账，其类型就会固定下来，您不可再更改。"
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

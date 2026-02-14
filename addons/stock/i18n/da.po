@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-02-07 13:32+0000\n"
+"PO-Revision-Date: 2026-02-14 13:30+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/stock/"
 "da/>\n"
@@ -97,8 +97,8 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-"* Kladde: Overførslen er ikke fuldført endnu. Reservering kan ikke "
-"anvendes.\n"
+"* Kladde: Overførslen er ikke fuldført endnu. Reservering kan ikke anvendes."
+"\n"
 "* Afventer en anden operation: Denne overførsel afventer en anden operation, "
 "før den er klar.\n"
 "* Afventer: Overførslen afventer tilgængeligheden af produkter.\n"
@@ -1401,9 +1401,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Da der allerede er anvendt andre måleenheder end %(problem_uom)s (f.eks. %"
-"(uom)s) for dette produkt, kan måleenheden ikke ændres. Hvis du ønsker at "
-"ændre den, skal du arkivere produktet og oprette et nyt."
+"Da der allerede er anvendt andre måleenheder end %(problem_uom)s "
+"(f.eks. %(uom)s) for dette produkt, kan måleenheden ikke ændres. Hvis du "
+"ønsker at ændre den, skal du arkivere produktet og oprette et nyt."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1704,10 +1704,10 @@ msgid ""
 msgstr ""
 "Per standard vil systemet tage fra lageret på kilde destinationen og passivt "
 "afvente tilgængelighed. Den anden mulighed, gør det muligt for dig, at "
-"oprette et indkøb direkte fra kilde destinationen (og dermed ignorere dens "
-"nuværende lager) for at indsamle produkter. Hvis vi vil sammenkæde "
-"bevægelser og have at denne venter på den forrige, bør den sidste mulighed "
-"vælges."
+"oprette et indkøb direkte fra kilde destinationen "
+"(og dermed ignorere dens nuværende lager) for at indsamle produkter. Hvis vi "
+"vil sammenkæde bevægelser og have at denne venter på den forrige, bør den "
+"sidste mulighed vælges."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -2029,8 +2029,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Beregn forsendelsesomkostninger, og send med DHL<br/>\n"
-"                                    <strong>(gå venligst til Hjem&gt;Apps at "
-"installere)</strong>"
+"                                    <strong>"
+"(gå venligst til Hjem&gt;Apps at installere)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2055,8 +2055,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Beregn forsendelsesomkostninger, og send med FedEx<br/>\n"
-"                                    <strong>(gå venligst til Hjem&gt;Apps at "
-"installere)</strong>"
+"                                    <strong>"
+"(gå venligst til Hjem&gt;Apps at installere)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2086,8 +2086,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Beregn forsendelsesomkostninger, og send med UPS<br/>\n"
-"                                    <strong>(gå venligst til Hjem&gt;Apps at "
-"installere)</strong>"
+"                                    <strong>"
+"(gå venligst til Hjem&gt;Apps at installere)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2102,8 +2102,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Beregn forsendelsesomkostninger, og send med USPS<br/>\n"
-"                                    <strong>(gå venligst til Hjem&gt;Apps at "
-"installere)</strong>"
+"                                    <strong>"
+"(gå venligst til Hjem&gt;Apps at installere)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3468,8 +3468,8 @@ msgid ""
 msgstr ""
 "Alle lager operationer i Odoo flytter produkterne fra en\n"
 "            lokation til en anden. For eksempel hvis du modtager produkter\n"
-"            fra en forhandler, vil Odoo flytte produkterne fra "
-"forhandlerens \n"
+"            fra en forhandler, vil Odoo flytte produkterne fra forhandlerens "
+"\n"
 "            lokation til en lager lokation. Hver rapport kan udføres på "
 "fysiske, \n"
 "            partner, eller virtuelle lokationer."
@@ -5041,8 +5041,7 @@ msgstr "Efterlad tom"
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr ""
-"Lad dette felt stå tomt, hvis denne rute deles mellem alle virksomheder"
+msgstr "Lad dette felt stå tomt, hvis denne rute deles mellem alle virksomheder"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -10852,8 +10851,8 @@ msgid ""
 "Lots/Serial Numbers\"."
 msgstr ""
 "Du må ikke oprette et lot eller serienummer med denne operations type. For "
-"at ændre dette, gå til operations typen og marker boksen \"Opret nye lot/"
-"serienumre\"."
+"at ændre dette, gå til operations typen og marker boksen "
+"\"Opret nye lot/serienumre\"."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
