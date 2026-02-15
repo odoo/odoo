@@ -8,6 +8,32 @@ from odoo.tests import Form
 from odoo import Command
 
 
+class TestLotValuationFifo(TestStockValuationCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        cls.product1.write({
+            'lot_valuated': True,
+            'tracking': 'lot',
+        })
+        cls.lot1, cls.lot2, cls.lot3 = cls.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': cls.product1.id},
+            {'name': 'lot2', 'product_id': cls.product1.id},
+            {'name': 'lot3', 'product_id': cls.product1.id},
+            {'name': 'lot4', 'product_id': cls.product1.id},
+        ])
+
+    def test_lot_remaining_qty(self):
+        """ Test the remaining qty is correctly computed on stock move tracked by lot """
+        in1 = self._make_in_move(self.product1, 2, 5, lot_ids=[self.lot1, self.lot2])
+        in2 = self._make_in_move(self.product1, 2, 7, lot_ids=[self.lot3, self.lot4])
+        self._make_out_move(self.product1, 2, lot_ids=[self.lot1, self.lot3])
+
+        self.assertEqual(in1.remaining_qty, 1)
+        self.assertEqual(in2.remaining_qty, 1)
+
+
 @skip('Temporary to fast merge new valuation')
 class TestLotValuation(TestStockValuationCommon):
     @classmethod
