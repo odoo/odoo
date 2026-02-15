@@ -1240,7 +1240,7 @@ class AccountMoveLine(models.Model):
                 raise UserError(_('The account selected on your journal entry forces to provide a secondary currency. You should remove the secondary currency on the account.'))
 
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids:
-                raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.', account.display_name))
+                raise UserError(_('You cannot use this account (%(account)s) in journal "%(journal)s", check the field \'Allowed Journals\' on the related account.', account=account.display_name, journal=journal.display_name))
 
             if account in (journal.default_account_id, journal.suspense_account_id):
                 continue
@@ -1248,8 +1248,8 @@ class AccountMoveLine(models.Model):
             is_account_control_ok = not journal.account_control_ids or account in journal.account_control_ids
 
             if not is_account_control_ok:
-                raise UserError(_("You cannot use this account (%s) in this journal, check the section 'Control-Access' under "
-                                  "tab 'Advanced Settings' on the related journal.", account.display_name))
+                raise UserError(_('You cannot use this account (%(account)s) in journal "%(journal)s", check the section \'Control-Access\' under '
+                                  'tab \'Advanced Settings\' on the related journal.', account=account.display_name, journal=journal.display_name))
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
     def _check_off_balance(self):
