@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from pytz import timezone, UTC
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -74,9 +75,11 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         if level.frequency != 'hourly' or level.frequency_hourly_source != 'attendance':
             return super()._get_accrual_plan_level_work_entry_prorata(level, start_period, start_date, end_period, end_date)
+
+        employee_tz = timezone(self.employee_id.tz or 'UTC')
         datetime_min_time = datetime.min.time()
-        start_dt = datetime.combine(start_date, datetime_min_time)
-        end_dt = datetime.combine(end_date, datetime_min_time)
+        start_dt = employee_tz.localize(datetime.combine(start_date, datetime_min_time)).astimezone(UTC).replace(tzinfo=None)
+        end_dt = employee_tz.localize(datetime.combine(end_date, datetime_min_time)).astimezone(UTC).replace(tzinfo=None)
 
         # Search for any attendance overlapping the window
         attendances = self.env['hr.attendance'].sudo().search([

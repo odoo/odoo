@@ -102,6 +102,9 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             self.assertEqual(allocation_form.number_of_hours_display, 8.0)
 
     def test_accrual_allocation_with_overlapping_attendance(self):
+        # Explicitly set timezone to UTC for this test to ensure consistent behavior
+        self.employee_emp.tz = 'UTC'
+        self.employee_emp.resource_calendar_id.tz = 'UTC'
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'is_based_on_worked_time': True,
@@ -179,12 +182,65 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'check_out': datetime.datetime(2024, 4, 2, 7, 0, 0),  # In Tokyo: 2024/04/02, 16h
         })
 
-        with freeze_time(datetime.datetime(2024, 4, 2, 20, 0, 0)):
-            # Only counts the part of the attendance on the 01/04/2024 UTC: 2 hours
+        with freeze_time(datetime.datetime(2024, 4, 1, 10, 0, 0)):
+            # April 1, 10:00 UTC = April 1, 19:00 Tokyo time
+            # So accrual only processes April 1 (Tokyo time), which has no attendance
             allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 0.25)  # 2 / 8 = 0.25
+            self.assertEqual(allocation.number_of_days, 0.0)  # No hours on Mars 31 Tokyo
 
-        with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
-            # Counts the whole attendance: 9 hours - 1h of lunchtime = 8h
+        with freeze_time(datetime.datetime(2024, 4, 2, 20, 0, 0)):
+            # April 2, 20:00 UTC = April 3, 05:00 Tokyo time
+            # So accrual processes April 2 (Tokyo time), which has the full attendance (7h-16h Tokyo)
+            # 9 hours - 1h of lunchtime = 8h
             allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 1.0)  # 8 / 8 = 1.0
+
+        with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
+            # April 3, 20:00 UTC = April 4, 05:00 Tokyo time
+            # No new attendance on April 3 (Tokyo), so no change
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 1.0)  # Still 8 / 8 = 1.0
+
+    def test_accrual_allocation_timezone_no_attendance_on_first_day(self):
+        """Test that accrual correctly shows 0 hours when attendance falls on next day in employee timezone."""
+        self.employee_emp.tz = 'Asia/Tokyo'
+        self.employee_emp.resource_calendar_id.tz = 'Asia/Tokyo'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 1,
+                'added_value_type': 'hour',
+                'frequency': 'hourly',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+                'frequency_hourly_source': 'attendance'
+            })],
+        })
+        with freeze_time("2024-4-1"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+
+        # Attendance from April 1, 22:00 UTC to April 2, 07:00 UTC
+        # In Tokyo: April 2, 07:00 to April 2, 16:00 (entirely on April 2)
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 1, 22, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 2, 7, 0, 0),
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 2, 10, 0, 0)):
+            # April 2, 10:00 UTC = April 2, 19:00 Tokyo time
+            # So accrual only processes April 1 (Tokyo time), which has no attendance
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.0)  # No hours on April 1 Tokyo
