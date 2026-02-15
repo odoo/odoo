@@ -132,8 +132,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
 
         self.assertTrue(product.self_order_visible, "the field should be visible when the pos config has no limit categories")
 
-    def test_self_order_product_availability(self):
-        """Test product visibility and cart behavior for kiosk and mobile self-ordering modes."""
+    def setup_product_availability(self):
         setup_product_combo_items(self)
 
         # Remove all combo items except desks_combo
@@ -145,18 +144,27 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             ],
         })
 
-        # --- Kiosk Mode Tour ---
+    def test_self_order_product_availability_kiosk(self):
+        """Test product visibility and cart behavior for kiosk"""
+        self.setup_product_availability()
         self.pos_config.write({
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'table',
         })
+
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_kiosk_product_availability")
 
-        # --- Mobile Mode Tour ---
+    def test_self_order_product_availability_mobile(self):
+        """Test product visibility and cart behavior for mobile"""
+        self.setup_product_availability()
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
         })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_product_availability")
