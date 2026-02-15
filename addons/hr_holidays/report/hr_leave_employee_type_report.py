@@ -53,13 +53,15 @@ class LeaveReport(models.Model):
                     allocation.employee_id as employee_id,
                     employee.active as active_employee,
                     CASE
-                        WHEN allocation.id = min_allocation_id.min_id
-                            THEN aggregate_allocation.number_of_days - COALESCE(aggregate_leave.number_of_days, 0)
+                        WHEN allocation.id = max_allocation_id.max_id
+                            THEN aggregate_allocation_non_expired.number_of_days
+                                - COALESCE(aggregate_leave_non_expired.number_of_days, 0)
                             ELSE 0
                     END as number_of_days,
                     CASE
-                        WHEN allocation.id = min_allocation_id.min_id
-                            THEN aggregate_allocation.number_of_hours - COALESCE(aggregate_leave.number_of_hours, 0)
+                        WHEN allocation.id = max_allocation_id.max_id
+                            THEN aggregate_allocation_non_expired.number_of_hours
+                                - COALESCE(aggregate_leave_non_expired.number_of_hours, 0)
                             ELSE 0
                     END as number_of_hours,
                     allocation.department_id as department_id,
@@ -72,30 +74,117 @@ class LeaveReport(models.Model):
                 FROM hr_leave_allocation as allocation
                 INNER JOIN hr_employee as employee ON (allocation.employee_id = employee.id)
 
-                /* Obtain the minimum id for a given employee and type of leave */
+                /* Maximum id for non-expired allocations only */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id, min(id) as min_id
-                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) min_allocation_id
-                on (allocation.employee_id=min_allocation_id.employee_id and allocation.holiday_status_id=min_allocation_id.holiday_status_id)
+                    (SELECT employee_id, holiday_status_id, max(id) as max_id
+                    FROM hr_leave_allocation
+                    WHERE (date_to IS NULL OR date_to >= CURRENT_DATE)
+                    GROUP BY employee_id, holiday_status_id) max_allocation_id
+                ON (allocation.employee_id = max_allocation_id.employee_id AND allocation.holiday_status_id = max_allocation_id.holiday_status_id)
 
-                /* Obtain the sum of allocations (validated) */
+                /* Sum of NON-EXPIRED allocations only */
                 LEFT JOIN
                     (SELECT employee_id, holiday_status_id,
                         sum(CASE WHEN state = 'validate' THEN number_of_days ELSE 0 END) as number_of_days,
                         sum(CASE WHEN state = 'validate' THEN number_of_hours_display ELSE 0 END) as number_of_hours
                     FROM hr_leave_allocation
-                    GROUP BY employee_id, holiday_status_id) aggregate_allocation
-                on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
+                    WHERE (date_to IS NULL OR date_to >= CURRENT_DATE)
+                    GROUP BY employee_id, holiday_status_id) aggregate_allocation_non_expired
+                ON (allocation.employee_id = aggregate_allocation_non_expired.employee_id AND allocation.holiday_status_id = aggregate_allocation_non_expired.holiday_status_id)
 
-                /* Obtain the sum of requested leaves (validated) */
+                /* Sum of leaves - only count days AFTER the latest expired allocation, excluding weekends & public holidays */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
-                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_days ELSE 0 END) as number_of_days,
-                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_hours ELSE 0 END) as number_of_hours
-                    FROM hr_leave
+                    (SELECT
+                        l.employee_id,
+                        l.holiday_status_id,
+                        SUM(
+                            CASE
+                                WHEN l.state IN ('validate', 'validate1') THEN
+                                    CASE
+                                        WHEN l.date_from > latest_expired_allocation.max_expired_date
+                                        THEN l.number_of_days
 
-                    GROUP BY employee_id, holiday_status_id) aggregate_leave
-                on (allocation.employee_id=aggregate_leave.employee_id and allocation.holiday_status_id = aggregate_leave.holiday_status_id)
+                                        WHEN l.date_to > latest_expired_allocation.max_expired_date
+                                            AND l.date_from <= latest_expired_allocation.max_expired_date
+                                        THEN
+                                            (SELECT COUNT(DISTINCT cd.day)
+                                                FROM generate_series(
+                                                    (latest_expired_allocation.max_expired_date + INTERVAL '1 day')::date,
+                                                    l.date_to::date,
+                                                    interval '1 day'
+                                                ) AS cd(day)
+                                                WHERE EXISTS (
+                                                    SELECT 1
+                                                    FROM resource_calendar_attendance rca
+                                                    WHERE rca.calendar_id = e.resource_calendar_id
+                                                    AND rca.dayofweek::int = ((EXTRACT(ISODOW FROM cd.day)::int + 6) % 7)
+                                                )
+                                                AND NOT EXISTS (
+                                                    SELECT 1
+                                                    FROM resource_calendar_leaves rcl
+                                                    WHERE rcl.date_from::date <= cd.day
+                                                    AND rcl.date_to::date >= cd.day
+                                                    AND rcl.resource_id IS NULL
+                                                    AND (rcl.calendar_id IS NULL OR rcl.calendar_id = e.resource_calendar_id)
+                                                )
+                                            )
+                                        ELSE 0
+                                    END
+                                ELSE 0
+                            END
+                        ) as number_of_days,
+                        SUM(
+                            CASE
+                                WHEN l.state IN ('validate', 'validate1') THEN
+                                    CASE
+                                        WHEN l.date_from > latest_expired_allocation.max_expired_date
+                                        THEN l.number_of_hours
+
+                                        WHEN l.date_to > latest_expired_allocation.max_expired_date
+                                            AND l.date_from <= latest_expired_allocation.max_expired_date
+                                        THEN
+                                            (l.number_of_hours *
+                                                (SELECT COUNT(DISTINCT cd.day)::float
+                                                    FROM generate_series(
+                                                        (latest_expired_allocation.max_expired_date + INTERVAL '1 day')::date,
+                                                        l.date_to::date,
+                                                        interval '1 day'
+                                                    ) AS cd(day)
+                                                    WHERE EXISTS (
+                                                        SELECT 1
+                                                        FROM resource_calendar_attendance rca
+                                                        WHERE rca.calendar_id = e.resource_calendar_id
+                                                        AND rca.dayofweek::int = ((EXTRACT(ISODOW FROM cd.day)::int + 6) % 7)
+                                                    )
+                                                    AND NOT EXISTS (
+                                                        SELECT 1
+                                                        FROM resource_calendar_leaves rcl
+                                                        WHERE rcl.date_from::date <= cd.day
+                                                        AND rcl.date_to::date >= cd.day
+                                                        AND rcl.resource_id IS NULL
+                                                        AND (rcl.calendar_id IS NULL OR rcl.calendar_id = e.resource_calendar_id)
+                                                    )
+                                                ) / NULLIF(l.number_of_days, 0)
+                                            )
+                                        ELSE 0
+                                    END
+                                ELSE 0
+                            END
+                        ) as number_of_hours
+                    FROM hr_leave l
+                    INNER JOIN hr_employee e ON e.id = l.employee_id
+
+                    /* Find the LATEST expiry date per employee/leave type */
+                    LEFT JOIN
+                        (SELECT employee_id, holiday_status_id, max(date_to) as max_expired_date
+                        FROM hr_leave_allocation
+                        WHERE date_to IS NOT NULL AND date_to < CURRENT_DATE
+                        GROUP BY employee_id, holiday_status_id) latest_expired_allocation
+                    ON (l.employee_id = latest_expired_allocation.employee_id AND l.holiday_status_id = latest_expired_allocation.holiday_status_id)
+                    GROUP BY l.employee_id, l.holiday_status_id) aggregate_leave_non_expired
+                ON (allocation.employee_id = aggregate_leave_non_expired.employee_id AND allocation.holiday_status_id = aggregate_leave_non_expired.holiday_status_id)
+
+                WHERE (allocation.date_to IS NULL OR allocation.date_to >= CURRENT_DATE)
 
                 UNION ALL SELECT
                     request.employee_id as employee_id,
