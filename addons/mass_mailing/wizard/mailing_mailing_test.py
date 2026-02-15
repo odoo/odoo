@@ -66,6 +66,7 @@ class TestMassMailing(models.TransientModel):
         with file_open("mass_mailing/static/src/scss/mass_mailing_mail.scss", "r") as fd:
             styles = fd.read()
         for valid_email in valid_emails:
+            attachments = mailing.attachment_ids.copy(default={'res_model': 'res.users', 'res_id': self.env.user.id})
             mail_values = {
                 'email_from': mailing.email_from,
                 'reply_to': mailing.reply_to,
@@ -77,7 +78,7 @@ class TestMassMailing(models.TransientModel):
                 }, minimal_qcontext=True),
                 'is_notification': True,
                 'mailing_id': mailing.id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
+                'attachment_ids': [(4, attachment.id) for attachment in attachments],
                 'auto_delete': False,  # they are manually deleted after notifying the document
                 'mail_server_id': mailing.mail_server_id.id,
                 'model': record._name,
