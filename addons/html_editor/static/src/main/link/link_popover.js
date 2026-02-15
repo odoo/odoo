@@ -77,13 +77,13 @@ export class LinkPopover extends Component {
         { style: "double", label: "═══" },
     ];
     buttonShapeData = [
-        { shape: "", label: "Default" },
-        { shape: "rounded-circle", label: "Default + Rounded" },
-        { shape: "outline", label: "Outline" },
-        { shape: "outline rounded-circle", label: "Outline + Rounded" },
-        { shape: "fill", label: "Fill" },
-        { shape: "fill rounded-circle", label: "Fill + Rounded" },
-        { shape: "flat", label: "Flat" },
+        { shape: "", label: _t("Default") },
+        { shape: "rounded-circle", label: _t("Default + Rounded") },
+        { shape: "outline", label: _t("Outline") },
+        { shape: "outline rounded-circle", label: _t("Outline + Rounded") },
+        { shape: "fill", label: _t("Fill") },
+        { shape: "fill rounded-circle", label: _t("Fill + Rounded") },
+        { shape: "flat", label: _t("Flat") },
     ];
     setup() {
         this.ui = useService("ui");
