@@ -56,10 +56,31 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         })
         sale_order.action_confirm()
         self.task.write({'sale_line_id': delivery_service_order_line.id})
+        sequence_per_invoice_type = self.project_task_rate._get_profitability_sequence_per_invoice_type()
         self.assertDictEqual(
             self.project_task_rate._get_profitability_items(False),
-            self.project_profitability_items_empty,
-            'No timesheets has been recorded in the task and no product has been deelivered in the SO linked so the project profitability has no data found.'
+            {
+                'revenues': {
+                    'data': [{
+                        'id': 'billable_manual',
+                        'sequence': sequence_per_invoice_type['billable_manual'],
+                        'invoiced': 0.0,
+                        'to_invoice': delivery_service_order_line.price_subtotal,
+                    }],
+                    'total': {
+                        'invoiced': 0.0,
+                        'to_invoice': delivery_service_order_line.price_subtotal,
+                    },
+                },
+                'costs': {
+                    'data': [],
+                    'total': {
+                        'billed': 0.0,
+                        'to_bill': 0.0,
+                    },
+                },
+            },
+            'There is no timesheets has been recorded in the task and no product has been delivered but since the product invoice policy is set to "delivered quantity" in the SO linked so the project profitability has data found.'
         )
 
         # Create and confirm a SO with the foreign company
@@ -113,7 +134,6 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'company_id': foreign_company.id,
         })
 
-        sequence_per_invoice_type = self.project_task_rate._get_profitability_sequence_per_invoice_type()
         self.assertIn('billable_time', sequence_per_invoice_type)
         self.assertIn('billable_fixed', sequence_per_invoice_type)
         self.assertIn('billable_milestones', sequence_per_invoice_type)
@@ -136,8 +156,9 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
-                    'total': {'invoiced': 100.0, 'to_invoice': 0.0},
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0},
+                            {'id': 'billable_manual', 'sequence': sequence_per_invoice_type['billable_manual'], 'invoiced': 0.0, 'to_invoice': 65.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 65.0},
                 },
                 'costs': {
                     'data': [
@@ -177,8 +198,9 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
-                    'total': {'invoiced': 100.0, 'to_invoice': 0.0},
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0},
+                             {'id': 'billable_manual', 'sequence': sequence_per_invoice_type['billable_manual'], 'invoiced': 0.0, 'to_invoice': 65.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 65.0},
                 },
                 'costs': {
                     'data': [
@@ -214,9 +236,10 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertDictEqual(
             self.project_task_rate._get_profitability_items(False),
             {
-                'revenues': {
-                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
-                    'total': {'invoiced': 100.0, 'to_invoice': 0.0},
+            'revenues': {
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0},
+                             {'id': 'billable_manual', 'sequence': sequence_per_invoice_type['billable_manual'], 'invoiced': 0.0, 'to_invoice': 65.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 65.0},
                 },
                 'costs': {
                     'data': [
@@ -259,9 +282,10 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertDictEqual(
             self.project_task_rate._get_profitability_items(False),
             {
-                'revenues': {
-                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
-                    'total': {'invoiced': 100.0, 'to_invoice': 0.0},
+            'revenues': {
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0},
+                             {'id': 'billable_manual', 'sequence': sequence_per_invoice_type['billable_manual'], 'invoiced': 0.0, 'to_invoice': 65.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 65.0},
                 },
                 'costs': {
                     'data': [
@@ -308,13 +332,18 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                     'data': [
                         {'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0},
                         {
+                            'id': 'billable_manual',
+                            'sequence': sequence_per_invoice_type['billable_manual'],
+                            'invoiced': 0.0,
+                            'to_invoice': 13.0,
+                        }, {
                             'id': 'billable_time',
                             'sequence': sequence_per_invoice_type['billable_time'],
                             'to_invoice': foreign_delivery_timesheet_order_line.untaxed_amount_to_invoice * 0.2,
                             'invoiced': 0.0
                         },
                     ],
-                    'total': {'invoiced': 100.0, 'to_invoice': foreign_delivery_timesheet_order_line.untaxed_amount_to_invoice * 0.2},
+                    'total': {'invoiced': 100.0, 'to_invoice': 39.0},
                 },
                 'costs': {
                     'data': [
@@ -367,13 +396,19 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                         {'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'],
                          'invoiced': 100.0, 'to_invoice': 0.0},
                         {
+                            'id': 'billable_manual',
+                            'sequence': 4,
+                            'invoiced': 0.0,
+                            'to_invoice': 78.0,
+                        },
+                        {
                             'id': 'billable_time',
                             'sequence': sequence_per_invoice_type['billable_time'],
                             'to_invoice': delivery_timesheet_order_line.untaxed_amount_to_invoice + foreign_delivery_timesheet_order_line.untaxed_amount_to_invoice * 0.2,
                             'invoiced': 0.0
                         },
                     ],
-                    'total': {'invoiced': 100.0, 'to_invoice': foreign_delivery_timesheet_order_line.untaxed_amount_to_invoice * 0.2 + delivery_timesheet_order_line.untaxed_amount_to_invoice},
+                    'total': {'invoiced': 100.0, 'to_invoice': 117.0},
                 },
                 'costs': {
                     'data': [
@@ -419,12 +454,30 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'unit_amount': 1,
         })
         self.assertEqual(task2_foreign_timesheet.so_line, milestone_foreign_order_line)
-        profitability_items = self.project_task_rate._get_profitability_items(False)
-        self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertDictEqual(
-            [data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'][0],
-            {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'], 'to_bill': 0.0, 'billed': task2_foreign_timesheet.amount * 0.2},
+            self.project_task_rate._get_profitability_items(False),
+            {
+                'revenues': {
+                    'data': [
+                        {'id': 'other_revenues_aal', 'sequence': 14, 'invoiced': 100.0, 'to_invoice': 0.0},
+                        {'id': 'billable_manual', 'sequence': 4, 'invoiced': 0.0, 'to_invoice': 78.0},
+                        {'id': 'billable_milestones', 'sequence': 3, 'invoiced': 0.0, 'to_invoice': 4.0},
+                        {'id': 'billable_time', 'sequence': 2, 'invoiced': 0.0, 'to_invoice': 39.0},
+                    ],
+                    'total': {'invoiced': 100.0, 'to_invoice': 121.0}
+                },
+                'costs': {
+                    'data': [
+                        {'id': 'other_costs_aal', 'sequence': 15, 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'billable_milestones', 'sequence': 3, 'billed': -40.0, 'to_bill': 0.0},
+                        {'id': 'billable_time', 'sequence': 2, 'billed': -290.0, 'to_bill': 0.0},
+                        {'id': 'non_billable', 'sequence': 5, 'billed': -145.0, 'to_bill': 0.0}
+                    ],
+                    'total': {'billed': -575.0, 'to_bill': 0.0}
+                }
+            }
         )
+
         milestone_foreign_order_line.qty_delivered = 1
         profitability_items = self.project_task_rate._get_profitability_items(False)
         self.assertDictEqual(
@@ -487,8 +540,27 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         task2_foreign_timesheet.unlink()
         task3_timesheet.unlink()
         profitability_items = self.project_task_rate._get_profitability_items(False)
-        self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
-        self.assertFalse([data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'])
+        self.assertDictEqual(
+            self.project_task_rate._get_profitability_items(False),
+            {
+                'revenues': {
+                    'data': [
+                        {'id': 'other_revenues_aal', 'sequence': 14, 'invoiced': 100.0, 'to_invoice': 0.0},
+                        {'id': 'billable_manual', 'sequence': 4, 'invoiced': 0.0, 'to_invoice': 78.0},
+                        {'id': 'billable_milestones', 'sequence': 3, 'invoiced': 0.0, 'to_invoice': 24.0},
+                        {'id': 'billable_time', 'sequence': 2, 'invoiced': 0.0, 'to_invoice': 39.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 141.0}
+                },
+                'costs': {
+                    'data': [
+                        {'id': 'other_costs_aal', 'sequence': 15, 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'billable_time', 'sequence': 2, 'billed': -290.0, 'to_bill': 0.0},
+                        {'id': 'non_billable', 'sequence': 5, 'billed': -145.0, 'to_bill': 0.0}
+                    ],
+                    'total': {'billed': -535.0, 'to_bill': 0.0}
+                }
+            }
+        )
 
     def test_profitability_revenue(self):
         product_profitability_items = self.env['product.product'].create({

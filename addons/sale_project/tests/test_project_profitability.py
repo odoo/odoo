@@ -123,10 +123,32 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         self.project.write({'allow_billable': True})
         self.assertTrue(self.project.allow_billable, 'The project should be billable.')
         self.project.sale_line_id = self.delivery_service_order_line
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
         self.assertDictEqual(
             self.project._get_profitability_items(False),
-            self.project_profitability_items_empty,
-            'No data for the project profitability should be found since no product is delivered in the SO linked.'
+            {
+                'revenues': {
+                    'data': [{
+                        'id': 'billable_manual',
+                        'sequence': sequence_per_invoice_type['billable_manual'],
+                        'invoiced': 0.0,
+                        'to_invoice': self.project.sale_line_id.price_subtotal,
+                    }],
+                    'total': {
+                        'invoiced': 0.0,
+                        'to_invoice': self.project.sale_line_id.price_subtotal,
+                    },
+                },
+                'costs': {
+                    'data': [],
+                    'total': {
+                        'billed': 0.0,
+                        'to_bill': 0.0,
+                    },
+                },
+            },
+            'data should be found for the project profitability since no product is delivered but the product invoice'
+            'policy is set to "delivered quantity"'
         )
 
         # Add extra cost and extra revenues to the analytic account.
@@ -190,13 +212,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             # id should be equal to "billable_manual" if "sale_timesheet" module is installed otherwise "service_revenues"
                             'id': invoice_type,
                             'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sol_foreign.untaxed_amount_to_invoice * 0.2,
+                            'to_invoice': self.delivery_service_order_line.price_subtotal + (sol_foreign.untaxed_amount_to_invoice * 0.2),
                             'invoiced': 0.0,
                         },
                     ],
                     'total': {
-                        'to_invoice': sol_foreign.untaxed_amount_to_invoice * 0.2,
                         'invoiced': 100.0,
+                        'to_invoice': self.delivery_service_order_line.price_subtotal + (sol_foreign.untaxed_amount_to_invoice * 0.2),
                     },
                 },
                 'costs': {
