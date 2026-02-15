@@ -47,7 +47,32 @@ class ResourceCalendarAttendance(models.Model):
         help="Gives the sequence of this line when displaying the resource calendar.")
 
     # Variable
-    date = fields.Date()
+    date = fields.Date(required=True)
+    is_recurrent = fields.Boolean()
+    delta = fields.Selection([
+        ('day', 'Days'),
+        ('week', 'Weeks'),
+    ])
+    variance = fields.Integer(string="Variance", help="Number of days or weeks between each occurrence.")
+    until = fields.Selection([
+        ('forever', 'Forever'),
+        ('times', 'Number of Occurences'),
+        ('date', 'Date')
+    ], default='forever', string="Recurrence End Condition")
+    occurences = fields.Integer(string="Number of Occurences", default=1)
+    until_date = fields.Date(string="Recurrence End Date")
+
+    def _get_until(self):
+        self.ensure_one()
+        if self.until == 'date':
+            return self.until_date
+        if self.until == 'times':
+            if self.is_recurrent and self.delta and self.variance:
+                if self.delta == 'day':
+                    return self.date + timedelta(days=self.variance * self.occurences)
+                if self.delta == 'week':
+                    return self.date + timedelta(weeks=self.variance * self.occurences)
+        return date.max
 
     @api.constrains('calendar_id', 'date', 'duration_hours', 'dayofweek')
     def _check_attendance(self):
