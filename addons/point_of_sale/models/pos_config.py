@@ -1216,7 +1216,7 @@ class PosConfig(models.Model):
         return {
             "has_pos_config": has_pos_config,
             "has_chart_template": has_chart_template,
-            "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
+            "is_restaurant_installed": bool(self.env['ir.module.module'].sudo().search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
             "is_main_company": main_company and self.env.company.id == main_company.id or False
         }
 
