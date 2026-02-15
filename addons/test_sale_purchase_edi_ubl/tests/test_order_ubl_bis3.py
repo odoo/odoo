@@ -317,6 +317,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         po_line_vals = [{
             'product_id': self.displace_prdct.id,
             'product_qty': 1.0,
+            'price_unit': 100.0,
         }]
         xml_attachment = self.get_purchase_xml(po_line_vals)
         # Archive product for SO import
