@@ -12,6 +12,10 @@ class ResCompany(models.Model):
     hr_presence_control_login = fields.Boolean(string="Based on user status in system", default=True)
     hr_presence_control_email = fields.Boolean(string="Based on number of emails sent")
     hr_presence_control_ip = fields.Boolean(string="Based on IP Address")
-    hr_presence_control_attendance = fields.Boolean(string="Based on attendances")
+
+    def _default_hr_presence_control_attendance(self):
+        module = self.env['ir.module.module'].sudo().search([('name', '=', 'hr_attendance'), ('state', '=', 'installed')], limit=1)
+        return bool(module)
+    hr_presence_control_attendance = fields.Boolean(string="Based on attendances", default=_default_hr_presence_control_attendance)
     contract_expiration_notice_period = fields.Integer("Contract Expiry Notice Period", default=7)
     work_permit_expiration_notice_period = fields.Integer("Work Permit Expiry Notice Period", default=60)
