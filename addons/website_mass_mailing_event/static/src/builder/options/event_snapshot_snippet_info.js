@@ -19,11 +19,16 @@ async function getAddressData(addressId, orm) {
         [addressId],
         ["city", "country_id", "state_id"]
     );
-    const countryData = await orm.read(
-        "res.country",
-        [addressData[0].country_id[0]],
-        ["name", "state_required"]
-    );
+
+    let countryData;
+    if (addressData[0].country_id) {
+        countryData = await orm.read(
+            "res.country",
+            [addressData[0].country_id[0]],
+            ["name", "state_required"]
+        );
+    }
+
     let stateData;
     if (addressData[0].state_id) {
         stateData = await orm.read("res.country.state", [addressData[0].state_id[0]], ["code"]);
@@ -31,7 +36,7 @@ async function getAddressData(addressId, orm) {
 
     return {
         address: addressData[0],
-        country: countryData[0],
+        country: countryData && countryData[0],
         state: stateData && stateData[0],
     };
 }
@@ -55,7 +60,7 @@ export const eventSnapshotSnippetInfo = {
             case "card":
                 return "website_mass_mailing_event.s_event_snapshot_card_fragment";
             case "aside":
-                return "website_mass_mailing_event.s_event_snapshot_event_aside_fragment";
+                return "website_mass_mailing_event.s_event_snapshot_aside_fragment";
         }
     },
     additionalRenderingContext: async (record, services) => {
