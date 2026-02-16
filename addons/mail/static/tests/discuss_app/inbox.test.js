@@ -159,21 +159,39 @@ test('"reply to" composer should send message if message replied to is not a not
 
 test("show subject of message in Inbox", async () => {
     const pyEnv = await startServer();
-    const messageId = pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "discuss.channel",
-        needaction: true,
-        subject: "Salutations, voyageur",
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "discuss.channel",
+            needaction: true,
+            subject: "Salutations, voyageur",
+        },
+        {
+            body: "",
+            model: "discuss.channel",
+            needaction: true,
+            subject: "Hello, wanderer",
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageId2,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
     await start();
     await openDiscuss();
     await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
+    // Empty body: display subject only
+    await contains(".o-mail-Message:has(:text('Subject: Hello, wanderer'))");
 });
 
 test("show subject of message in history", async () => {
