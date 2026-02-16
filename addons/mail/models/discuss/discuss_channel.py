@@ -15,7 +15,7 @@ from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.addons.web.models.models import lazymapping
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import format_list, email_normalize, html_escape
+from odoo.tools import format_list, email_normalize, html_escape, html2plaintext
 from odoo.tools.misc import hash_sign, OrderedSet
 from odoo.tools.sql import SQL
 
@@ -953,17 +953,25 @@ class DiscussChannel(models.Model):
         author = self.env["res.partner"].browse(author_ids) or self.env["mail.guest"].browse(
             msg_vals.get("author_guest_id", message.author_guest_id.id)
         )
+        body = msg_vals.get("body", message.body)
         if self.channel_type == 'chat':
             payload['title'] = author.name
+            payload["options"]["body"] = html2plaintext(body, include_references=False)
         elif self.channel_type == 'channel':
-            payload['title'] = "#%s - %s" % (record_name, author.name)
+            payload['title'] = f"#{record_name}"
         elif self.channel_type == 'group':
             if not record_name:
                 member_names = self.channel_member_ids.mapped(lambda m: m.partner_id.name if m.partner_id else m.guest_id.name)
                 record_name = f"{', '.join(member_names[:-1])} and {member_names[-1]}" if len(member_names) > 1 else member_names[0] if member_names else ""
-            payload['title'] = "%s - %s" % (record_name, author.name)
+            payload['title'] = record_name
         else:
-            payload['title'] = "#%s" % (record_name)
+            payload['title'] = record_name
+
+        if self.channel_type in ["channel", "group"]:
+            payload["options"]["icon"] = f"/web/image/discuss.channel/{self.id}/avatar_128"
+        else:
+            payload["options"]["icon"] = f"/web/image/{author._name}/{author.id}/avatar_128"
+
         return payload
 
     def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):

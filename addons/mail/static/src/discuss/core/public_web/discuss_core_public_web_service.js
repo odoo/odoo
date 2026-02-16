@@ -51,7 +51,7 @@ export class DiscussCorePublicWeb {
                     if (this.store.rtc.localChannel) {
                         await this.store.rtc.leaveCall();
                     }
-                    this.store.rtc.joinCall(channel);
+                    this.store.rtc.joinCall(channel, { audio: false, video: false });
                 } else if (action === "POST_RTC_LOGS") {
                     const logs = data || {};
                     logs.odooInfo = odoo.info;

@@ -24,7 +24,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import _, api, exceptions, fields, models, modules, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -4040,15 +4040,16 @@ class MailThread(models.AbstractModel):
         """
         msg_vals = msg_vals or {}
         author_id = msg_vals['author_id'] if 'author_id' in msg_vals else message.author_id.id
+        author = self.env["res.partner"].browse(author_id) or self.env["mail.guest"].browse(
+            msg_vals.get("author_guest_id", message.author_guest_id.id),
+        )
         model = msg_vals['model'] if 'model' in msg_vals else message.model
         title = force_record_name or message.record_name
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else message.res_id
         body = msg_vals['body'] if 'body' in msg_vals else message.body
 
-        if author_id:
-            author_name = self.env['res.partner'].browse(author_id).name
-            title = "%s: %s" % (author_name, title)
-            icon = "/web/image/res.partner/%d/avatar_128" % author_id
+        if model:
+            icon = modules.module.get_module_icon(self.env[model]._original_module)
         else:
             icon = '/web/static/img/odoo-icon-192x192.png'
 
@@ -4075,10 +4076,11 @@ class MailThread(models.AbstractModel):
                     count=total_attachments - 1,
                 )
 
+        body = html2plaintext(body, include_references=False) + self._generate_tracking_message(message)
         return {
             'title': title,
             'options': {
-                'body': html2plaintext(body, include_references=False) + self._generate_tracking_message(message),
+                'body': f"{author.name}: {body}",
                 'icon': icon,
                 'data': {
                     'model': model if model else '',

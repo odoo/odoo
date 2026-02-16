@@ -35,21 +35,25 @@ export class OutOfFocusService {
         ) {
             return;
         }
+        let title = _t("New message");
+        let icon = "/web/static/img/odoo-icon-192x192.png";
         const author = message.author;
-        let notificationTitle;
-        let icon = "/mail/static/src/img/odoobot_transparent.png";
-        if (!author) {
-            notificationTitle = _t("New message");
-        } else {
+        if (message?.thread?.channel?.channel_type === "chat" && author) {
+            title = author.name;
+        } else if (message?.thread?.channel?.channel_type === "channel") {
+            title = `#${message.thread.channel.name}`;
+        } else if (message?.thread?.channel?.channel_type === "group") {
+            title = message.thread.channel.name;
+        } else if (message.thread) {
+            title = message.thread.displayName;
+        }
+
+        if (["channel", "group"].includes(message?.thread?.channel?.channel_type)) {
+            icon = message.thread.channel.avatarUrl;
+        } else if (message?.thread?.channel && author) {
             icon = author.avatarUrl;
-            if (message.thread?.channel?.channel_type === "channel") {
-                notificationTitle = _t("%(author name)s from %(channel name)s", {
-                    "author name": message.authorName,
-                    "channel name": message.channel_id.displayName,
-                });
-            } else {
-                notificationTitle = message.authorName;
-            }
+        } else if (message?.thread) {
+            icon = message.thread.module_icon;
         }
         const notificationContent = message.previewText
             .toString()
@@ -57,7 +61,7 @@ export class OutOfFocusService {
         await this.sendNotification({
             message: notificationContent,
             sound: Boolean(message.channel_id),
-            title: notificationTitle,
+            title,
             type: "info",
             icon,
         });

@@ -22,7 +22,10 @@ patch(DiscussClientAction.prototype, {
         }
         const call = action.context?.call || action.params?.call;
         if (call === "accept") {
-            await this.rtc.joinCall(this.store.discuss.thread.channel);
+            await this.rtc.joinCall(this.store.discuss.thread.channel, {
+                audio: false,
+                camera: false,
+            });
             return;
         }
         if (
