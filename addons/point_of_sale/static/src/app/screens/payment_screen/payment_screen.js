@@ -343,12 +343,12 @@ export class PaymentScreen extends Component {
         this.numberBuffer.reset();
     }
 
-    paymentMethodImage(id) {
-        if (this.paymentMethod.image) {
-            return `/web/image/pos.payment.method/${id}/image`;
-        } else if (this.paymentMethod.type === "cash") {
+    paymentMethodImage(paymentMethod) {
+        if (paymentMethod.image) {
+            return `/web/image/pos.payment.method/${paymentMethod.id}/image`;
+        } else if (paymentMethod.type === "cash") {
             return "/point_of_sale/static/src/img/money.png";
-        } else if (this.paymentMethod.type === "pay_later") {
+        } else if (paymentMethod.type === "pay_later") {
             return "/point_of_sale/static/src/img/pay-later.png";
         } else {
             return "/point_of_sale/static/src/img/card-bank.png";

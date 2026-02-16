@@ -136,7 +136,7 @@
                         <t t-if="pos.config.canInvoice">Invoice</t>
                         <t t-else="">Not available</t>
                     </span>
-                    <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
+                    <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" />
                 </button>
             </div>
             <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-1 w-100">
@@ -171,7 +171,7 @@
                         t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal, 'd-flex justify-content-between align-items-center': true}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
-                            <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
+                            <img class="payment-method-icon" t-att-src="this.paymentMethodImage(paymentMethod)" />
                             <span class="payment-name" t-esc="paymentMethod.name" />
                         </div>
                         <span class="text-muted" t-esc="pos.getPaymentMethodFmtAmount(paymentMethod, currentOrder)"/>
