@@ -2,7 +2,7 @@ import { MAIN_PLUGINS, MOBILE_OS_EXCLUDED_PLUGINS } from "./plugin_sets";
 import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
 import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
-import { resourceSequenceSymbol, withSequence } from "./utils/resource";
+import { resourceSequenceSymbol, warnOfNamingConvention, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 import { setElementContent } from "@web/core/utils/html";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -306,6 +306,12 @@ export class Editor {
      * @returns {Array<any>}
      */
     trigger(resourceId, ...args) {
+        if (!resourceId.endsWith("_handlers")) {
+            warnOfNamingConvention("trigger", resourceId, {
+                prefix: "on",
+                suffix: "handlers",
+            });
+        }
         return this.getResource(resourceId).map((handler) => handler(...args));
     }
 
@@ -328,6 +334,12 @@ export class Editor {
      * @returns {Promise<void>}
      */
     async triggerAsync(resourceId, ...args) {
+        if (!resourceId.endsWith("_handlers")) {
+            warnOfNamingConvention("triggerAsync", resourceId, {
+                prefix: "on",
+                suffix: "handlers",
+            });
+        }
         for (const handler of this.getResource(resourceId)) {
             await handler(...args);
         }
@@ -358,6 +370,9 @@ export class Editor {
      * @returns {boolean} Whether one of the overrides returned a truthy value.
      */
     delegateTo(resourceId, ...args) {
+        if (!resourceId.endsWith("_overrides")) {
+            warnOfNamingConvention("delegateTo", resourceId, { suffix: "overrides" });
+        }
         return this.getResource(resourceId).some((fn) => fn(...args));
     }
 
@@ -384,6 +399,9 @@ export class Editor {
      * @returns {Parameters<GlobalResources[R][0]>[0]} The processed value of the item.
      */
     processThrough(resourceId, item, ...args) {
+        if (!resourceId.endsWith("_processors")) {
+            warnOfNamingConvention("processThrough", resourceId, { suffix: "processors" });
+        }
         this.getResource(resourceId).forEach((processor) => {
             item = processor(item, ...args) || item;
         });
@@ -412,6 +430,9 @@ export class Editor {
      * @returns {boolean | undefined}
      */
     checkPredicates(resourceId, ...args) {
+        if (!resourceId.endsWith("_predicates")) {
+            warnOfNamingConvention("checkPredicates", resourceId, { suffix: "predicates" });
+        }
         const results = this.getResource(resourceId)
             .map((predicate) => predicate(...args))
             .filter((result) => result !== undefined);
