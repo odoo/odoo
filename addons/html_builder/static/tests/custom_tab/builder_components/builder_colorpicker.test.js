@@ -260,3 +260,29 @@ test("should open the last used tab", async () => {
     await contains(".we-bg-options-container .o_we_color_preview").click();
     expect(".theme-tab.active").toHaveCount(1);
 });
+
+test("should use correct color variables on preview when using color combination", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue() {
+                return "";
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderColorPicker action="'customAction'" defaultColor="''"/>`;
+        }
+    );
+
+    const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    const editor = getEditor();
+    editor.shared.color.getColorCombination = () => "1";
+    await contains(":iframe .test-options-target").click();
+    expect(".we-bg-options-container .o_we_color_preview").toHaveAttribute(
+        "style",
+        "background-color: var(--hb-cp-1-bg); background-image: var(--hb-cp-1-bg-gradient);"
+    );
+});
