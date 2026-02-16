@@ -16,6 +16,7 @@ Price and Cost Price.
     ],
     'data':[
         'views/sale_order_views.xml',
+        'report/sale_report_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

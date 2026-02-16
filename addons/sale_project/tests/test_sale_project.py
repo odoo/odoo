@@ -201,16 +201,6 @@ class TestSaleProject(TestSaleProjectCommon):
             'price_unit': self.product_order_service1.list_price,
             'order_id': sale_order_2.id,
         })
-        section_sale_line_order_2 = SaleOrderLine.create({
-            'display_type': 'line_section',
-            'name': 'Test Section',
-            'order_id': sale_order_2.id,
-        })
-        note_sale_line_order_2 = SaleOrderLine.create({
-            'display_type': 'line_note',
-            'name': 'Test Note',
-            'order_id': sale_order_2.id,
-        })
         sale_order_2.action_confirm()
         task = self.env['project.task'].create({
             'name': 'Task',
@@ -220,23 +210,6 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(task.sale_line_id, sale_line_1_order_2)
         self.assertIn(task.sale_line_id, self.project_global._get_sale_order_items())
         self.assertEqual(self.project_global._get_sale_orders(), sale_order | sale_order_2)
-
-        sale_order_lines = sale_order.order_line + sale_line_1_order_2  # exclude the Section and Note Sales Order Items
-        sale_items_data = self.project_global.get_sale_items_data(limit=5, with_action=False, section_id='billable_fixed')
-
-        expected_sale_line_dict = {
-            sol_read['id']: sol_read
-            for sol_read in sale_order_lines._read_format(
-                ['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id'])
-        }
-        actual_sol_ids = []
-        for line in sale_items_data['sol_items']:
-            sol_id = line['id']
-            actual_sol_ids.append(sol_id)
-            self.assertIn(sol_id, expected_sale_line_dict)
-            self.assertDictEqual(line, expected_sale_line_dict[sol_id])
-        self.assertNotIn(section_sale_line_order_2.id, actual_sol_ids, 'The section Sales Order Item should not be takken into account in the Sales section of project.')
-        self.assertNotIn(note_sale_line_order_2.id, actual_sol_ids, 'The note Sales Order Item should not be takken into account in the Sales section of project.')
 
     def test_sol_product_type_update(self):
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({

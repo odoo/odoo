@@ -11,7 +11,7 @@
                        options="{'no_open': True}"
                        placeholder="Non-billable"
                 />
-                <field name="timesheet_invoice_type" optional="hide"/>
+                <field name="billable_type" optional="hide"/>
                 <field name="reinvoice_move_id" optional="hide"/>
                 <field name="timesheet_revenues" optional="hide" sum="Total"/>
                 <field name="margin" optional="hide" sum="Total"/>
@@ -122,7 +122,7 @@
         <field name="arch" type="xml">
             <pivot string="Timesheets Analysis" sample="1">
                 <field name="date" interval="month" type="row"/>
-                <field name="timesheet_invoice_type" type="col"/>
+                <field name="billable_type" type="col"/>
                 <field name="amount" string="Timesheet Costs"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 <field name="billable_time" widget="timesheet_uom"/>
@@ -140,7 +140,7 @@
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 <field name="billable_time" widget="timesheet_uom"/>
                 <field name="non_billable_time" widget="timesheet_uom"/>
-                <field name="timesheet_invoice_type" type="row"/>
+                <field name="billable_type" type="row"/>
             </graph>
         </field>
     </record>

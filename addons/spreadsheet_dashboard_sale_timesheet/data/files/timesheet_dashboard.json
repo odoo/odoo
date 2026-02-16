@@ -388,19 +388,19 @@
         "A7": "=_t(\"Grand total\")",
         "A8": "=_t(\"Billable rate\")",
         "B1": "=_t(\"Current\")",
-        "B2": "=PIVOT.VALUE(5,\"unit_amount\",\"timesheet_invoice_type\",\"billable_fixed\")",
-        "B3": "=PIVOT.VALUE(5,\"unit_amount\",\"timesheet_invoice_type\",\"billable_manual\")",
-        "B4": "=PIVOT.VALUE(5,\"unit_amount\",\"timesheet_invoice_type\",\"billable_time\")",
+        "B2": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"02_billable_fixed\")",
+        "B3": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"08_billable_manual\")",
+        "B4": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"04_billable_time\")",
         "B5": "=SUM(B2:B4)",
-        "B6": "=PIVOT.VALUE(5,\"unit_amount\",\"timesheet_invoice_type\",\"non_billable\")",
+        "B6": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"09_non_billable\")",
         "B7": "=PIVOT.VALUE(5,\"unit_amount\")",
         "B8": "=IFERROR(B5/B7)",
         "C1": "=_t(\"Previous\")",
-        "C2": "=PIVOT.VALUE(6,\"unit_amount\",\"timesheet_invoice_type\",\"billable_fixed\")",
-        "C3": "=PIVOT.VALUE(6,\"unit_amount\",\"timesheet_invoice_type\",\"billable_manual\")",
-        "C4": "=PIVOT.VALUE(6,\"unit_amount\",\"timesheet_invoice_type\",\"billable_time\")",
+        "C2": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"02_billable_fixed\")",
+        "C3": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"08_billable_manual\")",
+        "C4": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"04_billable_time\")",
         "C5": "=SUM(C2:C4)",
-        "C6": "=PIVOT.VALUE(6,\"unit_amount\",\"timesheet_invoice_type\",\"non_billable\")",
+        "C6": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"09_non_billable\")",
         "C7": "=PIVOT.VALUE(6,\"unit_amount\")",
         "C8": "=IFERROR(C5/C7)",
         "D1": "=_t(\"Current\")",
@@ -706,7 +706,7 @@
       "formulaId": "5",
       "columns": [],
       "rows": [
-        { "fieldName": "timesheet_invoice_type" }
+        { "fieldName": "billable_type" }
       ]
     },
     "6": {
@@ -734,7 +734,7 @@
       "formulaId": "6",
       "columns": [],
       "rows": [
-        { "fieldName": "timesheet_invoice_type" }
+        { "fieldName": "billable_type" }
       ]
     }
   },

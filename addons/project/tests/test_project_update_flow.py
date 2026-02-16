@@ -63,40 +63,6 @@ class TestProjectUpdate(TestProjectCommon):
         self.assertEqual(len(template_values['milestones']['list']), 0, "Milestone list length should be equal to 0 because the Milestones feature is disabled.")
         self.assertEqual(len(template_values['milestones']['created']), 0, "Milestone created length tasks should be equal to 0 because the Milestones feature is disabled.")
 
-    def test_project_update_panel(self):
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 1"
-            milestone_form.deadline = fields.Date.today() + relativedelta(years=-1)
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 2"
-            milestone_form.deadline = fields.Date.today() + relativedelta(years=-1)
-            milestone_form.is_reached = True
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 3"
-            milestone_form.deadline = fields.Date.today() + relativedelta(years=2)
-
-        panel_data = self.project_pigs.get_panel_data()
-
-        self.assertEqual(len(panel_data['milestones']['data']), 3, "Panel data should contain 'milestone' entry")
-        self.assertFalse(panel_data['milestones']['data'][0]['is_deadline_exceeded'], "Milestone is achieved")
-        self.assertTrue(panel_data['milestones']['data'][1]['is_deadline_exceeded'], "Milestone is exceeded")
-        self.assertTrue(panel_data['milestones']['data'][0]['is_reached'], "Milestone is done")
-        self.assertFalse(panel_data['milestones']['data'][1]['is_reached'], "Milestone isn't done")
-        # sorting
-        self.assertEqual(panel_data['milestones']['data'][0]['name'], "Test 2", "Sorting isn't correct")
-        self.assertEqual(panel_data['milestones']['data'][1]['name'], "Test 1", "Sorting isn't correct")
-        self.assertEqual(panel_data['milestones']['data'][2]['name'], "Test 3", "Sorting isn't correct")
-
-        # Disable the "Milestones" feature in the project and check the "Milestones" section is not loaded for this project.
-        self.project_pigs.write({'allow_milestones': False})
-        panel_data = self.project_pigs.get_panel_data()
-        self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is disabled in this project, the "Milestones" section is not loaded.')
-
-        # Disable globally the Milestones feature and check the Milestones section is not loaded.
-        self.env.user.group_ids -= self.env.ref('project.group_project_milestone')
-        panel_data = self.project_pigs.get_panel_data()
-        self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is globally disabled, the "Milestones" section is not loaded.')
-
     def test_project_update_reflects_task_changes(self):
         """
         Check if the project update reflects according to the task changes or not.

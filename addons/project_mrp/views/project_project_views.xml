@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="project_view_form_inherit_project_mrp" model="ir.ui.view">
+        <field name="name">project.view.form.inherit.project.mrp</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_mrp_bom" icon="fa-flask"
+                    groups="mrp.group_mrp_user" invisible="bom_count == 0">
+                    <field string="Bills of Materials" name="bom_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_mrp_production" icon="fa-wrench"
+                    groups="mrp.group_mrp_user" invisible="production_count == 0">
+                    <field string="Manufacturing Orders" name="production_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_embedded_action_bills_of_materials" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">95</field>

@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import json
-from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.fields import Domain
@@ -48,6 +46,7 @@ class ProjectProject(models.Model):
     reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
+    actual_margin = fields.Monetary(compute='_compute_actual_margin', export_string_translation=False)
 
     @api.model
     def default_get(self, fields):
@@ -144,6 +143,15 @@ class ProjectProject(models.Model):
     def _compute_display_sales_stat_buttons(self):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
+
+    def _compute_actual_margin(self):
+        margin_per_account = dict(self.env['account.analytic.line']._read_group(
+            domain=[('account_id', 'in', self.account_id.ids)],
+            groupby=['account_id'],
+            aggregates=['amount:sum'],
+        ))
+        for project in self:
+            project.actual_margin = margin_per_account.get(project.account_id.id, 0.0)
 
     def action_customer_preview(self):
         self.ensure_one()
@@ -263,50 +271,6 @@ class ProjectProject(models.Model):
         if self.allow_billable:
             action['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, view_type) if view_type == 'list' else (view_id, view_type) for view_id, view_type in action['views']]
         return action
-
-    def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name in ['service_revenues', 'materials']:
-            view_types = ['list', 'kanban', 'form']
-            action = {
-                'name': _('Sales Order Items'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'sale.order.line',
-                'context': {'create': False, 'edit': False},
-            }
-            if res_id:
-                action['res_id'] = res_id
-                view_types = ['form']
-            else:
-                action['domain'] = domain
-            action['views'] = [(False, v) for v in view_types]
-            return action
-
-        if section_name in ['other_invoice_revenues', 'downpayments']:
-            action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
-            action['domain'] = domain if domain else []
-            action['context'] = {
-                **ast.literal_eval(action['context']),
-                'default_partner_id': self.partner_id.id,
-                'project_id': self.id,
-            }
-            if res_id:
-                action['views'] = [(False, 'form')]
-                action['view_mode'] = 'form'
-                action['res_id'] = res_id
-            return action
-
-        if section_name == 'cost_of_goods_sold':
-            action = {
-                'name': _('Cost of Goods Sold Items'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'account.move.line',
-                'views': [[False, 'list'], [False, 'form']],
-                'domain': [('move_id', '=', res_id), ('display_type', '=', 'cogs')],
-                'context': {'create': False, 'edit': False},
-            }
-            return action
-
-        return super().action_profitability_items(section_name, domain, res_id)
 
     @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
     def _compute_has_any_so_with_nothing_to_invoice(self):
@@ -449,397 +413,6 @@ class ProjectProject(models.Model):
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
 
-    def get_panel_data(self):
-        panel_data = super().get_panel_data()
-        foldable_sections = self._get_foldable_section()
-        if self._show_profitability() and 'revenues' in panel_data['profitability_items']:
-            for section in panel_data['profitability_items']['revenues']['data']:
-                if section['id'] in foldable_sections:
-                    section['isSectionFoldable'] = True
-        return {
-            **panel_data,
-            'show_sale_items': self.allow_billable,
-        }
-
-    def _get_foldable_section(self):
-        return ['materials', 'service_revenues']
-
-    def get_sale_items_data(self, offset=0, limit=None, with_action=True, section_id=None):
-        if not self.env.user.has_group('project.group_project_user'):
-            return {}
-
-        all_sols = self.env['sale.order.line'].sudo().search(
-            self._get_domain_from_section_id(section_id),
-            offset=offset,
-            limit=limit + 1,
-        )
-        display_load_more = False
-        if len(all_sols) > limit:
-            all_sols = all_sols - all_sols[limit]
-            display_load_more = True
-
-        # filter to only get the action for the SOLs that the user can read
-        action_per_sol = all_sols.sudo(False)._filtered_access('read')._get_action_per_item() if with_action else {}
-
-        def get_action(sol_id):
-            """ Return the action vals to call it in frontend if the user can access to the SO related """
-            action, res_id = action_per_sol.get(sol_id, (None, None))
-            return {'action': {'name': action, 'resId': res_id, 'buttonContext': json.dumps({'active_id': sol_id, 'default_project_id': self.id})}} if action else {}
-
-        return {
-            'sol_items': [{
-                **sol_read,
-                **get_action(sol_read['id']),
-            } for sol_read in all_sols.with_context(with_price_unit=True)._read_format(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id'])],
-            'displayLoadMore': display_load_more,
-        }
-
-    def _get_sale_items_domain(self, additional_domain=None):
-        sale_items = self.sudo()._get_sale_order_items()
-        domain = [
-            ('order_id', 'in', sale_items.sudo().order_id.ids),
-            ('is_downpayment', '=', False),
-            ('state', '=', 'sale'),
-            ('display_type', '=', False),
-            '|',
-                ('project_id', 'in', [*self.ids, False]),
-                ('id', 'in', sale_items.ids),
-        ]
-        if additional_domain:
-            domain = Domain.AND([domain, additional_domain])
-        return domain
-
-    def _get_domain_from_section_id(self, section_id):
-        #  When the sale_timesheet module is not installed, all service products are grouped under the 'service revenues' section.
-        return self._get_sale_items_domain([('product_type', '!=' if section_id == 'materials' else '=', 'service')])
-
-    def _show_profitability(self):
-        self.ensure_one()
-        return self.allow_billable and super()._show_profitability()
-
-    def _show_profitability_helper(self):
-        return True
-
-    def _get_profitability_labels(self):
-        return {
-            **super()._get_profitability_labels(),
-            'service_revenues': self.env._('Other Services'),
-            'materials': self.env._('Materials'),
-            'other_invoice_revenues': self.env._('Customer Invoices'),
-            'downpayments': self.env._('Down Payments'),
-            'cost_of_goods_sold': self.env._('Cost of Goods Sold'),
-        }
-
-    def _get_profitability_sequence_per_invoice_type(self):
-        return {
-            **super()._get_profitability_sequence_per_invoice_type(),
-            'service_revenues': 6,
-            'materials': 7,
-            'other_invoice_revenues': 9,
-            'downpayments': 20,
-            'cost_of_goods_sold': 21,
-        }
-
-    def _get_service_policy_to_invoice_type(self):
-        return {
-            'ordered_prepaid': 'service_revenues',
-            'delivered_milestones': 'service_revenues',
-            'delivered_manual': 'service_revenues',
-        }
-
-    def _get_profitability_sale_order_items_domain(self, domain=None):
-        domain = Domain(domain or Domain.TRUE)
-        return Domain([
-            '|', ('product_id', '!=', False), ('is_downpayment', '=', True),
-            ('is_expense', '=', False),
-            ('state', '=', 'sale'),
-            '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
-        ]) & domain
-
-    def _get_revenues_items_from_sol(self, domain=None, with_action=True):
-        sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
-            self._get_profitability_sale_order_items_domain(domain),
-            ['currency_id', 'product_id', 'is_downpayment'],
-            ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
-        )
-        display_sol_action = with_action and len(self) == 1 and self.env.user.has_group('sales_team.group_sale_salesman')
-        revenues_dict = {}
-        total_to_invoice = total_invoiced = 0.0
-        data = []
-        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
-        if sale_line_read_group:
-            # Get conversion rate from currencies of the sale order lines to currency of project
-            convert_company = self.company_id or self.env.company
-
-            sols_per_product = defaultdict(lambda: [0.0, 0.0, []])
-            downpayment_amount_invoiced = 0
-            downpayment_sol_ids = []
-            for currency, product, is_downpayment, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
-                if is_downpayment:
-                    downpayment_amount_invoiced += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company, round=False)
-                    downpayment_sol_ids += sol_ids
-                else:
-                    sols_per_product[product.id][0] += currency._convert(untaxed_amount_to_invoice, convert_company.currency_id, convert_company)
-                    sols_per_product[product.id][1] += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company)
-                    sols_per_product[product.id][2] += sol_ids
-            if downpayment_amount_invoiced:
-                downpayments_data = {
-                    'id': 'downpayments',
-                    'sequence': sequence_per_invoice_type['downpayments'],
-                    'invoiced': downpayment_amount_invoiced,
-                    'to_invoice': -downpayment_amount_invoiced,
-                }
-                if with_action and (
-                    self.env.user.has_group('sales_team.group_sale_salesman_all_leads,')
-                    or self.env.user.has_group('account.group_account_invoice,')
-                    or self.env.user.has_group('account.group_account_readonly')
-                ):
-                    invoices = self.env['account.move'].search([('line_ids.sale_line_ids', 'in', downpayment_sol_ids)])
-                    args = ['downpayments', [('id', 'in', invoices.ids)]]
-                    if len(invoices) == 1:
-                        args.append(invoices.id)
-                    downpayments_data['action'] = {
-                        'name': 'action_profitability_items',
-                        'type': 'object',
-                        'args': json.dumps(args),
-                    }
-                data += [downpayments_data]
-                total_invoiced += downpayment_amount_invoiced
-                total_to_invoice -= downpayment_amount_invoiced
-            product_read_group = self.env['product.product'].sudo()._read_group(
-                [('id', 'in', list(sols_per_product))],
-                ['invoice_policy', 'service_type', 'type'],
-                ['id:array_agg'],
-            )
-            service_policy_to_invoice_type = self._get_service_policy_to_invoice_type()
-            general_to_service_map = self.env['product.template']._get_general_to_service_map()
-            for invoice_policy, service_type, type_, product_ids in product_read_group:
-                service_policy = None
-                if type_ == 'service':
-                    service_policy = general_to_service_map.get(
-                        (invoice_policy, service_type),
-                        'ordered_prepaid')
-                for product_id, (amount_to_invoice, amount_invoiced, sol_ids) in sols_per_product.items():
-                    if product_id in product_ids:
-                        invoice_type = service_policy_to_invoice_type.get(service_policy, 'materials')
-                        revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
-                        revenue['to_invoice'] += amount_to_invoice
-                        total_to_invoice += amount_to_invoice
-                        revenue['invoiced'] += amount_invoiced
-                        total_invoiced += amount_invoiced
-                        if display_sol_action and invoice_type in ['service_revenues', 'materials']:
-                            revenue.setdefault('record_ids', []).extend(sol_ids)
-
-            if display_sol_action:
-                section_name = 'materials'
-                materials = revenues_dict.get(section_name, {})
-                sale_order_items = self.env['sale.order.line'] \
-                    .browse(materials.pop('record_ids', [])) \
-                    ._filtered_access('read')
-                if sale_order_items:
-                    args = [section_name, [('id', 'in', sale_order_items.ids)]]
-                    if len(sale_order_items) == 1:
-                        args.append(sale_order_items.id)
-                    action_params = {
-                        'name': 'action_profitability_items',
-                        'type': 'object',
-                        'args': json.dumps(args),
-                    }
-                    if len(sale_order_items) == 1:
-                        action_params['res_id'] = sale_order_items.id
-                    materials['action'] = action_params
-        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
-        data += [{
-            'id': invoice_type,
-            'sequence': sequence_per_invoice_type[invoice_type],
-            **vals,
-        } for invoice_type, vals in revenues_dict.items()]
-        return {
-            'data': data,
-            'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
-        }
-
-    def _get_items_from_invoices_domain(self, domain=None):
-        domain = Domain(domain or Domain.TRUE)
-        included_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
-        return domain & Domain([
-            ('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
-            ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '!=', 0),
-            ('is_downpayment', '=', False),
-            ('id', 'not in', included_invoice_line_ids),
-        ])
-
-    def _get_items_from_invoices(self, excluded_move_line_ids=None, with_action=True):
-        """
-        Get all items from invoices, and put them into their own respective section
-        (either costs or revenues)
-        If the final total is 0 for either to_invoice or invoiced (ex: invoice -> credit note),
-        we don't output a new section
-
-        :param excluded_move_line_ids a list of 'account.move.line' to ignore
-        when fetching the move lines, for example a list of invoices that were
-        generated from a sales order
-        """
-        if excluded_move_line_ids is None:
-            excluded_move_line_ids = []
-        aml_fetch_fields = [
-            'balance', 'parent_state', 'company_currency_id', 'analytic_distribution', 'move_id',
-            'display_type', 'date',
-        ]
-        invoices_move_lines = self.env['account.move.line'].sudo().search_fetch(
-            Domain.AND([
-                self._get_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
-                [('analytic_distribution', 'in', self.account_id.ids)]
-            ]),
-            aml_fetch_fields,
-        )
-        res = {
-            'revenues': {
-                'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}
-            },
-            'costs': {
-                'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}
-            },
-        }
-        # TODO: invoices_move_lines.with_context(prefetch_fields=False).move_id.move_type ??
-        if invoices_move_lines:
-            revenues_lines = []
-            cogs_lines = []
-            for move_line in invoices_move_lines:
-                if move_line['display_type'] == 'cogs':
-                    cogs_lines.append(move_line)
-                else:
-                    revenues_lines.append(move_line)
-            for move_lines, ml_type in ((revenues_lines, 'revenues'), (cogs_lines, 'costs')):
-                amount_invoiced = amount_to_invoice = 0.0
-                for move_line in move_lines:
-                    currency = move_line.company_currency_id
-                    line_balance = currency._convert(move_line.balance, self.currency_id, self.company_id, move_line.date)
-                    # an analytic account can appear several time in an analytic distribution with different repartition percentage
-                    analytic_contribution = sum(
-                        percentage for ids, percentage in move_line.analytic_distribution.items()
-                        if str(self.account_id.id) in ids.split(',')
-                    ) / 100.
-                    if move_line.parent_state == 'draft':
-                        amount_to_invoice -= line_balance * analytic_contribution
-                    else:  # move_line.parent_state == 'posted'
-                        amount_invoiced -= line_balance * analytic_contribution
-                # don't display the section if the final values are both 0 (invoice -> credit note)
-                if amount_invoiced != 0 or amount_to_invoice != 0:
-                    section_id = 'other_invoice_revenues' if ml_type == 'revenues' else 'cost_of_goods_sold'
-                    invoices_items = {
-                        'id': section_id,
-                        'sequence': self._get_profitability_sequence_per_invoice_type()[section_id],
-                        'invoiced' if ml_type == 'revenues' else 'billed': amount_invoiced,
-                        'to_invoice' if ml_type == 'revenues' else 'to_bill': amount_to_invoice,
-                    }
-                    if with_action and (
-                        self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
-                        or self.env.user.has_group('account.group_account_invoice')
-                        or self.env.user.has_group('account.group_account_readonly')
-                    ):
-                        invoices_items['action'] = self._get_action_for_profitability_section(invoices_move_lines.move_id.ids, section_id)
-                    res[ml_type] = {
-                        'data': [invoices_items],
-                        'total': {
-                            'invoiced' if ml_type == 'revenues' else 'billed': amount_invoiced,
-                            'to_invoice' if ml_type == 'revenues' else 'to_bill': amount_to_invoice,
-                        },
-                    }
-        return res
-
-    def _add_invoice_items(self, domain, profitability_items, with_action=True):
-        sale_lines = self.env['sale.order.line'].sudo()._read_group(
-            self._get_profitability_sale_order_items_domain(domain),
-            [],
-            ['id:recordset'],
-        )[0][0]
-        items_from_invoices = self._get_items_from_invoices(
-            excluded_move_line_ids=sale_lines.invoice_lines.ids,
-            with_action=with_action
-        )
-        profitability_items['revenues']['data'] += items_from_invoices['revenues']['data']
-        profitability_items['revenues']['total']['to_invoice'] += items_from_invoices['revenues']['total']['to_invoice']
-        profitability_items['revenues']['total']['invoiced'] += items_from_invoices['revenues']['total']['invoiced']
-        profitability_items['costs']['data'] += items_from_invoices['costs']['data']
-        profitability_items['costs']['total']['to_bill'] += items_from_invoices['costs']['total']['to_bill']
-        profitability_items['costs']['total']['billed'] += items_from_invoices['costs']['total']['billed']
-
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
-        sale_items = self.sudo()._get_sale_order_items()
-        domain = [
-            ('order_id', 'in', sale_items.order_id.ids),
-            '|',
-                '|',
-                    ('project_id', 'in', self.ids),
-                    ('project_id', '=', False),
-                ('id', 'in', sale_items.ids),
-        ]
-        revenue_items_from_sol = self._get_revenues_items_from_sol(
-            domain,
-            with_action,
-        )
-        profitability_items['revenues']['data'] += revenue_items_from_sol['data']
-        profitability_items['revenues']['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
-        profitability_items['revenues']['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
-        self._add_invoice_items(domain, profitability_items, with_action=with_action)
-        self._add_purchase_items(profitability_items, with_action=with_action)
-        return profitability_items
-
-    def _get_stat_buttons(self):
-        buttons = super()._get_stat_buttons()
-        if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
-            buttons.append({
-                'icon': 'dollar',
-                'text': self.env._('Sales Orders'),
-                'number': self.sale_order_count,
-                'action_type': 'object',
-                'action': 'action_view_sos',
-                'additional_context': json.dumps({
-                    'create_for_project_id': self.id,
-                }),
-                'show': self.display_sales_stat_buttons and self.sale_order_count > 0,
-                'sequence': 27,
-            })
-        if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
-            buttons.append({
-                'icon': 'dollar',
-                'text': self.env._('Sales Order Items'),
-                'number': self.sale_order_line_count,
-                'action_type': 'object',
-                'action': 'action_view_sols',
-                'show': self.display_sales_stat_buttons,
-                'sequence': 28,
-            })
-        if self.env.user.has_group('account.group_account_readonly'):
-            buttons.append({
-                'icon': 'pencil-square-o',
-                'text': self.env._('Invoices'),
-                'number': self.invoice_count,
-                'action_type': 'object',
-                'action': 'action_open_project_invoices',
-                'show': bool(self.account_id) and self.invoice_count > 0,
-                'sequence': 30,
-            })
-        if self.env.user.has_group('account.group_account_readonly'):
-            buttons.append({
-                'icon': 'pencil-square-o',
-                'text': self.env._('Vendor Bills'),
-                'number': self.vendor_bill_count,
-                'action_type': 'object',
-                'action': 'action_open_project_vendor_bills',
-                'show': self.vendor_bill_count > 0,
-                'sequence': 38,
-            })
-        return buttons
-
-    def _get_profitability_values(self):
-        if not self.allow_billable:
-            return {}, False
-        return super()._get_profitability_values()
-
     # ---------------------------------------------------
     # Actions
     # ---------------------------------------------------
@@ -938,3 +511,11 @@ class ProjectProject(models.Model):
             'allow_billable',
             'from_sale_order_action',
         ]
+
+    def action_actual_margin(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
+        action['display_name'] = self.env._("%(name)s's Actual Margins", name=self.name)
+        action['context'] = {'search_default_fiscal_date': 1, 'search_default_group_date': 1}
+        action['domain'] = [('account_id', 'in', self.account_id.ids)]
+        return action

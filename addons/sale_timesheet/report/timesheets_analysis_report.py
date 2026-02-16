@@ -3,7 +3,7 @@
 
 from odoo import fields, models, api
 
-from odoo.addons.sale_timesheet.models.hr_timesheet import TIMESHEET_INVOICE_TYPES
+from odoo.addons.sale_timesheet.models.hr_timesheet import BILLABLE_TYPES
 
 
 class TimesheetsAnalysisReport(models.Model):
@@ -11,7 +11,7 @@ class TimesheetsAnalysisReport(models.Model):
 
     order_id = fields.Many2one("sale.order", string="Sales Order", readonly=True)
     so_line = fields.Many2one("sale.order.line", string="Sales Order Item", readonly=True)
-    timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type", readonly=True)
+    billable_type = fields.Selection(BILLABLE_TYPES, string="Billable Type", readonly=True)
     reinvoice_move_id = fields.Many2one("account.move", string="Invoice", readonly=True, help="Invoice created from the timesheet")
     timesheet_revenues = fields.Monetary("Timesheet Revenues", currency_field="currency_id", readonly=True, help="Number of hours spent multiplied by the unit price per hour/day.")
     margin = fields.Monetary("Margin", currency_field="currency_id", readonly=True, help="Timesheets revenues minus the costs")
@@ -34,7 +34,7 @@ class TimesheetsAnalysisReport(models.Model):
         return super()._select() + """,
             A.order_id AS order_id,
             A.so_line AS so_line,
-            A.timesheet_invoice_type AS timesheet_invoice_type,
+            A.billable_type AS billable_type,
             A.reinvoice_move_id AS reinvoice_move_id,
             CASE
                 WHEN A.order_id IS NULL OR T.service_type in ('manual', 'milestones')

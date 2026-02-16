@@ -81,6 +81,7 @@ class SaleReport(models.Model):
     price_total = fields.Monetary(string="Total", readonly=True)
     untaxed_amount_to_invoice = fields.Monetary(string="Untaxed Amount To Invoice", readonly=True)
     untaxed_amount_invoiced = fields.Monetary(string="Untaxed Amount Invoiced", readonly=True)
+    untaxed_delivered_amount = fields.Monetary(string="Untaxed Amount Delivered", readonly=True)
     line_invoice_status = fields.Selection(
         selection=[
             ('upselling', "Upselling Opportunity"),
@@ -138,6 +139,11 @@ class SaleReport(models.Model):
                 * {self._case_value_or_one('account_currency_table.rate')}
                 ) ELSE 0
             END AS untaxed_amount_invoiced,
+            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM((l.price_unit * l.qty_delivered)
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('account_currency_table.rate')}
+                ) ELSE 0
+            END AS untaxed_delivered_amount,
             COUNT(*) AS nbr,
             s.name AS name,
             s.date_order AS date,

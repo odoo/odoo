@@ -411,10 +411,3 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.assertEqual(project.account_id.vendor_bill_count, 1, 'Vendor bill should be linked to project account')
         self.assertTrue(vendor_bill.line_ids.analytic_line_ids, 'Analytic line should be created for the account move line')
         self.assertTrue(sale_order.order_line.analytic_line_ids, 'Analytic line should be linked to the sale order line created by the re-invoiced expense product')
-
-        # Only the original vendor bill amount should appear on the project update, to stay consistent with the corresponding hr_expense behavior
-        updates = project._get_profitability_items()
-        data_line = updates['costs']['data'][0]
-        self.assertEqual(data_line['id'], 'other_purchase_costs')
-        self.assertEqual(data_line['billed'], -20)
-        self.assertEqual(updates['costs']['total']['billed'], -20, 'Only the vendor bill should be deducted')

@@ -182,25 +182,6 @@ class SaleOrderLine(models.Model):
                 line.qty_to_invoice = qty_to_invoice
                 line.invoice_status = prev_inv_status
 
-    def _get_action_per_item(self):
-        """ Get action per Sales Order Item
-
-            When the Sales Order Item contains a service product then the action will be View Timesheets.
-
-            :returns: Dict containing id of SOL as key and the action as value
-        """
-        action_per_sol = super()._get_action_per_item()
-        timesheet_action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order_item').id
-        timesheet_ids_per_sol = {}
-        if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
-            timesheet_read_group = self.env['account.analytic.line']._read_group([('so_line', 'in', self.ids), ('project_id', '!=', False)], ['so_line'], ['id:array_agg'])
-            timesheet_ids_per_sol = {so_line.id: ids for so_line, ids in timesheet_read_group}
-        for sol in self:
-            timesheet_ids = timesheet_ids_per_sol.get(sol.id, [])
-            if sol.is_service and len(timesheet_ids) > 0:
-                action_per_sol[sol.id] = timesheet_action, timesheet_ids[0] if len(timesheet_ids) == 1 else False
-        return action_per_sol
-
     @api.model
     def _get_product_service_policy(self):
         return super()._get_product_service_policy() + ['delivered_timesheet']

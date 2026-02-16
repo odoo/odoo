@@ -18,14 +18,14 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer', 'show_address': True}</attribute>
             </field>
         </field>
     </record>
 
     <record id="project_embedded_action_analytic_items" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
-        <field name="sequence">105</field>
+        <field name="sequence">140</field>
         <field name="name">Analytic Items</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="python_method">action_open_analytic_items</field>
@@ -36,7 +36,7 @@
 
     <record id="project_embedded_action_analytic_items_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
-        <field name="sequence">105</field>
+        <field name="sequence">140</field>
         <field name="name">Analytic Items</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
         <field name="python_method">action_open_analytic_items</field>

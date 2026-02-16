@@ -30,7 +30,7 @@
                         </div>
                     </t>
                 </xpath>
-                <xpath expr="//field[@name='date']" position="after">
+                <xpath expr="//t[@name='allocated_hours_placeholder']" position="replace">
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
                 <xpath expr="//group[@name='group_time_managment']" position="attributes">
@@ -40,6 +40,19 @@
                     <setting class="col-lg-12" id="timesheet_settings" string="Timesheets" help="Log time on tasks">
                         <field name="allow_timesheets"/>
                     </setting>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_project_timesheets" type="object" class="oe_stat_button" icon="" groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_timesheets">
+                        <i class="fa fa-fw o_button_icon fa-clock-o" title="Timesheets" invisible="stat_success_rate"/>
+                        <i class="fa fa-fw o_button_icon fa-clock-o text-success" title="On Due" invisible="not stat_success_rate or stat_success_rate &gt;= 80"/>
+                        <i class="fa fa-fw o_button_icon fa-clock-o text-warning" title="Warning" invisible="not stat_success_rate or stat_success_rate &gt; 100 or stat_success_rate &lt; 80"/>
+                        <i class="fa fa-fw o_button_icon fa-clock-o text-danger" title="Over Due" invisible="not stat_success_rate or stat_success_rate &lt;= 100"/>
+                        <field string="Timesheets" name="stat_timesheet_value" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button" type="object" name="action_project_timesheets" icon="fa-warning text-danger"
+                        groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_timesheets or stat_success_rate &lt;= 100">
+                        <field string="Extra Time" name="stat_extra_time_value" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>

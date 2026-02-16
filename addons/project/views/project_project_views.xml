@@ -37,8 +37,6 @@
                     <field name="is_rotting" groups="project.group_project_stages" invisible="1"/>
                     <field name="rotting_days" groups="project.group_project_stages" invisible="1"/>
                     <header>
-                        <button name="action_open_share_project_wizard" string="Share Project" type="object" class="oe_highlight" groups="project.group_project_manager"
-                        invisible="privacy_visibility in ['followers', 'employees'] or is_template" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
                         <field name="stage_id" widget="rotting_statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages" domain="[('company_id', 'in', (company_id, False))]"/>
                     </header>
                 <sheet string="Project">
@@ -52,11 +50,31 @@
                                 </span>
                             </div>
                         </button>
+                        <button class="oe_stat_button" name="action_get_list_view" type="object" groups="project.group_project_milestone" invisible="not allow_milestones or milestone_count &lt;= 0 or is_template">
+                            <i class="fa o_button_icon fa-check text-success" invisible="next_milestone_status == 'off_track'" title="On Track"/>
+                            <i class="fa o_button_icon fa-check text-danger" invisible="next_milestone_status == 'on_track'" title="Off Track"/>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Milestones</span>
+                                <span class="o_stat_value">
+                                    <field name="milestone_count_reached"/> / <field name="milestone_count"/>
+                                    (<field name="milestone_progress" options="{'digits': [1, 0]}"/>%)
+                                </span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_user" context="{'active_id': id}" invisible="is_template">
-                            <field name="last_update_color" invisible="1"/>
-                            <div class="o_stat_info">
-                                <field name="update_count" invisible="1"/>
-                                <field name="last_update_status" readonly="1" widget="status_with_color" status_label="Dashboard" hideStatusName="True"/>
+                            <field name="last_update_status" class="o_stat_info" readonly="1" widget="status_with_color" status_label="Status"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_project_task_burndown_chart_report"
+                            icon="fa-area-chart" string="Burndown Chart" groups="project.group_project_user"/>
+                        <button name="action_view_all_rating" type="object" class="oe_stat_button" icon="" invisible="rating_count == 0">
+                            <i class="fa fa-fw o_button_icon fa-smile-o text-success" invisible="rating_avg &lt; 3.66" title="Happy"/>
+                            <i class="fa fa-fw o_button_icon fa-meh-o text-warning" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Neutral"/>
+                            <i class="fa fa-fw o_button_icon fa-frown-o text-danger" invisible="rating_avg &gt;= 2.33" title="Unhappy"/>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="rating_avg" nolabel="1" widget="float" digits="[1, 1]"/> / 5
+                                </span>
+                                <span class="o_stat_text">Average Rating</span>
                             </div>
                         </button>
                     </div>
@@ -70,11 +88,29 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="label_tasks" string="Name of the Tasks" placeholder="e.g. Tasks"/>
-                            <field name="partner_id" widget="res_partner_many2one"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
+                        <group class="d-lg-none">
+                            <div class="d-flex mb-3">
+                                <i class="fa fa-user pe-2" title="Customer" name="partner_id"/>
+                                <field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
+                            </div>
+                            <div class="d-flex align-items-center" invisible="not partner_phone">
+                                <i class="fa fa-phone pe-2" title="Phone"/>
+                                <field name="partner_phone" nolabel="1" widget="phone"/>
+                            </div>
+                            <div class="d-flex align-items-center mb-3" invisible="not partner_email">
+                                <i class="fa fa-envelope pe-2" title="Email"/>
+                                <field name="partner_email" nolabel="1" widget="email"/>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-tag pe-2" title="Tags"/>
+                                <field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                            </div>
+                        </group>
+                        <group class="d-none d-lg-grid">
+                            <i class="fa fa-user pe-2" title="Customer" name="partner_id"/><field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
+                            <i class="fa fa-phone pe-2" title="Phone" invisible="not partner_phone"/><field name="partner_phone" nolabel="1" widget="phone" invisible="not partner_phone"/>
+                            <i class="fa fa-envelope pe-2" title="Email" invisible="not partner_email"/><field name="partner_email" nolabel="1" widget="email" invisible="not partner_email"/>
+                            <i class="fa fa-tag pe-2" title="Tags"/><field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -84,6 +120,11 @@
                         </group>
                     </group>
                     <notebook>
+                        <page name="map" string="Map" invisible="not google_map_iframe">
+                            <!-- The readonly is set to false just to remove the iframe from the parent div with class "o_readonly" -->
+                            <!-- This class add some padding which we want to remove to make the map use all the space available in the page -->
+                            <field name="google_map_iframe" readonly="0"/>
+                        </page>
                         <page name="description" string="Description">
                             <field name="description" options="{'resizable': false}" placeholder="Project description..."/>
                         </page>
@@ -93,10 +134,11 @@
                                     <!-- Always display the whole alias in edit mode. It depends in read only -->
                                     <!-- Need to add alias_id in view for getting alias_domain_id by default -->
                                     <field name="alias_id" invisible="1"/>
+                                    <field name="label_tasks" string="Name of Tasks" placeholder="e.g. Tasks"/>
                                     <label for="alias_name" string="Project's Email" invisible="is_template"/>
                                     <field name="alias_email" widget="email" readonly="1" nolabel="1" groups="!project.group_project_manager" invisible="is_template"/>
                                     <div class="row" groups="project.group_project_manager" invisible="is_template">
-                                        <div class="d-flex col-10 p-0">
+                                        <div class="d-flex col-10">
                                             <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
                                             <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
                                                 options="{'no_create': True, 'no_open': True}"/>
@@ -111,6 +153,7 @@
                                     <field name="alias_contact" class="oe_inline" string="Accept Emails From"
                                            invisible="not alias_email"/>
                                     <field name="privacy_visibility" widget="radio"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                     <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
                                         <i class="fa fa-lightbulb-o pe-2" title="Info"/><field class="d-inline" name="access_instruction_message" nolabel="1"/>
                                     </span>
@@ -118,12 +161,15 @@
                                         <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
                                     </span>
                                 </group>
-                                <group name="analytic" groups="analytic.group_analytic_accounting">
-                                    <div class="o_flexible_margin_top o_horizontal_separator text-uppercase fw-bolder small mb-3" colspan="2">analytic</div>
-                                    <field name="account_id"/>
-                                </group>
-                                <group name="extra_settings">
-                                </group>
+                                <div class="o_col">
+                                    <group>
+                                        <t name="allocated_hours_placeholder"/>
+                                    </group>
+                                    <group name="analytic" groups="analytic.group_analytic_accounting">
+                                        <div class="o_flexible_margin_top o_horizontal_separator text-uppercase fw-bolder small mb-3" colspan="2">analytic</div>
+                                        <field name="account_id"/>
+                                    </group>
+                                </div>
                             </group>
                             <group>
                                 <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container">
@@ -698,7 +744,7 @@
                 </xpath>
                 <xpath expr="//div[@name='task_analysis']" position="before">
                     <div role="menuitem" groups="project.group_project_user">
-                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Dashboard</a>
+                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Updates</a>
                     </div>
                 </xpath>
             </field>
@@ -758,6 +804,18 @@
             <field name="state">code</field>
             <field name="code">
                 action = record.action_toggle_project_template_mode()
+            </field>
+        </record>
+
+        <record id="action_server_share_project" model="ir.actions.server">
+            <field name="name">Share Project</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="binding_model_id" ref="project.model_project_project"/>
+            <field name="binding_view_types">form</field>
+            <field name="group_ids" eval="[Command.link(ref('project.group_project_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = record.action_open_share_project_wizard()
             </field>
         </record>
 
