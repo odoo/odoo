@@ -40,7 +40,12 @@ import {
 } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
-import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
+import {
+    isDisplayStandalone,
+    isIOS,
+    isMobileOS,
+    isMacOS,
+} from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
@@ -335,11 +340,11 @@ export class Composer extends Component {
         };
         return this.env.inChatter
             ? _t(
-                  "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                  "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
                   tags
               )
             : _t(
-                  "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                  "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
                   tags
               );
     }
@@ -352,7 +357,8 @@ export class Composer extends Component {
     }
 
     get sendKeybinds() {
-        return this.env.inChatter ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
+        const modifierKey = isMacOS() ? _t("CMD") : _t("CTRL");
+        return this.env.inChatter ? [modifierKey, _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
@@ -540,7 +546,8 @@ export class Composer extends Component {
                 if (this.isMobileOS || ev.isComposing) {
                     return;
                 }
-                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
+                const modKey = isMacOS() ? ev.metaKey : ev.ctrlKey;
+                const shouldPost = this.env.inChatter ? modKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
                 }
