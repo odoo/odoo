@@ -482,7 +482,7 @@ class TestFrenchLeaves(TransactionCase):
         # 00h00 to 23h59 , but in the server it is saved as utc, so we consider the current user tz
         # and subtract that from the holiday. With this, wherever you may be running the tests, the
         # result should be consistent
-        tz = pytz.timezone(self.env.user.tz)
+        tz = pytz.timezone(self.env.user.tz or 'UTC')
         self.env['resource.calendar.leaves'].with_company(self.company).create({
             'name': 'Public Holiday',
             'calendar_id': False,
