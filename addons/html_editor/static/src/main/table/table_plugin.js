@@ -123,6 +123,7 @@ export class TablePlugin extends Plugin {
                     closestElement(editableSelection.anchorNode, ".o_selected_td") && "compact"
             ),
         ],
+        overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
 
         /** Handlers */
         on_selectionchange_handlers: this.updateSelectionTable.bind(this),
@@ -1119,6 +1120,25 @@ export class TablePlugin extends Plugin {
         }
 
         return false;
+    }
+
+    getTableSelectionRangeRect() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (closestElement(selection.commonAncestorContainer, "table.o_selected_table")) {
+            let [startTd, endTd] = [
+                closestElement(selection.anchorNode, "td"),
+                closestElement(selection.focusNode, "td"),
+            ];
+            if (selection.direction === DIRECTIONS.LEFT) {
+                [startTd, endTd] = [endTd, startTd];
+            }
+            const startTdRect = startTd.getBoundingClientRect();
+            const endTdRect = endTd.getBoundingClientRect();
+            const { left, top } = startTdRect;
+            const { bottom, right } = endTdRect;
+            const rect = new DOMRect(left, top, right - left, bottom - top);
+            return rect;
+        }
     }
 
     /**
