@@ -311,12 +311,16 @@ class WebsiteBlog(http.Controller):
         if blog_post not in all_post:
             return request.redirect("/blog/%s" % (request.env['ir.http']._slug(blog_post.blog_id)))
 
-        # should always return at least the current post
-        all_post_ids = all_post.ids
-        current_blog_post_index = all_post_ids.index(blog_post.id)
-        nb_posts = len(all_post_ids)
-        next_post_id = all_post_ids[(current_blog_post_index + 1) % nb_posts] if nb_posts > 1 else None
-        next_post = next_post_id and BlogPost.browse(next_post_id) or False
+        next_post = blog_post.recommended_next_post_id
+        is_next_post_recommended = True
+        if not next_post or not next_post.sudo().is_published:
+            # Fallback to the next post in the list.
+            all_post_ids = all_post.ids
+            current_blog_post_index = all_post_ids.index(blog_post.id)
+            nb_posts = len(all_post_ids)
+            next_post_id = all_post_ids[(current_blog_post_index + 1) % nb_posts] if nb_posts > 1 else None
+            next_post = next_post_id and BlogPost.browse(next_post_id) or False
+            is_next_post_recommended = False
 
         values = {
             'tags': tags,
@@ -328,6 +332,7 @@ class WebsiteBlog(http.Controller):
             'nav_list': self.nav_list(blog),
             'enable_editor': enable_editor,
             'next_post': next_post,
+            'is_next_post_recommended': is_next_post_recommended,
             'date': date_begin,
             'blog_url': blog_url,
         }

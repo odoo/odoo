@@ -192,6 +192,8 @@ class BlogPost(models.Model):
     author_name = fields.Char(related='author_id.display_name', string="Author Name", readonly=False, store=True)
     active = fields.Boolean('Active', default=True)
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, index=True, ondelete='cascade', default=lambda self: self.env['blog.blog'].search([], limit=1))
+    recommended_next_post_id = fields.Many2one('blog.post', string="Recommended Next Post",
+        help="Blog post that will appear next at the bottom of this article.")
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)

@@ -20,10 +20,11 @@
         <button type="button"
                 t-if="domState.selected and props.allowUnselect"
                 class="o-hb-btn o-hb-btn-has-icon btn btn-secondary"
+                t-att-title="props.unselectBtnTitle"
                 t-on-click="() => this.select()"
-                t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
+                t-on-pointerenter="hasPreview ? () => this.preview() : () => {}"
                 t-on-pointerleave="revert"
-                t-on-focusin="hasPreview ? () => this.preview() : undefined"
+                t-on-focusin="hasPreview ? () => this.preview() : () => {}"
                 t-on-focusout="revert"
                 aria-label="Unselect">
             <i class="oi oi-close" role="presentation"/>

@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website_blog.controllers.main import WebsiteBlog
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from datetime import datetime
 
@@ -144,3 +146,30 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
     def test_blog_posts_dynamic_snippet_options(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_options', login='admin')
+
+    def test_next_article(self):
+        blog = self.env['blog.blog'].create({'name': "Blog Test"})
+        [post1, post2, post3, post4] = self.env['blog.post'].create([
+            {'name': "Post Test 1", 'blog_id': blog.id, 'is_published': True},
+            {'name': "Post Test 2", 'blog_id': blog.id, 'is_published': True},
+            {'name': "Post Test 3", 'blog_id': blog.id, 'is_published': False},
+            {'name': "Post Test 4", 'blog_id': blog.id, 'is_published': True},
+        ])
+        post2.recommended_next_post_id = post4
+        post4.recommended_next_post_id = post3
+
+        website = self.env.ref('website.default_website')
+        controller = WebsiteBlog()
+
+        cases = [(self.env, post1, post4, "Next post should be Post4 according to chronological order"),
+            (self.env, post2, post4, "Next post should be Post4 as it is set manually"),
+            (self.env(user=self.env.ref('base.public_user')), post4, post2, "Fallback to next published post when recommended post is not published")]
+
+        for env, current_post, expected_post, message in cases:
+            with MockRequest(env, website=website) as mock_request:
+                def fake_render(_, values):
+                    self.assertEqual(values['next_post'], expected_post, message)
+
+                mock_request.session.touch = lambda: None
+                mock_request.render = fake_render
+                controller.blog_post(blog, current_post)
