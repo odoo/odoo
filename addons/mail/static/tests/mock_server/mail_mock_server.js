@@ -700,7 +700,7 @@ async function mail_message_update_content(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { attachment_ids, body, message_id } = await parseRequestParams(request);
+    const { attachment_ids, body, message_id, ...kwargs } = await parseRequestParams(request);
     const [message] = MailMessage.browse(message_id);
     const msg_values = {};
     if (body !== null) {
@@ -731,21 +731,28 @@ async function mail_message_update_content(request) {
         msg_values.partner_ids = false;
         msg_values.parent_id = false;
     }
+    if ("subject" in kwargs) {
+        msg_values.subject = kwargs.subject;
+    }
     MailMessage.write([message_id], msg_values);
+    const res = {
+        attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
+        body: message.body,
+        pinned_at: message.pinned_at,
+        recipients: mailDataHelpers.Store.many(
+            this.env["res.partner"].browse(message.partner_ids),
+            makeKwArgs({ fields: ["avatar_128", "name"] })
+        ),
+        link_preview_ids: message.link_preview_ids,
+        parentMessage: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
+    };
+    if ("subject" in kwargs) {
+        res.subject = message.subject;
+    }
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
         "mail.record/insert",
-        new mailDataHelpers.Store(MailMessage.browse(message.id), {
-            attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
-            body: message.body,
-            pinned_at: message.pinned_at,
-            recipients: mailDataHelpers.Store.many(
-                this.env["res.partner"].browse(message.partner_ids),
-                makeKwArgs({ fields: ["avatar_128", "name"] })
-            ),
-            link_preview_ids: message.link_preview_ids,
-            parentMessage: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
-        }).get_result()
+        new mailDataHelpers.Store(MailMessage.browse(message.id), res).get_result()
     );
     return new mailDataHelpers.Store(
         MailMessage.browse(message_id),
