@@ -24,3 +24,6 @@ export function getEditingEls(rootEl, { selector, exclude, applyTo }) {
     }
     return targetEls;
 }
+
+export const quoteCarouselSelector =
+    "section[data-snippet='s_quotes_carousel'] > div, section[data-snippet='s_quotes_carousel_minimal'] > div";

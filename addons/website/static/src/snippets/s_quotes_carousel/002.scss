@@ -10,3 +10,34 @@
         }
     }
 }
+
+section[data-snippet="s_quotes_carousel"][data-vcss="002"],
+section[data-snippet="s_quotes_carousel_minimal"][data-vcss="002"] {
+    // Prevent container padding to avoid visual misalignment.
+    > .container-fluid, > .container, > .o_container_small {
+        padding: 0;
+    }
+    .s_quotes_carousel:not([data-number-of-elements="1"]) {
+        @include media-breakpoint-up(md) {
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 4%;
+            }
+            $item-padding: 1%;
+            $slide-padding: 4%;
+            .carousel-item {
+                padding: 0 $item-padding;
+                .carousel-slide {
+                    padding: 0 $slide-padding;
+                }
+            }
+            &[data-scroll-mode="single"] .carousel-inner {
+                // Forcefully remove gap between slides.
+                gap: 0;
+                > .carousel-item {
+                    padding: 0 $slide-padding;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.CarouselQuotesLayoutOptions">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect action="'updateQuotesCarouselLayout'" dataAttributeAction="'numberOfElements'">
+                <BuilderSelectItem id="'one'" dataAttributeActionValue="'1'">1 element</BuilderSelectItem>
+                <BuilderSelectItem id="'two'" dataAttributeActionValue="'2'">2 elements</BuilderSelectItem>
+                <BuilderSelectItem id="'three'" dataAttributeActionValue="'3'">3 elements</BuilderSelectItem>
+                <BuilderSelectItem id="'four'" dataAttributeActionValue="'4'">4 elements</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <t t-if="!isActiveItem('one')">
+            <BuilderRow label.translate="Scrolling Mode" level="1">
+                <BuilderButtonGroup action="'updateQuotesCarouselLayout'" dataAttributeAction="'scrollMode'">
+                    <BuilderButton dataAttributeActionValue="'all'">All</BuilderButton>
+                    <BuilderButton dataAttributeActionValue="'single'">Single</BuilderButton>
+                </BuilderButtonGroup>
+            </BuilderRow>
+        </t>
+    </t>
+</templates>
