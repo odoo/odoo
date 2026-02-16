@@ -47,14 +47,20 @@ class AccountAnalyticLine(models.Model):
     def create(self, vals_list):
         lines = super().create(vals_list)
         if self.env.context.get('from_services_and_material'):
+            lines_with_manual_amount = self.env['account.analytic.line']
+            for line, vals in zip(lines, vals_list):
+                if vals.get('amount'):
+                    lines_with_manual_amount |= line
             lines._sync_so_accounts_and_partners()
             lines._sync_so_lines()
+            lines_with_manual_amount._sync_so_lines_price_unit()
         return lines
 
     def write(self, vals):
         if self and self.env.context.get('from_services_and_material'):
             order_changed_aals = self.env['account.analytic.line']
             product_changed_aals = self.env['account.analytic.line']
+            amount_changed_aals = self.env['account.analytic.line']
 
             if vals.get('order_id'):
                 order_changed_aals = self.filtered(
@@ -66,15 +72,19 @@ class AccountAnalyticLine(models.Model):
                     lambda aal: aal.product_id.id != vals['product_id']
                 )
 
+            if vals.get('amount'):
+                amount_changed_aals = self.filtered(
+                    lambda aal: aal.amount != vals['amount']
+                )
+
             product_or_order_changed_aals = order_changed_aals | product_changed_aals
 
             res = super().write(vals)
 
-            # if order changed then we need to reassign accounts and partners
             order_changed_aals._sync_so_accounts_and_partners()
-
             product_or_order_changed_aals._unsync_so_lines()
             product_or_order_changed_aals._sync_so_lines()
+            amount_changed_aals._sync_so_lines_price_unit()
         else:
             res = super().write(vals)
         return res
@@ -148,15 +158,14 @@ class AccountAnalyticLine(models.Model):
         return self.order_id.order_line.filtered(
             lambda line: line.product_id == self.product_id
             and line.product_uom_id == self.product_uom_id
-            and line._is_reinvoicing_line()
+            and line._is_analytic_reinvoice_line()
         )[:1]
 
     def _create_so_line(self):
         """Create a new sale order line corresponding to this analytic line.
 
         The created line is initialized with delivered quantity based on the
-        analytic line amount, unit price derived from the product's expense
-        policy, and an optional custom description.
+        analytic unit_amount.
 
         :rtype: sale.order.line
         :return: The newly created sale order line record.
@@ -177,6 +186,24 @@ class AccountAnalyticLine(models.Model):
 
         return self.env['sale.order.line'].create(values)
 
+    def _sync_so_lines_price_unit(self):
+        """Update the sale order line unit price to match the analytic line amount.
+
+        This method is used when the analytic line amount on at cost product AALS are manually
+        adjusted, ensuring the corresponding sale order line remains consistent.
+        """
+        for line in self:
+            if (
+                line.unit_amount
+                and line.so_line
+                and line.product_id.expense_policy == 'cost'
+            ):
+                product = line.product_id.with_company(line.order_id.company_id)
+                unit_price = -line.amount / line.unit_amount
+                line.so_line.price_unit = product.currency_id._convert(
+                    unit_price, line.order_id.currency_id, round=False
+                )
+
     def _unsync_so_lines(self):
         """Revert synchronization of delivered quantities on related sale order lines.
 
@@ -187,7 +214,7 @@ class AccountAnalyticLine(models.Model):
         of the `qty_delivered` field on the linked so lines .
         """
         for line in self.filtered(lambda line: line.so_line):
-            if not line.so_line._is_reinvoicing_line():
+            if not line.so_line._is_analytic_reinvoice_line():
                 continue
             if (
                 line.product_id.expense_policy == 'cost'

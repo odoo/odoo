@@ -29,7 +29,6 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <list string="Services &amp; Material" editable="top" multi_edit="1">
-                <field name="date" string="Date"/>
                 <field
                     name="order_id"
                     string="Customer Order"
@@ -66,6 +65,7 @@
                 <field name="partner_id" optional="hide"/>
                 <field name="amount" optional="hide"/>
                 <field name="name" string="Description"/>
+                <field name="date" string="Date"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
