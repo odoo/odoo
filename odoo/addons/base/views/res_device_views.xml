@@ -132,6 +132,14 @@
             </field>
         </record>
 
+        <record id="action_user_session" model="ir.actions.act_window">
+            <field name="name">User Sessions</field>
+            <field name="res_model">res.session</field>
+            <field name="path">user-session</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem action="action_user_session" id="menu_action_user_session" parent="base.menu_security" sequence="9"/>
+
         <record id="action_user_device" model="ir.actions.act_window">
             <field name="name">User Devices</field>
             <field name="res_model">res.device</field>
