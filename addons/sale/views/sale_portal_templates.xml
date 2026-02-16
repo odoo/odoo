@@ -760,10 +760,26 @@
                                         <t t-if="not show_section_total">
                                             <t t-set="section_name_colspan" t-value="99"/>
                                         </t>
+                                        <!-- Some columns (e.g. Discount and Unit Price)
+                                        are not displayed on smaller viewports -->
+                                        <td
+                                            name="td_section_name_xs"
+                                            t-att-colspan="section_name_colspan - 1 - (1 if display_discount else 0) - (1 if display_taxes else 0)"
+                                            t-attf-class="d-sm-none {{padding_class}}"
+                                        >
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td
+                                            name="td_section_name_sm"
+                                            t-att-colspan="section_name_colspan - (1 if display_taxes else 0)"
+                                            t-attf-class="d-none d-sm-table-cell d-md-none {{padding_class}}"
+                                        >
+                                            <span t-field="line.name"/>
+                                        </td>
                                         <td
                                             name="td_section_name"
                                             t-att-colspan="section_name_colspan"
-                                            t-att-class="padding_class"
+                                            t-attf-class="d-none d-md-table-cell {{padding_class}}"
                                         >
                                             <span t-field="line.name"/>
                                         </td>
@@ -891,17 +907,17 @@
                                         <td name="td_section_group_quantity" class="text-end text-nowrap">
                                             <span>1.00 Units</span>
                                         </td>
-                                        <td name="td_section_group_priceunit" class="text-end text-nowrap">
+                                        <td name="td_section_group_priceunit" class="d-none d-sm-table-cell text-end text-nowrap">
                                             <span
                                                 t-out="section_line['price_subtotal']"
                                                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
                                             />
                                         </td>
-                                        <td t-if="display_discount" name="td_section_group_discount"/>
+                                        <td t-if="display_discount" name="td_section_group_discount" class="d-none d-sm-table-cell"/>
                                         <td
                                             t-if="display_taxes"
                                             name="td_section_group_taxes"
-                                            t-attf-class="text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
+                                            t-attf-class="d-none d-md-table-cell text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
                                         >
                                             <span t-out="', '.join(section_line['tax_labels'])">
                                                 Tax 15%
