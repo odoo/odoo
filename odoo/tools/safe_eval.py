@@ -88,7 +88,7 @@ _BLACKLIST = set(to_opcodes([
 # opcodes necessary to build literal values
 _CONST_OPCODES = set(to_opcodes([
     # stack manipulations
-    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
+    'POP_TOP',
     'LOAD_CONST',
     'RETURN_VALUE',  # return the result of the literal/expr evaluation
     # literal collections
@@ -106,17 +106,10 @@ _CONST_OPCODES = set(to_opcodes([
     'TO_BOOL',
 ])) - _BLACKLIST
 
-# operations which are both binary and inplace, same order as in doc'
-_operations = [
-    'POWER', 'MULTIPLY',  # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
-    'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
-    'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
-]
 # operations on literal values
 _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
-    'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
-    *('BINARY_' + op for op in _operations), 'BINARY_SUBSCR',
-    *('INPLACE_' + op for op in _operations),
+    'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
+    'BINARY_SUBSCR',
     'BUILD_SLICE',
     # comprehensions
     'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
@@ -124,8 +117,6 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # specialised comparisons
     'IS_OP', 'CONTAINS_OP',
     'DICT_MERGE', 'DICT_UPDATE',
-    # Basically used in any "generator literal"
-    'GEN_START',  # added in 3.10 but already removed from 3.11.
     # Added in 3.11, replacing all BINARY_* and INPLACE_*
     'BINARY_OP',
     'BINARY_SLICE',
@@ -134,42 +125,27 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_BLOCK', 'POP_EXCEPT',
 
-    # note: removed in 3.8
-    'SETUP_LOOP', 'SETUP_EXCEPT', 'BREAK_LOOP', 'CONTINUE_LOOP',
-
     'EXTENDED_ARG',  # P3.6 for long jump offsets.
-    'MAKE_FUNCTION', 'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'CALL_FUNCTION_EX',
+    'MAKE_FUNCTION', 'CALL_FUNCTION_EX',
     # Added in P3.7 https://bugs.python.org/issue26110
-    'CALL_METHOD', 'LOAD_METHOD',
+    'LOAD_METHOD',
 
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
-    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
-    'SETUP_FINALLY', 'END_FINALLY',
-    # Added in 3.8 https://bugs.python.org/issue17611
-    'BEGIN_FINALLY', 'CALL_FINALLY', 'POP_FINALLY',
+    'JUMP_FORWARD', 'JUMP_BACKWARD',
+    'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
+    'SETUP_FINALLY',
 
     'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
-
-    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
+    'RERAISE',
 
     # Following opcodes were Added in 3.11
-    # replacement of opcodes CALL_FUNCTION, CALL_FUNCTION_KW, CALL_METHOD
-    'PUSH_NULL', 'PRECALL', 'CALL', 'KW_NAMES',
-    # replacement of POP_JUMP_IF_TRUE and POP_JUMP_IF_FALSE
-    'POP_JUMP_FORWARD_IF_FALSE', 'POP_JUMP_FORWARD_IF_TRUE',
-    'POP_JUMP_BACKWARD_IF_FALSE', 'POP_JUMP_BACKWARD_IF_TRUE',
-    # special case of the previous for IS NONE / IS NOT NONE
-    'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NONE',
-    'POP_JUMP_FORWARD_IF_NOT_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
-    # replacement of JUMP_IF_NOT_EXC_MATCH
-    'CHECK_EXC_MATCH',
-    # new opcodes
+    'PUSH_NULL', 'CALL', 'KW_NAMES', 'CHECK_EXC_MATCH',
     'RETURN_GENERATOR',
     'PUSH_EXC_INFO',
+
     'NOP',
     'FORMAT_VALUE', 'BUILD_STRING',
     # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
