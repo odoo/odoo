@@ -73,7 +73,7 @@ from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, float_compare, mute_logger, profiler
 from odoo.tools.mail import single_email_re
-from odoo.tools.misc import diff_zip, find_in_path, lower_logging
+from odoo.tools.misc import diff_zip, find_in_path, lower_logging, str2bool
 from odoo.tools.xml_utils import _validate_xml
 
 import odoo.addons.base
@@ -114,6 +114,8 @@ CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
+
+DISABLE_TIMEOUTS = str2bool(os.getenv('ODOO_TEST_DISABLE_TIMEOUT', '0'))
 
 IGNORED_MSGS = re.compile(r"""
     failed\ to\ fetch  # base error
@@ -1673,6 +1675,8 @@ class ChromeBrowser:
             "_websocket_request must not be called from the consumer thread"
         if not hasattr(self, 'ws'):
             return None
+        if DISABLE_TIMEOUTS:
+            timeout = None
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
@@ -1933,7 +1937,8 @@ which leads to stray network requests and inconsistencies."""
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
-        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=20.0)
+        timeout = 1e6 if DISABLE_TIMEOUTS else 20.0
+        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=timeout)
         self._logger.info("Navigation result: %s", nav_result)
         if wait_stop:
             frame_id = nav_result['frameId']
@@ -2371,6 +2376,8 @@ class HttpCase(TransactionCase):
         return Request.csrf_token(self)  # noqa: F821
 
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, json=None, params=None, allow_redirects=True, cookies=None, method: str | None = None):
+        if DISABLE_TIMEOUTS:
+            timeout = None
         if not method and (data or files or json):
             method = 'POST'
         method = method or 'GET'
@@ -2537,6 +2544,8 @@ class HttpCase(TransactionCase):
         if debug is not False:
             watch = True
             timeout = 1e6
+        elif DISABLE_TIMEOUTS:
+            timeout = 1e6
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
 
@@ -2662,6 +2671,8 @@ class HttpCase(TransactionCase):
         :raises requests.HTTPError: if one occurred
         :raises JsonRpcException: if the response contains an error
         """
+        if DISABLE_TIMEOUTS:
+            timeout = None
         response = self.opener.post(urljoin(self.base_url(), route), json={
             'id': 0,
             'jsonrpc': '2.0',
