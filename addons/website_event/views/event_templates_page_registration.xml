@@ -143,17 +143,6 @@
                             <div itemprop="name" class="mb-1" t-field="event.organizer_id"/>
                             <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': True,}"/>
                         </div>
-                        <!-- Social -->
-                        <div t-if="opt_event_share_block" class="o_wevent_sidebar_block">
-                            <div>
-                                <h6 class="o_wevent_sidebar_title">Share</h6>
-                                <p>Find out what people see and say about this event, and join the conversation.</p>
-                            </div>
-                            <t t-snippet-call="website.s_share"
-                                _no_title="True"
-                                _classes.f="o_wevent_sidebar_social mx-n1"
-                                _link_classes.f="o_wevent_social_link"/>
-                        </div>
                     </aside>
                 </div>
             </div>
@@ -738,7 +727,21 @@
 <template id="opt_event_calendar_block" name="Calendar links" inherit_id="website_event.event_description_full" active="True"/>
 <template id="opt_event_location_block" name="Location" inherit_id="website_event.event_description_full" active="True"/>
 <template id="opt_event_organizer_block" name="Organizer" inherit_id="website_event.event_description_full" active="True"/>
-<template id="opt_event_share_block" name="Share" inherit_id="website_event.event_description_full" active="True"/>
+<template id="opt_event_share_block" name="Share" inherit_id="website_event.event_description_full" active="True">
+    <xpath expr="//aside[@id='o_wevent_event_main_sidebar']" position="inside">
+        <div class="o_wevent_sidebar_block pb-5" t-ignore="true">
+            <div>
+                <h6 class="o_wevent_sidebar_title">Share</h6>
+                <p>Find out what people see and say about this event, and join the conversation.</p>
+            </div>
+
+            <t t-snippet-call="website.s_share"/>
+        </div>
+
+        <div class="oe_structure" id="oe_structure_event_sidebar_abcd"/>
+    </xpath>
+</template>
+
 <!-- Sidebar Position Option -->
 <template id="opt_event_fixed_sidebar" name="Fixed Sidebar Option" inherit_id="website_event.event_description_full" active="False"/>
 

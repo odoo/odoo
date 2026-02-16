@@ -227,7 +227,7 @@ Options:
             <div>
                 <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
             </div>
-            <t t-snippet-call="website.s_social_media"/>
+            <t t-snippet-call="website.s_social_media" _classes.f="oe_unremovable"/>
 
             <t t-call="website_mail.follow" t-if="blog"
                 email="user_id.email"
@@ -306,12 +306,12 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
+        <div class="o_wblog_sidebar_block pb-5" t-ignore="true">
             <div>
                 <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
             </div>
 
-            <t t-snippet-call="website.s_share"/>
+            <t t-snippet-call="website.s_share" _classes.f="oe_unremovable"/>
         </div>
 
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_3"/>
