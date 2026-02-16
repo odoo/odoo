@@ -267,10 +267,12 @@ export class GraphRenderer extends Component {
      * @param {boolean} [allIntegers=true]
      * @returns {string}
      */
-    formatValue(value, allIntegers = true, formatType = "") {
+    formatValue(value, allIntegers = true, formatType = "", options={}) {
         const largeNumber = Math.abs(value) >= 1000;
         if (formatType) {
-            return formatters.get(formatType)(value);
+            const formatter = formatters.get(formatType)
+            options = formatter.extractOptions ? formatter.extractOptions({options}) : {};
+            return formatter(value, options);
         }
         if (allIntegers && !largeNumber) {
             return String(value);
@@ -585,7 +587,7 @@ export class GraphRenderer extends Component {
                         : null,
             },
             ticks: {
-                callback: (value) => this.formatValue(value, false, fieldAttrs[measure]?.widget),
+                callback: (value) => this.formatValue(value, false, fieldAttrs[measure]?.widget, fieldAttrs[measure]?.options),
                 color: GRAPH_LABEL_COLOR,
             },
             stacked: mode === "line" && stacked ? stacked : undefined,
@@ -623,18 +625,19 @@ export class GraphRenderer extends Component {
             let label = dataset.trueLabels[index];
             let value = dataset.data[index];
             const measureWidget = metaData.fieldAttrs[measure]?.widget;
+            const measureOptions = metaData.fieldAttrs[measure]?.options;
             if (dataset.currencyIds?.[index]) {
                 value = formatMonetary(value, { currencyId: dataset.currencyIds[index] });
             } else if (dataset.currencyIds?.[index] === false) {
                 value = markup`${formatMonetary(value)}<sup class="ms-1 fw-bolder">?</sup>`;
             } else {
-                value = this.formatValue(value, allIntegers, measureWidget);
+                value = this.formatValue(value, allIntegers, measureWidget, measureOptions);
             }
             let boxColor;
             let percentage;
             if (mode === "pie") {
                 if (label === NO_DATA) {
-                    value = this.formatValue(0, allIntegers, measureWidget);
+                    value = this.formatValue(0, allIntegers, measureWidget, measureOptions);
                 }
                 boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);

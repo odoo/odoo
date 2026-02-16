@@ -186,11 +186,11 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
 });
 
 /**
- * Returns a string representing a time value, from a float.  The idea is that
- * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
- * instead of 0.25.
+ * Returns a string representing a time value, from a float or a Duration object.
+ * The idea is that we sometimes want to display something like 1h 45m instead of 1.75,
+ * or 0:15 instead of 0.25.
  *
- * @param {import("./parsers").Duration} value
+ * @param {import("./parsers").Duration|Number} value
  * @param {Object} [options]
  * @param {boolean} [options.showSeconds] if true, format like 1h 30m 20s otherwise, format like 1h 30m
  * @param {boolean} [options.numeric] if true, show the duration in the format set on the language
@@ -203,6 +203,11 @@ export function formatDuration(value, options = {}) {
     }
 
     options.unit = options.unit || "hours";
+
+    // Single number given
+    if (!isNaN(value)) {
+        value = { [options.unit]: value };
+    }
 
     let seconds = (value.hours || 0) * 3600 + (value.minutes || 0) * 60 + (value.seconds || 0);
     let isNegative;
@@ -255,20 +260,12 @@ export function formatDuration(value, options = {}) {
     return `${isNegative ? "-" : ""}${formattedValue}`;
 }
 formatDuration.extractOptions = ({ options }) => ({
-    showSeconds: options.show_seconds,
-    numeric: options.numeric,
+    showSeconds: exprToBoolean(options.show_seconds ?? true),
+    numeric: exprToBoolean(options.numeric),
 });
 
 /**
- * Returns a string representing a time value, from a float.  The idea is that
- * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
- * instead of 0.25.
- *
- * @param {number | false} value
- * @param {Object} [options]
- * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30 otherwise, format like 01:30
- * @param {boolean} [options.showSeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
- * @returns {string}
+ * @deprecated
  */
 export function formatFloatTime(value, options = {}) {
     if (value === false) {
@@ -476,7 +473,7 @@ function formatProperties(value, field) {
 export function formatReference(value, options) {
     return formatMany2one(
         value ? { id: value.resId, display_name: value.displayName } : false,
-        options
+        options,
     );
 }
 
@@ -539,7 +536,7 @@ registry
     .add("datetime", formatDateTime)
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
-    .add("float_time", formatFloatTime)
+    .add("float_time", formatDuration)
     .add("html", formatHtml)
     .add("integer", formatInteger)
     .add("json", formatJson)
