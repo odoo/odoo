@@ -19,4 +19,14 @@
         <field name='interval_type'>days</field>
         <field name="priority">8</field>
     </record>
+
+    <record id="ir_cron_ir_attachment_index" model="ir.cron">
+        <field name="name">Base: Index attachment content</field>
+        <field name="code">model._cron_index()</field>
+        <field name="interval_number" eval="10"/>
+        <field name="interval_type">minutes</field>
+        <field name="model_id" ref="model_ir_attachment"/>
+        <field name="priority" eval="10"/>
+        <field name="state">code</field>
+    </record>
 </odoo>

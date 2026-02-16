@@ -24,6 +24,7 @@ from odoo.http.router import root
 from odoo.http.stream import Stream
 from odoo.tools import (
     OrderedSet,
+    SQL,
     config,
     consteq,
     human_size,
@@ -307,14 +308,9 @@ class IrAttachment(models.Model):
 
     def _get_datas_related_values(self, data, mimetype):
         checksum = self._compute_checksum(data)
-        try:
-            index_content = self._index(data, mimetype, checksum=checksum)
-        except TypeError:
-            index_content = self._index(data, mimetype)
         values = {
             'file_size': len(data),
             'checksum': checksum,
-            'index_content': index_content,
             'store_fname': False,
             'db_datas': data,
         }
@@ -469,8 +465,22 @@ class IrAttachment(models.Model):
     checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
+    index_checksum = fields.Char("Indexed Checksum/SHA1", size=40, readonly=True)
 
     _res_idx = models.Index("(res_model, res_id)")
+
+    def _cron_index(self, limit=10):
+        domain = Domain.custom(to_sql=lambda table: SQL("%s IS DISTINCT FROM %s", table.checksum, table.index_checksum))
+        attachs = self.search(domain, limit=limit, order="id")
+        for attach in attachs:
+            try:
+                index_content = self._index(attach.raw, attach.mimetype, checksum=attach.checksum)
+            except TypeError:
+                index_content = self._index(attach.raw, attach.mimetype)
+            attach.write({
+                "index_content": index_content,
+                "index_checksum": attach.checksum,
+            })
 
     def _check_serving_attachments(self):
         if self.env.is_admin():

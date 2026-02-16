@@ -284,6 +284,14 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             )
             self.assertEqual(patch_file_read.call_count, 0)
 
+    def test_20_attachment_cron_index(self):
+        a1 = self.Attachment.create({'name': 'a1', 'raw': self.blob1})
+        self.assertFalse(a1.index_checksum)
+        self.assertFalse(a1.index_content)
+        a1._cron_index(limit=None)
+        self.assertEqual(a1.index_content, self.blob1.decode())
+        self.assertEqual(a1.checksum, a1.index_checksum)
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPermissions(TransactionCaseWithUserDemo):
