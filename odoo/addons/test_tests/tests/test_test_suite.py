@@ -28,7 +28,7 @@ _logger = logging.getLogger(__name__)
 # this only works if doClassCleanup is available on testCase because of the vendoring of suite.py.
 class TestTestSuite(TestCase):
     test_tags = {'standard', 'at_install'}
-    test_module = 'base'
+    test_module = 'test_tests'
 
     def test_test_suite(self):
         """ Check that OdooSuite handles unittest.TestCase correctly. """
@@ -114,7 +114,7 @@ class TestRunnerLoggingCommon(TransactionCase):
         """ Check that what was logged is what was expected. """
         for log_record in log_records:
             self._assert_log_equal(log_record, 'logger', _logger)
-            self._assert_log_equal(log_record, 'name', 'odoo.addons.base.tests.test_test_suite')
+            self._assert_log_equal(log_record, 'name', 'odoo.addons.test_tests.tests.test_test_suite')
             self._assert_log_equal(log_record, 'fn', __file__)
             self._assert_log_equal(log_record, 'func', self._testMethodName)
 
@@ -175,7 +175,7 @@ class TestRunnerLogging(TestRunnerLoggingCommon):
             return (
 f'''ERROR: Subtest TestRunnerLogging.test_raise_subtest (<subtest>)
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_raise_subtest
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_raise_subtest
     raise Exception('{message}')
 Exception: {message}
 ''')
@@ -208,7 +208,7 @@ Traceback (most recent call last):
     func(self, *args, **kwargs)
   File "/root_path/odoo/odoo/tests/common.py", line $line, in warmup
     func(self, *args, **kwargs)
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_with_decorators
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_with_decorators
     raise Exception('This is an error')
 Exception: This is an error
 ''')
@@ -238,13 +238,13 @@ Exception: This is an error
         message = (
 '''ERROR: TestRunnerLogging.test_call_stack
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_call_stack
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_call_stack
     alpha()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in alpha
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in alpha
     beta()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in beta
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in beta
     gamma()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in gamma
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in gamma
     raise Exception('This is an error')
 Exception: This is an error
 ''')
@@ -268,13 +268,13 @@ Exception: This is an error
         message = (
 '''ERROR: TestRunnerLogging.test_call_stack_context_manager
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_call_stack_context_manager
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_call_stack_context_manager
     alpha()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in alpha
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in alpha
     beta()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in beta
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in beta
     gamma()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in gamma
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in gamma
     raise Exception('This is an error')
 Exception: This is an error
 ''')
@@ -300,13 +300,13 @@ Exception: This is an error
         message = (
 '''ERROR: Subtest TestRunnerLogging.test_call_stack_subtest (<subtest>)
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_call_stack_subtest
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_call_stack_subtest
     alpha()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in alpha
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in alpha
     beta()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in beta
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in beta
     gamma()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in gamma
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in gamma
     raise Exception('This is an error')
 Exception: This is an error
 ''')
@@ -331,13 +331,13 @@ Exception: This is an error
         message = (
 '''FAIL: Subtest TestRunnerLogging.test_assertQueryCount (<subtest>)
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_assertQueryCount
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_assertQueryCount
     with self.assertQueryCount(system=0):
   File "/usr/lib/python/contextlib.py", line $line, in __exit__
     next(self.gen)
   File "/root_path/odoo/odoo/tests/common.py", line $line, in assertQueryCount
     self.fail(msg % (login, count, expected, funcname, filename, linenum))
-AssertionError: Query count more than expected for user __system__: 1 > 0 in test_assertQueryCount at base/tests/test_test_suite.py:$line
+AssertionError: Query count more than expected for user __system__: 1 > 0 in test_assertQueryCount at test_tests/tests/test_test_suite.py:$line
 ''')
         self.expected_logs = [
             (logging.INFO, '=' * 70),
@@ -356,11 +356,11 @@ AssertionError: Query count more than expected for user __system__: 1 > 0 in tes
         message = (
 '''ERROR: TestRunnerLogging.test_reraise
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_reraise
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_reraise
     alpha()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in alpha
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in alpha
     beta()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in beta
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in beta
     raise Exception('This is an error')
 Exception: This is an error
 ''')
@@ -385,18 +385,18 @@ Exception: This is an error
         message = (
 '''ERROR: TestRunnerLogging.test_handle_error
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in alpha
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in alpha
     beta()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in beta
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in beta
     raise Exception('This is an error')
 Exception: This is an error
 
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in test_handle_error
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_handle_error
     alpha()
-  File "/root_path/odoo/odoo/addons/base/tests/test_test_suite.py", line $line, in alpha
+  File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in alpha
     raise Exception('This is an error2')
 Exception: This is an error2
 ''')
