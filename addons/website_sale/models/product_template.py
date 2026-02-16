@@ -101,20 +101,17 @@ class ProductTemplate(models.Model):
     # Whether optional products should be automatically filled by a cron.
     suggest_optional_products = fields.Boolean(
         string="Suggest Optional Products",
-        default=lambda self: self._is_automate_suggested_product_feature_enabled()
-        and not self.optional_product_ids,
+        default=lambda self: self._is_automate_suggested_product_feature_enabled(),
     )
     # Whether accessory products should be automatically filled by a cron.
     suggest_accessory_products = fields.Boolean(
         string="Suggest Accessory Products",
-        default=lambda self: self._is_automate_suggested_product_feature_enabled()
-        and not self.accessory_product_ids,
+        default=lambda self: self._is_automate_suggested_product_feature_enabled(),
     )
     # Whether alternative products should be automatically filled by a cron.
     suggest_alternative_products = fields.Boolean(
         string="Suggest Alternative Products",
-        default=lambda self: self._is_automate_suggested_product_feature_enabled()
-        and not self.alternative_product_ids,
+        default=lambda self: self._is_automate_suggested_product_feature_enabled(),
     )
     # Last update date of the optional, accessory and alternative products.
     suggested_products_last_update = fields.Datetime(string="Last update of suggested products")
@@ -281,6 +278,14 @@ class ProductTemplate(models.Model):
 
     #=== CRUD METHODS ===#
 
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Avoid erasing alternative, optional or accessory products set at creation if the
+            # feature group_automate_suggested_products is enabled.
+            # The other fields of the product.template are not set yet when setting the default.
+            self._exclude_products_from_automated_suggestions(vals)
+        return super().create(vals_list)
+
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
@@ -291,17 +296,25 @@ class ProductTemplate(models.Model):
         ):
             vals['description_ecommerce'] = ''
 
-        # Deactivate the automation of suggested products on manually adding suggested products.
+        # Deactivate the automation of suggested products whem manually adding suggested products.
         from_cron = self.env.context.get('cron_id')
         from_settings = self.env.context.get('module')
-        if not (from_cron or from_settings):
-            vals['suggest_optional_products'] = not vals.get('optional_product_ids')
-            vals['suggest_accessory_products'] = not vals.get('accessory_product_ids')
-            vals['suggest_alternative_products'] = not vals.get('alternative_product_ids')
+        from_server_action = self.env.context.get('active_model')
+        if not (from_cron or from_settings or from_server_action):
+            self._exclude_products_from_automated_suggestions(vals)
 
         return super().write(vals)
 
     #=== BUSINESS METHODS ===#
+
+    @staticmethod
+    def _exclude_products_from_automated_suggestions(vals):
+        if 'optional_product_ids' in vals:
+            vals.update({'suggest_optional_products': False})
+        if 'accessory_product_ids' in vals:
+            vals.update({'suggest_accessory_products': False})
+        if 'alternative_product_ids' in vals:
+            vals.update({'suggest_alternative_products': False})
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -318,7 +331,7 @@ class ProductTemplate(models.Model):
         domain = self.env['website'].sale_product_domain()
         return self.alternative_product_ids.filtered_domain(domain)
 
-    def _update_suggested_products(self, batch_size=None, force_update=True):
+    def _prepare_suggested_products_update(self, batch_size=None, force_update=True):
         """Update the current product templates' optional, accessory, and alternative products.
 
         Only salable and publish product templates are considered. The heuristics to find suggested
@@ -339,33 +352,31 @@ class ProductTemplate(models.Model):
             return  # Skip the automation if the cron was activated without the feature.
 
         now = fields.Datetime.now()
-        products_domain = [('sale_ok', '=', True), ('is_published', '=', True)]
+        products_domain = Domain([('sale_ok', '=', True), ('is_published', '=', True)])
         if self:  # Called from a server action
             products_to_update = self
             in_cron = False
         else:  # Called from the cron
-            last_update = now - relativedelta(hours=12)  # TODO rename to something clearer
-            cron_domain = Domain.AND([
-                [
-                    '|',
-                    ('suggested_products_last_update', '<', last_update),
-                    ('suggested_products_last_update', '=', False),
-                ],  # TODO rewrite with Domain API
-                products_domain,
-            ])
-            # TODO explain why order
+            last_12_hours = now - relativedelta(hours=12)
+            cron_domain = products_domain & (
+                Domain('suggested_products_last_update', '<', last_12_hours)
+                | Domain('suggested_products_last_update', '=', False)
+            )
+            # Order by last update (desc) to ensure the cron processes all products over time,
+            # starting with those that haven't been updated recently
             products_to_update = self.search(
                 cron_domain, order='suggested_products_last_update', limit=batch_size
             )
             in_cron = True
 
-        # TODO extract in other method
+        products_to_update._populate_suggested_products(force_update, in_cron, now, products_domain)
 
+    def _populate_suggested_products(self, force_update, in_cron, now, products_domain):
         if in_cron:
-            self.env['ir.cron']._commit_progress(remaining=len(products_to_update))
-
+            self.env['ir.cron']._commit_progress(remaining=len(self))
+        # TODO-PDA group by company and do smaller search
         all_products = self.search(products_domain)
-        for product in products_to_update:
+        for product in self:
             other_products = all_products.filtered_domain([
                 ('id', '!=', product.id),
                 '|',
@@ -393,7 +404,7 @@ class ProductTemplate(models.Model):
                 product.suggest_alternative_products = True
             product.suggested_products_last_update = now
         if in_cron:
-            self.env['ir.cron']._commit_progress(len(products_to_update))
+            self.env['ir.cron']._commit_progress(len(self))
 
     @api.model
     def _is_automate_suggested_product_feature_enabled(self):
@@ -415,6 +426,7 @@ class ProductTemplate(models.Model):
         for batch_index in range(max_batches):
             end_date = now - relativedelta(months=batch_index * batch_size)
             start_date = end_date - relativedelta(months=batch_size)
+            # TODO-PDA split_every to limit the number of SO?
             orders_with_product_a = self.env['sale.order'].search([
                 ('date_order', '>', start_date),
                 ('date_order', '<=', end_date),

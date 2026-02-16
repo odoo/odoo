@@ -11,7 +11,7 @@
             eval="[(4, ref('website_sale.group_automate_suggested_products'))]"
         />
         <field name="state">code</field>
-        <field name="code">if records: action = records._update_suggested_products()</field>
+        <field name="code">if records: action = records._prepare_suggested_products_update()</field>
     </record>
 
 </odoo>
