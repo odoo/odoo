@@ -72,6 +72,12 @@
             <field name="country_id" eval="False"/>
         </record>
 
+        <record id="departure_dead" model="hr.departure.reason">
+            <field name="sequence">3</field>
+            <field name="name">Dead</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
         <record id="home_work_location" model="hr.work.location">
             <field name="name">Home</field>
             <field name="location_type">home</field>

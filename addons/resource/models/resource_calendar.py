@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime, time, timedelta, UTC
+from datetime import date, datetime, time, timedelta, UTC
 from itertools import chain
 from functools import partial
 from zoneinfo import ZoneInfo
@@ -720,14 +720,27 @@ class ResourceCalendar(models.Model):
             `domain` controls the way leaves are recognized.
             None means default value ('count_as', '=', 'absence')
 
-            Counts the number of work hours between two datetimes.
+            Counts the number of work hours between two dates/datetimes.
         """
         self.ensure_one()
+
+        # datetime is also an instance of date
+        assert isinstance(start_dt, date)
+        assert isinstance(end_dt, date)
+
+        tz = ZoneInfo(self.env.company.tz)
+
+        # convert to datetime if object passed is date
+        if not isinstance(start_dt, datetime):
+            start_dt = datetime.combine(start_dt, time.min, tz)
+        if not isinstance(end_dt, datetime):
+            end_dt = datetime.combine(end_dt, time.max, tz)
+
         # Set timezone in company tz if no timezone is explicitly given
         if not start_dt.tzinfo:
-            start_dt = start_dt.astimezone(ZoneInfo(self.env.company.tz))
+            start_dt = start_dt.astimezone(tz)
         if not end_dt.tzinfo:
-            end_dt = end_dt.astimezone(ZoneInfo(self.env.company.tz))
+            end_dt = end_dt.astimezone(tz)
 
         if compute_leaves:
             intervals = self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]
