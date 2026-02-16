@@ -21,15 +21,19 @@ class TestVariableResourceCalendar(TransactionCase):
 
     def test_attendance_intervals_batch_variable_calendar(self):
         """Test that _attendance_intervals_batch returns only attendances in the selected date range"""
-        start = date(2025, 11, 1)
+        start = date(1, 1, 1)
         self.variable_calendar.attendance_ids = [(5, 0, 0)] + [
             (0, 0,
                 {
-                    'date': start + timedelta(days=day),
+                    'date': start + timedelta(days=day, weeks=week),
                     'hour_from': hour,
                     'hour_to': hour + 4,
+                    'recurrency': True,
+                    'recurrency_type': 'weeks',
+                    'interval': 2,
                 })
-            for day in range(0, 31)
+            for day in range(5)
+            for week in range(2)
             for hour in [8, 13]
         ]
 
@@ -39,9 +43,9 @@ class TestVariableResourceCalendar(TransactionCase):
 
         intervals = self.variable_calendar._attendance_intervals_batch(start_dt, end_dt)[False]
 
-        # Should only take attendance with date between Nov 10 and Nov 20 (22 attendances)
+        # Should only take attendance with date between Nov 10 and Nov 20 (18 attendances)
         # Attendances based on dayofweek are ignored in variable calendars
-        self.assertEqual(len(intervals), 22, "Should have 22 attendance in range")
+        self.assertEqual(len(intervals), 18, "Should have 18 attendance in range")
         self.assertEqual(intervals._items[0][0:2], (datetime(2025, 11, 10, 8, 0, tzinfo=tz), datetime(2025, 11, 10, 12, 0, tzinfo=tz)))
         self.assertEqual(intervals._items[-1][0:2], (datetime(2025, 11, 20, 13, 0, tzinfo=tz), datetime(2025, 11, 20, 17, 0, tzinfo=tz)))
 

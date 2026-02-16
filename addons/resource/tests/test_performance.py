@@ -15,8 +15,15 @@ class TestVariableResourceCalendarPerformance(TransactionCase):
             'name': 'Test Variable Calendar',
             'schedule_type': 'variable',
             'attendance_ids': [
-                (0, 0, {'date': date(2020, 1, 6) + timedelta(days=d, weeks=w), 'hour_from': h[0], 'hour_to': h[1]})
-                for d in range(5) for w in range(260) for h in [(8, 12), (13, 17)]
+                (0, 0, {
+                    'date': date(1, 1, 1) + timedelta(days=d, weeks=w),
+                    'hour_from': h[0],
+                    'hour_to': h[1],
+                    'recurrency': True,
+                    'recurrency_type': 'weeks',
+                    'interval': 2,
+                    })
+                for d in range(5) for w in range(2) for h in [(8, 12), (13, 17)]
             ]
         })
         # 260 weeks = 5 years worth of attendances (which looks like a lot but should be the average in real world scenarios)
@@ -33,13 +40,16 @@ class TestVariableResourceCalendarPerformance(TransactionCase):
     def test_performance_computes_days_per_week_variable_calendar(self):
         with self.assertQueryCount(15):
             self.variable_calendar._compute_days_per_week()
+        self.assertEqual(self.variable_calendar.days_per_week, 5, "Should have 5 days per week")
 
     @warmup
     def test_performance_computes_hours_per_week_variable_calendar(self):
         with self.assertQueryCount(15):
             self.variable_calendar._compute_hours_per_week()
+        self.assertEqual(self.variable_calendar.hours_per_week, 40, "Should have 40 hours per week")
 
     @warmup
     def test_performance_computes_hours_per_day_variable_calendar(self):
         with self.assertQueryCount(15):
             self.variable_calendar._compute_hours_per_day()
+        self.assertEqual(self.variable_calendar.hours_per_day, 8, "Should have 8 hours per day")

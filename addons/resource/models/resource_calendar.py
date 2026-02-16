@@ -793,22 +793,21 @@ class ResourceCalendar(models.Model):
         return sum(self.attendance_ids._get_attendances_on_date(date).mapped('duration_hours'))
 
     def _get_working_hours(self, date_from, date_to, domain=None):
+        """
+        Get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
+            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
+            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
+
+        :param date_from: start date of the period (included)
+        :param date_to: end date of the period (included)
+        :param domain: optional domain to filter attendances, if not specified, _get_global_attendances() will be used.
+        """
         self.ensure_one()
         result = defaultdict(lambda: self.env['resource.calendar.attendance'])
 
-        attendances = self.attendance_ids.filtered_domain(domain) if domain else self._get_global_attendances()
-        if not attendances:
-            return result
-        attendances = attendances.with_prefetch()
-
-        if self.schedule_type == 'variable':
-            result.update(attendances.filtered(lambda att: att.date and date_from <= att.date <= date_to).grouped('date'))
-        else:
-            grouped_attendances = attendances.grouped('dayofweek')
-            result.update({
-                day.date(): grouped_attendances[str(day.weekday())]
-                for day in rrule(DAILY, date_from, until=date_to, byweekday=set(attendances.mapped(lambda att: int(att.dayofweek))))
-            })
+        attendances = (self.attendance_ids.filtered_domain(domain) if domain else self._get_global_attendances()).with_prefetch()
+        for day in rrule(DAILY, date_from, until=date_to):
+            result[day.date()] += attendances._get_attendances_on_date(day.date())
         return result
 
     def copy_from(self, date_from, date_to, force=False):

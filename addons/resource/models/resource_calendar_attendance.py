@@ -47,32 +47,20 @@ class ResourceCalendarAttendance(models.Model):
         help="Gives the sequence of this line when displaying the resource calendar.")
 
     # Variable
-    date = fields.Date(required=True)
-    is_recurrent = fields.Boolean()
-    delta = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
+    date = fields.Date()
+    recurrency = fields.Boolean()
+    recurrency_type = fields.Selection([
+        ('days', 'Days'),
+        ('weeks', 'Weeks'),
     ])
-    variance = fields.Integer(string="Variance", help="Number of days or weeks between each occurrence.")
-    until = fields.Selection([
+    interval = fields.Integer(string="Interval", help="Number of days or weeks between each occurrence.")
+    end_type = fields.Selection([
         ('forever', 'Forever'),
         ('times', 'Number of Occurences'),
         ('date', 'Date')
     ], default='forever', string="Recurrence End Condition")
-    occurences = fields.Integer(string="Number of Occurences", default=1)
-    until_date = fields.Date(string="Recurrence End Date")
-
-    def _get_until(self):
-        self.ensure_one()
-        if self.until == 'date':
-            return self.until_date
-        if self.until == 'times':
-            if self.is_recurrent and self.delta and self.variance:
-                if self.delta == 'day':
-                    return self.date + timedelta(days=self.variance * self.occurences)
-                if self.delta == 'week':
-                    return self.date + timedelta(weeks=self.variance * self.occurences)
-        return date.max
+    count = fields.Integer(string="Number of Repetitions", default=1)
+    until = fields.Date(string="Recurrence End Date", compute="_compute_until", store=True, readonly=False)
 
     @api.constrains('calendar_id', 'date', 'duration_hours', 'dayofweek')
     def _check_attendance(self):
@@ -183,7 +171,22 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self.filtered(lambda att: att.hour_from or att.hour_to):
             attendance.duration_hours = max(0, attendance.hour_to - attendance.hour_from)
 
-    @api.depends('week_type')
+    @api.depends('recurrency', 'end_type', 'recurrency_type', 'interval', 'count', 'date')
+    def _compute_until(self):
+        for attendance in self.filtered(lambda a: a.date):
+            if not attendance.recurrency:
+                attendance.until = attendance.date
+                continue
+            match attendance.end_type:
+                case 'date':
+                    break  # It should already be set by the user
+                case 'times' if attendance.interval and attendance.count:
+                    attendance.until = attendance.date + timedelta(**{attendance.recurrency_type: attendance.interval * attendance.count})
+                case 'forever':
+                    attendance.until = date.max
+                case _:
+                    attendance.until = None
+
     def _compute_display_name(self):
         for attendance in self:
             if attendance.duration_based:
@@ -210,5 +213,19 @@ class ResourceCalendarAttendance(models.Model):
         return True
 
     def _get_attendances_on_date(self, date_obj):
+        """
+        Get the attendances for a specific date. For variable schedule, it will return the attendances with the same date or with a recurrency rule matching the date. For fixed schedule, it will return the attendances with the same day of week as the date.
+
+        :param date_obj: the date to get the attendances for (date object)
+        """
         assert isinstance(date_obj, date), "date_obj should be of type date"
-        return self.filtered(lambda a: (a.date == date_obj) if a.calendar_id.schedule_type == 'variable' else (a.dayofweek == str(date_obj.weekday())))
+
+        def is_recurrent_attendance_today(a):
+            return (a.calendar_id.schedule_type == 'variable' and a.recurrency and a.date and a.until
+                    and a.date <= date_obj <= a.until and (
+                        (a.recurrency_type == 'days' and (date_obj - a.date).days % a.interval == 0) or
+                        (a.recurrency_type == 'weeks' and (date_obj - a.date).days % 7 == 0 and ((date_obj - a.date).days // 7) % a.interval == 0)
+                    )
+                )
+
+        return self.filtered(lambda a: (a.date == date_obj or is_recurrent_attendance_today(a)) if a.calendar_id.schedule_type == 'variable' else (a.dayofweek == str(date_obj.weekday())))
