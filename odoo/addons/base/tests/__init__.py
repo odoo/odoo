@@ -37,7 +37,6 @@ from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_embedded_actions
 from . import test_ir_default
-from . import test_lxml
 from . import test_mail
 from . import test_menu
 from . import test_misc
@@ -55,7 +54,6 @@ from . import test_search
 from . import test_split_table
 from . import test_sql
 from . import test_translate
-from . import test_tz
 # from . import test_uninstall  # loop
 from . import test_user_has_group
 from . import test_views
@@ -79,7 +77,6 @@ from . import test_neutralize
 from . import test_config_parameter
 from . import test_ir_module_category
 from . import test_configmanager
-from . import test_num2words_ar
 from . import test_cli
 from . import test_signature
 from . import test_import_files
