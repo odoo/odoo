@@ -179,6 +179,27 @@ class TestMailTools(MailCommon):
             found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
             self.assertEqual(found, [expected_partner], msg)
 
+    def test_mail_find_partner_from_emails_tiebreaker(self):
+        """Test deterministic tie-breaking when two company partners share an email."""
+        Partner = self.env['res.partner']
+        self.env.company.partner_id.write({'email': self._test_email})
+        hijacker = Partner.create({
+            'name': 'AA Hijacker',
+            'email': self._test_email,
+            'company_type': 'company',
+        })
+
+        self.assertLess(self.env.company.partner_id.id, hijacker.id, "Test assumes company partner is older")
+        # Test tie-breaking with no record context - should prioritize company partner over hijacker
+        found = Partner._mail_find_partner_from_emails([self._test_email])
+        self.assertEqual(found, [self.env.company.partner_id],
+                        "Should prioritize the company partner when no record context is provided")
+
+        record = Partner.create({'name': 'Record', 'company_id': self.env.company.id})
+        found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
+        self.assertEqual(found, [self.env.company.partner_id],
+                         "Should use deterministic id ordering when candidates tie on priority")
+
 
 @tagged('mail_tools', 'mail_init')
 class TestMailUtils(MailCommon):
