@@ -6,7 +6,7 @@ from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import SQL, OrderedSet
 
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
+from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 
 
 class TestDomain(TransactionExpressionCase):

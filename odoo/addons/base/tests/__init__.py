@@ -1,14 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
-from . import test_acl
-from . import test_api
 from . import test_base
-from . import test_cache
 from . import test_deprecation
-from . import test_db_cursor
-from . import test_display_name
-from . import test_expression
 from . import test_format_address_mixin
 from . import test_groups
 from . import test_avatar_mixin
@@ -28,17 +22,11 @@ from . import test_ir_sequence_date_range
 from . import test_ir_embedded_actions
 from . import test_ir_default
 from . import test_menu
-from . import test_orm
-from . import test_ormcache
-from . import test_overrides
-from . import test_query
 from . import test_qweb_field
 from . import test_qweb
 from . import test_res_config
 from . import test_res_lang
-from . import test_search
 from . import test_split_table
-# from . import test_uninstall  # loop
 from . import test_user_has_group
 from . import test_views
 from . import test_res_company
@@ -49,7 +37,6 @@ from . import test_res_partner_bank
 from . import test_res_partner_merge
 from . import test_res_users
 from . import test_reports
-from . import test_transactions
 from . import test_form_create
 from . import test_config_parameter
 from . import test_ir_module_category

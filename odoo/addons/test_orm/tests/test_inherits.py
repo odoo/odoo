@@ -2,6 +2,7 @@ from odoo.tests import tagged, common
 from odoo.exceptions import ValidationError
 from odoo import Command
 from unittest.mock import patch
+from odoo.tools import mute_logger
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -201,3 +202,106 @@ class test_inherits(common.TransactionCase):
             parent.write({'test_unstored_inherits_shared_line_ids': [(0, 0, {'name': 'Coucou'})]})
             self.assertTrue(parent.child_id)
             self.assertEqual(len(parent.child_id.test_unstored_inherits_shared_line_ids), 1)
+
+
+@tagged('at_install', '-post_install')
+class TestInherits(common.TransactionCase):
+    """ test the behavior of the orm for models that use _inherits;
+        specifically: res.users, that inherits from res.partner
+    """
+
+    def test_default(self):
+        """ `default_get` cannot return a dictionary or a new id """
+        defaults = self.env['res.users'].default_get(['partner_id'])
+        if 'partner_id' in defaults:
+            self.assertIsInstance(defaults['partner_id'], (bool, int))
+
+    def test_create(self):
+        """ creating a user should automatically create a new partner """
+        partners_before = self.env['res.partner'].search([])
+        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+
+        self.assertNotIn(user_foo.partner_id, partners_before)
+
+    def test_create_with_ancestor(self):
+        """ creating a user with a specific 'partner_id' should not create a new partner """
+        partner_foo = self.env['res.partner'].create({'name': 'Foo'})
+        partners_before = self.env['res.partner'].search([])
+        user_foo = self.env['res.users'].create({'partner_id': partner_foo.id, 'login': 'foo'})
+        partners_after = self.env['res.partner'].search([])
+
+        self.assertEqual(partners_before, partners_after)
+        self.assertEqual(user_foo.name, 'Foo')
+        self.assertEqual(user_foo.partner_id, partner_foo)
+
+    @mute_logger('odoo.models')
+    def test_read(self):
+        """ inherited fields should be read without any indirection """
+        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        user_values, = user_foo.read()
+        partner_values, = user_foo.partner_id.read()
+
+        self.assertEqual(user_values['name'], partner_values['name'])
+        self.assertEqual(user_foo.name, user_foo.partner_id.name)
+
+    @mute_logger('odoo.models')
+    def test_copy(self):
+        """ copying a user should automatically copy its partner, too """
+        user_foo = self.env['res.users'].create({
+            'name': 'Foo',
+            'login': 'foo',
+            'employee': True,
+        })
+        foo_before, = user_foo.read()
+        del foo_before['create_date']
+        del foo_before['write_date']
+        user_bar = user_foo.copy({'login': 'bar'})
+        foo_after, = user_foo.read()
+        del foo_after['create_date']
+        del foo_after['write_date']
+        self.assertEqual(foo_before, foo_after)
+
+        self.assertEqual(user_bar.name, 'Foo (copy)')
+        self.assertEqual(user_bar.login, 'bar')
+        self.assertEqual(user_foo.employee, user_bar.employee)
+        self.assertNotEqual(user_foo.id, user_bar.id)
+        self.assertNotEqual(user_foo.partner_id.id, user_bar.partner_id.id)
+
+    @mute_logger('odoo.models')
+    def test_copy_with_ancestor(self):
+        """ copying a user with 'parent_id' in defaults should not duplicate the partner """
+        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
+        partner_bar = self.env['res.partner'].create({'name': 'Bar'})
+
+        foo_before, = user_foo.read()
+        del foo_before['create_date']
+        del foo_before['write_date']
+        del foo_before['login_date']
+        partners_before = self.env['res.partner'].search([])
+        user_bar = user_foo.copy({'partner_id': partner_bar.id, 'login': 'bar'})
+        foo_after, = user_foo.read()
+        del foo_after['create_date']
+        del foo_after['write_date']
+        del foo_after['login_date']
+        partners_after = self.env['res.partner'].search([])
+
+        self.assertEqual(foo_before, foo_after)
+        self.assertEqual(partners_before, partners_after)
+
+        self.assertNotEqual(user_foo.id, user_bar.id)
+        self.assertEqual(user_bar.partner_id.id, partner_bar.id)
+        self.assertEqual(user_bar.login, 'bar', "login is given from copy parameters")
+        self.assertFalse(user_bar.password, "password should not be copied from original record")
+        self.assertEqual(user_bar.name, 'Bar', "name is given from specific partner")
+        self.assertEqual(user_bar.signature, user_foo.signature, "signature should be copied")
+
+    @mute_logger('odoo.models')
+    def test_write_date(self):
+        """ modifying inherited fields must update write_date """
+        user = self.env.user
+        write_date_before = user.write_date
+
+        # write base64 image
+        user.write({'image_1920': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
+        write_date_after = user.write_date
+        self.assertNotEqual(write_date_before, write_date_after)
