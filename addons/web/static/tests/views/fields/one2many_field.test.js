@@ -10,7 +10,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { onWillDestroy, onWillStart, reactive, useState } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, reactive, useState, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -8132,8 +8132,7 @@ test("default value for nested one2manys (coming from onchange)", async () => {
 
     Partner._onChanges.p = function (obj) {
         obj.p = [
-            [5],
-            [0, 0, { turtles: [[5], [4, 1, false]] }], // link record 1 by default
+            [0, 0, { turtles: [[4, 1]] }], // link record 1 by default
         ];
     };
     onRpc("web_save", (args) => {
@@ -10835,9 +10834,7 @@ test("delete a record while adding another one in a multipage", async () => {
 
 test("one2many, onchange, edition and multipage...", async () => {
     Partner._onChanges = {
-        turtles: function (obj) {
-            obj.turtles = [[5]].concat(obj.turtles);
-        },
+        turtles: function () {},
     };
 
     Partner._records[0].turtles = [1, 2, 3];
@@ -10860,7 +10857,6 @@ test("one2many, onchange, edition and multipage...", async () => {
     await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_field_widget[name=turtle_foo] input").edit("nora", { confirm: false });
     await contains(".o_field_x2many_list_row_add button").click();
-
     expect.verifySteps([
         "get_views partner",
         "web_read partner",
@@ -13729,4 +13725,41 @@ test("one2many list with monetary aggregates and different currencies", async ()
     await contains("tfoot span sup").hover();
     expect(".o_multi_currency_popover").toHaveCount(1);
     expect(".o_multi_currency_popover").toHaveText("500.00 € at $ 0.50 on Jun 13");
+});
+
+test.tags("desktop");
+test("one2many custom which can clear the relation", async () => {
+    class ClearWidget extends Component {
+        static props = ["*"];
+        static template = xml`
+            <div>
+                <span t-esc="this.props.record.data[this.props.name].count"/>
+                <button t-on-click="clear">Clear</button>
+            </div>`;
+
+        clear() {
+            return this.props.record.data[this.props.name].clear();
+        }
+    }
+    registry.category("fields").add("clear", { component: ClearWidget });
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].partner_ids).toEqual([[5]]);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "turtle",
+        arch: `<form><field name="partner_ids" widget="clear"/></form>`,
+        resId: 2,
+    });
+
+    expect(".o_field_widget[name=partner_ids] span").toHaveText("2");
+    await contains(".o_field_widget[name=partner_ids] button").click();
+    expect(".o_field_widget[name=partner_ids] span").toHaveText("0");
+    await contains(".o_form_button_save").click();
+    expect(".o_field_widget[name=partner_ids] span").toHaveText("0");
+
+    expect.verifySteps(["web_save"]);
 });
