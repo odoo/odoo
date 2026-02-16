@@ -101,7 +101,7 @@ registerWebsitePreviewTour('edit_link_popover', {
         trigger: ".modal-footer .btn-primary",
         run: "click",
     },
-    ...openLinkPopup(":iframe .top_menu a:contains('Home')[href='/contactus']", "/contactus", 0, true),
+    ...openLinkPopup(":iframe .top_menu a:contains('Home')[href='/contactus']", "/contactus", 1, true),
     {
         content: "Popover should be shown with updated preview data (2)",
         trigger: ".o-we-linkpopover .o_we_url_link:contains('Contact Us')",
