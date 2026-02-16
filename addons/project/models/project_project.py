@@ -1,21 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import json
 
 from collections import defaultdict
-from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
-from odoo.tools import get_lang, float_utils, formatLang, SQL, LazyTranslate
+from odoo.tools import get_lang, SQL, LazyTranslate
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
+from markupsafe import Markup
+from werkzeug.urls import url_encode
 
 _lt = LazyTranslate(__name__)
 
@@ -95,6 +94,8 @@ class ProjectProject(models.Model):
     active = fields.Boolean(default=True, copy=False, export_string_translation=False)
     sequence = fields.Integer(default=10, export_string_translation=False)
     partner_id = fields.Many2one('res.partner', string='Customer', bypass_search_access=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", index='btree_not_null')
+    partner_phone = fields.Char(related='partner_id.phone', readonly=False, export_string_translation=False)
+    partner_email = fields.Char(related='partner_id.email', readonly=False, export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True, export_string_translation=False)
     analytic_account_balance = fields.Monetary(related="account_id.balance")
@@ -177,15 +178,17 @@ class ProjectProject(models.Model):
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True, export_string_translation=False)
     last_update_color = fields.Integer(compute='_compute_last_update_color', export_string_translation=False)
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True, export_string_translation=False)
-    milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone', export_string_translation=False)
-    milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone', export_string_translation=False)
+    milestone_count = fields.Integer(compute='_compute_milestone_count', export_string_translation=False)
+    milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', export_string_translation=False)
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded', export_string_translation=False)
-    milestone_progress = fields.Integer("Milestones Reached", compute='_compute_milestone_reached_count', groups="project.group_project_milestone", export_string_translation=False)
+    milestone_progress = fields.Integer("Milestones Reached", compute='_compute_milestone_reached_count', export_string_translation=False)
     next_milestone_id = fields.Many2one('project.milestone', compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
+    next_milestone_status = fields.Char(compute='_compute_next_milestone_info', compute_sudo=True, export_string_translation=False)
     is_template = fields.Boolean(copy=False, export_string_translation=False)
     show_ratings = fields.Boolean(compute='_compute_show_ratings', export_string_translation=False)
+    google_map_iframe = fields.Html(compute='_compute_google_map_iframe', sanitize=False, export_string_translation=False)
 
     _project_date_greater = models.Constraint(
         'check(date >= date_start)',
@@ -201,6 +204,29 @@ class ProjectProject(models.Model):
                 order=f"sequence asc, {self.env['project.project.stage']._order}",
                 limit=1,
             ).id
+
+    @api.depends('next_milestone_id')
+    def _compute_next_milestone_info(self):
+        for project in self:
+            if milestone := project.next_milestone_id:
+                project.next_milestone_status = 'off_track' if milestone.is_deadline_exceeded else 'on_track'
+            else:
+                project.next_milestone_status = False
+
+    @api.depends('partner_id')
+    def _compute_google_map_iframe(self):
+        for project in self:
+            address = project.partner_id._display_address(without_company=True).replace('\n', ' ').strip()
+            if not address:
+                project.google_map_iframe = False
+                continue
+            query_params = url_encode({'q': address, 'output': 'embed'})
+            project.google_map_iframe = Markup("""
+                <iframe
+                    loading="lazy"
+                    src="https://www.google.com/maps?{query_params}">
+                </iframe>
+            """).format(query_params=query_params)
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
     def _compute_next_milestone_id(self):
@@ -900,10 +926,20 @@ class ProjectProject(models.Model):
 
     def project_update_all_action(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
-        action['display_name'] = _("%(name)s Dashboard", name=self.name)
+        action['display_name'] = _("%(name)s Updates", name=self.name)
         return action
 
     def action_open_share_project_wizard(self):
+        if self.privacy_visibility in ['followers', 'employees'] or self.is_template:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': self.env._("Sharing is not available for this project visibility setting."),
+                },
+            }
+
         template = self.env.ref('project.mail_template_project_sharing', raise_if_not_found=False)
 
         local_context = self.env.context | {
@@ -978,18 +1014,19 @@ class ProjectProject(models.Model):
         action['display_name'] = _("%(name)s's Milestones", name=self.name)
         return action
 
-    def action_view_tasks_from_project_milestone(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('project.project_milestone_action_view_tasks')
-        action['display_name'] = _("Tasks")
-        action['domain'] = [('milestone_id', 'in', self.milestone_ids.ids)]
-        return action
+    def action_open_project_form(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Project Overview'),
+            'res_model': 'project.project',
+            'view_mode': 'form',
+            'res_id': self.id,
+        }
 
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------
-
-    def action_profitability_items(self, section_name, domain=None, res_id=False):
-        return {}
 
     def get_last_update_or_default(self):
         self.ensure_one()
@@ -998,177 +1035,6 @@ class ProjectProject(models.Model):
             'status': labels.get(self.last_update_status, _('Set Status')),
             'color': self.last_update_color,
         }
-
-    def get_panel_data(self):
-        self.ensure_one()
-        if not self.env.user.has_group('project.group_project_user'):
-            return {}
-        show_profitability = self._show_profitability()
-        panel_data = {
-            'user': self._get_user_values(),
-            'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
-            'currency_id': self.currency_id.id,
-            'show_project_profitability_helper': show_profitability and self._show_profitability_helper(),
-            'show_milestones': self.allow_milestones,
-        }
-        if self.allow_milestones:
-            panel_data['milestones'] = self._get_milestones()
-        if show_profitability:
-            profitability_items = self.with_context(active_test=False)._get_profitability_items()
-            if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
-                profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
-                profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
-            panel_data['profitability_items'] = profitability_items
-            panel_data['profitability_labels'] = self._get_profitability_labels()
-        return panel_data
-
-    def get_milestones(self):
-        if self.env.user.has_group('project.group_project_user'):
-            return self._get_milestones()
-        return {}
-
-    def _get_profitability_labels(self):
-        return {}
-
-    def _get_profitability_sequence_per_invoice_type(self):
-        return {}
-
-    def _get_already_included_profitability_invoice_line_ids(self):
-        # To be extended to avoid account.move.line overlap between
-        # profitability reports.
-        return []
-
-    def _get_user_values(self):
-        return {
-            'is_project_user': self.env.user.has_group('project.group_project_user'),
-        }
-
-    def _show_profitability(self):
-        self.ensure_one()
-        return True
-
-    def _show_profitability_helper(self):
-        return self.env.user.has_group('analytic.group_analytic_accounting')
-
-    def _get_profitability_aal_domain(self):
-        return [('account_id', 'in', self.account_id.ids)]
-
-    def _get_profitability_items(self, with_action=True):
-        return self._get_items_from_aal(with_action)
-
-    def _get_items_from_aal(self, with_action=True):
-        return {
-            'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
-            'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
-        }
-
-    def _get_milestones(self):
-        self.ensure_one()
-        return {
-            'data': self.milestone_ids._get_data_list(),
-        }
-
-    def _get_stat_buttons(self):
-        self.ensure_one()
-        closed_task_count = self.task_count - self.open_task_count
-        if self.task_count:
-            number = self.env._(
-                "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)",
-                closed_task_count=closed_task_count,
-                task_count=self.task_count,
-                closed_rate=round(100 * closed_task_count / self.task_count),
-            )
-        else:
-            number = self.env._(
-                "%(closed_task_count)s / %(task_count)s",
-                closed_task_count=closed_task_count,
-                task_count=self.task_count,
-            )
-        buttons = [{
-            'icon': 'check',
-            'text': self.label_tasks,
-            'number': number,
-            'action_type': 'object',
-            'action': 'action_view_tasks',
-            'show': True,
-            'sequence': 1,
-        }]
-        if self.rating_count != 0:
-            if self.rating_avg >= rating_data.RATING_AVG_TOP:
-                icon = 'smile-o text-success'
-            elif self.rating_avg >= rating_data.RATING_AVG_OK:
-                icon = 'meh-o text-warning'
-            else:
-                icon = 'frown-o text-danger'
-            buttons.append({
-                'icon': icon,
-                'text': self.env._('Average Rating'),
-                'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
-                'action_type': 'object',
-                'action': 'action_view_all_rating',
-                'show': self.show_ratings,
-                'sequence': 15,
-            })
-        if self.env.user.has_group('project.group_project_user'):
-            buttons.append({
-                'icon': 'area-chart',
-                'text': self.env._('Burndown Chart'),
-                'action_type': 'action',
-                'action': 'project.action_project_task_burndown_chart_report',
-                'additional_context': json.dumps({
-                    'active_id': self.id,
-                    'stage_name_and_sequence_per_id': {
-                        stage.id: {
-                            'sequence': stage.sequence,
-                            'name': stage.name
-                        } for stage in self.type_ids
-                    },
-                }),
-                'show': True,
-                'sequence': 60,
-            })
-        return buttons
-
-    def _get_profitability_values(self):
-        if not self.env.user.has_group('project.group_project_manager'):
-            return {}, False
-        profitability_items = self._get_profitability_items(False)
-        if profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
-            profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
-            profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
-        costs = sum(profitability_items['costs']['total'].values())
-        revenues = sum(profitability_items['revenues']['total'].values())
-        margin = revenues + costs
-        to_bill_to_invoice = profitability_items['costs']['total']['to_bill'] + profitability_items['revenues']['total']['to_invoice']
-        billed_invoiced = profitability_items['costs']['total']['billed'] + profitability_items['revenues']['total']['invoiced']
-        expected_percentage, to_bill_to_invoice_percentage, billed_invoiced_percentage = 0, 0, 0
-        if revenues:
-            expected_percentage = formatLang(self.env, (margin / revenues) * 100, digits=0)
-        if profitability_items['revenues']['total']['to_invoice']:
-            to_bill_to_invoice_percentage = formatLang(self.env, (to_bill_to_invoice / profitability_items['revenues']['total']['to_invoice']) * 100, digits=0)
-        if profitability_items['revenues']['total']['invoiced']:
-            billed_invoiced_percentage = formatLang(self.env, (billed_invoiced / profitability_items['revenues']['total']['invoiced']) * 100, digits=0)
-        profitability_values_dict = {
-            'account_id': self.account_id,
-            'costs': profitability_items['costs'],
-            'revenues': profitability_items['revenues'],
-            'expected_percentage': expected_percentage,
-            'to_bill_to_invoice_percentage': to_bill_to_invoice_percentage,
-            'billed_invoiced_percentage': billed_invoiced_percentage,
-            'total': {
-                'costs': costs,
-                'revenues': revenues,
-                'margin': margin,
-                'margin_percentage': formatLang(self.env,
-                                                not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
-                                                digits=0),
-            },
-            'labels': self._get_profitability_labels(),
-        }
-        show_profitability = bool(profitability_values_dict.get('account_id')
-            and (profitability_values_dict.get('costs') or profitability_values_dict.get('revenues'))
-        )
-        return profitability_values_dict, show_profitability
 
     # ---------------------------------------------------
     #  Business Methods

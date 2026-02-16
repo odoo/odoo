@@ -471,13 +471,6 @@ class SaleOrderLine(models.Model):
                     values['analytic_distribution'] = {accounts.id: 100}
         return values
 
-    def _get_action_per_item(self):
-        """ Get action per Sales Order Item
-
-            :returns: Dict containing id of SOL as key and the action as value
-        """
-        return {}
-
     def _prepare_procurement_values(self):
         values = super()._prepare_procurement_values()
         if self.order_id.project_id:

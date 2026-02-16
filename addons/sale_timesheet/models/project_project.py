@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import json
 
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import SQL
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 
@@ -227,38 +226,12 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order_item")
         action.update({
             'context': {
-                'search_default_groupby_timesheet_invoice_type': True,
+                'search_default_groupby_billable_type': True,
                 'default_project_id': self.id,
             },
             'domain': [('project_id', '=', self.id)],
         })
         return action
-
-    def action_profitability_items(self, section_name, domain=None, res_id=False):
-        self.ensure_one()
-        if section_name in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual', 'non_billable']:
-            action = self.action_billable_time_button()
-            if domain:
-                action['domain'] = Domain.AND([[('project_id', '=', self.id)], domain])
-            action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
-            graph_view = False
-            if section_name == 'billable_time':
-                graph_view = self.env.ref('sale_timesheet.view_hr_timesheet_line_graph_invoice_employee').id
-            action['views'] = [
-                (view_id, view_type) if view_type != 'graph' else (graph_view or view_id, view_type)
-                for view_id, view_type in action['views']
-            ]
-            if res_id:
-                if 'views' in action:
-                    action['views'] = [
-                        (view_id, view_type)
-                        for view_id, view_type in action['views']
-                        if view_type == 'form'
-                    ] or [False, 'form']
-                action['view_mode'] = 'form'
-                action['res_id'] = res_id
-            return action
-        return super().action_profitability_items(section_name, domain, res_id)
 
     def action_project_timesheets(self):
         action = super().action_project_timesheets()
@@ -273,22 +246,6 @@ class ProjectProject(models.Model):
     # ----------------------------
     #  Project Updates
     # ----------------------------
-
-    def get_panel_data(self):
-        panel_data = super().get_panel_data()
-        return {
-            **panel_data,
-            'account_id': self.account_id.id,
-        }
-
-    def _get_foldable_section(self):
-        foldable_section = super()._get_foldable_section()
-        return foldable_section + [
-            'billable_fixed',
-            'billable_milestones',
-            'billable_time',
-            'billable_manual',
-        ]
 
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
@@ -334,198 +291,6 @@ class ProjectProject(models.Model):
         ]))
         query._joins['project_sale_order_item'] = (join, sql, condition)
         return query
-
-    def _get_domain_from_section_id(self, section_id):
-        section_domains = {
-            'materials': [
-                ('product_id.type', '!=', 'service')
-            ],
-            'billable_fixed': [
-                ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'order')
-            ],
-            'billable_milestones': [
-                ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'delivery'),
-                ('product_id.service_type', '=', 'milestones'),
-            ],
-            'billable_time': [
-                ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'delivery'),
-                ('product_id.service_type', '=', 'timesheet'),
-            ],
-            'billable_manual': [
-                ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'delivery'),
-                ('product_id.service_type', '=', 'manual'),
-            ],
-        }
-
-        return self._get_sale_items_domain(section_domains.get(section_id, []))
-
-    def _get_profitability_labels(self):
-        return {
-            **super()._get_profitability_labels(),
-            'billable_fixed': self.env._('Timesheets (Fixed Price)'),
-            'billable_time': self.env._('Timesheets (Billed on Timesheets)'),
-            'billable_milestones': self.env._('Timesheets (Billed on Milestones)'),
-            'billable_manual': self.env._('Timesheets (Billed Manually)'),
-            'non_billable': self.env._('Timesheets (Non-Billable)'),
-            'timesheet_revenues': self.env._('Timesheets revenues'),
-            'other_costs': self.env._('Materials'),
-        }
-
-    def _get_profitability_sequence_per_invoice_type(self):
-        return {
-            **super()._get_profitability_sequence_per_invoice_type(),
-            'billable_fixed': 1,
-            'billable_time': 2,
-            'billable_milestones': 3,
-            'billable_manual': 4,
-            'non_billable': 5,
-            'timesheet_revenues': 6,
-            'other_costs': 12,
-        }
-
-    def _get_profitability_aal_domain(self):
-        domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]
-        return Domain.AND([
-            super()._get_profitability_aal_domain(),
-            domain,
-        ])
-
-    def _get_profitability_items_from_aal(self, profitability_items, with_action=True):
-        if not self.allow_timesheets:
-            total_invoiced = total_to_invoice = 0.0
-            revenue_data = []
-            for revenue in profitability_items['revenues']['data']:
-                if revenue['id'] in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual']:
-                    continue
-                total_invoiced += revenue['invoiced']
-                total_to_invoice += revenue['to_invoice']
-                revenue_data.append(revenue)
-            profitability_items['revenues'] = {
-                'data': revenue_data,
-                'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
-            }
-            return profitability_items
-        aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
-            self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'reinvoice_move_id', 'currency_id', 'category'],
-            ['amount:sum', 'id:array_agg'],
-        )
-        can_see_timesheets = with_action and len(self) == 1 and self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver')
-        revenues_dict = {}
-        costs_dict = {}
-        total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
-        total_costs = {'billed': 0.0, 'to_bill': 0.0}
-        convert_company = self.company_id or self.env.company
-        for timesheet_invoice_type, _dummy, currency, category, amount, ids in aa_line_read_group:
-            if category == 'vendor_bill':
-                continue  # This is done to prevent expense duplication with product re-invoice policies
-            amount = currency._convert(amount, self.currency_id, convert_company)
-            invoice_type = timesheet_invoice_type
-            cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
-            revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
-            if amount < 0:  # cost
-                cost['billed'] += amount
-                total_costs['billed'] += amount
-            else:  # revenues
-                revenue['invoiced'] += amount
-                total_revenues['invoiced'] += amount
-            if can_see_timesheets and invoice_type not in ['other_costs', 'other_revenues']:
-                cost.setdefault('record_ids', []).extend(ids)
-                revenue.setdefault('record_ids', []).extend(ids)
-        action_name = None
-        if can_see_timesheets:
-            action_name = 'action_profitability_items'
-
-        def get_timesheets_action(invoice_type, record_ids):
-            args = [invoice_type, [('id', 'in', record_ids)]]
-            if len(record_ids) == 1:
-                args.append(record_ids[0])
-            return {'name': action_name, 'type': 'object', 'args': json.dumps(args)}
-
-        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
-
-        def convert_dict_into_profitability_data(d, cost=True):
-            profitability_data = []
-            key1, key2 = ['to_bill', 'billed'] if cost else ['to_invoice', 'invoiced']
-            for invoice_type, vals in d.items():
-                if not vals[key1] and not vals[key2]:
-                    continue
-                record_ids = vals.pop('record_ids', [])
-                data = {'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals}
-                if record_ids:
-                    if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
-                        action = get_timesheets_action(invoice_type, record_ids)
-                        data['action'] = action
-                profitability_data.append(data)
-            return profitability_data
-
-        def merge_profitability_data(a, b):
-            return {
-                'data': a['data'] + b['data'],
-                'total': {key: a['total'][key] + b['total'][key] for key in a['total'] if key in b['total']}
-            }
-
-        for revenue in profitability_items['revenues']['data']:
-            revenue_id = revenue['id']
-            aal_revenue = revenues_dict.pop(revenue_id, {})
-            revenue['to_invoice'] += aal_revenue.get('to_invoice', 0.0)
-            revenue['invoiced'] += aal_revenue.get('invoiced', 0.0)
-            record_ids = aal_revenue.get('record_ids', [])
-            if can_see_timesheets and record_ids:
-                action = get_timesheets_action(revenue_id, record_ids)
-                revenue['action'] = action
-
-        for cost in profitability_items['costs']['data']:
-            cost_id = cost['id']
-            aal_cost = costs_dict.pop(cost_id, {})
-            cost['to_bill'] += aal_cost.get('to_bill', 0.0)
-            cost['billed'] += aal_cost.get('billed', 0.0)
-            record_ids = aal_cost.get('record_ids', [])
-            if can_see_timesheets and record_ids:
-                cost['action'] = get_timesheets_action(cost_id, record_ids)
-
-        profitability_items['revenues'] = merge_profitability_data(
-            profitability_items['revenues'],
-            {'data': convert_dict_into_profitability_data(revenues_dict, False), 'total': total_revenues},
-        )
-        profitability_items['costs'] = merge_profitability_data(
-            profitability_items['costs'],
-            {'data': convert_dict_into_profitability_data(costs_dict), 'total': total_costs},
-        )
-        return profitability_items
-
-    def _get_domain_aal_with_no_move_line(self):
-        # we add the tuple 'project_id = False' in the domain to remove the timesheets from the search.
-        return Domain.AND([
-            super()._get_domain_aal_with_no_move_line(),
-            [('project_id', '=', False)]
-        ])
-
-    def _get_service_policy_to_invoice_type(self):
-        return {
-            **super()._get_service_policy_to_invoice_type(),
-            'ordered_prepaid': 'billable_fixed',
-            'delivered_milestones': 'billable_milestones',
-            'delivered_timesheet': 'billable_time',
-            'delivered_manual': 'billable_manual',
-        }
-
-    def _get_profitability_items(self, with_action=True):
-        return self._get_profitability_items_from_aal(
-            super()._get_profitability_items(with_action),
-            with_action
-        )
-
-    def _get_project_to_template_warnings(self):
-        res = super()._get_project_to_template_warnings()
-        timesheet_linked_count = self.env['account.analytic.line'].search_count([('project_id', '=', self.id)], limit=1)
-        if timesheet_linked_count:
-            res.append(self.env._("This project is current linked to timesheet."))
-        return res
 
     def _get_template_default_context_whitelist(self):
         return [

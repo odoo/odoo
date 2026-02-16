@@ -10,15 +10,15 @@
                     <field name="order_id" string="Sales Order" filter_domain="['|', ('so_line', 'ilike', self), ('order_id', 'ilike', self)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
-                    <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"
+                    <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('billable_type', '=', '02_billable_fixed')]"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter name="billable_time" string="Billed on Timesheets" domain="[('timesheet_invoice_type', '=', 'billable_time')]"
+                    <filter name="billable_time" string="Billed on Timesheets" domain="[('billable_type', '=', '04_billable_time')]"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter name="billable_milestones" string="Billed on Milestones" domain="[('timesheet_invoice_type', '=', 'billable_milestones')]"
+                    <filter name="billable_milestones" string="Billed on Milestones" domain="[('billable_type', '=', '06_billable_milestones')]"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter name="billable_manual" string="Billed Manually" domain="[('timesheet_invoice_type', '=', 'billable_manual')]"
+                    <filter name="billable_manual" string="Billed Manually" domain="[('billable_type', '=', '08_billable_manual')]"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter name="non_billable" string="Non-Billable" domain="[('timesheet_invoice_type', '=', 'non_billable')]"
+                    <filter name="non_billable" string="Non-Billable" domain="[('billable_type', '=', '09_non_billable')]"
                         groups="sales_team.group_sale_salesman"/>
                     <separator/>
                 </xpath>
@@ -27,8 +27,8 @@
                         groups="sales_team.group_sale_salesman"/>
                     <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'reinvoice_move_id'}"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter string="Billing Type" name="groupby_timesheet_invoice_type" domain="[]"
-                        context="{'group_by': 'timesheet_invoice_type'}" groups="sales_team.group_sale_salesman"/>
+                    <filter string="Billing Type" name="groupby_billable_type" domain="[]"
+                        context="{'group_by': 'billable_type'}" groups="sales_team.group_sale_salesman"/>
                 </xpath>
             </field>
     </record>
@@ -94,7 +94,7 @@
         <field name="arch" type="xml">
             <pivot string="Timesheets" sample="1">
                 <field name="date" interval="month" type="row"/>
-                <field name="timesheet_invoice_type" type="col"/>
+                <field name="billable_type" type="col"/>
                 <field name="unit_amount" string="Time Spent" type="measure" widget="timesheet_uom"/>
                 <field name="amount" string="Timesheet Costs"/>
             </pivot>
@@ -111,18 +111,6 @@
                 <field name="amount" type="measure" string="Timesheet Costs"/>
                 <field name="unit_amount" string="Time Spent" type="measure" widget="timesheet_uom"/>
             </graph>
-        </field>
-    </record>
-
-    <record id="view_hr_timesheet_line_graph_invoice_employee" model="ir.ui.view">
-        <field name="name">account.analytic.line.graph.invoice.employee</field>
-        <field name="model">account.analytic.line</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="view_hr_timesheet_line_graph_employee_per_date"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='date']" position="replace">
-                <field name="reinvoice_move_id"/>
-            </xpath>
         </field>
     </record>
 

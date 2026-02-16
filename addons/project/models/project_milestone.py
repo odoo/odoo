@@ -98,11 +98,6 @@ class ProjectMilestone(models.Model):
         ])
         return [('project_id', 'in', query)]
 
-    def toggle_is_reached(self, is_reached):
-        self.ensure_one()
-        self.update({'is_reached': is_reached})
-        return self._get_data()
-
     def action_view_tasks(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('project.action_view_task_from_milestone')

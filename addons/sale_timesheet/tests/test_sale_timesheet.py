@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, timedelta
+from datetime import timedelta
 
 from odoo import Command
 from odoo.fields import Date
 from odoo.tools import float_is_zero
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import Form, tagged, new_test_user
 
@@ -103,7 +102,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         self.assertEqual(so_line_ordered_global_project.qty_delivered, 10.5, 'Timesheet directly on project does not increase delivered quantity on so line')
         self.assertEqual(sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
-        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
+        self.assertEqual(timesheet1.billable_type, '02_billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
         self.assertFalse(timesheet1.reinvoice_move_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
 
         timesheet2 = self.env['account.analytic.line'].create({
@@ -115,7 +114,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         self.assertEqual(so_line_ordered_global_project.qty_delivered, 50, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
-        self.assertEqual(timesheet2.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
+        self.assertEqual(timesheet2.billable_type, '02_billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
         self.assertFalse(timesheet2.reinvoice_move_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
         timesheet3 = self.env['account.analytic.line'].create({
@@ -125,7 +124,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
         self.assertEqual(so_line_ordered_project_only.qty_delivered, 0.0, 'Timesheet directly on project does not increase delivered quantity on so line')
-        self.assertEqual(timesheet3.timesheet_invoice_type, 'non_billable', "Timesheets without SO should be be 'non-billable'")
+        self.assertEqual(timesheet3.billable_type, '09_non_billable', "Timesheets without SO should be be 'non-billable'")
         self.assertFalse(timesheet3.reinvoice_move_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
         # log timesheet on task in global project (higher than the initial ordrered qty)
@@ -235,7 +234,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(so_line_deliver_global_project.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
         self.assertEqual(so_line_deliver_task_project.invoice_status, 'no', 'Sale Timesheet: so line invoice status should not change when no timesheet linked to the line')
         self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so in "to invoice" status when logged')
-        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
+        self.assertEqual(timesheet1.billable_type, '04_billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet1.reinvoice_move_id, "The timesheet1 should not be linked to the invoice yet")
 
         # invoice SO
@@ -256,7 +255,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(so_line_deliver_global_project.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
         self.assertEqual(so_line_deliver_task_project.invoice_status, 'no', 'Sale Timesheet: so line invoice status should not change when no timesheet linked to the line')
         self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
-        self.assertEqual(timesheet2.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
+        self.assertEqual(timesheet2.billable_type, '04_billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet2.reinvoice_move_id, "The timesheet2 should not be linked to the invoice yet")
 
         # create a second invoice
@@ -285,7 +284,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         self.assertTrue(float_is_zero(so_line_deliver_only_project.qty_delivered, precision_digits=2), "Timesheeting on project should not incremented the delivered quantity on the SO line")
         self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should have quantity to invoice')
-        self.assertEqual(timesheet3.timesheet_invoice_type, 'billable_time', "Timesheets with an amount > 0 should be 'billable time'")
+        self.assertEqual(timesheet3.billable_type, '04_billable_time', "Timesheets with an amount > 0 should be 'billable time'")
         self.assertFalse(timesheet3.reinvoice_move_id, "The timesheet3 should not be linked to the invoice yet")
 
         # let's log some timesheets on the task (new task/new project)
@@ -358,14 +357,14 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one coming from SO line 1 'task in global project'.")
         self.assertEqual(so_line_manual_global_project.task_id.sale_line_id, so_line_manual_global_project, "Task from a milestone product should be linked to its SO line too")
-        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_manual', "Milestone timesheet goes in billable manual category")
+        self.assertEqual(timesheet1.billable_type, '08_billable_manual', "Milestone timesheet goes in billable manual category")
         self.assertTrue(float_is_zero(so_line_manual_global_project.qty_delivered, precision_digits=2), "Milestone Timesheeting should not incremented the delivered quantity on the SO line")
         self.assertEqual(so_line_manual_global_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created task.")
         self.assertEqual(so_line_manual_only_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created project.")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
 
-        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_manual', "Timesheets linked to SO line with ordered product shoulbe be billable fixed since it is a prepaid product.")
-        self.assertEqual(timesheet2.timesheet_invoice_type, 'non_billable', "Timesheets without SO should be be 'non-billable'")
+        self.assertEqual(timesheet1.billable_type, '08_billable_manual', "Timesheets linked to SO line with ordered product shoulbe be billable fixed since it is a prepaid product.")
+        self.assertEqual(timesheet2.billable_type, '09_non_billable', "Timesheets without SO should be be 'non-billable'")
         self.assertFalse(timesheet1.reinvoice_move_id, "The timesheet1 should not be linked to the invoice")
         self.assertFalse(timesheet2.reinvoice_move_id, "The timesheet2 should not be linked to the invoice")
 
@@ -462,10 +461,10 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 30,
             'employee_id': self.employee_manager.id
         })
-        
+
         with self.assertRaises(AccessError, msg="The user should not have access to the SOL"):
             so_line_deliver_timesheet.with_user(self.user_employee_without_sales_access).read(['name'])
-    
+
         # invalidate cache to make sure the SOL set on the timesheet is not in the cache since the user
         # should not be able to access on the SOL.
         self.env['sale.order.line'].invalidate_model()
@@ -890,34 +889,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         move.with_context(check_move_validity=False).line_ids[0].unlink()
         self.assertFalse(analytic_line.reinvoice_move_id, "The timesheet should have been unlinked from move")
 
-    def test_update_sol_price(self):
-        """ This test ensure that when the price of a sol is updated, the project_profitability panel from the project linked to the SO of that sol is correctly updated too.
-        1) create new SO
-        2) add a sol with a service product with 'invoice on prepaid' and 'create project & task' setting.
-        3) confirm SO and check the project_profitability panel
-        4) update the price of the sol and check the project_profitability panel
-        """
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-        })
-        product_price = self.product_order_timesheet3.list_price
-        so_line = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet3.name,
-            'product_id': self.product_order_timesheet3.id,
-            'product_uom_qty': 1,
-            'price_unit': product_price,
-            'order_id': sale_order.id,
-        })
-        sale_order.action_confirm()
-        project = sale_order.project_ids[0]
-
-        items = project._get_profitability_items(with_action=False)
-        self.assertEqual(items['revenues']['data'][0]['to_invoice'], product_price, "The quantity to_invoice should be equal to the price of the product")
-
-        so_line.price_unit = 2*product_price
-        items = project._get_profitability_items(with_action=False)
-        self.assertEqual(items['revenues']['data'][0]['to_invoice'], 2*product_price, "The quantity to_invoice should be equal to twice the price of the product")
-
     def test_sale_order_with_multiple_project_templates(self):
         """Test when creating multiple projects for one sale order every project has its own allocated hours"""
         sale_order = self.env['sale.order'].create({
@@ -1103,7 +1074,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 'employee_id': self.employee_user.id,
             },
         ])
-        self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')
+        self.assertEqual(timesheet.billable_type, '04_billable_time')
 
     def test_linked_timesheet_after_invoice_reversal(self):
         """Test that uneditable timesheet entries aren't linked to a reversed invoice form"""

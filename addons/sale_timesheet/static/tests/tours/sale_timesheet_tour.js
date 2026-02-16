@@ -291,76 +291,21 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: "span.o-dropdown-item:contains('Top Menu')",
     run: "click",
 }, {
-    trigger: ".o-dropdown-item div span:contains('Dashboard')",
-    content: "Put Dashboard in the embedded actions",
+    trigger: ".o-dropdown-item div span:contains('Updates')",
+    content: "Put Updates in the embedded actions",
     run: "click",
 }, {
-    trigger: ".o_embedded_actions button span:contains('Dashboard')",
-    content: "Open Dashboard",
-    run: "click",
-}, {
-    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_title:contains('Profitability')",
-    content: 'Check the user sees Profitability section',
-}, {
-    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > div > .o_rightpanel_subsection:eq(0) > table > thead > tr > th:eq(0):contains('Revenues')",
-    content: 'Check the user sees Profitability subsection row',
-}, {
-    trigger: "button.o_group_caret:has(.fa-caret-right)",
-    content: 'Check that the dropdown button is present',
-    run: "click",
-}, {
-    trigger: "th:contains('Sales Order Items')",
-    content: 'Check that the sale items section is present',
-}, {
-    trigger: "button.o_group_caret:has(.fa-caret-down)",
-    content: 'Check that the button has changed',
-    run: "click",
-}, {
-    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > div > .o_rightpanel_subsection:eq(1) > table > thead > tr > th:eq(0):contains('Costs')",
-    content: 'Check the user sees Profitability subsection row',
-}, {
-    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > div > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Total')",
-    content: 'Check the user sees Profitability subsection row',
-}, {
-    trigger: ".o_rightpanel_section[name='milestones'] .o_rightpanel_title:contains('Milestones')",
-    content: 'Check the user sees Milestones section',
-    run: "click",
-}, {
-    trigger: ".o_add_milestone a",
-    content: "Add a first milestone",
+    trigger: ".o_embedded_actions button span:contains('Updates')",
+    content: "Open Updates",
     run: "click",
 }, {
     trigger: ".o_list_button_add",
-    content: "Add a first milestone",
-    run: "click",
-}, {
-    trigger: "div.o_field_widget[name=name] input",
-    run: "edit New milestone",
-}, {
-    trigger: "input[data-field=deadline]",
-    content: "Edit new Milestone",
-    run: "edit 12/12/2099",
-}, {
-    trigger: ".o_list_button_save",
-    content: "Save new Milestone",
-    run: "click",
-}, {
-    trigger: ".breadcrumb-item.o_back_button",
-    run: "click",
-}, {
-    trigger: ".o-kanban-button-new",
     content: "Create new Project Update",
     run: "click",
 }, {
     trigger: "div.o_field_widget[name=name] input",
     content: "Give a name to Project Update",
     run: "edit New update",
-}, {
-    trigger: ".o_field_widget[name=description] h3:contains('Profitability')",
-    content: "Profitability title must be in description",
-}, {
-    trigger: ".o_field_widget[name=description] h3:contains('Milestones')",
-    content: "Milestones title must be in description",
 },
 // Those steps are currently needed in order to prevent the following issue:
 // "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
@@ -369,7 +314,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Go back to the kanban view and the project update will be added on that view',
     run: "click",
 }, {
-    trigger: '.o_controller_with_rightpanel',
+    trigger: '.o_updates_controller',
     content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
 },
 ...stepUtils.toggleHomeMenu(),

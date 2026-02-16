@@ -8,7 +8,6 @@ from . import test_project_embedded_action_settings
 from . import test_project_flow
 from . import test_project_mail_features
 from . import test_project_milestone
-from . import test_project_profitability
 from . import test_project_recurrence
 from . import test_project_sharing
 from . import test_project_sharing_portal_access

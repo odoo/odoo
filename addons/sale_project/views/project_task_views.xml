@@ -49,15 +49,10 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <xpath expr="//button[@name='project_update_all_action']" position="after">
                 <field name="display_sales_stat_buttons" invisible="1"/>
                 <field name="allow_billable" invisible="1" />
                 <field name="privacy_visibility" invisible="1" />
-                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Preview</span>
-                    </div>
-                </button>
                 <button
                     class="oe_stat_button"
                     type="object"
@@ -100,12 +95,44 @@
                         </span>
                     </div>
                 </button>
-            </div>
+                <button class="oe_stat_button" type="object" name="action_open_project_invoices" icon="fa-pencil-square-o"
+                    groups="account.group_account_readonly" invisible="not account_id or invoice_count == 0">
+                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_open_project_vendor_bills" icon="fa-pencil-square-o"
+                    groups="account.group_account_readonly" invisible="vendor_bill_count == 0">
+                    <field string="Vendor Bills" name="vendor_bill_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_project_task_burndown_chart_report']" position="after">
+                <button class="oe_stat_button" name="action_actual_margin" type="object" groups="project.group_project_manager" context="{'active_id': id}" invisible="is_template or not allow_billable">
+                    <i class="fa fa-fw o_button_icon fa-dollar text-success" invisible="actual_margin &lt; 0" title="On Track"/>
+                    <i class="fa fa-fw o_button_icon fa-dollar text-danger" invisible="actual_margin &gt;= 0" title="Off Track"/>
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Actual Margin</span>
+                        <field name="actual_margin" class="o_stat_value" widget="float" options="{'digits': [1, 0]}"/>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_sols" icon="fa-dollar"
+                    groups="sales_team.group_sale_salesman_all_leads" invisible="not display_sales_stat_buttons">
+                    <field string="Sales Order Items" name="sale_order_line_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_view_all_rating']" position="after">
+                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Preview</span>
+                    </div>
+                </button>
+            </xpath>
             <xpath expr="//header" position="inside">
                 <field name="has_any_so_to_invoice" invisible="1"/>
                 <field name="has_any_so_with_nothing_to_invoice" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">not allow_billable or is_template</attribute>
+            </xpath>
+            <xpath expr="//i[@name='partner_id']" position="attributes">
                 <attribute name="invisible">not allow_billable or is_template</attribute>
             </xpath>
             <xpath expr="//group[@name='group_time_managment']" position="before">
@@ -117,11 +144,11 @@
                     </div>
                 </group>
             </xpath>
-            <xpath expr="//page[@name='settings']//field[@name='privacy_visibility']" position="after">
+            <xpath expr="//t[@name='allocated_hours_placeholder']" position="after">
                 <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"  context="{'default_partner_id': partner_id}"/>
                 <label for="sale_line_id" invisible="not allow_billable or not partner_id or is_template"/>
-                <div 
-                    class="o_row" 
+                <div
+                    class="o_row"
                     invisible="not allow_billable or not partner_id or is_template">
                     <field name="sale_line_id"
                         groups="!sales_team.group_sale_salesman"
@@ -178,7 +205,7 @@
                 <field name="project_sale_order_id" invisible="1"/>
                 <field name="sale_order_id" invisible="True" groups="sales_team.group_sale_salesman"/>
                 <label for="sale_line_id" invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor or has_project_template"/>
-                <div 
+                <div
                     name="sale_line_div"
                     class="o_row"
                     invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor or has_project_template">
@@ -206,7 +233,7 @@
                         placeholder="Non-billable"/>
                     <span
                         class="fa fa-exclamation-triangle text-warning"
-                        title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order." 
+                        title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order."
                         invisible="sale_order_state != 'cancel'"/>
                 </div>
                 <field name="allow_billable" invisible="1"/>

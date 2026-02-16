@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="project_view_form_inherit_project_purchase" model="ir.ui.view">
+        <field name="name">project.view.form.inherit.project.purchase</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_open_project_purchase_orders" icon="fa-credit-card"
+                    groups="purchase.group_purchase_user" invisible="purchase_orders_count == 0">
+                    <field string="Purchase Orders" name="purchase_orders_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_embedded_action_purchase_orders" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">70</field>

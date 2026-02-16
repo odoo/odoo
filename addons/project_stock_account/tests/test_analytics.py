@@ -134,17 +134,6 @@ class TestAnalytics(TestStockCommon):
         self.assertEqual(analytic_line2[self.plan1_name], self.analytic_account1)
         self.assertEqual(analytic_line2[self.plan2_name], self.analytic_account2)
 
-        self.assertDictEqual(
-            self.project._get_profitability_items(False),
-            {
-                'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
-                'costs': {
-                    'data': [{'id': 'other_costs', 'sequence': 15, 'billed': 1300.0, 'to_bill': 0.0}],
-                    'total': {'billed': 1300.0, 'to_bill': 0.0}
-                }
-            }
-        )
-
     def test_mandatory_analytic_plan_picking(self):
         self.env['account.analytic.applicability'].create({
             'business_domain': 'stock_picking',

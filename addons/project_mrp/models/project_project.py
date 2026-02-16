@@ -60,26 +60,3 @@ class ProjectProject(models.Model):
             action['views'] = [[False, 'form']]
             action['res_id'] = productions.id
         return action
-
-    def _get_stat_buttons(self):
-        buttons = super()._get_stat_buttons()
-        if self.env.user.has_group('mrp.group_mrp_user'):
-            buttons.extend([{
-                'icon': 'flask',
-                'text': self.env._('Bills of Materials'),
-                'number': self.bom_count,
-                'action_type': 'object',
-                'action': 'action_view_mrp_bom',
-                'show': self.bom_count > 0,
-                'sequence': 35,
-            },
-            {
-                'icon': 'wrench',
-                'text': self.env._('Manufacturing Orders'),
-                'number': self.production_count,
-                'action_type': 'object',
-                'action': 'action_view_mrp_production',
-                'show': self.production_count > 0,
-                'sequence': 46,
-            }])
-        return buttons

@@ -229,10 +229,19 @@
 
         <record id="project_embedded_action_project_updates" model="ir.embedded.actions">
             <field name="parent_res_model">project.project</field>
-            <field name="sequence">110</field>
-            <field name="name">Dashboard</field>
+            <field name="sequence">120</field>
+            <field name="name">Updates</field>
             <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
             <field name="action_id" ref="project.project_update_all_action"/>
+        </record>
+
+        <record id="project_embedded_action_project_overview" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="sequence">110</field>
+            <field name="name">Overview</field>
+            <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="python_method">action_open_project_form</field>
         </record>
 
         <record id="project_embedded_action_all_tasks_dashboard" model="ir.embedded.actions">
@@ -245,7 +254,7 @@
 
     <record id="project_embedded_action_project_burndown_chart" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
-        <field name="sequence">120</field>
+        <field name="sequence">130</field>
         <field name="name">Burndown Chart</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="action_id" ref="project.action_project_task_burndown_chart_report"/>
@@ -254,7 +263,7 @@
 
     <record id="project_embedded_action_update_burndown_chart" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
-        <field name="sequence">120</field>
+        <field name="sequence">130</field>
         <field name="name">Burndown Chart</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
         <field name="action_id" ref="project.action_project_task_burndown_chart_report"/>
@@ -1003,58 +1012,6 @@
             </field>
         </record>
 
-        <record id="project_task_kanban_view_project_milestone" model="ir.ui.view">
-            <field name="name">project.task.kanban.inherit.project.milestone</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="view_task_kanban"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//kanban" position="attributes">
-                    <attribute name="default_group_by">milestone_id</attribute>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="project_task_tree_view_project_milestone" model="ir.ui.view">
-            <field name="name">project.task.view.tree.project.milestone</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project_task_view_tree_base"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//list" position="attributes">
-                    <attribute name="default_group_by">milestone_id</attribute>
-                </xpath>
-                <xpath expr="//field[@name='milestone_id']" position="attributes">
-                    <attribute name="optional">show</attribute>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="project_task_pivot_view_project_milestone" model="ir.ui.view">
-            <field name="name">project.task.view.pivot.project.milestone</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="view_project_task_pivot"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-               <xpath expr="//field[@name='project_id']" position="replace">
-                    <field name="milestone_id" type="row"/>
-                    <field name="stage_id" type="col"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="project_task_graph_view_project_milestone" model="ir.ui.view">
-            <field name="name">project.task.view.graph.project.milestone</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="view_project_task_graph"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='project_id']" position="replace">
-                    <field name="milestone_id"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
@@ -1297,49 +1254,6 @@
             <field name="context">{'default_res_model': 'project.task', 'default_res_ids': active_ids}</field>
             <field name="binding_model_id" ref="project.model_project_task"/>
             <field name="binding_view_types">list,kanban</field>
-        </record>
-
-        <record id="project_milestone_action_view_tasks" model="ir.actions.act_window">
-            <field name="name">Tasks.test</field>
-            <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('has_template_ancestor', '=', False)]</field>
-            <field name="context">{'default_project_id': active_id}</field>
-        </record>
-
-        <record id="project_milestone_action_view_tasks_kanban" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="project.project_task_kanban_view_project_milestone"/>
-        </record>
-
-        <record id="project_milestone_action_view_tasks_list" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">list</field>
-            <field name="view_id" ref="project_task_tree_view_project_milestone"/>
-        </record>
-
-        <record id="project_milestone_action_view_tasks_calendar" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="30"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="project.view_task_calendar"/>
-        </record>
-
-        <record id="project_milestone_action_view_pivot" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="60"/>
-            <field name="view_mode">pivot</field>
-            <field name="view_id" ref="project_task_pivot_view_project_milestone"/>
-        </record>
-
-        <record id="project_milestone_action_view_graph" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="70"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="project_task_graph_view_project_milestone"/>
         </record>
 
     <record id="project_task_templates_list" model="ir.ui.view">

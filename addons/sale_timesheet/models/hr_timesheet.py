@@ -6,17 +6,18 @@ from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.misc import unquote
 
-TIMESHEET_INVOICE_TYPES = [
-    ('billable_time', 'Billed on Timesheets'),
-    ('billable_fixed', 'Billed at a Fixed price'),
-    ('billable_milestones', 'Billed on Milestones'),
-    ('billable_manual', 'Billed Manually'),
-    ('non_billable', 'Non-Billable'),
-    ('timesheet_revenues', 'Timesheet Revenues'),
-    ('service_revenues', 'Service Revenues'),
-    ('other_revenues', 'Other revenues'),
-    ('other_costs', 'Other costs'),
+from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
+
+TIMESHEET_BILLABLE_TYPES = [
+    ('02_billable_fixed', 'Billed at a Fixed price'),
+    ('03_timesheet_revenues', 'Revenues Timesheets'),
+    ('04_billable_time', 'Billed on Timesheets'),
+    ('06_billable_milestones', 'Billed on Milestones'),
+    ('08_billable_manual', 'Billed Manually'),
+    ('09_non_billable', 'Non-Billable'),
 ]
+
+BILLABLE_TYPES += TIMESHEET_BILLABLE_TYPES
 
 
 class AccountAnalyticLine(models.Model):
@@ -34,8 +35,7 @@ class AccountAnalyticLine(models.Model):
             ],
         ])
 
-    timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
-            compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
+    billable_type = fields.Selection(selection_add=TIMESHEET_BILLABLE_TYPES)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     so_line = fields.Many2one(
         falsy_value_label="Non-billable",
@@ -51,30 +51,28 @@ class AccountAnalyticLine(models.Model):
             timesheet.commercial_partner_id = timesheet.task_id.sudo().partner_id.commercial_partner_id or timesheet.project_id.sudo().partner_id.commercial_partner_id
 
     @api.depends('so_line.product_id', 'project_id.billing_type', 'amount')
-    def _compute_timesheet_invoice_type(self):
-        for timesheet in self:
-            if timesheet.project_id:  # AAL will be set to False
-                invoice_type = False
-                if not timesheet.so_line:
-                    invoice_type = 'non_billable' if timesheet.project_id.billing_type != 'manually' else 'billable_manual'
-                elif timesheet.so_line.product_id.type == 'service':
-                    if timesheet.so_line.product_id.invoice_policy == 'delivery':
-                        if timesheet.so_line.product_id.service_type == 'timesheet':
-                            invoice_type = 'timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else 'billable_time'
-                        else:
-                            service_type = timesheet.so_line.product_id.service_type
-                            invoice_type = f'billable_{service_type}' if service_type in ['milestones', 'manual'] else 'billable_fixed'
-                    elif timesheet.so_line.product_id.invoice_policy == 'order':
-                        invoice_type = 'billable_fixed'
-                timesheet.timesheet_invoice_type = invoice_type
-            else:
-                if timesheet.amount >= 0 and timesheet.unit_amount >= 0:
-                    if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
-                        timesheet.timesheet_invoice_type = 'service_revenues'
+    def _compute_project_billable_type(self):
+        timesheets_with_project = self.filtered(lambda t: t.project_id)
+        for timesheet in timesheets_with_project:
+            invoice_type = False
+            if not timesheet.so_line:
+                invoice_type = '09_non_billable' if timesheet.project_id.billing_type != 'manually' else '08_billable_manual'
+            elif timesheet.so_line.product_id.type == 'service':
+                if timesheet.so_line.product_id.invoice_policy == 'delivery':
+                    if timesheet.so_line.product_id.service_type == 'timesheet':
+                        invoice_type = '03_timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else '04_billable_time'
                     else:
-                        timesheet.timesheet_invoice_type = 'other_revenues'
-                else:
-                    timesheet.timesheet_invoice_type = 'other_costs'
+                        service_type = timesheet.so_line.product_id.service_type
+                        if service_type == 'milestones':
+                            invoice_type = '06_billable_milestones'
+                        elif service_type == 'manual':
+                            invoice_type = '08_billable_manual'
+                        else:
+                            invoice_type = '02_billable_fixed'
+                elif timesheet.so_line.product_id.invoice_policy == 'order':
+                    invoice_type = '02_billable_fixed'
+            timesheet.billable_type = invoice_type
+        super(AccountAnalyticLine, self - timesheets_with_project)._compute_project_billable_type()
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
@@ -156,7 +154,7 @@ class AccountAnalyticLine(models.Model):
             thus there is no meaning of showing invoice with ordered quantity.
         """
         domain = super()._timesheet_get_portal_domain()
-        return Domain.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable', 'billable_fixed', 'billable_manual', 'billable_milestones'])]])
+        return Domain.AND([domain, [('billable_type', 'in', ['04_billable_time', '09_non_billable', '02_billable_fixed', '08_billable_manual', '06_billable_milestones'])]])
 
     @api.model
     def _timesheet_get_sale_domain(self, order_lines_ids, invoice_ids):
@@ -168,9 +166,9 @@ class AccountAnalyticLine(models.Model):
             '&',
             ('reinvoice_move_id', 'in', invoice_ids.ids),
             # TODO : Master: Check if non_billable should be removed ?
-            ('timesheet_invoice_type', 'in', ['billable_time', 'non_billable']),
+            ('billable_type', 'in', ['04_billable_time', '09_non_billable']),
             '&',
-            ('timesheet_invoice_type', '=', 'billable_fixed'),
+            ('billable_type', '=', '02_billable_fixed'),
                 '&',
                 ('so_line', 'in', order_lines_ids.ids),
                 ('reinvoice_move_id', '=', False),
