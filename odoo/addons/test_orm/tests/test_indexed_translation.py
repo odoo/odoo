@@ -1,7 +1,7 @@
 import odoo.tests
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
-from odoo.addons.base.tests.test_translate import SPECIAL_CHARACTERS
+from odoo.addons.test_tools.tests.test_translate import SPECIAL_CHARACTERS
 
 
 @odoo.tests.tagged('post_install', '-at_install')

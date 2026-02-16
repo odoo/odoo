@@ -21,7 +21,7 @@ from odoo.tools.mail import (
     prepend_html_content,
 )
 
-from . import mail_examples
+from odoo.addons.base.tests import mail_examples
 
 
 @tagged('mail_sanitize')

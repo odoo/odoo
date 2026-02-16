@@ -7,7 +7,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from odoo.tools import cloc
 from odoo.tests import tagged
 
-from odoo.addons.base.tests import test_cloc
+from odoo.addons.test_tools.tests import test_cloc
 
 VALID_XML = """
 <templates id="template" xml:space="preserve">

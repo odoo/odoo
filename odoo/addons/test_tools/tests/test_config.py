@@ -7,7 +7,7 @@ from odoo.tests import tagged, TransactionCase
 from odoo.tools import file_open, file_open_temporary_directory, file_path
 from odoo.tools.config import configmanager
 
-EMPTY_CONFIG_PATH = file_path('base/tests/config/empty.conf')
+EMPTY_CONFIG_PATH = file_path('test_tools/tests/config/empty.conf')
 PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
 
@@ -172,7 +172,7 @@ class TestConfigManager(TransactionCase):
         })
 
     def test_02_config_file(self):
-        config_path = file_path('base/tests/config/non_default.conf')
+        config_path = file_path('test_tools/tests/config/non_default.conf')
         with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
             self.config._parse_config(['-c', config_path])
         self.assertConfigEqual({
@@ -302,7 +302,7 @@ class TestConfigManager(TransactionCase):
             config_path = f'{temp_dir}/save.conf'
             self.config._parse_config(['--config', config_path, '--save'])
             with (file_open(config_path, env=self.env) as config_file,
-                  file_open('base/tests/config/save_posix.conf', env=self.env) as save_file):
+                  file_open('test_tools/tests/config/save_posix.conf', env=self.env) as save_file):
                 config_content = config_file.read().rstrip()
                 save_content = save_file.read().format(
                     project_path=PROJECT_PATH,
@@ -315,7 +315,7 @@ class TestConfigManager(TransactionCase):
     def test_04_odoo16_config_file(self):
         # test that loading the Odoo 16.0 generated default config works
         # with a modern version
-        config_path = file_path('base/tests/config/16.0.conf')
+        config_path = file_path('test_tools/tests/config/16.0.conf')
         with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
             self.config._parse_config(['--config', config_path])
         with (
@@ -465,7 +465,7 @@ class TestConfigManager(TransactionCase):
         config._warn_deprecated_options()
 
     def test_06_cli(self):
-        with file_open('base/tests/config/cli') as file:
+        with file_open('test_tools/tests/config/cli') as file:
             with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
                 self.config._parse_config(file.read().split())
         self.assertEqual(capture.output, [
@@ -592,7 +592,7 @@ class TestConfigManager(TransactionCase):
         })
 
     def test_07_environ(self):
-        with file_open('base/tests/config/environ') as file:
+        with file_open('test_tools/tests/config/environ') as file:
             os.environ.update({
                 x[0]: x[2]
                 for line in file.readlines()
@@ -722,15 +722,15 @@ class TestConfigManager(TransactionCase):
     @patch('optparse.OptionParser.error')
     def test_06_syslog_logfile_exclusive_cli(self, error):
         self.parse_reset(['--syslog', '--logfile', 'logfile'])
-        self.parse_reset(['-c', file_path('base/tests/config/sysloglogfile.conf')])
+        self.parse_reset(['-c', file_path('test_tools/tests/config/sysloglogfile.conf')])
         error.assert_has_calls(2 * [call("the syslog and logfile options are exclusive")])
 
     @patch('optparse.OptionParser.error')
     def test_10_init_update_incompatible_with_multidb(self, error):
         self.parse_reset(['-d', 'db1,db2', '-i', 'base'])
         self.parse_reset(['-d', 'db1,db2', '-u', 'base'])
-        self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-i', 'base'])
-        self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-u', 'base'])
+        self.parse_reset(['-c', file_path('test_tools/tests/config/multidb.conf'), '-i', 'base'])
+        self.parse_reset(['-c', file_path('test_tools/tests/config/multidb.conf'), '-u', 'base'])
         error.assert_has_calls(4 * [call("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")])
 
     def test_11_auto_stop_after_init_after_test(self):
