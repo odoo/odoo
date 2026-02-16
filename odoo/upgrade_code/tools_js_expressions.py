@@ -216,7 +216,6 @@ def compile_expr(expr, bound_variables):
     local_vars = set()
     stack = []  # track {, [, ( for group context
 
-    # print([(t.value, t.type, len(t.value)) for t in tokens])
     i = 0
     while i < len(tokens):
         tok = tokens[i]
@@ -322,7 +321,6 @@ def process_dynamic_string(node, bound_variables, attr="t-attf-class"):
 
 
 def is_component(node):
-    # print(node)
     return (node.tag and node.tag[0].isupper()) or node.get("t-component") is not None
 
 
@@ -517,7 +515,6 @@ def fix_rendering_context(root: etree._ElementTree, outside_vars, inside_vars):
 
 
 def update_template(content: str, outside_vars, inside_vars):
-    # print(outside_vars)
     def callback(tree):
         fix_rendering_context(tree, outside_vars, inside_vars)
 
@@ -548,67 +545,76 @@ def replace_x_path_only(content: str, variables: set):
     return result
 
 
-def _aggregate_call_vars(root: etree._ElementTree, vars):
-    # Find all nodes with t-call="sometemplate"
-    for call_node in root.xpath("descendant-or-self::*[@t-call]"):
-        template_name = call_node.get("t-call")
-        if not template_name:
-            continue
+class VariableAggregator:
+    """ Traverses XML templates, aggregating variables per fragment. """
 
-        # Ensure a set exists for this template
-        var_set = vars.setdefault(template_name, set())
+    def __init__(self):
+        self.tCallVars = defaultdict(set)
+        self.insideVars = defaultdict(set)
 
-        # Look for t-set inside this t-call subtree
-        for set_node in call_node.xpath("descendant-or-self::*[@t-set]"):
-            var_name = set_node.get("t-set")
-            if var_name:
-                var_set.add(var_name)
+    def _aggregate_call_vars(self, root: etree._ElementTree, vars):
+        # Find all nodes with t-call="sometemplate"
+        for call_node in root.xpath("descendant-or-self::*[@t-call]"):
+            template_name = call_node.get("t-call")
+            if not template_name:
+                continue
 
-    for call_node in root.xpath("descendant-or-self::*[@t-foreach]"):
-        print(call_node)
+            # Look for t-set inside this t-call subtree
+            # (On purpose only take t-set inside t-call even if those outside still apply)
+            for set_node in call_node.xpath("descendant-or-self::*[@t-set]"):
+                var_name = set_node.get("t-set")
+                if var_name:
+                    self.tCallVars[template_name].add(var_name)
 
+    def _aggregate_inside_vars(self, root: etree._ElementTree, inside_vars: dict[str, set[str]]):
+        templates = root.xpath(
+            "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
+        )
+        for tpl in templates:
+            template_name = tpl.get("t-name") or tpl.get("id")
+            if not template_name:
+                continue
 
-def _aggregate_inside_vars(root: etree._ElementTree, inside_vars: dict[str, set[str]]):
-    def _add_var(var_set, name: str | None):
-        if not name:
-            return
-        name = name.strip()
-        var_set.add(name)
+            # t-set introduces a local
+            for set_node in tpl.xpath("descendant-or-self::*[@t-set]"):
+                var_name = set_node.get("t-set")
+                if var_name:
+                    self.insideVars[template_name].add(var_name)
 
-    templates = root.xpath(
-        "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
-    )
-    for tpl in templates:
-        tpl_name = tpl.get("t-name") or tpl.get("id")
-        if not tpl_name:
-            continue
+            # Loops introduce locals via t-as (and maybe an index var)
+            for loop_node in tpl.xpath(
+                "descendant-or-self::*[@t-foreach] | descendant-or-self::*[@t-for-each]"
+            ):
+                var_name = loop_node.get("t-as")
+                if var_name:
+                    self.insideVars[template_name].add(var_name)
 
-        var_set = inside_vars.setdefault(tpl_name, set())
-
-        # t-set introduces a local
-        for set_node in tpl.xpath("descendant-or-self::*[@t-set]"):
-            _add_var(var_set, set_node.get("t-set"))
-
-        # Loops introduce locals via t-as (and maybe an index var)
-        for loop_node in tpl.xpath(
-            "descendant-or-self::*[@t-foreach] | descendant-or-self::*[@t-for-each]"
-        ):
-            _add_var(var_set, loop_node.get("t-as"))
-            _add_var(
-                var_set, loop_node.get("t-foreach-index") or loop_node.get("t-index")
-            )
+                var_name = loop_node.get("t-foreach-index") or loop_node.get("t-index")
+                if var_name:
+                    self.insideVars[template_name].add(var_name)
 
         # TODO t-set-slot vars
         # for loop_node in tpl.xpath("descendant-or-self::*[@t-set-slot]"):
 
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
+    aggregator = VariableAggregator()
+
     def callback(tree):
-        _aggregate_call_vars(tree, vars)
-        _aggregate_inside_vars(tree, inside_vars)
+        aggregator._aggregate_call_vars(tree, vars)
+        aggregator._aggregate_inside_vars(tree, inside_vars)
 
     update_etree(content, callback)
 
+    for template, variables in aggregator.tCallVars.items():
+        if template not in vars:
+            vars[template] = set()
+        vars[template].update(variables)
+
+    for template, variables in aggregator.insideVars.items():
+        if template not in inside_vars:
+            inside_vars[template] = set()
+        inside_vars[template].update(variables)
 
 # ------------------------------------------------------------------------------
 # TESTS
@@ -1601,6 +1607,25 @@ test_vars = [
 
 # ------------------------------------------------------------------------------
 
+
+def run_test_vars_collection(test):
+    aggregate_vars(test["content"], test["outside_vars"], test["inside_vars"])
+    return test["outside_vars"], test["inside_vars"]
+
+
+test_vars_collection = [
+    {
+        "name": "simple template",
+        "outside_vars": {},
+        "inside_vars": {"abc": {"a"}},
+        "content": '<t t-name="web.xyz"> <t t-set="b" t-value="2"/> </t>',
+        "expected": ({}, {'abc': {'a'}, 'web.xyz': {'b'}}),
+    },
+]
+
+# ------------------------------------------------------------------------------
+
+
 WHITELIST = []
 
 
@@ -1638,6 +1663,7 @@ if __name__ == "__main__":
         ("main", tests, run_tests_main),
         ("xpaths", test_external_xpath, run_test_external_xpath),
         ("external vars", test_vars, run_test_vars),
+        ("vars aggregator", test_vars_collection, run_test_vars_collection),
     ]:
         s, f = run_test_group(name, test_group, func)
         total_success += s
