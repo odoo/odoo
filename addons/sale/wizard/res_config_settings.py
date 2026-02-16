@@ -61,6 +61,7 @@ class ResConfigSettings(models.TransientModel):
     downpayment_account_id = fields.Many2one(
         related="company_id.downpayment_account_id", readonly=False
     )
+    downpayment_account_active = fields.Boolean(related='downpayment_account_id.active', string="Down payment Account Active")
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")

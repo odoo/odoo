@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="account.view_account_form"/>
         <field name="arch" type="xml">
             <field name="tag_ids" position="after">
-                <field name="account_stock_variation_id" invisible="account_type != 'asset_current'"/>
-                <field name="account_stock_expense_id" invisible="account_type != 'asset_current'" placeholder="For Perpetual Continental Only" groups="base.group_no_one"/>
+                <field name="account_stock_variation_id" invisible="account_type != 'asset_current'" decoration-muted="not account_stock_variation_active"/>
+                <field name="account_stock_expense_id" invisible="account_type != 'asset_current'" placeholder="For Perpetual Continental Only" groups="base.group_no_one" decoration-muted="not account_stock_expense_active"/>
             </field>
         </field>
     </record>

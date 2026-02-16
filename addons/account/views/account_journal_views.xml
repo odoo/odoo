@@ -81,23 +81,27 @@
                                                invisible="not type or type in ('sale', 'purchase', 'general')"
                                                required="(id and type in ('bank', 'cash', 'credit'))"
                                                options="{'no_quick_create': True}"
-                                               groups="account.group_account_readonly"/>
+                                               groups="account.group_account_readonly"
+                                               decoration-muted="not default_account_active"/>
                                         <field name="default_account_id" nolabel="1"
                                                invisible="type not in ('sale', 'purchase', 'general')"
                                                required="type in ('sale', 'purchase')"
                                                options="{'no_quick_create': True}"
-                                               groups="account.group_account_readonly"/>
+                                               groups="account.group_account_readonly"
+                                               decoration-muted="not default_account_active"/>
                                         <field name="suspense_account_id"
                                                invisible="type not in ('bank', 'cash', 'credit')"
                                                required="type in ('bank', 'cash', 'credit')"
                                                options="{'no_quick_create': True}"
-                                               groups="account.group_account_readonly"/>
+                                               groups="account.group_account_readonly"
+                                               decoration-muted="not suspense_account_active"/>
                                         <field name="non_deductible_account_id"
                                                invisible="type != 'purchase'"
                                                options="{'no_quick_create': True}"
-                                               groups="account.group_account_readonly"/>
-                                        <field name="profit_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly"/>
-                                        <field name="loss_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly"/>
+                                               groups="account.group_account_readonly"
+                                               decoration-muted="not non_deductible_account_active"/>
+                                        <field name="profit_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly" decoration-muted="not profit_account_active"/>
+                                        <field name="loss_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly" decoration-muted="not loss_account_active"/>
                                         <field name="refund_sequence" invisible="type not in ['sale', 'purchase']"/>
                                         <field name="payment_sequence" invisible="type not in ('bank', 'cash', 'credit')"/>
                                         <field name="invoice_template_pdf_report_id"

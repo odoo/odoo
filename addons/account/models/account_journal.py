@@ -117,6 +117,7 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain=_get_default_account_domain)
+    default_account_active = fields.Boolean(related='default_account_id.active', string="Default Account Active")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -124,6 +125,7 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain="[('account_type', '=', 'asset_current')]",
     )
+    suspense_account_active = fields.Boolean(related='suspense_account_id.active', string="Suspense Account Active")
     non_deductible_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
@@ -132,6 +134,7 @@ class AccountJournal(models.Model):
         store=True,
         help="Account used to register the private part of mixed expenses.",
     )
+    non_deductible_account_active = fields.Boolean(related='non_deductible_account_id.active', string="Private Share Account Active")
     restrict_mode_hash_table = fields.Boolean(string="Secure Posted Entries with Hash",
         help="If ticked, when an entry is posted, we retroactively hash all moves in the sequence from the entry back to the last hashed entry. The hash can also be performed on demand by the Secure Entries wizard.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -226,11 +229,13 @@ class AccountJournal(models.Model):
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
         domain="[('account_type', 'in', ('income', 'income_other'))]")
+    profit_account_active = fields.Boolean(related='profit_account_id.active', string="Profit Account Active")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
         domain="[('account_type', '=', 'expense')]")
+    loss_account_active = fields.Boolean(related='loss_account_id.active', string="Loss Account Active")
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)

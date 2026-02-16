@@ -71,9 +71,9 @@
                         <group name="properties" groups="account.group_account_readonly">
                             <group string="Cost and Revenue">
                                 <field name="property_account_income_id" placeholder="From Category"
-                                    groups="account.group_account_readonly"/>
+                                    groups="account.group_account_readonly" decoration-muted="not property_account_income_active"/>
                                 <field name="property_account_expense_id" placeholder="From Category"
-                                    groups="account.group_account_readonly"/>
+                                    groups="account.group_account_readonly" decoration-muted="not property_account_expense_active"/>
                             </group>
                         </group>
                         <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>

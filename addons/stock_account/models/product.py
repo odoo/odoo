@@ -529,13 +529,16 @@ class ProductCategory(models.Model):
         'account.account', 'Stock Valuation Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""")
+    property_stock_valuation_account_active = fields.Boolean(related='property_stock_valuation_account_id.active', string="Stock Valuation Account Active")
     property_price_difference_account_id = fields.Many2one(
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
+    property_price_difference_account_active = fields.Boolean(related='property_price_difference_account_id.active', string="Price Difference Account Active")
     account_stock_variation_id = fields.Many2one(
         'account.account', string="Stock Variation Account", readonly=False,
         related="property_stock_valuation_account_id.account_stock_variation_id")
+    account_stock_variation_active = fields.Boolean(related='account_stock_variation_id.active', string="Stock Variation Account Active")
 
     @api.depends_context('company')
     def _compute_anglo_saxon_accounting(self):
