@@ -579,6 +579,7 @@
                    </group>
                 </group>
                 <notebook>
+                    <field name="is_product_mandatory" invisible="1"/>
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
@@ -587,6 +588,7 @@
                             readonly="state == 'cancel' or locked"
                             aggregated_fields="price_subtotal,price_total"
                             options="{'hide_composition': True, 'hide_prices': True, 'subsections': True}"
+                            context="{'from_order_line_tab': True}"
                         >
                             <form>
                                 <field name="technical_price_unit" invisible="1"/>
@@ -611,7 +613,7 @@
                                                     'partner_id': parent.partner_id,
                                                 }"
                                                 readonly="not product_updatable"
-                                                required="not display_type and not is_downpayment"
+                                                required="parent.is_product_mandatory and not display_type and not is_downpayment"
                                                 force_save="1"
                                                 widget="many2one_barcode"
                                             />
@@ -729,7 +731,7 @@
                                     name="product_id"
                                     string="Product Variant"
                                     readonly="not product_updatable"
-                                    required="not display_type and not is_downpayment"
+                                    required="parent.is_product_mandatory and not display_type and not is_downpayment"
                                     force_save="1"
                                     context="{
                                         'default_lst_price': price_unit,
@@ -744,7 +746,6 @@
                                 <field name="product_template_id"
                                     string="Product"
                                     readonly="id and not product_updatable"
-                                    required="not display_type and not is_downpayment"
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
@@ -753,10 +754,10 @@
                                     options="{
                                         'show_label_warning': True
                                     }"
-                                    optional="show"
+                                    optional="hide"
                                     widget="sol_product_many2one"
                                     placeholder="Type to find a product..."/>
-                                <field name="name" widget="sol_text" optional="show"/>
+                                <field name="name" widget="sol_label_text" optional="show"/>
                                 <field
                                     name="analytic_distribution"
                                     widget="analytic_distribution"

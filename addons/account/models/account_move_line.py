@@ -1021,8 +1021,13 @@ class AccountMoveLine(models.Model):
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
+        lines_without_product = self.filtered(lambda l: not l.product_id)
+        all_uoms = self.env['uom.uom'].search([]) if lines_without_product else self.env['uom.uom']
         for line in self:
-            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            if line.product_id:
+                line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            else:
+                line.allowed_uom_ids = all_uoms
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -1109,10 +1114,15 @@ class AccountMoveLine(models.Model):
             filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
             tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
 
+            # If no taxes found and not in predictive/quick-edit mode, apply the default company sale tax
+            if not tax_ids and not self.product_id and self.env.context.get('from_invoice_tab') and not self.move_id.quick_edit_mode:
+                tax_ids = self.company_id.account_sale_tax_id
+
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
             tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+            # Note: Default company purchase tax is omitted here as the predictive billing system handles tax suggestion for vendor bills.
 
         elif self.env.context.get('account_default_taxes'):
             tax_ids = self.account_id.tax_ids

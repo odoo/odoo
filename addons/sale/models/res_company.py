@@ -57,6 +57,11 @@ class ResCompany(models.Model):
         tracking=True,
     )
 
+    sale_order_mandatory_product = fields.Boolean(
+        string="Product is mandatory on Sales Orders",
+        default=True,
+    )
+
     @api.constrains('prepayment_percent')
     def _check_prepayment_percent(self):
         for company in self:

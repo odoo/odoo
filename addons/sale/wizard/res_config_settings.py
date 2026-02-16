@@ -59,6 +59,11 @@ class ResConfigSettings(models.TransientModel):
         readonly=False)
     downpayment_account_id = fields.Many2one(related='company_id.downpayment_account_id', readonly=False)
 
+    sale_order_mandatory_product = fields.Boolean(
+        related='company_id.sale_order_mandatory_product',
+        readonly=False,
+    )
+
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_bpost = fields.Boolean("bpost Connector")

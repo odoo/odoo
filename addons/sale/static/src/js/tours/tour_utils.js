@@ -1,3 +1,5 @@
+import { showProductColumn } from "@account/js/tours/tour_utils";
+
 export function createNewSalesOrder() {
     return [
         {
@@ -40,6 +42,7 @@ export function selectPricelist(pricelistName) {
 
 export function addProduct(productName, rowNumber=1) {
     return [
+        ...showProductColumn("product_template_id"),
         {
             content: `Add product ${productName}`,
             trigger: 'button:contains("Add a product")',
@@ -50,7 +53,7 @@ export function addProduct(productName, rowNumber=1) {
             trigger: `.o_data_row:nth-child(${rowNumber})`,
         },
         {
-            trigger: 'div[name="product_template_id"] input',  // TODO VFE o_selected_row
+            trigger: '.o_selected_row input',
             run: `edit ${productName}`,
         },
         {
@@ -90,12 +93,12 @@ export function checkSOLDescriptionContains(productName, text) {
 export function editLineMatching(productName, text) {
     let base_step = checkSOLDescriptionContains(productName, text);
     base_step['run'] = 'click';
-    return base_step;
+    return [...showProductColumn("product_template_id"), base_step];
 }
 
 export function editConfiguration() {
     return {
-        trigger: '[name=product_template_id] button.fa-pencil',
+        trigger: '.o_selected_row button.fa-pencil',
         run: 'click',
     }
 }
