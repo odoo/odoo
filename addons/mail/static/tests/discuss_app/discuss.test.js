@@ -761,6 +761,7 @@ test("basic top bar rendering", async () => {
     await openDiscuss("mail.box_inbox");
     await contains("button:disabled:text('Mark all read')");
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName:disabled");
     await click("button:text('Starred messages')");
     await contains("button:disabled:text('Unstar all')");
     await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
