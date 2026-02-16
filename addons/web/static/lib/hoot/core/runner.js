@@ -1805,11 +1805,14 @@ export class Runner {
             return ev.preventDefault();
         }
 
-        if (this.state.currentTest && !(error instanceof HootError)) {
+        if (this.state.currentTest) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
-                return ev.preventDefault();
+                if (!(error instanceof HootError)) {
+                    ev.preventDefault();
+                }
+                return;
             }
         } else {
             this._handleGlobalError(ev, error);
