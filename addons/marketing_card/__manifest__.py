@@ -24,6 +24,9 @@
         'web.assets_backend': [
             'marketing_card/static/src/scss/*',
         ],
+        'web.assets_frontend': [
+            'marketing_card/static/src/scss/frontend/*.scss',
+        ],
     },
     'application': True,
     'author': 'Odoo S.A.',

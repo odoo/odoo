@@ -31,11 +31,16 @@ def _extract_values_from_document(rendered_document):
 class TestMarketingCardMail(MailCase, MarketingCardCommon):
 
     def assertSentMailCorrectCard(self, sent_mails, cards):
+        """Check that every card was sent in at least one of the emails.
+
+        :sent_mails: an iterable of tuple[mail_values, language_code]
+        :cards: a recordset of cards to check were sent
+        """
         IrHttp = self.env['ir.http']
         sent_cards = self.env['card.card']
-        for sent_mail in sent_mails:
+        for sent_mail, lang in sent_mails:
             record_id = int(sent_mail['object_id'].split('-')[0])
-            card = cards.filtered(lambda card: card.res_id == record_id)
+            card = cards.filtered(lambda card: card.res_id == record_id and card.lang == lang)
             self.assertEqual(len(card), 1)
             sent_cards += card
             campaign_base_url = card.campaign_id.get_base_url()
@@ -56,6 +61,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             'default_email_from': 'test@test.lan',
             'default_mailing_domain': [('id', 'in', partners.ids[:5])],
             'default_reply_to': 'test@test.lan',
+            'lang': 'fr_FR'
         }
         mailing = Form(self.env['mailing.mailing'].with_context(mailing_context)).save()
         mailing.body_html = mailing.body_arch  # normally the js html_field would fill this in
@@ -92,12 +98,22 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         self.assertFalse(mailing.card_requires_sync_count)
 
         # modifying the campaign should lead to all cards relevant being re-rendered
-        campaign.content_header = "New Header"
+        campaign.content_header = f"{campaign.content_header} (modified)"
         mailing._compute_card_requires_sync_count()
         self.assertTrue(mailing.card_requires_sync_count)
         with self.mock_image_renderer():
             mailing.action_update_cards()
         self.assertEqual(len(self._wkhtmltoimage_bodies), 5)
+        self.assertIn("Mon Titre Francais", self._wkhtmltoimage_bodies[0])
+        mailing._compute_card_requires_sync_count()
+        self.assertFalse(mailing.card_requires_sync_count)
+
+        # modifying the language should lead to all cards being re-rendered
+        # setting it back to a language with generated cards should not require a new render
+        mailing.card_lang = 'nl_NL'
+        self.assertTrue(mailing.card_requires_sync_count)
+        mailing.card_lang = 'fr_FR'
+        self.assertFalse(mailing.card_requires_sync_count)
 
         with self.mock_mail_gateway(), self.assertQueryCount(65):
             mailing._action_send_mail()
@@ -107,8 +123,28 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         sent_cards = cards.filtered(lambda card: not card.requires_sync)
         self.assertEqual(len(sent_cards), 5)
         self.assertEqual(len(self._mails), 5)
+        sent_mails = list(zip(self._mails, ['fr_FR'] * len(self._mails)))
 
-        self.assertSentMailCorrectCard(self._mails, sent_cards)
+        # send a copy in dutch
+        nl_mailing = mailing.copy(default={'card_lang': 'nl_NL'})
+        with self.mock_image_renderer():
+            nl_mailing.action_update_cards()
+        with self.mock_mail_gateway(), self.assertQueryCount(38):
+            nl_mailing._action_send_mail()
+        # render language should be based purely on the mailing language
+        self.assertNotEqual(nl_mailing.env.lang, 'nl_NL')
+        self.assertNotEqual(nl_mailing.env.user.lang, 'nl_NL')
+        self.assertIn("Mijn Nederlands Titel", self._wkhtmltoimage_bodies[0])
+
+        cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
+        sent_cards = cards.filtered(lambda card: not card.requires_sync)
+        self.assertEqual(len(cards), 11)
+        self.assertEqual(len(sent_cards), 10)
+        self.assertEqual(len(cards.filtered(lambda card: not card.requires_sync)), 10)
+        self.assertEqual(len(self._mails), 5)
+        sent_mails += list(zip(self._mails, ['nl_NL'] * len(self._mails)))
+
+        self.assertSentMailCorrectCard(sent_mails, sent_cards)
 
     @users('marketing_card_user')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -124,6 +160,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             'default_email_from': 'test@test.lan',
             'default_mailing_domain': [('id', 'in', partners.ids)],
             'default_reply_to': 'test@test.lan',
+            'lang': 'en_US'
         }
         mailing = Form(self.env['mailing.mailing'].with_context(mailing_context)).save()
         mailing.body_html = mailing.body_arch  # normally the js html_field would fill this in
@@ -138,7 +175,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             mailing._action_send_mail()
         self.assertEqual(len(self._mails), 10)
 
-        self.assertSentMailCorrectCard(self._mails, cards)
+        self.assertSentMailCorrectCard([(mail, 'en_US') for mail in self._mails], cards)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -168,7 +205,8 @@ class TestMarketingCardRender(MarketingCardCommon):
         self.assertFalse(role_values['image1'])
         self.assertFalse(role_values['image2'])
 
-        campaign.action_preview()
+        with self.mock_image_renderer():
+            campaign.action_preview()
         card = self.env['card.card'].search([
             ('campaign_id', '=', campaign.id),
             ('active', '=', False)
@@ -220,7 +258,7 @@ class TestMarketingCardRender(MarketingCardCommon):
             self.assertEqual(self.static_campaign.res_model, 'res.partner')
 
             # mismatch with card
-            self.env['card.card'].sudo().create({'campaign_id': self.static_campaign.id, 'res_id': 1})
+            self.env['card.card'].sudo().create({'campaign_id': self.static_campaign.id, 'res_id': 1, 'lang': 'fr_FR'})
 
             self.assertTrue(self.static_campaign.card_ids)
             with self.assertRaises(exceptions.ValidationError):
@@ -271,36 +309,42 @@ class TestMarketingCardRender(MarketingCardCommon):
 class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
 
     @mock_image_render
-    def test_campaign_stats(self):
-        partners = self.env['res.partner'].create([{'name': f'Part{n}', 'email': f'partn{n}@test.lan'} for n in range(20)])
-        cards = self.campaign._update_cards([('id', 'in', partners.ids)]).sorted('res_id')
-        self.assertEqual(len(cards), 20)
+    def test_campaign_stats_update(self):
+        """Check that different routes update card status as expected."""
+        cards_fr = self.campaign._update_cards([('id', 'in', self.partners.ids)], 'fr_FR').sorted('res_id')
+        cards_nl = self.campaign._update_cards([('id', 'in', self.partners.ids)], 'nl_NL').sorted('res_id')
+
+        self.assertFalse(cards_fr & cards_nl)
+        self.assertEqual(len(cards_fr), 20)
+        self.assertEqual(len(cards_nl), 20)
         self.assertEqual(self.campaign.card_count, 20)
         self.assertEqual(self.campaign.card_click_count, 0)
         self.assertEqual(self.campaign.card_share_count, 0)
-        self.assertListEqual(cards.mapped('image'), [base64.b64encode(VALID_JPEG)] * 20)
-        self.assertListEqual(cards.mapped('share_status'), [False] * 20)
-        self.assertListEqual(cards.mapped('requires_sync'), [False] * 20)
+        self.assertListEqual((cards_fr + cards_nl).mapped('image'), [base64.b64encode(VALID_JPEG)] * 40)
+        self.assertListEqual((cards_fr + cards_nl).mapped('share_status'), [False] * 40)
+        self.assertListEqual((cards_fr + cards_nl).mapped('requires_sync'), [False] * 40)
 
         # user checks preview
-        self.campaign.preview_record_ref = partners[0]
-        card = cards.filtered(lambda card: card.res_id == partners[0].id)
-        self.assertEqual(self.campaign.action_preview()['url'], card._get_path('preview'))
-        self.url_open(card._get_path('preview'))
-        image_request_headers = self.url_open(card._get_card_url()).headers
+        self.campaign.preview_record_ref = self.partners[0]
+        card_fr, card_nl = (cards_fr + cards_nl).filtered(lambda card: card.res_id == self.partners[0].id)
+        self.assertEqual(self.campaign.with_context(lang='fr_FR').action_preview()['url'], card_fr._get_path('preview'))
+        self.assertEqual(self.campaign.with_context(lang='nl_NL').action_preview()['url'], card_nl._get_path('preview'))
+        self.assertNotEqual(card_fr._get_path('preview'), card_nl._get_path('preview'))
+        self.url_open(card_fr._get_path('preview'))
+        image_request_headers = self.url_open(card_fr._get_card_url()).headers
         self.assertEqual(image_request_headers.get('Content-Type'), 'image/jpeg')
         self.assertTrue(image_request_headers.get('Content-Length'))
-        self.assertTrue(card.image)
-        self.assertEqual(card.share_status, 'visited')
-        self.assertEqual(card.active, False, "preview card was updated and is thus considered not valid")
+        self.assertTrue(card_fr.image)
+        self.assertEqual(card_fr.share_status, 'visited')
+        self.assertEqual(card_fr.active, False, "preview card was updated and is thus considered not valid")
         self.campaign.flush_recordset()
         self.assertEqual(self.campaign.card_count, 19)
         self.assertEqual(self.campaign.card_click_count, 0)
         self.assertEqual(self.campaign.card_share_count, 0, 'A regular user fetching the card should not count as a share.')
 
         # recipient opens the card they received
-        card.active = True  # reset as if it were never used as preview
-        image_request_headers = self.url_open(card._get_card_url())
+        card_fr.active = True  # reset as if it were never used as preview
+        image_request_headers = self.url_open(card_fr._get_card_url())
         self.campaign.flush_recordset()
         self.assertEqual(self.campaign.card_count, 20)
         self.assertEqual(self.campaign.card_click_count, 1)
@@ -308,13 +352,13 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
 
         # user publishes redirect url, prompting social network crawler to check open-graph data
         self.opener.headers['User-Agent'] = f'v1 {SOCIAL_NETWORK_USER_AGENTS[0]} v1.2/'
-        opengraph_view = html.fromstring(self.url_open(card._get_redirect_url()).content)
+        opengraph_view = html.fromstring(self.url_open(card_fr._get_redirect_url()).content)
         self.assertTrue(opengraph_view is not None, 'Crawler should get a valid html page as response')
         opengraph_image_url_element = opengraph_view.find('.//meta[@property="og:image"]')
         self.assertTrue(opengraph_image_url_element is not None, 'page should contain image opengraph node')
         opengraph_image_url = opengraph_image_url_element.attrib.get('content')
         self.assertTrue(opengraph_image_url)
-        self.assertEqual(opengraph_image_url, card._get_card_url())
+        self.assertEqual(opengraph_image_url, card_fr._get_card_url())
 
         image_request_headers = self.url_open(opengraph_image_url).headers
         self.assertEqual(image_request_headers.get('Content-Type'), 'image/jpeg')
@@ -324,22 +368,59 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
         self.assertEqual(self.campaign.card_count, 20)
         self.assertEqual(self.campaign.card_click_count, 1)
         self.assertEqual(self.campaign.card_share_count, 1, "A crawler fetching the card is considered a share.")
-        self.assertEqual(cards[0].share_status, 'shared')
+        self.assertEqual(card_fr.share_status, 'shared')
 
         # someone clicks the redirect url on the social network platform
         self.assertEqual(self.campaign.target_url_click_count, 0)
         self.opener.headers['User-Agent'] = 'someuseragent'
-        redirect_response = self.url_open(card._get_redirect_url(), allow_redirects=False)
+        redirect_response = self.url_open(card_fr._get_redirect_url(), allow_redirects=False)
         self.assertEqual(redirect_response.status_code, 303)
         self.assertEqual(redirect_response._next.url, self.campaign.link_tracker_id.short_url)
         self.url_open(redirect_response._next.url, allow_redirects=False)
         self.assertEqual(self.campaign.target_url_click_count, 1)
 
-        cards[1:10].share_status = 'visited'
-        cards[10:].share_status = 'shared'
+    def test_campaign_stats_multi_lang_overlap(self):
+        """Check that the same card in different languages is counted only once."""
+        cards_fr = self.campaign._update_cards([('id', 'in', self.partners.ids)], 'fr_FR').sorted('res_id')
+        cards_nl = self.campaign._update_cards([('id', 'in', self.partners.ids)], 'nl_NL').sorted('res_id')
+
+        no_status_cards_fr = cards_fr[0:2]
+        visited_cards_fr = cards_fr[2:10]
+        shared_cards_fr = cards_fr[10:]
+        no_status_cards_nl = cards_nl[0:2]
+        visited_cards_nl = cards_nl[2:10]
+        shared_cards_nl = cards_nl[10:]
+
+        no_status_cards_fr.share_status = False
+        visited_cards_fr.share_status = 'visited'
+        shared_cards_fr.share_status = 'shared'
+        self.assertEqual(self.campaign.card_count, 20)
+        self.assertEqual(self.campaign.card_click_count, 18, 'Shared cards are considered implicitly visited')
+        self.assertEqual(self.campaign.card_share_count, 10)
+
+        self.assertEqual(
+            (cards_nl).mapped('share_status'),
+            [False] * 20
+        )
+        # better status in another language => pick the highest status
+        visited_cards_nl[:5].share_status = 'shared'
+        self.campaign.invalidate_recordset()
+        self.assertEqual(self.campaign.card_count, 20)
+        self.assertEqual(self.campaign.card_click_count, 18, 'Shared cards are considered implicitly visited')
+        self.assertEqual(self.campaign.card_share_count, 15)
+        no_status_cards_nl[0].share_status = 'visited'
+        no_status_cards_nl[1].share_status = 'shared'
+        self.campaign.invalidate_recordset()
         self.assertEqual(self.campaign.card_count, 20)
         self.assertEqual(self.campaign.card_click_count, 20, 'Shared cards are considered implicitly visited')
-        self.assertEqual(self.campaign.card_share_count, 11)
+        self.assertEqual(self.campaign.card_share_count, 16)
+        # worse status in another language => still pick the highest status
+        shared_cards_nl[0].share_status = 'visited'
+        shared_cards_nl[1].share_status = False
+        self.campaign.invalidate_recordset()
+        self.assertEqual(self.campaign.card_count, 20)
+        self.assertEqual(self.campaign.card_click_count, 20, 'Shared cards are considered implicitly visited')
+        self.assertEqual(self.campaign.card_share_count, 16)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -375,7 +456,7 @@ class TestMarketingCardSecurity(MarketingCardCommon):
         campaign = self.campaign.with_user(self.env.user)
         campaign.preview_record_ref = self.marketing_card_user.partner_id
         # should work fine with accessible fields
-        campaign._update_cards([('id', '=', self.marketing_card_user.partner_id.id)])
+        campaign._update_cards([('id', '=', self.marketing_card_user.partner_id.id)], 'fr_FR')
         with self.assertRaises(exceptions.UserError):
             campaign.write({
                 'content_header_dyn': True,
@@ -393,11 +474,11 @@ class TestMarketingCardSecurity(MarketingCardCommon):
         self.marketing_card_user.partner_id.state_id.invalidate_recordset()
 
         with self.assertRaises(exceptions.UserError), self.mock_image_renderer():
-            campaign._update_cards([('id', '=', self.marketing_card_user.partner_id.id)])
+            campaign._update_cards([('id', '=', self.marketing_card_user.partner_id.id)], 'fr_FR')
         self.assertFalse(self._wkhtmltoimage_bodies, 'There should have been no render on illegal fields')
 
         with self.mock_image_renderer():
-            campaign.with_user(self.system_admin)._update_cards([('id', '=', self.marketing_card_user.partner_id.id)])
+            campaign.with_user(self.system_admin)._update_cards([('id', '=', self.marketing_card_user.partner_id.id)], 'fr_FR')
         self.assertIn('test marketing card state', self._wkhtmltoimage_bodies[0])
 
     def test_campaign_ownership(self):

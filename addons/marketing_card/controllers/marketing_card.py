@@ -70,13 +70,17 @@ class MarketingCardController(Controller):
     def card_campaign_preview(self, card_id=None, card_slug=None):
         """Route for users to preview their card and share it on their social platforms."""
         card = _get_card_from_url(card_id, card_slug)
+        card = card.with_context(lang=card.lang)
         if not card.share_status:
             card.sudo().share_status = 'visited'
 
         campaign_sudo = card.sudo().campaign_id
+        request.update_context(lang=card.lang)
         return request.render('marketing_card.card_campaign_preview', {
-            'card': card,
             'campaign': campaign_sudo,
+            'card': card,
+            'edit_in_backend': True,
+            'main_object': campaign_sudo,
             'quote': quote,
         })
 
@@ -102,10 +106,30 @@ class MarketingCardController(Controller):
         card = _get_card_from_url(card_id, card_slug)
 
         campaign_sudo = card.sudo().campaign_id
+
+        untracked_url = ''
+        record_url = (
+            not campaign_sudo.target_url
+            and (record_sudo := self.env[card.res_model].browse(card.res_id).sudo().exists())
+            and campaign_sudo._get_record_url(record_sudo)
+        )
+        untracked_url = campaign_sudo.target_url or record_url or campaign_sudo.get_base_url()
+
         # don't count clicks from preview
-        redirect_url = campaign_sudo.target_url or campaign_sudo.get_base_url()
         if card.active:
-            redirect_url = campaign_sudo.link_tracker_id.short_url or redirect_url
+            if record_url:
+                redirect_url = untracked_url
+                # still track on the link tracker since it's meant to track accross the whole campaign
+                if link_tracker_code := campaign_sudo.link_tracker_id.code:
+                    request.env['link.tracker.click'].sudo().add_click(
+                        link_tracker_code,
+                        ip=request.httprequest.remote_addr,
+                        country_code=request.geoip.country_code,
+                    )
+            else:
+                redirect_url = campaign_sudo.link_tracker_id.short_url or untracked_url
+        else:
+            redirect_url = untracked_url
 
         if _is_crawler(request):
             return request.render('marketing_card.card_campaign_crawler', {
