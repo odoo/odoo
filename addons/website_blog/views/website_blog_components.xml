@@ -337,14 +337,16 @@ Display a sidebar beside the post content.
 <template id="blog_post_sidebar" name="Sidebar - Blog Post">
     <div id="o_wblog_post_sidebar">
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_1"/>
+        <div id="o_wblog_post_sidebar_sticky" t-attf-class="#{is_view_active('website_blog.opt_blog_post_toc_display') and 'o_sticky_reactive sticky-lg-top' or ''}"/>
     </div>
 </template>
 
 
 <!-- (Option) Post Sidebar: Author avatar -->
-<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="1">
-    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
+<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="0">
+    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="before">
+        <div class="o_wblog_sidebar_block mb-2 pb-4">
+            <h2 class="small mb-3">Written by</h2>
             <t t-call="website_blog.post_author"
                 is_post_page.f="true"
                 additionnal_classes.f="d-flex align-items-center"/>
@@ -355,10 +357,10 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
-    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-4">
+    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+        <div class="o_wblog_sidebar_block mb-2 pb-4">
             <div>
-                <h2 class="mb-3 h6">Share this post</h2>
+                <h2 class="mb-3 small">Share this post</h2>
             </div>
 
             <t t-snippet-call="website.s_share">
@@ -375,10 +377,10 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="False" priority="3">
-    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-4">
-            <h2 class="h6">Tags</h2>
-            <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1">
+    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+        <div class="o_wblog_sidebar_block mb-2 pb-4">
+            <h2 class="small mb-3">Tags</h2>
+            <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1 small">
                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                     <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                 </t>
@@ -397,10 +399,10 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Blogs list -->
 <template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="False" priority="4">
-    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-4">
-            <h2 class="h6">Our blogs</h2>
-            <ul class="list-unstyled">
+    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+        <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block mb-2 pb-4">
+            <h2 class="small mb-3">Our blogs</h2>
+            <ul class="list-unstyled small">
                 <li t-foreach="blogs" t-as="nav_blog" class="mb-2">
                     <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" t-out="nav_blog.name"/>
                 </li>
@@ -412,12 +414,25 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Archive -->
 <template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="False" priority="5">
-    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-4">
+    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+        <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="h6">Archive</h2>
             <t t-call="website_blog.date_selector"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_6"/>
+    </xpath>
+</template>
+
+<!-- (Option) Post Sidebar: display Table of Contents -->
+<template id="opt_blog_post_toc_display" name="Table of Contents" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
+    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+        <div class="o_wblog_sidebar_block o_wblog_toc mb-2 pb-4">
+            <h2 class="mb-3 small">On this page</h2>
+            <nav class="o_wblog_toc_nav">
+                <!-- Table of contents will be generated by JavaScript -->
+            </nav>
+        </div>
+        <div class="oe_structure" id="oe_structure_blog_post_sidebar_7"/>
     </xpath>
 </template>
 

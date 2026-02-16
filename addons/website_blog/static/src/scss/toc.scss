@@ -1,0 +1,74 @@
+#o_wblog_post_sidebar {
+    height: 100%;
+}
+
+#o_wblog_post_sidebar_sticky {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.o_wblog_toc {
+    .o_wblog_toc_nav .list-group {
+        position: relative;
+
+        // Gray vertical bar
+        &::before {
+            @include o-position-absolute(0, auto, 0, 0);
+            width: 2px;
+            content: "";
+            background-color: $gray-300;
+        }
+
+        .o_wblog_toc_link {
+            color: $text-muted;
+            font-weight: $font-weight-normal + 100;
+            padding: $spacer * 0.375 0 $spacer * 0.375 $spacer * 0.75;
+            font-size: $font-size-sm;
+            transition: padding 0.1s, opacity 0.1s, color 0.2s;
+            opacity: 0.7;
+
+            // Black indicator bar
+            &::before {
+                content: "";
+                @include o-position-absolute(0, auto, 0, 0);
+                width: $border-width * 2;
+                background-color: transparent;
+                transition: background-color 0.2s;
+            }
+
+            &:hover, &:focus {
+                opacity: 1;
+                color: $body-color;
+            }
+
+            // Base padding for each level (not active)
+            &.o_wblog_toc_link_0 {
+                padding-left: $spacer * 0.75;
+            }
+
+            @for $i from 1 through 4 {
+                &.o_wblog_toc_link_#{$i} {
+                    padding-left: $spacer * (0.75 + $i * 1);
+                }
+            }
+
+            // Active state
+            &.active {
+                opacity: 1;
+                color: $body-color;
+                padding-left: $spacer;
+
+                &::before {
+                    background-color: map-get($theme-colors, 'primary');
+                }
+
+                // Adjust padding for different levels when active
+                @for $i from 1 through 4 {
+                    &.o_wblog_toc_link_#{$i} {
+                        padding-left: $spacer * (1 + $i * 1);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -12,35 +12,38 @@
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_breadcrumb']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Sidebar">
-            <BuilderCheckbox id="'blog_post_sidebar_opt'" actionParam="{views: ['website_blog.opt_blog_post_sidebar']}"/>
+        <!-- Sidebar -->
+        <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Sidebar</div>
+        <hr class="mx-2 mt-0 mb-2"/>
+
+        <BuilderRow label.translate="Author">
+            <BuilderCheckbox id="'blog_post_author_opt'" actionParam="{views: ['website_blog.opt_blog_post_author_avatar_display']}"/>
         </BuilderRow>
-        <t t-if="this.isActiveItem('blog_post_sidebar_opt')">
-            <BuilderRow label.translate="Archive" level="1">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_archive_display']}"/>
-            </BuilderRow>
 
-            <BuilderRow label.translate="Author" level="1">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_author_avatar_display']}"/>
-            </BuilderRow>
+        <BuilderRow label.translate="Table of Contents">
+            <BuilderCheckbox id="'blog_post_toc_opt'" actionParam="{views: ['website_blog.opt_blog_post_toc_display']}"/>
+        </BuilderRow>
 
-            <BuilderRow label.translate="Blogs List" level="1">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_blogs_display']}"/>
-            </BuilderRow>
+        <BuilderRow label.translate="Share Links">
+            <BuilderCheckbox id="'blog_post_share_links_opt'" actionParam="{views: ['website_blog.opt_blog_post_share_links_display']}"/>
+        </BuilderRow>
 
-            <BuilderRow label.translate="Share Links" level="1">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_share_links_display']}"/>
-            </BuilderRow>
+        <BuilderRow label.translate="Tags">
+            <BuilderCheckbox id="'blog_post_tags_opt'" actionParam="{views: ['website_blog.opt_blog_post_tags_display']}"/>
+        </BuilderRow>
 
-            <BuilderRow label.translate="Tags" level="1">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_tags_display']}"/>
-            </BuilderRow>
-        </t>
+        <BuilderRow label.translate="Blogs List">
+            <BuilderCheckbox id="'blog_post_blogs_opt'" actionParam="{views: ['website_blog.opt_blog_post_blogs_display']}"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Archive">
+            <BuilderCheckbox id="'blog_post_archive_opt'" actionParam="{views: ['website_blog.opt_blog_post_archive_display']}"/>
+        </BuilderRow>
 
         <BuilderRow
             label.translate="Container Size"
             tooltip.translate="Adapt the size of the blog post's content"
-            t-if="!this.isActiveItem('split_cover') and !this.isActiveItem('blog_post_sidebar_opt')"
+            t-if="!this.isActiveItem('split_cover') and !this.isActiveItem('blog_post_archive_opt') and !this.isActiveItem('blog_post_author_opt') and !this.isActiveItem('blog_post_blogs_opt') and !this.isActiveItem('blog_post_share_links_opt') and !this.isActiveItem('blog_post_tags_opt') and !this.isActiveItem('blog_post_toc_opt')"
         >
             <BuilderSelect>
                 <BuilderSelectItem actionParam="{views: []}">Default</BuilderSelectItem>

@@ -216,7 +216,15 @@ list of filtered posts (by date or tag).
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_post_large_container" t-value="is_view_active('website_blog.opt_blog_post_large_container')"/>
-        <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
+        <!-- Sidebar is shown automatically when any sidebar content option is enabled -->
+        <t t-set="opt_blog_post_sidebar" t-value="
+            is_view_active('website_blog.opt_blog_post_archive_display') or
+            is_view_active('website_blog.opt_blog_post_author_avatar_display') or
+            is_view_active('website_blog.opt_blog_post_blogs_display') or
+            is_view_active('website_blog.opt_blog_post_share_links_display') or
+            is_view_active('website_blog.opt_blog_post_tags_display') or
+            is_view_active('website_blog.opt_blog_post_toc_display')
+        "/>
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_split_cover" t-value="is_view_active('website_blog.opt_blog_post_split_cover')"/>
         <t t-set="opt_blog_post_full_width_cover" t-value="is_view_active('website_blog.opt_blog_post_full_width_cover')"/>
@@ -311,9 +319,9 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_post_large_container" name="Increase Readability" inherit_id="website_blog.blog_post_complete" active="False"/>
 
 <!-- (Option) Post: Show Sidebar
-    Show sidebar beside the post content
+    Sidebar is shown automatically when any sidebar content option is enabled
 -->
-<template id="opt_blog_post_sidebar" name="Show Sidebar" inherit_id="website_blog.blog_post_complete" active="True"/>
+<template id="opt_blog_post_sidebar" name="Show Sidebar" inherit_id="website_blog.blog_post_complete" active="False"/>
 
 <!-- (Option) Post: Full width cover
     Use 'full width cover' design rather than the regular one
