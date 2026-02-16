@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.fields import Domain
-from odoo.tools import parse_contact_from_email
+from odoo.tools import parse_contact_from_email, OrderedSet
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 import logging
@@ -97,6 +97,18 @@ class Base(models.AbstractModel):
         else:
             check_access = 'write'
         return ((Domain.TRUE, check_access),)
+
+    def _mail_group_by_operation_for_mail_message_operation(self, message_operation):
+        """ Globally reverse result of '_mail_get_operation_for_mail_message_operation'
+        aka return documents for a given access to check on them. """
+        document_operations = self._mail_get_operation_for_mail_message_operation(message_operation)
+        operation_documents_ids = defaultdict(OrderedSet)
+        for record, record_operation in document_operations.items():
+            operation_documents_ids[record_operation].update(record.ids)
+        return {
+            operation: self.browse(ids).with_prefetch(self._prefetch_ids)
+            for operation, ids in operation_documents_ids.items()
+        }
 
     # ------------------------------------------------------------
     # FIELDS HELPERS
