@@ -7,14 +7,20 @@ $-editor-messages-margin-x: 2%;
 %o-editor-messages {
     background: $o-we-dropzone-bg-color;
     text-align: center;
-    color: #fff;
-    outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
+    color: $o-we-dropzone-text-color;
+    min-height: $o-we-dropzone-size;
+    outline: $o-we-dropzone-border;
     outline-offset: -$o-we-dropzone-border-width;
+    border: 1px solid $o-we-dropzone-accent-color;
+    border-radius: $o-we-dropzone-border-radius;
 
     &:before {
         content: attr(data-editor-message);
         display: block;
-        font-size: 20px;
+        font-size: 18px;
+         // Required to prevent the theme font family from being applied.
+        font-family: $o-we-font-family;
+        text-shadow: 0 0 5px $o-we-dropzone-accent-color;
     }
 
     // Show the default editor message only for "empty" elements
@@ -74,22 +80,23 @@ $-editor-messages-margin-x: 2%;
             @extend %o-editor-messages;
             padding: 112px 0px;
             margin: 20px $-editor-messages-margin-x;
-            border-radius: $border-radius-lg;
+            font-size: 18px;
         }
 
         // Exception 2: empty wrap during drag & drop (override of base case)
         &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child {
             padding: 112px 0px;
-            text-shadow: none;
+            font-size: 18px;
         }
-
         > p:empty:only-child {
-            color: #aaa;
+            color: #aaa; // TODO: is it useful ?
         }
     }
 
     &[data-oe-type=html].oe_empty:empty {
         @extend %o-editor-messages;
+        padding: 12px 0;
+        margin: 20px $-editor-messages-margin-x;
     }
 }
 
