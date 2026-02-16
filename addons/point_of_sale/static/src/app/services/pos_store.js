@@ -743,6 +743,13 @@ export class PosStore extends WithLazyGetterTrap {
             let product;
             if (opts.code) {
                 product = this.models["product.product"].getBy("barcode", opts.code.base_code);
+                if (!product) {
+                    const productPackaging = this.models["product.uom"].getBy(
+                        "barcode",
+                        opts.code.base_code
+                    );
+                    product = productPackaging && productPackaging.product_id;
+                }
             } else {
                 product = opts.presetVariant;
             }
