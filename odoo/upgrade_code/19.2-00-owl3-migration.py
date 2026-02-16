@@ -282,6 +282,7 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.SearchPanel.Category": {'section'},
         "web.ListRenderer.RecordRow": {'record'},
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
+        "pos_restaurant.floor_screen_element": {'elemment'}
     }  # vars defined under t-call
     inside_vars = {} # vars defined inside template, eg. using t-set
 
