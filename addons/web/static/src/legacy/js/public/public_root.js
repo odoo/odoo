@@ -1,5 +1,6 @@
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { session } from "@web/session";
 
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
@@ -10,7 +11,8 @@ import { browser } from '@web/core/browser/browser';
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
-import { RPCError } from '@web/core/network/rpc';
+import { rpc, RPCError } from '@web/core/network/rpc';
+import { RPCCache } from "@web/core/network/rpc_cache";
 import { patch } from "@web/core/utils/patch";
 
 const { Settings } = luxon;
@@ -366,6 +368,9 @@ export const PublicRoot = publicWidget.Widget.extend({
  * been consumed.
  */
 export async function createPublicRoot(RootWidget) {
+    if (window.isSecureContext && session.browser_cache_secret) {
+        rpc.setCache(new RPCCache("rpc", session.registry_hash, session.browser_cache_secret));
+    }
     await lazyloader.allScriptsLoaded;
     await whenReady();
     const env = makeEnv();

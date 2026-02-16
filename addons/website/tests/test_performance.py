@@ -226,6 +226,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
+                    'ir_config_parameter': 1,
+                    # `_session_token_get_values` for the frontend RPC cache
                     'website_page': 2,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
@@ -234,7 +236,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website_menu': 1,
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 7
+                expected_query_count = 8
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
@@ -251,6 +253,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
+                    'ir_config_parameter': 1,
+                    # `_session_token_get_values` for the frontend RPC cache
                     'website_page': 2,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
@@ -259,7 +263,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website_menu': 1,
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 2 if cache else 7
+                expected_query_count = 2 if cache else 8
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -294,6 +298,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
 
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
+                    'ir_config_parameter': 1,
+                    # `_session_token_get_values` for the frontend RPC cache
                     'website_menu': 1,
                     # homepage controller is prefetching all menus for perf in one go
                     'website_page': 2,
@@ -303,7 +309,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # layout
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 6
+                expected_query_count = 7
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -359,6 +365,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
 
         select_tables_perf = {
             'orm_signaling_registry': 1,
+            'ir_config_parameter': 1,
+            # `_session_token_get_values` for the frontend RPC cache
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
             'website_page': 2,
@@ -368,8 +376,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website_menu': 1,
             'ir_ui_view': 1,
         }
-        self._check_url_hot_query(self.page.url, 7, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 7)
+        self._check_url_hot_query(self.page.url, 8, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 8)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):

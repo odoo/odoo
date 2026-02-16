@@ -46,10 +46,9 @@ export class DonationSnippet extends Interaction {
         // it cannot be restored at the moment: if willStart don't await this,
         // there needs to be an asynchronous update of the DOM in start... which
         // edit mode warns about, as start is not awaited anywhere.
-        // TODO the "cached" parameters has no effect: the actual cache is not
-        // initialized on the frontend side at the moment.
-        // TODO Also it should be the third param of rpc, not the second one...
-        this.currency = await rpc("/website/get_current_currency", { cache: true });
+        // The cache must be on disk to be effective. RAM cache is lost when the
+        // user navigates among pages (only case where DonationSnippet restarts)
+        this.currency = await rpc("/website/get_current_currency", {}, { cache: {type: "disk"} });
     }
 
     start() {

@@ -176,6 +176,7 @@ class IrHttp(models.AbstractModel):
     def get_frontend_session_info(self):
         user = self.env.user
         session_uid = request.session.uid
+        hmac_payload = self.env.user._session_token_get_values()  # already ordered
         session_info = {
             'is_admin': user._is_admin() if session_uid else False,
             'is_system': user._is_system() if session_uid else False,
@@ -184,6 +185,7 @@ class IrHttp(models.AbstractModel):
             'is_website_user': user._is_public() if session_uid else False,
             'uid': session_uid,
             "registry_hash": hmac(self.env(su=True), "webclient-cache", self.env.registry.registry_sequence),
+            'browser_cache_secret': hmac(request.env(su=True), "browser_cache_key", hmac_payload),
             'is_frontend': True,
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),
