@@ -23,6 +23,134 @@ import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
 
 const TRUE_TREE = condition(1, "=", 1);
+<<<<<<< bdfb1c773f51d1b62c1033b61791351df74a80b7
+||||||| d5109a45d610916530b4b74cf3e2fa440ee7ed63
+
+function collectDifferences(tree, otherTree) {
+    // some differences shadow the other differences "below":
+    if (tree.type !== otherTree.type) {
+        return [{ type: "other" }];
+    }
+    if (tree.negate !== otherTree.negate) {
+        return [{ type: "other" }];
+    }
+    if (tree.type === "condition") {
+        if (formatValue(tree.path) !== formatValue(otherTree.path)) {
+            return [{ type: "other" }];
+        }
+        if (formatValue(tree.value) !== formatValue(otherTree.value)) {
+            return [{ type: "other" }];
+        }
+        if (formatValue(tree.operator) !== formatValue(otherTree.operator)) {
+            if (tree.operator === "!=" && otherTree.operator === "set") {
+                return [{ type: "replacement", tree, operator: "set" }];
+            } else if (tree.operator === "=" && otherTree.operator === "not_set") {
+                return [{ type: "replacement", tree, operator: "not_set" }];
+            } else {
+                return [{ type: "other" }];
+            }
+        }
+        return [];
+    }
+    if (tree.value !== otherTree.value) {
+        return [{ type: "other" }];
+    }
+    if (tree.type === "complex_condition") {
+        return [];
+    }
+    if (tree.children.length !== otherTree.children.length) {
+        return [{ type: "other" }];
+    }
+    const diffs = [];
+    for (let i = 0; i < tree.children.length; i++) {
+        const child = tree.children[i];
+        const otherChild = otherTree.children[i];
+        const childDiffs = collectDifferences(child, otherChild);
+        if (childDiffs.some((d) => d.type !== "replacement")) {
+            return [{ type: "other" }];
+        }
+        diffs.push(...childDiffs);
+    }
+    return diffs;
+}
+
+function restoreVirtualOperators(tree, otherTree) {
+    const diffs = collectDifferences(tree, otherTree);
+    // note that the array diffs is homogeneous:
+    // we have diffs of the form [], [other], [repl, ..., repl]
+    if (diffs.some((d) => d.type !== "replacement")) {
+        return;
+    }
+    for (const { tree, operator } of diffs) {
+        tree.operator = operator;
+    }
+}
+
+=======
+
+function collectDifferences(tree, otherTree) {
+    // some differences shadow the other differences "below":
+    if (tree.type !== otherTree.type) {
+        return [{ type: "other" }];
+    }
+    if (tree.negate !== otherTree.negate) {
+        return [{ type: "other" }];
+    }
+    if (tree.type === "condition") {
+        if (formatValue(tree.path) !== formatValue(otherTree.path)) {
+            return [{ type: "other" }];
+        }
+        if (formatValue(tree.value) !== formatValue(otherTree.value)) {
+            return [{ type: "other" }];
+        }
+        if (formatValue(tree.operator) !== formatValue(otherTree.operator)) {
+            if (tree.operator === "!=" && otherTree.operator === "set") {
+                return [{ type: "replacement", tree, operator: "set" }];
+            } else if (tree.operator === "=" && otherTree.operator === "not_set") {
+                return [{ type: "replacement", tree, operator: "not_set" }];
+            } else if (tree.operator === "starts_with" && otherTree.operator === "ends_with") {
+                return [{ type: "replacement", tree, operator: "ends_with" }];
+            } else {
+                return [{ type: "other" }];
+            }
+        }
+        return [];
+    }
+    if (tree.value !== otherTree.value) {
+        return [{ type: "other" }];
+    }
+    if (tree.type === "complex_condition") {
+        return [];
+    }
+    if (tree.children.length !== otherTree.children.length) {
+        return [{ type: "other" }];
+    }
+    const diffs = [];
+    for (let i = 0; i < tree.children.length; i++) {
+        const child = tree.children[i];
+        const otherChild = otherTree.children[i];
+        const childDiffs = collectDifferences(child, otherChild);
+        if (childDiffs.some((d) => d.type !== "replacement")) {
+            return [{ type: "other" }];
+        }
+        diffs.push(...childDiffs);
+    }
+    return diffs;
+}
+
+function restoreVirtualOperators(tree, otherTree) {
+    const diffs = collectDifferences(tree, otherTree);
+    // note that the array diffs is homogeneous:
+    // we have diffs of the form [], [other], [repl, ..., repl]
+    if (diffs.some((d) => d.type !== "replacement")) {
+        return;
+    }
+    for (const { tree, operator } of diffs) {
+        tree.operator = operator;
+    }
+}
+
+>>>>>>> 5af78a843daf53ce7e40ac77c2f5e58dac43b9aa
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";
     static components = {
