@@ -114,6 +114,17 @@ class PosSelfOrderController(http.Controller):
                         'tax_ids': child_product.taxes_id,
                     })
                 lst_price = 0
+            elif not line.combo_parent_id:
+                taxes = fiscal_pos.map_tax(product.taxes_id) if fiscal_pos else product.taxes_id
+                pdetails = taxes.compute_all(product.lst_price, pos_config.currency_id, line.qty, product)
+                line.write({
+                    'price_unit': product.lst_price,
+                    'price_subtotal': pdetails.get('total_excluded'),
+                    'price_subtotal_incl': pdetails.get('total_included'),
+                    'price_extra': price_extra,
+                    'tax_ids': product.taxes_id
+                })
+
 
     @http.route('/pos-self-order/remove-order', auth='public', type='json', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
@@ -194,8 +205,9 @@ class PosSelfOrderController(http.Controller):
 
 
     def _get_order_prices(self, lines):
-        amount_untaxed = sum(lines.mapped('price_subtotal'))
-        amount_total = sum(lines.mapped('price_subtotal_incl'))
+        # ignore combo line parent price (price is computed based on lines in combo)
+        amount_untaxed = sum(line.price_subtotal for line in lines if not line.combo_line_ids)
+        amount_total = sum(line.price_subtotal_incl for line in lines if not line.combo_line_ids)
         return amount_total, amount_untaxed
 
     # The first part will be the session_id of the order.
