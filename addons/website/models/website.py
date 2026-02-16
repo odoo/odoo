@@ -405,8 +405,11 @@ class Website(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for record in self:
+            if not record.domain:
+                continue
             try:
                 urlparse(record.domain)
+                record._idna_url(record.domain)
             except ValueError:
                 raise ValidationError(_("The provided website domain is not a valid URL."))
 

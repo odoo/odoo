@@ -157,3 +157,6 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
 
         with self.assertRaises(ValidationError):
             website.write({'domain': 'https://my-website.net['})
+
+        with self.assertRaises(ValidationError):
+            website.write({'domain': 'https://.net'})
