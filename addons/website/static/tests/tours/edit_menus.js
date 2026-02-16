@@ -105,9 +105,31 @@ registerWebsitePreviewTour('edit_menus', {
         trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input.is-invalid",
     },
     {
-        content: "It didn't save without a url. Fill url input.",
+        content: "It didn't save without a url. Fill url input. Enter a relative URL containing a space",
         trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)',
+        run: "edit /url with space",
+    },
+    {
+        content: "Check that a warning is shown for relative URLs with spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning:not(.invisible)",
+    },
+    {
+        content: "Enter an absolute URL with spaces (should not show warning)",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+        run: "edit http://example.com/url with space",
+    },
+    {
+        content: "Verify the warning is hidden for absolute URLs with spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible:not(:visible)",
+    },
+    {
+        content: "Clear the URL and enter a valid one without spaces",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
         run: "edit #",
+    },
+    {
+        content: "Verify the warning remains hidden when the URL has no spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible:not(:visible)",
     },
     {
         content: "Confirm the new menu entry",
