@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_crm_unified_inherit_osm_autocomplete" model="ir.ui.view">
+        <field name="name">res.partner.form.crm.unified.osm.autocomplete</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="crm.view_partner_form_crm_unified"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="widget">osm_address_autocomplete</attribute>
+                <attribute name="options">{'street': 'street', 'street_number': 'street_number', 'street2': 'street2', 'city': 'city', 'zip': 'zip', 'state_id': 'state_id', 'country_id': 'country_id'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="widget">osm_address_autocomplete</attribute>
+                <attribute name="options">{'street': 'street', 'street_number': 'street_number', 'street2': 'street2', 'city': 'city', 'zip': 'zip', 'state_id': 'state_id', 'country_id': 'country_id'}</attribute>
+            </xpath>
+            <!-- Agregar campos de latitude y longitude hidden -->
+            <xpath expr="//field[@name='state_id']" position="after">
+                <field name="latitude" invisible="1"/>
+                <field name="longitude" invisible="1"/>
+            </xpath>
+            <!-- Agregar mapa ocupando todo el ancho, fuera del bloque de direccion -->
+            <xpath expr="//group[.//field[@name='street'] and .//field[@name='city']]" position="after">
+                <separator/>
+                <group col="4" class="o_form_full_width">
+                    <field name="map_html" widget="html" nolabel="1" colspan="4" invisible="not is_company or not street"/>
+                </group>
+                <!-- Botones de geocodificación -->
+                <group string="Geocodificación" invisible="not is_company" col="4">
+                    <group colspan="2">
+                        <field name="geocode_address" readonly="1" string="Dirección geocodificada"/>
+                        <field name="last_geocode" readonly="1" string="Última actualización"/>
+                    </group>
+                    <group colspan="2">
+                        <button name="action_geocode_address" 
+                            type="object" 
+                            string="Actualizar Coordenadas" 
+                            icon="fa-refresh"
+                            class="btn-secondary"
+                            help="Buscar coordenadas GPS basándose en la dirección actual"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

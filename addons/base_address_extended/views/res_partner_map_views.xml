@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- VISTA DEL FORMULARIO CON MAPA INTEGRADO -->
+        <record id="view_partner_form_with_map" model="ir.ui.view">
+            <field name="name">res.partner.form.with.map</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">25</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <div class="container-fluid" style="margin-bottom: 20px; background-color: #f5f5f5; padding: 15px; border-radius: 4px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 style="margin-top: 0; margin-bottom: 10px;">📍 Ubicación en el Mapa</h4>
+                                <div id="map-partner-container" style="width: 100%; height: 500px; border: 2px solid #ddd; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                                    <p style="color: #999; text-align: center;">Cargando mapa...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- VISTA LISTA CON INFORMACIÓN DE UBICACIÓN -->
+        <record id="view_partner_tree_with_location" model="ir.ui.view">
+            <field name="name">res.partner.tree.with.location</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">name asc</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="partner_latitude" optional="hide"/>
+                    <field name="partner_longitude" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- BÚSQUEDA CON FILTROS DE UBICACIÓN -->
+        <record id="view_partner_search_map" model="ir.ui.view">
+            <field name="name">res.partner.search.map</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='type_company']" position="after">
+                    <separator/>
+                    <filter string="Con ubicación" name="has_location" 
+                        domain="[('partner_latitude', '!=', 0), ('partner_longitude', '!=', 0)]"/>
+                    <filter string="Sin ubicación" name="no_location" 
+                        domain="[('partner_latitude', '=', 0)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- RECURSOS DE LEAFLET -->
+        <template id="assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-XwwWDnDdsLXd7VWghqlAwZBHnlz7B1yUqVEL/t0x0x0YHn2dRd8wMOQGb6H8VCnA6V8XPNKhVMoQ8a4cA1q0xA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-WXoSL2lrKOSIDHgcnQlJ76jpo3aAkkas63CEQEQc+NgPORc41ckbMjsTTkAtn2XVميOvQIc+RTka50PrkgjwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            </xpath>
+        </template>
+
+        <!-- ESTILOS PERSONALIZADOS PARA EL MAPA -->
+        <template id="map_custom_styles" inherit_id="web.layout">
+            <xpath expr="//head" position="inside">
+                <style>
+                    .address-map-container {
+                        position: relative;
+                        width: 100%;
+                    }
+                    .map-wrapper {
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        background: #e0e0e0;
+                    }
+                    #map-partner-container {
+                        position: relative;
+                    }
+                    #map-partner-container .leaflet-container {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 6px;
+                    }
+                    .leaflet-popup {
+                        background: white;
+                        border-radius: 6px;
+                        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+                    }
+                    .leaflet-popup-content {
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+                        font-size: 13px;
+                        width: auto !important;
+                        padding: 10px;
+                    }
+                    .leaflet-popup-close-button {
+                        width: 24px;
+                        height: 24px;
+                        font-size: 18px;
+                    }
+                </style>
+            </xpath>
+        </template>
+    </data>
+</odoo>

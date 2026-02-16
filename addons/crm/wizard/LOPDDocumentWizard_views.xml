@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista del wizard para importar documento LOPD -->
+    <record id="view_lopd_document_wizard_form" model="ir.ui.view">
+        <field name="name">lopd.document.wizard.form</field>
+        <field name="model">lopd.document.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar Documento LOPD">
+                <sheet>
+                    <group>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="name" string="Nombre del documento"/>
+                        <field name="filename" invisible="1"/>
+                        <field name="datas" string="Archivo" filename="filename" required="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Importar" type="object" name="action_import_document" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

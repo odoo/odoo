@@ -6,3 +6,5 @@ from . import crm_lead_to_opportunity
 from . import crm_lead_to_opportunity_mass
 from . import crm_merge_opportunities
 from . import crm_lead_pls_update
+from . import LOPDDocumentWizard
+from . import outlook_message_wizard

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
+<<<<<<< HEAD
 
         <!-- Partner kanban view inherit -->
         <record id="crm_lead_partner_kanban_view" model="ir.ui.view">
@@ -37,10 +38,324 @@
                             groups="sales_team.group_sale_salesman"
                             context="{'default_partner_id': id, 'default_type':'opportunity'}">
                             <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
+=======
+    <!-- VISTA UNIFICADA PARA CLIENTES (Empresas y Contactos) -->
+    <record id="view_partner_form_crm_unified" model="ir.ui.view">
+        <field name="name">res.partner.form.crm.unified</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="replace">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" 
+                            type="object"
+                            name="action_view_contacts"
+                            icon="fa-users"
+                            invisible="not is_company">
+                            <field name="contact_count" widget="statinfo" string="Contactos"/>
+                        </button>
+                        <button name="action_view_outlook_messages"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-envelope-o"
+                            invisible="outlook_message_count == 0">
+                            <field name="outlook_message_count" widget="statinfo" string="Mensajes"/>
+                        </button>
+                        <button name="action_send_outlook_message"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-envelope"
+                            invisible="not email or not is_company">
+                            <span>Enviar Email</span>
+>>>>>>> 5ec06c51f0d1 (update contactos y cuentas)
                         </button>
                     </div>
-                </data>
-            </field>
-        </record>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    
+
+                    <!-- SECCIÓN PARA EMPRESAS -->
+                    <group string="INFORMACIÓN DE LA CUENTA" invisible="not is_company">
+                        <group>
+                            <field name="name" string="Nombre de cuenta"/>
+                            <field name="vat" string="CIF"/>
+                        </group>
+                        <group>
+                            <field name="trade_name" string="Marca Comercial"/>
+                            <field name="phone" string="Teléfono" widget="phone"/>
+                        </group>
+                        <group>
+                            <field name="fax" string="Fax"/>
+                            <field name="email" string="Email" widget="email"/>
+                        </group>
+                        <group>
+                            <field name="website" string="Sitio Web" widget="url" placeholder=""/>
+                        </group>
+                        <group>
+                            <field name="user_id" string="Contacto"/>
+                        </group>
+                        <group>
+                            <field name="parent_id" string="Cuenta primaria" domain="[('is_company', '=', True), ('id', '!=', id)]"/>
+                            <field name="relationship_type" string="Tipo de relación"/>
+                        </group>
+                        <group>
+                            <field name="lopd_signed" string="LOPD firmada"/>
+                            <field name="lopd_document_id" string="Documento LOPD" 
+                                   readonly="1" 
+                                   invisible="not lopd_signed"
+                                   options="{'no_open': True}"/>
+                            <button name="action_import_lopd_document"
+                                type="object"
+                                class="btn btn-primary btn-sm"
+                                icon="fa-file-pdf-o"
+                                invisible="not lopd_signed"
+                                string="Importar documento LOPD"/>
+                        </group>
+                    </group>
+
+                    <!-- CONTACTOS Y CONTRATOS -->
+                    <notebook invisible="not is_company">
+                        <page string="Contactos" name="contacts_crm">
+                            <field name="child_ids" domain="[('type', '=', 'contact')]" context="{'default_parent_id': id, 'default_type': 'contact', 'default_is_company': False}">
+                                <list string="Contactos" editable="bottom">
+                                    <field name="name" string="Nombre"/>
+                                    <field name="function" string="Puesto"/>
+                                    <field name="phone" widget="phone" string="Teléfono"/>
+                                    <field name="email" widget="email" string="Email"/>
+                                    <field name="active" widget="boolean" string="Activo"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Contratos" name="contracts_crm">
+                            <group>
+                                <group string="Contratos">
+                                    <field name="contract_it_bonus" widget="boolean" string="Bono informática"/>
+                                    <field name="contract_total_it_maintenance" widget="boolean" string="Mantenimiento total informática"/>
+                                    <field name="contract_physical_centralita" widget="boolean" string="Mantenimiento centralita física"/>
+                                    <field name="contract_cloud_centralita" widget="boolean" string="Mantenimiento centralita cloud"/>
+                                    <field name="contract_vpn" widget="boolean" string="Mantenimiento VPN"/>
+                                    <field name="contract_acronis" widget="boolean" string="Acronis"/>
+                                    <field name="contract_antivirus" widget="boolean" string="Antivirus"/>
+                                    <field name="contract_office365" widget="boolean" string="Office 365"/>
+                                </group>
+                                <group string="Incidencias">
+                                    <field name="contract_incidents_cobro" widget="boolean" string="Incidencias cobro"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+
+                    <!-- SECCIÓN DE DIRECCIÓN -->
+                    <group string="DIRECCIÓN" invisible="not is_company">
+                        <group>
+                            <label for="street" string="Calle"/>
+                            <div class="o_row">
+                                <field name="street" string="Calle" placeholder="Nombre de la calle" style="width: 70%;"/>
+                                <field name="street_number" string="Nº" placeholder="Nº" style="width: 25%;"/>
+                            </div>
+                            <field name="street2" string="Piso/puerta"/>
+                            <field name="city" string="Ciudad"/>
+                        </group>
+                        <group>
+                            <field name="zip" string="Código postal"/>
+                            <field name="state_id" string="Estado o provincia"/>
+                        </group>
+                        <group>
+                            <field name="country_id" string="País o región"/>
+                        </group>
+                    </group>
+                </sheet>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- FORMULARIO PARA CONTACTOS -->
+    <record id="view_partner_form_crm_person" model="ir.ui.view">
+        <field name="name">res.partner.form.crm.person</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Persona">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <group string="INFORMACIÓN DE CONTACTO">
+                        <group>
+                            <field name="name" string="Nombre completo"/>
+                            <field name="function" string="Puesto"/>
+                            <field name="phone" string="Teléfono del trabajo" widget="phone"/>
+                            <field name="email" string="Correo electrónico" widget="email"/>
+                        </group>
+                        <group>
+                            <field name="parent_id" string="Cuenta" domain="[('is_company', '=', True)]"/>
+                            <field name="fax" string="Fax"/>
+                            <field name="tz" string="Zona horaria principal"/>
+                            <field name="relationship_type" string="Tipo de relación"/>
+                        </group>
+                    </group>
+                    <group string="DIRECCIÓN">
+                        <group>
+                            <label for="street" string="Calle"/>
+                            <div class="o_row">
+                                <field name="street" string="Calle" placeholder="Nombre de la calle" style="width: 70%;"/>
+                                <field name="street_number" string="Nº" placeholder="Nº" style="width: 25%;"/>
+                            </div>
+                            <field name="street2" string="Piso/puerta"/>
+                            <field name="city" string="Ciudad"/>
+                        </group>
+                        <group>
+                            <field name="zip" string="Código postal"/>
+                            <field name="state_id" string="Estado o provincia"/>
+                        </group>
+                        <group>
+                            <field name="country_id" string="País o región"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- LISTA PARA CUENTAS Y CONTACTOS -->
+    <record id="view_partner_tree_crm" model="ir.ui.view">
+        <field name="name">res.partner.tree.crm</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Partners">
+                <field name="name" string="Nombre"/>
+                <field name="phone" string="Teléfono" widget="phone" optional="show"/>
+                <field name="email" string="Email" widget="email" optional="show"/>
+                <field name="parent_id" string="Cuenta" optional="show"/>
+                <field name="user_id" string="Comercial" widget="many2one_avatar_user" optional="hide"/>
+                <field name="active" string="Estado" widget="boolean_toggle" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- BÚSQUEDA UNIFICADA -->
+    <record id="view_partner_search_crm" model="ir.ui.view">
+        <field name="name">res.partner.search.crm</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Partners">
+                <field name="name"/>
+                <field name="parent_id" string="Cuenta"/>
+                <filter string="Empresas" name="companies" domain="[('is_company', '=', True)]"/>
+                <filter string="Contactos" name="contacts" domain="[('is_company', '=', False), ('type', '=', 'contact')]"/>
+                <separator/>
+                <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Mi equipo" name="my_team" domain="[('user_id', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN PARA CUENTAS -->
+    <record id="action_partner_customer_all_companies" model="ir.actions.act_window">
+        <field name="name">Cuentas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="context">{
+            'default_is_company': True,
+            'search_default_active': 1,
+        }</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_partner_tree_crm')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_partner_form_crm_unified')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('base.res_partner_kanban_view')})]"/>
+        <field name="search_view_id" ref="view_partner_search_crm"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear una nueva cuenta
+            </p>
+            <p>
+                Gestiona tus cuentas de clientes (empresas) y sus contactos asociados.
+            </p>
+        </field>
+    </record>
+
+    <!-- ACCIÓN PARA CONTACTOS -->
+    <record id="action_partner_customer_all_persons" model="ir.actions.act_window">
+        <field name="name">Contactos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_company', '=', False), ('type', '=', 'contact')]</field>
+        <field name="context">{
+            'default_is_company': False,
+            'default_type': 'contact',
+            'search_default_active': 1,
+        }</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_partner_tree_crm')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_partner_form_crm_person')})]"/>
+        <field name="search_view_id" ref="view_partner_search_crm"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear un nuevo contacto
+            </p>
+            <p>
+                Gestiona a las personas que trabajan en tus empresas clientes.
+            </p>
+        </field>
+    </record>
+
+    <!-- MENÚ PARA CUENTAS -->
+    <menuitem 
+        id="menu_crm_all_companies"
+        name="Cuentas"
+        parent="crm.crm_menu_sales"
+        action="action_partner_customer_all_companies"
+        groups="sales_team.group_sale_salesman"
+        sequence="5"/>
+
+    <!-- MENÚ PARA CONTACTOS -->
+    <menuitem 
+        id="menu_crm_all_contacts"
+        name="Contactos"
+        parent="crm.crm_menu_sales"
+        action="action_partner_customer_all_persons"
+        groups="sales_team.group_sale_salesman"
+        sequence="6"/>
+
+    <!-- VISTA PARA IMPORTAR DOCUMENTO LOPD -->
+    <record id="view_attachment_form_lopd_import" model="ir.ui.view">
+        <field name="name">ir.attachment.form.lopd.import</field>
+        <field name="model">ir.attachment</field>
+        <field name="arch" type="xml">
+            <form string="Importar Documento LOPD">
+                <sheet>
+                    <group>
+                        <field name="name" string="Nombre"/>
+                        <field name="type" string="Tipo"/>
+                        <field name="datas" string="Contenido del archivo (base64)" filename="name"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Guardar" special="save" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir la vista de importación -->
+    <record id="action_attachment_lopd_import" model="ir.actions.act_window">
+        <field name="name">Importar Documento LOPD</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_attachment_form_lopd_import"/>
+        <field name="target">new</field>
+    </record>
+
 
 </odoo>

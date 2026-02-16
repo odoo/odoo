@@ -45,7 +45,12 @@
         name="Customers"
         parent="crm_menu_sales"
         action="base.action_partner_form"
-        sequence="5"/>
+        sequence="5"
+        groups="base.group_no_one"/>
+
+    <record id="res_partner_menu_customer" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 
     <!-- LEADS (MAIN USER MENU) -->
     <menuitem
