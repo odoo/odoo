@@ -268,10 +268,14 @@ export class GraphRenderer extends Component {
      * @param {boolean} [allIntegers=true]
      * @returns {string}
      */
-    formatValue(value, allIntegers = true, formatType = "") {
+    formatValue(value, measure, allIntegers = true) {
         const largeNumber = Math.abs(value) >= 1000;
-        if (formatType) {
-            return formatters.get(formatType)(value);
+        const widget = this.model.metaData.fieldAttrs[measure]?.widget
+        let options = this.model.metaData.fieldAttrs[measure]?.options
+        if (widget) {
+            const formatter = formatters.get(widget);
+            options = formatter.extractOptions ? formatter.extractOptions({ options }) : {};
+            return formatter(value, options);
         }
         if (allIntegers && !largeNumber) {
             return String(value);
@@ -555,7 +559,7 @@ export class GraphRenderer extends Component {
      */
     getScaleOptions() {
         const { labels } = this.model.data;
-        const { fieldAttrs, measure, measures, mode, stacked } = this.model.metaData;
+        const { measure, measures, mode, stacked } = this.model.metaData;
         if (mode === "pie") {
             return {};
         }
@@ -586,7 +590,7 @@ export class GraphRenderer extends Component {
                         : null,
             },
             ticks: {
-                callback: (value) => this.formatValue(value, false, fieldAttrs[measure]?.widget),
+                callback: (value) => this.formatValue(value, measure, false),
                 color: GRAPH_LABEL_COLOR,
             },
             stacked: mode === "line" && stacked ? stacked : undefined,
@@ -623,19 +627,18 @@ export class GraphRenderer extends Component {
             const dataset = data.datasets[item.datasetIndex] || this.model.lineOverlayDataset;
             let label = dataset.trueLabels[index];
             let value = dataset.data[index];
-            const measureWidget = metaData.fieldAttrs[measure]?.widget;
             if (dataset.currencyIds?.[index]) {
                 value = formatMonetary(value, { currencyId: dataset.currencyIds[index] });
             } else if (dataset.currencyIds?.[index] === false) {
                 value = markup`${formatMonetary(value)}<sup class="ms-1 fw-bolder">?</sup>`;
             } else {
-                value = this.formatValue(value, allIntegers, measureWidget);
+                value = this.formatValue(value, measure, allIntegers);
             }
             let boxColor;
             let percentage;
             if (mode === "pie") {
                 if (label === NO_DATA) {
-                    value = this.formatValue(0, allIntegers, measureWidget);
+                    value = this.formatValue(0, measure, allIntegers);
                 }
                 boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);

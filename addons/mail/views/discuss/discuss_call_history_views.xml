@@ -8,7 +8,7 @@
                 <list string="Call History" sample="1">
                     <field name="channel_id" string="Conversation"/>
                     <field name="start_dt" string="Date" widget="daterange" options="{'end_date_field': 'end_dt'}"/>
-                    <field name="duration_hour" string="Duration" widget="float_time" options="{'show_seconds': false}"/>
+                    <field name="duration_hour" string="Duration" widget="float_time" options="{'show_seconds': true}"/>
                 </list>
             </field>
         </record>
@@ -21,7 +21,7 @@
                         <field name="channel_id"/>
                         <field name="start_dt"/>
                         <field name="end_dt"/>
-                        <field name="duration_hour" widget="float_time"/>
+                        <field name="duration_hour" widget="float_time" options="{'show_seconds': true}"/>
                     </group>
                 </form>
             </field>

@@ -1,4 +1,5 @@
 import { exprToBoolean } from "@web/core/utils/strings";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { visitXML } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 
@@ -46,27 +47,22 @@ export class GraphArchParser {
                     if (fieldName === "id") {
                         break;
                     }
+                    if (!archInfo.fieldAttrs[fieldName]) {
+                        archInfo.fieldAttrs[fieldName] = {};
+                    }
+
+                    const options = node.getAttribute("options");
+                    archInfo.fieldAttrs[fieldName].options = options ? evaluateExpr(options): {};
+                    
                     const string = node.getAttribute("string");
                     if (string) {
-                        if (!archInfo.fieldAttrs[fieldName]) {
-                            archInfo.fieldAttrs[fieldName] = {};
-                        }
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
                     const widget = node.getAttribute("widget");
                     if (widget) {
-                        if (!archInfo.fieldAttrs[fieldName]) {
-                            archInfo.fieldAttrs[fieldName] = {};
-                        }
                         archInfo.fieldAttrs[fieldName].widget = widget;
                     }
-                    if (
-                        node.getAttribute("invisible") === "True" ||
-                        node.getAttribute("invisible") === "1"
-                    ) {
-                        if (!archInfo.fieldAttrs[fieldName]) {
-                            archInfo.fieldAttrs[fieldName] = {};
-                        }
+                    if (exprToBoolean(node.getAttribute("invisible"))) {
                         archInfo.fieldAttrs[fieldName].isInvisible = true;
                         break;
                     }

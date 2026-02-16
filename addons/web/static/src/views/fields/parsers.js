@@ -108,35 +108,10 @@ export function parseFloat(value, { allowOperation = false } = {}) {
  * The float time can have two formats: float or integer:integer.
  *
  * @param {string} value
+ * @param {UnitOfTime} [unit="hours"]
  * @returns {number} a float
  */
-export function parseFloatTime(value) {
-    let sign = 1;
-    if (value[0] === "-") {
-        value = value.slice(1);
-        sign = -1;
-    }
-    const values = value.split(":");
-    if (values.length > 2) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
-    }
-    if (values.length === 1) {
-        return sign * parseFloat(value);
-    }
-    const hours = parseInteger(values[0]);
-    const minutes = parseInteger(values[1]);
-    return sign * (hours + minutes / 60);
-}
-
-/**
- *
- * Parse a string of a duration to float value based on unit
- * e.g.: 1h 30m in hours would be 1.5 
- * 
- * @param {string} value
- * @param {UnitOfTime} unit
- */
-export function parseFloatDuration(value, unit) {
+export function parseFloatTime(value, unit = "hours") {
     const duration = parseDuration(value, unit);
 
     if (unit === "hours") {
@@ -156,10 +131,10 @@ export function parseFloatDuration(value, unit) {
  * - Human format as 12h 30m 45s (depends of the local)
  *
  * @param {string} value
- * @param {UnitOfTime} unit
+ * @param {UnitOfTime} [unit="hours"]
  * @return {Duration}
  */
-export function parseDuration(value, unit = "hours") {
+function parseDuration(value, unit = "hours") {
     let isNegative;
     const duration = {
         hours: 0,
@@ -188,7 +163,7 @@ export function parseDuration(value, unit = "hours") {
     }
 
     // 12:30:45 format
-    else if (value.match(/\d+:\d*(:\d*)?/)) {
+    else if (value.match(/(\d+)?:\d*(:\d*)?/)) {
         const result = value.split(":");
         let unitFound = result.length === 3;
         let i = 0;
