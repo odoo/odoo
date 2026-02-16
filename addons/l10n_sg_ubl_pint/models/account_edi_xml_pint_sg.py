@@ -60,6 +60,11 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
                 for code, amount in amounts_in_accounting_currency
             ]
 
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@sg-1'
+
     def _export_invoice_constraints_new(self, invoice, vals):
         # EXTENDS account_edi_ubl_cii
         constraints = super()._export_invoice_constraints(invoice, vals)

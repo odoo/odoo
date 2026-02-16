@@ -50,10 +50,10 @@ class AccountEdiXmlPint_My(models.AbstractModel):
 
         return grouping_key
 
-    def _add_invoice_tax_total_nodes(self, document_node, vals):
+    def _ubl_add_tax_totals_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_tax_total_nodes(document_node, vals)
-        nodes = document_node['cac:TaxTotal']
+        super()._ubl_add_tax_totals_nodes(vals)
+        nodes = vals['document_node']['cac:TaxTotal']
 
         if not nodes:
             tax_total_node = self._ubl_get_tax_total_node(vals, {
@@ -62,11 +62,6 @@ class AccountEdiXmlPint_My(models.AbstractModel):
                 'subtotals': {},
             })
             nodes.append(tax_total_node)
-
-    def _add_invoice_header_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
 
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         # EXTENDS account.edi.ubl_bis3
@@ -96,6 +91,16 @@ class AccountEdiXmlPint_My(models.AbstractModel):
                     'cbc:ID': {'_text': 'GST'},
                 },
             })
+
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@my-1'
+
+    def _ubl_add_profile_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_profile_id_node(vals)
+        vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:billing'
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints

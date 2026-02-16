@@ -484,15 +484,27 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             self.add_invoice_line_optional_nodes(line_node, vals, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS)
 
     def add_invoice_line_optional_nodes(self, line_node, vals, optional_line_fields):
-        move_line = self.env['account.move.line'].browse(vals['base_line']['id'])
-        move_line_optional_fields = {key: move_line[key] for key in move_line._fields if key.startswith("x_studio_peppol") and move_line[key] and key in optional_line_fields}
+        base_line = vals['base_line']
+        record = base_line['record']
+        if not isinstance(record, models.Model) or record._name != 'account.move.line':
+            return
+
+        move_line_optional_fields = {
+            key: record[key]
+            for key in record._fields
+            if (
+                key.startswith("x_studio_peppol")
+                and record[key]
+                and key in optional_line_fields
+            )
+        }
         for field in move_line_optional_fields:
             node = line_node
             for tag in optional_line_fields[field]["path"]:
                 if tag not in node:
                     node[tag] = {}
                 node = node[tag]
-            node.update(optional_line_fields[field]["attrs"](move_line))
+            node.update(optional_line_fields[field]["attrs"](record))
 
     # -------------------------------------------------------------------------
     # EXPORT: Generic templates
