@@ -26,7 +26,7 @@ const sessionExpired = {
 
 registry
     .category("error_notifications")
-    .add("odoo.http.SessionExpiredException", sessionExpired)
+    .add("odoo.http.session.SessionExpiredException", sessionExpired)
     .add("werkzeug.exceptions.Forbidden", sessionExpired)
     .add("504", {
         title: _t("Request timeout"),
