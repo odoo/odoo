@@ -1051,10 +1051,10 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "A simple PoS man!"),
-            TicketScreen.nthRowContains(1, "Delivery", false),
-            TicketScreen.nthRowContains(2, "002"),
-            TicketScreen.nthRowContains(2, "Dine in", false),
+            TicketScreen.nthRowContains(2, "A simple PoS man!"),
+            TicketScreen.nthRowContains(2, "Delivery", false),
+            TicketScreen.nthRowContains(1, "002"),
+            TicketScreen.nthRowContains(1, "Dine in", false),
         ].flat(),
 });
 
