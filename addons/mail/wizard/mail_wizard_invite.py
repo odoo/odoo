@@ -33,8 +33,15 @@ class Invite(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _prepare_message_values(self, document, model_name):
+        body = self.env._("%(name)s (%(email)s) added you as a follower of this %(model)s.") % {
+            "name": self.env.user.name,
+            "email": self.env.user.email,
+            "model": model_name,
+        }
+        if self.message:
+            body += Markup('<div style="color:grey;">%s</div>') % self.message
         return {
-            'body': self.message or "",
+            'body': body,
             'email_add_signature': False,
             'email_from': self.env.user.email_formatted,
             'email_layout_xmlid': "mail.mail_notification_invite",
