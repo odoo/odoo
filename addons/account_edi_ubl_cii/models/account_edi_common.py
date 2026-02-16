@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, models
+from odoo import _, models, Command, api
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_repr
@@ -505,7 +505,6 @@ class AccountEdiCommon(models.AbstractModel):
 
         source_attachment = file_data['attachment'] or self.env['ir.attachment']
         attachments = source_attachment + self._import_attachments(invoice, tree)
-
         self._log_import_invoice_ubl_cii(invoice, invoice_logs=fill_invoice_logs, attachments=attachments)
 
     def _add_logs_import_invoice_ubl_cii(self, invoice, invoice_logs=None):
@@ -576,7 +575,9 @@ class AccountEdiCommon(models.AbstractModel):
             limit=1,
         ) if state_code and country else self.env['res.country.state']
         if not partner and name and vat:
-            partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
+            partner_vals = self._prepare_partner_values_to_create(
+                name=name, email=email, phone=phone, peppol_eas=peppol_eas, peppol_endpoint=peppol_endpoint
+            )
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             partner = self.env['res.partner'].create(partner_vals)
@@ -587,15 +588,32 @@ class AccountEdiCommon(models.AbstractModel):
             logs.append(_("Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
                   name=name, vat=vat, phone=phone, email=email))
         if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
-            partner.write({
-                'country_id': country.id,
-                'street': postal_address.get('street'),
-                'street2': postal_address.get('additional_street'),
-                'city': postal_address.get('city'),
-                'zip': postal_address.get('zip'),
-                'state_id': state.id,
-            })
+            partner.write(self._prepare_partner_values_to_update(
+                country=country, postal_address=postal_address, state=state, eppol_eas=peppol_eas, peppol_endpoint=peppol_endpoint)
+            )
         return partner, logs
+
+    @api.model
+    def _prepare_partner_values_to_create(self, **kwargs):
+        """ Prepares the values for creating a new partner when importing an invoice. """
+        return {
+            'name': kwargs.get('name'),
+            'email': kwargs.get('email'),
+            'phone': kwargs.get('phone'),
+            'is_company': True
+        }
+
+    @api.model
+    def _prepare_partner_values_to_update(self, **kwargs):
+        """ Prepares the values for updating an existing partner. """
+        return {
+            'country_id': kwargs.get('country').id if kwargs.get('country') else None,
+            'street': kwargs.get('postal_address').get('street'),
+            'street2': kwargs.get('postal_address').get('additional_street'),
+            'city': kwargs.get('postal_address').get('city'),
+            'zip': kwargs.get('postal_address').get('zip'),
+            'state_id': kwargs.get('state').id if kwargs.get('state') else None
+        }
 
     def _import_partner_bank(self, invoice, bank_details):
         bank_details = list(set(map(sanitize_account_number, bank_details)))
