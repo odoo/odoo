@@ -413,6 +413,37 @@ class TestPeppolMessage(AccountTestInvoicingCommon):
             move, [{
                 'peppol_move_state': 'done',
                 'move_type': 'in_invoice',
+                'journal_id': self.env.company.peppol_purchase_journal_id.id,
+                }])
+
+    def test_receive_success_peppol_multi_journal(self):
+
+        def _mocked_find_customer_email(self, _decoded_content):
+            return 'peppol@mycompany.com'
+        EdiProxyUser = self.env.registry['account_edi_proxy_client.user']
+        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'mycompany.com')
+        mail_alias = self.env['mail.alias'].create(
+            {'alias_name': 'peppol',
+             'alias_model_id': self.env['ir.model'].search_read([('model', '=', 'account.journal')], ['id'])[0]['id']
+            }
+        )
+        peppol_journal = self.env['account.journal'].create(
+            {'name': 'PEPPOL journal',
+             'type': 'purchase',
+             'code': 'pep',
+             'default_account_id': self.env.company.peppol_purchase_journal_id.default_account_id.id,
+             'alias_id': mail_alias.id,
+        })
+        # a correct move should be createdi
+        with patch.object(EdiProxyUser, '_find_customer_email', _mocked_find_customer_email):
+            self.env['account_edi_proxy_client.user'].with_context(toto=True)._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(
+            move, [{
+                'peppol_move_state': 'done',
+                'move_type': 'in_invoice',
+                'journal_id': peppol_journal.id
             }])
 
     def test_validate_partner(self):

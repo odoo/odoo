@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import xml.etree.ElementTree as ET
 
 from odoo import _, api, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -130,6 +131,12 @@ class AccountEdiProxyClientUser(models.Model):
             _logger.info("PEPPOL recovery completed. Recovered user id=%s.", user.id)
             return user
 
+    def _find_customer_email(self, decoded_document):
+        etree = ET.ElementTree(ET.fromstring(decoded_document))
+        mail_alias_node = etree.findall('{*}AccountingCustomerParty/{*}Party/{*}Contact/{*}ElectronicMail')
+        if mail_alias_node:
+            return mail_alias_node[0].text
+
     def _peppol_get_new_documents(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
         job_count = self._context.get('peppol_crons_job_count') or BATCH_SIZE
@@ -160,15 +167,21 @@ class AccountEdiProxyClientUser(models.Model):
             if not message_uuids:
                 continue
 
+            purchase_journals_mapping = {}
             company = edi_user.company_id
-            journal = company.peppol_purchase_journal_id
-            # use the first purchase journal if the Peppol journal is not set up
-            # to create the move anyway
-            if not journal:
-                journal = self.env['account.journal'].search([
+            default_journal = company.peppol_purchase_journal_id
+            for purchase_journal in self.env['account.journal'].search([
                     ('company_id', '=', company.id),
                     ('type', '=', 'purchase')
-                ], limit=1)
+                    ]):
+                # use the first purchase journal if the Peppol journal is not set up
+                if not default_journal:
+                    default_journal = purchase_journal
+
+                mail_alias = purchase_journal.alias_id
+                if mail_alias and mail_alias.alias_name and mail_alias.alias_domain:
+                    # TODO forward port: use alias_full_name
+                    purchase_journals_mapping[mail_alias.alias_name + '@' + mail_alias.alias_domain] = purchase_journal
 
             need_retrigger = need_retrigger or len(message_uuids) > job_count
             message_uuids = message_uuids[:job_count]
@@ -191,6 +204,11 @@ class AccountEdiProxyClientUser(models.Model):
                     'type': 'binary',
                     'mimetype': 'application/xml',
                 }
+
+                journal = default_journal
+                customer_email = self._find_customer_email(decoded_document)
+                if customer_email and purchase_journals_mapping.get(customer_email):
+                    journal = purchase_journals_mapping.get(customer_email)
 
                 try:
                     attachment = self.env['ir.attachment'].create(attachment_vals)

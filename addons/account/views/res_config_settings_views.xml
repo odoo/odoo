@@ -663,6 +663,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt16 o_settings_container" id="account_peppol" attrs="{'invisible': [('is_account_peppol_eligible', '!=', True)]}">
+                            <h2>PEPPOL Electronic Document Invoicing</h2>
+                            <field name="is_account_peppol_eligible" invisible="1" />
+                            <div id="account_peppol_install" class="col-12 col-lg-12 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_peppol" readonly="False"/>
+
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_peppol" string="Enable PEPPOL"/>
+                                    <div class="text-muted">
+                                        Allow sending and receiving invoices through the PEPPOL network
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h2>Storno Accounting</h2>
                         <div class="row mt16 o_settings_container" id="storno">
                             <div class="col-12 col-lg-6 o_setting_box"
