@@ -55,10 +55,14 @@ class AccountMove(models.Model):
 
     @api.depends('line_ids.sale_line_ids')
     def _compute_service_line_count(self):
+        service_data = self.env['account.analytic.line']._read_group(
+            self._domain_services_analytic_line(),
+            ['reinvoice_move_id'],
+            ['__count'],
+        )
+        mapped_services_data = dict(service_data)
         for move in self:
-            move.service_line_count = self.env['account.analytic.line'].search_count(
-                move._domain_services_analytic_line(),
-            )
+            move.service_line_count = mapped_services_data.get(move, 0)
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'invoice_line_ids.product_id.sale_line_warn_msg', 'invoice_line_ids.product_id.display_name')
     def _compute_sale_warning_text(self):
