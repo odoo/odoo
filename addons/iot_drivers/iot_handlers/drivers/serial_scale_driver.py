@@ -126,8 +126,10 @@ class ScaleDriver(SerialDriver):
         answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
+            weight_on_scale = float(match.group(1))
             self.data.update({
-                'result': float(match.group(1)),
+                'result': weight_on_scale,
+                'value': weight_on_scale,  # TODO: remove this when v18 is deprecated
                 'status': self._status,
             })
         else:
