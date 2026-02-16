@@ -64,11 +64,12 @@ export class ChatWindow extends Component {
     }
 
     get hasActionsMenu() {
+        const partition = this.threadActions.partition;
         return (
-            this.partitionedActions.group.length > 0 ||
-            this.partitionedActions.other.length > 0 ||
-            (this.ui.isSmall && this.partitionedActions.quick.length > 2) ||
-            (!this.ui.isSmall && this.partitionedActions.quick.length > 3)
+            partition.group.length > 0 ||
+            partition.other.length > 0 ||
+            (this.ui.isSmall && partition.quick.length > 2) ||
+            (!this.ui.isSmall && partition.quick.length > 3)
         );
     }
 
