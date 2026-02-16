@@ -263,6 +263,9 @@ def load_module_graph(
             package.state = 'installed'
             module.env.flush_all()
             module.env.cr.commit()
+            # signal cache change only; this makes concurrent workers invalidate
+            # their cache (to avoid inconsistencies about some new group, etc.)
+            registry.signal_cache_changes()
 
         test_time = 0.0
         test_queries = 0

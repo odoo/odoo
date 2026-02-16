@@ -1103,9 +1103,17 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # otherwise, self.registry_sequence should be equal to cr.fetchone()[0]
                 self.registry_sequence += 1
 
-        # no need to notify cache invalidation in case of registry invalidation,
-        # because reloading the registry implies starting with an empty cache
-        elif self.cache_invalidated:
+            # no need to notify cache invalidation in case of registry invalidation,
+            # because reloading the registry implies starting with an empty cache
+            self.registry_invalidated = False
+            self.cache_invalidated.clear()
+            return
+
+        self.signal_cache_changes()
+
+    def signal_cache_changes(self) -> None:
+        """ Notifies other processes if cache has been invalidated. """
+        if self.cache_invalidated:
             _logger.info("Caches invalidated, signaling through the database: %s", sorted(self.cache_invalidated))
             with self.cursor() as cr:
                 for cache_name in self.cache_invalidated:
@@ -1116,8 +1124,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     # otherwise, self.cache_sequences[cache_name] should be equal to cr.fetchone()[0]
                     self.cache_sequences[cache_name] += 1
 
-        self.registry_invalidated = False
-        self.cache_invalidated.clear()
+            self.cache_invalidated.clear()
 
     def reset_changes(self) -> None:
         """ Reset the registry and cancel all invalidations. """
