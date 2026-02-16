@@ -74,6 +74,8 @@ def to_opcodes(opnames, _opmap=opmap):
     for x in opnames:
         if x in _opmap:
             yield _opmap[x]
+
+
 # opcodes which absolutely positively must not be usable in safe_eval,
 # explicitly subtracted from all sets of valid opcodes just in case
 _BLACKLIST = set(to_opcodes([
@@ -85,8 +87,9 @@ _BLACKLIST = set(to_opcodes([
     # no reason to allow this
     'STORE_GLOBAL', 'DELETE_GLOBAL',
 ]))
-# opcodes necessary to build literal values
-_CONST_OPCODES = set(to_opcodes([
+
+# operations on literal values
+_EXPR_OPCODES = set(to_opcodes([
     # stack manipulations
     'POP_TOP',
     'LOAD_CONST',
@@ -96,18 +99,7 @@ _CONST_OPCODES = set(to_opcodes([
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
     'LIST_EXTEND', 'SET_UPDATE',
-    # 3.11 replace DUP_TOP, DUP_TOP_TWO, ROT_TWO, ROT_THREE, ROT_FOUR
-    'COPY', 'SWAP',
-    # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
-    'RESUME',
-    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
-    'RETURN_CONST',
-    # 3.13
-    'TO_BOOL',
-])) - _BLACKLIST
 
-# operations on literal values
-_EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
     'BINARY_SUBSCR',
     'BUILD_SLICE',
@@ -117,9 +109,17 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # specialised comparisons
     'IS_OP', 'CONTAINS_OP',
     'DICT_MERGE', 'DICT_UPDATE',
+    # 3.11 replace DUP_TOP, DUP_TOP_TWO, ROT_TWO, ROT_THREE, ROT_FOUR
+    'COPY', 'SWAP',
+    # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
+    'RESUME',
     # Added in 3.11, replacing all BINARY_* and INPLACE_*
     'BINARY_OP',
     'BINARY_SLICE',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
+    'RETURN_CONST',
+    # 3.13
+    'TO_BOOL',
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
