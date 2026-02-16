@@ -10,15 +10,6 @@ patch(PosOrderline.prototype, {
         }
         return super.ignoreLoyaltyPoints(args);
     },
-    //@override
-    setQuantityFromSOL(saleOrderLine) {
-        // we need to consider reward product such as discount in a quotation
-        if (saleOrderLine.reward_id) {
-            this.setQuantity(saleOrderLine.product_uom_qty);
-        } else {
-            super.setQuantityFromSOL(...arguments);
-        }
-    },
 });
 
 patch(PosOrder.prototype, {

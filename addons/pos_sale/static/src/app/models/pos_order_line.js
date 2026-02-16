@@ -28,21 +28,4 @@ patch(PosOrderline.prototype, {
             total: formatCurrency(detail.total, this.currency),
         }));
     },
-    /**
-     * Set quantity based on the give sale order line.
-     * @param {'sale.order.line'} saleOrderLine
-     */
-    async setQuantityFromSOL(saleOrderLine) {
-        if (
-            this.product_id.type === "service" &&
-            !["sent", "draft"].includes(this.sale_order_origin_id.state)
-        ) {
-            this.setQuantity(saleOrderLine.qty_to_invoice);
-        } else {
-            this.setQuantity(
-                saleOrderLine.product_uom_qty -
-                    Math.max(saleOrderLine.qty_delivered, saleOrderLine.qty_invoiced)
-            );
-        }
-    },
 });

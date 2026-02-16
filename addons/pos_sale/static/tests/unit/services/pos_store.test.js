@@ -177,4 +177,56 @@ describe("onClickSaleOrder", () => {
         expect(cell(2, 2)).toHaveText("TEST 2");
         expect(cell(2, 4)).toHaveText(`$ 150.00 (tax incl.)`);
     });
+
+    test("sale order: ignore lines with zero quantity", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+        const promiseResult = store.onClickSaleOrder(2);
+        const button = ".modal-body button:contains('Settle the order')";
+        await waitFor(button);
+        await click(button);
+        await promiseResult;
+
+        expect(order.lines.length).toBe(3);
+        expect(order.lines[2].product_id.id).toBe(5);
+        expect(order.lines[2].qty).toBe(5);
+        expect(order.lines[2].price_unit).toBe(100);
+        expect(order.lines[2].prices.total_excluded).toBe(500);
+    });
+});
+
+describe("getConvertedQuantityFromSaleOrderline", () => {
+    test("service product, state != sent/draft → qty_to_invoice", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.product"].getFirst();
+        product.type = "service";
+
+        const saleOrderLine = {
+            qty_to_invoice: 2,
+            product_id: product,
+            order_id: { state: "sale" },
+        };
+        const qty = await store.getConvertedQuantityFromSaleOrderline(saleOrderLine, saleOrderLine);
+        expect(qty).toBe(2);
+    });
+
+    test("non-service product → qty = uom_qty - max(delivered, invoiced)", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.product"].getFirst();
+        product.type = "consu";
+
+        const saleOrderLine = {
+            product_uom_qty: 8,
+            qty_delivered: 1,
+            qty_invoiced: 2,
+            qty_to_invoice: 6,
+            product_id: product,
+            order_id: { state: "sale" },
+        };
+
+        const qty = await store.getConvertedQuantityFromSaleOrderline(saleOrderLine, saleOrderLine);
+        expect(qty).toBe(6);
+    });
 });
