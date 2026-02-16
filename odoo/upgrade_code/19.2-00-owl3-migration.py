@@ -16,8 +16,8 @@ EXCLUDED_FILES = (
     'addons/web/static/lib/owl/owl.js',
     'addons/web/static/src/owl2/utils.js',
     'pos_blackbox_be/static/src/pos/overrides/navbar/navbar.xml',
+    'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
 )
-
 
 class JSTooling:
     @staticmethod
