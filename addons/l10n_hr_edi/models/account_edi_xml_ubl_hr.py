@@ -77,8 +77,9 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         # Corresponds to Croatian eRacun format constrains
         constraints = {}
         if vals['document_type'] in ['invoice', 'credit_note']:
-            if any(c.isspace() for c in vals['document_node']['cac:PaymentMeans']['cac:PayeeFinancialAccount']['cbc:ID'].get('_text')):
-                constraints.update({'ubl_hr_br_1': self.env._("HR-BR-1: The account number must not contain whitespace characters.")})
+            for node in vals['document_node']['cac:PaymentMeans']:
+                if any(char.isspace() for char in node.get('cac:PayeeFinancialAccount', {}).get('cbc:ID', {}).get('_text', '')):
+                    constraints['ubl_hr_br_1'] = self.env._("HR-BR-1: The account number must not contain whitespace characters.")
             if invoice.amount_residual > 0 and not invoice.invoice_date_due:
                 constraints.update({'ubl_hr_br_4': self.env._("HR-BT-4: In the case of a positive amount due for payment (BT-115), the payment due date (BT-9) must be specified.")})
             constraints.update({
@@ -106,70 +107,104 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         self._add_hr_extension_node(document_node)
         return document_node
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        super()._add_invoice_header_nodes(document_node, vals)
-        invoice = vals['invoice']
-        document_node.update({
-            # For Croatia, ID should be the Croatian-format fiscalization number
-            'cbc:ID': {
-                '_text': invoice.l10n_hr_fiscalization_number
-            },
-            # HR-BT-1: Copy indicator - is the invoice the original or already sent
-            #   This doesn't appear to be currently supported in Odoo, and is set to 'false' in TR localization using a similar format
-            'cbc:CopyIndicator': {
-                    '_text': 'false'
-            },
-            # HR-BT-2: The invoice must have an invoice issuance time.
-            #   (in addition to BT-2: Date of issue)
-            'cbc:IssueDate': {
-                '_text': fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()[0]
-            },
-            'cbc:IssueTime': {
-                '_text': fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()[1]
-            },
-            # HR-BR-34: The process label MUST be specified. Values P1-P12 or P99:Customer ID from Table 4 Business Process Types are used.
-            'cbc:ProfileID': {
-                '_text': f"P99:{invoice.l10n_hr_customer_defined_process_name}" if invoice.l10n_hr_process_type == 'P99' else invoice.l10n_hr_process_type
-            },
-            # HR-BR-5: The specification identifier must have the value
-            # 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
-            'cbc:CustomizationID': {
-                '_text': 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
-            },
-        })
-        # HR-BT-4: In the case of a positive amount due for payment (BT-115), the payment due date (BT-9) must be specified.
-        if invoice.amount_residual > 0 and not document_node['cbc:DueDate'] and vals['document_type'] == 'invoice':
-            if invoice.invoice_date_due:
-                document_node.update({
-                    'cbc:DueDate': {
-                        '_text': invoice.invoice_date_due
-                    }
-                })
+    def _ubl_add_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_id_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # For Croatia, ID should be the Croatian-format fiscalization number
+        vals['document_node']['cbc:ID']['_text'] = invoice.l10n_hr_fiscalization_number
+
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
+
+    def _ubl_add_profile_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_profile_id_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # HR-BR-34: The process label MUST be specified. Values P1-P12 or P99:Customer ID from Table 4 Business Process Types are used.
+        if invoice.l10n_hr_process_type == 'P99':
+            vals['document_node']['cbc:ProfileID']['_text'] = f"P99:{invoice.l10n_hr_customer_defined_process_name}"
+        else:
+            vals['document_node']['cbc:ProfileID']['_text'] = invoice.l10n_hr_process_type
+
+    def _ubl_add_copy_indicator_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_copy_indicator_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # HR-BT-1: Copy indicator - is the invoice the original or already sent
+        #   This doesn't appear to be currently supported in Odoo, and is set to 'false' in TR localization using a similar format
+        vals['document_node']['cbc:CopyIndicator']['_text'] = 'false'
+
+    def _ubl_add_issue_date_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_issue_date_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # HR-BT-2: The invoice must have an invoice issuance time.
+        #   (in addition to BT-2: Date of issue)
+        issue_date_str, issue_time_str = fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()
+        vals['document_node']['cbc:IssueDate']['_text'] = issue_date_str
+        vals['document_node']['cbc:IssueTime']['_text'] = issue_time_str
+
+    def _ubl_add_invoice_type_code_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_invoice_type_code_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        if (
+            invoice.l10n_hr_process_type in ('P4', 'P6')
+            and invoice.move_type == 'out_invoice'
+        ):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = '386'
+
+    def _ubl_add_credit_note_type_code_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_credit_note_type_code_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        if (
+            invoice.l10n_hr_process_type in ('P4', 'P6')
+            and invoice.move_type == 'out_refund'
+        ):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '386'
+        elif invoice.l10n_hr_process_type == 'P9':
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '381'
+
+    def _ubl_add_billing_reference_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_billing_reference_nodes(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
         # HR-BT-3: Note on previous invoice
         # HR-BR-6: Each previous invoice reference (BG-3) must have the date of issue of the previous invoice (BT-26).
         if 'refund' in invoice.move_type and invoice.reversed_entry_id:
-            document_node['cac:BillingReference'] = {
+            vals['document_node']['cac:BillingReference'] = [{
                 'cac:InvoiceDocumentReference': {
                     'cbc:ID': {'_text': invoice.ref},
                 },
                 'cbc:IssueDate': {
                     '_text': invoice.reversed_entry_id.invoice_date
                 }
-            }
-        # Document Type Codes and Process Type Logic
-        if invoice.l10n_hr_process_type in ('P4', 'P6'):
-            if invoice.move_type == 'out_invoice':
-                document_node['cbc:InvoiceTypeCode'].update({
-                    '_text': '386'
-                })
-            elif invoice.move_type == 'out_refund':
-                document_node['cbc:CreditNoteTypeCode'].update({
-                    '_text': '386'
-                })
-        elif invoice.l10n_hr_process_type == 'P9':
-            document_node['cbc:CreditNoteTypeCode'].update({
-                '_text': '381'
-            })
+            }]
 
     def _add_hr_extension_node(self, document_node):
         """
@@ -228,20 +263,6 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                             }
                         }
                     },
-                }
-            }
-        })
-
-    def _add_invoice_line_item_nodes(self, line_node, vals):
-        super()._add_invoice_line_item_nodes(line_node, vals)
-        # HR-BR-25: Each item MUST have an item classification identifier from the Classification of Products
-        # by Activities scheme: KPD (CPA) - listID "CG", except in the case of advance payment invoices.
-        line = vals['base_line']['record']
-        line_node['cac:Item'].update({
-            'cac:CommodityClassification': {
-                'cbc:ItemClassificationCode': {
-                    'listID': 'CG',
-                    '_text': line.l10n_hr_kpd_category_id.name
                 }
             }
         })
@@ -342,6 +363,13 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         node['cbc:TaxExemptionReasonCode']['_text'] = tax_category.get('tax_exemption_reason_code')
         node['cbc:TaxExemptionReason']['_text'] = tax_category.get('tax_exemption_reason')
         return node
+
+    def _setup_base_lines(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._setup_base_lines(vals)
+        for base_line in vals['base_lines']:
+            if base_line.get('record') and 'l10n_hr_kpd_category_id' in base_line['record']._fields:
+                base_line['cg_item_classification_code'] = base_line['record'].l10n_hr_kpd_category_id
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):
         logs = super()._import_fill_invoice(invoice, tree, qty_factor)
