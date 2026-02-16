@@ -2,12 +2,14 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.NoteButton">
         <button
-            t-attf-class="{{this.props.class}} flex-shrink-0"
+            t-attf-class="control-button btn btn-lg {{this.props.class}} flex-shrink-0 text-start text-md-center lh-lg"
             t-att-disabled="pos.getOrder()?.isEmpty()" t-on-click="onClick">
             <t t-if="this.props.icon">
-                <i t-attf-class="{{this.props.icon}} me-1"/>
+                <span t-attf-class="d-md-flex flex-md-column justify-content-end {{this.props.icon ? 'h-md-50' : ''}}">
+                    <i t-attf-class="{{this.props.icon ? this.props.icon + ' me-2 me-md-0' : ''}} text-500" aria-hidden="true"/>
+                </span>
             </t>
-            <span t-esc="this.props.label"/>
+            <span t-attf-class="{{this.props.icon ? 'd-md-flex flex-md-column align-items-center h-md-50 pt-md-2 lh-sm' : ''}}" t-esc="this.props.label"/>
         </button>
     </t>
 </templates>

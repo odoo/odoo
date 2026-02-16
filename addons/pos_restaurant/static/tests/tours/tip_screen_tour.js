@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // order 4
             ProductScreen.addOrderline("Coca-Cola", "4", "2"),
             ProductScreen.totalAmountIs("8.0"),
-            ProductScreen.clickControlButton("Guests"),
+            ProductScreen.clickControlButton("Guest"),
             NumberPopup.enterValue("2"),
             NumberPopup.isShown("2"),
             Dialog.confirm(),
