@@ -2172,7 +2172,7 @@ class ProjectTask(models.Model):
             self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit),
             lambda res: (
                 res.extend(["email", "name"]),
-                res.from_method("_store_im_status_fields"),
+                res.from_method("_store_im_status_fields") if res.is_for_internal_users() else None,
                 res.from_method("_store_mention_fields"),
             ),
         )

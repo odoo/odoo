@@ -2,6 +2,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 
 import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 let nextId = 0;
 
@@ -23,6 +24,7 @@ export class DiscussAvatar extends Component {
     setup() {
         super.setup();
         this.uniqueId = `mail.DiscussAvatar.${nextId++}`;
+        this.store = useService("mail.store");
     }
 
     get channel() {
@@ -49,6 +51,9 @@ export class DiscussAvatar extends Component {
     get showIcon() {
         if (this.channel) {
             return this.channel.showThreadIcon({ ignoreTyping: !this.props.typing });
+        }
+        if (!this.store.self_user || this.store.self_user.share === true) {
+            return false;
         }
         if (this.props.member || this.props.persona) {
             return true;

@@ -43,6 +43,8 @@ class IrWebsocket(models.AbstractModel):
 
     def _prepare_subscribe_data(self, channels, last):
         data = super()._prepare_subscribe_data(channels, last)
+        if not self.env.user._is_internal():
+            return data
         model_ids_to_token = defaultdict(dict)
         for channel in channels:
             if not isinstance(channel, str) or not channel.startswith(PRESENCE_CHANNEL_PREFIX):
@@ -103,7 +105,7 @@ class IrWebsocket(models.AbstractModel):
 
     def _after_subscribe_data(self, data):
         user, guest = self.env["res.users"]._get_current_persona()
-        if user or guest:
+        if (user or guest) and self.env.user._is_internal():
             data["missed_presences"]._send_presence(bus_target=user.partner_id or guest)
 
     def _on_websocket_closed(self, cookies):
