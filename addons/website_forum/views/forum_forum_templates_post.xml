@@ -149,11 +149,11 @@
             <button type="submit" t-attf-class="o_wforum_submit_post #{ 'oe_social_share_call ' if forum.allow_share else '' }btn btn-primary my-3 #{ 'karma_required' if not question.can_answer else ''}"
                     t-att-data-karma="question.forum_id.karma_answer"
                     data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
-            <a href="#"
+            <button
                class="o_wforum_discard_btn btn btn-link"
                data-bs-toggle="collapse"
                data-bs-target=".answer_collapse"
-               aria-expanded="false">Discard</a>
+               aria-expanded="false">Discard</button>
         </div>
     </form>
 </template>
@@ -253,13 +253,12 @@
                 </section>
                 <!-- Write Answer -->
                 <div t-if="uid and not question.uid_has_answered and question.can_answer and question.state == 'active' and question.active != False" class="d-flex mt-3">
-                    <a t-attf-class="btn btn-outline-primary collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ ' disabled' if forum.has_pending_post else ''} text-decoration-none"
+                    <button t-attf-class="btn btn-outline-primary collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ ' disabled' if forum.has_pending_post else ''} text-decoration-none"
                         t-att-data-karma="question.forum_id.karma_answer"
                         data-bs-toggle="collapse"
-                        data-bs-target=".answer_collapse"
-                        href="#">
+                        data-bs-target=".answer_collapse">
                         <i class="fa fa-reply me-1"/>Reply
-                    </a>
+                    </button>
                 </div>
                 <t t-if="question.state != 'close' and question.active != False and question.can_answer and forum">
                     <div id="post_reply" class="answer_collapse position-fixed d-flex flex-column start-0 end-0 bottom-0 w-100 w-lg-50 shadow mx-auto px-3 bg-body"
@@ -351,9 +350,8 @@
                             <t t-set="helper_own_post">You can't vote for your own post</t>
                             <t t-set="helper_no_karma">You don't have enough karma</t>
                             <t t-set="helper_decline">Unmark as Best Answer</t>
-                            <a t-if="question.can_answer and question.forum_id.mode == 'questions'"
+                            <button t-if="question.can_answer and question.forum_id.mode == 'questions'"
                                 t-attf-class="o_wforum_validate_toggler btn #{ 'opacity-50 opacity-100-hover' if not answer.is_correct and answer.create_uid.id != uid and post_id.can_accept else ''} #{ 'karma_required opacity-25 ' if not post_id.can_accept else ''}#{ 'opacity-25' if answer.create_uid.id == uid else ''}"
-                                href="#"
                                 t-attf-data-karma="#{post_id.karma_accept}"
                                 t-att-data-helper-accept="helper_accept"
                                 t-att-data-helper-own-post="helper_own_post"
@@ -364,20 +362,19 @@
                                 t-attf-data-target="#answer-#{post_id.id}"
                                 t-attf-data-href="/forum/#{ slug(question.forum_id) }/post/#{ slug(answer) }/toggle_correct">
                                 <i t-attf-class="fa fa-lg #{ 'fa-check-circle text-success' if answer.is_correct else 'fa-check-circle-o' }"/>
-                            </a>
+                            </button>
                         </t>
                     </t>
                     <div class="d-flex align-items-center ms-auto">
                         <t t-if="post_id == question">
                             <t t-set="user_answer" t-value="uid and post_id.child_ids.filtered(lambda a: a.create_uid.id == uid)"/>
                             <div t-if="not user_answer and uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto">
-                                <a t-attf-class="btn opacity-50 opacity-100-hover collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ 'disabled' if forum.has_pending_post else '' } text-decoration-none"
+                                <button t-attf-class="btn opacity-50 opacity-100-hover collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ 'disabled' if forum.has_pending_post else '' } text-decoration-none"
                                     t-att-data-karma="question.forum_id.karma_answer"
                                     data-bs-toggle="collapse" data-bs-target=".answer_collapse"
-                                    href="#"
                                 >
                                     <i class="fa fa-reply me-1"/>Reply
-                                </a>
+                                </button>
                             </div>
                             <a t-if="user_answer" class="btn btn-sm btn-primary"
                                 t-attf-href="#answer-#{user_answer.id}"
@@ -435,9 +432,9 @@
 </template>
 
 <template id="post_dropdown">
-    <a class="btn opacity-50 opacity-100-hover px-2" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button class="btn opacity-50 opacity-100-hover px-2" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="oi oi-ellipsis-h"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
-    </a>
+    </button>
     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
         <t t-if="post_id == question">
             <t t-if="post_id.state == 'close'" t-call="website_forum.link_button"

@@ -107,7 +107,7 @@
                 </span>
                 <div t-if="question_count or tags" class="dropdown ms-lg-auto">
                     <t t-if="_page_name == 'tags'" t-set="tag_filter" t-value="keep_query('filters').split('=')[1] if keep_query('filters') else ''"/>
-                    <a href="#" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                    <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                         <!-- Foreach tag_filter/ Foreach filters -->
                         <t t-if="filters == 'all' or tag_filter == 'all' or not tag_filter and not filters">All</t>
                         <t t-if="_page_name == 'tags'">
@@ -120,7 +120,7 @@
                             <t t-elif="filters == 'unsolved'">Unsolved</t>
                             <t t-elif="filters == 'unanswered'">Unanswered</t>
                         </t>
-                    </a>
+                    </button>
                     <div class="dropdown-menu" role="menu">
                         <a t-attf-href="?#{ keep_query('search', 'sorting', 'create_uid', filters='all') }"
                             class="dropdown-item">

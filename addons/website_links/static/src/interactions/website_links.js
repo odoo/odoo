@@ -9,7 +9,7 @@ import { WebsiteLinksTagsWrapper } from "@website_links/components/website_links
 class WebsiteLinks extends Interaction {
     static selector = ".o_website_links_create_tracked_url";
     dynamicContent = {
-        "#recent_links_sort_by a": {
+        "#recent_links_sort_by button": {
             "t-on-click": this.onRecentLinksFilterChange,
         },
         ".o_website_links_new_link_tracker": {
@@ -227,7 +227,7 @@ class WebsiteLinks extends Interaction {
     }
 
     updateFilters(filter) {
-        const dropdownBtnEls = this.el.querySelectorAll("#recent_links_sort_by a");
+        const dropdownBtnEls = this.el.querySelectorAll("#recent_links_sort_by button");
         for (const buttonEl of dropdownBtnEls) {
             const isCurrentFilter = buttonEl.dataset.filter === filter;
             if (isCurrentFilter) {

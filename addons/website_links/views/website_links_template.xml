@@ -50,8 +50,8 @@
                                     <p class="o_website_links_edition col-md-9 d-flex flex-nowrap gap-2 align-items-center mb-0">
                                         <span class="o_website_links_short_url d-flex align-items-center text-nowrap text-truncate" id="short_url"><span id="short-url-host" class="text-truncate"/><span id="o_website_links_code"/></span>
                                         <span class="o_website_links_edit_tools text-nowrap" style="display:none;">
-                                            <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline" href="#">ok</a> or
-                                            <a class="o_website_links_cancel_edit o_translate_inline" href="#">cancel</a>
+                                            <button class="o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline">ok</button> or
+                                            <button class="o_website_links_cancel_edit o_translate_inline btn btn-link p-0">cancel</button>
                                         </span>
                                         <a t-attf-class="#{'' if can_create_link_tracker_code else 'd-none'} o_website_links_edit_code o_translate_inline" aria-label="Edit code" title="Edit code"><i class="fa fa-pencil gray"/></a>
                                         <a class="copy-to-clipboard btn btn-success text-nowrap o_translate_inline"><i class="fa fa-copy me-2"/>Copy</a>
@@ -81,9 +81,9 @@
                                     Newest
                                 </button>
                                 <div id="recent_links_sort_by" class="dropdown-menu dropdown-menu-end">
-                                    <a data-filter="newest" class="dropdown-item active" href="#">Newest</a>
-                                    <a data-filter="most-clicked" class="dropdown-item" href="#">Number of Clicks</a>
-                                    <a data-filter="recently-used" class="dropdown-item" href="#">Last Clicks</a>
+                                    <button data-filter="newest" class="dropdown-item active">Newest</button>
+                                    <button data-filter="most-clicked" class="dropdown-item">Number of Clicks</button>
+                                    <button data-filter="recently-used" class="dropdown-item">Last Clicks</button>
                                 </div>
                             </div>
                         </small>

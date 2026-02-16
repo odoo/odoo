@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         {
             content: "Sort by last clicked links",
-            trigger: "#recent_links_sort_by a[data-filter='recently-used']",
+            trigger: "#recent_links_sort_by button[data-filter='recently-used']",
             run: "click",
         },
         {

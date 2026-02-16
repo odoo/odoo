@@ -64,7 +64,7 @@ registerBackendAndFrontendTour("question_tour", {
     run: "click",
 },
 {
-    trigger: "a:contains(Reply).collapsed",
+    trigger: "button:contains(Reply).collapsed",
     content: _t("Click to reply."),
     tooltipPosition: "bottom",
     run: "click",
