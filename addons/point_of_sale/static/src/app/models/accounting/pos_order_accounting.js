@@ -100,9 +100,12 @@ export class PosOrderAccounting extends Base {
             (isNegative ? -roundingSanatizer : roundingSanatizer);
 
         const amount = isNegative ? -this.currency.round(total) : this.currency.round(total);
-        return this.config.cash_rounding
+        return this.shouldRoundChange
             ? this.config.rounding_method.asymmetricRound(amount)
             : amount;
+    }
+    get shouldRoundChange() {
+        return this.config.cash_rounding;
     }
     get orderIsRounded() {
         const cashPm = this.payment_ids.some((p) => p.payment_method_id.is_cash_count);
