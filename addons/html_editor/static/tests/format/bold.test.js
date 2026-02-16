@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
@@ -432,4 +432,11 @@ test("should not add history step for bold on collapsed selection", async () => 
 
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
+});
+
+test("should not apply bold formatting for partial selection inside contenteditable false", async () => {
+    const { editor, el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
+    bold(editor);
+    expect(getContent(el)).toBe(`<p contenteditable="false">T[e]st</p>`);
+    expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
 });
