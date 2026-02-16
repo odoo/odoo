@@ -2075,7 +2075,11 @@ class MailThread(models.AbstractModel):
                 )
         else:
             def sort_key(p):
-                return (self.env.user.partner_id == p, not p.company_id)
+                return (
+                    self.env.user.partner_id == p,          # prioritize user
+                    self.env.company.partner_id == p,       # then the company partner itself
+                    not p.company_id,                       # else pick partner w/out company_id
+                )
 
         done_partners.sort(key=sort_key, reverse=True)  # reverse because False < True
 

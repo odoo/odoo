@@ -179,6 +179,23 @@ class TestMailTools(MailCommon):
             found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
             self.assertEqual(found, [expected_partner], msg)
 
+    def test_mail_find_partner_from_emails_tiebreaker(self):
+        """ Test _mail_find_partner_from_emails with a tie-breaker scenario:
+        two partners share the same email, one being the company partner and
+        the other a hijacker with the same email and company company type.
+        We expect resolution should pick the company’s own partner rather than the hijacker.
+        """
+        Partner = self.env['res.partner']
+        self.env.company.partner_id.write({'email': self._test_email})
+        Partner.create({
+            'name': 'AA Hijacker',
+            'email': self._test_email,
+            'company_type': 'company',
+        })
+        found = Partner._mail_find_partner_from_emails([self._test_email])
+        self.assertEqual(found, [self.env.company.partner_id],
+                        "Should prioritize the company partner associated with the record")
+
 
 @tagged('mail_tools', 'mail_init')
 class TestMailUtils(MailCommon):
