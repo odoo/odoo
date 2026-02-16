@@ -578,7 +578,7 @@ test("footer displays the right tips", async () => {
     await press(["Control", "k"]);
     await animationFrame();
     expect(".o_command_palette_footer").toHaveText(
-        "TIP — search for @FirstName, !SecondName and #ThirdName"
+        "TIP — search for @FirstName, !SecondName, and #ThirdName"
     );
 });
 

@@ -1,7 +1,7 @@
-import { registry } from "@web/core/registry";
-import { CommandPalette } from "./command_palette";
-
 import { Component, EventBus } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { formatList } from "../l10n/utils";
+import { CommandPalette } from "./command_palette";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
@@ -43,13 +43,27 @@ class DefaultFooter extends Component {
     static props = {
         switchNamespace: { type: Function },
     };
+
     setup() {
-        this.elements = commandSetupRegistry
-            .getEntries()
-            .map((el) => ({ namespace: el[0], name: el[1].name }))
-            .filter((el) => el.name);
+        const items = {};
+        for (const [namespace, { name }] of commandSetupRegistry.getEntries()) {
+            if (name) {
+                items[namespace] = name;
+            }
+        }
+        this.items = formatList(Object.keys(items), { toParts: true }).map((part) =>
+            part.type === "literal"
+                ? { separator: part.value }
+                : {
+                      name: items[part.value],
+                      namespace: part.value,
+                  }
+        );
     }
 
+    /**
+     * @param {string} namespace
+     */
     onClick(namespace) {
         this.props.switchNamespace(namespace);
     }

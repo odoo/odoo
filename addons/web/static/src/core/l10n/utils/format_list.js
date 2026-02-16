@@ -81,15 +81,22 @@ const LIST_STYLES = {
  *
  * @see https://www.unicode.org/reports/tr35/tr35-general.html#ListPatterns for more details.
  *
+ * @template {boolean} [T=false]
  * @param {Iterable<string>} values values to format into a list.
  * @param {{
  *  localeCode?: string;
  *  style?: FormatListStyle;
+ *  toParts?: T;
  * }} [options]
- * @returns {string} formatted list.
+ * @returns {T extends true ? ReturnType<Intl.ListFormat["formatToParts"]> : string}
  */
-export function formatList(values, { localeCode, style } = {}) {
+export function formatList(values, { localeCode, style, toParts } = {}) {
     const locale = localeCode || user.lang || "en-US";
     const formatter = new Intl.ListFormat(locale, LIST_STYLES[style || "standard"]);
-    return formatter.format(Array.from(values, String));
+    const stringValues = Array.from(values, String);
+    if (toParts) {
+        return formatter.formatToParts(stringValues);
+    } else {
+        return formatter.format(stringValues);
+    }
 }

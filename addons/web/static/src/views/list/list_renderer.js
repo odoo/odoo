@@ -335,6 +335,10 @@ export class ListRenderer extends Component {
         });
     }
 
+    getAddGroupLabel() {
+        return _t("Add a %s", this.props.list.groupByField.string);
+    }
+
     getActiveColumns() {
         return this.allColumns.filter((col) => {
             if (col.optional && !this.optionalActiveFields[col.name]) {

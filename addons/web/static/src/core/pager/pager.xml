@@ -10,7 +10,7 @@
                 <t t-else="">
                     <span class="o_pager_value d-inline-block border-bottom border-transparent mb-n1" t-esc="value" t-on-click="onValueClick" />
                 </t>
-                <span> / </span>
+                <t t-translation="off"> / </t>
                 <t t-if="props.updateTotal">
                     <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': state.isDisabled }" t-on-click.stop="updateTotal"><t t-esc="props.total"/>+</span>
                 </t>
