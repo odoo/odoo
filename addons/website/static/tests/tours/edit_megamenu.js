@@ -127,7 +127,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     edition: true,
 }, () => [
        // Add a megamenu item to the top menu.
-    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home", 1),
     {
         content: "Click on 'Link' to open Link Dialog",
         trigger: ".o-we-linkpopover a.js_edit_menu",
@@ -197,7 +197,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     edition: true,
 }, () => [
     // Add a megamenu item to the top menu.
-    ...openLinkPopup(":iframe .top_menu .nav-item a", "Home"),
+    ...openLinkPopup(":iframe .top_menu .nav-item a", "Home", 1),
     {
         content: "Click on 'Link' to open Link Dialog",
         trigger: ".o-we-linkpopover a.js_edit_menu",

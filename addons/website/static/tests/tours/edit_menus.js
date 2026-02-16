@@ -67,7 +67,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     // Add a menu item in edit mode.
     ...clickOnEditAndWaitEditMode(),
-    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home", 1),
     {
         content: "Click on Edit Menu",
         trigger: '.o-we-linkpopover a.js_edit_menu',
@@ -127,7 +127,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     // Edit the new menu item from the "edit link" popover button
     clickOnExtraMenuItem({}, true),
-    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!"),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!", 1),
     {
         content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
         trigger: ':iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
@@ -172,7 +172,7 @@ registerWebsitePreviewTour('edit_menus', {
         },
     },
     clickOnExtraMenuItem({}, true),
-    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar", 1),
     {
         content: "Click on the popover Edit Menu button",
         trigger: '.o-we-linkpopover a.js_edit_menu',

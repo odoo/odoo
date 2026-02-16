@@ -497,7 +497,7 @@ test("should not add history step for bold on collapsed selection", async () => 
 test("should not apply bold formatting for partial selection inside contenteditable false", async () => {
     const { editor, el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
     bold(editor);
-    expect(getContent(el)).toBe(`[<p contenteditable="false">Test</p>]`);
+    expect(getContent(el)).toBe(`<p contenteditable="false">T[e]st</p>`);
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
 });
 
