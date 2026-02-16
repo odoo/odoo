@@ -36,6 +36,8 @@ $o-social-colors: (
     "threads": #000000,
 );
 
+$o-we-contrast-border-color: mix(white, $o-we-color-accent, 30%) !default;
+
 // Needed to be changed to be high enough to not overflow when a user
 // has a page with a lot of content (10000px was proven to be too small)
 $o-we-handles-offset-to-hide: 100000px !default;
@@ -45,12 +47,18 @@ $o-we-handles-accent-color-preview: $o-enterprise-color !default;
 $o-we-handle-edge-size: $o-we-handles-btn-size !default;
 $o-we-handle-border-width: 2px !default;
 $o-we-handle-inside-line-width: 3px !default;
+$o-we-handle-contrast-border: 1px solid $o-we-contrast-border-color !default;
+
+$o-we-hover-overlay-color: $o-we-contrast-border-color !default;
 
 $o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use the variable)
 $o-we-dropzone-border-width: 2px !default;
-$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
+$o-we-dropzone-border: $o-we-dropzone-border-width solid rgba($o-we-contrast-border-color, .5) !default;
 $o-we-dropzone-accent-color: $o-we-color-accent !default;
 $o-we-dropzone-bg-color: rgba($o-we-dropzone-accent-color, .5) !default;
+$o-we-dropzone-z-index: 1029 !default;
+
+$o-we-inner-content-dropzone-size: 4px !default;
 
 $o-we-toolbar-height: 40px !default;
 $o-we-toolbar-color-accent: #018597 !default;

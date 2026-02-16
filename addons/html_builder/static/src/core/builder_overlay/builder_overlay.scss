@@ -42,7 +42,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             animation: o_hover_overlay_fade_in 0.1s ease-in-out forwards;
             .o_side {
                 &::before {
-                    background: rgb(126, 114, 114) !important;
+                    background: $o-we-hover-overlay-color !important;
                 }
                 background-color: transparent !important;
                 border-bottom: none !important;
@@ -221,10 +221,17 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
 
                         &.n::before {
                             margin: 0 auto auto;
+                            border-bottom: $o-we-handle-contrast-border;
                         }
-
                         &.s::before {
                             margin: auto auto 0;
+                            border-top: $o-we-handle-contrast-border;
+                        }
+                        &.w::before {
+                            border-right: $o-we-handle-contrast-border;
+                        }
+                        &.e::before {
+                            border-left: $o-we-handle-contrast-border;
                         }
                     }
                 }

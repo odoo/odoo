@@ -50,13 +50,13 @@ export class OverlayButtonsPlugin extends Plugin {
                         const iframeRect = this.iframe.getBoundingClientRect();
                         if (this.target && position.top < iframeRect.top) {
                             const targetRect = this.target.getBoundingClientRect();
-                            const newTop = iframeRect.top + targetRect.bottom + 15;
+                            const newTop = iframeRect.top + targetRect.bottom + 1;
                             position.top = newTop;
                             overlayEl.style.top = `${newTop}px`;
                         }
                         return;
                     },
-                    margin: 15,
+                    margin: 1,
                     flip: false,
                 },
                 closeOnPointerdown: false,

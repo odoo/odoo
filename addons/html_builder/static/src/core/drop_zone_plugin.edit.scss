@@ -1,14 +1,10 @@
 .oe_drop_zone {
     background: $o-we-dropzone-bg-color;
-    animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
         position: relative;
         width: 100%;
-        border-radius: $border-radius-lg;
-        outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
-        outline-offset: -$o-we-dropzone-border-width;
-        z-index: 2000; // TODO use $o-we-overlay-zindex instead
+        z-index: $o-we-dropzone-z-index;
     }
 
     &.o_dropzone_highlighted {
@@ -42,7 +38,7 @@
         background-color: rgba($o-we-bg-lighter, 0.15);
         color: white;
         outline-color: $o-we-bg-lighter;
-        z-index: 1999; // TODO
+        z-index: $o-we-dropzone-z-index;
 
         > p {
             position: absolute;
@@ -52,6 +48,25 @@
             text-shadow: 0px 0px 4px black;
             font-size: 20px;
         }
+    }
+}
+
+// "Inner content" drop zones.
+:not(.oe_structure):not([data-oe-type="html"])
+    > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
+    height: $o-we-inner-content-dropzone-size;
+    min-height: $o-we-inner-content-dropzone-size;
+    margin: (-$o-we-inner-content-dropzone-size/2) 0;
+
+    &:not(.oe_vertical) {
+        border-bottom: $o-we-dropzone-border;
+    }
+
+    &.oe_vertical {
+        width: $o-we-inner-content-dropzone-size;
+        min-width: $o-we-inner-content-dropzone-size;
+        margin: 0 (-$o-we-inner-content-dropzone-size/2);
+        border-right: $o-we-dropzone-border;
     }
 }
 
