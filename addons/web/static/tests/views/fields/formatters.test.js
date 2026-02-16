@@ -242,51 +242,52 @@ test("formatDuration", () => {
     expect(formatDuration({ hours: 0.25 })).toBe("0h 15m");
     expect(formatDuration({ minutes: 35 })).toBe("0h 35m");
     expect(formatDuration({ minutes: 35 }, { unit: "minutes" })).toBe("35m");
-    expect(formatDuration({ hours: 2, seconds: 15 })).toBe("2h 0m 15s");
-    expect(formatDuration({ seconds: 15 })).toBe("0h 0m 15s");
-    expect(formatDuration({ hours: 2 }, { unit: "seconds" })).toBe("2h 0m 0s");
-    expect(formatDuration({ minutes: 2, seconds: 15 })).toBe("0h 2m 15s");
-    expect(formatDuration({ seconds: 135 }, { showSeconds: false })).toBe("0h 2m");
-    expect(formatDuration({ minutes: 2, seconds: 15 }, { showSeconds: false, unit: "minutes" })).toBe("2m");
+    expect(formatDuration({ hours: 2, seconds: 15 }, { unit: "seconds" })).toBe("2h 0m 15s");
+    expect(formatDuration({ seconds: 15 })).toBe("0h 0m");
+    expect(formatDuration({ hours: 2 }, { unit: "seconds" })).toBe("2h 0m");
+    expect(formatDuration({ minutes: 2, seconds: 15 })).toBe("0h 2m");
+    expect(formatDuration({ seconds: 135 }, { showSeconds: true })).toBe("0h 2m 15s");
+    expect(formatDuration({ minutes: 2, seconds: 15 }, { unit: "minutes" })).toBe("2m");
     expect(formatDuration({ minutes: -30 })).toBe("-0h 30m");
     expect(formatDuration({ minutes: -30 }, { unit: "minutes" })).toBe("-30m");
 
     const options = { numeric: true };
-    expect(formatDuration({ hours: 3.5 }, options)).toBe("3:30:00");
-    expect(formatDuration({ hours: 3, seconds: 30 }, options)).toBe("3:00:30");
-    expect(formatDuration({ minutes: 3, seconds: 30 }, {...options, unit: "minutes"})).toBe("0:03:30");
-    expect(formatDuration({ hours: 0.25 }, options)).toBe("0:15:00");
-    expect(formatDuration({ minutes: 35 }, options)).toBe("0:35:00");
-    expect(formatDuration({ minutes: 2, seconds: 15 }, options)).toBe("0:02:15");
-    expect(formatDuration({ seconds: 135 }, { ...options, showSeconds: false })).toBe("0:02");
-    expect(formatDuration({ minutes: -30 }, options)).toBe("-0:30:00");
-    expect(formatDuration({ hours: -0.5 }, { ...options, showSeconds: false })).toBe("-0:30");
+    expect(formatDuration({ hours: 3.5 }, options)).toBe("3:30");
+    expect(formatDuration({ hours: 3, seconds: 30 }, options)).toBe("3:00");
+    expect(formatDuration({ minutes: 3, seconds: 30 }, {...options, unit: "minutes"})).toBe("0:03");
+    expect(formatDuration({ hours: 0.25 }, options)).toBe("0:15");
+    expect(formatDuration({ minutes: 35 }, options)).toBe("0:35");
+    expect(formatDuration({ minutes: 2, seconds: 15 }, options)).toBe("0:02");
+    expect(formatDuration({ seconds: 135 }, { ...options, showSeconds: true })).toBe("0:02:15");
+    expect(formatDuration({ minutes: -30 }, options)).toBe("-0:30");
+    expect(formatDuration({ hours: -0.5 }, { ...options, showSeconds: true })).toBe("-0:30");
 });
 
 test("formatDuration special cases", () => {
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2h 5m 30s");
+    const options = { showSeconds: true };
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, options)).toBe("2h 5m 30s");
 
     localization.locale = "fr-FR";
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2h 5min 30s");
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, options)).toBe("2h 5min 30s");
 
     localization.locale = "zh-CN";
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2小时 5分钟 30秒");
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, options)).toBe("2小时 5分钟 30秒");
     expect(formatDuration({ minutes: 120 })).toBe("2小时");
 
     localization.locale = "ar-SY";
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("٢س ٥د ٣٠ث");
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, { numeric: true })).toBe(
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, options)).toBe("٢س ٥د ٣٠ث");
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, { ...options, numeric: true })).toBe(
         "2:05:30"
     );
     expect(formatDuration({ minutes: 120 })).toBe("٢س");
 
     localization.locale = "th-TH";
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2ชม. 5นาที 30วิ");
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, options)).toBe("2ชม. 5นาที 30วิ");
     expect(formatDuration({ minutes: 120 })).toBe("2ชม.");
-    expect(formatDuration({ seconds: 30 }, { unit: "seconds" })).toBe("30วิ");
+    expect(formatDuration({ seconds: 30 }, { ...options, unit: "seconds" })).toBe("30วิ");
 
     localization.locale = "hi-IN";
-    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2घं 5मि 30से");
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, options)).toBe("2घं 5मि 30से");
     expect(formatDuration({ minutes: 120 })).toBe("2घं");
-    expect(formatDuration({ seconds: 30 }, { unit: "seconds" })).toBe("30से");
+    expect(formatDuration({ seconds: 30 }, { ...options, unit: "seconds" })).toBe("30से");
 });

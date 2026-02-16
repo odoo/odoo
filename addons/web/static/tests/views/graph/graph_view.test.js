@@ -563,7 +563,7 @@ test("format total in hh:mm when measure is unit_amount", async () => {
         resModel: "foo",
         arch: /* xml */ `
             <graph>
-                <field name="unit_amount" type="measure" widget="float_time" />
+                <field name="unit_amount" type="measure" widget="float_time" options="{'numeric': 1, 'show_seconds': 0}" />
             </graph>
         `,
     });
@@ -580,17 +580,17 @@ test("format total in hh:mm when measure is unit_amount", async () => {
         message: "should be a float_time widget",
     });
     checkYTicks(view, [
-        "00:00",
-        "01:00",
-        "02:00",
-        "03:00",
-        "04:00",
-        "05:00",
-        "06:00",
-        "07:00",
-        "08:00",
+        "0:00",
+        "1:00",
+        "2:00",
+        "3:00",
+        "4:00",
+        "5:00",
+        "6:00",
+        "7:00",
+        "8:00",
     ]);
-    checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] }, 0);
+    checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "8:00" }] }, 0);
 });
 
 test("Stacked button visible in the line chart", async () => {

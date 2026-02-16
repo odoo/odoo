@@ -1,4 +1,5 @@
 import { exprToBoolean } from "@web/core/utils/strings";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { visitXML } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 
@@ -13,7 +14,7 @@ export class GraphArchParser {
                 case "graph": {
                     if (node.hasAttribute("disable_linking")) {
                         archInfo.disableLinking = exprToBoolean(
-                            node.getAttribute("disable_linking")
+                            node.getAttribute("disable_linking"),
                         );
                     }
                     if (node.hasAttribute("stacked")) {
@@ -24,7 +25,7 @@ export class GraphArchParser {
                     }
                     if (node.hasAttribute("cumulated_start")) {
                         archInfo.cumulatedStart = exprToBoolean(
-                            node.getAttribute("cumulated_start")
+                            node.getAttribute("cumulated_start"),
                         );
                     }
                     const mode = node.getAttribute("type");
@@ -54,16 +55,15 @@ export class GraphArchParser {
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
                     const widget = node.getAttribute("widget");
+                    const options = node.getAttribute("options");
                     if (widget) {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }
                         archInfo.fieldAttrs[fieldName].widget = widget;
+                        archInfo.fieldAttrs[fieldName].options = evaluateExpr(options || "{}");
                     }
-                    if (
-                        node.getAttribute("invisible") === "True" ||
-                        node.getAttribute("invisible") === "1"
-                    ) {
+                    if (exprToBoolean(node.getAttribute("invisible"))) {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }
