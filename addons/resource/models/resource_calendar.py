@@ -396,7 +396,7 @@ class ResourceCalendar(models.Model):
         result_per_resource_id = dict()
         for tz, tz_resources in resources_per_tz.items():
             res = result_per_tz[tz]
-
+            is_hour = self.env.context.get('is_hour_leave', False)
             res_intervals = Intervals(res, keep_distinct=True)
             start_datetime = start_dt.astimezone(tz)
             end_datetime = end_dt.astimezone(tz)
@@ -474,6 +474,43 @@ class ResourceCalendar(models.Model):
                             current_day += timedelta(days=1)
 
                         current_start_day += timedelta(days=7)
+
+                    result_per_resource_id[resource.id] = Intervals(intervals, keep_distinct=True)
+                elif self.duration_based and is_hour:
+                    intervals = []
+                    current_date = start_datetime.date()
+                    end_date = end_datetime.date()
+
+                    while current_date <= end_date:
+                        day_start = tz.localize(datetime.combine(current_date, time.min))
+
+                        interval_start = max(start_datetime, day_start)
+                        interval_end = min(end_datetime, day_start + timedelta(days=1))
+
+                        if interval_start < interval_end:
+                            weekday = str(current_date.weekday())
+                            week_type = ResourceCalendarAttendance.get_week_type(current_date)
+
+                            day_attendances = self.attendance_ids.filtered(
+                                lambda att:
+                                    att.dayofweek == weekday
+                                    and att.day_period != 'lunch'
+                                    and (
+                                        not self.two_weeks_calendar
+                                        or att.week_type == str(week_type)
+                                    )
+                            )
+
+                            capacity = sum(day_attendances.mapped('duration_hours'))
+
+                            if capacity:
+                                dummy_attendance = self.env['resource.calendar.attendance'].new({
+                                    'duration_hours': capacity,
+                                    'duration_days': 1,
+                                })
+                                intervals.append((interval_start, interval_end, dummy_attendance))
+
+                        current_date += timedelta(days=1)
 
                     result_per_resource_id[resource.id] = Intervals(intervals, keep_distinct=True)
                 else:
@@ -629,11 +666,17 @@ class ResourceCalendar(models.Model):
             # If the interval covers only a part of the original attendance, we
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
-            day_hours[start.date()] += interval_hours
+            duration = sum(meta.mapped('duration_hours'))
             if len(self) == 1 and self.flexible_hours:
+                day_hours[start.date()] += interval_hours
                 day_days[start.date()] += interval_hours / self.hours_per_day if self.hours_per_day else 0
+            elif len(self) == 1 and self.duration_based:
+                consumed_hours = min(interval_hours, duration)
+                day_hours[start.date()] += consumed_hours
+                day_days[start.date()] += sum(meta.mapped('duration_days')) * consumed_hours / duration
             else:
-                day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
+                day_hours[start.date()] += interval_hours
+                day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / duration
 
         return {
             # Round the number of days to the closest 16th of a day.

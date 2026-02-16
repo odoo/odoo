@@ -16,6 +16,12 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'requires_allocation': False,
             'request_unit': 'half_day',
         })
+        cls.leave_type_hour = cls.env['hr.leave.type'].create({
+            'name': 'Automatic Test (Hours)',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
 
     def test_no_attendances(self):
         calendar = self.env['resource.calendar'].create({
@@ -459,3 +465,36 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 0)
         self.assertEqual(leave.date_from, datetime(2019, 9, 2, 6, 0, 0))
         self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+    def test_attendance_based_on_duration_hours(self):
+        # Test that duration-based calendars allow leave at any hour of the day,
+        # without being bound to any specific time period.
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration Based',
+            'duration_based': True,
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({
+                    "name": "Wednesday Morning",
+                    "duration_hours": 5,
+                    "day_period": "morning",
+                    "dayofweek": "2"}),
+                Command.create({
+                    "name": "Wednesday Afternoon",
+                    "duration_hours": 3,
+                    "day_period": "afternoon",
+                    "dayofweek": "2"}),
+            ],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+        with Form(self.env["hr.leave"].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type_hour
+            leave_form.request_date_from = date(2026, 2, 4)  # Wednesday
+            leave_form.request_date_to = date(2026, 2, 4)  # Wednesday
+
+            leave_form.request_hour_from = 4.0
+            leave_form.request_hour_to = 7.0
+
+            leave_form.save()
+            self.assertEqual(leave_form.record.number_of_hours, 3)
