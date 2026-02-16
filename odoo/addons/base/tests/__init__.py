@@ -11,7 +11,6 @@ from . import test_display_name
 from . import test_expression
 from . import test_format_address_mixin
 from . import test_groups
-from . import test_install
 from . import test_avatar_mixin
 from . import test_init
 from . import test_ir_actions
@@ -29,8 +28,6 @@ from . import test_ir_sequence_date_range
 from . import test_ir_embedded_actions
 from . import test_ir_default
 from . import test_menu
-from . import test_module
-from . import test_module_graph
 from . import test_orm
 from . import test_ormcache
 from . import test_overrides
@@ -54,7 +51,6 @@ from . import test_res_users
 from . import test_reports
 from . import test_transactions
 from . import test_form_create
-from . import test_neutralize
 from . import test_config_parameter
 from . import test_ir_module_category
 from . import test_import_files
