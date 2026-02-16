@@ -283,7 +283,7 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.SearchPanel.Category": {'section'},
         "web.ListRenderer.RecordRow": {'record'},
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
-        "pos_restaurant.floor_screen_element": {'elemment'}
+        "pos_restaurant.floor_screen_element": {'elemment'},
     }  # vars defined under t-call
     inside_vars = {} # vars defined inside template, eg. using t-set
 
@@ -319,10 +319,49 @@ def upgrade_this(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(web_files))
 
 
+def upgrade_this_in_tests(file_manager, log_info, log_error):
+    pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
+
+    test_files = [
+        f for f in file_manager
+        if f.path._str.endswith(".test.js")
+        and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
+    ]
+
+    pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
+    for fileno, file in enumerate(test_files, start=1):
+        try:
+            with open(file.path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            def process_match(match):
+                prefix = match.group(1)   # The "xml`" part
+                raw_xml = match.group(2)  # The content inside backticks
+                suffix = match.group(3)   # The closing "`"
+
+                wrapped_xml = f"<t t-name='xyz'>{raw_xml}</t>"
+
+                processed_wrapped = update_template(wrapped_xml, {}, {})
+
+                inner_xml = re.sub(r'^<[^>]+>', '', processed_wrapped)
+                inner_xml = re.sub(r'</[^>]+>$', '', inner_xml)
+
+                return f"{prefix}{inner_xml}{suffix}"
+
+            new_content = pattern.sub(process_match, content)
+
+            if new_content != content:
+                file.content = new_content
+
+        except Exception as e:
+            print(f"Error processing {file.path}: {e}")
+
+
 def upgrade(file_manager) -> str:
     """Main entry point called by Odoo."""
     collector = MigrationCollector()
 
-    collector.run_sub("Migrating this.", upgrade_this, file_manager)
+    collector.run_sub("Migrating this. in xml templates", upgrade_this, file_manager)
+    collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_tests, file_manager)
 
     return collector.get_final_logs()
