@@ -552,7 +552,8 @@ class StockQuant(models.Model):
         self.inventory_quantity = 0
         if self.env.context.get('inventory_report_mode'):
             self._apply_inventory()
-        self.user_id = self.env.user.id
+        else:
+            self.user_id = self.env.user.id
 
     @api.depends('location_id', 'lot_id', 'package_id', 'owner_id')
     def _compute_display_name(self):
