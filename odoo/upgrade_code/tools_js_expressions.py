@@ -452,8 +452,10 @@ def fix_template(root: etree._ElementTree, bound_variables, inside_vars):
             for attr, value in node.attrib.items():
                 if not value:
                     continue
-                if attr.startswith("t-") or attr.endswith(".translate") or attr.startswith("position"):
+                if attr.startswith("t-") or attr.endswith(".translate"):
                     continue  # skip Owl directives
+                if _is_inside_inherit(node) and attr.startswith("position"):
+                    continue  # A component can be replaced with <A position="replace"/> inside inherits
                 node.set(attr, compile_expr(value, node_vars))
 
 
@@ -483,12 +485,16 @@ def should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
     return False
 
 
+def _is_inside_inherit(node: etree._Element):
+    """ Returns the nearest ancestor (or self) that defines a t-inherit. """
+    return node.xpath("ancestor-or-self::*[@t-inherit][1]")
+
+
 def get_node_vars(node: etree._Element, base_vars: set[str], inside_vars: dict[str, set[str]]) -> set[str]:
     """ If we're inside a t-inherit subtree, merge target template locals into the vars. """
 
-    inherit_ancestor = node.xpath("ancestor-or-self::*[@t-inherit][1]")  # Handles nested inherit
-    if inherit_ancestor:
-        target = inherit_ancestor[0].get("t-inherit")
+    if _is_inside_inherit(node):
+        target = _is_inside_inherit(node)[0].get("t-inherit")
         return base_vars | set(inside_vars.get(target, set()))
     return base_vars
 
@@ -918,9 +924,13 @@ tests = [
         "expected": '<A b="(this.s) ? 1 : 2"/>',
     },
     {
-        "name": "component attributes",
-        "content": '<A position="replace"/>',
-        "expected": '<A position="replace"/>',
+        "name": "component postion attribute",
+        "content": """
+<t t-name="a"> <A position="replace"/> <t t-name="c" t-inherit="b" t-inherit-mode="primary"> <A position="replace"/> </t> </t>
+""",
+        "expected": """
+<t t-name="a"> <A position="this.replace"/> <t t-name="c" t-inherit="b" t-inherit-mode="primary"> <A position="replace"/> </t> </t>
+""",
     },
     {
         "name": "component, another variation",
