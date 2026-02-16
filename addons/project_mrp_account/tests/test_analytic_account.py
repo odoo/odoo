@@ -63,7 +63,6 @@ class TestMrpAnalyticAccount(TransactionCase):
         cls.project.account_id = False
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAnalyticAccount(TestMrpAnalyticAccount):
     def test_mo_analytic(self):
         """Test the amount on analytic line will change when consumed qty of the

@@ -13,7 +13,6 @@ from odoo.tests import tagged
 from .common import TestHrCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResource(TestHrCommon):
 
     @classmethod

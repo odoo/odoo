@@ -7,7 +7,6 @@ from odoo.tests import Form, tagged
 PRICE = 718.75 - 100  # total price minus glass
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpValuationStandard(TestBomPriceCommon):
     def _get_production_cost_move_lines(self):
         return self.env['account.move.line'].search([

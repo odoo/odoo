@@ -8,7 +8,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('gamification')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestKarmaGain(common.SlidesCase):
 
     def setUp(self):

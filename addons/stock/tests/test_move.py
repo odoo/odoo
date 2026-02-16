@@ -10,7 +10,7 @@ from odoo.tests import tagged, Form, new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockMove(TestStockCommon):
     @classmethod
     def setUpClass(cls):

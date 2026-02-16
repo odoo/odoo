@@ -10,7 +10,6 @@ from odoo.tools import mute_logger
 
 
 @tagged('security')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccess(common.SlidesCase):
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
@@ -317,7 +316,7 @@ class TestAccess(common.SlidesCase):
             self.slide.with_user(self.user_portal).read(['name'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestAccessHttp(common.SlidesCase, HttpCase):
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule', 'odoo.http')
     def test_access_slide_attachment(self):
@@ -425,7 +424,6 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
 
 
 @tagged('functional', 'security')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRemoveMembership(common.SlidesCase):
 
     def setUp(self):
@@ -460,7 +458,6 @@ class TestRemoveMembership(common.SlidesCase):
 
 
 @tagged('functional')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessFeatures(common.SlidesCase):
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
@@ -639,7 +636,6 @@ class TestAccessFeatures(common.SlidesCase):
 
 
 @tagged("functional")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReview(common.SlidesCase, HttpCase):
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
     def test_channel_multiple_reviews(self):

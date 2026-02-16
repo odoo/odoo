@@ -1436,7 +1436,6 @@ class TestSubcontractingPortal(TransactionCase):
         self.assertEqual(mo.move_line_raw_ids[2].quantity, 2)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubcontractingSerialMassReceipt(TransactionCase):
 
     def setUp(self):

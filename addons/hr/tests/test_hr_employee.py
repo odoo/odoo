@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from psycopg2.errors import NotNullViolation
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestHrEmployee(TestHrCommon):
 
     def setUp(self):

@@ -11,7 +11,6 @@ from odoo.tests import tagged
 from .common import TestHrHolidaysCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):

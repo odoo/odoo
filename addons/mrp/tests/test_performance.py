@@ -10,7 +10,6 @@ from odoo.tests import tagged, common, Form
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpSerialMassProducePerformance(common.TransactionCase):
 
     @unittest.skip

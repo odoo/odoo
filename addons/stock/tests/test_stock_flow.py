@@ -7,7 +7,7 @@ from odoo.tools import mute_logger, float_round
 from odoo import Command, fields
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):

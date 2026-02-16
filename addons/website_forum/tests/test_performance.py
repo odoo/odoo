@@ -8,7 +8,6 @@ from odoo.tests import tagged
 from odoo.addons.website.tests.test_performance import UtilPerf
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumPerformance(UtilPerf):
     @classmethod
     def setUpClass(cls):

@@ -6,7 +6,6 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWarehouse(TestStockCommon):
 
     def test_inventory_product(self):

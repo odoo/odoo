@@ -119,7 +119,6 @@ class TestMultiCompanyCommon(TransactionCase):
             self.env = self.env(context=context)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompanyProject(TestMultiCompanyCommon):
 
     @classmethod

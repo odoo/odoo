@@ -79,7 +79,6 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
 
 
 @tagged('mail_post', 'mail_notify')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailNotifyAPI(TestMessagePostCommon):
 
     @classmethod
@@ -404,7 +403,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
 
 
 @tagged('mail_post', 'mail_notify')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestMessageNotify(TestMessagePostCommon):
 
     @users('employee')
@@ -630,7 +629,6 @@ class TestMessageNotify(TestMessagePostCommon):
 
 
 @tagged('mail_post')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessageLog(TestMessagePostCommon):
 
     @classmethod
@@ -1904,7 +1902,6 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
 
 @tagged('mail_post')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessagePostHelpers(TestMessagePostCommon):
 
     @classmethod
@@ -2229,7 +2226,6 @@ class TestMessagePostGlobal(TestMessagePostCommon):
 
 
 @tagged('mail_post', 'multi_lang')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessagePostLang(MailCommon, TestRecipients):
 
     @classmethod

@@ -9,7 +9,6 @@ from odoo.tests.common import users
 
 
 @tagged('mail_composer_mixin')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerMixin(MailCommon, TestRecipients):
 
     @classmethod

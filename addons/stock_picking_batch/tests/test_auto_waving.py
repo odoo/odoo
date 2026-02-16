@@ -4,7 +4,6 @@ from odoo import Command
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAutoWaving(TransactionCase):
     @classmethod
     def setUpClass(cls):

@@ -10,7 +10,6 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQweb(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -302,7 +301,6 @@ class TestQweb(TransactionCaseWithUserDemo):
               0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 7
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQwebProcessAtt(TransactionCase):
     def setUp(self):
         super(TestQwebProcessAtt, self).setUp()

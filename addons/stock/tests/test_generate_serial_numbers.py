@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError
 from odoo.tests import tagged, TransactionCase, new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class StockGenerateCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):

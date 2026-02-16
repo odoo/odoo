@@ -9,7 +9,6 @@ from odoo.tools import float_compare, float_round
 from odoo import fields, Command
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpAccount(TestBomPriceCommon):
 
     def test_00_production_order_with_accounting(self):

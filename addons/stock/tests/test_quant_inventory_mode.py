@@ -6,7 +6,6 @@ from odoo.tests import tagged, Form, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEditableQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):

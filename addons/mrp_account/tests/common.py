@@ -138,7 +138,6 @@ class TestBomPriceCommon(TestStockValuationCommon):
         cls._use_production_accounting()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBomPriceOperationCommon(TestBomPriceCommon):
     """ Common bom setup with workorder operations"""
     @classmethod

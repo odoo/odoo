@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.exceptions import AccessError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestProjectFlow(TestProjectCommon, MailCase):
 
     def test_project_process_project_manager_duplicate(self):
