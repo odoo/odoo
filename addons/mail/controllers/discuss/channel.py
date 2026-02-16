@@ -87,10 +87,7 @@ class DiscussChannelWebclientController(WebclientController):
                 params["partners_to"],
             )
         if name == "/discuss/create_channel":
-            resolve_channel = request.env["discuss.channel"]._create_channel(
-                params["name"],
-                params["group_id"],
-            )
+            resolve_channel = request.env["discuss.channel"]._create_channel(params["name"])
         if name == "/discuss/create_group":
             resolve_channel = request.env["discuss.channel"]._create_group(
                 params["partners_to"],

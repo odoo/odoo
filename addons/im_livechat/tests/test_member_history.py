@@ -118,7 +118,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
 
     def test_can_only_create_history_for_livechats(self):
         john = self._create_operator("fr_FR")
-        channel = self.env["discuss.channel"]._create_channel(name="General", group_id=None)
+        channel = self.env["discuss.channel"]._create_channel(name="General")
         member = channel.add_members(partner_ids=john.partner_id.ids)
         with self.assertRaises(ValidationError):
             self.env["im_livechat.channel.member.history"].create({"member_id": member.id}).channel_id

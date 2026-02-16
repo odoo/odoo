@@ -32,9 +32,9 @@ class TestDiscussChannelMember(MailCommon):
         cls.group.channel_member_ids.unlink()
 
     def test_cannot_change_member_immutable_fields(self):
-        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="General")
+        channel = self.env["discuss.channel"]._create_channel(name="General")
         bob = new_test_user(self.env, "bob", groups="base.group_user")
-        another_channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Another channel")
+        another_channel = self.env["discuss.channel"]._create_channel(name="Another channel")
         another_partner = self.env["res.partner"].create({"name": "John"})
         guest = self.env["mail.guest"].create({"name": "Jane"})
         member = channel._add_members(users=bob)
@@ -46,7 +46,7 @@ class TestDiscussChannelMember(MailCommon):
             member.guest_id = guest
 
     def test_user_public_cannot_join_channel(self):
-        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Public")
+        channel = self.env["discuss.channel"]._create_channel(name="Public")
         public = new_test_user(self.env, "public_user", groups="base.group_public")
         with self.assertRaises(ValidationError):
             channel._add_members(users=public)
@@ -67,7 +67,7 @@ class TestDiscussChannelMember(MailCommon):
     # ------------------------------------------------------------
 
     def test_channel_member_invite_with_guest(self):
-        public_channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Public")
+        public_channel = self.env["discuss.channel"]._create_channel(name="Public")
         guest = self.env['mail.guest'].create({'name': 'Guest'})
         partner = self.env['res.partner'].create({
             'name': 'ToInvite',
@@ -88,7 +88,11 @@ class TestDiscussChannelMember(MailCommon):
     # ------------------------------------------------------------
 
     def test_unread_counter_with_message_post(self):
-        channel_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='Public channel')
+        channel_as_user_1 = (
+            self.env["discuss.channel"]
+            .with_user(self.user_1)
+            ._create_channel(name="Public channel", visibility_policy="public")
+        )
         channel_as_user_1.with_user(self.user_1)._add_members(users=self.user_1)
         channel_as_user_1.with_user(self.user_1)._add_members(users=self.user_2)
         channel_1_rel_user_2 = self.env['discuss.channel.member'].search([
@@ -105,8 +109,8 @@ class TestDiscussChannelMember(MailCommon):
         self.assertEqual(channel_1_rel_user_2.message_unread_counter, 1, "should have 1 unread message after someone else posted a message")
 
     def test_unread_counter_with_message_post_multi_channel(self):
-        channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='wololo channel')
-        channel_2_as_user_2 = self.env['discuss.channel'].with_user(self.user_2)._create_channel(group_id=None, name='walala channel')
+        channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(name='wololo channel')
+        channel_2_as_user_2 = self.env['discuss.channel'].with_user(self.user_2)._create_channel(name='walala channel')
         channel_1_as_user_1._add_members(users=self.user_2)
         channel_2_as_user_2._add_members(users=self.user_1)
         channel_2_as_user_2._add_members(users=self.user_3)

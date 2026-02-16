@@ -408,6 +408,16 @@ class DiscussChannel(models.Model):
                 fields.Datetime.now() if channel.livechat_status == "need_help" else None
             )
 
+    def _compute_visibility_policy(self):
+        livechats = self.filtered(lambda c: c.channel_type == "livechat")
+        livechats.filtered(lambda c: not c.visibility_policy).visibility_policy = "member"
+        super(DiscussChannel, self - livechats)._compute_visibility_policy()
+
+    def _compute_membership_policy(self):
+        livechats = self.filtered(lambda c: c.channel_type == "livechat")
+        livechats.filtered(lambda c: not c.membership_policy).membership_policy = "invite"
+        super(DiscussChannel, self - livechats)._compute_membership_policy()
+
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)

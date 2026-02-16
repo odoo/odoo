@@ -69,6 +69,32 @@ class DiscussChannel(models.Model):
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     can_join = fields.Boolean("Can Join", compute="_compute_can_join")
     can_leave = fields.Boolean("Can Leave", compute="_compute_can_leave")
+    visibility_policy = fields.Selection(
+        compute="_compute_visibility_policy",
+        help="Determine who can see this channel",
+        recursive=True,
+        string="Visibility Policy",
+        store=True,
+        selection=[
+            ("member", "Members"),
+            ("member_and_group", "Members belonging to the authorized group"),
+            ("internal", "All internal Users"),
+            ("group", "Users from the authorized group"),
+            ("public", "Anyone with the link"),
+        ],
+    )
+    membership_policy = fields.Selection(
+        compute="_compute_membership_policy",
+        help="Determine how users can join this channel",
+        recursive=True,
+        string="Membership Policy",
+        store=True,
+        selection=[
+            ("blocked", "No one"),
+            ("invite", "By invitation"),
+            ("open", "Anyone who can view the channel"),
+        ],
+    )
     channel_type = fields.Selection([
         ('chat', 'Chat'),
         ('channel', 'Channel'),
@@ -130,12 +156,9 @@ class DiscussChannel(models.Model):
         'UNIQUE(uuid)',
         'The channel UUID must be unique',
     )
-    _group_public_id_check = models.Constraint(
-        "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
-        'Group authorization and group auto-subscription are only supported on channels.',
-    )
 
     # CONSTRAINTS
+
     @api.constrains("from_message_id")
     def _constraint_from_message_id(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
@@ -178,14 +201,37 @@ class DiscussChannel(models.Model):
             if len(ch.channel_member_ids) > 2:
                 raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
 
-    @api.constrains('group_public_id', 'group_ids')
+    @api.constrains("group_ids")
     def _constraint_group_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
+        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and channel.group_ids)
         if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+            raise ValidationError(
+                self.env._(
+                    "For %(channels)s, channel_type should be 'channel' to have group auto-subscription.",
+                    channels=", ".join([ch.name for ch in failing_channels]),
+                ),
+            )
 
     # COMPUTE / INVERSE
+
+    @api.depends("parent_channel_id.visibility_policy", "visibility_policy")
+    def _compute_visibility_policy(self):
+        for channel in self.filtered(lambda c: not c.visibility_policy):
+            if channel.parent_channel_id:
+                channel.visibility_policy = channel.parent_channel_id.visibility_policy
+            else:
+                channel.visibility_policy = "member"
+
+    @api.depends("channel_type", "membership_policy", "parent_channel_id.membership_policy")
+    def _compute_membership_policy(self):
+        for channel in self.filtered(lambda c: not c.membership_policy):
+            if channel.parent_channel_id:
+                channel.membership_policy = channel.parent_channel_id.membership_policy
+                continue
+            channel.membership_policy = (
+                "invite" if channel.channel_type in ("channel", "group") else "blocked"
+            )
 
     @api.depends("channel_name_member_ids", "name")
     def _compute_display_name(self):
@@ -372,15 +418,16 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.message_count = message_count_by_channel_id.get(channel.id, 0)
 
-    @api.depends("channel_type", "parent_channel_id.group_public_id")
+    @api.depends("parent_channel_id.group_public_id", "visibility_policy")
     def _compute_group_public_id(self):
-        channels = self.filtered(lambda channel: channel.channel_type == "channel")
-        for channel in channels:
+        for channel in self:
             if channel.parent_channel_id:
                 channel.group_public_id = channel.parent_channel_id.group_public_id
-            elif not channel.group_public_id:
+                continue
+            if channel.visibility_policy == "internal":
                 channel.group_public_id = self.env.ref("base.group_user")
-        (self - channels).group_public_id = None
+            elif channel.visibility_policy not in ("group", "member_and_group"):
+                channel.group_public_id = None
 
     @api.depends('uuid')
     def _compute_invitation_url(self):
@@ -1406,21 +1453,20 @@ class DiscussChannel(models.Model):
         return Store().add(self, "_store_open_chat_window_fields").get_client_action()
 
     @api.model
-    def _create_channel(self, name, group_id):
-        """ Create a channel and add the current partner, broadcast it (to make the user directly
-            listen to it when polling)
-            :param name : the name of the channel to create
-            :param group_id : the group allowed to join the channel.
-            :return dict : channel header
+    def _create_channel(self, name, *, visibility_policy=None, membership_policy=None):
+        """Create a channel and add the current partner as a member.
+
+        :param name : the name of the channel to create
+        :param visibility_policy: The visibility policy of the channel.
+        :param membership_policy: The membership_policy of the channel.
+        :returns: The newly created discuss channel recordset.
+
         """
-        # create the channel
-        vals = {
-            'channel_type': 'channel',
-            'name': name,
-        }
-        new_channel = self.create(vals)
-        group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
-        new_channel.group_public_id = group.id if group else None
+        new_channel = self.create({"channel_type": "channel", "name": name})
+        if visibility_policy:
+            new_channel.visibility_policy = visibility_policy
+        if membership_policy:
+            new_channel.membership_policy = membership_policy
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         return new_channel
