@@ -278,6 +278,7 @@ def upgrade_this(file_manager, log_info, log_error):
     # Step 1: Gather all variables in the web module
     outside_vars = {
         "mail.Composer.quickActions": {'partitionedActions'},
+        "mail.Composer.extraActions": {'partitionedActions'},
         "web.Breadcrumb.Name": {'breadcrumb'},
         "web.SearchPanel.Category": {'section'},
         "web.ListRenderer.RecordRow": {'record'},
