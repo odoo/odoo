@@ -24,4 +24,15 @@
             <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.categories_setting']}" />
         </BuilderRow>
     </t>
+
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='module_specific_options']" position="after">
+            <partnership_page_option
+                template="website_partnership.PartnershipPageOption"
+                selector="main:has(#oe_structure_website_partnership_layout_1)"
+                title="Partner Page"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+        </xpath>
+    </t>
 </templates>

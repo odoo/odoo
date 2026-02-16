@@ -2,8 +2,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
-import { BEGIN } from "@html_builder/utils/option_sequence";
 import { _t } from "@web/core/l10n/translation";
 import { renderToFragment } from "@web/core/utils/render";
 
@@ -12,7 +10,6 @@ export class RecordSnapshotPlugin extends Plugin {
     static shared = ["createFragment"];
 
     resources = {
-        builder_options: [withSequence(BEGIN, RecordSnapshotOption)],
         builder_actions: {
             SelectRecordAction,
         },
@@ -42,8 +39,8 @@ export class RecordSnapshotPlugin extends Plugin {
 }
 
 export class RecordSnapshotOption extends BaseOptionComponent {
+    static id = "record_snapshot_option";
     static template = "mass_mailing.recordSnapshotOption";
-    static selector = ".s_record_snapshot";
 
     getElementDataModel() {
         return this.env.getEditingElement().dataset.model;
@@ -104,3 +101,4 @@ class SelectRecordAction extends BuilderAction {
 }
 
 registry.category("mass_mailing-plugins").add(RecordSnapshotPlugin.id, RecordSnapshotPlugin);
+registry.category("mass_mailing-options").add(RecordSnapshotOption.id, RecordSnapshotOption);
