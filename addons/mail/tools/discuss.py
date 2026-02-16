@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
+import base64
 from collections import defaultdict, UserList
 from datetime import date, datetime
 from functools import wraps
@@ -11,6 +12,7 @@ from odoo import models
 from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.tools import groupby
+from odoo.tools.misc import hmac
 from odoo.addons.bus.websocket import wsrequest
 
 def add_guest_to_context(func):
@@ -59,6 +61,7 @@ def get_sfu_url(env) -> str | None:
         sfu_url = os.getenv("ODOO_SFU_URL")
     if sfu_url:
         return sfu_url.rstrip("/")
+    return None
 
 
 def get_sfu_key(env) -> str | None:
@@ -66,6 +69,11 @@ def get_sfu_key(env) -> str | None:
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
     return sfu_key
+
+
+def get_derived_sfu_key(env, unique_id) -> str:
+    hex = hmac(env(su=True), "odoo_sfu", unique_id).encode()
+    return base64.b64encode(hex).decode()
 
 
 ids_by_model = defaultdict(lambda: ("id",))

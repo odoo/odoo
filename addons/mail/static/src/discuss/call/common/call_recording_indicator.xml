@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallRecordingIndicator">
+        <div class="o-discuss-CallRecordingIndicator d-flex align-items-center gap-3 px-2 py-1 rounded-2" t-att-class="{ 'o-hovered': state.hovered }" t-on-mouseenter="() => this.state.hovered = true" t-on-mouseleave="() => this.state.hovered = false">
+            <div class="o-discuss-CallRecordingIndicator-icons d-flex align-items-center gap-2">
+                <i class="fa fa-circle text-danger o-blinking"/>
+                <i t-if="rtc.recordingState.video" title="recording video" class="fa fa-desktop"/>
+                <i t-else="" title="recording audio only" class="fa fa-microphone"/>
+                <i t-if="rtc.recordingState.transcription" title="transcription active" class="oi oi-subtitle"/>
+            </div>
+            <button t-if="state.hovered" class="btn btn-sm btn-danger" t-on-click="onClickStopRecording">Stop recording</button>
+        </div>
+    </t>
+
+</templates>
