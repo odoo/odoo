@@ -769,21 +769,28 @@ async function mail_message_update_content(request) {
         msg_values.partner_ids = false;
         msg_values.parent_id = false;
     }
+    if ("subject" in update_data) {
+        msg_values.subject = update_data.subject;
+    }
     MailMessage.write([message_id], msg_values);
+    const res = {
+        attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
+        body: ["markup", message.body],
+        parent_id: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
+        partner_ids: mailDataHelpers.Store.many(
+            this.env["res.partner"].browse(message.partner_ids),
+            makeKwArgs({ fields: ["avatar_128", "name"] })
+        ),
+        pinned_at: message.pinned_at,
+        message_link_preview_ids: message.message_link_preview_ids,
+    };
+    if ("subject" in update_data) {
+        res.subject = message.subject;
+    }
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
         "mail.record/insert",
-        new mailDataHelpers.Store(MailMessage.browse(message.id), {
-            attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
-            body: ["markup", message.body],
-            parent_id: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
-            partner_ids: mailDataHelpers.Store.many(
-                this.env["res.partner"].browse(message.partner_ids),
-                makeKwArgs({ fields: ["avatar_128", "name"] })
-            ),
-            pinned_at: message.pinned_at,
-            message_link_preview_ids: message.message_link_preview_ids,
-        }).get_result()
+        new mailDataHelpers.Store(MailMessage.browse(message.id), res).get_result()
     );
     return new mailDataHelpers.Store(
         MailMessage.browse(message_id),
