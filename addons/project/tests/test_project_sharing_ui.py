@@ -1,5 +1,3 @@
-from unittest import skip
-
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
@@ -90,7 +88,6 @@ class TestProjectSharingUi(HttpCase):
         })
         self.start_tour("/odoo", 'project_sharing_tour', login="admin")
 
-    @skip("until planning field service task is not merged")
     def test_02_project_sharing(self):
         """ Test project sharing ui with a portal user.
 
