@@ -17,6 +17,11 @@
             <div class="col-md-9">
                 <input id="url_input" t-ref="url-input" type="text" t-model="url.input.value" class="form-control" t-att-class="{ 'is-invalid': url.input.hasError }"/>
                 <small class="form-text">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+                <!-- TODO (19.0): Remove this warning once URLs are auto-filled
+                     from a slugified title. -->
+                <small class="text-warning d-block" t-att-class="{'invisible': !url.input.value?.includes(' ') || new RegExp('^[a-z]+:', 'i').test(url.input.value)}">
+                    Spaces are not allowed in URL.
+                </small>
             </div>
         </div>
     </WebsiteDialog>
