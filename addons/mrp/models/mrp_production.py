@@ -111,9 +111,7 @@ class MrpProduction(models.Model):
     product_tracking = fields.Selection(related='product_id.tracking')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
-        'Quantity To Produce', digits='Product Unit',
-        readonly=False, required=True, tracking=True, precompute=True,
-        compute='_compute_product_qty', store=True, copy=True)
+        'Quantity To Produce', digits='Product Unit', tracking=True, default=1.0)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
         'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
@@ -443,16 +441,6 @@ class MrpProduction(models.Model):
                     bom = boms_by_product[production.product_id]
                     production.bom_id = bom.id or False
                     self.env.add_to_compute(production._fields['picking_type_id'], production)
-
-    @api.depends('bom_id')
-    def _compute_product_qty(self):
-        for production in self:
-            if production.state != 'draft':
-                continue
-            if production.bom_id and production._origin.bom_id != production.bom_id:
-                production.product_qty = production.bom_id.product_qty
-            elif not production.bom_id:
-                production.product_qty = 1.0
 
     @api.depends('move_raw_ids')
     def _compute_production_capacity(self):
