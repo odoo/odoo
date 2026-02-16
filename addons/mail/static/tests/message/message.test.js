@@ -478,7 +478,7 @@ test("Edit and click save", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message-body:text('Goodbye World (edited)')");
-    await contains("span[title='Jan 1, 2025, 1:00 PM']:contains('(edited)')");
+    await contains("span[title='Last edited Jan 1, 2025, 1:00 PM']:contains('(edited)')");
 });
 
 test("Do not call server on save if no changes", async () => {

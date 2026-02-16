@@ -298,6 +298,10 @@ export class Message extends Record {
         return this.editedDate?.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang });
     }
 
+    get editedText() {
+        return _t("Last edited %(editedDate)s", { editedDate: this.editedDatetimeMedium });
+    }
+
     /**
      * Get the effective persona performing actions on this message.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
