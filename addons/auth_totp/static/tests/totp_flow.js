@@ -85,12 +85,11 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     trigger: '.modal:contains("Two-Factor Authentication Activation")',
 }, {
     content: "Get secret from collapsed div",
-    trigger: `.modal a:contains("Cannot scan it?")`,
+    trigger: `.modal [name="secret"]`,
     async run(helpers) {
         const secret = this.anchor
-            .closest("div")
-            .querySelector("[name=secret] span:first-child");
-        const copyBtn = secret.querySelector("button");
+            .querySelector(" span:first-child");
+        const copyBtn = this.anchor.querySelector("button");
         if (copyBtn) {
             copyBtn.remove();
         }

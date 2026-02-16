@@ -6,30 +6,56 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <div class="o_auth_totp_enable_2FA text-center ps-0">
-                        <div class="mb-3 w-100">
+                    <div class="o_auth_totp_enable_2FA ps-0">
+                        <!-- Step 1 -->
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <span class="d-inline-flex align-items-center justify-content-center flex-shrink-0 p-0 border border-dark rounded-circle" style="width:1.8em; aspect-ratio:1">
+                                <span class="position-absolute">1</span>
+                            </span>
+                            <div>
+                                <span class="h6 mb-2">Download an authenticator app</span>
+                                <p class="small text-muted">Download and install Authy or Google Authenticator in your phone.</p>
+                            </div>
+                        </div>
 
-                            <!-- Desktop version -->
-                            <h3 class="fw-bold d-none d-md-block">Scan this barcode in your Authenticator app</h3>
-                            <div class="d-none d-md-block">
-                                <field name="qrcode" readonly="True" widget="image" options="{'reload': false }"/>
+                        <!-- Step 2 -->
+                        <div class="d-flex align-items-start gap-3 mb-4">
+                            <span class="d-inline-flex align-items-center justify-content-center flex-shrink-0 p-0 border border-dark rounded-circle" style="width:1.8em; aspect-ratio:1">
+                                <span class="position-absolute">2</span>
+                            </span>
+                            <div>
+                                <!-- Mobile Version -->
+                                <span class="d-lg-none h6 m-0">Enter the code</span>
+                                <p class="small text-muted d-lg-none">Add this key in your Authenticator app</p>
 
-                                <h3 class="fw-bold"><a data-bs-toggle="collapse"
-                                   href="#collapseTotpSecret" role="button" aria-expanded="false"
-                                   aria-controls="collapseTotpSecret">Cannot scan it?</a></h3>
-                                <div class="collapse" id="collapseTotpSecret">
-                                  <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
+                                <!-- Desktop version -->
+                                <span class="d-none d-lg-block h6 m-0">Scan the QR code</span>
+                                <p class="d-none d-lg-block small text-muted">Open the authenticator app and scan the QR code using your phone's camera.
+                                </p>
+                                <div class="d-none d-lg-flex justify-content-start mb-4">
+                                    <div class="shadow" style="max-width: 9rem">
+                                        <field name="qrcode" readonly="True" widget="image" options="{'reload': false }"/>
+                                    </div>
                                 </div>
-                            </div>
+                                <p class="d-none d-lg-block small mb-2">
+                                    <b>Or</b> <span class="text-muted">enter this secret key into your authenticator app.</span>
+                                </p>
 
-                            <!-- Mobile Version -->
-                            <h3 class="fw-bold d-block d-md-none">Add this key in your Authenticator app</h3>
-                            <div class="d-block d-md-none">
-                                <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
+                                <!-- Both Mobile/Desktop versions -->
+                                <field name="secret" widget="CopyClipboardChar" readonly="1"/>
                             </div>
+                        </div>
 
-                            <h3 class="fw-bold">Write the code given by your app</h3>
-                            <field required="True" name="code" autocomplete="off" class="o_field_highlight w-50 w-sm-25" placeholder="Verification code"/>
+                        <!-- Step 3 -->
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="d-inline-flex align-items-center justify-content-center flex-shrink-0 p-0 border border-dark rounded-circle" style="width:1.8em; aspect-ratio:1">
+                                <span class="position-absolute">3</span>
+                            </span>
+                            <div>
+                                <span class="h6 m-0">Add the code from the app</span>
+                                <p class="small text-muted mb-3">Enter the code provided by your authenticator app.</p>
+                                <field required="True" name="code" autocomplete="off" class="o_field_highlight w-50 w-sm-25" placeholder="Verification code"/>
+                            </div>
                         </div>
                     </div>
                 </sheet>

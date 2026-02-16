@@ -1,53 +1,63 @@
 <templates xml:space="preserve">
     <t t-name="portal.identitycheck">
         <form string="Security Control">
-            <h3><strong>Please enter your password to confirm you own this account</strong></h3>
-            <br/>
-            <div>
-                <input class="form-control col-10 col-md-6" autocomplete="current-password"
-                       name="password" type="password" required="required"/>
+            <div class="form-text mb-3">Please enter your password to confirm you own this account</div>
+            <div class="form-floating mb-2">
+                <input id="portal_password_input mb-3" class="form-control" autocomplete="current-password"
+                   name="password" type="password" required="required" placeholder="Your Password"/>
+                <label for="portal_password_input">Your password</label>
             </div>
-            <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
+            <div class="text-end">
+                <a href="/web/reset_password/" title="Forgot password?" role="button">Forgot password?</a>
+            </div>
         </form>
     </t>
     <t t-name="portal.keydescription">
         <form string="Key Description">
-            <h3><strong>Name your key</strong></h3>
-            <p>Enter a description of and purpose for the key.</p>
-            <input type="text" class="form-control col-10 col-md-6" placeholder="What's this key for?"
-                name="description" required="required"/>
-            <p>
-                It is very important that this description be clear
-                and complete, <strong>it will be the only way to
-                identify the key once created</strong>.
-            </p>
-            <h3 class="fw-bold">
+            <strong>Name your key</strong>
+            <p class="form-text">Enter a description of and purpose for the key.</p>
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" placeholder="What's this key for?"
+                    name="description" required="required"/>
+                <label for="description">Description</label>
+            </div>
+            <div class="alert alert-warning form-text mb-5 d-flex align-items-sm-baseline gap-2">
+                <i class="fa fa-warning text-warning-emphasis" aria-hidden="true"/>
+                <span>
+                    Description must be clear and complete, <u>it will be the <b>only way</b> to
+                    identify the key once created</u>.
+                </span>
+            </div>
+            <strong>
                 Give a duration for the key's validity
-            </h3>
-            <select name="duration" class="form-control">
-                <option t-foreach="duration_selection" t-as="duration" t-key="duration[0]"
-                    t-att-id="`duration_${duration[0]}`"
-                    t-esc="duration[1]"
-                    t-att-value="duration[0]"/>
-            </select>
-            <p>
-                The key will be deleted once this period has elapsed.
+            </strong>
+            <p class="form-text">
+                The key will be automatically deleted once this period has elapsed.
             </p>
+            <div class="form-floating">
+                <select name="duration" class="form-select">
+                    <option t-foreach="duration_selection" t-as="duration" t-key="duration[0]"
+                        t-att-id="`duration_${duration[0]}`"
+                        t-esc="duration[1]"
+                        t-att-value="duration[0]"/>
+                </select>
+                <label for="duration">Duration</label>
+            </div>
         </form>
     </t>
     <t t-name="portal.keyshow">
         <div>
-            <h3><strong>Write down your key</strong></h3>
-            <p>
-                Here is your new API key, use it instead of a password for RPC access.
-                Your login is still necessary for interactive usage.
+            <p class="mb-4">Here is your new API key. Use it instead of a password for RPC access.<br/>Your login is still necessary for interactive usage.
+                <a href="https://www.odoo.com/documentation/latest/developer/reference/external_api.html#api-key">Read More</a>.
             </p>
-            <p><code><span t-out="key"/></code></p>
-            <p class="alert alert-warning" role="alert">
-                <strong>Important:</strong>
-                The key cannot be retrieved later and provides <b>full access</b>
-                to your user account, it is very important to store it securely.
-            </p>
+            <div class="border bg-success-light px-3 py-2 rounded text-center mb-4">
+                <span class="font-monospace" t-out="key"/>
+            </div>
+            <div class="alert alert-warning small" role="alert">
+                <b class="d-block mb-2">Please write down your key.</b>
+                The key <b>cannot</b> be retrieved later and provides <b>full access</b> to your user account.
+                <u>It is crucial to store it securely</u>.
+            </div>
         </div>
     </t>
 </templates>

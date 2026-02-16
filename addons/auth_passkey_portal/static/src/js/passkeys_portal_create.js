@@ -25,7 +25,7 @@ export class PortalPasskeyCreate extends Interaction {
         );
         const serverOptions = create_action.context.registration;
         this.services.dialog.add(InputConfirmationDialog, {
-            title: _t("Create Passkey"),
+            title: _t("Create a Passkey"),
             body: renderToMarkup("auth_passkey_portal.create"),
             confirmLabel: _t("Create"),
             confirm: async ({ inputEl }) => {

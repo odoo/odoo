@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("passkeys_portal_create", {
     steps: () => [
         {
             content: "Ensure there are no passkeys already",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: 'button:contains("Create a Passkey")',
             run: () => {
                 const amount = document.querySelectorAll(".o_passkey_portal_entry").length;
                 if (amount != 0) {
@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("passkeys_portal_create", {
             },
         }, {
             content: "Add a Passkey",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: 'button:contains("Create a Passkey")',
             run: "click",
         }, {
             content: "Check that we have to enter enhanced security mode",

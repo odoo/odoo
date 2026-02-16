@@ -35,7 +35,7 @@
         <t t-if="fullscreen">
             <button class="btn oi oi-arrow-left oi-large" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
-        <h4 class="modal-title text-wrap text-break fs-3 flex-grow-1" t-att-class="{ 'me-auto ms-3': fullscreen }">
+        <h4 class="modal-title text-wrap text-break flex-grow-1" t-att-class="{ 'me-auto ms-3': fullscreen }">
             <t t-esc="props.title"/>
         </h4>
         <t t-if="onExpand">

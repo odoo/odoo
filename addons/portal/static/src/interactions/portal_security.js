@@ -71,7 +71,7 @@ export class PortalSecurity extends Interaction {
                 // Remove `'Custom Date'` selection for portal user
                 duration_selection: duration.selection.filter((option) => option[0] !== "-1"),
             }),
-            confirmLabel: _t("Confirm"),
+            confirmLabel: _t("Create Key"),
             size: 'md',
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
@@ -97,6 +97,7 @@ export class PortalSecurity extends Interaction {
                         title: _t("API Key Ready"),
                         body: renderToMarkup("portal.keyshow", { key: res.context.default_key }),
                         confirmLabel: _t("Close"),
+                        size: 'md',
                     },
                     {
                         onClose: () => {
@@ -120,17 +121,27 @@ export class PortalSecurity extends Interaction {
         window.location.reload();
     }
     async onRevokeAllSessionsClick() {
-        await this.waitFor(
-            handleCheckIdentity(
-                this.waitFor(
-                    this.services.orm.call("res.users", "action_revoke_all_devices", [user.userId])
-                ),
-                this.services.orm,
-                this.services.dialog
-            )
-        );
-        window.location.reload();
-        return true;
+        this.services.dialog.add(ConfirmationDialog, {
+            title: _t("Are you sure?"),
+            body: _t("All sessions on any other device will be logged out"),
+            size: 'md',
+            confirmLabel: _t("Yes, log-out any other session"),
+            confirmClass: 'btn-warning',
+            confirm: async () => {
+                await this.waitFor(
+                    handleCheckIdentity(
+                        this.waitFor(
+                            this.services.orm.call("res.users", "action_revoke_all_devices", [user.userId])
+                        ),
+                        this.services.orm,
+                        this.services.dialog
+                    )
+                );
+                window.location.reload();
+                return true;
+            },
+            cancel: () => {},
+        });
     }
 }
 
@@ -166,7 +177,7 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
         return new Promise((resolve) => {
             ormService.write("res.users.identitycheck", [checkId], {auth_method: 'password'});
             dialogService.add(InputConfirmationDialog, {
-                title: _t("Security Control"),
+                title: _t("Identity Verification"),
                 body: renderToMarkup("portal.identitycheck"),
                 confirmLabel: _t("Confirm Password"),
                 size: 'md',

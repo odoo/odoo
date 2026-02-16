@@ -38,7 +38,7 @@ function fromField(f, record) {
             // Field
             const secretSpan = document.createElement("span");
             secretSpan.setAttribute("name", "secret");
-            secretSpan.setAttribute("class", "o_field_copy_url");
+            secretSpan.setAttribute("class", "o_field_copy_url flex-grow-1 py-2 px-2 px-md-3 text-center rounded-start border font-monospace smaller");
             secretSpan.textContent = record["secret"];
 
             // Copy Button
@@ -48,7 +48,7 @@ function fromField(f, record) {
             copySpanText.textContent = _t(" Copy");
 
             const copyButton = document.createElement("button");
-            copyButton.setAttribute("class", "btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2");
+            copyButton.setAttribute("class", "btn btn-sm btn-primary o_clipboard_button o_btn_char_copy rounded-start-0 px-2");
             copyButton.onclick = async function (event) {
                 event.preventDefault();
                 $(copyButton).tooltip({ title: _t("Copied!"), trigger: "manual", placement: "bottom" });
@@ -62,7 +62,7 @@ function fromField(f, record) {
 
             // CopyClipboard Div
             const secretDiv = document.createElement("div");
-            secretDiv.setAttribute("class", "o_field_copy d-flex justify-content-center align-items-center");
+            secretDiv.setAttribute("class", "o_field_copy d-inline-flex justify-content-center");
             secretDiv.appendChild(secretSpan);
             secretDiv.appendChild(copyButton);
 
