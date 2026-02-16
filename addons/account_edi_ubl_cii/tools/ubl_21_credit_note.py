@@ -22,6 +22,7 @@ CreditNoteLine = {
     'cac:Price': cac.Price,
     'cac:ItemPriceExtension': cac.ItemPriceExtension,
 }
+
 CreditNote = {
     '_tag': 'CreditNote',
     'ext:UBLExtensions': {},

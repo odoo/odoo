@@ -106,9 +106,9 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
         discount_node['cbc:BaseAmount'] = None
         return discount_node
 
-    def _ubl_add_values_tax_currency_code(self, vals):
-        # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+    def _ubl_add_tax_currency_code_node(self, vals):
+        # OVERRIDE
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -124,10 +124,10 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
         return tax_total_keys
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_21
-        super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['ubl_a_nz']}
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0'
 
     def _ubl_add_party_endpoint_id_node(self, vals):
         # EXTENDS
