@@ -51,9 +51,9 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
         discount_node['cbc:BaseAmount'] = None
         return discount_node
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -69,10 +69,16 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
 
         return tax_total_keys
 
-    def _add_invoice_payment_means_nodes(self, document_node, vals):
-        """ https://www.peppolguide.sg/billing/bis/#_payment_means_information """
-        super()._add_invoice_payment_means_nodes(document_node, vals)
-        document_node['cac:PaymentMeans']['cbc:PaymentMeansCode'] = {
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0'
+
+    def _ubl_add_payment_means_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_payment_means_nodes(vals)
+        # https://www.peppolguide.sg/billing/bis/#_payment_means_information
+        vals['document_node']['cac:PaymentMeans'][0]['cbc:PaymentMeansCode'] = {
             '_text': 54,
             'name': 'Credit Card',
         }

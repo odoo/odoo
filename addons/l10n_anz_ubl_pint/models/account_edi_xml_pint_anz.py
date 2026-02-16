@@ -86,6 +86,11 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
                     },
                 }]
 
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@aunz-1'
+
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
     # -------------------------------------------------------------------------
