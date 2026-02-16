@@ -156,7 +156,10 @@ class ResConfigSettings(models.TransientModel):
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 
     # Quick encoding (fiduciary mode)
-    quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
+    quick_edit_mode_enabled = fields.Boolean(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode_enabled')
+    quick_edit_mode = fields.Selection(readonly=False, related='company_id.quick_edit_mode')
+    document_sequence_editable = fields.Boolean(string="Docuemnt's sequence editable", readonly=False, related='company_id.document_sequence_editable')
+    set_to_review_documents = fields.Boolean(string="Review data", readonly=False, related='company_id.set_to_review_documents')
 
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(
         comodel_name='account.account',

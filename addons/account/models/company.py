@@ -251,12 +251,16 @@ class ResCompany(models.Model):
     )
 
     # Fiduciary mode
+    quick_edit_mode_enabled = fields.Boolean(string="Quick encoding")
     quick_edit_mode = fields.Selection(
         selection=[
             ('out_invoices', 'Customer Invoices'),
             ('in_invoices', 'Vendor Bills'),
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
-        string="Quick encoding")
+        default='out_and_in_invoices',
+    )
+    document_sequence_editable = fields.Boolean(string="Docuemnt's sequence editable")
+    set_to_review_documents = fields.Boolean(string="Review data")
 
     # Separate account for allocation of discounts
     account_discount_income_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')

@@ -1101,7 +1101,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== ref, invoice_origin, narration, payment_reference ====
         ref = tree.findtext('./{*}ID')
-        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+        if ref and invoice.is_sale_document(include_receipts=True) and invoice.document_sequence_editable:
             invoice_values['name'] = ref
         elif ref:
             invoice_values['ref'] = ref

@@ -643,6 +643,8 @@ class AccountMove(models.Model):
              'Odoo will automatically create one invoice line with default values to match it.',
     )
     quick_encoding_vals = fields.Json(compute='_compute_quick_encoding_vals', exportable=False)
+    document_sequence_editable = fields.Boolean(related='company_id.document_sequence_editable')
+    set_to_review_documents = fields.Boolean(related='company_id.set_to_review_documents')
 
     # === Misc Information === #
     narration = fields.Html(
@@ -2063,6 +2065,9 @@ class AccountMove(models.Model):
     @api.depends('journal_id.type', 'company_id')
     def _compute_quick_edit_mode(self):
         for move in self:
+            if not move.company_id.quick_edit_mode_enabled:
+                move.quick_edit_mode = False
+                continue
             quick_edit_mode = move.company_id.quick_edit_mode
             if move.journal_id.type == 'sale':
                 move.quick_edit_mode = quick_edit_mode in ('out_invoices', 'out_and_in_invoices')
@@ -2665,7 +2670,7 @@ class AccountMove(models.Model):
 
     @api.onchange('name', 'highest_name')
     def _onchange_name_warning(self):
-        if self.name and self.name != '/' and self.name <= (self.highest_name or '') and not self.quick_edit_mode:
+        if self.name and self.name != '/' and self.name <= (self.highest_name or '') and not self.document_sequence_editable:
             self.show_name_warning = True
         else:
             self.show_name_warning = False
@@ -2733,7 +2738,7 @@ class AccountMove(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
-        if not self.quick_edit_mode:
+        if not self.document_sequence_editable:
             self.name = False
             self._compute_name()
 
@@ -3894,9 +3899,9 @@ class AccountMove(models.Model):
                 if is_user_able_to_review:
                     if move.review_state:
                         move_ids_review_done.append(move.id)
-                else:
+                elif move.set_to_review_documents:
                     move_ids_review_todo.append(move.id)
-            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised') and modified_accounting_fields:
+            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised') and modified_accounting_fields and move.set_to_review_documents:
                 move_ids_review_todo.append(move.id)
 
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
@@ -3916,7 +3921,7 @@ class AccountMove(models.Model):
                     move.name and move.name != '/'
                     and move.sequence_number not in (0, 1)
                     and 'journal_id' in vals and move.journal_id.id != vals['journal_id']
-                    and not move.quick_edit_mode
+                    and not move.document_sequence_editable
                     and not ('name' in vals and (vals['name'] == '/' or not vals['name']))
             ):
                 raise UserError(_('You cannot edit the journal of a journal entry with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'))
@@ -4048,7 +4053,7 @@ class AccountMove(models.Model):
         """
         if not (
             self.env.user.has_group('account.group_account_manager')
-            or any(self.company_id.mapped('quick_edit_mode'))
+            or any(self.company_id.mapped('document_sequence_editable'))
             or self.env.context.get('force_delete')
             or self.check_move_sequence_chain()
         ):
@@ -4188,7 +4193,7 @@ class AccountMove(models.Model):
 
     def _must_check_constrains_date_sequence(self):
         # OVERRIDES sequence.mixin
-        return self.state == 'posted' and not self.quick_edit_mode
+        return self.state == 'posted' and not self.document_sequence_editable
 
     def _get_last_sequence_domain(self, relaxed=False):
         #pylint: disable=sql-injection
@@ -4558,9 +4563,9 @@ class AccountMove(models.Model):
 
     def _check_total_amount(self, amount_total):
         """
-        Verifies that the total amount corresponds to the quick total amount chosen as some
+        Verifies that the total amount corresponds to the expected total amount chosen as some
         rounding errors may appear. In such a case, we round up the tax such that the total
-        is equal to the quick total amount set
+        is equal to the provided total amount.
         E.g.: 100€ including 21% tax: base = 82.64, tax = 17.35, total = 99.99
         The tax will be set to 17.36 in order to have a total of 100.00
         """

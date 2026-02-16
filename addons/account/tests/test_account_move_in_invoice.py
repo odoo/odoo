@@ -2287,7 +2287,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertFalse(move_form.invoice_date)
 
         # Fiduciary mode enabled, date suggestion
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
 
         # We are June 17th. No Lock date. Bill Date of the most recent Vendor Bill : March 15th
         # ==> Default New Vendor Bill date = March 31st (last day of March)
