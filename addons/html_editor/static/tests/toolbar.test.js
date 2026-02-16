@@ -11,6 +11,7 @@ import {
     press,
     queryAll,
     queryAllTexts,
+    queryFirst,
     queryOne,
     waitFor,
     waitForNone,
@@ -542,6 +543,34 @@ test("toolbar open on single selected cell in table", async () => {
     await tick();
     expect(targetTd).toHaveClass("o_selected_td");
     await expectElementCount(".o-we-toolbar", 1);
+});
+
+test.tags("desktop");
+test("Position toolbar correctly on table selection", async () => {
+    const contentBefore = unformat(`
+        <p>abcd</p>
+        <p>abcd</p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p>[<br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p>]<br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    await setupEditor(contentBefore);
+    await waitFor(".o-we-toolbar");
+    const firstTd = queryFirst("td.o_selected_td");
+    const toolbarOverlay = queryOne(".o-we-toolbar").parentElement;
+    const toolbarRect = toolbarOverlay.getBoundingClientRect();
+    const cellRect = firstTd.getBoundingClientRect();
+    expect([toolbarRect.left, toolbarRect.bottom]).toMatch([cellRect.left, cellRect.top]);
 });
 
 test("should select table single cell when entire content is selected via mouse movement", async () => {
