@@ -282,6 +282,7 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.Breadcrumb.Name": {'breadcrumb'},
         "web.SearchPanel.Category": {'section'},
         "web.ListRenderer.RecordRow": {'record'},
+        "web.PivotMeasure": {'cell'},
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
         "pos_restaurant.floor_screen_element": {'elemment'},
     }  # vars defined under t-call
