@@ -1700,7 +1700,7 @@ class MrpProduction(models.Model):
         self.workorder_ids.filtered(
             lambda wo: not wo.is_planned
             and not wo.needed_by_workorder_ids
-        )._plan_workorders(from_date=self.date_start)
+        )._action_plan(from_date=self.date_start)
 
     def button_unplan(self):
         self._unplan_workorders()
