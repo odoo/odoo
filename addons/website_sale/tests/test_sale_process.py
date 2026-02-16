@@ -77,7 +77,6 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
                 'state': 'enabled',
                 'is_published': True,
             })
-            transfer_provider._transfer_ensure_pending_msg_is_set()
 
     def test_01_admin_shop_tour(self):
         self.start_tour(

@@ -70,10 +70,15 @@
                 <div class="card flex-grow-1">
                     <div id="o_payment_status_message_details" class="card-body">
                         <t>$0</t>
+                        <div t-if="tx.amount" class="mt-3">
+                            <b>Amount: </b>
+                            <span class="user-select-all border rounded bg-light p-2">
+                                <t t-out="tx.currency_id.symbol"/>
+                                <t t-out="tx.amount"/>
+                            </span>
+                        </div>
                         <t t-if="tx._get_communication()">
-                            <hr class="w-100"/>
-                            <strong class="mt-auto">Communication: </strong>
-                            <span t-out="tx._get_communication()"/>
+                            <div class="mt-3"><b>Communication: </b><span class="user-select-all border rounded bg-light p-2" t-out="tx._get_communication()"/></div>
                         </t>
                     </div>
                 </div>
