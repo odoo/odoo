@@ -5051,6 +5051,8 @@ class MailThread(models.AbstractModel):
             message.attachment_ids._delete_and_notify()
         if partner_ids is not None:
             msg_values.update({"partner_ids": [int(pid) for pid in partner_ids] or False})
+        if "subject" in kwargs:
+            msg_values["subject"] = kwargs["subject"]
         if msg_values:
             message.write(msg_values)
         if message._filter_empty():
@@ -5083,6 +5085,7 @@ class MailThread(models.AbstractModel):
                     sort="id",
                 ),
                 res.attr("pinned_at"),
+                res.attr("subject"),
                 res.attr("write_date"),
                 res.from_method("_store_linked_messages_fields"),
                 self._store_message_update_extra_fields(res),

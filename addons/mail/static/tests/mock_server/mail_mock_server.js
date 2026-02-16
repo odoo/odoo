@@ -677,6 +677,9 @@ async function mail_message_update_content(request) {
         msg_values.partner_ids = false;
         msg_values.parent_id = false;
     }
+    if ("subject" in update_data) {
+        msg_values.subject = update_data.subject;
+    }
     MailMessage.write([message_id], msg_values);
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
@@ -691,6 +694,7 @@ async function mail_message_update_content(request) {
             ),
             pinned_at: message.pinned_at,
             message_link_preview_ids: message.message_link_preview_ids,
+            subject: message.subject,
         }).get_result()
     );
     return new mailDataHelpers.Store(
