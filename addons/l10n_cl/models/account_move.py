@@ -22,6 +22,7 @@ class AccountMove(models.Model):
         for move in self:
             if (
                 move.company_id.country_id.code == "CL"
+                and move.journal_id.type != 'general'
                 and move.l10n_latam_document_number
                 and not re.fullmatch(r"[0-9]+", move.l10n_latam_document_number)
             ):
