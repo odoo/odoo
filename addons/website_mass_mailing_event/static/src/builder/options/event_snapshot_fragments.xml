@@ -100,7 +100,7 @@
 
     <t t-name="website_mass_mailing_event.event_address_template">
         <t t-set="has_city" t-value="address.city"/>
-        <t t-set="has_state" t-value="state and country.state_required"/>
+        <t t-set="has_state" t-value="state and country and country.state_required"/>
 
         <span class="fa fa-map-marker"></span> <t t-if="has_city">
             <t t-out="address.city"/><t t-if="address.country_id">, </t>
@@ -108,6 +108,8 @@
         <t t-if="has_state">
             <t t-out="state.code"/>,
         </t>
-        <t t-out="country.name"/>
+        <t t-if="country">
+            <t t-out="country.name"/>
+        </t>
     </t>
 </templates>
