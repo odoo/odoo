@@ -30,13 +30,16 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
             res.raise_for_status()
             attachment = self.env["ir.attachment"].search([], order="id desc", limit=1)
             # ignore signature in url
-            content = re.sub(
-                r'"url": "https://storage\.googleapis\.com/.*?"',
-                '"url": "[url]"',
-                res.content.decode("utf-8"),
+            content = json.loads(
+                re.sub(
+                    r'"url": "https://storage\.googleapis\.com/.*?"',
+                    '"url": "[url]"',
+                    res.content.decode("utf-8"),
+                )
             )
+            content["data"]["store_data"].pop("__store_version__")
             self.assertEqual(
-                json.loads(content),
+                content,
                 {
                     "data": {
                         "attachment_id": attachment.id,

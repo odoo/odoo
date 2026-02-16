@@ -2,13 +2,12 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import mail_route, Store
 from odoo.fields import Command, Domain
-from odoo.http import route
 
 
 class PollController(ThreadController):
-    @route("/mail/poll/create", type="jsonrpc", auth="user", methods=["POST"])
+    @mail_route("/mail/poll/create", type="jsonrpc", auth="user", methods=["POST"])
     def poll_create(
         self,
         duration,
@@ -40,7 +39,7 @@ class PollController(ThreadController):
         Store(**thread._store_target()).add(poll, "_store_poll_fields").bus_send()
         return poll.id
 
-    @route("/mail/poll/end", type="jsonrpc", auth="user", methods=["POST"])
+    @mail_route("/mail/poll/end", type="jsonrpc", auth="user", methods=["POST"])
     def poll_end(self, poll_id):
         poll_domain = Domain("id", "=", poll_id) & Domain("end_message_id", "=", False)
         if not self.env.user._is_admin():
@@ -48,7 +47,7 @@ class PollController(ThreadController):
         # sudo - mail.poll: creator of the poll or admins can end a poll prematurely.
         self.env["mail.poll"].sudo().search_fetch(poll_domain)._end_and_notify()
 
-    @route("/mail/poll/delete", type="jsonrpc", auth="user", methods=["POST"])
+    @mail_route("/mail/poll/delete", type="jsonrpc", auth="user", methods=["POST"])
     def poll_delete(self, poll_id):
         poll_domain = Domain("id", "=", poll_id)
         if not self.env.user._is_admin():
@@ -56,8 +55,7 @@ class PollController(ThreadController):
         # sudo - mail.poll: creator of the poll or admins can delete a poll.
         self.env["mail.poll"].sudo().search_fetch(poll_domain).unlink()
 
-    @route("/mail/poll/vote", type="jsonrpc", auth="public", methods=["POST"])
-    @add_guest_to_context
+    @mail_route("/mail/poll/vote", type="jsonrpc", auth="public", methods=["POST"])
     def poll_vote(self, poll_id, option_ids):
         options_domain = [("poll_id", "=", poll_id), ("id", "in", option_ids)]
         # sudo - mail.poll.option: can access poll options, vote access is validated
@@ -86,8 +84,7 @@ class PollController(ThreadController):
         store.add(vote, "_store_vote_fields")
         store.bus_send()
 
-    @route("/mail/poll/remove_vote", type="jsonrpc", auth="public", methods=["POST"])
-    @add_guest_to_context
+    @mail_route("/mail/poll/remove_vote", type="jsonrpc", auth="public", methods=["POST"])
     def poll_remove_vote(self, poll_id):
         votes_domain = [("option_id.poll_id", "=", poll_id), ("is_self_vote", "=", True)]
         # sudo - mail.poll.vote: removing/accessing self vote is allowed.

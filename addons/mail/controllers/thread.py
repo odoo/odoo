@@ -8,7 +8,7 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import mail_route, Store
 
 
 class ThreadController(http.Controller):
@@ -60,7 +60,7 @@ class ThreadController(http.Controller):
     # main routes
     # ------------------------------------------------------------
 
-    @http.route("/mail/thread/recipients", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/mail/thread/recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients(self, thread_model, thread_id, message_id=None):
         """ Fetch discussion-based suggested recipients, creating partners on the fly """
         thread = self._get_thread_with_access(thread_model, thread_id, mode='read')
@@ -78,7 +78,7 @@ class ThreadController(http.Controller):
             for info in suggested if info['partner_id']
         ]
 
-    @http.route("/mail/thread/recipients/get_suggested_recipients", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/mail/thread/recipients/get_suggested_recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients_get_suggested_recipients(self, thread_model, thread_id, partner_ids=None, main_email=False):
         """This method returns the suggested recipients with updates coming from the frontend.
         :param thread_model: Model on which we are currently working on.
@@ -94,7 +94,7 @@ class ThreadController(http.Controller):
             recipients = list(filter(lambda rec: rec.get('partner_id') not in old_customer_ids, recipients))
         return [{key: recipient[key] for key in recipient if key in ['name', 'email', 'partner_id']} for recipient in recipients]
 
-    @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
@@ -104,7 +104,7 @@ class ThreadController(http.Controller):
         ]
         return partners
 
-    @http.route("/mail/read_subscription_data", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/mail/read_subscription_data", methods=["POST"], type="jsonrpc", auth="user")
     def read_subscription_data(self, follower_id):
         """Computes:
         - message_subtype_data: data about document subtypes: which are
@@ -179,8 +179,7 @@ class ThreadController(http.Controller):
         res.setdefault("message_type", "comment")
         return res
 
-    @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
     def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
         store = Store()
         request.update_context(message_post_store=store)
@@ -212,8 +211,7 @@ class ThreadController(http.Controller):
         store.add(message, "_store_message_fields")
         return {"store_data": store.get_result(), "message_id": message.id}
 
-    @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     def mail_message_update_content(self, message_id, update_data, **kwargs):
         message = self._get_message_with_access(message_id, mode="create", **kwargs)
         if not message or not self._can_edit_message(message, **kwargs):
@@ -234,13 +232,13 @@ class ThreadController(http.Controller):
     def _can_edit_message(cls, message, **kwargs):
         return message.sudo().is_current_user_or_guest_author or request.env.user._is_admin()
 
-    @http.route("/mail/thread/unsubscribe", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/mail/thread/unsubscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
         return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
 
-    @http.route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)

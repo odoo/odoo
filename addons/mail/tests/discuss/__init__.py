@@ -19,6 +19,7 @@ from . import test_discuss_sub_channels
 from . import test_discuss_thread_controller
 from . import test_guest
 from . import test_message_controller
+from . import test_store_versioning
 from . import test_guest_feature
 from . import test_toggle_upload
 from . import test_load_messages

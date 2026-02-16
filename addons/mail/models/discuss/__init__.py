@@ -4,6 +4,7 @@
 from . import mail_message
 
 # discuss
+from . import bus
 from . import bus_sync_mixin
 from . import discuss_call_history
 from . import discuss_category

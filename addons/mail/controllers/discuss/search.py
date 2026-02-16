@@ -3,12 +3,11 @@
 from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import mail_route, Store
 
 
 class SearchController(http.Controller):
-    @http.route("/discuss/search", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/discuss/search", methods=["POST"], type="jsonrpc", auth="public")
     def search(self, term, category_id=None, limit=10):
         store = Store()
         base_domain = Domain("name", "ilike", term) & Domain("channel_type", "!=", "chat")

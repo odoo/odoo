@@ -342,6 +342,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     res = fn()
             else:
                 res = fn()
+        res.pop("__store_version__", False)
         self.assertEqual(res, results)
 
     @freeze_time("2025-04-22 21:18:33")

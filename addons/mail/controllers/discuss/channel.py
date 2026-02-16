@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from odoo import fields, http
 from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
+from odoo.addons.mail.tools.discuss import mail_route, Store
 from odoo.exceptions import AccessError
 
 
@@ -115,8 +115,7 @@ class DiscussChannelWebclientController(WebclientController):
 
 
 class ChannelController(http.Controller):
-    @http.route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    @add_guest_to_context
+    @mail_route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     def discuss_channel_members(self, channel_id, known_member_ids):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
@@ -130,15 +129,14 @@ class ChannelController(http.Controller):
         store.add(unknown_members, "_store_member_fields")
         return store.get_result()
 
-    @http.route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
+    @mail_route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel or not data:
             raise NotFound()
         channel.write({"image_128": data})
 
-    @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_mark_as_read(self, channel_id, last_message_id):
         member = request.env["discuss.channel.member"].search([
             ("channel_id", "=", channel_id),
@@ -148,8 +146,7 @@ class ChannelController(http.Controller):
             return  # ignore if the member left in the meantime
         member._mark_as_read(last_message_id)
 
-    @http.route("/discuss/channel/set_new_message_separator", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/discuss/channel/set_new_message_separator", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_set_new_message_separator(self, channel_id, message_id):
         member = request.env["discuss.channel.member"].search([
             ("channel_id", "=", channel_id),
@@ -159,8 +156,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         return member._set_new_message_separator(message_id)
 
-    @http.route("/discuss/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/discuss/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_notify_typing(self, channel_id, is_typing):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
@@ -179,8 +175,7 @@ class ChannelController(http.Controller):
         if member:
             member._notify_typing(is_typing)
 
-    @http.route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    @add_guest_to_context
+    @mail_route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     def load_attachments(self, channel_id, limit=30, before=None):
         """Load attachments of a channel. If before is set, load attachments
         older than the given id.
@@ -202,8 +197,7 @@ class ChannelController(http.Controller):
         store = Store().add(attachments, "_store_attachment_fields")
         return {"store_data": store.get_result(), "count": len(attachments)}
 
-    @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_join(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
@@ -211,7 +205,7 @@ class ChannelController(http.Controller):
         channel._find_or_create_member_for_self()
         return Store().add(channel, "_store_channel_fields").get_result()
 
-    @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
+    @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
@@ -220,8 +214,7 @@ class ChannelController(http.Controller):
         store = Store().add(sub_channel, "_store_channel_fields")
         return {"store_data": store.get_result(), "sub_channel": sub_channel.id}
 
-    @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_fetch(self, parent_channel_id, search_term=None, before=None, limit=30):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
@@ -258,7 +251,7 @@ class ChannelController(http.Controller):
             "sub_channel_ids": sub_channels.ids,
         }
 
-    @http.route("/discuss/channel/sub_channel/delete", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/discuss/channel/sub_channel/delete", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_delete_sub_channel(self, sub_channel_id):
         channel = request.env["discuss.channel"].search_fetch([("id", "=", sub_channel_id)])
         if not channel or not channel.parent_channel_id or channel.create_uid != request.env.user:
@@ -268,14 +261,14 @@ class ChannelController(http.Controller):
         # sudo: discuss.channel - skipping ACL for users who created the thread
         channel.sudo().unlink()
 
-    @http.route("/discuss/channel/remove_member", methods=["POST"], type="jsonrpc", auth="public")
+    @mail_route("/discuss/channel/remove_member", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_remove_member(self, member_id):
         channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
         if not channel_member:
             raise NotFound()
         channel_member.unlink()
 
-    @http.route("/discuss/channel/member/set_role", methods=["POST"], type="jsonrpc", auth="public")
+    @mail_route("/discuss/channel/member/set_role", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_set_channel_member_role(self, member_id, channel_role):
         channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
         if not channel_member:
