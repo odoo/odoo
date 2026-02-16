@@ -1633,9 +1633,10 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order.action_confirm()
         action = sale_order.action_create_project()
         project = self.env['project.project'].with_context(action['context']).create({
-            'name': 'Test Project',
             'allow_billable': True,
         })
+        project_name = f"{sale_order.name} - {sale_order.partner_id.name}"
+        self.assertEqual(project.name, project_name, "The create project name should include the sale order and partner")
         self.assertEqual(sale_order.project_id, project, "The created project should be linked to this sale order")
         self.assertEqual(project.reinvoiced_sale_order_id, sale_order, "The created project should be linked to this sale order")
 
