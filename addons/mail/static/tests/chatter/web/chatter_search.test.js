@@ -95,7 +95,7 @@ test("opening search in chatter hides files and pinned messages panels", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button[aria-label='Attach files']");
+    await click("button[aria-label='Attach files']:text('1')");
     await click("button[title='Pinned Messages']");
     await contains(".o-mail-AttachmentBox");
     await contains(".o-mail-pinnedMessages");
