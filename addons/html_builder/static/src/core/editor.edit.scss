@@ -1,33 +1,5 @@
-$-editor-messages-margin-x: 2%;
-
 .editor_enable .btn:hover {
     cursor: text;
-}
-
-%o-editor-messages {
-    background: $o-we-dropzone-bg-color;
-    text-align: center;
-    color: #fff;
-    outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
-    outline-offset: -$o-we-dropzone-border-width;
-
-    &:before {
-        content: attr(data-editor-message);
-        display: block;
-        font-size: 20px;
-    }
-
-    // Show the default editor message only for "empty" elements
-    &:not(:empty) {
-        &[data-editor-message-default]:before {
-            content: none;
-        }
-    }
-
-    &:after {
-        content: attr(data-editor-sub-message);
-        display: block;
-    }
 }
 
 // This style block is about the "editor message" which highlights the areas
@@ -48,7 +20,7 @@ $-editor-messages-margin-x: 2%;
 
         // Base case (website.page (#wrap), t-field (product description), ...)
         > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
-            @extend %o-editor-messages;
+            @include o-editor-messages;
             height: auto;
 
             // Empty editable element during drag & drop
@@ -59,10 +31,6 @@ $-editor-messages-margin-x: 2%;
             }
 
             &:not(:only-child) {
-                &::before {
-                    font-size: 16px;
-                }
-
                 &[data-editor-message-default]::before {
                     content: none;
                 }
@@ -71,25 +39,21 @@ $-editor-messages-margin-x: 2%;
 
         // Exception 1: empty wrap NOT during drag & drop
         &#wrap:empty {
-            @extend %o-editor-messages;
+            @include o-editor-messages;
             padding: 112px 0px;
             margin: 20px $-editor-messages-margin-x;
-            border-radius: $border-radius-lg;
         }
 
         // Exception 2: empty wrap during drag & drop (override of base case)
         &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child {
             padding: 112px 0px;
-            text-shadow: none;
-        }
-
-        > p:empty:only-child {
-            color: #aaa;
         }
     }
 
     &[data-oe-type=html].oe_empty:empty {
-        @extend %o-editor-messages;
+        @include o-editor-messages;
+        padding: 12px 0;
+        margin: 20px $-editor-messages-margin-x;
     }
 }
 

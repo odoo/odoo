@@ -40,9 +40,10 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         &.o_hover_overlay {
             opacity: 0.3;
             animation: o_hover_overlay_fade_in 0.1s ease-in-out forwards;
+
             .o_side {
                 &::before {
-                    background: rgb(126, 114, 114) !important;
+                    background: $o-we-hover-overlay-color !important;
                 }
                 background-color: transparent !important;
                 border-bottom: none !important;
@@ -69,6 +70,14 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                 }
                 &.o_side_x {
                     width: $o-we-handle-edge-size;
+
+                    &::before {
+                        // It’s needed for "pixel-perfect" overlay corners.
+                        // Otherwise, the colors can overlap and not look good
+                        // depending on the background color behind the overlay.
+                        top: $o-we-handle-border-width/2 !important;
+                        bottom: $o-we-handle-border-width/2 !important;
+                    }
                 }
                 &.w {
                     inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 $o-we-handle-border-width * 0.5;
@@ -77,6 +86,10 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
 
                     body.o_rtl & {
                         transform: translateX(50%);
+                    }
+
+                    &::before {
+                        border-right: $o-we-handle-contrast-border;
                     }
                 }
                 &.e {
@@ -87,6 +100,10 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     body.o_rtl & {
                         transform: translateX(-50%);
                     }
+
+                    &::before {
+                        border-left: $o-we-handle-contrast-border;
+                    }
                 }
                 &.n {
                     inset: $o-we-handles-offset-to-hide 0 auto 0;
@@ -95,9 +112,13 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     &.o_grid_handle {
                         transform: translateY(-50%);
 
-                        &:before {
+                        &::before {
                             transform: translateY($o-we-handle-border-width * 0.5);
                         }
+                    }
+
+                    &::before {
+                        border-bottom: $o-we-handle-contrast-border;
                     }
                 }
                 &.s {
@@ -110,6 +131,10 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         &:before {
                             transform: translateY($o-we-handle-border-width * -0.5);
                         }
+                    }
+
+                    &::before {
+                        border-top: $o-we-handle-contrast-border;
                     }
                 }
                 &.ne {
@@ -172,7 +197,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                 }
 
                 &.o_column_handle.o_side_y {
-                    background-color: rgba($o-we-handles-accent-color, .1);
+                    background-color: rgba($o-we-handles-accent-color, 0.1);
 
                     &::after {
                         content: '';
@@ -180,7 +205,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         height: $o-we-handles-btn-size;
                     }
                     &.n {
-                        border-bottom: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
+                        border-bottom: dashed $o-we-handle-border-width * 0.5 rgba($o-we-contrast-border-color, 0.7);
 
                         &::after {
                             inset: 0 0 auto 0;
@@ -188,7 +213,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         }
                     }
                     &.s {
-                        border-top: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
+                        border-top: dashed $o-we-handle-border-width * 0.5 rgba($o-we-contrast-border-color, 0.7);
 
                         &::after {
                             inset: auto 0 0 0;
@@ -222,7 +247,6 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         &.n::before {
                             margin: 0 auto auto;
                         }
-
                         &.s::before {
                             margin: auto auto 0;
                         }

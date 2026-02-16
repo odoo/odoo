@@ -364,9 +364,9 @@ export class DropZonePlugin extends Plugin {
             "oe_sanitized_drop_zone",
             "text-center"
         );
-        const messageEl = this.document.createElement("p");
-        messageEl.textContent = _t("For technical reasons, this block cannot be dropped here");
-        dropzoneEl.prepend(messageEl);
+        dropzoneEl.dataset.editorMessage = _t(
+            "For technical reasons, this block cannot be dropped here"
+        );
         return dropzoneEl;
     }
 
@@ -434,7 +434,10 @@ export class DropZonePlugin extends Plugin {
             if (parseInt(parentContentWidth) !== parseInt(hookOuterWidth)) {
                 vertical = true;
                 const hookOuterHeight = hookEl.getBoundingClientRect().height;
-                style.height = Math.max(hookOuterHeight, 30) + "px";
+                // Combined with the 1px top margin added by the CSS, removing
+                // 2px from the height here prevents two vertical dropzones from
+                // touching when one is placed below the other.
+                style.height = Math.max(hookOuterHeight - 2, 30) + "px";
                 if (toInsertInline) {
                     style.display = "inline-block";
                     style.verticalAlign = "middle";
@@ -516,10 +519,8 @@ export class DropZonePlugin extends Plugin {
 
         // Inserting a sanitized dropzone for each sanitized area.
         for (const sanitizedZoneEl of selectorSanitized) {
-            sanitizedZoneEl.style.position = "relative";
             sanitizedZoneEl.prepend(this.createSanitizedDropzone());
         }
-        this.sanitizedZoneEls = selectorSanitized;
 
         // Inserting a grid dropzone for each row in grid mode.
         for (const rowEl of selectorGrids) {
@@ -555,9 +556,5 @@ export class DropZonePlugin extends Plugin {
         this.editable.querySelectorAll(".oe_drop_zone").forEach((dropzoneEl) => {
             dropzoneEl.remove();
         });
-        this.sanitizedZoneEls.forEach((sanitizedZoneEl) =>
-            sanitizedZoneEl.style.removeProperty("position")
-        );
-        this.sanitizedZoneEls = [];
     }
 }

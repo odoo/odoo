@@ -1,20 +1,21 @@
 .oe_drop_zone {
-    background: $o-we-dropzone-bg-color;
-    animation: dropZoneInsert 1s linear 0s infinite alternate;
+    @include o-we-dropzone-base-style;
 
     &.oe_insert {
         position: relative;
         width: 100%;
-        border-radius: $border-radius-lg;
-        outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
-        outline-offset: -$o-we-dropzone-border-width;
-        z-index: 2000; // TODO use $o-we-overlay-zindex instead
+        z-index: $o-we-dropzone-z-index;
     }
 
     &.o_dropzone_highlighted {
-        filter: brightness(1.5);
-        transition: 200ms;
+        filter: brightness(1.2);
     }
+}
+
+:has(> .oe_drop_zone) {
+    // Make sure the drop zone stays fully visible, even if its container is
+    // smaller than it.
+    overflow: visible !important;
 }
 
 .oe_drop_zone:not(.oe_grid_zone) {
@@ -33,24 +34,75 @@
     }
 
     &.oe_sanitized_drop_zone {
+        @include o-editor-messages;
         position: absolute;
         top: 0px;
-        height: 100%;
-        padding: 15px;
+        z-index: $o-we-dropzone-z-index - 1 !important;
+        display: flex;
         margin: 0px;
-        backdrop-filter: blur(15px);
-        background-color: rgba($o-we-bg-lighter, 0.15);
-        color: white;
-        outline-color: $o-we-bg-lighter;
-        z-index: 1999; // TODO
+        border: 1px solid $o-we-dropzone-sanitized-color !important;
+        outline: $o-we-dropzone-border-width dashed mix(white, $o-we-dropzone-sanitized-color, 50%) !important;
+        height: auto;
+        min-height: 100% !important;
+        padding: 0;
+        background: repeating-linear-gradient(
+            135deg,
+            $o-we-dropzone-sanitized-color,
+            $o-we-dropzone-sanitized-color 5px,
+            rgba($o-we-dropzone-sanitized-color, 0.6) 5px,
+            rgba($o-we-dropzone-sanitized-color, 0.6) 10px
+        ) !important;
+        backdrop-filter: blur(7px);
 
-        > p {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: calc(100% - 30px);
-            text-shadow: 0px 0px 4px black;
-            font-size: 20px;
+        &::before {
+            padding: 10px;
+            width: 100%;
+            align-content: center;
+            text-shadow: 0 0 5px $o-we-dropzone-sanitized-color !important;
+        }
+    }
+}
+
+:has(> .oe_sanitized_drop_zone) {
+    position: relative;
+}
+
+:not(.oe_structure):not([data-oe-type="html"]) {
+    // "Inner content" drop zones.
+    > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
+        height: $o-we-inner-content-dropzone-size;
+        min-height: $o-we-inner-content-dropzone-size;
+        margin: (-$o-we-inner-content-dropzone-size/2) 0;
+        outline: unset;
+        border: unset;
+
+        // Make sure no drop zone is on top of another when one is placed before
+        // a paragraph and the next is its first child.
+        + p > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone):first-child {
+            margin-top: $o-we-inner-content-dropzone-size;
+        }
+
+        &:not(.oe_vertical) {
+            border-bottom: $o-we-inner-content-dropzone-border;
+        }
+
+        &.oe_vertical {
+            width: $o-we-inner-content-dropzone-size;
+            min-width: $o-we-inner-content-dropzone-size;
+            margin: 1px (-$o-we-inner-content-dropzone-size/2);
+            border-right: $o-we-inner-content-dropzone-border;
+        }
+    }
+
+    // zero-width text nodes around inline buttons can create extra line boxes.
+    // Without this "line-height: 0", the editable area will become too tall if
+    // it contains buttons when the dropzones appear. (for example, a "Contact
+    // us" button in a website page header)
+    &:has(> .btn) {
+        &:has(> .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone)) {
+            &:not(:has(> :not(.oe_drop_zone, .btn))) {
+                line-height: 0;
+            }
         }
     }
 }
