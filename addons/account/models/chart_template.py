@@ -1295,7 +1295,7 @@ class AccountChartTemplate(models.AbstractModel):
                 or code_translations.get_python_translations(translation_module, generic_lang).get(record[fname])
             )
 
-    def _load_translations(self, langs=None, companies=None, template_data=None):
+    def _load_translations(self, langs=None, companies=None, template_data=None, overwrite=False, force_overwrite=False):
         """Load the translations of the chart template.
 
         :param langs: the lang code to load the translations for. If one of the codes is not present,
@@ -1349,4 +1349,4 @@ class AccountChartTemplate(models.AbstractModel):
                             translation_importer.model_translations[mname][field][xml_id][lang] = value_translated
                             break
 
-        translation_importer.save(overwrite=False)
+        translation_importer.save(overwrite=overwrite, force_overwrite=force_overwrite)
