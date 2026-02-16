@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isContentEditable, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
@@ -346,11 +346,14 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkAllowedOnSelection() {
-        const linksInSelection = this.dependencies.selection
-            .getTraversedNodes()
-            .filter((n) => n.tagName === "A");
+        const selection = this.dependencies.selection;
+        const linksCount = selection.getTraversedNodes().filter((n) => n.tagName === "A").length;
+        const { deepEditableSelection } = selection.getSelectionData();
+        const { anchorNode, focusNode } = deepEditableSelection;
         return (
-            linksInSelection.length < 2 && this.dependencies.selection.getTraversedBlocks().size < 2
+            linksCount < 2 &&
+            selection.getTraversedBlocks().size < 2 &&
+            (anchorNode !== focusNode || isContentEditable(anchorNode))
         );
     }
 
@@ -615,7 +618,11 @@ export class LinkPlugin extends Plugin {
         }
         if (!selectionData.documentSelectionIsInEditable) {
             const popoverEl = document.querySelector(".o-we-linkpopover");
-            if (popoverEl && (!selectionData.documentSelection || popoverEl.contains(selectionData.documentSelection.anchorNode))) {
+            if (
+                popoverEl &&
+                (!selectionData.documentSelection ||
+                    popoverEl.contains(selectionData.documentSelection.anchorNode))
+            ) {
                 return;
             }
             this.linkInDocument = null;

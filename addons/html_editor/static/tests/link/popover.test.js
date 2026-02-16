@@ -813,6 +813,18 @@ describe("shortcut", () => {
             '<p><a href="https://test.com">li[]nk</a></p>'
         );
     });
+    test("should not create a link via shortcut for partial selection inside contenteditable false", async () => {
+        const { el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        await click(".o_command_name:first");
+        await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+        expect(queryOne(".o_notification_content").textContent).toBe(
+            "Unable to create a link on the current selection."
+        );
+        expect(getContent(el)).toBe('<p contenteditable="false">T[e]st</p>');
+        expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+    });
 });
 
 describe("link preview", () => {
