@@ -9,13 +9,7 @@
             </xpath>
             <xpath expr="//div[@t-out='message.body']" position="replace">
                 <div style="font-size:13px;">
-                    <div>
-                        <t t-out='message.author_id.name'/> (<t t-out='message.author_id.email'/>) added you as a follower of this <t t-out="model_description"/>.
-                    </div>
-                    <br t-if="len(message.body) > 0"/>
-                    <div style="color:grey;">
-                        <t t-out="message.body"/>
-                    </div>
+                    <t t-out="message.body"/>
                 </div>
             </xpath>
             <xpath expr="//span[@id='mail_unfollow']" position="replace"/>
