@@ -310,16 +310,16 @@ class HrExpense(models.Model):
     # --------------------------------------------
 
     @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
-    def _check_required_fields_if_not_draft(self):
+    def _check_required_fields(self):
         for expense in self.filtered(lambda expense: expense.state != 'draft'):
             errors = []
 
             # Check for required fields 'name' and 'product_id'
-            if not expense.name and not expense.product_id:
+            if not expense.name and not expense.product_id and expense.state != 'refused':
                 errors.append(self.env._("Enter a description and select a product to proceed."))
             elif not expense.name:
                 errors.append(self.env._("Enter a description to proceed."))
-            elif not expense.product_id:
+            elif not expense.product_id and expense.state != 'refused':
                 errors.append(self.env._("Select a product to proceed."))
 
             # Check for non-zero amounts
