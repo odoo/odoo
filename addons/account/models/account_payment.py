@@ -185,7 +185,7 @@ class AccountPayment(models.Model):
     # used to know whether the field `partner_bank_id` needs to be required or not in the payments form views
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank')
-    country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
+    country_code = fields.Char(related='company_id.country_code')
     amount_signed = fields.Monetary(
         currency_field='currency_id', compute='_compute_amount_signed', tracking=True,
         help='Negative value of amount field if payment_type is outbound')
