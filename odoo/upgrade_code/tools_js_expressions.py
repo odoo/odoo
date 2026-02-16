@@ -452,7 +452,7 @@ def fix_template(root: etree._ElementTree, bound_variables, inside_vars):
             for attr, value in node.attrib.items():
                 if not value:
                     continue
-                if attr.startswith("t-") or attr.endswith(".translate"):
+                if attr.startswith("t-") or attr.endswith(".translate") or attr.startswith("position"):
                     continue  # skip Owl directives
                 node.set(attr, compile_expr(value, node_vars))
 
@@ -916,6 +916,11 @@ tests = [
         "name": "component, variation",
         "content": '<A b="(s) ? 1 : 2"/>',
         "expected": '<A b="(this.s) ? 1 : 2"/>',
+    },
+    {
+        "name": "component attributes",
+        "content": '<A position="replace"/>',
+        "expected": '<A position="replace"/>',
     },
     {
         "name": "component, another variation",
