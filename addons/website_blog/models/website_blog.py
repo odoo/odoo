@@ -262,7 +262,7 @@ class BlogPost(models.Model):
                 author = SchemaBuilder("Person", name=post.author_id.display_name or post.author_name)
                 blog_post.add_nested(author=author)
             if company:
-                blog_post.add_nested(publisher=self.env["website"].organization_structured_data(company))
+                blog_post.add_nested(publisher=website.organization_structured_data())
 
             if post.blog_id:
                 slug = self.env["ir.http"]._slug(post.blog_id)

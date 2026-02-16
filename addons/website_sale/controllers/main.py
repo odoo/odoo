@@ -541,7 +541,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             values['main_object'] = category
             values['markup_data_json'] = SchemaBuilder.render_structured_data_list([
-                website._prepare_ecommerce_store_markup_data(),
+                website.organization_structured_data(),
                 self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
             ])
         values.update(self._get_additional_shop_values(values, **post))
@@ -816,7 +816,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             or product.public_categ_ids[:1]
         )
         markup_data = [
-            website._prepare_ecommerce_store_markup_data(), product._to_structured_data(website)
+            website.organization_structured_data(with_id=True), product._to_structured_data(website)
         ]
         if category:
             # Add breadcrumb's SEO data.

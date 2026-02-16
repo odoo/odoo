@@ -3,10 +3,10 @@
 
 
 <template id="event_details" name="Event Header">
-    <t t-call="website_event.layout">
-        <t t-set="head">
-            <script type="application/ld+json" t-out="event_json_ld"/>
-        </t>
+    <t t-set="head">
+        <script type="application/ld+json" t-out="event_json_ld"/>
+    </t>
+    <t t-call="website_event.layout" head="head">
         <!-- Remove this in cleanup to something like this because it's already there inside event_json_ld -->
         <!-- <div class="h-100" name="event">
             <t t-out="0"/>

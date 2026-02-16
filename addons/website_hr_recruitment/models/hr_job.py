@@ -178,16 +178,22 @@ spirit. To be successful, you will have solid solving problem skills.''')
         hiring_organization = None
         job_location = None
         if self.department_id:
-            department_company = self.department_id.company_id.sudo()
+            department = self.department_id.sudo()
+            department_company = department.company_id
             identifier = SchemaBuilder(
                 "PropertyValue",
                 name=department_company.name,
                 value=f"{department_company.id}-{self.id}",
             )
-            hiring_organization = self.website_id.organization_structured_data(department_company)
+            hiring_organization = self.website_id.organization_structured_data()
+            address = self.address_id.sudo()
             job_location = SchemaBuilder(
                 "Place",
-                address=self.env['website'].postal_address_structured_data(department_company),
+                address=self.env['website'].postal_address_structured_data(
+                    city=address.city,
+                    state_code=address.state_id.code,
+                    country_code=address.country_id.code,
+                ),
             )
         base_salary = None  # TODO: Add support for baseSalary field
         return SchemaBuilder(

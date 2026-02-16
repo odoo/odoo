@@ -4,7 +4,7 @@
 <!-- ======   Overall pages layout   ===========================================
 ============================================================================ -->
 <template id="index" name="Blog Navigation">
-    <t t-call="website.layout">
+    <t t-call="website.layout" head="head">
         <div id="wrap" class="js_blog website_blog">
             <t t-out="0"/>
 
@@ -166,14 +166,14 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
-    <t t-call="website_blog.index">
+    <t t-set="head">
+        <script t-if="blog_post_ld_json" type="application/ld+json" t-out="blog_post_ld_json"/>
+    </t>
+    <t t-call="website_blog.index" head="head">
 
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
 
-        <t t-set="head">
-            <script t-if="blog_post_ld_json" type="application/ld+json" t-out="blog_post_ld_json"/>
-        </t>
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>
         <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>

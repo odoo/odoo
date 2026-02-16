@@ -196,7 +196,7 @@ class WebsiteBlog(http.Controller):
         company = website.company_id
 
         if company:
-            result.append(website.organization_structured_data(company, with_id=True))
+            result.append(website.organization_structured_data(with_id=True))
 
         if blog:
             blog_sd = blog._to_structured_data(website=website)

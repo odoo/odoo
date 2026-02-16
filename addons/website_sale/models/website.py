@@ -1166,28 +1166,3 @@ class Website(models.Model):
                 'website_id': website.id,
             } for website in self.filtered(lambda w: w._default_feed_is_valid())
         ])
-
-    def _prepare_ecommerce_store_markup_data(self):
-        """Generate JSON-LD markup data for the website's eCommerce store.
-
-        See https://schema.org/OnlineStore
-
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
-        return self._build_organization_schema(
-            name=self.name,
-            schema_type="OnlineStore",
-            social_links=self,
-            company_id=self.company_id.id,
-            with_id=False
-        )
-
-    def _get_ecommerce_store_markup_json(self):
-        """Generate JSON-LD markup data for the company of the website.
-
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
-        markup_data = self._prepare_ecommerce_store_markup_data()
-        return markup_data.render_json()

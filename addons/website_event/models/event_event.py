@@ -675,7 +675,15 @@ class EventEvent(models.Model):
 
         location = None
         if self.address_id:
-            address = website.postal_address_structured_data(self.address_id.sudo())
+            address = self.address_id.sudo()
+            address = website.postal_address_structured_data(
+                street=address.street,
+                street2=address.street2,
+                city=address.city,
+                zip=address.zip,
+                state_state=address.state_id.code,
+                country_state=address.country_id.code,
+            )
             location = SchemaBuilder("Place", name=self.address_name).add_nested(address=address)
 
         description = self.subtitle
