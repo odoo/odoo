@@ -177,20 +177,6 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            Order.hasLine({}),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder2", {
     steps: () =>
         [

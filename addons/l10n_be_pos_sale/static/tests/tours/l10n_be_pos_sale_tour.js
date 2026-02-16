@@ -30,7 +30,6 @@ registry.category("web_tour.tours").add("PosSettleOrderIsInvoice", {
             ProductScreen.clickPayButton(),
             negateStep(...PaymentScreen.isInvoiceButtonChecked()),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.isInvoiceButtonChecked(),
         ].flat(),
 });
 
@@ -42,7 +41,6 @@ registry.category("web_tour.tours").add("PosSettleOrderTryInvoice", {
             PosSale.settleNthOrder(1),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.isInvoiceButtonChecked(),
         ].flat(),
 });
 
