@@ -37,3 +37,12 @@ export function subtotalIs(amount) {
         },
     ];
 }
+
+export function globalDiscountIs(text) {
+    return [
+        {
+            content: `global discount is '${text}'`,
+            trigger: `.splitbill-screen .order-info .discount:contains("${text}")`,
+        },
+    ];
+}
