@@ -55,6 +55,12 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
             ProductScreen.selectedOrderlineHas("Packaging Product", 12),
             scan_barcode("12345610"),
             ProductScreen.selectedOrderlineHas("Packaging Product", 22),
+
+            // Add Product which has no barcode, but it's packaging has one
+            scan_barcode("12345618"),
+            ProductConfiguratorPopup.pickMulti("Cushion"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Packaging Product2", 10),
             Chrome.endTour(),
         ].flat(),
 });
