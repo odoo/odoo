@@ -1,11 +1,13 @@
+$o-mail-attachment-height: 10em;
+
 .o-mail-AttachmentContainer {
     &.o-inMessage.o-isImage:not(.o-inChatter) {
         min-width: 13em;
-        min-height: 10em;
+        min-height: $o-mail-attachment-height;
     }
     &:not(.o-inMessage.o-isImage), &.o-inChatter.o-inMessage.o-isImage {
         width: 13em;
-        height: 10em;
+        height: $o-mail-attachment-height;
     }
     background-color: $gray-200;
 
@@ -38,8 +40,12 @@
     line-height: 1.25;
 }
 
-.o-mail-AttachmentImage.o-inMessage {
+.o-mail-AttachmentImage.o-inMessage:not(.o-inComposer) {
     max-height: 300px;
+}
+
+.o-mail-AttachmentImage.o-inComposer {
+    max-height: $o-mail-attachment-height;
 }
 
 .o-viewable {
