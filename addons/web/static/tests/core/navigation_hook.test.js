@@ -18,7 +18,7 @@ class BasicHookParent extends Component {
     static template = xml`
         <button class="outside" t-ref="outsideRef">outside target</button>
         <div class="container" t-ref="containerRef">
-            <button class="o-navigable one" t-on-click="() => this.onClick(1)">target one</button>
+            <button class="o-navigable one" tabindex="0" t-on-click="() => this.onClick(1)">target one</button>
             <div class="o-navigable two" tabindex="0" t-on-click="() => this.onClick(2)">target two</div>
             <input class="o-navigable three" t-on-click="() => this.onClick(3)"/><br/>
             <button class="no-nav-class">skipped</button><br/>
@@ -73,7 +73,7 @@ test("default navigation", async () => {
     await navigate("home", ".one");
 
     await navigate("tab", ".two");
-    await navigate("shift+tab", ".one");
+    await navigate(["shift", "tab"], ".one");
 
     await navigate("arrowleft", ".one");
     await navigate("arrowright", ".one");
@@ -164,7 +164,7 @@ test("navigation with virtual focus", async () => {
     await navigate("home", ".one");
 
     await navigate("tab", ".two");
-    await navigate("shift+tab", ".one");
+    await navigate(["shift", "tab"], ".one");
 
     await press("enter");
     await animationFrame();
@@ -399,4 +399,50 @@ test("set focused element as active item", async () => {
     expect(component.inputRef.el).toBeFocused();
     expect(component.navigation.activeItem).not.toBeEmpty();
     expect(component.navigation.activeItem.el).toBe(component.inputRef.el);
+});
+
+test("browser default navigation is not captured", async () => {
+    async function navigate(hotkey, focused) {
+        await press(hotkey);
+        await animationFrame();
+        expect(focused).toBeFocused();
+    }
+
+    class Parent extends Component {
+        static props = [];
+        static template = xml`
+            <button class="outside-one" t-ref="outsideRef">outside one</button>
+            <div class="container" t-ref="containerRef">
+                <button class="o-navigable inside-one">inside one</button>
+                <button class="o-navigable inside-two">inside two</button>
+            </div>
+            <button class="outside-two">outside two</button>
+        `;
+
+        setup() {
+            useAutofocus({ refName: "outsideRef" });
+            this.navigation = useNavigation("containerRef", {});
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".outside-one").toBeFocused();
+
+    await navigate("tab", ".inside-one.focus");
+    expect(".focus").toHaveCount(1);
+
+    await navigate("tab", ".inside-two.focus");
+    expect(".focus").toHaveCount(1);
+
+    await navigate("tab", ".outside-two");
+    expect(".focus").toHaveCount(0);
+
+    await navigate(["shift", "tab"], ".inside-two.focus");
+    expect(".focus").toHaveCount(1);
+
+    await navigate(["shift", "tab"], ".inside-one.focus");
+    expect(".focus").toHaveCount(1);
+
+    await navigate(["shift", "tab"], ".outside-one");
+    expect(".focus").toHaveCount(0);
 });

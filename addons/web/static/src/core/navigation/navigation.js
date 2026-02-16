@@ -133,16 +133,20 @@ export class Navigator {
                 shouldRegisterHotkeys: true,
                 virtualFocus: false,
                 hotkeys: {
+                    ...(!options.virtualFocus
+                        ? {}
+                        : {
+                              tab: {
+                                  callback: () => this.next(),
+                                  bypassEditableProtection: true,
+                              },
+                              "shift+tab": {
+                                  callback: () => this.previous(),
+                                  bypassEditableProtection: true,
+                              },
+                          }),
                     home: () => this.items[0]?.setActive(),
                     end: () => this.items.at(-1)?.setActive(),
-                    tab: {
-                        callback: () => this.next(),
-                        bypassEditableProtection: true,
-                    },
-                    "shift+tab": {
-                        callback: () => this.previous(),
-                        bypassEditableProtection: true,
-                    },
                     arrowdown: {
                         callback: () => this.next(),
                         bypassEditableProtection: true,
