@@ -121,7 +121,7 @@ class TestCommand(BaseCase):
         shell = self.popen_command(
             'shell',
             '--shell-interface=python',
-            '--shell-file', file_path('base/tests/shell_file.txt'),
+            '--shell-file', file_path('test_core/tests/shell_file.txt'),
             stdin=main,
             close_fds=True,
         )
