@@ -91,10 +91,10 @@
 <template id='industries_setting' customize_show="True" active='False' name="Filter Industries" inherit_id="index_content">
     <xpath expr="//t[@t-set='all_categories_label']" position="before">
         <div class="dropdown d-none d-lg-block">
-            <a role="button" href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open industries dropdown">
+            <button data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open industries dropdown">
                 <t t-set="all_industries_label">All Industries</t>
                 <span t-out="current_industry and current_industry.name or all_industries_label"/>
-            </a>
+            </button>
             <div class="dropdown-menu">
                 <t t-if='current_industry'>
                     <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all')}"
@@ -459,8 +459,8 @@
                 </tbody>
             </table>
             <div class='d-flex justify-content-center gap-2 mt-3'>
-                <a role="button" title="I'm interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</a>
-                <a role="button" title="I'm not interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"> I'm not interested</a>
+                <button title="I'm interested" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</button>
+                <button title="I'm not interested" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"> I'm not interested</button>
                 <div class="modal fade modal_partner_assign_interested" role="form">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">

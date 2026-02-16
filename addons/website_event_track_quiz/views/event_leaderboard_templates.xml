@@ -111,7 +111,7 @@
                 <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
 
                     <div class="btn-group ms-1 position-static me-2">
-                        <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                        <button class="btn bg-black-25 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></button>
                         <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                             <form class="px-3" t-attf-action="#{'/event/%s/community/leaderboard' % (slug(event))}" role="search" method="get">
                                 <div class="input-group">
