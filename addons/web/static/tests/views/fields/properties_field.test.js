@@ -302,6 +302,39 @@ test("properties: no access to parent", async () => {
 });
 
 /**
+ * If the current user cannot write on the parent due to it being undefined,
+ * display a different warning message.
+ */
+test("properties: no parent", async () => {
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: undefined,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    expect(".o-dropdown--menu span:contains(Edit Properties)").toHaveCount(1, {
+        message: "The 'Edit Properties' btn should be in the cog menu",
+    });
+    await toggleMenuItem("Edit Properties"); // Start the edition mode
+    expect(".o_notification_content").toHaveText(
+        "Oops! You need to define Company to edit its properties."
+    );
+});
+
+/**
  * If the current user can write on the parent, he should
  * be able to change the properties definition.
  */
