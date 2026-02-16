@@ -35,16 +35,17 @@ class TestSuite(BaseTestSuite):
 
     def run(self, result, debug=False):
         for test in self:
-            if result.shouldStop:
-                break
-            assert isinstance(test, (TestCase))
-            odoo.modules.module.current_test = test
-            self._tearDownPreviousClass(test, result)
-            self._handleClassSetUp(test, result)
-            result._previousTestClass = test.__class__
+            for i in range(1):
+                if result.shouldStop:
+                    break
+                assert isinstance(test, (TestCase))
+                odoo.modules.module.current_test = test
+                self._tearDownPreviousClass(test, result)
+                self._handleClassSetUp(test, result)
+                result._previousTestClass = test.__class__
 
-            if not test.__class__._classSetupFailed:
-                test(result)
+                if not test.__class__._classSetupFailed:
+                    test(result)
 
         self._tearDownPreviousClass(None, result)
         return result

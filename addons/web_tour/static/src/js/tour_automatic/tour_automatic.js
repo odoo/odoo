@@ -122,6 +122,7 @@ export class TourAutomatic {
             allowDelayToRemove: this.config.allowDelayToRemove,
             onError: ({ error }) => {
                 if (error.type === "Timeout") {
+                    console.log(document.querySelector("iframe").contentDocument.body.outerHTML);
                     this.throwError(...this.currentStep.describeWhyIFailed, error.message);
                 } else {
                     this.throwError(error.message);

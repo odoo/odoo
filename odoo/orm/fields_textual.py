@@ -8,6 +8,7 @@ from collections import defaultdict
 from difflib import get_close_matches, unified_diff
 from hashlib import sha256
 from operator import attrgetter
+import itertools
 
 from markupsafe import Markup
 from markupsafe import escape as markup_escape
@@ -92,6 +93,7 @@ class StoredTranslations(dict):
 class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate: bool | Callable[[Callable[[str], str], str], str] = False  # whether the field is translated
+    autonomous_lang: bool = False
     size = None                         # maximum size of values (deprecated)
     is_text = True
     falsy_value = ''
@@ -190,7 +192,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             lang = record.env.lang or 'en_US'
             delay_translation = value != record.with_context(edit_translations=None, check_translations=None, lang=lang)[self.name]
 
-            if lang != base_lang:
+            if lang != base_lang and not self.autonomous_lang:
                 base_value = record.with_context(edit_translations=None, check_translations=True, lang=base_lang)[self.name]
                 base_terms = self.get_trans_terms(base_value)
                 translated_terms = self.get_trans_terms(value) if value != base_value else base_terms
@@ -241,8 +243,16 @@ class BaseString(Field[str | typing.Literal[False]]):
         dictionary = defaultdict(lambda: defaultdict(dict))
         if not from_lang_terms:
             return dictionary
-        dictionary.update({from_lang_term: defaultdict(dict) for from_lang_term in from_lang_terms})
 
+        if self.autonomous_lang:
+            lang_env = 'en_US'
+            lang_value_tuples = iter((lang, self.get_trans_terms(value)) for lang, value in to_lang_values.items())
+            for lang, terms in itertools.chain([(lang_env, from_lang_terms)], lang_value_tuples):
+                for term in terms:
+                    dictionary[term][lang] = term 
+            return dictionary
+
+        dictionary.update({from_lang_term: defaultdict(dict) for from_lang_term in from_lang_terms})
         for lang, to_lang_value in to_lang_values.items():
             to_lang_terms = self.get_trans_terms(to_lang_value)
             if len(from_lang_terms) != len(to_lang_terms):
@@ -375,7 +385,9 @@ class BaseString(Field[str | typing.Literal[False]]):
             return
 
         # model translation
-        if not callable(self.translate):
+        if not callable(self.translate) or self.autonomous_lang:
+            # if self.autonomous_lang:
+            #     cache_value = {lang: cache_value}
             # invalidate clean fields because them may contain fallback value
             clean_records = records.filtered(lambda rec: rec.id not in dirty_ids)
             clean_records.invalidate_recordset([self.name])
@@ -658,6 +670,8 @@ class Html(BaseString):
         # Otherwise, breaks `--test-tags .test_render_field`, for instance.
         elif attrs.get('translate') is True and attrs.get('sanitize', True):
             attrs['translate'] = html_translate
+        if attrs.get("translate") == html_translate and "render_engine" not in attrs and "autonomous_lang" not in attrs:
+            attrs["autonomous_lang"] = True
         return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))

@@ -2933,7 +2933,7 @@ class BaseModel(metaclass=MetaModel):
             translations = [{
                 'lang': lang,
                 'source': term_en,
-                'value': term_lang if term_lang != term_en else ''
+                'value': term_lang if field.autonomous_lang or term_lang != term_en else ''
             } for term_en, translations in translation_dictionary.items()
                 for lang, term_lang in translations.items()]
         context = {}
@@ -3871,7 +3871,7 @@ class BaseModel(metaclass=MetaModel):
                 column = SQL.identifier(fname)
                 # the type cast is necessary for some values, like NULLs
                 expr = SQL('"__tmp".%s::%s', column, SQL(field.column_type[1]))
-                if field.translate is True:
+                if field.translate and (field.translate is True or getattr(field, "autonomous_lang", None)):
                     # this is the SQL equivalent of:
                     # None if expr is None else (
                     #     (column or {'en_US': next(iter(expr.values()))}) | expr
@@ -4828,7 +4828,7 @@ class BaseModel(metaclass=MetaModel):
                 if not old_stored_translations:
                     continue
                 lang = self.env.lang or 'en_US'
-                if field.translate is True:
+                if field.translate is True or field.autonomous_lang:
                     new.update_field_translations(name, {
                         k: v for k, v in old_stored_translations.items() if k in valid_langs and k != lang
                     })
