@@ -115,6 +115,12 @@ BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
+_DEFAULT_WEB_TIMEOUT = float(os.getenv('ODOO_TEST_WEB_TIMEOUT', '0')) or 12
+_DEFAULT_WEB_NAVIGATE_TIMEOUT = float(os.getenv('ODOO_TEST_WEB_NAVIGATE_TIMEOUT', '0')) or _DEFAULT_WEB_TIMEOUT * 2
+_DEFAULT_JS_TIMEOUT = _DEFAULT_WEB_TIMEOUT * 5
+assert _DEFAULT_WEB_TIMEOUT > 0, "bad ODOO_TEST_WEB_TIMEOUT environment variable"
+assert _DEFAULT_WEB_NAVIGATE_TIMEOUT > 0, "bad ODOO_TEST_WEB_NAVIGATE_TIMEOUT environment variable"
+
 IGNORED_MSGS = re.compile(r"""
     (?: failed\ to\ fetch  # base error
       | connectionlosterror:  # conversion by offlineFailToFetchErrorHandler
@@ -1940,7 +1946,7 @@ which leads to stray network requests and inconsistencies."""
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
-        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=20.0)
+        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=_DEFAULT_WEB_NAVIGATE_TIMEOUT)
         self._logger.info("Navigation result: %s", nav_result)
         if wait_stop:
             frame_id = nav_result['frameId']
@@ -2377,7 +2383,7 @@ class HttpCase(TransactionCase):
     def csrf_token(self):
         return Request.csrf_token(self)  # noqa: F821
 
-    def url_open(self, url, data=None, files=None, timeout=12, headers=None, json=None, params=None, allow_redirects=True, cookies=None, method: str | None = None):
+    def url_open(self, url, data=None, files=None, timeout=_DEFAULT_WEB_TIMEOUT, headers=None, json=None, params=None, allow_redirects=True, cookies=None, method: str | None = None):
         if not method and (data or files or json):
             method = 'POST'
         method = method or 'GET'
@@ -2385,7 +2391,7 @@ class HttpCase(TransactionCase):
             url = self.base_url() + url
         return self.opener.request(method, url, params=params, data=data, json=json, files=files, timeout=timeout, headers=headers, cookies=cookies, allow_redirects=allow_redirects)
 
-    def _wait_remaining_requests(self, timeout=10):
+    def _wait_remaining_requests(self, timeout=_DEFAULT_WEB_TIMEOUT):
 
         def get_http_request_threads():
             return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
@@ -2512,7 +2518,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=_DEFAULT_JS_TIMEOUT, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2663,7 +2669,7 @@ class HttpCase(TransactionCase):
                 additional_tags.append('is_tour')
         return additional_tags
 
-    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None, timeout=12):
+    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None, timeout=_DEFAULT_WEB_TIMEOUT):
         """Make a JSON-RPC request to the server.
 
         :raises requests.HTTPError: if one occurred
