@@ -148,16 +148,14 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_company_currency(vals)
+        self._ubl_add_tax_currency_code_node_company_currency(vals)
 
-    def _add_invoice_header_nodes(self, document_node, vals):
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {
-            '_text': 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
-        }
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
 
     def _ubl_get_partner_address_node(self, vals, partner):
         # EXTENDS account.edi.xml.ubl_bis3
