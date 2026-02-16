@@ -16543,7 +16543,7 @@ test(`keep order after grouping`, async () => {
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Foo");
-    expect(queryAllTexts`.o_group_name`, { inline: true }).toEqual(["yop 1", "gnap 1", "blip 2"]);
+    expect(queryAllTexts(".o_group_name", { inline: true })).toEqual(["yop 1", "gnap 1", "blip 2"]);
 
     await toggleMenuItem("Foo");
     expect(queryAllTexts`.o_data_row td[name=foo]`).toEqual(["yop", "gnap", "blip", "blip"]);
