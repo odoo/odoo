@@ -16,17 +16,19 @@
                         <group class="align-items-stretch mx-0">
                             <group class="px-0">
                                 <field name="email_from" invisible="not email_from"/>
-                                <field name="subject" class="fw-bold"/>
+                                <label for="subject" string="Subject"/>
+                                <field name="subject" class="fw-bold" invisible="not subject" nolabel="1"/>
+                                <span class="fst-italic" invisible="subject">Unspecified</span>
                                 <label for="recipient_names" string="To"/>
                                 <field name="recipient_names" invisible="not recipient_names" nolabel="1"/>
-                                <span invisible="recipient_names">(unspecified)</span>
+                                <span class="fst-italic" invisible="recipient_names">Unspecified</span>
                                 <field name="reply_to" invisible="not reply_to"/>
                                 <field name="scheduled_date" invisible="not scheduled_date"/>
                             </group>
                             <div class="d-flex justify-content-end flex-column px-0">
                                 <div class="d-flex gap-1 justify-content-end align-items-stretch">
                                     <field name="lang"
-                                        class="p-1 d-flex w-25 align-items-center border"
+                                        class="p-1 d-flex w-25 align-items-center"
                                         invisible="not has_several_languages_installed" nolabel="1"/>
                                     <field name="resource_ref" nolabel="1"
                                         options="{'hide_model': True, 'no_create': True, 'no_open': True, 'model_field': 'model_id'}"

@@ -165,12 +165,12 @@ class MailingMailingTest(models.TransientModel):
         failed_count = total - success_count
         if failed_count > 0:
             notif_message = _(
-                'Test mailing successfully sent to %(success)s recipients, and %(failed)s failed.',
+                'Test email sent to %(success)s recipient(s), could not send to %(failed)s.',
                 success=success_count, failed=failed_count,
             )
         else:
             notif_message = _(
-                'Test mailing successfully sent to %(success)s recipients.',
+                'Test email sent to %(success)s recipient(s).',
                 success=success_count,
             )
 

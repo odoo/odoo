@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mass_mailing.MailingPreviewModeToggle">
-        <div class="d-flex gap-1" t-if="!state.isSmall">
+        <div class="d-flex gap-1 pb-1" t-if="!state.isSmall">
             <button type="button" class="btn py-0 px-1" t-on-click="() => this.onTogglePreviewMode(false)"
                     t-att-class="!state.isMobileMode? 'btn-primary' : 'btn-secondary'">
                 <i class="fa fa-desktop" title="Desktop Preview"/>

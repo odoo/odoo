@@ -3,7 +3,7 @@
     <t t-name="mail.MailPreviewRecordField" t-inherit="web.ReferenceField" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='relation']" position="replace">
             <div t-if="relation" class="d-flex align-items-stretch gap-1">
-                <div class="d-flex border px-1 align-items-center">$0</div>
+                <div class="d-flex px-1 align-items-center">$0</div>
                 <div class="d-flex ps-1 justify-content-center text-nowrap">
                     <Pager t-props="pagerProps"/>
                 </div>
