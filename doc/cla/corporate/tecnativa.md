@@ -30,3 +30,4 @@ Josep Guardiola josep.guardiola@tecnativa.com https://github.com/josep-tecnativa
 Carlos Lopez carlos.lopez@tecnativa.com https://github.com/carlos-lopez-tecnativa
 Eduardo Ezerouali eduardo.ezerouali@tecnativa.com https://github.com/eduezerouali-tecnativa
 Christian Ramos christian.ramos@tecnativa.com https://github.com/christian-ramos-tecnativa
+Juan Carlos Oñate juancarlos.onate@tecnativa.com https://github.com/juancarlosonate-tecnativa
