@@ -9,7 +9,7 @@ import {
     useState,
 } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
-import { isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { isInstanceOf, isIterable, isPromise } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { logger } from "../core/logger";
 import {
     getTypeOf,
@@ -249,7 +249,7 @@ export class HootTechnicalValue extends Component {
     }
 
     wrapPromiseValue(promise) {
-        if (!isInstanceOf(promise, Promise)) {
+        if (!isPromise(promise)) {
             return;
         }
         this.state.promiseState = ["pending", null];
