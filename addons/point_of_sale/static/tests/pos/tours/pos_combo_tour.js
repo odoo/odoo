@@ -347,6 +347,53 @@ registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_convert_orderlines_to_combo_with_same_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Combo Product 1"),
+            ProductConfiguratorPopup.pickColor("Blue"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Combo Product 1"),
+            ProductConfiguratorPopup.pickColor("Red"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Combo Product 4"),
+            ProductScreen.clickDisplayedProduct("Combo Product 6"),
+            ProductScreen.clickApplyCombo(),
+            inLeftSide([
+                ...Order.hasLine({
+                    productName: "Combo Product 1",
+                    quantity: "1",
+                    attributeLine: "Red",
+                }),
+                ...Order.hasLine({
+                    productName: "Combo Product 1",
+                    quantity: "1",
+                    attributeLine: "Blue",
+                }),
+                ...Order.hasLine({
+                    productName: "Combo Product 4",
+                    quantity: "1",
+                }),
+                ...Order.hasLine({
+                    productName: "Combo Product 6",
+                    quantity: "1",
+                }),
+                {
+                    content: "there only 5 order lines",
+                    trigger: ".order-container",
+                    run: () => {
+                        const orderLines = document.querySelectorAll(".orderline");
+                        if (orderLines.length !== 5) {
+                            throw new Error("Expected 5 order lines");
+                        }
+                    },
+                },
+            ]),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_combo_item_image_display", {
     steps: () =>
         [

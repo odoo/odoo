@@ -3584,6 +3584,30 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_convert_orderlines_to_combo', login="pos_user")
 
+    def test_convert_orderlines_to_combo_with_same_product(self):
+        setup_product_combo_items(self)
+        self.desk_accessories_combo.qty_max = 2
+        chair_color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'display_type': 'color',
+            'create_variant': 'no_variant',
+        })
+        chair_color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': chair_color_attribute.id,
+            'html_color': '#ff0000',
+        })
+        chair_color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': chair_color_attribute.id,
+            'html_color': '#0000ff',
+        })
+        self.combo_product_1.product_tmpl_id.attribute_line_ids = [Command.create({
+            'attribute_id': chair_color_attribute.id,
+            'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])],
+        })]
+        self.start_pos_tour('test_convert_orderlines_to_combo_with_same_product')
+
     def test_sync_from_ui_one_by_one(self):
         """
         Sync from UI is now syncing orders one by one.
