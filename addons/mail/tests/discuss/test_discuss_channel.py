@@ -961,6 +961,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,
                                 "pinned_at": message.pinned_at,
+                                "subject": message.subject,
                                 "translationValue": False,
                                 "write_date": fields.Datetime.to_string(message.write_date),
                             },
