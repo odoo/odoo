@@ -147,9 +147,11 @@ class HrEmployee(models.Model):
 
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
+        current_datetime = fields.Datetime.now()
         for employee in self:
             employee.last_attendance_id = self.env['hr.attendance'].search([
                 ('employee_id', 'in', employee.ids),
+                ('check_in', '<=', current_datetime),
             ], order="check_in desc", limit=1)
 
     @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
