@@ -6468,7 +6468,6 @@ test(`properly apply onchange on one2many fields`, async () => {
     Partner._onChanges = {
         foo(record) {
             record.child_ids = [
-                [5],
                 [1, 4, { name: "updated record" }],
                 [0, null, { name: "created record" }],
             ];
@@ -6548,7 +6547,7 @@ test(`update many2many value in one2many after onchange`, async () => {
     Partner._records[1].child_ids = [4];
     Partner._onChanges = {
         foo(record) {
-            record.child_ids = [[5], [1, 4, { name: "gold", type_ids: [[5]] }]];
+            record.child_ids = [[1, 4, { name: "gold", type_ids: [[4, 12]] }]];
         },
     };
 
@@ -6571,7 +6570,7 @@ test(`update many2many value in one2many after onchange`, async () => {
     expect(queryAllTexts`.o_data_cell`).toEqual(["aaa", "No records"]);
 
     await contains(`.o_field_widget[name=foo] input`).edit("tralala");
-    expect(queryAllTexts`.o_data_cell`).toEqual(["gold", "No records"]);
+    expect(queryAllTexts`.o_data_cell`).toEqual(["gold", "1 record"]);
 });
 
 test(`delete a line in a one2many while editing another line`, async () => {

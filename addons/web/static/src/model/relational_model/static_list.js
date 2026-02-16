@@ -219,6 +219,13 @@ export class StaticList extends DataPoint {
         return this.handleField && this.orderBy.length && this.orderBy[0].name === this.handleField;
     }
 
+    clear() {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.CLEAR]]);
+            await this._onUpdate();
+        });
+    }
+
     delete(record) {
         return this.model.mutex.exec(async () => {
             await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
@@ -557,16 +564,22 @@ export class StaticList extends DataPoint {
     }
 
     async _applyCommands(commands, { canAddOverLimit } = {}) {
-        const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
+        const { CLEAR, CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
 
         // For performance reasons, we split commands by record ids, such that we have quick access
         // to all commands concerning a given record. At the end, we re-build the list of commands
         // from this structure.
         let lastCommandIndex = -1;
-        const commandsByIds = {};
+        let commandsByIds = {};
         function addOwnCommand(command) {
-            commandsByIds[command[1]] = commandsByIds[command[1]] || [];
-            commandsByIds[command[1]].push({ command, index: ++lastCommandIndex });
+            let id = command[1];
+            if (!id) {
+                id = "global"; // global commands: CLEAR and SET
+                commandsByIds[id] = []; // only the last CLEAR or SET command is relevant
+            } else {
+                commandsByIds[id] = commandsByIds[id] || [];
+            }
+            commandsByIds[id].push({ command, index: ++lastCommandIndex });
         }
         function getOwnCommands(id) {
             commandsByIds[id] = commandsByIds[id] || [];
@@ -578,8 +591,8 @@ export class StaticList extends DataPoint {
 
         // For performance reasons, we accumulate removed ids (commands DELETE and UNLINK), and at
         // the end, we filter once this.records and this._currentIds to remove them.
-        const removedIds = {};
-        const recordsToLoad = [];
+        let removedIds = {};
+        let recordsToLoad = [];
         let nextRecords = [...this.records];
         let nextCurrentIds = [...this.currentIds];
         let nextTmpIncreaseLimit = this._tmpIncreaseLimit;
@@ -694,6 +707,16 @@ export class StaticList extends DataPoint {
                     }
                     nextCurrentIds.push(record.resId);
                     addOwnCommand([command[0], command[1]]);
+                    break;
+                }
+                case CLEAR: {
+                    commandsByIds = {};
+                    nextRecords = [];
+                    nextCurrentIds = [];
+                    recordsToLoad = [];
+                    removedIds = {};
+                    nextTmpIncreaseLimit = this._tmpIncreaseLimit;
+                    addOwnCommand([CLEAR]);
                     break;
                 }
             }
