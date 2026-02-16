@@ -925,4 +925,9 @@ export class GraphRenderer extends Component {
         const { cumulated } = this.model.metaData;
         this.model.updateMetaData({ cumulated: !cumulated });
     }
+
+    toggleShowEmpty() {
+        const { showEmpty } = this.model.metaData;
+        this.model.updateMetaData({ showEmpty: !showEmpty });
+    }
 }

@@ -29,6 +29,11 @@
                 t-on-click="toggleStacked"
                 t-att-class="{ active: model.metaData.stacked }"
             />
+            <button class="btn btn-secondary fa fa-circle-o o_graph_button" data-tooltip="Empty Datapoints" aria-label="Empty Datapoints"
+                t-on-click="toggleShowEmpty"
+                t-att-class="{ active: model.metaData.showEmpty }"
+                t-att-disabled="!model.metaData.hasEmpty"
+            />
         </div>
         <div t-if="model.metaData.mode === 'line'" class="btn-group" role="toolbar" aria-label="Change graph">
             <button class="btn btn-secondary fa fa-database o_graph_button" data-tooltip="Stacked" aria-label="Stacked"

@@ -61,6 +61,8 @@ export class GraphController extends Component {
             context.graph_stacked = this.model.metaData.stacked;
             if (mode === "line") {
                 context.graph_cumulated = this.model.metaData.cumulated;
+            } else if (mode === "bar") {
+                context.graph_show_empty = this.model.metaData.showEmpty;
             }
         }
         return context;
