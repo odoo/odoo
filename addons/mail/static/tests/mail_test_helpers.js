@@ -874,10 +874,11 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
  * @param {boolean} [options.ignoreOrder=false]
  * @param {string[]} [options.stepsAfter=[]]
  * @param {string[]} [options.stepsBefore=[]]
+ * @param {number} [options.timeout=5000]
  */
 export async function waitStoreFetch(
     nameOrNames = [],
-    { ignoreOrder = false, stepsAfter = [], stepsBefore = [] } = {}
+    { ignoreOrder = false, stepsAfter = [], stepsBefore = [], timeout = 5000 } = {}
 ) {
     await expect.waitForSteps(
         [
@@ -894,7 +895,7 @@ export async function waitStoreFetch(
             ),
             ...stepsAfter,
         ],
-        { ignoreOrder }
+        { ignoreOrder, timeout }
     );
     /**
      * Extra tick necessary to ensure the RPC is fully processed before resolving.
