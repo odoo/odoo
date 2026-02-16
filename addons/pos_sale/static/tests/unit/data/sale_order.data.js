@@ -42,6 +42,22 @@ export class SaleOrder extends models.ServerModel {
             date_order: "2025-07-03 17:04:14",
             write_date: "2025-07-03 17:04:14",
         },
+        {
+            id: 2,
+            name: "S00002",
+            state: "sale",
+            order_line: [3, 4],
+            partner_id: 3,
+            pricelist_id: 1,
+            fiscal_position_id: 1,
+            amount_total: 650,
+            amount_untaxed: 650,
+            amount_unpaid: 500,
+            partner_shipping_id: 3,
+            partner_invoice_id: 3,
+            date_order: "2025-07-03 17:04:14",
+            write_date: "2025-07-03 17:04:14",
+        },
     ];
 
     async load_sale_order_from_pos(id, config_id) {

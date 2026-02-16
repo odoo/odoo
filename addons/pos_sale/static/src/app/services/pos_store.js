@@ -79,6 +79,18 @@ patch(PosStore.prototype, {
         ]);
         return result["sale.order"][0];
     },
+    getConvertedQuantityFromSaleOrderline(convertedLine, soLine) {
+        const type = convertedLine.product_id.type;
+        const sOrder = soLine.order_id;
+        if (type === "service" && !["sent", "draft"].includes(sOrder.state)) {
+            return convertedLine.qty_to_invoice;
+        } else {
+            return (
+                convertedLine.product_uom_qty -
+                Math.max(convertedLine.qty_delivered, convertedLine.qty_invoiced)
+            );
+        }
+    },
     async settleSO(sale_order, orderFiscalPos) {
         if (sale_order.pricelist_id) {
             this.getOrder().setPricelist(sale_order.pricelist_id);
@@ -140,10 +152,15 @@ patch(PosStore.prototype, {
                     }
                 }
             );
+            const converted_line = converted_lines.find((l) => l.id === line.id);
+            newLineValues.qty = this.getConvertedQuantityFromSaleOrderline(converted_line, line);
+            if (!newLineValues.qty || newLineValues.qty === 0) {
+                continue;
+            }
+
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
 
-            const converted_line = converted_lines.find((l) => l.id === line.id);
             if (
                 newLine.getProduct().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
@@ -166,7 +183,6 @@ patch(PosStore.prototype, {
                     });
                 }
             }
-            newLine.setQuantityFromSOL(converted_line);
             newLine.setUnitPrice(converted_line.price_unit);
             newLine.setDiscount(line.discount);
 
