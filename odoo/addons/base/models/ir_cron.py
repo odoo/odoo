@@ -167,7 +167,7 @@ class IrCron(models.Model):
 
         with ListLogHandler(_logger, logging.ERROR) as capture:
             self._process_job(cron_cr, job)
-        if log_record := next((lr for lr in capture if hasattr(lr, 'exc_info')), None):
+        if log_record := next((lr for lr in capture if getattr(lr, 'exc_info', None)), None):
             _exc_type, exception, _traceback = log_record.exc_info
             e = RuntimeError()
             e.__cause__ = exception
