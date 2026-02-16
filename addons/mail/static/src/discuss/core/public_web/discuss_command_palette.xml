@@ -43,7 +43,7 @@
             <div class="d-flex align-items-center px-0 mb-1 gap-1">
                 <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="oi oi-user-plus"/> Invite people</span>
             </div>
-            <ChannelInvitation state="invitePeopleState"/>
+            <ChannelInvitation searchStr="props.name" onSelectionChange.bind="onSelectionChange"/>
         </div>
         <t t-set-slot="footer">
             <button class="btn btn-primary me-2" t-on-click="onClickConfirm" t-esc="createText"/>

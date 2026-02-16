@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o-mail-Message-body')]" position="after">
-            <div class="o-mail-Message-seenContainer position-absolute">
+        <xpath expr="//div[hasclass('o-mail-Message-content')]/div[hasclass('position-relative')]/AttachmentList" position="after">
+            <div t-if="props.message.isBodyEmpty and message.attachment_ids.length > 0 and props.message.showSeenIndicator(props.thread)" class="o-mail-Message-seenContainer position-absolute ratio-1x1 rounded-circle p-1">
                 <MessageSeenIndicator
-                    t-if="props.message.showSeenIndicator(props.thread)"
                     message="props.message"
                 />
             </div>
         </xpath>
-        <xpath expr="//AttachmentList" position="after">
-            <div t-if="props.message.isBodyEmpty and message.attachment_ids.length > 0" class="o-mail-Message-seenContainer position-absolute ratio-1x1 rounded-circle p-1">
+    </t>
+    <t t-inherit="mail.Message-bodyContent" t-inherit-mode="extension">
+        <xpath expr="//div[@t-ref='body']" position="after">
+            <div t-if="props.message.showSeenIndicator(props.thread)" class="o-mail-Message-seenContainer position-absolute">
                 <MessageSeenIndicator
-                    t-if="props.message.showSeenIndicator(props.thread)"
                     message="props.message"
                 />
             </div>

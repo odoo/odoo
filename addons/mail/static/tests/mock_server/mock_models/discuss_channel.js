@@ -962,4 +962,75 @@ export class DiscussChannel extends models.ServerModel {
         });
         MailGuest._set_auth_cookie(guestId);
     }
+
+    /**
+     * @param {number[]} ids
+     * @param {number} source_message_id
+     * @param {string} [optional_msg_body]
+     * @param {boolean} [optional_msg_has_link]
+     * @param {boolean} [source_msg_has_link]
+     */
+    _forward_message(
+        ids,
+        source_message_id,
+        optional_msg_body,
+        optional_msg_has_link,
+        source_msg_has_link
+    ) {
+        const kwargs = getKwArgs(
+            arguments,
+            "ids",
+            "source_message_id",
+            "optional_msg_body",
+            "optional_msg_has_link",
+            "source_msg_has_link"
+        );
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        optional_msg_body = kwargs.optional_msg_body || false;
+        optional_msg_has_link = kwargs.optional_msg_has_link || false;
+        source_msg_has_link = kwargs.source_msg_has_link || false;
+
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        const [forwardedMessage] = MailMessage.browse(kwargs.source_message_id);
+
+        for (const channel of this.browse(ids)) {
+            const newAttachmentIds = [];
+            if (forwardedMessage.attachment_ids?.length) {
+                const attachments = IrAttachment.browse(forwardedMessage.attachment_ids);
+                for (const attachment of attachments) {
+                    const newAttachmentId = IrAttachment.create({
+                        name: attachment.name,
+                        mimetype: attachment.mimetype,
+                        res_model: "discuss.channel",
+                        res_id: channel.id,
+                    });
+                    newAttachmentIds.push(newAttachmentId);
+                }
+            }
+            this.message_post(
+                channel.id,
+                makeKwArgs({
+                    body: forwardedMessage.body,
+                    message_type: "comment",
+                    forwarded_from_id: forwardedMessage.id,
+                    subtype_xmlid: "mail.mt_comment",
+                    attachment_ids: newAttachmentIds,
+                })
+            );
+            if (optional_msg_body) {
+                this.message_post(
+                    channel.id,
+                    makeKwArgs({
+                        body: optional_msg_body,
+                        message_type: "comment",
+                        subtype_xmlid: "mail.mt_comment",
+                    })
+                );
+            }
+        }
+    }
 }

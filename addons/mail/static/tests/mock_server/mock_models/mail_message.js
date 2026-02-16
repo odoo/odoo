@@ -16,6 +16,7 @@ export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
+    forwarded_from_id = fields.Many2one({ relation: "mail.message" });
     pinned_at = fields.Generic({ default: false });
 
     /** @param {DomainListRepr} [domain] */
@@ -189,6 +190,7 @@ export class MailMessage extends models.ServerModel {
             mailDataHelpers.Store.attr("body", (m) => ["markup", m.body]),
             "create_date",
             "date",
+            mailDataHelpers.Store.one("forwarded_from_id"),
             "message_type",
             "model",
             "message_link_preview_ids",

@@ -382,7 +382,7 @@ test("'New Meeting' in mobile", async () => {
     await contains("button[title*='Close Chat Window']");
     await click("button:text('Chats')");
     await click("button[title='New Meeting']");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Partner 2'))");
+    await click(".o-discuss-SelectableList-selectable:has(:text('Partner 2'))");
     await click("button:not([disabled]):text('Invite to Meeting')");
     await contains(".o-discuss-Call");
     await click("[title='Exit Fullscreen']");
@@ -809,9 +809,9 @@ test("should also invite to the call when inviting to the channel", async () => 
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await click("button[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation:has(:text('Invite people'))");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click("button[title='Invite']:enabled");
+    await contains(".o-discuss-ChannelInvitation");
+    await click(".o-discuss-SelectableList-selectable:has(:text('TestPartner'))");
+    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-CallParticipantCard.o-isInvitation");
 });
 

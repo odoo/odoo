@@ -127,6 +127,8 @@ export class Message extends Record {
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
     parent_id = fields.One("mail.message");
+    /** @type {number[]} */
+    forwarded_from_id = fields.One("mail.message");
     /**
      * When set, this temporary/pending message failed message post, and the
      * value is a callback to re-attempt to post the message.
@@ -242,7 +244,7 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (this.isEmpty || !this.allowsEdition || this.poll) {
+        if (this.isEmpty || !this.allowsEdition || this.poll || this.forwarded_from_id) {
             return false;
         }
         return this.message_type === "comment";

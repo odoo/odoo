@@ -10,93 +10,36 @@
 
     <t t-name="discuss.ChannelInvitation.main">
         <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints, 'px-1': !props.channel }">
-            <t t-if="store.self_user?.share === false">
-                <div class="position-relative">
-                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
-                    <div t-if="props.channel?.allow_invite_by_email" class="o-discuss-ChannelInvitation-iconContainer position-absolute top-50 end-0 translate-middle-y me-2 smaller opacity-50" data-tooltip="Type email to invite">
-                        <i class="fa fa-envelope-o fa-lg"/>
-                        <i class="fa fa-plus-circle o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle"/>
-                    </div>
-                </div>
-                <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': selectablePartners.length === 0 and state.selectableEmails.length === 0 }">
-                    <div t-if="selectablePartners.length === 0 and state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
-                        <t t-if="props.channel">No people found to invite.</t>
-                        <t t-else="">No user found.</t>
-                    </div>
-                    <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
-                    <t t-foreach="selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
-                        </t>
-                    </t>
-                    <t t-foreach="state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableEmailAddress" t-value="selectableEmailAddress"/>
-                            <t t-set="selectableItemIndex" t-value="selectablePartners.length + selectableEmailAddress_index"/>
-                        </t>
-                    </t>
-                </ul>
-            </t>
-            <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
-                <t t-if="store.self_user" >
-                    <div t-if="selectedPartners.length > 0 or state.selectedEmails.length > 0" class="pt-2">
-                        <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto o-scrollbar-thin">
-                            <t t-foreach="selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
-                                <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
-                                    <t t-esc="selectedPartner.name"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
-                                </button>
-                            </t>
-                            <t t-foreach="state.selectedEmails" t-as="selectedEmail" t-key="selectedEmail">
-                                <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedEmail(selectedEmail)">
-                                    <t t-esc="selectedEmail"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
-                                </button>
-                            </t>
-                        </div>
-                    </div>
-                    <button t-if="props.channel and (selectedPartners.length > 0 or state.selectedEmails.length > 0)" class="btn btn-primary w-100 my-2" t-att-title="invitationButtonText" t-on-click="onClickInvite">
-                        <t t-esc="invitationButtonText"/>
-                    </button>
+            <div class="d-flex flex-column flex-grow-1 overflow-hidden o-min-height-0">
+                <t t-call="discuss.SelectableList">
+                    <t t-set="beforeOptionsTemplate" t-value="'discuss.ChannelInvitation-beforeOptions'"/>
+                    <t t-set="additionalItemContentTemplate" t-value="'discuss.ChannelInvitation-additionalItemContent'"/>
                 </t>
-                <hr t-if="props.channel?.invitationLink" class="border-dark-subtle"/>
-                <div t-if="props.channel?.invitationLink" class="input-group">
-                    <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.channel.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
-                    <button class="btn btn-primary px-2 o-py-0_5" t-on-click="onClickCopy">
-                        <i class="fa fa-copy"/>
-                    </button>
+            </div>
+            <div class="flex-shrink-0 bg-inherit">
+                <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
+                    <t t-if="store.self_user">
+                        <button t-if="props.channel and selectedOptions.length" class="btn btn-primary w-100 my-2" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                            <t t-out="invitationButtonText"/>
+                        </button>
+                    </t>
+                    <hr t-if="props.channel?.invitationLink" class="border-dark-subtle"/>
+                    <div t-if="props.channel?.invitationLink" class="input-group">
+                        <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.channel.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <button class="btn btn-primary px-2 o-py-0_5" t-on-click="onClickCopy">
+                            <i class="fa fa-copy"/>
+                        </button>
+                    </div>
+                    <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-out="props.channel.accessRestrictedToGroupText"/>
                 </div>
-                <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedToGroupText"/>
             </div>
         </div>
     </t>
-    <t t-name="discuss.ChannelInvitation-selectableItem">
-        <t t-set="isSelected" t-value="selectablePartner ? selectablePartner.in(selectedPartners) : state.selectedEmails.includes(selectableEmailAddress)"/>
-        <li class="o-discuss-ChannelInvitation-selectable object-fit-cover d-flex align-items-start px-1 py-0 btn list-group-item border-0 rounded-0 w-100"
-            t-att-class="{ 'o-odd': selectableItemIndex % 2 === 1, 'o-selected': isSelected, 'align-items-center': selectableEmailAddress }"
-            t-on-click="() => selectablePartner ? this.onClickSelectablePartner(selectablePartner) : this.onClickSelectableEmail(selectableEmailAddress) "
-        >
-            <div class="d-flex align-items-center p-1 bg-inherit">
-                <div class="position-relative d-flex flex-shrink-0 bg-inherit">
-                    <DiscussAvatar t-if="selectablePartner" persona="selectablePartner"/>
-                    <div t-else="" class="w-100 h-100 d-flex align-items-center justify-content-center rounded-3 bg-primary text-white">
-                        <i class="fa fa-envelope"/>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex flex-column mx-2 flex-grow-1 overflow-hidden o-mt-0_5">
-                <t t-if="selectablePartner">
-                    <div class="d-flex overflow-hidden align-items-baseline" name="selectablePartnerName">
-                        <span class="text-truncate" t-esc="selectablePartner.name"/>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1 gap-1" name="selectablePartnerDetail">
-                        <span t-if="selectablePartner.email" t-esc="selectablePartner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
-                    </div>
-                </t>
-                <div t-else="" class="overflow-hidden d-flex flex-column align-items-baseline">
-                    <span class="text-truncate text-start w-100" t-esc="selectableEmailAddress"/>
-                    <span t-if="state.sentEmails.has(selectableEmailAddress)" class="text-truncate text-start smaller text-600 fw-normal lh-1 w-100">Invitation already sent to this address</span>
-                </div>
-            </div>
-            <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
-        </li>
+    <t t-name="discuss.ChannelInvitation-beforeOptions">
+        <div t-if="state.searchResultCount > state.selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="showingResultNarrowText"/>
     </t>
+    <t t-name="discuss.ChannelInvitation-additionalItemContent">
+        <span t-if="option.email and state.sentEmails.has(option.email)" class="text-truncate text-start smaller text-600 fw-normal lh-1 w-100">Invitation already sent to this address</span>
+    </t>
+
 </templates>

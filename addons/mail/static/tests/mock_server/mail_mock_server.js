@@ -629,6 +629,33 @@ registerRoute("/mail/message/translate", translate);
 /** @type {RouteCallback} */
 async function translate(request) {}
 
+registerRoute("/mail/message/forward", mail_message_forward);
+/** @type {RouteCallback} */
+async function mail_message_forward(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    const {
+        forwarded_from_id,
+        optional_msg_body,
+        target_channels_ids,
+        optional_msg_has_link = false,
+        source_msg_has_link = false,
+    } = await parseRequestParams(request);
+    const channels = DiscussChannel.browse(target_channels_ids);
+    if (!channels.length) {
+        return;
+    }
+    DiscussChannel._forward_message(
+        target_channels_ids,
+        makeKwArgs({
+            source_message_id: forwarded_from_id,
+            optional_msg_body,
+            optional_msg_has_link,
+            source_msg_has_link,
+        })
+    );
+}
+
 registerRoute("/mail/message/update_content", mail_message_update_content);
 /** @type {RouteCallback} */
 async function mail_message_update_content(request) {

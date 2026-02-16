@@ -24,10 +24,12 @@ class CreateChatDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.invitePeopleState = useState({
-            selectablePartners: [],
             selectedPartners: [],
-            searchStr: this.props.name,
         });
+    }
+
+    onSelectionChange(selectedPartners) {
+        this.invitePeopleState.selectedPartners = selectedPartners;
     }
 
     get createText() {

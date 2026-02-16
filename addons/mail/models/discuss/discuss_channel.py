@@ -8,6 +8,7 @@ from markupsafe import Markup
 from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
+from odoo.http import request
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
@@ -1052,6 +1053,56 @@ class DiscussChannel(models.Model):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely
         if not message.message_type == 'comment':
             raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
+
+    def _forward_message(
+        self,
+        source_message,
+        optional_msg_body=False,
+        optional_msg_has_link=False,
+        source_msg_has_link=False,
+    ):
+        source_message.ensure_one()
+        attachment_template = []
+        if source_message.attachment_ids:
+            attachment_template = source_message.attachment_ids.copy_data()
+        preview_messages = self.env["mail.message"]
+        for channel in self:
+            if attachment_template:
+                new_attachment_ids = self.env["ir.attachment"].create(
+                    [
+                        dict(vals, res_id=channel.id, res_model="discuss.channel")
+                        for vals in attachment_template
+                    ]
+                ).ids
+            else:
+                new_attachment_ids = []
+            forwarded_msg = channel.message_post(
+                body=source_message.body,
+                message_type="comment",
+                forwarded_from_id=source_message.id,
+                subtype_xmlid="mail.mt_comment",
+                attachment_ids=new_attachment_ids,
+            )
+            if source_msg_has_link:
+                preview_messages |= forwarded_msg
+            if optional_msg_body:
+                optional_msg = channel.message_post(
+                    body=optional_msg_body,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                    body_is_html=True,
+                )
+                if optional_msg_has_link:
+                    preview_messages |= optional_msg
+        if preview_messages and self.env["mail.link.preview"]._is_link_preview_enabled():
+            # sudo: mail.link.preview requires ERP Manager access, but preview creation
+            # during forwarding must work for all users. Sudo bypasses access restrictions.
+            link_preview_sudo = self.env["mail.link.preview"].sudo()
+            base_url = request.httprequest.url_root if request and request.httprequest else None
+            for msg in preview_messages:
+                link_preview_sudo._create_from_message_and_notify(
+                    msg, request_url=base_url
+                )
 
     def _create_attachments_for_post(self, values_list, extra_list):
         # Create voice metadata from meta information

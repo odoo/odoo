@@ -164,6 +164,8 @@ class MailMessage(models.Model):
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null')
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
+    forwarded_from_id = fields.Many2one(
+        'mail.message', 'Forwarded From', index='btree_not_null', ondelete='set null')
     # related document
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
@@ -1164,6 +1166,7 @@ class MailMessage(models.Model):
         res.attr("subject")
         # sudo: mail.message.subtype - reading subtype on accessible message is allowed
         res.one("subtype_id", ["description"], sudo=True)
+        res.one("forwarded_from_id", "_store_message_fields", predicate=lambda m: m.forwarded_from_id)
         res.attr("write_date")
         self._store_linked_messages_fields(res)
         self._store_message_link_previews_fields(res)
