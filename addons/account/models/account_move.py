@@ -6649,7 +6649,7 @@ class AccountMove(models.Model):
             # Search for partners in the mail's body.
             body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
             partners = self._partner_find_from_emails_single(
-                body_mail_addresses, filter_found=lambda p: is_right_company(p) or p.partner_share, no_create=True,
+                body_mail_addresses, filter_found=lambda p: is_right_company(p) and p.partner_share, no_create=True,
             ) if body_mail_addresses else self.env['res.partner']
 
         # Little hack: Inject the mail's subject in the body.
