@@ -107,14 +107,18 @@ export function clickPaymentline(name, amount) {
         },
     ];
 }
-export function clickInvoiceButton() {
-    return [
+export function clickInvoiceButton(isHighlighted = true) {
+    const steps = [
         {
             content: "click invoice button",
             trigger: ".payment-buttons .js_invoice",
             run: "click",
         },
     ];
+    if (isHighlighted) {
+        steps.push(...isInvoiceButtonChecked());
+    }
+    return steps;
 }
 export function clickValidate() {
     return [
@@ -251,14 +255,6 @@ export function changeIs(amount) {
         {
             content: `change is ${amount}`,
             trigger: `.payment-status-amount .amount:contains("${amount}")`,
-        },
-    ];
-}
-export function isInvoiceOptionSelected() {
-    return [
-        {
-            content: "Invoice option is selected",
-            trigger: ".payment-buttons .js_invoice.highlight",
         },
     ];
 }

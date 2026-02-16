@@ -32,7 +32,6 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             Dialog.confirm(),
 
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.isInvoiceOptionSelected(),
             PaymentScreen.clickValidate(),
             // verify that the pos requires the selection of a partner
             Dialog.confirm(),
