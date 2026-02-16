@@ -2149,6 +2149,7 @@ class MailThread(models.AbstractModel):
                 {partner.id for partners in results.values() for partner in partners if partner.id}
             )
         else:
+<<<<<<< 52ea8960c59a3ae355365a9f46316c831bb0d124
             all_partners = self.env['mail.thread']._partner_find_from_emails_single(
                 emails, avoid_alias=True, no_create=not force_create,
             )
@@ -2163,6 +2164,150 @@ class MailThread(models.AbstractModel):
                     self.env['res.partner']
                 ))
         return results
+||||||| ea56382f804e494a86a72dab02a26134ef358c50
+            followers = self.env['res.partner']
+
+        # first, build a normalized email list and remove those linked to aliases
+        # to avoid adding aliases as partners. In case of multi-email input, use
+        # the first found valid one to be tolerant against multi emails encoding
+        normalized_emails = [email_normalized
+                             for email_normalized in (email_normalize(contact, strict=False) for contact in emails)
+                             if email_normalized
+                            ]
+        matching_aliases = self.env['mail.alias'].sudo().search([('alias_full_name', 'in', normalized_emails)])
+        if matching_aliases:
+            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')]
+
+        done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        user_partners = self._mail_search_on_user(remaining, extra_domain=extra_domain)
+        done_partners += [user_partner for user_partner in user_partners]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
+        done_partners += [partner for partner in partners]
+
+        # prioritize current user if exists in list, and partners with matching company ids
+        if company_fname := records and records._mail_get_company_field():
+            def sort_key(p):
+                return (
+                    self.env.user.partner_id == p,           # prioritize user
+                    p.company_id in records[company_fname],  # then partner associated w/ records
+                    not p.company_id,                        # else pick partner w/out company_id
+                )
+        else:
+            def sort_key(p):
+                return (self.env.user.partner_id == p, not p.company_id)
+
+        done_partners.sort(key=sort_key, reverse=True)  # reverse because False < True
+
+        # iterate and keep ordering
+        partners = []
+        for contact in emails:
+            normalized_email = email_normalize(contact, strict=False)
+            partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
+            if not partner and force_create and normalized_email in normalized_emails:
+                partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
+            partners.append(partner)
+        return partners
+
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        """ Convert a list of emails into a list partner_ids and a list
+            new_partner_ids. The return value is non conventional because
+            it is meant to be used by the mail widget.
+
+            :return dict: partner_ids and new_partner_ids """
+        self.ensure_one()
+        MailMessage = self.env['mail.message'].sudo()
+        partners = self._mail_find_partner_from_emails(emails, records=self)
+        result = list()
+        for idx, contact in enumerate(emails):
+            partner = partners[idx]
+            partner_info = {'full_name': partner.email_formatted if partner else contact, 'partner_id': partner.id}
+            result.append(partner_info)
+            # link mail with this from mail to the new partner id
+            if link_mail and partner:
+                MailMessage.search([
+                    ('email_from', '=ilike', partner.email_normalized),
+                    ('author_id', '=', False)
+                ]).write({'author_id': partner.id})
+        return result
+=======
+            followers = self.env['res.partner']
+
+        # first, build a normalized email list and remove those linked to aliases
+        # to avoid adding aliases as partners. In case of multi-email input, use
+        # the first found valid one to be tolerant against multi emails encoding
+        normalized_emails = [email_normalized
+                             for email_normalized in (email_normalize(contact, strict=False) for contact in emails)
+                             if email_normalized
+                            ]
+        matching_aliases = self.env['mail.alias'].sudo().search([('alias_full_name', 'in', normalized_emails)])
+        if matching_aliases:
+            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')]
+
+        done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        user_partners = self._mail_search_on_user(remaining, extra_domain=extra_domain)
+        done_partners += [user_partner for user_partner in user_partners]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
+        done_partners += [partner for partner in partners]
+
+        # prioritize current user if exists in list, and partners with matching company ids
+        if company_fname := records and records._mail_get_company_field():
+            def sort_key(p):
+                return (
+                    self.env.user.partner_id == p,           # prioritize user
+                    p.company_id in records[company_fname],  # then partner associated w/ records
+                    not p.company_id,                        # else pick partner w/out company_id
+                    -p.id,                                   # finally use a deterministic id ASC tie-breaker
+                )
+        else:
+            def sort_key(p):
+                return (
+                    self.env.user.partner_id == p,          # prioritize user
+                    not p.company_id,                       # else pick partner w/out company_id
+                    -p.id,                                  # finally use a deterministic id ASC tie-breaker
+                )
+
+        done_partners.sort(key=sort_key, reverse=True)  # reverse because False < True
+
+        # iterate and keep ordering
+        partners = []
+        for contact in emails:
+            normalized_email = email_normalize(contact, strict=False)
+            partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
+            if not partner and force_create and normalized_email in normalized_emails:
+                partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
+            partners.append(partner)
+        return partners
+
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        """ Convert a list of emails into a list partner_ids and a list
+            new_partner_ids. The return value is non conventional because
+            it is meant to be used by the mail widget.
+
+            :return dict: partner_ids and new_partner_ids """
+        self.ensure_one()
+        MailMessage = self.env['mail.message'].sudo()
+        partners = self._mail_find_partner_from_emails(emails, records=self)
+        result = list()
+        for idx, contact in enumerate(emails):
+            partner = partners[idx]
+            partner_info = {'full_name': partner.email_formatted if partner else contact, 'partner_id': partner.id}
+            result.append(partner_info)
+            # link mail with this from mail to the new partner id
+            if link_mail and partner:
+                MailMessage.search([
+                    ('email_from', '=ilike', partner.email_normalized),
+                    ('author_id', '=', False)
+                ]).write({'author_id': partner.id})
+        return result
+>>>>>>> 4180951bad4de614c39eb386f3321d670552c012
 
     def _get_customer_information(self):
         """ Get customer information that can be extracted from the records by
