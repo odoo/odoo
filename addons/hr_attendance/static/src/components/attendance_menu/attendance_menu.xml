@@ -18,16 +18,11 @@
                 <div class="att_container d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
                         <h3 class="mb-0">
-                            <t t-if="this.state.checkedIn">
-                                Timesheets
+                            <t t-if="this.hasCheckedInToday">
+                                <small>Welcome back</small> <span class="d-block"><t t-esc="this.employeeName"/>!</span>
                             </t>
                             <t t-else="">
-                                <t t-if="this.hasCheckedInToday">
-                                    <small>Welcome back</small> <span class="d-block"><t t-esc="this.employeeName"/>!</span>
-                                </t>
-                                <t t-else="">
-                                    <small>Welcome,</small> <span class="d-block"><t t-esc="this.employeeName"/>.</span>
-                                </t>
+                                <small>Welcome,</small> <span class="d-block"><t t-esc="this.employeeName"/>.</span>
                             </t>
                         </h3>
                     </div>
