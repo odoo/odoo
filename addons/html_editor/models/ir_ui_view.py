@@ -338,7 +338,7 @@ class IrUiView(models.Model):
                     node.set('class', node.get('class') + ' col-md')
                     has_change = True
             if has_change:
-                ancestor.with_context(no_cow=True).write({'arch': etree.tostring(arch, encoding='unicode')})
+                ancestor.with_context(no_cow=True, delayed_translations=False).write({'arch': etree.tostring(arch, encoding='unicode')})
 
         new_arch = self.replace_arch_section(xpath, arch_section)
         old_arch = etree.fromstring(self.arch.encode('utf-8'))
