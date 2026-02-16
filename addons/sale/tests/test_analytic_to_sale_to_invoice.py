@@ -409,3 +409,27 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         """Negative analytic quantities should not be allowed."""
         with self.assertRaises(UserError, msg="It shouldn't be possible to set negative quantity on analytic line."):
             self.at_cost_aal.with_context(from_services_and_material=True).unit_amount = -1
+
+    def test_manual_amount_update_updates_so_line_price_unit(self):
+        """Updating the analytic line amount for at cost lines recomputes the SO line unit price."""
+        self.at_cost_aal.unit_amount = 2
+        self.at_cost_aal.amount = -20
+
+        extra_work_at_cost = self.env['account.analytic.line'].with_context(from_services_and_material=True).create({
+            'name': 'Extra work At cost line',
+            'product_id': self.reinvoice_at_cost_product.id,
+            'unit_amount': 2,
+            'order_id': self.services_sale_order.id,
+            'amount': -30,
+        })
+
+        self.assertEqual(
+            self.at_cost_aal.so_line.price_unit,
+            10,
+            "Unit Price should be recomputed when AAL amount is changed."
+        )
+        self.assertEqual(
+            extra_work_at_cost.so_line.price_unit,
+            15,
+            "Unit Price should be recomputed when AAL amount is changed."
+        )

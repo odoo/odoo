@@ -970,7 +970,7 @@ class SaleOrderLine(models.Model):
         # compute for analytic lines
         delivered_qties = defaultdict(float)
         lines_by_analytic = self.filtered(
-            lambda sol: sol.qty_delivered_method == 'analytic' or sol._is_reinvoicing_line()
+            lambda sol: sol.qty_delivered_method == 'analytic' or sol._is_analytic_reinvoice_line()
         )
         domain = lines_by_analytic._get_delivered_quantity_by_analytic_domain()
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic(domain)
@@ -1871,7 +1871,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.product_uom_id.rounding
 
-    def _is_reinvoicing_line(self):
+    def _is_analytic_reinvoice_line(self):
         self.ensure_one()
         return (
             not self.is_expense
