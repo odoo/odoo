@@ -125,8 +125,9 @@ class AccountMove(models.Model):
 
             param['company_id'] = self.company_id.id or False
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
-            param['move_type'] = (('in_invoice', 'in_refund') if
-                  self.l10n_latam_document_type_id._is_doc_type_vendor() else ('out_invoice', 'out_refund'))
+            param['move_type'] = (('in_invoice', 'in_refund')
+                if self.is_purchase_document()
+                else ('out_invoice', 'out_refund'))
         return where_string, param
 
     def _get_name_invoice_report(self):
@@ -177,8 +178,14 @@ class AccountMove(models.Model):
 
     def _is_manual_document_number(self):
         if self.journal_id.company_id.country_id.code == 'CL':
-            return self.journal_id.type == 'purchase' and not self.l10n_latam_document_type_id._is_doc_type_vendor()
+            return self.journal_id.type == 'purchase' and not self._is_electronic_vendor_bill()
         return super()._is_manual_document_number()
+
+    def _is_electronic_vendor_bill(self):
+        return self.l10n_latam_document_type_id._is_doc_type_vendor() or (
+            self.l10n_latam_document_type_id._is_doc_type_credit_note()
+            and self.reversed_entry_id.l10n_latam_document_type_id._is_doc_type_vendor()
+        )
 
     def _l10n_cl_get_amounts(self):
         """
