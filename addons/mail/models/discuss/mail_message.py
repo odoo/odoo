@@ -18,6 +18,13 @@ class MailMessage(models.Model):
             else:
                 message.channel_id = False
 
+    def _get_with_access(self, mode="read", **kwargs):
+        """Override to allow users/guests to edit their own messages in channels."""
+        res = super()._get_with_access(mode=mode, **kwargs)
+        if not res and mode == "write" and self.channel_id and self.is_current_user_or_guest_author:
+            return self
+        return res
+
     def _store_message_fields(self, res: Store.FieldList, **kwargs):
         super()._store_message_fields(res, **kwargs)
         res.many(

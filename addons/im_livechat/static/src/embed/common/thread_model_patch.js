@@ -114,15 +114,10 @@ patch(Thread.prototype, {
         return message;
     },
 
-    get composerHidden() {
-        return (
-            super.composerHidden ||
-            this.livechat_end_dt ||
-            (this.channel?.chatbot?.completed && !this.channel.chatbot.forwarded)
-        );
-    },
-
     computeComposerDisabled() {
+        if (this.channel?.channel_type !== "livechat") {
+            return super.computeComposerDisabled(...arguments);
+        }
         if (this.channel?.chatbot?.forwarded && !this.livechat_end_dt) {
             return false;
         }

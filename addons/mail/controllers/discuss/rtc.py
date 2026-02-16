@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from werkzeug.exceptions import NotFound
 
+from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE
 from odoo.tools import file_open
@@ -66,9 +67,11 @@ class RtcController(Controller):
         """Joins the RTC call of a channel if the user is a member of that channel
         :param int channel_id: id of the channel to join
         """
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise request.not_found()
+        if channel.is_readonly:
+            raise UserError(self.env._("Cannot join a call in a read-only channel."))
         member = channel._find_or_create_member_for_self()
         if not member:
             raise NotFound()

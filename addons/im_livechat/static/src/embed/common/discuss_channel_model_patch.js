@@ -63,5 +63,12 @@ const discussChannelPatch = {
             this.delete();
         }
     },
+    get composerHidden() {
+        return (
+            super.composerHidden ||
+            this.livechat_end_dt ||
+            (this.channel?.chatbot?.completed && !this.channel.chatbot.forwarded)
+        );
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

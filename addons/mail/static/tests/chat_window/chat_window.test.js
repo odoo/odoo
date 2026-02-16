@@ -1068,3 +1068,45 @@ test("Do not squash logged notes", async () => {
     await contains(".o-mail-Message:not(.o-squashed) .o-mail-Message-content:has(:text('Hello'))");
     await contains(".o-mail-Message:not(.o-squashed) .o-mail-Message-content:has(:text('World!'))");
 });
+
+test("Readonly chat window as non-admin shows bottom banner", async () => {
+    const pyEnv = await startServer();
+    const memberPartnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: memberPartnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
+        ],
+    });
+    setupChatHub({ opened: [channelId] });
+    await start({
+        authenticateAs: { login: "test_member", password: "test_member" },
+    });
+    await contains(".o-mail-ChatWindow span:text('This channel is read-only.')");
+    await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 0 });
+});
+
+test("Readonly chat window as admin shows composer", async () => {
+    const pyEnv = await startServer();
+    const adminPartnerId = pyEnv["res.partner"].create({ name: "Admin User" });
+    pyEnv["res.users"].create({ partner_id: adminPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: adminPartnerId, channel_role: "member" }),
+        ],
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow .o-mail-Composer-input");
+    await contains(".o-mail-ChatWindow span:text('This channel is read-only.')", { count: 0 });
+});

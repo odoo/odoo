@@ -178,4 +178,7 @@ export class ChatWindow extends Component {
         // await new Promise(setTimeout); // wait for bubbling header
         this.state.actionsMenuOpened = isOpen;
     }
+    get showBlankBeforeComposerHiddenText() {
+        return true;
+    }
 }

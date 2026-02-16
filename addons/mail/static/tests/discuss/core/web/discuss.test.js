@@ -61,7 +61,7 @@ test("can create a new channel", async () => {
     ]);
     await waitStoreFetch(
         [
-            ["/discuss/create_channel", { name: "abc" }],
+            ["/discuss/create_channel", { name: "abc", is_readonly: false }],
             [
                 "/discuss/channel/messages",
                 {
@@ -80,6 +80,23 @@ test("can create a new channel", async () => {
             ],
         }
     );
+});
+
+test("can create a read-only channel", async () => {
+    const pyEnv = await startServer();
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-Discuss");
+    await click("input[placeholder='Search conversations']");
+    await click("a:text('Create Channel')");
+    await insertText("input[placeholder='Channel name']", "abc");
+    await click("input[type='checkbox'][name='readonly']");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('abc')");
+    await contains(".o-mail-Message", { count: 0 });
+    const [channelId] = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
+    const channel = pyEnv["discuss.channel"].browse(channelId)[0];
+    expect(channel.is_readonly).toBe(true);
 });
 
 test("can make a DM chat", async () => {

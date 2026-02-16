@@ -3,6 +3,7 @@ import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model"
 import { fields } from "@mail/model/misc";
 
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 
 /** @type {import("models").DiscussChannel} */
@@ -133,6 +134,19 @@ const discussChannelPatch = {
     },
     get allow_invite_by_email() {
         return this.channel_type === "livechat" || super.allow_invite_by_email;
+    },
+    get composerHidden() {
+        if (this.channel?.channel_type === "livechat") {
+            return !!this.livechat_end_dt;
+        }
+        return super.composerHidden;
+    },
+
+    get composerHiddenText() {
+        if (this.channel?.channel_type === "livechat" && this.livechat_end_dt) {
+            return _t("This live chat conversation has ended");
+        }
+        return super.composerHiddenText;
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

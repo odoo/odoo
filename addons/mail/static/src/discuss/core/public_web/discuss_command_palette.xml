@@ -29,6 +29,10 @@
                 <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
                 <input type="text" class="form-control" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
                 <div class="invalid-feedback">Channel must have a name.</div>
+                <div class="form-check mt-2">
+                    <input type="checkbox" id="readonly" class="form-check-input" name="readonly" t-model="state.is_readonly" />
+                    <label for="readonly" class="form-check-label">Read-only</label>
+                </div>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary me-2" t-att-disabled="!state.name or state.name.trim().length === 0" t-on-click="onClickConfirm">Create Channel</button>

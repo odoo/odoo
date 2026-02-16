@@ -75,6 +75,7 @@ export class DiscussChannelMember extends models.ServerModel {
 
     _sync_field_names() {
         return [
+            "channel_role",
             "is_favorite",
             "last_interest_dt",
             "message_unread_counter",

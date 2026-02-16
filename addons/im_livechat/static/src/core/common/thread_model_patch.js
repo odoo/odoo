@@ -33,9 +33,6 @@ patch(Thread.prototype, {
             },
         });
     },
-    get composerHidden() {
-        return this.channel?.channel_type === "livechat" && this.livechat_end_dt;
-    },
 
     get transcriptUrl() {
         return url(`/im_livechat/download_transcript/${this.id}`);

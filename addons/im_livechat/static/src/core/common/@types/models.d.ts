@@ -67,7 +67,6 @@ declare module "models" {
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
     }
     export interface Thread {
-        composerHidden: Readonly<boolean>;
         country_id: Country;
         livechat_end_dt: import("luxon").DateTime;
         livechat_note: ReturnType<import("@odoo/owl").markup>|string;
