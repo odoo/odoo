@@ -893,14 +893,14 @@ export class Composer extends Component {
     addEmoji(str) {
         const composer = toRaw(this.props.composer);
         if (this.editor) {
-            this.editor.shared.dom.insert(str);
+            this.editor.shared.dom.insert(str + " ");
             this.editor.shared.history.addStep();
         } else {
             const composerText = composer.composerText;
             const firstPart = composerText.slice(0, composer.selection.start);
             const secondPart = composerText.slice(composer.selection.end, composerText.length);
-            composer.composerText = firstPart + str + secondPart;
-            this.selection.moveCursor((firstPart + str).length);
+            composer.composerText = firstPart + str + " " + secondPart;
+            this.selection.moveCursor((firstPart + str).length + 1);
         }
         if (this.ui.isSmall && !this.env.inChatter) {
             return false;
