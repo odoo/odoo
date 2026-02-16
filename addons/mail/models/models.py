@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
-from odoo.tools import parse_contact_from_email
+from odoo.tools import parse_contact_from_email, OrderedSet
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 import logging
@@ -78,13 +78,13 @@ class Base(models.AbstractModel):
         """ Globally reverse result of '_mail_get_operation_for_mail_message_operation'
         aka return documents for a given access to check on them. """
         document_operations = self._mail_get_operation_for_mail_message_operation(message_operation)
-        operation_documents = defaultdict(lambda: self.env[self._name])
+        operation_documents_ids = defaultdict(OrderedSet)
         for record, record_operation in document_operations.items():
-            operation_documents[record_operation] += record
-        # force prefetch in a post-loop as recordset concatenation may lose it
-        for operation, records in operation_documents.items():
-            records = records.with_prefetch(self.ids)
-        return operation_documents
+            operation_documents_ids[record_operation].update(record.ids)
+        return {
+            operation: self.browse(ids).with_prefetch(self._prefetch_ids)
+            for operation, ids in operation_documents_ids.items()
+        }
 
     # ------------------------------------------------------------
     # FIELDS HELPERS
