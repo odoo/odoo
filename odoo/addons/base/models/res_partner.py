@@ -749,6 +749,11 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
+        if vals.get('name'):
+            for partner in self:
+                for bank in partner.bank_ids:
+                    if bank.acc_holder_name == partner.name:
+                        bank.acc_holder_name = vals['name']
         if 'company_id' in vals:
             company_id = vals['company_id']
             for partner in self:
