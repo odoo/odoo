@@ -563,7 +563,7 @@ test("format total in hh:mm when measure is unit_amount", async () => {
         resModel: "foo",
         arch: /* xml */ `
             <graph>
-                <field name="unit_amount" type="measure" widget="float_time" />
+                <field name="unit_amount" type="measure" widget="float_time" options="{'numeric': 1}" />
             </graph>
         `,
     });
@@ -579,18 +579,8 @@ test("format total in hh:mm when measure is unit_amount", async () => {
     expect(fieldAttrs[measure].widget).toBe("float_time", {
         message: "should be a float_time widget",
     });
-    checkYTicks(view, [
-        "00:00",
-        "01:00",
-        "02:00",
-        "03:00",
-        "04:00",
-        "05:00",
-        "06:00",
-        "07:00",
-        "08:00",
-    ]);
-    checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] }, 0);
+    checkYTicks(view, ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00"]);
+    checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "8:00" }] }, 0);
 });
 
 test("Stacked button visible in the line chart", async () => {
@@ -1146,8 +1136,24 @@ test("process arch with field tags", async () => {
     expect(new GraphArchParser().parse(arch, fooFields)).toEqual({
         fields: fooFields,
         fieldAttrs: {
-            bar: { isInvisible: true, string: "My invisible field" },
-            fighters: { string: "FooFighters" },
+            bar: {
+                isInvisible: true,
+                options: {},
+                string: "My invisible field",
+            },
+            date: {
+                options: {},
+            },
+            fighters: {
+                options: {},
+                string: "FooFighters",
+            },
+            foo: {
+                options: {},
+            },
+            revenue: {
+                options: {},
+            },
         },
         measure: "revenue",
         measures: ["revenue"],
@@ -1170,7 +1176,17 @@ test("process arch with non stored field tags of type measure", async () => {
     `;
     expect(new GraphArchParser().parse(arch, fooFields)).toEqual({
         fields: fooFields,
-        fieldAttrs: {},
+        fieldAttrs: {
+            foo: {
+                options: {},
+            },
+            product_id: {
+                options: {},
+            },
+            revenue: {
+                options: {},
+            },
+        },
         measure: "foo",
         measures: ["revenue", "foo"],
         groupBy: ["product_id"],

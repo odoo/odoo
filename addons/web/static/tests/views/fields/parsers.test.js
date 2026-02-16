@@ -11,7 +11,6 @@ import {
     parseMonetary,
     parsePercentage,
 } from "@web/views/fields/parsers";
-import { parseDuration } from "../../../src/views/fields/parsers";
 
 beforeEach(makeMockEnv);
 
@@ -53,10 +52,32 @@ test("parseFloatTime", () => {
     expect(parseFloatTime("1:")).toBe(1);
     expect(parseFloatTime(":12")).toBe(0.2);
 
-    expect(() => parseFloatTime("a:1")).toThrow();
-    expect(() => parseFloatTime("1:a")).toThrow();
-    expect(() => parseFloatTime("1:1:")).toThrow();
-    expect(() => parseFloatTime(":1:1")).toThrow();
+    expect(parseFloatTime("a:12")).toBe(0.2);
+    expect(parseFloatTime("1:a")).toBe(1);
+    expect(parseFloatTime("1:12:")).toBe(1.2);
+    expect(parseFloatTime(":30:45")).toBe(0.5125);
+
+    expect(parseFloatTime("1h 30m 45s")).toBe(1.5125);
+    expect(parseFloatTime("1h 45s")).toBe(1.0125);
+    expect(parseFloatTime("45s 30m 1h")).toBe(1.5125);
+    expect(parseFloatTime("45s 20s 55s")).toBe(0.0125);
+    expect(parseFloatTime("1h30")).toBe(1.5);
+    expect(parseFloatTime("-1h 30m 45s")).toBe(-1.5125);
+
+    expect(parseFloatTime("qwerwqer")).toBe(0);
+
+    clearMemoizeCaches();
+    localization.locale = "fr-FR";
+    expect(parseFloatTime("2h 30m 45s")).toBe(2.5125);
+    expect(parseFloatTime("2h 30min 45s")).toBe(2.5125);
+
+    clearMemoizeCaches();
+    localization.locale = "zh-CN";
+    expect(parseFloatTime("2小时 30分钟 45秒")).toBe(2.5125);
+
+    clearMemoizeCaches();
+    localization.locale = "ar-SY";
+    expect(parseFloatTime("٢س ٣٠د ٤٥ث")).toBe(2.5125);
 });
 
 test("parseInteger", () => {
@@ -176,35 +197,4 @@ test("parseMonetary", () => {
     expect(parseMonetary("=1.000,00 + 11.121,00")).toBe(12121);
     expect(parseMonetary("=1000,00 + 11122,00")).toBe(12122);
     expect(parseMonetary("=1000 + 11123")).toBe(12123);
-});
-
-test("parseDuration", () => {
-    expect(parseDuration("1")).toEqual({ hours: 1, minutes: 0, seconds: 0 });
-    expect(parseDuration("1:")).toEqual({ hours: 1, minutes: 0, seconds: 0 });
-    expect(parseDuration("1:25")).toEqual({ hours: 1, minutes: 25, seconds: 0 });
-    expect(parseDuration("1:25", "minutes")).toEqual({ hours: 0, minutes: 1, seconds: 25 });
-    expect(parseDuration("1:25:30")).toEqual({ hours: 1, minutes: 25, seconds: 30 });
-    expect(parseDuration("-1:30:20")).toEqual({ hours: -1, minutes: -30, seconds: -20 });
-
-    expect(parseDuration("1h 30m 45s")).toEqual({ hours: 1, minutes: 30, seconds: 45 });
-    expect(parseDuration("1h 45s")).toEqual({ hours: 1, minutes: 0, seconds: 45 });
-    expect(parseDuration("25s 30m 1h")).toEqual({ hours: 1, minutes: 30, seconds: 25 });
-    expect(parseDuration("25s 40s 55s")).toEqual({ hours: 0, minutes: 0, seconds: 25 });
-    expect(parseDuration("1h30")).toEqual({ hours: 1, minutes: 30, seconds: 0 });
-    expect(parseDuration("-1h 30m 20s")).toEqual({ hours: -1, minutes: -30, seconds: -20 });
-
-    expect(parseDuration("qwerwqer")).toEqual({ hours: 0, minutes: 0, seconds: 0 });
-
-    clearMemoizeCaches();
-    localization.locale = "fr-FR";
-    expect(parseDuration("2h 5m 30s")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
-    expect(parseDuration("2h 5min 30s")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
-
-    clearMemoizeCaches();
-    localization.locale = "zh-CN";
-    expect(parseDuration("2小时 5分钟 30秒")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
-
-    clearMemoizeCaches();
-    localization.locale = "ar-SY";
-    expect(parseDuration("٢ س ٥ د ٣٠ ث")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
 });
