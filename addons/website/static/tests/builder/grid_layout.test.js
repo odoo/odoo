@@ -87,7 +87,7 @@ test("Add an image to a grid", async () => {
         class extends Plugin {
             static id = "test";
             resources = {
-                on_media_dialog_saved_handlers: (el) => waitUntil(() => el[0].complete).then(tick),
+                on_will_save_media_dialog_handlers: (el) => waitUntil(() => el[0].complete).then(tick),
             };
         }
     );

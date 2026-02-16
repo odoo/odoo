@@ -75,7 +75,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * }) => void)[]} on_element_over_dropzone_handlers
  * @typedef {(() => (() => void))[]} on_prepare_drag_handlers
  *
- * @typedef {((el: HTMLElement) => boolean)[]} is_draggable_handlers
+ * @typedef {((el: HTMLElement) => boolean)[]} is_draggable_predicates
  */
 
 export class DragAndDropPlugin extends Plugin {
@@ -120,7 +120,7 @@ export class DragAndDropPlugin extends Plugin {
             return false;
         }
 
-        for (const isDraggable of this.getResource("is_draggable_handlers")) {
+        for (const isDraggable of this.getResource("is_draggable_predicates")) {
             if (!isDraggable(el)) {
                 return false;
             }

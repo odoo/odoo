@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 class SaveSnippetPlugin extends Plugin {
     static id = "mass_mailing.SaveSnippetPlugin";
     resources = {
-        custom_snippets_notification_handlers: this.handleCustomSnippetNotification.bind(this),
+        custom_snippets_notification_overrides: this.handleCustomSnippetNotification.bind(this),
     };
 
     handleCustomSnippetNotification(savedName) {

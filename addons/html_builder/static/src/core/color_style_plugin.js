@@ -22,7 +22,7 @@ class ColorStylePlugin extends Plugin {
             );
             return true;
         }),
-        apply_custom_css_style: withSequence(20, this.applyColorStyle.bind(this)),
+        apply_custom_css_style_overrides: withSequence(20, this.applyColorStyle.bind(this)),
     };
     /**
      * @param {Object} context

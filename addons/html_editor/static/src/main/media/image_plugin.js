@@ -43,7 +43,7 @@ const IMAGE_SIZE = [
 
 /**
  * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
- * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_predicates
+ * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_providers
  */
 
 export class ImagePlugin extends Plugin {
@@ -214,7 +214,7 @@ export class ImagePlugin extends Plugin {
         selectionchange_handlers: this.updateImageParams.bind(this),
         post_undo_handlers: this.updateImageParams.bind(this),
         post_redo_handlers: this.updateImageParams.bind(this),
-        on_media_dialog_saved_handlers: async (elements) => {
+        on_will_save_media_dialog_handlers: async (elements) => {
             for (const element of elements) {
                 if (element && element.tagName === "IMG") {
                     this.resetImageTransformation(element, { addStep: false });
@@ -300,7 +300,7 @@ export class ImagePlugin extends Plugin {
         }
         let imageName;
         // Keep the result from the first predicate that returns something.
-        this.getResource("image_name_predicates").find((p) => {
+        this.getResource("image_name_providers").find((p) => {
             imageName = p(targetedImg);
             return imageName;
         });

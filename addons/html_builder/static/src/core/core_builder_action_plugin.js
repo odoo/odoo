@@ -17,7 +17,7 @@ import { getValueFromVar } from "@html_builder/utils/utils";
  *      styleName: string,
  *      value: ActionValue,
  *      params?: ActionParams,
- * ) => boolean)[]} apply_custom_css_style
+ * ) => boolean)[]} apply_custom_css_style_overrides
  */
 
 export function withoutTransition(editingElement, callback) {
@@ -310,7 +310,7 @@ export class StyleAction extends BuilderAction {
         withoutTransition(editingElement, () => {
             const { mainParam: styleName, ...styleParams } = params;
             if (
-                !this.delegateTo("apply_custom_css_style", {
+                !this.delegateTo("apply_custom_css_style_overrides", {
                     editingElement,
                     styleName,
                     value,

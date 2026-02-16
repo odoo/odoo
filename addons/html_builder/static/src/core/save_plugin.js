@@ -27,7 +27,7 @@ import { uniqueId } from "@web/core/utils/functions";
  *
  * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
  *
- * @typedef {(() => HTMLElement[] | NodeList)[]} get_dirty_els
+ * @typedef {(() => HTMLElement[] | NodeList)[]} dirty_els_providers
  */
 
 export class SavePlugin extends Plugin {
@@ -46,7 +46,7 @@ export class SavePlugin extends Plugin {
             //     root is the clone of a node that was o_dirty
             // }
         ],
-        get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
+        dirty_els_providers: () => this.editable.querySelectorAll(".o_dirty"),
         // Do not change the sequence of this resource, it must stay the first
         // one to avoid marking dirty when not needed during the drag and drop.
         on_prepare_drag_handlers: withSequence(0, this.ignoreDirty.bind(this)),
@@ -88,7 +88,7 @@ export class SavePlugin extends Plugin {
     }
     async _save() {
         const dirtyEls = [];
-        for (const getDirtyEls of this.getResource("get_dirty_els")) {
+        for (const getDirtyEls of this.getResource("dirty_els_providers")) {
             dirtyEls.push(...getDirtyEls());
         }
         // Group elements to save if possible

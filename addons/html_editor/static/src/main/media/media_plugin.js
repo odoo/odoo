@@ -26,7 +26,7 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 /**
  * @typedef {((mediaEl: HTMLElement) => void)[]} after_save_media_dialog_handlers
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_added_media_handlers
- * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_media_dialog_saved_handlers
+ * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_will_save_media_dialog_handlers
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_replaced_media_handlers
  *
  * @typedef {{
@@ -217,7 +217,9 @@ export class MediaPlugin extends Plugin {
                     ? selection
                     : [selection]
                 : [];
-            for (const onMediaDialogSaved of this.getResource("on_media_dialog_saved_handlers")) {
+            for (const onMediaDialogSaved of this.getResource(
+                "on_will_save_media_dialog_handlers"
+            )) {
                 await onMediaDialogSaved(elements, { node: params.node });
             }
             return oldSave(...args);

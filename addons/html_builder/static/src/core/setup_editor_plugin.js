@@ -9,7 +9,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 
 /**
- * @typedef {(() => void | true)[]} after_setup_editor_handlers
+ * @typedef {(() => void | true)[]} after_setup_editor_overrides
  * @typedef {(() => void)[]} before_setup_editor_handlers
  *
  * @typedef {CSSSelector[]} savable_selectors
@@ -45,7 +45,7 @@ export class SetupEditorPlugin extends Plugin {
         for (const savableEl of savableEls) {
             savableEl.classList.add("o_savable");
         }
-        if (this.delegateTo("after_setup_editor_handlers")) {
+        if (this.delegateTo("after_setup_editor_overrides")) {
             return;
         }
 

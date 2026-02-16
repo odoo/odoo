@@ -54,8 +54,8 @@ export class TranslationPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        get_dirty_els: this.getDirtyTranslations.bind(this),
-        after_setup_editor_handlers: () => {
+        dirty_els_providers: this.getDirtyTranslations.bind(this),
+        after_setup_editor_overrides: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
             );
