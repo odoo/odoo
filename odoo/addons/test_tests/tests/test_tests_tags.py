@@ -19,7 +19,7 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertEqual(fc.test_tags, {'post_install', 'standard'})
-        self.assertEqual(fc.test_module, 'base')
+        self.assertEqual(fc.test_module, 'test_tests')
 
     def test_set_tags_not_decorated(self):
         """Test that a TransactionCase has some test_tags by default"""
@@ -30,7 +30,7 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertEqual(fc.test_tags, {'post_install', 'standard'})
-        self.assertEqual(fc.test_module, 'base')
+        self.assertEqual(fc.test_module, 'test_tests')
 
     def test_set_tags_single_tag(self):
         """Test the set_tags decorator with a single tag"""
@@ -42,7 +42,7 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertEqual(fc.test_tags, {'post_install', 'standard', 'slow'})
-        self.assertEqual(fc.test_module, 'base')
+        self.assertEqual(fc.test_module, 'test_tests')
 
     def test_set_tags_multiple_tags(self):
         """Test the set_tags decorator with multiple tags"""
@@ -54,7 +54,7 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertEqual(fc.test_tags, {'post_install', 'standard', 'slow', 'nightly'})
-        self.assertEqual(fc.test_module, 'base')
+        self.assertEqual(fc.test_module, 'test_tests')
 
     def test_inheritance(self):
         """Test inheritance when using the 'tagged' decorator"""
@@ -85,7 +85,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClassA()
         self.assertEqual(fc.test_tags, {'post_install'})
-        self.assertEqual(fc.test_module, 'base')
+        self.assertEqual(fc.test_module, 'test_tests')
 
         @tagged('-standard', '-base', '-post_install', 'at_install')
         class FakeClassB(TransactionCase):
@@ -367,9 +367,9 @@ class TestSelectorSelection(TransactionCase):
         self.assertTrue(tags.check(post_install_obj) and position.check(post_install_obj))
 
         # module part
-        tags = TagsSelector('/base')
+        tags = TagsSelector('/test_tests')
         self.assertTrue(tags.check(no_tags_obj), 'Test should match is module path')
-        tags = TagsSelector('/base/tests/test_tests_tags.py')
+        tags = TagsSelector('/test_tests/tests/test_tests_tags.py')
         self.assertTrue(tags.check(no_tags_obj), 'Test should match is module path with file')
 
         tags = TagsSelector('/account/tests/test_tests_tags.py')
@@ -406,7 +406,7 @@ class TestSelectorSelection(TransactionCase):
         tags = TagsSelector('/mail,-:TestLintingCrossModule', available_modules=['base', 'mail', 'web'])
         self.assertFalse(tags.check(instance), "The cross module test should not be selected if explicilty blacklisted by its class")
 
-        self.assertEqual(instance.__module__.split('.')[2], 'base', "Ensure that module is define in base for following checks")
+        self.assertEqual(instance.__module__.split('.')[2], 'test_tests', "Ensure that module is define in base for following checks")
 
         tags = TagsSelector(':TestLintingCrossModule,-/base', available_modules=['base', 'mail', 'web'])
         self.assertTrue(tags.check(instance), "The cross module test should be selected by its class even when declaring module is blacklisted")
@@ -432,10 +432,10 @@ class TestSelectorSelection(TransactionCase):
 
     def test_selector_parser_cross_module_parameters(self):
         tags = ','.join([
-            '/base:FakeClassA[failfast=0,filter=-livechat]',
+            '/test_tests:FakeClassA[failfast=0,filter=-livechat]',
             #'/base:FakeClassA[filter=[-barecode,-stock_x]]',
             '/other[notForThisClass]',
-            '-/base:FakeClassA[arg1,arg2]',
+            '-/test_tests:FakeClassA[arg1,arg2]',
         ])
         tags = TagsSelector(tags)
         class FakeClassA(TransactionCase):
@@ -454,7 +454,7 @@ class TestSelectorSelection(TransactionCase):
         self.assertFalse(tags.check(self), "we don't expect a negative parameter to enable the test if not enabled in other tags")
         self.assertEqual(self._test_params, [])
 
-        tags = TagsSelector('/base,-.test_negative_parameters_translate[someparam]')
+        tags = TagsSelector('/test_tests,-.test_negative_parameters_translate[someparam]')
         self.assertTrue(tags.check(self), "A negative parametric tag should not disable the test")
         self.assertEqual(self._test_params, [('-', 'someparam')])
 
@@ -462,7 +462,7 @@ class TestSelectorSelection(TransactionCase):
         self.assertTrue(tags.check(self), "we don't expect a single negative parameter to disable the test that should run by edfault")
         self.assertEqual(self._test_params, [('-', 'someparam')])
 
-        tags = TagsSelector('/base,-.test_negative_parameters_translate')
+        tags = TagsSelector('/test_tests,-.test_negative_parameters_translate')
         self.assertFalse(tags.check(self), "Sanity check, a negative parametric tag without params still disable the test")
         self.assertEqual(self._test_params, [])
 
@@ -471,10 +471,10 @@ class TestSelectorSelection(TransactionCase):
         self.assertEqual(self._test_params, [('+', '-someparam')])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTestClass(BaseCase):
     def test_canonical_tag(self):
-        self.assertEqual(self.canonical_tag, '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
+        self.assertEqual(self.canonical_tag, '/test_tests/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
 
     def get_log_metadata(self):
-        self.assertEqual(self.log_metadata['canonical_tag'], '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
+        self.assertEqual(self.log_metadata['canonical_tag'], '/test_tests/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
