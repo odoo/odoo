@@ -57,13 +57,15 @@ export class UseSuggestion {
     suggestionService = useService("mail.suggestion");
     state = useState({
         count: 0,
-        items: undefined,
+        type: undefined,
+        suggestions: undefined,
         isFetching: false,
     });
     search = {
         delimiter: undefined,
         position: undefined,
         term: "",
+        isOutOfBounds: undefined,
     };
     lastFetchedSearch;
     get isSearchMoreSpecificThanLastFetch() {
@@ -87,7 +89,7 @@ export class UseSuggestion {
             position: undefined,
             term: "",
         });
-        this.state.items = undefined;
+        Object.assign(this.state, { type: undefined, suggestions: undefined });
     }
     detect() {
         let start = 0;
@@ -119,6 +121,7 @@ export class UseSuggestion {
         const candidatePositions = [];
         // consider the chars before the current cursor position
         let numberOfSpaces = 0;
+        this.considerationBoundary = -1;
         for (let index = start - 1; index >= 0; --index) {
             if (/\s/.test(text[index])) {
                 numberOfSpaces++;
@@ -127,6 +130,7 @@ export class UseSuggestion {
                     // a majority of partners have a two-word name. This
                     // removes the need to check for mentions following a
                     // delimiter used earlier in the content.
+                    this.considerationBoundary = index;
                     break;
                 }
             }
@@ -173,6 +177,7 @@ export class UseSuggestion {
                 delimiter: candidateDelimiter,
                 position: candidatePosition,
                 term: text.substring(candidatePosition + candidateDelimiter.length, start),
+                isOutOfBounds: this.considerationBoundary > candidatePosition,
             });
             this.state.count++;
             return;
@@ -243,15 +248,11 @@ export class UseSuggestion {
         const { type, suggestions } = this.suggestionService.searchSuggestions(this.search, {
             thread: this.thread,
         });
-        if (!suggestions.length) {
-            this.state.items = undefined;
-            return;
-        }
         // arbitrary limit to avoid displaying too many elements at once
         // ideally a load more mechanism should be introduced
         const limit = 8;
         suggestions.length = Math.min(suggestions.length, limit);
-        this.state.items = { type, suggestions };
+        Object.assign(this.state, { type, suggestions });
     }
 
     async fetchSuggestions() {
@@ -285,11 +286,8 @@ export class UseSuggestion {
         this.update();
         this.lastFetchedSearch = {
             ...this.search,
-            count: this.state.items?.suggestions.length ?? 0,
+            count: this.state.suggestions?.length ?? 0,
         };
-        if (!this.state.items?.suggestions.length) {
-            this.clearSearch();
-        }
     }
 }
 

@@ -58,6 +58,13 @@ const EDIT_CLICK_TYPE = {
     SAVE: "save",
 };
 export const MENTION_AMOUNT_WARNING = 50;
+const NO_SUGGESTIONS_LABELS = {
+    Partner: _t("No partner found"),
+    "discuss.channel": _t("No channel found"),
+    ChannelCommand: _t("No command found"),
+    "mail.canned.response": _t("No canned response found"),
+    emoji: _t("No emoji found"),
+};
 
 /**
  * @typedef {Object} Props
@@ -391,10 +398,11 @@ export class Composer extends Component {
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.state.items);
+        return Boolean(this.suggestion?.state.suggestions?.length);
     }
 
     get navigableListProps() {
+        const isLoading = Boolean(this.suggestion.search.term) && this.suggestion.state.isFetching;
         const props = {
             anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
@@ -402,14 +410,17 @@ export class Composer extends Component {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
+            isLoading,
             options: [],
         };
+        const { type, suggestions } = this.suggestion.state;
         if (!this.hasSuggestions) {
+            if (type && !isLoading && !this.suggestion.search.isOutOfBounds) {
+                props.options = [{ label: NO_SUGGESTIONS_LABELS[type], unselectable: true }];
+            }
             return props;
         }
-        const suggestions = this.suggestion.state.items.suggestions;
-        switch (this.suggestion.state.items.type) {
+        switch (type) {
             case "Partner":
                 return {
                     ...props,

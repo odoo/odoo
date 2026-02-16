@@ -1470,7 +1470,7 @@ test("can quickly add emoji with ':' keyword", async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
     await contains(".o-mail-NavigableList-item:text('😅 :sweat_smile:')");
     await htmlInsertText(editor, ":s", { replace: true });
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-NavigableList-item:text('No emoji found')");
 });
 
 test("composer reply-to message is restored on thread change", async () => {
