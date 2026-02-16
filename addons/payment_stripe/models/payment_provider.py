@@ -251,6 +251,15 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
+    def _stripe_should_raise(self, response, offline):
+        """ Retun whether a request to Stripe should raise an exception in case of a non-successful response.
+        :param dict response: The response of the request to Stripe.
+        :param bool offline: Whether the operation of the transaction being processed is 'offline'
+        :return If the request should raise an exception or not.
+        :rtype: bool
+        """
+        return not response.ok and not offline and 400 <= response.status_code < 500 and response.json().get('error') # The 'code' entry is sometimes missing
+
     def _stripe_make_request(
         self, endpoint, payload=None, method='POST', offline=False, idempotency_key=None
     ):
@@ -284,10 +293,7 @@ class PaymentProvider(models.Model):
             # See https://stripe.com/docs/error-codes.
             # If the request originates from an offline operation, don't raise to avoid a cursor
             # rollback and return the response as-is for flow-specific handling.
-            if not response.ok \
-                    and not offline \
-                    and 400 <= response.status_code < 500 \
-                    and response.json().get('error'):  # The 'code' entry is sometimes missing
+            if self._stripe_should_raise(response, offline):
                 try:
                     response.raise_for_status()
                 except requests.exceptions.HTTPError:
