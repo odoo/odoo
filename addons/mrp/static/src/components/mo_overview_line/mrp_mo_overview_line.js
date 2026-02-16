@@ -21,7 +21,7 @@ export class MoOverviewLine extends Component {
                 state: { type: String, optional: true },
                 formatted_state: { type: String, optional: true },
                 has_bom: { type: Boolean, optional: true },
-                quantity: Number,
+                quantity: { type: Number, optional: true },
                 replenish_quantity: { type: Number, optional: true },
                 uom: { type: String, optional: true },
                 uom_name: { type: String, optional: true },
@@ -48,6 +48,7 @@ export class MoOverviewLine extends Component {
                 currency_id: Number,
                 currency: { type: String, optional: true },
                 production_id: { type: Number, optional: true },
+                subcontracted: { type: Boolean, optional: true },
             },
         },
         showOptions: SHOW_OPTIONS,
@@ -146,6 +147,9 @@ export class MoOverviewLine extends Component {
     }
 
     get formattedQuantity() {
+        if(!this.data.quantity) {
+            return "";
+        }
         if (this.data.model === "mrp.workorder") {
             return this.formatFloatTime(this.data.quantity);
         }

@@ -148,8 +148,10 @@
             </td>
             <td t-if="data['show_replenishments']" class="text-center" t-out="line.get('formatted_state', '')"/>
             <td t-attf-class="text-end {{ data['get_color'](line.get('quantity_decorator')) }}">
-                <t t-if="line.get('model') == 'mrp.workorder'" t-out="line['quantity']" t-options="{'widget': 'float_time'}"/>
-                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                <t t-if="line.get('quantity')">
+                    <t t-if="line.get('model') == 'mrp.workorder'" t-out="line['quantity']" t-options="{'widget': 'float_time'}"/>
+                    <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                </t>
             </td>
             <td t-if="data['show_uom']" class="text-start" t-out="line['uom_name']"/>
             <td t-if="data['show_availabilities']" class="text-end">
