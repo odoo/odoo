@@ -169,7 +169,8 @@ export class CheckIdentity {
         // Check the fingerprint each time webclient is loaded
         // Only for internal user
         env.bus.addEventListener("WEB_CLIENT_READY", () => {
-            if (session.device_salt) {
+            if (session.device_salt) {  // Re-authentication feature is activated
+                this.patch_rpc();
                 this.updateFingerprint()
                     .then(result => !result && this.run())
                     .catch(() => {});
@@ -180,6 +181,36 @@ export class CheckIdentity {
                     // fetch`. This is a false positive.
             }
         });
+    }
+
+    patch_rpc() {
+        // Patch RPC to replay it automatically when the identity is verified
+        const originalRpc = rpc._rpc;
+
+        rpc._rpc = (...args) => {
+            let originalPromise = originalRpc(...args);
+
+            const promise = new Promise(async (resolve, reject) => {
+                try {
+                    resolve(await originalPromise);
+                } catch (error) {
+                    if (error.data?.name !== "odoo.http.session.CheckIdentityException") {
+                        return reject(error);
+                    }
+                    await this.run(false);  // Check identity
+                    try {
+                        resolve(await originalRpc(...args));  // Replay
+                    } catch (error) {
+                        reject(error);
+                    }
+                }
+            });
+            // Attach custom function
+            promise.abort = function (rejectError = true) {
+                originalPromise?.abort?.(rejectError);
+            };
+            return promise;
+        };
     }
 
     async getFingerprint() {
@@ -262,17 +293,20 @@ export class CheckIdentity {
         this.channel.postMessage("identityChecked");
     }
 
-    async run() {
+    async run(reload = true) {
         if (!this.started) {
             this.dialogService.add(CheckIdentityDialog);
         }
         // Empty the current view, to not let any confidential data displayed
         // not even inspecting the dom or through the console using Javascript.
-        this.env.services.action && this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        if (reload) {
+            this.env.services.action && this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        }
         await new Promise((resolve) => {
             this.bus.addEventListener("identityChecked", resolve, { once: true });
         });
         // Reload the view to display back the data that was displayed before.
+        if (!reload) return;
         if (this.env.services.action) {
             if (this.env.services.action.currentController) {
                 this.env.services.action.doAction("soft_reload");
@@ -314,7 +348,10 @@ export const checkIdentityService = {
     dependencies: ["dialog"],
 
     start(env, services) {
-        return new CheckIdentity(env, services);
+        // TODO: just for testing
+        const check_identity = new CheckIdentity(env, services);
+        check_identity.patch_rpc();
+        return check_identity;
     },
 };
 
