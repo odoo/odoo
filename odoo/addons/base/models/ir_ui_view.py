@@ -25,7 +25,8 @@ from odoo.tools import _, config, frozendict, partition, unique, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
-from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS, wrap_o_translation
+
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 
 _logger = logging.getLogger(__name__)
@@ -1049,6 +1050,10 @@ actual arch.
     def _get_combined_archs(self):
         """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
         parented = []
+        edit_translations = self.env.context.get('edit_translations')
+        if edit_translations:
+            self = self.with_context(edit_translations="inherit_safe")   # noqa: PLW0642
+
         roots = self.env['ir.ui.view']
         for root in self:
             parented.append(view_ids := [])
@@ -1059,7 +1064,6 @@ actual arch.
                     break
                 root = root.inherit_id
         views = self.env['ir.ui.view'].browse(unique(view_id for view_ids in parented for view_id in view_ids))
-
         # Add inherited views to the list of loading forced views
         # Otherwise, inherited views could not find elements created in
         # their direct parents if that parent is defined in the same module
@@ -1092,11 +1096,18 @@ actual arch.
             return _hierarchy
 
         roots = roots.with_prefetch(all_tree_views._prefetch_ids)
-
-        return [
-            root._combine(get_hierarchy(root, parented_ids))
-            for root, parented_ids in zip(roots, parented)
-        ]
+        if not edit_translations or edit_translations == "partial_inheritance":
+            return [
+                root._combine(get_hierarchy(root, parented_ids))
+                for root, parented_ids in zip(roots, parented)
+            ]
+        else:
+            res = []
+            for root, parented_ids in zip(roots, parented):
+                combined = root._combine(get_hierarchy(root, parented_ids))
+                wrap_o_translation(combined)
+                res.append(combined)
+            return res
 
     def _get_view_refs(self, node):
         """ Extract the `[view_type]_view_ref` keys and values from the node context attribute,

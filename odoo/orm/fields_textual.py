@@ -181,9 +181,10 @@ class BaseString(Field[str | typing.Literal[False]]):
             lang = self.translation_lang(record.env)
             # raise a KeyError for the __get__ function
             value = value[lang]
+        edit_translations = record.env.context.get('edit_translations')
         if (
             callable(self.translate)
-            and record.env.context.get('edit_translations')
+            and edit_translations
             and self.get_trans_terms(value)
         ):
             base_lang = record._get_base_lang()
@@ -208,18 +209,27 @@ class BaseString(Field[str | typing.Literal[False]]):
                 source_term = get_base(term)
                 translation_state = 'translated' if lang == base_lang or source_term != term else 'to_translate'
                 translation_source_sha = sha256(source_term.encode()).hexdigest()
-                return (
-                    '<span '
-                        f'''{'class="o_delay_translation" ' if delay_translation else ''}'''
-                        f'data-oe-model="{markup_escape(record._name)}" '
-                        f'data-oe-id="{markup_escape(record.id)}" '
-                        f'data-oe-field="{markup_escape(self.name)}" '
-                        f'data-oe-translation-state="{translation_state}" '
-                        f'data-oe-translation-source-sha="{translation_source_sha}"'
-                    '>'
-                        f'{term}'
-                    '</span>'
+
+                attrs = (
+                    f'''{'class="o_delay_translation" ' if delay_translation else ''}'''
+                    f'data-oe-model="{markup_escape(record._name)}" '
+                    f'data-oe-id="{markup_escape(record.id)}" '
+                    f'data-oe-field="{markup_escape(self.name)}" '
+                    f'data-oe-translation-state="{translation_state}" '
+                    f'data-oe-translation-source-sha="{translation_source_sha}"'
                 )
+                if edit_translations == "inherit_safe":
+                    return (
+                        f'<o-translate {attrs} />'
+                        f'{term}'
+                        f'<o-translate />'
+                    )
+                else:
+                    return (
+                        f'<span {attrs}>'
+                            f'{term}'
+                        '</span>'
+                    )
             # pylint: disable=not-callable
             value = self.translate(translate_func, value)
         return value

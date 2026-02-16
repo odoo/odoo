@@ -623,6 +623,48 @@ class TestViewInheritance(ViewCase):
         }])
         self.assertEqual(not_broken.invalid_locators, [{"broken_hierarchy": True}])
 
+    def test_inheritance_with_edit_translations(self):
+        view = self.View.create({
+            'model': self.model,
+            'type': 'qweb',
+            'name': "some_view",
+            'arch': '''<t t-name="some_view"><div><strong>origin</strong></div></t>''',
+        })
+
+        inherited_view = self.View.create({
+            'model': self.model,
+            'type': 'qweb',
+            'inherit_id': view.id,
+            'name': "child_view",
+            'arch': (
+            '<data>'
+                '<xpath expr="/t/div/strong" position="replace">'
+                    '<strong>inherited</strong>'
+                '</xpath>'
+                '<xpath expr="/t/div/strong" position="inside">'
+                    'additional text'
+                '</xpath>'
+            '</data>'),
+        })
+        self.env.ref('base.lang_fr').active = True
+        combined = view.with_context(edit_translations=True, lang="fr_FR").get_combined_arch()
+
+        self.assertXMLEqual(
+            combined,
+            ('<t t-name="some_view">'
+                '<div>'
+                     f'<span data-oe-model="ir.ui.view" data-oe-id="{view.id}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="979d9364afdd037c8cadb3cf6888b2a8041df767b2c5514076fd60674b9a0d7f">'
+                        f'<span data-oe-model="ir.ui.view" data-oe-id="{inherited_view.id}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="677d2d592a3573b77fca497c929df5564eccad9f68537a0badf06f9c252041bd">'
+                            '<strong>inherited'
+                            f'<span data-oe-model="ir.ui.view" data-oe-id="{inherited_view.id}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="c57cb9e210a21def772cad3cd9ef83247e70bed77da89a64c9a5e91e7f3348db">'
+                            'additional text'
+                            '</span></strong>'
+                        '</span>'
+                    '</span>'
+                '</div></t>')
+            )
+
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceSpecs(ViewCase):

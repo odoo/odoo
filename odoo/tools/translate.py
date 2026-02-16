@@ -107,6 +107,42 @@ def is_translatable_attrib_text(node):
     return node.tag == 'field' and node.attrib.get('widget', '') == 'url'
 
 
+def translation_boundary_type(node):
+    if node.tag == "o-translate" and len(node) == 0 and not node.text:
+        return "start" if node.attrib else "stop"
+
+
+def wrap_o_translation(tree):
+    def o_translate_siblings(node):
+        if node.get("done"):
+            return
+        wrap = etree.Element("span", node.attrib)
+        node.set("done", "true")
+        wrap.text = node.tail
+        sibl = node.getnext()
+        while sibl is not None:
+            boundary = translation_boundary_type(sibl)
+            if boundary == "stop":
+                wrap.tail = sibl.tail
+                sibl.addnext(wrap)
+                sibl.set("done", "true")
+                sibl = wrap
+                break
+            elif boundary == "start":
+                sibl = o_translate_siblings(sibl)
+            else:
+                sibl_ = sibl
+                sibl = sibl.getnext()
+                wrap.append(sibl_)
+        return sibl
+
+    harvest = []
+    for node in tree.iter("o-translate"):
+        harvest.append(node)
+        o_translate_siblings(node)
+    for node in harvest:
+        node.getparent().remove(node)
+
 # This should match the list provided to OWL (see translatableAttributes).
 OWL_TRANSLATED_ATTRS = {
     "alt",
@@ -161,7 +197,7 @@ def translate_xml_node(node, callback, parse, serialize):
             "o_translate_inline" in node.attrib.get("class", "").split()
             or node.tag in TRANSLATED_ELEMENTS
             and not any(key.startswith("t-") or key.endswith(".translate") for key in node.attrib)
-            and all(translatable(child) for child in node)
+            and all((translatable(child) or bool(translation_boundary_type(child))) for child in node)
         )
 
     def hastext(node, pos=0):
@@ -174,7 +210,7 @@ def translate_xml_node(node, callback, parse, serialize):
             nonspace(node[pos-1].tail if pos else node.text)
             or (
                 pos < len(node)
-                and translatable(node[pos])
+                and (translatable(node[pos]) or translation_boundary_type(node[pos]))
                 and (
                     any(  # attribute to translate
                         val and (
@@ -266,6 +302,10 @@ def translate_xml_node(node, callback, parse, serialize):
                         value = translate_format_string_expression(val.strip(), callback)
                     else:
                         value = callback(val.strip())
+                    if value and value.startswith("<o-translate"):
+                        tree = etree.fromstring(f'<t>{value}</t>')
+                        wrap_o_translation(tree)
+                        value = etree.tostring(tree[0], encoding="unicode")
                     node.set(key, value or val)
 
     process(node)
