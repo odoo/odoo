@@ -400,9 +400,9 @@ export class BuilderOptionsPlugin extends Plugin {
         if (lastValidContainerIdx > 0) {
             containers = containers.slice(lastValidContainerIdx);
         }
-        const lastContainerWthOptions = containers.findLast((c) => c.options.length);
-        if (lastContainerWthOptions) {
-            lastContainerWthOptions.folded = false;
+        const lastContainerWithOptions = containers.findLast((c) => c.options.length);
+        if (lastContainerWithOptions) {
+            lastContainerWithOptions.folded = false;
         }
         return containers;
     }
