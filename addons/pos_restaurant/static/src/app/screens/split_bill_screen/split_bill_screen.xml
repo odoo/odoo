@@ -43,9 +43,9 @@
                                 <t t-esc="this.getNumberOfProducts()" /> product(s) selected
                             </div>
                             <t t-set="discountPc" t-value="getGlobalDiscountPc()" />
-                            <div t-if="discountPc" class="text-dark"
+                            <div t-if="discountPc.value" class="discount text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
-                                With <t t-esc="discountPc" />% discount
+                                With <t t-esc="discountPc.type === 'percent' ? `${discountPc.value}%` : env.utils.formatCurrency(discountPc.value)" /> discount
                             </div>
                         </div>
 
