@@ -229,12 +229,32 @@ class AccountMove(models.Model):
             }}
         return super()._onchange_name_warning()
 
+    def l10n_in_separate_document(self):
+        self.ensure_one()
+
+        def get_exempt_lines(lines):
+            return lines.filtered(
+                lambda line: any(
+                    tax.l10n_in_tax_type in ('exempt', 'nil_rated', 'non_gst')
+                    for tax in line.tax_ids
+                ),
+            )
+        tax_invoice_journal = self.company_id.l10n_in_tax_invoice_journal_id
+        bill_of_supply_journal = self.company_id.l10n_in_bill_of_supply_journal_id
+        copied_invoice = self.copy({'journal_id': bill_of_supply_journal.id})
+        self.journal_id = tax_invoice_journal
+        orijnal_invoice_exempt_lines = get_exempt_lines(self.invoice_line_ids)
+        copied_invoice_exempt_lines = get_exempt_lines(copied_invoice.invoice_line_ids)
+        self.invoice_line_ids = [Command.delete(line.id) for line in orijnal_invoice_exempt_lines]
+        copied_invoice.invoice_line_ids = [Command.delete(line.id) for line in copied_invoice.invoice_line_ids.filtered('product_id') - copied_invoice_exempt_lines]
+
     @api.depends(
         'invoice_line_ids.l10n_in_hsn_code',
         'company_id.l10n_in_hsn_code_digit',
         'invoice_line_ids.tax_ids',
         'commercial_partner_id.l10n_in_pan_entity_id',
-        'invoice_line_ids.price_total'
+        'invoice_line_ids.price_total',
+        'l10n_in_gst_treatment',
     )
     def _compute_l10n_in_warning(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
@@ -262,11 +282,11 @@ class AccountMove(models.Model):
                     warnings['tds_tcs_threshold_alert'] = {
                         'message': applicable_sections._get_warning_message(),
                     }
-
+            filtered_lines = move.invoice_line_ids.filtered(line_filter_func)
             if (
                 company.l10n_in_is_gst_registered
                 and company.l10n_in_hsn_code_digit
-                and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
+                and filtered_lines
             ):
                 lines = self.env['account.move.line']
                 for line in filtered_lines:
@@ -300,6 +320,26 @@ class AccountMove(models.Model):
                         'action_text': action_text,
                     }
 
+            if (
+                move.is_sale_document(include_receipts=False)
+                and company.l10n_in_is_gst_registered
+                and company.l10n_in_gst_invoice_journal_feature
+                and move.l10n_in_gst_treatment in [
+                    'regular',
+                    'composition',
+                    'special_economic_zone',
+                    'deemed_export',
+                    'uin_holders',
+                ]
+            ):
+                tax_types = set(filtered_lines.tax_ids.mapped('l10n_in_tax_type'))
+                exempt_types = {'exempt', 'nil_rated', 'non_gst'}
+                if tax_types & exempt_types and tax_types - exempt_types:
+                    warnings['exempt_alert'] = {
+                        'message': _("This document includes both taxable and exempt goods. It is advisable to raise seperate document."),
+                        'action_call': ('account.move', 'l10n_in_separate_document', move.id),
+                        'action_text': _("Seprate Document"),
+                    }
             move.l10n_in_warning = warnings
         (self - indian_invoice).l10n_in_warning = {}
 

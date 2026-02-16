@@ -36,6 +36,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'p20011',
                 'l10n_in_withholding_account_id': 'p100595',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'l10n_in_tax_invoice_journal_id': 'sale',
+                'l10n_in_bill_of_supply_journal_id': 'sale',
+                'l10n_in_invoice_cum_bill_of_supply_journal_id': 'sale',
             },
         }
 
