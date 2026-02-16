@@ -78,6 +78,7 @@ export class Overlay {
         this.component = null;
         this.bus = new EventBus();
         this.getContainer = getContainer;
+        this.customRangeProviders = this.plugin.getResource("custom_selection_range_providers");
     }
 
     /**
@@ -95,7 +96,7 @@ export class Overlay {
             let initialSelection;
             if (selection && selection.type !== "None") {
                 initialSelection = {
-                    range: selection.getRangeAt(0),
+                    range: this.getCustomSelectionRange() || selection.getRangeAt(0),
                 };
             }
             this._remove = this.plugin.services.overlay.add(
@@ -107,6 +108,7 @@ export class Overlay {
                     props,
                     target,
                     initialSelection,
+                    getCustomSelectionRange: this.getCustomSelectionRange.bind(this),
                     bus: this.bus,
                     getContainer: this.getContainer,
                     close: this.close.bind(this),
@@ -136,5 +138,15 @@ export class Overlay {
 
     updatePosition() {
         this.bus.trigger("updatePosition");
+    }
+
+    getCustomSelectionRange() {
+        let customSelectionRange;
+        for (const cb of this.customRangeProviders) {
+            customSelectionRange = cb();
+            if (customSelectionRange) {
+                return customSelectionRange;
+            }
+        }
     }
 }
