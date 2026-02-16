@@ -20,6 +20,10 @@ class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
     static dependencies = ["customizeTranslationTab"];
 
+    setup() {
+        this.canTimeout = false;
+    }
+
     async apply() {
         const translationState = this.dependencies.customizeTranslationTab.getTranslationState();
         try {
@@ -159,20 +163,25 @@ class TranslateToAction extends BuilderAction {
                 systemMessage,
                 { role: "user", content: `Translate the following to ${language}:\n\n${prompt}` },
             ];
-            return rpc(
-                "/html_editor/generate_text",
-                {
-                    prompt: prompt,
-                    conversation_history: conversation,
-                },
-                { silent: true }
-            );
+            try {
+                const response = await rpc(
+                    "/html_editor/generate_text",
+                    {
+                        prompt: prompt,
+                        conversation_history: conversation,
+                    },
+                    { silent: true }
+                );
+                return response;
+            } catch {
+                return JSON.stringify(chunk.map(({ id }) => ({ id, text: "" })));
+            }
         });
 
         // Limit concurrency to avoid
         // "Oops, it looks like our AI is unreachable!" error
         // when too many requests are sent in a short time.
-        const concurrencyLimit = 5;
+        const concurrencyLimit = 3;
         const allResults = [];
         const executing = new Set();
         for (const task of tasks) {
