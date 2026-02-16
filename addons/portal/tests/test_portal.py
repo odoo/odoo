@@ -16,12 +16,20 @@ class TestUsersHttp(HttpCase):
             self.env,
             login,
             name='Partner A',
+            groups='base.group_portal',
         )
 
         bank_account = self.env['res.partner.bank'].create({
             'acc_number': '123456789',
             'partner_id': portal_user.partner_id.id,
             'acc_holder_name': 'Partner A Holder',
+            'acc_type': 'bank',
+        })
+
+        bank_account_2 = self.env['res.partner.bank'].create({
+            'acc_number': '987654321',
+            'partner_id': portal_user.partner_id.id,
+            'acc_holder_name': 'Partner A',
             'acc_type': 'bank',
         })
 
@@ -48,6 +56,21 @@ class TestUsersHttp(HttpCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(bank_account.acc_holder_name, 'Partner A Holder')
+        self.assertEqual(bank_account_2.acc_holder_name, 'Partner A')
+
+        # request 2: request with changed partner name
+        response2 = self.url_open(
+            url='/my/address/submit',
+            data={
+                **common_data,
+                'name': 'Partner New Name',
+                'partner_id': str(portal_user.partner_id.id),
+                'csrf_token': Request.csrf_token(self)
+            }
+        )
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(bank_account.acc_holder_name, 'Partner A Holder')
+        self.assertEqual(bank_account_2.acc_holder_name, 'Partner New Name')
 
     def test_deactivate_portal_user(self):
         # Create a portal user with data which should be removed on deactivation
