@@ -478,6 +478,11 @@ class Properties(Field):
                         for many2many_value in property_value
                     ]
 
+    @staticmethod
+    def generate_property_name():
+        # keep only the first 64 bits
+        return str(uuid.uuid4()).replace('-', '')[:16]
+
     @classmethod
     def _add_missing_names(cls, values_list):
         """Generate new properties name if needed.
@@ -488,8 +493,7 @@ class Properties(Field):
         """
         for definition in values_list:
             if definition.get('definition_changed') and not definition.get('name'):
-                # keep only the first 64 bits
-                definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
+                definition['name'] = Properties.generate_property_name()
 
     @classmethod
     def _parse_json_types(cls, values_list, env, res_ids_per_model):
