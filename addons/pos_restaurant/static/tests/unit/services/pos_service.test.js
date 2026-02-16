@@ -351,18 +351,29 @@ describe("restaurant pos_store.js", () => {
 
     test("transferOrder", async () => {
         const store = await setupPosEnv();
+        const date = DateTime.now();
         const tableSrc = store.models["restaurant.table"].get(1);
         const tableDst = store.models["restaurant.table"].get(2);
-        const sourceOrder = store.addNewOrder({ table_id: tableSrc });
+        const sourceOrder = store.addNewOrder({
+            table_id: tableSrc,
+            write_date: date,
+            create_date: date,
+        });
         const product1 = store.models["product.template"].get(5);
         await store.addLineToOrder(
             {
                 product_tmpl_id: product1,
                 qty: 2,
+                write_date: date,
+                create_date: date,
             },
             sourceOrder
         );
-        const order = store.addNewOrder({ table_id: tableDst });
+        const order = store.addNewOrder({
+            table_id: tableDst,
+            write_date: date,
+            create_date: date,
+        });
         await store.transferOrder(sourceOrder.uuid, tableDst);
         expect(sourceOrder.lines.length).toBe(0);
         expect(order.lines.length).toBe(1);
@@ -386,7 +397,9 @@ describe("restaurant pos_store.js", () => {
         const line2 = await store.addLineToOrder({ product_tmpl_id: product2, qty: 2 }, order2);
         line2.course_id = course2;
         course2.line_ids = [line2];
-        await store.mergeOrders(order1, order2);
+        const result = await store.mergeOrders(order1, order2);
+        expect(result.id).toBeOfType("number");
+        expect(order2.id).toBeOfType("number");
         expect(order2.lines.length).toBe(2);
         expect(order1.lines.length).toBe(0);
         expect(order1.table_id).toBe(undefined);
