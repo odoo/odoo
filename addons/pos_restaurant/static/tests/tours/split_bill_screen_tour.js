@@ -12,6 +12,7 @@ const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/utils/split_bill_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SplitBillScreenTour", {
@@ -308,6 +309,18 @@ registry.category("web_tour.tours").add("SplitBillScreenTourTransfer", {
             ProductScreen.clickControlButton("Discount"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas("discount", 1, "-1.80"),
+            ProductScreen.clickControlButton("Split"),
+
+            SplitBillScreen.globalDiscountIs("With 10% discount"),
+            SplitBillScreen.clickBack(),
+            ProductScreen.clickControlButton("Discount"),
+            NumberPopup.clickType("fixed"),
+            Dialog.confirm(),
+            ProductScreen.clickControlButton("Split"),
+            SplitBillScreen.globalDiscountIs("With $ 10.00 discount"),
+            SplitBillScreen.clickBack(),
+            ProductScreen.clickControlButton("Discount"),
+            Dialog.confirm(),
             ProductScreen.clickControlButton("Split"),
 
             // Check if the screen contains all the orderlines
