@@ -186,7 +186,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data[this.props.name];
     }
 
-    async _onProductTemplateUpdate() {
+    async _getPreloadedConfigData() {
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
@@ -196,6 +196,12 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 context: this.props.context,
             }
         );
+        return result;
+    }
+
+    async _onProductTemplateUpdate() {
+        debugger;
+        const result = await this._getPreloadedConfigData();
         if (result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 if (result.is_combo) {
@@ -239,7 +245,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     async _openProductConfigurator({
         edit = false,
         selectedComboItems = [],
-        preloadedData = null,
+        preloadedData = {},
     } = {}) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;

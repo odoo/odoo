@@ -408,17 +408,16 @@ class ProductTemplate(models.Model):
             product_or_template.with_context(display_default_code=not self.env.context.get('website_id')),
             pricelist,
             combination,
-            currency=currency,
-            date=date,
             **kwargs,
         )
 
-        if self.env.context.get('website_id'):
+        if request and request.is_frontend:
+            website = request.website.with_context(self.env.context)
             has_zero_price = float_is_zero(
                 basic_product_information['price'], precision_rounding=currency.rounding
             )
             basic_product_information['can_be_sold'] = not (
-                self.website_id.prevent_zero_price_sale and has_zero_price
+                website.prevent_sale and has_zero_price
             )
             # Don't compute the strikethrough price if there's a custom price (i.e. if `price_info`
             # is populated).
@@ -452,7 +451,8 @@ class ProductTemplate(models.Model):
             product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
                 self.env.company
             )
-            taxes = self.taxes_id.sudo().fiscal_position_ids.sudo().map_tax(product_taxes)
+            if product_taxes:
+                taxes = request.fiscal_position.map_tax(product_taxes)
             return self._apply_taxes_to_price(price_extra, currency, product_taxes, taxes, product_or_template)
         return price_extra
 
@@ -469,9 +469,10 @@ class ProductTemplate(models.Model):
         """
         pricelist_rule = self.pricelist_rule_ids.browse(pricelist_rule_id)
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
-            self.env.company
+                self.env.company
         )
-        taxes = self.taxes_id.sudo().fiscal_position_ids.sudo().map_tax(product_taxes)
+        if product_taxes:
+            taxes = request.fiscal_position.map_tax(product_taxes)
 
         # First, try to use the base price as the strikethrough price.
         # Apply taxes before comparing it to the actual price.
@@ -484,10 +485,10 @@ class ProductTemplate(models.Model):
                     date=date,
                     currency=currency,
                 ),
+                currency,
                 product_taxes,
                 taxes,
                 product_or_template,
-                currency,
             )
             # Only show the base price if it's greater than the actual price.
             if currency.compare_amounts(pricelist_base_price, price) == 1:
@@ -519,11 +520,12 @@ class ProductTemplate(models.Model):
         :return: Whether the product should be shown in the configurator.
         """
         should_show_product = super()._should_show_product(product_template)
-        if self.env.context.get('website_id'):
+        if request and request.is_frontend:
+            website = request.website.with_context(self.env.context)
             return (
                 should_show_product
                 and product_template._is_add_to_cart_possible()
-                and product_template.filtered_domain(self.website_id.domain)
+                and product_template.filtered_domain(website.domain)
             )
         return should_show_product
 

@@ -11,7 +11,10 @@ export class ProductConfiguratorDialog extends Component {
     static props = {
         productTemplateId: Number,
         ptavIds: { type: Array, element: Number },
-        preloadedData: Object,
+        preloadedData: {
+            type: Object,
+            optional: true,
+        },
         customPtavs: {
             type: Array,
             element: Object,
