@@ -262,7 +262,7 @@ export class CaptionPlugin extends Plugin {
 
     isLinkAllowedOnSelection() {
         const figure = findInSelection(
-            this.dependencies.selection.getEditableSelection(),
+            this.dependencies.selection.getSelectionData().deepEditableSelection,
             "figure"
         );
         if (

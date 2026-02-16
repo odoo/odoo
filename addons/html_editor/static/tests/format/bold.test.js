@@ -594,7 +594,7 @@ test("should not apply bold formatting for partial selection inside contentedita
     const { editor, el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder=""><br></p>[<p contenteditable="false">Test</p>]<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        `<p data-selection-placeholder=""><br></p><p contenteditable="false">T[e]st</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
 });

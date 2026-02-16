@@ -114,7 +114,7 @@ registerWebsitePreviewTour(
         ...openLinkPopup(
             ":iframe .top_menu a:contains('Home')[href='/contactus']",
             "/contactus",
-            0,
+            1,
             true
         ),
         {
