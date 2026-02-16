@@ -7,7 +7,8 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
-const FIRST_PARAGRAPH = ":iframe #wrap .s_text_image p:not([data-selection-placeholder]):nth-child(2)";
+const FIRST_PARAGRAPH =
+    ":iframe #wrap .s_text_image p:not([data-selection-placeholder]):nth-child(2)";
 
 const clickEditLink = {
     content: "Click on Edit Link in Popover",
@@ -108,7 +109,7 @@ registerWebsitePreviewTour(
         ...openLinkPopup(
             ":iframe .top_menu a:contains('Home')[href='/contactus']",
             "/contactus",
-            0,
+            1,
             true
         ),
         {
