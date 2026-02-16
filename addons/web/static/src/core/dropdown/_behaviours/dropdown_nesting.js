@@ -121,6 +121,14 @@ export function useDropdownNesting(state) {
             },
             hotkeys: {
                 escape: () => current.close(),
+                tab: {
+                    callback: (navigator) => navigator.next(),
+                    bypassEditableProtection: true,
+                },
+                "shift+tab": {
+                    callback: (navigator) => navigator.previous(),
+                    bypassEditableProtection: true,
+                },
                 arrowleft: {
                     isAvailable: () => true,
                     callback: (navigator) => {

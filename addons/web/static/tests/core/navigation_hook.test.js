@@ -18,7 +18,7 @@ class BasicHookParent extends Component {
     static template = xml`
         <button class="outside" t-ref="outsideRef">outside target</button>
         <div class="container" t-ref="containerRef">
-            <button class="o-navigable one" t-on-click="() => this.onClick(1)">target one</button>
+            <button class="o-navigable one" tabindex="0" t-on-click="() => this.onClick(1)">target one</button>
             <div class="o-navigable two" tabindex="0" t-on-click="() => this.onClick(2)">target two</div>
             <input class="o-navigable three" t-on-click="() => this.onClick(3)"/><br/>
             <button class="no-nav-class">skipped</button><br/>
@@ -73,7 +73,7 @@ test("default navigation", async () => {
     await navigate("home", ".one");
 
     await navigate("tab", ".two");
-    await navigate("shift+tab", ".one");
+    await navigate(["shift", "tab"], ".one");
 
     await navigate("arrowleft", ".one");
     await navigate("arrowright", ".one");
@@ -164,7 +164,7 @@ test("navigation with virtual focus", async () => {
     await navigate("home", ".one");
 
     await navigate("tab", ".two");
-    await navigate("shift+tab", ".one");
+    await navigate(["shift", "tab"], ".one");
 
     await press("enter");
     await animationFrame();
