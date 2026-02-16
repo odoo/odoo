@@ -1199,7 +1199,7 @@ test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") mes
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
 });
 
-test("Editing a message to clear its composer opens message delete dialog.", async () => {
+test("Can delete a message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1209,6 +1209,7 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
         author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
+        subject: "Hello, wanderer",
         res_id: channelId,
         message_type: "comment",
     });
@@ -1219,6 +1220,8 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "not empty" });
     await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
+    await click("button:text('Confirm')");
+    await contains(".o-mail-Message:has(:text('This message has been removed'))");
 });
 
 test("Clear message body should not open message delete dialog if it has attachments", async () => {
