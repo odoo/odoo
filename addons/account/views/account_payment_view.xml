@@ -289,6 +289,7 @@
                                         required="require_partner_bank_account"/>
 
                                 <field name="partner_bank_id" string="Vendor Bank Account"
+                                        id="partner_bank_id_vendor"
                                         widget="many2one_bank"
                                         context="{'default_partner_id': partner_id}"
                                         invisible="not show_partner_bank_account or partner_type != 'supplier' or payment_type == 'inbound'"
