@@ -32,3 +32,10 @@ class TestGenericIN(TestGenericLocalization):
         _, html = super().test_generic_localization()
         self.assertTrue("HSN Code" in html)
         self.assertTrue("Tax Invoice" in html)
+
+    def test_refund_order_receipt(self):
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_refund_order_receipt')
+        refund_order = self.main_pos_config.current_session_id.order_ids[0]
+        html_data = refund_order.order_receipt_generate_html()
+        self.assertTrue('R-INVOICE' in html_data)
