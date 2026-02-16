@@ -18,20 +18,18 @@ class PaymentLinkWizard(models.TransientModel):
         res_model = self.env.context.get('active_model')
         if res_id and res_model:
             res.update({'res_model': res_model, 'res_id': res_id})
-            res.update(
-                self.env[res_model].browse(res_id)._get_default_payment_link_values()
-            )
+            res.update(self.env[res_model].browse(res_id)._get_default_payment_link_values())
         return res
 
-    res_model = fields.Char("Related Document Model", required=True)
-    res_id = fields.Integer("Related Document ID", required=True)
+    res_model = fields.Char(string="Related Document Model", required=True)
+    res_id = fields.Integer(string="Related Document ID", required=True)
     amount = fields.Monetary(currency_field='currency_id', required=True)
     amount_max = fields.Monetary(currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency')
-    partner_id = fields.Many2one('res.partner')
+    currency_id = fields.Many2one(comodel_name='res.currency')
+    partner_id = fields.Many2one(comodel_name='res.partner')
     partner_email = fields.Char(related='partner_id.email')
     link = fields.Char(string="Payment Link", compute='_compute_link')
-    company_id = fields.Many2one('res.company', compute='_compute_company_id')
+    company_id = fields.Many2one(comodel_name='res.company', compute='_compute_company_id')
     warning_message = fields.Char(compute='_compute_warning_message')
 
     @api.depends('amount', 'amount_max')
@@ -43,7 +41,10 @@ class PaymentLinkWizard(models.TransientModel):
             elif wizard.amount <= 0:
                 wizard.warning_message = _("Please set a positive amount.")
             elif wizard.amount > wizard.amount_max:
-                wizard.warning_message = _("Please set an amount lower than %s.", wizard.currency_id.format(wizard.amount_max))
+                wizard.warning_message = _(
+                    "Please set an amount lower than %s.",
+                    wizard.currency_id.format(wizard.amount_max),
+                )
 
     @api.depends('res_model', 'res_id')
     def _compute_company_id(self):
@@ -64,8 +65,9 @@ class PaymentLinkWizard(models.TransientModel):
             else:
                 payment_link.link = f'{url}?{urls.url_encode(query_params)}{anchor}'
 
-    def _prepare_url(self, base_url, related_document):
-        """ Build the URL of the payment link with the website's base URL and return it.
+    def _prepare_url(self, base_url, related_document):  # noqa: ARG002
+        """Build the URL of the payment link with the website's base URL and return it.
+
         :param str base_url: The website's base URL.
         :param recordset related_document: The record for which the payment link is generated.
         :return: The URL of the payment link.
@@ -73,8 +75,8 @@ class PaymentLinkWizard(models.TransientModel):
         """
         return f'{base_url}/payment/pay'
 
-    def _prepare_query_params(self, related_document):
-        """ Prepare the query string params to append to the payment link URL.
+    def _prepare_query_params(self, related_document):  # noqa: ARG002
+        """Prepare the query string params to append to the payment link URL.
 
         Note: self.ensure_one()
 
@@ -94,11 +96,11 @@ class PaymentLinkWizard(models.TransientModel):
     def _prepare_access_token(self):
         self.ensure_one()
         return payment_utils.generate_access_token(
-            self.partner_id.id, self.amount, self.currency_id.id, env=self.env,
+            self.partner_id.id, self.amount, self.currency_id.id, env=self.env
         )
 
     def _prepare_anchor(self):
-        """ Prepare the anchor to append to the payment link.
+        """Prepare the anchor to append to the payment link.
 
         Note: self.ensure_one()
 

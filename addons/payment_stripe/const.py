@@ -64,7 +64,7 @@ STATUS_MAPPING = {
     'authorized': ('requires_capture',),
     'done': ('succeeded',),
     'cancel': ('canceled',),
-    'error': ('requires_payment_method', 'failed',),
+    'error': ('requires_payment_method', 'failed'),
 }
 
 # Events which are handled by the webhook

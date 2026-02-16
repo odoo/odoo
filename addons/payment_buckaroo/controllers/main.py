@@ -10,7 +10,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -38,9 +37,7 @@ class BuckarooController(http.Controller):
         data = self._normalize_data_keys(raw_data)
 
         received_signature = data.get('brq_signature')
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'buckaroo', data
-        )
+        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('buckaroo', data)
         if tx_sudo:
             self._verify_signature(raw_data, received_signature, tx_sudo)
             tx_sudo._process('buckaroo', data)
@@ -59,9 +56,7 @@ class BuckarooController(http.Controller):
         _logger.info("notification received from Buckaroo with data:\n%s", pprint.pformat(raw_data))
         data = self._normalize_data_keys(raw_data)
         received_signature = data.get('brq_signature')
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'buckaroo', data
-        )
+        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('buckaroo', data)
         if tx_sudo:
             # Check the integrity of the payment data
             self._verify_signature(raw_data, received_signature, tx_sudo)
@@ -70,7 +65,7 @@ class BuckarooController(http.Controller):
 
     @staticmethod
     def _normalize_data_keys(data):
-        """ Set all keys of a dictionary to lower-case.
+        """Set all keys of a dictionary to lower-case.
 
         As Buckaroo parameters names are case insensitive, we can convert everything to lower-case
         to easily detected the presence of a parameter by checking the lower-case key only.
@@ -94,7 +89,7 @@ class BuckarooController(http.Controller):
         # Check for the received signature
         if not received_signature:
             _logger.warning("Received payment data with missing signature")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data
         expected_signature = tx_sudo.provider_id._buckaroo_generate_digital_sign(
@@ -102,4 +97,4 @@ class BuckarooController(http.Controller):
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature")
-            raise Forbidden()
+            raise Forbidden

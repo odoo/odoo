@@ -9,7 +9,6 @@ from odoo.addons.payment_aps import utils as aps_utils
 from odoo.addons.payment_aps.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_aps.controllers.main import APSController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -18,7 +17,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
-        """ Override of `payment` to ensure that APS' requirements for references are satisfied.
+        """Override of `payment` to ensure that APS' requirements for references are satisfied.
 
         APS' requirements for transaction are as follows:
         - References can only be made of alphanumeric characters and/or '-' and '_'.
@@ -35,10 +34,12 @@ class PaymentTransaction(models.Model):
         if provider_code == 'aps':
             prefix = payment_utils.singularize_reference_prefix()
 
-        return super()._compute_reference(provider_code, prefix=prefix, separator=separator, **kwargs)
+        return super()._compute_reference(
+            provider_code, prefix=prefix, separator=separator, **kwargs
+        )
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return APS-specific processing values.
+        """Override of `payment` to return APS-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -88,10 +89,7 @@ class PaymentTransaction(models.Model):
         amount = payment_utils.to_major_currency_units(
             float(payment_data.get('amount', 0)), self.currency_id
         )
-        return {
-            'amount': amount,
-            'currency_code': payment_data.get('currency'),
-        }
+        return {'amount': amount, 'currency_code': payment_data.get('currency')}
 
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
@@ -121,7 +119,10 @@ class PaymentTransaction(models.Model):
                 "for transaction %(ref)s.",
                 {'status': status, 'reason': status_description, 'ref': self.reference},
             )
-            self._set_error(_(
-                "Received invalid transaction status %(status)s and reason '%(reason)s'.",
-                status=status, reason=status_description
-            ))
+            self._set_error(
+                _(
+                    "Received invalid transaction status %(status)s and reason '%(reason)s'.",
+                    status=status,
+                    reason=status_description,
+                )
+            )

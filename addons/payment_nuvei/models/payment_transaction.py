@@ -12,7 +12,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_nuvei import const
 from odoo.addons.payment_nuvei.controllers.main import NuveiController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -20,7 +19,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return Nuvei-specific rendering values.
+        """Override of `payment` to return Nuvei-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -35,7 +34,7 @@ class PaymentTransaction(models.Model):
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         if self.payment_method_code in const.FULL_NAME_METHODS and not (first_name and last_name):
             raise UserError(
-                "Nuvei: " + _(
+                _(
                     "%(payment_method)s requires both a first and last name.",
                     payment_method=self.payment_method_id.name,
                 )
@@ -97,12 +96,11 @@ class PaymentTransaction(models.Model):
         }
 
         checksum = self.provider_id._nuvei_calculate_signature(url_params, incoming=False)
-        rendering_values = {
+        return {
             'api_url': self.provider_id._nuvei_get_api_url(),
             'checksum': checksum,
             'url_params': url_params,
         }
-        return rendering_values
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -121,7 +119,7 @@ class PaymentTransaction(models.Model):
         # amount set so we return early. This only occurs in the leaving flow so
         # no issue should arise leaving early.
         if not payment_data:
-            return
+            return None
 
         is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
         rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
@@ -137,7 +135,8 @@ class PaymentTransaction(models.Model):
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'nuvei':
-            return super()._apply_updates(payment_data)
+            super()._apply_updates(payment_data)
+            return
 
         if not payment_data:
             self._set_canceled(state_message=_("The customer left the payment page."))
@@ -165,10 +164,13 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif status in const.PAYMENT_STATUS_MAPPING['error']:
             failure_reason = payment_data.get('Reason') or payment_data.get('message')
-            self._set_error(_(
-                "An error occurred during the processing of your payment (%(reason)s). Please try"
-                " again.", reason=failure_reason,
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during the processing of your payment (%(reason)s). Please"
+                    " try again.",
+                    reason=failure_reason,
+                )
+            )
         else:  # Classify unsupported payment states as the `error` tx state.
             status_description = payment_data.get('Reason')
             _logger.info(
@@ -176,7 +178,10 @@ class PaymentTransaction(models.Model):
                 "for transaction %(ref)s.",
                 {'status': status, 'reason': status_description, 'ref': self.reference},
             )
-            self._set_error(_(
-                "Received invalid transaction status %(status)s and reason '%(reason)s'.",
-                status=status, reason=status_description
-            ))
+            self._set_error(
+                _(
+                    "Received invalid transaction status %(status)s and reason '%(reason)s'.",
+                    status=status,
+                    reason=status_description,
+                )
+            )

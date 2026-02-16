@@ -4,16 +4,18 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class PaypalCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.paypal = cls._prepare_provider('paypal', update_values={
-            'paypal_email_account': 'dummy@test.mail.com',
-            'paypal_client_id': 'dummy_client_id',
-            'paypal_client_secret': 'dummy_secret',
-        })
+        cls.paypal = cls._prepare_provider(
+            'paypal',
+            update_values={
+                'paypal_email_account': 'dummy@test.mail.com',
+                'paypal_client_id': 'dummy_client_id',
+                'paypal_client_secret': 'dummy_secret',
+            },
+        )
 
         # Override default values
         cls.provider = cls.paypal
@@ -26,36 +28,34 @@ class PaypalCommon(PaymentCommon):
                 'id': cls.order_id,
                 'intent': 'CAPTURE',
                 'status': 'COMPLETED',
-                'payment_source': {
-                    'paypal': {
-                        'account_id': '59XDVNACRAZZJ',
-                    }},
-                'purchase_units': [{
-                    'amount': {
-                        'currency_code': cls.currency.name,
-                        'value': str(cls.amount),
-                    },
-                    'reference_id': cls.reference,
-                }],
-            }
+                'payment_source': {'paypal': {'account_id': '59XDVNACRAZZJ'}},
+                'purchase_units': [
+                    {
+                        'amount': {'currency_code': cls.currency.name, 'value': str(cls.amount)},
+                        'reference_id': cls.reference,
+                    }
+                ],
+            },
         }
 
         cls.completed_order = {
             'status': 'COMPLETED',
-            'payment_source': {
-                'paypal': {'account_id': '59XDVNACRAZZJ'},
-            },
-            'purchase_units': [{
-                'reference_id': cls.reference,
-                'payments': {
-                    'captures': [{
-                        'amount': {
-                            'currency_code': cls.currency.name,
-                            'value': str(cls.amount),
-                        },
-                        'status': 'COMPLETED',
-                        'id': cls.order_id,
-                    }],
-                },
-            }],
+            'payment_source': {'paypal': {'account_id': '59XDVNACRAZZJ'}},
+            'purchase_units': [
+                {
+                    'reference_id': cls.reference,
+                    'payments': {
+                        'captures': [
+                            {
+                                'amount': {
+                                    'currency_code': cls.currency.name,
+                                    'value': str(cls.amount),
+                                },
+                                'status': 'COMPLETED',
+                                'id': cls.order_id,
+                            }
+                        ]
+                    },
+                }
+            ],
         }

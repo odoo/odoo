@@ -17,17 +17,15 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import utils as adyen_utils
 
-
 _logger = get_payment_logger(__name__)
 
 
 class AdyenController(http.Controller):
-
     _webhook_url = '/payment/adyen/notification'
 
     @http.route('/payment/adyen/payment_methods', type='jsonrpc', auth='public')
     def adyen_payment_methods(self, provider_id, formatted_amount=None, partner_id=None):
-        """ Query the available payment methods based on the payment context.
+        """Query the available payment methods based on the payment context.
 
         :param int provider_id: The provider handling the transaction, as a `payment.provider` id
         :param dict formatted_amount: The Adyen-formatted amount.
@@ -61,8 +59,15 @@ class AdyenController(http.Controller):
 
     @http.route('/payment/adyen/payments', type='jsonrpc', auth='public')
     def adyen_payments(
-        self, provider_id, reference, converted_amount, currency_id, partner_id, payment_method,
-        access_token, browser_info=None
+        self,
+        provider_id,
+        reference,
+        converted_amount,
+        currency_id,
+        partner_id,
+        payment_method,
+        access_token,
+        browser_info=None,
     ):
         """Make a payment request and process the payment data.
 
@@ -86,9 +91,11 @@ class AdyenController(http.Controller):
 
         # Prepare the payment request to Adyen
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
-        tx_sudo = request.env['payment.transaction'].sudo().search([
-            ('provider_id', '=', provider_sudo.id), ('reference', '=', reference),
-        ])
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()
+            .search([('provider_id', '=', provider_sudo.id), ('reference', '=', reference)])
+        )
         partner_country_code = (
             tx_sudo.partner_country_id.code or provider_sudo.company_id.country_id.code or 'NL'
         )
@@ -116,11 +123,7 @@ class AdyenController(http.Controller):
             'shopperName': adyen_utils.format_partner_name(tx_sudo.partner_name),
             'telephoneNumber': tx_sudo.partner_phone or "",
             'storePaymentMethod': tx_sudo.tokenize,  # True by default on Adyen side
-            'authenticationData': {
-                'threeDSRequestData': {
-                    'nativeThreeDS': 'preferred',
-                }
-            },
+            'authenticationData': {'threeDSRequestData': {'nativeThreeDS': 'preferred'}},
             'channel': 'web',  # Required to support 3DS
             'origin': provider_sudo.get_base_url(),  # Required to support 3DS
             'browserInfo': browser_info,  # Required to support 3DS
@@ -132,11 +135,9 @@ class AdyenController(http.Controller):
                 f'/payment/adyen/return?merchantReference={reference}',
             ),
             **adyen_utils.include_partner_addresses(tx_sudo),
-            'lineItems': [{
-                'amountIncludingTax': converted_amount,
-                'quantity': '1',
-                'description': reference,
-            }],
+            'lineItems': [
+                {'amountIncludingTax': converted_amount, 'quantity': '1', 'description': reference}
+            ],
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing
@@ -157,9 +158,7 @@ class AdyenController(http.Controller):
         response_content = provider_sudo._send_api_request(
             'POST', '/payments', json=data, idempotency_key=idempotency_key
         )
-        tx_sudo._process(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
-        )
+        tx_sudo._process('adyen', dict(response_content, merchantReference=reference))
         return response_content
 
     @http.route('/payment/adyen/payments/details', type='jsonrpc', auth='public')
@@ -177,28 +176,30 @@ class AdyenController(http.Controller):
         """
         # Make the payment details request to Adyen
         provider_sudo = request.env['payment.provider'].browse(provider_id).sudo()
-        tx_sudo = request.env['payment.transaction'].sudo().search([
-            ('provider_id', '=', provider_sudo.id), ('reference', '=', reference),
-        ])
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()
+            .search([('provider_id', '=', provider_sudo.id), ('reference', '=', reference)])
+        )
 
         idempotency_key = payment_utils.generate_idempotency_key(
             tx_sudo, scope='payment_details_request_controller'
         )
 
         response_content = provider_sudo._send_api_request(
-            'POST', '/payments/details', json=payment_details, idempotency_key=idempotency_key,
+            'POST', '/payments/details', json=payment_details, idempotency_key=idempotency_key
         )
 
         # Process the payment data request response.
         request.env['payment.transaction'].sudo()._process(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
+            'adyen', dict(response_content, merchantReference=reference)
         )
 
         return response_content
 
     @http.route('/payment/adyen/return', type='http', auth='public', csrf=False, save_session=False)
     def adyen_return_from_3ds_auth(self, **data):
-        """ Process the authentication data sent by Adyen after redirection from the 3DS1 page.
+        """Process the authentication data sent by Adyen after redirection from the 3DS1 page.
 
         The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
         to the user if they are redirected to this route with a POST request. Indeed, as the session
@@ -225,16 +226,13 @@ class AdyenController(http.Controller):
         # Query and process the result of the additional actions that have been performed
         _logger.info(
             "Handling redirection from Adyen for transaction %s with data:\n%s",
-            tx_sudo.reference, pprint.pformat(data)
+            tx_sudo.reference,
+            pprint.pformat(data),
         )
         self.adyen_payment_details(
             tx_sudo.provider_id.id,
             data['merchantReference'],
-            {
-                'details': {
-                    'redirectResult': data['redirectResult'],
-                },
-            },
+            {'details': {'redirectResult': data['redirectResult']}},
         )
 
         # Redirect the user to the status page
@@ -242,7 +240,7 @@ class AdyenController(http.Controller):
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def adyen_webhook(self):
-        """ Process the data sent by Adyen to the webhook based on the event code.
+        """Process the data sent by Adyen to the webhook based on the event code.
 
         See https://docs.adyen.com/development-resources/webhooks/understand-notifications for the
         exhaustive list of event codes.
@@ -258,8 +256,10 @@ class AdyenController(http.Controller):
                 "notification received from Adyen with data:\n%s", pprint.pformat(payment_data)
             )
             # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                'adyen', payment_data
+            tx_sudo = (
+                request.env['payment.transaction']
+                .sudo()
+                ._search_by_reference('adyen', payment_data)
             )
             if tx_sudo:
                 self._verify_signature(payment_data, tx_sudo)
@@ -295,18 +295,18 @@ class AdyenController(http.Controller):
         received_signature = payment_data.get('additionalData', {}).get('hmacSignature')
         if not received_signature:
             _logger.warning("received payment data with missing signature")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the payload
         hmac_key = tx_sudo.provider_id.adyen_hmac_key
         expected_signature = AdyenController._compute_signature(payment_data, hmac_key)
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("received payment data with invalid signature")
-            raise Forbidden()
+            raise Forbidden
 
     @staticmethod
     def _compute_signature(payload, hmac_key):
-        """ Compute the signature from the payload.
+        """Compute the signature from the payload.
 
         See https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures
 
@@ -315,8 +315,9 @@ class AdyenController(http.Controller):
         :return: The computed signature
         :rtype: str
         """
+
         def _flatten_dict(_value, _path_base='', _separator='.'):
-            """ Recursively generate a flat representation of a dict.
+            """Recursively generate a flat representation of a dict.
 
             :param Object _value: The value to flatten. A dict or an already flat value
             :param str _path_base: They base path for keys of _value, including preceding separators
@@ -330,7 +331,7 @@ class AdyenController(http.Controller):
                 yield _path_base, _value
 
         def _to_escaped_string(_value):
-            """ Escape payload values that are using illegal symbols and cast them to string.
+            """Escape payload values that are using illegal symbols and cast them to string.
 
             String values containing `\\` or `:` are prefixed with `\\`.
             Empty values (`None`) are replaced by an empty string.
@@ -338,20 +339,25 @@ class AdyenController(http.Controller):
             :param Object _value: The value to escape
             :return: The escaped value
             :rtype: string
-            """
+            """  # noqa: D301
             if isinstance(_value, str):
                 return _value.replace('\\', '\\\\').replace(':', '\\:')
-            elif _value is None:
+            if _value is None:
                 return ''
-            else:
-                return str(_value)
+            return str(_value)
 
         signature_keys = [
-            'pspReference', 'originalReference', 'merchantAccountCode', 'merchantReference',
-            'amount.value', 'amount.currency', 'eventCode', 'success'
+            'pspReference',
+            'originalReference',
+            'merchantAccountCode',
+            'merchantReference',
+            'amount.value',
+            'amount.currency',
+            'eventCode',
+            'success',
         ]
         # Flatten the payload to allow accessing inner dicts naively
-        flattened_payload = {k: v for k, v in _flatten_dict(payload)}
+        flattened_payload = dict(_flatten_dict(payload))
         # Build the list of signature values as per the list of required signature keys
         signature_values = [flattened_payload.get(key) for key in signature_keys]
         # Escape values using forbidden symbols

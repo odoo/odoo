@@ -12,7 +12,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -39,7 +38,7 @@ class FlutterwaveController(http.Controller):
 
     @http.route(_auth_return_url, type='http', methods=['GET'], auth='public')
     def flutterwave_return_from_authorization(self, response=None):
-        """ Process the response sent by Flutterwave after authorization.
+        """Process the response sent by Flutterwave after authorization.
 
         :param str response: The stringified JSON response.
         """
@@ -58,8 +57,10 @@ class FlutterwaveController(http.Controller):
 
         if data['event'] == 'charge.completed':
             payment_data = data['data']
-            tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                'flutterwave', payment_data
+            tx_sudo = (
+                request.env['payment.transaction']
+                .sudo()
+                ._search_by_reference('flutterwave', payment_data)
             )
             if tx_sudo:
                 signature = request.httprequest.headers.get('verif-hash')
@@ -79,13 +80,13 @@ class FlutterwaveController(http.Controller):
         # Check for the received signature.
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature.
         expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden
 
     @staticmethod
     def _verify_and_process(data):
@@ -94,15 +95,15 @@ class FlutterwaveController(http.Controller):
         :param dict data: The payment data.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'flutterwave', data
+        tx_sudo = (
+            request.env['payment.transaction'].sudo()._search_by_reference('flutterwave', data)
         )
         if not tx_sudo:
             return
 
         try:
             verified_data = tx_sudo._send_api_request(
-                'GET', 'transactions/verify_by_reference', params={'tx_ref': tx_sudo.reference},
+                'GET', 'transactions/verify_by_reference', params={'tx_ref': tx_sudo.reference}
             )
         except ValidationError:
             _logger.error("Unable to verify the payment data")

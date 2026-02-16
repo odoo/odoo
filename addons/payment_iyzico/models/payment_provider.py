@@ -75,13 +75,12 @@ class PaymentProvider(models.Model):
         )
         signature = self._iyzico_calculate_signature(endpoint, payload, random_string)
         authorization_params = [
-            f'apiKey:{self.iyzico_key_id}', f'randomKey:{random_string}', f'signature:{signature}'
+            f'apiKey:{self.iyzico_key_id}',
+            f'randomKey:{random_string}',
+            f'signature:{signature}',
         ]
         hash_base64 = base64.b64encode('&'.join(authorization_params).encode()).decode()
-        return {
-            'Authorization': f'IYZWSv2 {hash_base64}',
-            'x-iyzi-rnd': random_string,
-        }
+        return {'Authorization': f'IYZWSv2 {hash_base64}', 'x-iyzi-rnd': random_string}
 
     def _iyzico_calculate_signature(self, endpoint, payload, random_string):
         """Calculate the signature for the provided data.

@@ -7,7 +7,6 @@ from odoo.addons.payment_iyzico.tests.common import IyzicoCommon
 
 @tagged('post_install', '-at_install')
 class TestPaymentProvider(IyzicoCommon):
-
     def test_signature_calculation_for_outgoing_data(self):
         """Test that the calculated signature matches the expected signature for outgoing data."""
         calculated_signature = self.provider._iyzico_calculate_signature(

@@ -11,7 +11,7 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class PaymentHttpCommon(PaymentCommon, HttpCase):
-    """ HttpCase common to build and simulate requests going through payment controllers.
+    """HttpCase common to build and simulate requests going through payment controllers.
 
     Only use if you effectively want to test controllers.
     If you only want to test 'models' code, the PaymentCommon should be sufficient.
@@ -24,7 +24,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         return urls.urljoin(self.base_url(), route)
 
     def _make_http_get_request(self, url, params=None):
-        """ Make an HTTP GET request to the provided URL.
+        """Make an HTTP GET request to the provided URL.
 
         :param str url: The URL to make the request to
         :param dict params: The parameters to be sent in the query string
@@ -35,7 +35,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         return self.url_open(url, params=formatted_params)
 
     def _make_http_post_request(self, url, data=None):
-        """ Make an HTTP POST request to the provided URL.
+        """Make an HTTP POST request to the provided URL.
 
         :param str url: The URL to make the request to
         :param dict data: The data to be send in the request body
@@ -46,7 +46,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         return self.url_open(url, data=formatted_data, method='POST')
 
     def _format_http_request_payload(self, payload=None):
-        """ Format a request payload to replace float values by their string representation.
+        """Format a request payload to replace float values by their string representation.
 
         :param dict payload: The payload to format
         :return: The formatted payload
@@ -59,7 +59,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         return formatted_payload
 
     def _make_json_request(self, url, data=None):
-        """ Make a JSON request to the provided URL.
+        """Make a JSON request to the provided URL.
 
         :param str url: The URL to make the request to
         :param dict data: The data to be send in the request body in JSON format
@@ -69,14 +69,14 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         return self.url_open(url, json=data)
 
     @contextmanager
-    def _assertNotFound(self):
+    def _assertNotFound(self):  # noqa: N802
         with self.assertRaises(JsonRpcException) as cm:
             yield
         self.assertEqual(cm.exception.code, 404)
 
     def _get_payment_context(self, response):
-        """Extracts the payment context & other form info (provider & token ids)
-        from a payment response
+        """Extract the payment context & other form info (provider & token ids) from a payment
+        response.
 
         :param response: http Response, with a payment form as text
         :return: Transaction context (+ provider_ids & token_ids)
@@ -85,10 +85,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         # Need to specify an HTML parser as parser
         # Otherwise void elements (<img>, <link> without a closing / tag)
         # are considered wrong and trigger a lxml.etree.XMLSyntaxError
-        html_tree = objectify.fromstring(
-            response.text,
-            parser=etree.HTMLParser(),
-        )
+        html_tree = objectify.fromstring(response.text, parser=etree.HTMLParser())
         payment_form = html_tree.xpath('//form[@id="o_payment_form"]')[0]
         values = {}
         for key, val in payment_form.items():
@@ -115,10 +112,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
             else:  # 'payment_method'
                 payment_method_ids.append(int(data['payment-option-id']))
 
-        values.update({
-            'token_ids': token_ids,
-            'payment_method_ids': payment_method_ids,
-        })
+        values.update({'token_ids': token_ids, 'payment_method_ids': payment_method_ids})
 
         return values
 
@@ -126,7 +120,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
     ###############
 
     def _prepare_pay_values(self, amount=0.0, currency=None, reference='', partner=None):
-        """Prepare basic payment/pay route values
+        """Prepare basic payment/pay route values.
 
         NOTE: needs PaymentCommon to enable fallback values.
 
@@ -145,7 +139,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         }
 
     def _portal_pay(self, **route_kwargs):
-        """/payment/pay payment context feedback
+        """/payment/pay payment context feedback.
 
         NOTE: must be authenticated before calling method.
         Or an access_token should be specified in route_kwargs
@@ -165,7 +159,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
     ######################
 
     def _portal_payment_method(self):
-        """/my/payment_method payment context feedback
+        """/my/payment_method payment context feedback.
 
         NOTE: must be authenticated before calling method
             validation flow is restricted to logged users
@@ -185,7 +179,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
     #######################
 
     def _prepare_transaction_values(self, payment_method_id, token_id, flow):
-        """ Prepare the basic payment/transaction route values.
+        """Prepare the basic payment/transaction route values.
 
         :param int payment_option_id: The payment option handling the transaction, as a
                                       `payment.method` id or a `payment.token` id
@@ -211,7 +205,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         }
 
     def _portal_transaction(self, tx_route='/payment/transaction', **route_kwargs):
-        """/payment/transaction feedback
+        """/payment/transaction feedback.
 
         :return: The response to the json request
         """

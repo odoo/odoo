@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -16,7 +15,7 @@ class PaymentToken(models.Model):
     stripe_mandate = fields.Char(string="Stripe Mandate", readonly=True)
 
     def _stripe_sca_migrate_customer(self):
-        """ Migrate a token from the old implementation of Stripe to the SCA-compliant one.
+        """Migrate a token from the old implementation of Stripe to the SCA-compliant one.
 
         In the old implementation, it was possible to create a Charge by giving only the customer id
         and let Stripe use the default source (= default payment method). Stripe now requires to

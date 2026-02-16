@@ -4,16 +4,18 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class XenditCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.xendit = cls._prepare_provider('xendit', update_values={
-            'xendit_public_key': 'xnd_public_key',
-            'xendit_secret_key': 'xnd_secret_key',
-            'xendit_webhook_token': 'xnd_webhook_token',
-        })
+        cls.xendit = cls._prepare_provider(
+            'xendit',
+            update_values={
+                'xendit_public_key': 'xnd_public_key',
+                'xendit_secret_key': 'xnd_secret_key',
+                'xendit_webhook_token': 'xnd_webhook_token',
+            },
+        )
         cls.provider = cls.xendit
         cls.amount = 11100
         cls.currency = cls._enable_currency('IDR')
@@ -59,5 +61,5 @@ class XenditCommon(PaymentCommon):
             'approval_code': '831000',
             'created': '2024-05-16T06:41:41.176Z',
             'id': '6645aaa5f00da60017cdc66c',
-            'card_fingerprint': '652e1897a273b700164639a7'
+            'card_fingerprint': '652e1897a273b700164639a7',
         }

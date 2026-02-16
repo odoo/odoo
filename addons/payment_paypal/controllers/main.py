@@ -12,7 +12,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -29,8 +28,10 @@ class PaypalController(http.Controller):
                               key.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'paypal', {'reference_id': reference}
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()
+            ._search_by_reference('paypal', {'reference_id': reference})
         )
         if tx_sudo:
             idempotency_key = payment_utils.generate_idempotency_key(
@@ -40,8 +41,10 @@ class PaypalController(http.Controller):
                 'POST', f'/v2/checkout/orders/{order_id}/capture', idempotency_key=idempotency_key
             )
             normalized_response = self._normalize_paypal_data(response)
-            tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                'paypal', normalized_response
+            tx_sudo = (
+                request.env['payment.transaction']
+                .sudo()
+                ._search_by_reference('paypal', normalized_response)
             )
             tx_sudo._process('paypal', normalized_response)
 
@@ -59,8 +62,10 @@ class PaypalController(http.Controller):
             _logger.info("Notification received from PayPal with data:\n%s", pprint.pformat(data))
             normalized_data = self._normalize_paypal_data(data.get('resource'), from_webhook=True)
             # Check the origin and integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                'paypal', normalized_data
+            tx_sudo = (
+                request.env['payment.transaction']
+                .sudo()
+                ._search_by_reference('paypal', normalized_data)
             )
             if tx_sudo:
                 self._verify_notification_origin(data, tx_sudo)
@@ -68,7 +73,7 @@ class PaypalController(http.Controller):
         return request.make_json_response('')
 
     def _normalize_paypal_data(self, data, from_webhook=False):
-        """ Normalize the payment data received from PayPal.
+        """Normalize the payment data received from PayPal.
 
         The payment data received from PayPal has a different format depending on whether the data
         come from the payment request response, or from the webhook.
@@ -81,7 +86,7 @@ class PaypalController(http.Controller):
         purchase_unit = data['purchase_units'][0]
         result = {
             'payment_source': data['payment_source'].keys(),
-            'reference_id': purchase_unit.get('reference_id')
+            'reference_id': purchase_unit.get('reference_id'),
         }
         if from_webhook:
             result.update({
@@ -90,18 +95,14 @@ class PaypalController(http.Controller):
                 'id': data.get('id'),
                 'status': data.get('status'),
             })
+        elif captured := purchase_unit.get('payments', {}).get('captures'):
+            result.update({**captured[0], 'txn_type': 'CAPTURE'})
         else:
-            if captured := purchase_unit.get('payments', {}).get('captures'):
-                result.update({
-                    **captured[0],
-                    'txn_type': 'CAPTURE',
-                })
-            else:
-                _logger.warning(_("Invalid response format, can't normalize."))
+            _logger.warning(_("Invalid response format, can't normalize."))
         return result
 
     def _verify_notification_origin(self, payment_data, tx_sudo):
-        """ Check that the notification was sent by PayPal.
+        """Check that the notification was sent by PayPal.
 
         See https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature_post.
 
@@ -130,4 +131,4 @@ class PaypalController(http.Controller):
 
         if verification.get('verification_status') != 'SUCCESS':
             _logger.warning("Received payment data that was not verified by PayPal.")
-            raise Forbidden()
+            raise Forbidden

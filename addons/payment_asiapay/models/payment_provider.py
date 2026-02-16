@@ -17,8 +17,12 @@ class PaymentProvider(models.Model):
     asiapay_brand = fields.Selection(
         string="Asiapay Brand",
         help="The brand associated to your AsiaPay account.",
-        selection=[("paydollar", "PayDollar"), ("pesopay", "PesoPay"),
-                    ("siampay", "SiamPay"), ("bimopay", "BimoPay")],
+        selection=[
+            ("paydollar", "PayDollar"),
+            ("pesopay", "PesoPay"),
+            ("siampay", "SiamPay"),
+            ("bimopay", "BimoPay"),
+        ],
         required_if_provider='asiapay',
         default='paydollar',
         copy=False,
@@ -59,15 +63,17 @@ class PaymentProvider(models.Model):
                 if currency.name not in allowed_codes
             ]
             if provider.available_currency_ids.filtered(lambda c: c.name not in allowed_codes):
-                raise ValidationError(_(
-                    "AsiaPay does not support the following currencies: %(currencies)s.",
-                    currencies=", ".join(unsupported_currency_codes),
-                ))
+                raise ValidationError(
+                    _(
+                        "AsiaPay does not support the following currencies: %(currencies)s.",
+                        currencies=", ".join(unsupported_currency_codes),
+                    )
+                )
 
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'asiapay':
             return super()._get_default_payment_method_codes()
@@ -76,7 +82,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS ===#
 
     def _asiapay_get_api_url(self):
-        """ Return the URL of the API corresponding to the provider's state.
+        """Return the URL of the API corresponding to the provider's state.
 
         :return: The API URL.
         :rtype: str
@@ -88,7 +94,7 @@ class PaymentProvider(models.Model):
         return api_urls.get(self.asiapay_brand, api_urls['paydollar'])
 
     def _asiapay_calculate_signature(self, data, incoming=True):
-        """ Compute the signature for the provided data according to the AsiaPay documentation.
+        """Compute the signature for the provided data according to the AsiaPay documentation.
 
         :param dict data: The data to sign.
         :param bool incoming: Whether the signature must be generated for an incoming (AsiaPay to

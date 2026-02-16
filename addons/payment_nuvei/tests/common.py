@@ -4,15 +4,17 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 class NuveiCommon(PaymentHttpCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.nuvei = cls._prepare_provider('nuvei', update_values={
-            'nuvei_merchant_identifier': '123456abc',
-            'nuvei_site_identifier': '1234',
-            'nuvei_secret_key': 'dummy',
-        })
+        cls.nuvei = cls._prepare_provider(
+            'nuvei',
+            update_values={
+                'nuvei_merchant_identifier': '123456abc',
+                'nuvei_site_identifier': '1234',
+                'nuvei_secret_key': 'dummy',
+            },
+        )
 
         cls.provider = cls.nuvei
 
@@ -27,7 +29,7 @@ class NuveiCommon(PaymentHttpCommon):
             "Error": "Success",
             "Status": "APPROVED",
             "advanceResponseChecksum": "660a42e9796754d93c9e4b87c3ac4e34ce"
-                                       "8880e32813609c15b273a1d5cee563",
+            "8880e32813609c15b273a1d5cee563",
             "totalAmount": cls.amount,
             "TransactionID": "7110000000004858227",
             "item_amount_1": cls.amount,

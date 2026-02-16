@@ -6,18 +6,22 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class RazorpayCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.provider = cls._prepare_provider('razorpay', update_values={
-            'razorpay_key_id': 'rzp_123',
-            'razorpay_key_secret': 'Y63AyP9eL91',
-            'razorpay_webhook_secret': 'coincoin_motherducker',
-            'payment_method_ids': [Command.set([cls.env.ref('payment.payment_method_card').id])],
-            'allow_tokenization': True,
-        })
+        cls.provider = cls._prepare_provider(
+            'razorpay',
+            update_values={
+                'razorpay_key_id': 'rzp_123',
+                'razorpay_key_secret': 'Y63AyP9eL91',
+                'razorpay_webhook_secret': 'coincoin_motherducker',
+                'payment_method_ids': [
+                    Command.set([cls.env.ref('payment.payment_method_card').id])
+                ],
+                'allow_tokenization': True,
+            },
+        )
 
         cls.customer_id = 'cust_123'
         cls.token_id = 'token_404'
@@ -52,16 +56,8 @@ class RazorpayCommon(PaymentCommon):
             'description': cls.reference,
             'status': 'pending',
         }
-        cls.refund_data = {
-            'id': cls.refund_id,
-            'payment_id': cls.payment_id,
-            'amount': cls.amount,
-        }
+        cls.refund_data = {'id': cls.refund_id, 'payment_id': cls.payment_id, 'amount': cls.amount}
         cls.webhook_payment_data = {
             'event': 'payment.captured',
-            'payload': {
-                'payment': {
-                    'entity': cls.payment_data,
-                },
-            },
+            'payload': {'payment': {'entity': cls.payment_data}},
         }

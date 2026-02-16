@@ -5,18 +5,20 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class WorldlineCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.worldline = cls._prepare_provider('worldline', update_values={
-            'worldline_pspid': 'dummy',
-            'worldline_api_key': 'dummy',
-            'worldline_api_secret': 'dummy',
-            'worldline_webhook_key': 'dummy',
-            'worldline_webhook_secret': 'dummy',
-        })
+        cls.worldline = cls._prepare_provider(
+            'worldline',
+            update_values={
+                'worldline_pspid': 'dummy',
+                'worldline_api_key': 'dummy',
+                'worldline_api_secret': 'dummy',
+                'worldline_webhook_key': 'dummy',
+                'worldline_webhook_secret': 'dummy',
+            },
+        )
 
         cls.provider = cls.worldline
         cls.currency = cls.currency_euro
@@ -28,34 +30,32 @@ class WorldlineCommon(PaymentCommon):
         cls.payment_data = {
             'payment': {
                 'paymentOutput': {
-                    'references': {
-                        'merchantReference': cls.reference,
-                    },
+                    'references': {'merchantReference': cls.reference},
                     'cardPaymentMethodSpecificOutput': {
                         'paymentProductId': 1,
-                        'card': {
-                            'cardNumber': "******4242"
-                        },
-                        'token': 'whateverToken'
+                        'card': {'cardNumber': "******4242"},
+                        'token': 'whateverToken',
                     },
                     'amountOfMoney': cls.notification_amount_and_currency,
                 },
                 'id': '1234567890_0',
                 'status': 'CAPTURED',
-            },
+            }
         }
 
         cls.payment_data_insufficient_funds = {
             'errorId': 'ffffffff-fff-fffff-ffff-ffffffffffff',
-            'errors': [{
-                'category': 'IO_ERROR',
-                'code': '9999',
-                'errorCode': '30511001',
-                'httpStatusCode': 402,
-                'id': 'EXTERNAL_ACQUIRER_ERROR',
-                'message': '',
-                'retriable': False,
-            }],
+            'errors': [
+                {
+                    'category': 'IO_ERROR',
+                    'code': '9999',
+                    'errorCode': '30511001',
+                    'httpStatusCode': 402,
+                    'id': 'EXTERNAL_ACQUIRER_ERROR',
+                    'message': '',
+                    'retriable': False,
+                }
+            ],
             'paymentResult': {
                 'creationOutput': {
                     'externalReference': 'aaaaaaaa-5555-eeee-eeee-eeeeeeeeeeee',
@@ -87,15 +87,17 @@ class WorldlineCommon(PaymentCommon):
                     },
                     'status': 'REJECTED',
                     'statusOutput': {
-                        'errors': [{
-                            'category': 'IO_ERROR',
-                            'code': '9999',
-                            'errorCode': '30511001',
-                            'httpStatusCode': 402,
-                            'id': 'EXTERNAL_ACQUIRER_ERROR',
-                            'message': '',
-                            'retriable': False,
-                        }],
+                        'errors': [
+                            {
+                                'category': 'IO_ERROR',
+                                'code': '9999',
+                                'errorCode': '30511001',
+                                'httpStatusCode': 402,
+                                'id': 'EXTERNAL_ACQUIRER_ERROR',
+                                'message': '',
+                                'retriable': False,
+                            }
+                        ],
                         'isAuthorized': False,
                         'isCancellable': False,
                         'isRefundable': False,
@@ -128,27 +130,30 @@ class WorldlineCommon(PaymentCommon):
                         'fraudResults': {'cvvResult': 'P', 'fraudServiceResult': 'accepted'},
                         'paymentProductId': 1,
                         'threeDSecureResults': {'eci': '9'},
-                        'token': 'ODOO-ALIAS-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'},
+                        'token': 'ODOO-ALIAS-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                    },
                     'customer': {'device': {'ipAddressCountryCode': '99'}},
                     'paymentMethod': 'card',
                     'references': {'merchantReference': cls.reference},
                 },
                 'status': 'REJECTED',
                 'statusOutput': {
-                    'errors': [{
-                        'category': 'PAYMENT_PLATFORM_ERROR',
-                        'code': '9999',
-                        'errorCode': '30331001',
-                        'httpStatusCode': 402,
-                        'id': 'INVALID_CARD',
-                        'message': '',
-                        'retriable': False,
-                    }],
+                    'errors': [
+                        {
+                            'category': 'PAYMENT_PLATFORM_ERROR',
+                            'code': '9999',
+                            'errorCode': '30331001',
+                            'httpStatusCode': 402,
+                            'id': 'INVALID_CARD',
+                            'message': '',
+                            'retriable': False,
+                        }
+                    ],
                     'isAuthorized': False,
                     'isCancellable': False,
                     'isRefundable': False,
                     'statusCategory': 'UNSUCCESSFUL',
-                    'statusCode': 2
+                    'statusCode': 2,
                 },
             },
             'type': 'payment.rejected',

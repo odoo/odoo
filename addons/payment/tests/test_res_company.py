@@ -5,7 +5,6 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged('-at_install', 'post_install')
 class TestResCompany(PaymentCommon):
-
     def test_creating_company_duplicates_providers(self):
         """Ensure that installed payment providers of an existing company are correctly duplicated
         when a new company is created."""

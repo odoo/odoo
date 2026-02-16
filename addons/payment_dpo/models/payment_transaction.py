@@ -9,7 +9,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_dpo import const
 from odoo.addons.payment_dpo.controllers.main import DPOController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -17,7 +16,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return DPO-specific processing values.
+        """Override of `payment` to return DPO-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`.
 
@@ -34,7 +33,7 @@ class PaymentTransaction(models.Model):
         return {'api_url': api_url}
 
     def _dpo_create_token(self):
-        """ Create a transaction token and return the response data.
+        """Create a transaction token and return the response data.
 
         The token is used to redirect the customer to the payment page.
 
@@ -49,28 +48,28 @@ class PaymentTransaction(models.Model):
         payload = (
             f'<?xml version="1.0" encoding="utf-8"?>'
             f'<API3G>'
-                f'<CompanyToken>{self.provider_id.dpo_company_token}</CompanyToken>'
-                f'<Request>createToken</Request>'
-                f'<Transaction>'
-                    f'<PaymentAmount>{self.amount}</PaymentAmount>'
-                    f'<PaymentCurrency>{self.currency_id.name}</PaymentCurrency>'
-                    f'<CompanyRef>{self.reference}</CompanyRef>'
-                    f'<RedirectURL>{return_url}</RedirectURL>'
-                    f'<BackURL>{return_url}</BackURL>'
-                    f'<customerEmail>{self.partner_email}</customerEmail>'
-                    f'<customerFirstName>{first_name}</customerFirstName>'
-                    f'<customerLastName>{last_name}</customerLastName>'
-                    f'<customerCity>{self.partner_city or ""}</customerCity>'
-                    f'<customerCountry>{self.partner_country_id.code or ""}</customerCountry>'
-                    f'<customerZip>{self.partner_zip or ""}</customerZip>'
-                f'</Transaction>'
-                f'<Services>'
-                    f'<Service>'
-                        f'<ServiceType>{self.provider_id.dpo_service_ref}</ServiceType>'
-                        f'<ServiceDescription>{self.reference}</ServiceDescription>'
-                        f'<ServiceDate>{create_date}</ServiceDate>'
-                    f'</Service>'
-                f'</Services>'
+            f'<CompanyToken>{self.provider_id.dpo_company_token}</CompanyToken>'
+            f'<Request>createToken</Request>'
+            f'<Transaction>'
+            f'<PaymentAmount>{self.amount}</PaymentAmount>'
+            f'<PaymentCurrency>{self.currency_id.name}</PaymentCurrency>'
+            f'<CompanyRef>{self.reference}</CompanyRef>'
+            f'<RedirectURL>{return_url}</RedirectURL>'
+            f'<BackURL>{return_url}</BackURL>'
+            f'<customerEmail>{self.partner_email}</customerEmail>'
+            f'<customerFirstName>{first_name}</customerFirstName>'
+            f'<customerLastName>{last_name}</customerLastName>'
+            f'<customerCity>{self.partner_city or ""}</customerCity>'
+            f'<customerCountry>{self.partner_country_id.code or ""}</customerCountry>'
+            f'<customerZip>{self.partner_zip or ""}</customerZip>'
+            f'</Transaction>'
+            f'<Services>'
+            f'<Service>'
+            f'<ServiceType>{self.provider_id.dpo_service_ref}</ServiceType>'
+            f'<ServiceDescription>{self.reference}</ServiceDescription>'
+            f'<ServiceDate>{create_date}</ServiceDate>'
+            f'</Service>'
+            f'</Services>'
             f'</API3G>'
         )
 
@@ -95,10 +94,7 @@ class PaymentTransaction(models.Model):
 
         amount = payment_data.get('TransactionAmount')
         currency_code = payment_data.get('TransactionCurrency')
-        return {
-            'amount': float(amount),
-            'currency_code': currency_code,
-        }
+        return {'amount': float(amount), 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -119,14 +115,18 @@ class PaymentTransaction(models.Model):
         elif status_code in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif status_code in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(_(
-                "An error occurred during processing of your payment (code %(code)s:"
-                " %(explanation)s). Please try again.",
-                code=status_code, explanation=payment_data.get('ResultExplanation'),
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during processing of your payment (code %(code)s:"
+                    " %(explanation)s). Please try again.",
+                    code=status_code,
+                    explanation=payment_data.get('ResultExplanation'),
+                )
+            )
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction %s.",
-                status_code, self.reference
+                status_code,
+                self.reference,
             )
             self._set_error(_("Unknown status code: %s", status_code))

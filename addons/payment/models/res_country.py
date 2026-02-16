@@ -22,11 +22,9 @@ class ResCountry(models.Model):
         for country in self:
             country.is_stripe_supported_country = (
                 stripe is not None
-                and stripe.const.COUNTRY_MAPPING.get(
-                    country.code, country.code
-                ) in stripe.const.SUPPORTED_COUNTRIES
+                and stripe.const.COUNTRY_MAPPING.get(country.code, country.code)
+                in stripe.const.SUPPORTED_COUNTRIES
             )
             country.is_mercado_pago_supported_country = (
-                mercado_pago
-                and country.code in mercado_pago.const.SUPPORTED_COUNTRIES
+                mercado_pago and country.code in mercado_pago.const.SUPPORTED_COUNTRIES
             )

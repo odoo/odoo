@@ -12,7 +12,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -63,7 +62,7 @@ class RedsysController(http.Controller):
         received_signature = payment_data.get('Ds_Signature')
         if not received_signature:
             _logger.warning("Received notification with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the payment data.
         expected_signature = tx_sudo.provider_id._redsys_calculate_signature(
@@ -73,4 +72,4 @@ class RedsysController(http.Controller):
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received notification with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

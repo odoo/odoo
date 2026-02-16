@@ -14,8 +14,7 @@ from odoo.addons.portal.controllers import portal
 
 
 class PaymentPortal(portal.CustomerPortal):
-
-    """ This controller contains the foundations for online payments through the portal.
+    """This controller contains the foundations for online payments through the portal.
 
     It allows to complete a full payment flow without the need of going through a document-based
     flow made available by another module's controller.
@@ -35,13 +34,19 @@ class PaymentPortal(portal.CustomerPortal):
     """
 
     @http.route(
-        '/payment/pay', type='http', methods=['GET'], auth='public', website=True, sitemap=False,
+        '/payment/pay', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
     def payment_pay(
-        self, reference=None, amount=None, currency_id=None, partner_id=None, company_id=None,
-        access_token=None, **kwargs
+        self,
+        reference=None,
+        amount=None,
+        currency_id=None,
+        partner_id=None,
+        company_id=None,
+        access_token=None,
+        **kwargs,
     ):
-        """ Display the payment form with optional filtering of payment options.
+        """Display the payment form with optional filtering of payment options.
 
         The filtering takes place on the basis of provided parameters, if any. If a parameter is
         incorrect or malformed, it is skipped to avoid preventing the user from making the payment.
@@ -67,15 +72,15 @@ class PaymentPortal(portal.CustomerPortal):
         :raise NotFound: If the access token is invalid.
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
-        currency_id, partner_id, company_id = tuple(map(
-            self._cast_as_int, (currency_id, partner_id, company_id)
-        ))
+        currency_id, partner_id, company_id = tuple(
+            map(self._cast_as_int, (currency_id, partner_id, company_id))
+        )
         amount = self._cast_as_float(amount)
 
         # Raise an HTTP 404 if a partner is provided with an invalid access token
         if partner_id:
             if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
-                raise NotFound()  # Don't leak information about ids.
+                raise NotFound  # Don't leak information about ids.
 
         user_sudo = request.env.user
         logged_in = not user_sudo._is_public()
@@ -106,28 +111,38 @@ class PaymentPortal(portal.CustomerPortal):
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
         if not currency or not currency.active:
-            raise NotFound()  # The currency must exist and be active.
+            raise NotFound  # The currency must exist and be active.
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            company_id,
-            partner_sudo.id,
-            amount,
-            currency_id=currency.id,
-            report=availability_report,
-            **kwargs,
-        )  # In sudo mode to read the fields of providers and partner (if logged out).
-        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
-            providers_sudo.ids,
-            partner_sudo.id,
-            currency_id=currency.id,
-            report=availability_report,
-            **kwargs,
-        )  # In sudo mode to read the fields of providers.
-        tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-            providers_sudo.ids, partner_sudo.id
-        )  # In sudo mode to be able to read tokens of other partners and the fields of providers.
+        providers_sudo = (
+            request.env['payment.provider']
+            .sudo()  # In sudo mode to read the fields of providers and partner (if logged out).
+            ._get_compatible_providers(
+                company_id,
+                partner_sudo.id,
+                amount,
+                currency_id=currency.id,
+                report=availability_report,
+                **kwargs,
+            )
+        )
+        payment_methods_sudo = (
+            request.env['payment.method']
+            .sudo()  # In sudo mode to read the fields of providers.
+            ._get_compatible_payment_methods(
+                providers_sudo.ids,
+                partner_sudo.id,
+                currency_id=currency.id,
+                report=availability_report,
+                **kwargs,
+            )
+        )
+        tokens_sudo = (
+            request.env['payment.token']
+            .sudo()  # In sudo mode to read tokens of other partners and the fields of providers.
+            ._get_available_tokens(providers_sudo.ids, partner_sudo.id)
+        )
 
         # Make sure that the partner's company matches the company passed as parameter.
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)
@@ -144,7 +159,7 @@ class PaymentPortal(portal.CustomerPortal):
         payment_form_values = {
             'show_tokenize_input_mapping': self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
-            ),
+            )
         }
         payment_context = {
             'reference_prefix': reference,
@@ -171,7 +186,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @staticmethod
     def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
-        """ Determine for each provider whether the tokenization input should be shown or not.
+        """Determine for each provider whether the tokenization input should be shown or not.
 
         :param recordset providers_sudo: The providers for which to determine whether the
                                          tokenization input should be shown or not, as a sudoed
@@ -182,17 +197,19 @@ class PaymentPortal(portal.CustomerPortal):
         """
         show_tokenize_input_mapping = {}
         for provider_sudo in providers_sudo:
-            show_tokenize_input = provider_sudo.allow_tokenization \
-                                  and not provider_sudo._is_tokenization_required(**kwargs)
+            show_tokenize_input = (
+                provider_sudo.allow_tokenization
+                and not provider_sudo._is_tokenization_required(**kwargs)
+            )
             show_tokenize_input_mapping[provider_sudo.id] = show_tokenize_input
         return show_tokenize_input_mapping
 
-    def _get_payment_page_template_xmlid(self, **kwargs):
+    def _get_payment_page_template_xmlid(self, **_kwargs):
         return 'payment.pay'
 
     @http.route('/my/payment_method', type='http', methods=['GET'], auth='user', website=True)
     def payment_method(self, **kwargs):
-        """ Display the form to manage payment methods.
+        """Display the form to manage payment methods.
 
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The rendered manage form
@@ -202,24 +219,34 @@ class PaymentPortal(portal.CustomerPortal):
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            request.env.company.id,
-            partner_sudo.id,
-            0.,  # There is no amount to pay with validation transactions.
-            force_tokenization=True,
-            is_validation=True,
-            report=availability_report,
-            **kwargs,
-        )  # In sudo mode to read the fields of providers and partner (if logged out).
-        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
-            providers_sudo.ids,
-            partner_sudo.id,
-            force_tokenization=True,
-            report=availability_report,
-        )  # In sudo mode to read the fields of providers.
-        tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-            None, partner_sudo.id, is_validation=True
-        )  # In sudo mode to read the commercial partner's and providers' fields.
+        providers_sudo = (
+            request.env['payment.provider']
+            .sudo()  # In sudo mode to read the fields of providers and partner (if logged out).
+            ._get_compatible_providers(
+                request.env.company.id,
+                partner_sudo.id,
+                0.0,  # There is no amount to pay with validation transactions.
+                force_tokenization=True,
+                is_validation=True,
+                report=availability_report,
+                **kwargs,
+            )
+        )
+        payment_methods_sudo = (
+            request.env['payment.method']
+            .sudo()  # In sudo mode to read the fields of providers.
+            ._get_compatible_payment_methods(
+                providers_sudo.ids,
+                partner_sudo.id,
+                force_tokenization=True,
+                report=availability_report,
+            )
+        )
+        tokens_sudo = (
+            request.env['payment.token']
+            .sudo()  # In sudo mode to read the commercial partner's and providers' fields.
+            ._get_available_tokens(None, partner_sudo.id, is_validation=True)
+        )
 
         access_token = payment_utils.generate_access_token(partner_sudo.id, None, None)
 
@@ -246,10 +273,10 @@ class PaymentPortal(portal.CustomerPortal):
         }
         return request.render('payment.payment_methods', rendering_context)
 
-    def _get_extra_payment_form_values(self, **kwargs):
-        """ Return a dict of extra payment form values to include in the rendering context.
+    def _get_extra_payment_form_values(self, **_kwargs):
+        """Return a dict of extra payment form values to include in the rendering context.
 
-        :param dict kwargs: Optional data. This parameter is not used here.
+        :param dict _kwargs: Optional data. This parameter is not used here.
         :return: The dict of extra payment form values.
         :rtype: dict
         """
@@ -257,7 +284,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @http.route('/payment/transaction', type='jsonrpc', auth='public')
     def payment_transaction(self, amount, currency_id, partner_id, access_token, **kwargs):
-        """ Create a draft transaction and return its processing values.
+        """Create a draft transaction and return its processing values.
 
         :param float|None amount: The amount to pay in the given currency.
                                   None if in a payment method validation operation
@@ -273,7 +300,7 @@ class PaymentPortal(portal.CustomerPortal):
         # Check the access token against the transaction values
         amount = amount and float(amount)  # Cast as float in case the JS stripped the '.0'
         if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
-            raise Forbidden()
+            raise Forbidden
 
         self._validate_transaction_kwargs(kwargs, additional_allowed_keys=('reference_prefix',))
         tx_sudo = self._create_transaction(
@@ -283,11 +310,22 @@ class PaymentPortal(portal.CustomerPortal):
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
-        self, provider_id, payment_method_id, token_id, amount, currency_id, partner_id, flow,
-        tokenization_requested, landing_route, reference_prefix=None, is_validation=False,
-        custom_create_values=None, **kwargs
+        self,
+        provider_id,
+        payment_method_id,
+        token_id,
+        amount,
+        currency_id,
+        partner_id,
+        flow,
+        tokenization_requested,
+        landing_route,
+        reference_prefix=None,
+        is_validation=False,
+        custom_create_values=None,
+        **kwargs,
     ):
-        """ Create a draft transaction based on the payment context and return it.
+        """Create a draft transaction based on the payment context and return it.
 
         :param int provider_id: The provider of the provider payment method or token, as a
                                 `payment.provider` id.
@@ -297,7 +335,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param int|None currency_id: The currency of the amount, as a `res.currency` id, or `None`
                                      if in a validation operation.
         :param int partner_id: The partner making the payment, as a `res.partner` id.
-        :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'.
+        :param str flow: The online payment flow of the transaction: redirect, direct or token.
         :param bool tokenization_requested: Whether the user requested that a token is created.
         :param str landing_route: The route the user is redirected to after the transaction.
         :param str reference_prefix: The custom prefix to compute the full reference.
@@ -334,32 +372,37 @@ class PaymentPortal(portal.CustomerPortal):
             payment_method_id = token_sudo.payment_method_id.id
 
         reference = request.env['payment.transaction']._compute_reference(
-            provider_sudo.code,
-            prefix=reference_prefix,
-            **(custom_create_values or {}),
-            **kwargs
+            provider_sudo.code, prefix=reference_prefix, **(custom_create_values or {}), **kwargs
         )
         if is_validation:  # Providers determine the amount and currency in validation operations
             amount = provider_sudo._get_validation_amount()
             payment_method = request.env['payment.method'].browse(payment_method_id)
-            currency_id = provider_sudo.with_context(
-                validation_pm=payment_method  # Will be converted to a kwarg in master.
-            )._get_validation_currency().id
+            currency_id = (
+                provider_sudo.with_context(
+                    validation_pm=payment_method  # Will be converted to a kwarg in master.
+                )
+                ._get_validation_currency()
+                .id
+            )
 
         # Create the transaction
-        tx_sudo = request.env['payment.transaction'].sudo().create({
-            'provider_id': provider_sudo.id,
-            'payment_method_id': payment_method_id,
-            'reference': reference,
-            'amount': amount,
-            'currency_id': currency_id,
-            'partner_id': partner_id,
-            'token_id': token_id,
-            'operation': f'online_{flow}' if not is_validation else 'validation',
-            'tokenize': tokenize,
-            'landing_route': landing_route,
-            **(custom_create_values or {}),
-        })  # In sudo mode to allow writing on callback fields
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()  # In sudo mode to write on callback fields
+            .create({
+                'provider_id': provider_sudo.id,
+                'payment_method_id': payment_method_id,
+                'reference': reference,
+                'amount': amount,
+                'currency_id': currency_id,
+                'partner_id': partner_id,
+                'token_id': token_id,
+                'operation': f'online_{flow}' if not is_validation else 'validation',
+                'tokenize': tokenize,
+                'landing_route': landing_route,
+                **(custom_create_values or {}),
+            })
+        )
 
         if flow != 'token':
             tx_sudo._log_sent_message()  # Direct/Redirect payments go through the payment form.
@@ -373,7 +416,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @staticmethod
     def _update_landing_route(tx_sudo, access_token):
-        """ Add the mandatory parameters to the route and recompute the access token if needed.
+        """Add the mandatory parameters to the route and recompute the access token if needed.
 
         The generic landing route requires the tx id and access token to be provided since there is
         no document to rely on. The access token is recomputed in case we are dealing with a
@@ -388,16 +431,17 @@ class PaymentPortal(portal.CustomerPortal):
             access_token = payment_utils.generate_access_token(
                 tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
             )
-        tx_sudo.landing_route = f'{tx_sudo.landing_route}' \
-                                f'?tx_id={tx_sudo.id}&access_token={access_token}'
+        tx_sudo.landing_route = (
+            f'{tx_sudo.landing_route}?tx_id={tx_sudo.id}&access_token={access_token}'
+        )
 
     @http.route('/payment/confirmation', type='http', methods=['GET'], auth='public', website=True)
-    def payment_confirm(self, tx_id, access_token, **kwargs):
-        """ Display the payment confirmation page to the user.
+    def payment_confirm(self, tx_id, access_token, **_kwargs):
+        """Display the payment confirmation page to the user.
 
         :param str tx_id: The transaction to confirm, as a `payment.transaction` id
         :param str access_token: The access token used to verify the user
-        :param dict kwargs: Optional data. This parameter is not used here
+        :param dict _kwargs: Optional data. This parameter is not used here
         :raise NotFound: If the access token is invalid.
         """
         tx_id = self._cast_as_int(tx_id)
@@ -408,33 +452,37 @@ class PaymentPortal(portal.CustomerPortal):
             if not payment_utils.check_access_token(
                 access_token, tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
             ):
-                raise NotFound()  # Don't leak information about ids.
+                raise NotFound  # Don't leak information about ids.
 
             # Display the payment confirmation page to the user
             return request.render('payment.confirm', qcontext={'tx': tx_sudo})
-        else:
-            # Display the portal homepage to the user
-            return request.redirect('/my/home')
+
+        # Display the portal homepage to the user
+        return request.redirect('/my/home')
 
     @http.route('/payment/archive_token', type='jsonrpc', auth='user')
     def archive_token(self, token_id):
-        """ Check that a user has write access on a token and archive the token if so.
+        """Check that a user has write access on a token and archive the token if so.
 
         :param int token_id: The token to archive, as a `payment.token` id
         :return: None
         """
         partner_sudo = request.env.user.partner_id
-        token_sudo = request.env['payment.token'].sudo().search([
-            ('id', '=', token_id),
-            # Check that the user owns the token before letting them archive anything
-            ('partner_id', 'in', [partner_sudo.id, partner_sudo.commercial_partner_id.id])
-        ])
+        token_sudo = (
+            request.env['payment.token']
+            .sudo()
+            .search([
+                ('id', '=', token_id),
+                # Check that the user owns the token before letting them archive anything
+                ('partner_id', 'in', [partner_sudo.id, partner_sudo.commercial_partner_id.id]),
+            ])
+        )
         if token_sudo:
             token_sudo.active = False
 
     @staticmethod
     def _cast_as_int(str_value):
-        """ Cast a string as an `int` and return it.
+        """Cast a string as an `int` and return it.
 
         If the conversion fails, `None` is returned instead.
 
@@ -449,7 +497,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @staticmethod
     def _cast_as_float(str_value):
-        """ Cast a string as a `float` and return it.
+        """Cast a string as a `float` and return it.
 
         If the conversion fails, `None` is returned instead.
 
@@ -464,7 +512,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @staticmethod
     def _can_partner_pay_in_company(partner, document_company):
-        """ Return whether the provided partner can pay in the provided company.
+        """Return whether the provided partner can pay in the provided company.
 
         The payment is allowed either if the partner's company is not set or if the companies match.
 
@@ -479,7 +527,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @staticmethod
     def _validate_transaction_kwargs(kwargs, additional_allowed_keys=()):
-        """ Verify that the keys of a transaction route's kwargs are all whitelisted.
+        """Verify that the keys of a transaction route's kwargs are all whitelisted.
 
         The whitelist consists of all the keys that are expected to be passed to a transaction
         route, plus optional contextually allowed keys.

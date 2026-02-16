@@ -11,7 +11,6 @@ from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 @tagged('post_install', '-at_install')
 class AuthorizeTest(AuthorizeCommon):
-
     def test_compatible_providers(self):
         # Note: in the test common, 'USD' is specified as the currency linked to the user account.
         unsupported_currency = self._enable_currency('CHF')
@@ -27,19 +26,23 @@ class AuthorizeTest(AuthorizeCommon):
     def test_processing_values(self):
         """Test custom 'access_token' processing_values for authorize provider."""
         tx = self._create_transaction(flow='direct')
-        with mute_logger('odoo.addons.payment.models.payment_transaction'), \
+        with (
+            mute_logger('odoo.addons.payment.models.payment_transaction'),
             patch(
                 'odoo.addons.payment.utils.generate_access_token',
-                new=self._generate_test_access_token
-            ):
+                new=self._generate_test_access_token,
+            ),
+        ):
             processing_values = tx._get_processing_values()
 
         with patch(
             'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
         ):
-            self.assertTrue(payment_utils.check_access_token(
-                processing_values['access_token'], self.reference, self.partner.id,
-            ))
+            self.assertTrue(
+                payment_utils.check_access_token(
+                    processing_values['access_token'], self.reference, self.partner.id
+                )
+            )
 
     def test_validation(self):
         self.assertEqual(self.authorize.available_currency_ids[0], self.currency_usd)
@@ -63,18 +66,16 @@ class AuthorizeTest(AuthorizeCommon):
         self.assertEqual(amount_data, None)  # Amount validation is skipped.
 
     def test_voiding_confirmed_tx_cancels_it(self):
-        """ Test that voiding a transaction cancels it even if it's already confirmed. """
+        """Test that voiding a transaction cancels it even if it's already confirmed."""
         source_tx = self._create_transaction('direct', state='done')
         with patch(
             'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
-            '.get_transaction_details', return_value={'transaction': {'authAmount': self.amount}},
+            '.get_transaction_details',
+            return_value={'transaction': {'authAmount': self.amount}},
         ):
-            source_tx._process('authorize', {
-                'response': {
-                    'x_response_code': '1',
-                    'x_type': 'void',
-                },
-            })
+            source_tx._process(
+                'authorize', {'response': {'x_response_code': '1', 'x_type': 'void'}}
+            )
         self.assertEqual(source_tx.state, 'cancel')
 
     @mute_logger('odoo.addons.payment_authorize.models.payment_transaction')
@@ -87,11 +88,15 @@ class AuthorizeTest(AuthorizeCommon):
         }
         with patch(
             'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
-            '.create_customer_profile', return_value=payment_data,
+            '.create_customer_profile',
+            return_value=payment_data,
         ):
             token_values = tx._extract_token_values({})
-        self.assertDictEqual(token_values, {
-            'payment_details': '1234',
-            'provider_ref': '123456789',
-            'authorize_profile': '987654321',
-        })
+        self.assertDictEqual(
+            token_values,
+            {
+                'payment_details': '1234',
+                'provider_ref': '123456789',
+                'authorize_profile': '987654321',
+            },
+        )

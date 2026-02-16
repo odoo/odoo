@@ -12,11 +12,10 @@ from odoo.addons.payment_dpo.tests.common import DPOCommon
 
 @tagged('post_install', '-at_install')
 class TestProcessingFlows(DPOCommon, PaymentHttpCommon):
-
     @mute_logger('odoo.addons.payment_dpo.controllers.main')
     def test_redirect_notification_triggers_processing(self):
-        """ Test that receiving a valid redirect notification triggers the processing of the
-        payment data. """
+        """Test that receiving a valid redirect notification triggers the processing of the
+        payment data."""
         self._create_transaction('redirect')
         url = self._build_url(DPOController._return_url)
         with patch(

@@ -12,7 +12,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_xendit import const
 from odoo.addons.payment_xendit.controllers.main import XenditController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -20,7 +19,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of payment to return Xendit-specific processing values.
+        """Override of payment to return Xendit-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -31,12 +30,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'xendit':
             return super()._get_specific_processing_values(processing_values)
 
-        return {
-            'rounded_amount': self._get_rounded_amount(),
-        }
+        return {'rounded_amount': self._get_rounded_amount()}
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return Xendit-specific rendering values.
+        """Override of `payment` to return Xendit-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -57,13 +54,10 @@ class PaymentTransaction(models.Model):
             return {}
 
         # Extract the payment link URL and embed it in the redirect form.
-        rendering_values = {
-            'api_url': invoice_data.get('invoice_url')
-        }
-        return rendering_values
+        return {'api_url': invoice_data.get('invoice_url')}
 
     def _xendit_prepare_invoice_request_payload(self):
-        """ Create the payload for the invoice request based on the transaction values.
+        """Create the payload for the invoice request based on the transaction values.
 
         :return: The request payload.
         :rtype: dict
@@ -80,13 +74,13 @@ class PaymentTransaction(models.Model):
             'external_id': self.reference,
             'amount': self._get_rounded_amount(),
             'description': self.reference,
-            'customer': {
-                'given_names': self.partner_name,
-            },
+            'customer': {'given_names': self.partner_name},
             'success_redirect_url': f'{redirect_url}?{success_url_params}',
             'failure_redirect_url': redirect_url,
-            'payment_methods': [const.PAYMENT_METHODS_MAPPING.get(
-                self.payment_method_code, self.payment_method_code.upper())
+            'payment_methods': [
+                const.PAYMENT_METHODS_MAPPING.get(
+                    self.payment_method_code, self.payment_method_code.upper()
+                )
             ],
             'currency': self.currency_id.name,
         }
@@ -122,7 +116,7 @@ class PaymentTransaction(models.Model):
         self._xendit_create_charge(self.token_id.provider_ref)
 
     def _xendit_create_charge(self, token_ref, auth_id=None):
-        """ Create a charge on Xendit using the `credit_card_charges` endpoint.
+        """Create a charge on Xendit using the `credit_card_charges` endpoint.
 
         :param str token_ref: The reference of the Xendit token to use to make the payment.
         :param str auth_id: The authentication id to use to make the payment.
@@ -204,10 +198,13 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:
             failure_reason = payment_data.get('failure_reason')
-            self._set_error(_(
-                "An error occurred during the processing of your payment (%s). Please try again.",
-                failure_reason,
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during the processing of your payment (%s). Please try"
+                    " again.",
+                    failure_reason,
+                )
+            )
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Xendit data.
@@ -223,7 +220,4 @@ class PaymentTransaction(models.Model):
 
         card_info = payment_data['masked_card_number'][-4:]  # Xendit pads details with X's.
 
-        return {
-            'payment_details': card_info,
-            'provider_ref': payment_data['credit_card_token_id'],
-        }
+        return {'payment_details': card_info, 'provider_ref': payment_data['credit_card_token_id']}

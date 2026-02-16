@@ -28,9 +28,7 @@ PAYMENT_METHODS_MAPPING = {
 # See https://pagosonline.redsys.es/desarrolladores-inicio/integrate-con-nosotros/parametros-de-entrada-y-salida/.
 PAYMENT_STATUS_MAPPING = {
     'done': tuple(f'{i:04}' for i in range(100)) + ('400', '900'),  # From 0000 to 0099, 400 and 900
-    'cancel': (
-        '9915',
-    ),
+    'cancel': ('9915',),
     'error': (
         '101',
         '102',

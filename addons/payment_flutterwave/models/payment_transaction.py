@@ -9,7 +9,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_flutterwave import const
 from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -46,7 +45,7 @@ class PaymentTransaction(models.Model):
         )
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of payment to redirect pending token-flow transactions.
+        """Override of payment to redirect pending token-flow transactions.
 
         If the financial institution insists on 3-D Secure authentication, this
         override will redirect the user to the provided authorization page.
@@ -56,13 +55,14 @@ class PaymentTransaction(models.Model):
         if not self._flutterwave_is_authorization_pending():
             return super()._get_specific_processing_values(processing_values)
 
-        return {'redirect_form_html': self.env['ir.qweb']._render(
-            self.provider_id.redirect_form_view_id.id,
-            {'auth_url': self.provider_reference},
-        )}
+        return {
+            'redirect_form_html': self.env['ir.qweb']._render(
+                self.provider_id.redirect_form_view_id.id, {'auth_url': self.provider_reference}
+            )
+        }
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of payment to return Flutterwave-specific rendering values.
+        """Override of payment to return Flutterwave-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -144,10 +144,7 @@ class PaymentTransaction(models.Model):
 
         amount = payment_data.get('amount')
         currency_code = payment_data.get('currency')
-        return {
-            'amount': float(amount),
-            'currency_code': currency_code,
-        }
+        return {'amount': float(amount), 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -179,14 +176,18 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(_(
-                "An error occurred during the processing of your payment (status %s). Please try "
-                "again.", payment_status
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during the processing of your payment (status %s). Please"
+                    " try again.",
+                    payment_status,
+                )
+            )
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction %s.",
-                payment_status, self.reference
+                payment_status,
+                self.reference,
             )
             self._set_error(_("Unknown payment status: %s", payment_status))
 
@@ -205,7 +206,7 @@ class PaymentTransaction(models.Model):
         }
 
     def _flutterwave_is_authorization_pending(self):
-        """ Filter Flutterwave token transactions that are awaiting external authorization.
+        """Filter Flutterwave token transactions that are awaiting external authorization.
 
         :return: Pending transactions awaiting authorization.
         :rtype: recordset of `payment.transaction`
