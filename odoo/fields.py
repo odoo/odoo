@@ -2516,7 +2516,14 @@ class Image(Binary):
         records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
 
     def _image_process(self, value):
-        if self.readonly and not self.max_width and not self.max_height:
+        if self.readonly and (
+            (not self.max_width and not self.max_height)
+            or (
+                self.related_field
+                and self.max_width == self.related_field.max_width
+                and self.max_height == self.related_field.max_height
+            )
+        ):
             # no need to process images for computed fields, or related fields
             return value
         try:
