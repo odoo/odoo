@@ -62,9 +62,9 @@ function makeInteractorFn(type, fn, name, alias) {
     return {
         [alias || name](...args) {
             const result = fn(...args);
-            if (isInstanceOf(result, Promise)) {
+            if (isPromise(result)) {
                 for (let i = 0; i < args.length; i++) {
-                    if (isInstanceOf(args[i], Promise)) {
+                    if (isPromise(args[i])) {
                         // Get promise result for async arguments if possible
                         args[i].then((result) => (args[i] = result));
                     }
@@ -314,6 +314,16 @@ export function interactor(type, fn) {
  */
 export function isFirefox() {
     return /firefox/i.test($userAgent);
+}
+
+Array.isArray;
+
+/**
+ * @param {any} instance
+ * @returns {instance is Promise<any>}
+ */
+export function isPromise(instance) {
+    return instance && typeof instance.then === "function";
 }
 
 /**
