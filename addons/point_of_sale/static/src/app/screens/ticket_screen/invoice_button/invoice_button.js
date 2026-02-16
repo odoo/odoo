@@ -16,7 +16,6 @@ export class InvoiceButton extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.invoiceService = useService("account_move");
         this.lock = false;
     }
     get isAlreadyInvoiced() {
@@ -35,11 +34,7 @@ export class InvoiceButton extends Component {
     async _downloadInvoice(orderId) {
         try {
             const orders = await this.pos.data.loadServerOrders([["id", "=", orderId]]);
-            const order = orders[0];
-            const accountMoveId = order.raw.account_move;
-            if (accountMoveId) {
-                await this.invoiceService.downloadPdf(accountMoveId);
-            }
+            await this.pos.downloadInvoicePdf(orders[0]);
         } catch (error) {
             if (error instanceof Error) {
                 throw error;

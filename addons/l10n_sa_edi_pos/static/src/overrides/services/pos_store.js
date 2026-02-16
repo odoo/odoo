@@ -1,35 +1,26 @@
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { markup } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
+import { PosStore } from "@point_of_sale/app/services/pos_store";
 
-patch(OrderPaymentValidation.prototype, {
-    setup(vals) {
-        super.setup(...arguments);
-        this.dialog = this.pos.env.services.dialog;
-    },
-    async finalizeValidation() {
-        await super.finalizeValidation(...arguments);
-
+patch(PosStore.prototype, {
+    _handleInvoiceNotification(order, error) {
         // note: isSACompany guarantees order.is_to_invoice()
         // expect for cases like deposit and settlement
         // Skip if invoice is not mandatory(Ex: settlement)
         // Skips entirely if journal is not onboarded or electronic invoicing is not selected
         if (
-            this.order.isInvoiceMandatoryForSA() &&
-            this.order.finalized &&
-            !this.order.l10n_sa_invoice_qr_code_str
+            order.isInvoiceMandatoryForSA() &&
+            order.finalized &&
+            !order.l10n_sa_invoice_qr_code_str
         ) {
-            const orderError = _t(
-                "%s by going to Backend > Orders > Invoice",
-                this.order.pos_reference
-            );
-            const href = `/odoo/customer-invoices/${this.order?.raw?.account_move}`;
+            const orderError = _t("%s by going to Backend > Orders > Invoice", order.pos_reference);
+            const href = `/odoo/customer-invoices/${order?.raw?.account_move}`;
             const link = markup`<a target="_blank" href=${href} class="text-info fw-bolder">${_t(
                 "Invoice"
             )}</a>`;
-            const errorInfo = this.order.raw.account_move ? link : orderError;
+            const errorInfo = order.raw.account_move ? link : orderError;
             const message = _t(
                 `The Receipt and Invoice generated here are not valid documents as there is ` +
                     `an error in their processing. You need to resolve the errors first in %s` +
@@ -42,5 +33,6 @@ patch(OrderPaymentValidation.prototype, {
                 body: message,
             });
         }
+        return super._handleInvoiceNotification(order, error);
     },
 });

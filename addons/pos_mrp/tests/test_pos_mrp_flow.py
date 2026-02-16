@@ -367,4 +367,5 @@ class TestPosMrp(CommonPosMrpTest):
                 'user_id': self.env.uid
             }
         self.env['pos.order'].sync_from_ui([pos_order_data])['pos.order'][0]['id']
+        self.env['pos.order']._trigger_pos_order_invoice_cron()
         self.assertEqual(len(current_session.picking_ids.move_line_ids), 4)

@@ -81,7 +81,7 @@ class PosOrder(models.Model):
             state = order.l10n_es_edi_verifactu_document_ids._get_state()
             order.l10n_es_edi_verifactu_state = state
 
-    @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_id')
+    @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_id', 'account_move')
     def _compute_l10n_es_edi_verifactu_qr_code(self):
         for order in self:
             invoice = order.account_move

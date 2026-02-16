@@ -12,6 +12,7 @@ test("uiState", async () => {
         unmerge: {},
         lastPrints: [],
         lineToRefund: {},
+        pos_device_identifier: 1,
         displayed: true,
         booked: false,
         screen_data: {},

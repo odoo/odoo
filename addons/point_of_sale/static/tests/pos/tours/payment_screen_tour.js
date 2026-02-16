@@ -1,5 +1,6 @@
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import { registry } from "@web/core/registry";
@@ -204,6 +205,7 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
             PaymentScreen.clickValidate(),
             // Edit payment button shouldn't be available for posted orders
             negateStep({ trigger: ".feedback-screen .edit-order-payment:contains(Edit Payment)" }),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
