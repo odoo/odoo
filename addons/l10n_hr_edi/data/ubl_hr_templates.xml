@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_hr_CommonType" inherit_id="account_edi_ubl_cii.ubl_20_CommonType">
+        <xpath expr="//*[local-name()='UBLVersionID']" position="after">
+            <t xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+                <ext:UBLExtensions t-foreach="vals.get('hrextac_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{HrExtensionType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </ext:UBLExtensions>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='AccountingSupplierParty']" position="inside">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:SellerContact>
+                    <cbc:ID t-out="accounting_supplier_vals.get('operator_oib')"/>
+                    <cbc:Name t-out="accounting_supplier_vals.get('operator_name')"/>
+                </cac:SellerContact>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_hr_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType">
+        <xpath expr="//*[local-name()='IssueDate']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:IssueTime t-out="vals.get('issue_time')"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_hr_CreditNoteType" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteType">
+        <xpath expr="//*[local-name()='IssueDate']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:IssueTime t-out="vals.get('issue_time')"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_hr_TaxCategoryType">
+        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('hr_tax_category_code')"/>
+            <cbc:Name t-out="vals.get('name')"/>
+            <cbc:Percent t-out="vals.get('percent')"/>
+            <cbc:TaxExemptionReasonCode t-out="vals.get('tax_exemption_reason_code')"/>
+            <cbc:TaxExemptionReason t-out="vals.get('tax_exemption_reason')"/>
+            <cbc:TierRange t-out="vals.get('tier_range')"/>
+            <cac:TaxScheme>
+                <t t-set="tax_scheme_vals" t-value="vals.get('tax_scheme_vals', {})"/>
+                <cbc:ID
+                    t-translation="off"
+                    t-att="tax_scheme_vals.get('id_attrs', {})"
+                    t-out="tax_scheme_vals.get('id')"/>
+                <cbc:Name t-translation="off" t-out="tax_scheme_vals.get('name')"/>
+                <cbc:TaxTypeCode t-out="tax_scheme_vals.get('tax_type_code')"/>
+            </cac:TaxScheme>
+        </t>
+    </template>
+
+    <template id="ubl_hr_HrExtensionType">
+        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+           xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+           xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
+            <ext:UBLExtension>
+                <ext:ExtensionContent>
+                    <hrextac:HRFISK20Data>
+                        <hrextac:HRObracunPDVPoNaplati t-out="vals.get('hr_cash_basis_flag')"/>
+                        <hrextac:HRTaxTotal>
+                            <cbc:TaxAmount
+                                t-att-currencyID="vals['currency'].name"
+                                t-out="format_float(vals.get('tax_amount'), vals.get('currency_dp'))"/>
+                            <hrextac:HRTaxSubtotal t-foreach="vals.get('tax_subtotal_vals', [])" t-as="foreach_vals">
+                                <cbc:TaxableAmount
+                                    t-att-currencyID="foreach_vals['currency'].name"
+                                    t-out="format_float(foreach_vals.get('taxable_amount'), foreach_vals.get('currency_dp'))"/>
+                                <cbc:TaxAmount
+                                    t-att-currencyID="foreach_vals['currency'].name"
+                                    t-out="format_float(foreach_vals.get('tax_amount'), foreach_vals.get('currency_dp'))"/>
+                                <hrextac:HRTaxCategory>
+                                    <t t-call="{{HrTaxCategoryType_template}}">
+                                        <t t-set="vals" t-value="foreach_vals.get('tax_category_vals', {})"/>
+                                    </t>
+                                </hrextac:HRTaxCategory>
+                            </hrextac:HRTaxSubtotal>
+                        </hrextac:HRTaxTotal>
+                        <hrextac:HRLegalMonetaryTotal>
+                            <cac:TaxExclusiveAmount
+                                t-att-currencyID="vals['currency'].name"
+                                t-out="format_float(vals.get('hr_tax_exclusive_amount'), vals.get('currency_dp'))"/>
+                            <hrextac:OutOfScopeOfVATAmount
+                                t-att-currencyID="vals['currency'].name"
+                                t-out="format_float(vals.get('hr_out_of_scope_amount'), vals.get('currency_dp'))"/>
+                        </hrextac:HRLegalMonetaryTotal>
+                    </hrextac:HRFISK20Data>
+                </ext:ExtensionContent>
+            </ext:UBLExtension>
+        </t>
+    </template>
+
+    <template id="ubl_hr_HrTaxCategoryType">
+        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+           xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+           xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
+            <cbc:ID t-out="vals.get('hr_tax_category_code')"/>
+            <cbc:Name t-out="vals.get('hr_tax_name')"/>
+            <cbc:Percent t-out="vals.get('percent')"/>
+            <cbc:TaxExemptionReasonCode t-out="vals.get('tax_exemption_reason_code')"/>
+            <cbc:TaxExemptionReason t-out="vals.get('tax_exemption_reason')"/>
+            <cbc:TierRange t-out="vals.get('tier_range')"/>
+            <hrextac:HRTaxScheme>
+                <t t-set="tax_scheme_vals" t-value="vals.get('tax_scheme_vals', {})"/>
+                <cbc:ID
+                    t-translation="off"
+                    t-att="tax_scheme_vals.get('id_attrs', {})"
+                    t-out="tax_scheme_vals.get('id')"/>
+                <cbc:Name t-translation="off" t-out="tax_scheme_vals.get('name')"/>
+                <cbc:TaxTypeCode t-out="tax_scheme_vals.get('tax_type_code')"/>
+            </hrextac:HRTaxScheme>
+        </t>
+    </template>
+
+    <template id="ubl_hr_Invoice">
+        <Invoice
+            xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
+            <t t-call="{{InvoiceType_template}}"/>
+        </Invoice>
+    </template>
+
+    <template id="ubl_hr_CreditNote">
+        <CreditNote
+            xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
+            <t t-call="{{CreditNoteType_template}}"/>
+        </CreditNote>
+    </template>
+
+    <template id="ubl_hr_DebitNote">
+        <DebitNote
+            xmlns="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
+            <t t-call="{{DebitNoteType_template}}"/>
+        </DebitNote>
+    </template>
+</odoo>

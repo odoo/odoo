@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mojeracun_reject_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_hr_edi.mojeracun_reject_wizard.form</field>
+        <field name="model">l10n_hr_edi.mojeracun_reject_wizard</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group name="mojeracun_rejection">
+                        <div colspan="2" class="text-muted mb-3">
+                            Reject MojEracun invoice with the following reasoning:
+                        </div>
+                        <field name="rejection_type" string="Rejection Reason Type"/>
+                        <field name="rejection_description" string="Rejection Reason Description" placeholder="Provide a reason for rejection"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="button_reject_invoice"
+                        string="Reject invoice"
+                        type="object"
+                        class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
