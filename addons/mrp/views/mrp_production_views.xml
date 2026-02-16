@@ -484,8 +484,16 @@
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
                                 context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
+<<<<<<< 9c3af68c0b33bdd6778f3087c5a7b85b93315ff8
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" delete="state == 'draft'">
                                 <list default_order="sequence, id" decoration-muted="state in ['done', 'cancel']" editable="bottom">
+||||||| 7a39185f83d0daca207c8007512f4700537c7e88
+                                readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
+                                <list default_order="sequence, id" decoration-muted="state in ['done', 'cancel']" editable="bottom">
+=======
+                                readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
+                                <list decoration-muted="state in ['done', 'cancel']" editable="bottom">
+>>>>>>> 06e2112e9eafd564325c7e026d14a9ad019eb4aa
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
