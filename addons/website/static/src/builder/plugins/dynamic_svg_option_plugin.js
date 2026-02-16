@@ -13,7 +13,7 @@ export class DynamicSvgOptionPlugin extends Plugin {
         builder_actions: {
             SvgColorAction,
         },
-        builder_options_context: {
+        builder_options_render_context: {
             dynamicSVGSelector,
         },
     };

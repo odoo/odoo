@@ -357,7 +357,11 @@ export function addBuilderOption(option) {
         patchWithCleanup(BuilderOptionsPlugin.prototype, {
             computeBuilderOptionsFromTemplate() {
                 const options = super.computeBuilderOptionsFromTemplate();
-                return [...options, ...testBuilderOptions];
+                const normalizedTestOptions = testBuilderOptions.map((option, index) => {
+                    const optionName = `TestBuilderOption${index}`;
+                    return this.createOptionClass(optionName, {}, option);
+                });
+                return [...options, ...normalizedTestOptions];
             },
         });
         after(() => {

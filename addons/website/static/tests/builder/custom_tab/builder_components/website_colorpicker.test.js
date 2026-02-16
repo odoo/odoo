@@ -1,14 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { addBuilderOption } from "@html_builder/../tests/helpers";
+import { addBuilderOption, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -60,10 +59,12 @@ test("should have the theme tab", async () => {
 });
 
 test("should work with color transition", async () => {
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'color'" enabledTabs="['custom']" />`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderColorPicker styleAction="'color'" enabledTabs="['custom']" />`;
+        }
+    );
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         // The CSS for the class "o_we_force_no_transition" is needed
         loadIframeBundles: true,
