@@ -598,7 +598,8 @@ export class Message extends Record {
     canReplyTo(thread) {
         return (
             ["discuss.channel", "mail.box"].includes(thread?.model) &&
-            this.message_type !== "user_notification"
+            this.message_type !== "user_notification" &&
+            !thread.channel?.composerHidden
         );
     }
 

@@ -74,7 +74,12 @@
                 <t t-else="">
                     <Thread autofocus="isMobileOS ? props.chatWindow.autofocus : undefined" thread="channel.thread" t-key="channel.thread.localId" jumpPresent="state.jumpThreadPresent" jumpToNewMessage="props.chatWindow.jumpToNewMessage"/>
                     <t t-call="mail.ChatWindow.memberTyping"/>
-                    <Composer composer="channel.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType" disabled="channel.composerDisabled"/>
+                    <Composer t-if="!channel.composerHidden" composer="channel.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType" disabled="channel.composerDisabled"/>
+                    <div t-else="" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerHiddenContainer">
+                        <span t-if="showBlankBeforeComposerHiddenText" class="flex-grow-1"/>
+                        <span t-esc="channel.composerHiddenText"/>
+                        <span class="flex-grow-1"/>
+                    </div>
                 </t>
             </t>
         </div>

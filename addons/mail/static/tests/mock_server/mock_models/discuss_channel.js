@@ -45,6 +45,7 @@ export class DiscussChannel extends models.ServerModel {
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
     });
+    is_readonly = fields.Boolean({ string: "Read-only" });
     uuid = fields.Generic({
         default: () => uniqueId("discuss.channel_uuid-"),
     });
@@ -225,10 +226,11 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      * @param {string} [group_id]
      */
-    _create_channel(name, group_id) {
-        const kwargs = getKwArgs(arguments, "name", "group_id");
+    _create_channel(name, group_id, is_readonly) {
+        const kwargs = getKwArgs(arguments, "name", "group_id", "is_readonly");
         name = kwargs.name;
         group_id = kwargs.group_id;
+        is_readonly = kwargs.is_readonly || false;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
@@ -240,6 +242,7 @@ export class DiscussChannel extends models.ServerModel {
             channel_type: "channel",
             name,
             group_public_id: group_id,
+            is_readonly,
         });
         this.write([id], { group_public_id: group_id });
         this.message_post(
@@ -263,6 +266,7 @@ export class DiscussChannel extends models.ServerModel {
             "default_display_mode",
             "description",
             "group_public_id",
+            "is_readonly",
             "last_interest_dt",
             "name",
             "uuid",

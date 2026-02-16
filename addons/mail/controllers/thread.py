@@ -20,11 +20,16 @@ class ThreadController(http.Controller):
     def _get_message_with_access(cls, message_id, mode="read", **kwargs):
         """ Simplified getter that filters access params only, making model methods
         using strong parameters. """
-        message_su = request.env['mail.message'].sudo().browse(message_id).exists()
+        message_su = (
+            request.env["mail.message"]
+            .sudo()
+            .with_context(active_test=False)
+            .search_fetch([("id", "=", message_id)])
+            .with_context(active_test=True)
+        )
         if not message_su:
             return message_su
-        return request.env['mail.message']._get_with_access(
-            message_su.id,
+        return message_su._get_with_access(
             mode=mode,
             **{
                 key: value for key, value in kwargs.items()
@@ -215,7 +220,7 @@ class ThreadController(http.Controller):
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_message_update_content(self, message_id, update_data, **kwargs):
-        message = self._get_message_with_access(message_id, mode="create", **kwargs)
+        message = self._get_message_with_access(message_id, mode="write", **kwargs)
         if not message or not self._can_edit_message(message, **kwargs):
             raise NotFound()
         # sudo: mail.message - access is checked in _get_with_access and _can_edit_message

@@ -15,7 +15,7 @@ class PortalThreadController(ThreadController):
         store = Store().add_global_values(request.env.user.sudo(False)._store_init_global_fields)
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(request.env.user.partner_id, {"is_user_publisher": True})
-        if thread := self._get_thread_with_access(thread_model, thread_id, **kwargs):
+        if thread := self._get_thread_with_access(thread_model, thread_id, mode="read", **kwargs):
             store.add(
                 thread,
                 lambda res: self._store_portal_thread_fields(res, **kwargs),
@@ -33,7 +33,23 @@ class PortalThreadController(ThreadController):
         }
 
         def can_react(thread):
-            has_access = cls._get_thread_with_access_for_post(thread._name, thread.id, **kwargs)
+            thread_mode = False
+            # sudo: mail.thread - can read thread to build _mail_get_operation_for_mail_message_operation
+            for domain, operation in thread.sudo()._mail_get_operation_for_mail_message_operation(
+                getattr(thread, "_mail_message_reaction_access", "create"),
+            ):
+                # sudo: mail.thread - can read thread to filter on access domain
+                if thread.sudo().filtered_domain(domain):
+                    thread_mode = operation
+                    break
+            if not thread_mode:
+                return False
+            has_access = cls._get_thread_with_access(
+                thread._name,
+                thread.id,
+                mode=thread_mode,
+                **kwargs,
+            )
             if request.env.user._is_public():
                 return bool(has_access and portal_partner_by_thread.get(thread))
             return bool(has_access)

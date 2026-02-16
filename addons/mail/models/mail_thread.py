@@ -5093,12 +5093,17 @@ class MailThread(models.AbstractModel):
         if res.is_for_current_user():
             res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
             res.attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write"))
-            can_post = False
-            for domain, operation in self._mail_get_operation_for_mail_message_operation('create'):
-                if self.sudo().filtered_domain(domain):
-                    can_post = operation == "read"
-                    break
-            res.attr("canPostOnReadonly", can_post)
+            # sudo: mail.thread - can read thread to build _mail_get_operation_for_mail_message_operation
+            operation_list = self.sudo()._mail_get_operation_for_mail_message_operation("create")
+
+            def can_post_on_readonly_by_thread(thread):
+                for domain, operation in operation_list:
+                    # sudo: mail.thread - can read thread to filter on access domain
+                    if operation == "read" and thread.sudo().filtered_domain(domain):
+                        return True
+                return False
+
+            res.attr("canPostOnReadonly", can_post_on_readonly_by_thread)
         if "activities" in request_list and isinstance(self, self.env.registry["mail.activity.mixin"]):
             res.many(
                 "activities",

@@ -22,4 +22,9 @@ patch(ChatWindow.prototype, {
         }
         return this.channel.chatbot?.completed || this.channel.livechat_end_dt;
     },
+    get showBlankBeforeComposerHiddenText() {
+        return this.channel?.channel_type === "livechat"
+            ? !this.showGiveFeedbackBtn
+            : super.showBlankBeforeComposerHiddenText;
+    },
 });

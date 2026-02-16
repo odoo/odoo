@@ -655,37 +655,25 @@ class MailMessage(models.Model):
             user=self.env.uid,
         ))
 
-    @api.model
-    def _get_with_access(self, message_id, mode="read", **kwargs):
-        message = self.browse(message_id).exists()
-        if not message:
-            return message
-
+    def _get_with_access(self, mode="read", **kwargs):
+        if not self:
+            return self
+        self.ensure_one()
+        if self.env.user._is_admin():
+            return self
         # sanity check on kwargs
-        allowed_params = self.env[message.sudo().model or 'mail.thread']._get_allowed_access_params()
+        allowed_params = self.env[self.sudo().model or 'mail.thread']._get_allowed_access_params()
         if invalid := (set((kwargs or {}).keys()) - allowed_params):
             _logger.warning("Invalid parameters to _get_with_access: %s", invalid)
-
-        if self.env.user._is_public() and self.env["mail.guest"]._get_guest_from_context():
-            # Don't check_access_rights for public user with a guest, as the rules are
-            # incorrect due to historically having no reason to allow operations on messages to
-            # public user before the introduction of guests. Even with ignoring the rights,
-            # check_access_rule and its sub methods are already covering all the cases properly.
-            query = message.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', message.ids))
-            if message.sudo(False)._filter_accessible_from_query(query, mode):
-                return message
-        else:
-            if message.sudo(False).has_access(mode):
-                return message
-
-        if message.model and message.res_id:
-            thread_su = self.env[message.model].browse(message.res_id).sudo()
+        if self.sudo(False).has_access(mode):
+            return self
+        if self.model and self.res_id:
+            thread_su = self.env[self.model].browse(self.res_id).sudo()
             for domain, access_mode in thread_su._mail_get_operation_for_mail_message_operation(mode):
                 if thread_su.filtered_domain(domain):
-                    if self.env[message.model]._get_thread_with_access(message.res_id, mode=access_mode, **kwargs):
-                        return message
+                    if self.env[self.model]._get_thread_with_access(self.res_id, mode=access_mode, **kwargs):
+                        return self
                     break
-
         return self.browse()
 
     @api.model_create_multi

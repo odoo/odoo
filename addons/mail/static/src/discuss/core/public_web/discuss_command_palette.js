@@ -60,7 +60,7 @@ class CreateChannelDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.orm = useService("orm");
-        this.state = useState({ name: this.props.name || "", isInvalid: false });
+        this.state = useState({ name: this.props.name || "", isInvalid: false, is_readonly: false });
     }
 
     /** @param {KeyboardEvent} ev */
@@ -80,7 +80,7 @@ class CreateChannelDialog extends Component {
             this.state.isInvalid = true;
             return;
         }
-        await makeNewChannel(name, this.store);
+        await makeNewChannel(name, this.store, this.state.is_readonly);
         this.props.close();
     }
 }
@@ -121,10 +121,10 @@ commandSetupRegistry.add("@", {
  * @param {string} name
  * @param {import("models").Store} store
  */
-async function makeNewChannel(name, store) {
+async function makeNewChannel(name, store, is_readonly = false) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
-        { name, group_id: store.internalUserGroupId },
+        { name, group_id: store.internalUserGroupId, is_readonly },
         { readonly: false, requestData: true }
     );
     channel.open({ focus: true, bypassCompact: true });

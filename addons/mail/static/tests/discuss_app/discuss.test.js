@@ -9,6 +9,7 @@ import {
     defineMailModels,
     editInput,
     focus,
+    hover,
     insertText,
     listenStoreFetch,
     onRpcBefore,
@@ -2594,4 +2595,176 @@ test("Show typing icon on group chat in sidebar", async () => {
     await contains(
         ".o-mail-DiscussSidebar-item .o-discuss-Typing-icon[title='Marc Demo is typing...']"
     );
+});
+
+test("Read-only channel member has bottom banner instead of composer", async () => {
+    const pyEnv = await startServer();
+    const memberPartnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: memberPartnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
+        ],
+    });
+
+    await start({
+        authenticateAs: { login: "test_member", password: "test_member" },
+    });
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
+    await contains(".o-mail-Composer", { count: 0 });
+    pyEnv["discuss.channel"].write([channelId], { is_readonly: false });
+    await contains(".o-mail-Composer");
+    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')", {
+        count: 0,
+    });
+    pyEnv["discuss.channel"].write([channelId], { is_readonly: true });
+    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
+    await contains(".o-mail-Composer", { count: 0 });
+});
+
+test("Read-only channel admin has composer", async () => {
+    const pyEnv = await startServer();
+    const adminPartnerId = pyEnv["res.partner"].create({ name: "Admin User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: adminPartnerId, channel_role: "owner" }),
+
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+        ],
+    });
+    pyEnv["res.users"].create({
+        partner_id: adminPartnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    await start({
+        authenticateAs: { login: "test_member", password: "test_member" },
+    });
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer");
+    const memberId = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", adminPartnerId],
+    ])[0];
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: "member" });
+    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
+    await contains(".o-mail-Composer", { count: 0 });
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: "admin" });
+    await contains(".o-mail-Composer");
+    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')", {
+        count: 0,
+    });
+});
+
+test("Read-only channel member cannot respond or create subthread", async () => {
+    const pyEnv = await startServer();
+    const memberPartnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: memberPartnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
+        ],
+    });
+    const memberId = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ])[0];
+    pyEnv["mail.message"].create({
+        body: "Welcome to the read-only channel!",
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: memberId,
+    });
+    await start({
+        authenticateAs: { login: "test_member", password: "test_member" },
+    });
+    await openDiscuss(channelId);
+    await hover(".o-mail-Message");
+    await contains(".o-mail-Message .o-mail-ActionList-button", { count: 3 });
+    await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Add Star']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Mark as Unread']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Copy Text']");
+});
+
+test("Read-only channel have reactions for admin", async () => {
+    const pyEnv = await startServer();
+    const adminPartnerId = pyEnv["res.partner"].create({ name: "Admin User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "admin" }),
+            Command.create({ partner_id: adminPartnerId, channel_role: "owner" }),
+        ],
+    });
+    const memberId = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ])[0];
+    pyEnv["mail.message"].create({
+        body: "Welcome to the read-only channel!",
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: memberId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-Message");
+    await contains(".o-mail-Message .o-mail-ActionList-button", { count: 3 });
+    await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Add Star']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Reply']");
+    await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
+    await contains(".o-dropdown-item:text('Create Thread')");
+    await contains(".o-dropdown-item:text('Mark as Unread')");
+    await contains(".o-dropdown-item:text('Copy Text')");
+    await contains(".o-dropdown-item:text('Pin')");
+});
+
+test("Cannot call read-only channels", async () => {
+    const pyEnv = await startServer();
+    const adminPartnerId = pyEnv["res.partner"].create({ name: "Admin User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "member" }),
+            Command.create({ partner_id: adminPartnerId, channel_role: "owner" }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Notification Settings']"
+    );
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Search Messages']"
+    );
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Pinned Messages']"
+    );
+    await contains(".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Threads']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Attachments']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Members']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ActionList .o-mail-ActionList-button", {
+        count: 6,
+    });
 });

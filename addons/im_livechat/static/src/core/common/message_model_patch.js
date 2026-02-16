@@ -11,7 +11,7 @@ const messagePatch = {
     },
     canReplyTo(thread) {
         if (thread?.channel?.channel_type === "livechat") {
-            return !thread.composerDisabled && !thread.composerHidden;
+            return !thread.composerDisabled && !thread.channel.composerHidden;
         }
         return super.canReplyTo(thread);
     },

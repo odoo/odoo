@@ -5,13 +5,5 @@
             <t>$0</t>
             <CloseConfirmation t-if="props.chatWindow.confirmCloseResolver" channelName="channel.displayName" onCloseConfirmationDialog="() => this.props.chatWindow.confirmCloseResolver.resolve(false)" onClickLeaveConversation="() => this.props.chatWindow.confirmCloseResolver.resolve(true)"/>
         </xpath>
-        <xpath expr="//Composer" position="replace">
-            <div t-if="channel.composerHidden" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerHiddenContainer">
-                <span t-if="!showGiveFeedbackBtn" class="flex-grow-1"/>
-                <span>This live chat conversation has ended</span>
-                <span class="flex-grow-1"/>
-            </div>
-            <t t-else="">$0</t>
-        </xpath>
     </t>
 </templates>
