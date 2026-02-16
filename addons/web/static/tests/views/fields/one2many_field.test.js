@@ -13763,3 +13763,40 @@ test("one2many custom which can clear the relation", async () => {
 
     expect.verifySteps(["web_save"]);
 });
+
+test.tags("desktop");
+test("one2many custom which can set the relation", async () => {
+    class SetWidget extends Component {
+        static props = ["*"];
+        static template = xml`
+            <div>
+                <span t-esc="this.props.record.data[this.props.name].count"/>
+                <button t-on-click="set">Set</button>
+            </div>`;
+
+        set() {
+            return this.props.record.data[this.props.name].set([2, 4]);
+        }
+    }
+    registry.category("fields").add("set", { component: SetWidget });
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].partner_ids).toEqual([[6, false, [2, 4]]]);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "turtle",
+        arch: `<form><field name="partner_ids" widget="set"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=partner_ids] span").toHaveText("0");
+    await contains(".o_field_widget[name=partner_ids] button").click();
+    expect(".o_field_widget[name=partner_ids] span").toHaveText("2");
+    await contains(".o_form_button_save").click();
+    expect(".o_field_widget[name=partner_ids] span").toHaveText("2");
+
+    expect.verifySteps(["web_save"]);
+});

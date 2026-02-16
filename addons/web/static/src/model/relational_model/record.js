@@ -1,7 +1,6 @@
 import { markRaw, markup, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
@@ -1010,24 +1009,15 @@ export class Record extends DataPoint {
     }
 
     async _preprocessX2manyChanges(changes) {
-        for (const [fieldName, value] of Object.entries(changes)) {
+        for (const [fieldName, commands] of Object.entries(changes)) {
             if (
                 this.fields[fieldName].type !== "one2many" &&
                 this.fields[fieldName].type !== "many2many"
             ) {
                 continue;
             }
-            const list = this.data[fieldName];
-            for (const command of value) {
-                switch (command[0]) {
-                    case x2ManyCommands.SET:
-                        await list._replaceWith(command[2]);
-                        break;
-                    default:
-                        await list._applyCommands([command]);
-                }
-            }
-            changes[fieldName] = list;
+            await this.data[fieldName]._applyCommands(commands);
+            changes[fieldName] = this.data[fieldName];
         }
     }
 

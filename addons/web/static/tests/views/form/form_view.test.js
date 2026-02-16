@@ -4082,7 +4082,6 @@ test(`make default record with non empty one2many`, async () => {
     Partner._fields.child_ids = fields.One2many({
         relation: "partner",
         default: [
-            [6, 0, []], // replace with zero ids
             [0, 0, { foo: "new foo1", product_id: 41, child_ids: [] }], // create a new value
             [0, 0, { foo: "new foo2", product_id: 37, child_ids: [] }], // create a new value
         ],
