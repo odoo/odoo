@@ -11,7 +11,6 @@ import {
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
-    isElement,
     isEmptyBlock,
     isListElement,
     isListItemElement,
@@ -19,7 +18,6 @@ import {
     isPhrasingContent,
     isProtected,
     isProtecting,
-    isVisibleTextNode,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
@@ -50,7 +48,6 @@ import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
-import { isColorGradient } from "@web/core/utils/colors";
 
 const listSelectorItems = [
     {
@@ -189,6 +186,7 @@ export class ListPlugin extends Plugin {
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
         on_will_insert_separator_handlers: this.exitList.bind(this),
         on_block_formatted_handlers: this.postFormatAppliedOnList.bind(this),
+        on_element_colored_handlers: this.postColorAppliedOnList.bind(this),
 
         /** Processors */
         normalize_processors: this.normalize.bind(this),
@@ -203,7 +201,6 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
-        apply_color_overrides: this.applyColorToListItem.bind(this),
         triple_click_overrides: this.handleTripleClick.bind(this),
 
         is_node_fully_selected_predicates: (node, selection, range) => {
@@ -430,7 +427,10 @@ export class ListPlugin extends Plugin {
         }
         // Copy some classes from base container to li.
         for (const className of [...baseContainer.classList]) {
-            if ([...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES].includes(className)) {
+            if (
+                [...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES].includes(className) ||
+                TEXT_CLASSES_REGEX.test(className)
+            ) {
                 list.firstElementChild.classList.add(className);
                 removeClass(baseContainer, className);
             }
@@ -1142,68 +1142,16 @@ export class ListPlugin extends Plugin {
         );
     }
 
-    applyColorToListItem(color, mode, coloredNodes) {
-        this.dependencies.split.splitSelection();
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        const listItems = new Set(
-            targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
-        );
-        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
+    postColorAppliedOnList(coloredElement, color, mode) {
+        if (mode !== "color" || color === "o_default_color" || color === "") {
             return;
         }
-        const cursors = this.dependencies.selection.preserveSelection();
-        for (const listItem of listItems) {
-            if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
-                const listItemDescendants = descendants(listItem);
-                for (const node of [
-                    listItem,
-                    ...listItemDescendants.filter(
-                        (n) => isElement(n) && closestElement(n, "LI") === listItem
-                    ),
-                ]) {
-                    // Remove any color-related classes.
-                    const classesToRemove = [...node.classList].filter(
-                        (cls) => cls === "o_default_color" || TEXT_CLASSES_REGEX.test(cls)
-                    );
-                    removeClass(node, ...classesToRemove);
-
-                    if (node.style.color) {
-                        removeStyle(node, "color");
-                    }
-                }
-
-                const sublists = childNodes(listItem).filter(isListElement);
-                coloredNodes.add(listItem);
-                listItemDescendants
-                    .filter((n) => !sublists.some((list) => list.contains(n)))
-                    .forEach((n) => coloredNodes.add(n));
-                if (color) {
-                    this.dependencies.color.colorElement(listItem, color, mode);
-                    for (const list of sublists) {
-                        list.classList.add("o_default_color");
-                    }
-                }
-            } else if (
-                color === "" &&
-                (listItem.style.color ||
-                    [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
-            ) {
-                const textNodes = targetedNodes.filter(
-                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
-                );
-                // Remove inline color from partial selection by
-                // wrapping in font with default color.
-                for (const node of textNodes) {
-                    const font = this.document.createElement("font");
-                    font.classList.add("o_default_color");
-                    node.before(font);
-                    cursors.update(callbacksForCursorUpdate.before(node, font));
-                    font.append(node);
-                    cursors.update(callbacksForCursorUpdate.append(font, node));
-                }
+        if (isListItem(coloredElement)) {
+            const sublists = childNodes(coloredElement).filter(isListElement);
+            for (const list of sublists) {
+                list.classList.add("o_default_color");
             }
         }
-        cursors.restore();
     }
 
     postFormatAppliedOnList(formattedBlocks, formatName, applyStyle) {

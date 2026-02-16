@@ -43,6 +43,7 @@ export class ColorUIPlugin extends Plugin {
             },
         ],
         on_selectionchange_handlers: this.updateSelectedColor.bind(this),
+        on_element_colored_handlers: this.updateSelectedColor.bind(this),
         background_color_processors: this.getBackgroundColorProcessor.bind(this),
         apply_background_color_processors: this.applyBackgroundColorProcessor.bind(this),
     };

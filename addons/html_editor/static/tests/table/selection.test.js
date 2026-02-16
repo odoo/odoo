@@ -467,9 +467,7 @@ describe("select a full table on cross over", () => {
                             </td>
                         </tr></tbody>
                     </table>
-                    <p>
-                        <font style="color: aquamarine;">abc</font>
-                    </p>
+                    <p style="color: aquamarine;">abc</p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -521,7 +519,7 @@ describe("select a full table on cross over", () => {
                             </td>
                         </tr></tbody>
                     </table>
-                    <p><font style="color: aquamarine;">abc</font></p>
+                    <p style="color: aquamarine;">abc</p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">

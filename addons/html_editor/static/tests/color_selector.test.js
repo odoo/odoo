@@ -37,7 +37,7 @@ test("can set foreground color", async () => {
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p style="color: rgb(107, 173, 222);">[test]</p>`);
 });
 
 test("can set background color", async () => {
@@ -84,7 +84,7 @@ test("should add opacity to custom background colors but not to theme colors", a
 
     await contains(".o_color_button[data-color='o-color-1']").click(); // Select a theme color
     await waitFor(".o-we-toolbar");
-    expect(getContent(el)).toBe(`<p><font style="" class="bg-o-color-1">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p><font class="bg-o-color-1">[test]</font></p>`);
     // Verify computed background color has no opacity.
     expect(queryFirst("p font", { root: el })).toHaveStyle({
         backgroundColor: "rgb(113, 75, 103)",
@@ -239,12 +239,12 @@ test("select hex color and apply it", async () => {
     await animationFrame();
     expect("button[data-color='#017E84']").toHaveCount(1);
     expect("button[data-color='#017E84']").toHaveStyle({ backgroundColor: "rgb(1, 126, 132)" });
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">test</font></p>`);
+    expect(getContent(el)).toBe(`<p style="color: rgb(1, 126, 132);">test</p>`);
 
     await click(".odoo-editor-editable");
     await animationFrame();
     expect(".o_font_color_selector").toHaveCount(0);
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p style="color: rgb(1, 126, 132);">[test]</p>`);
 });
 
 test("should be able to apply hex color with opacity component", async () => {
@@ -268,14 +268,12 @@ test("should be able to apply hex color with opacity component", async () => {
     expect("button[data-color='#017E8480']").toHaveStyle({
         backgroundColor: "rgba(1, 126, 132, 0.5)",
     });
-    expect(getContent(el)).toBe(`<p><font style="color: rgba(1, 126, 132, 0.5);">test</font></p>`);
+    expect(getContent(el)).toBe(`<p style="color: rgba(1, 126, 132, 0.5);">test</p>`);
 
     await click(".odoo-editor-editable");
     await animationFrame();
     expect(".o_font_color_selector").toHaveCount(0);
-    expect(getContent(el)).toBe(
-        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
-    );
+    expect(getContent(el)).toBe(`<p style="color: rgba(1, 126, 132, 0.5);">[test]</p>`);
 });
 
 test("custom color tab should be opened by default if selected color is a custom color", async () => {
@@ -496,7 +494,7 @@ test("clicking on button color parent does not crash", async () => {
     await animationFrame();
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p style="color: rgb(107, 173, 222);">[test]</p>`);
 });
 
 test("gradient picker should be closed by default when switching gradient tab", async () => {
@@ -700,7 +698,7 @@ test("solid tab color navigation using keys", async () => {
     await press("ArrowUp");
     expect('.o_font_color_selector button[data-color="#000000"]').toBeFocused();
     await press("Enter");
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(0, 0, 0);">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p style="color: rgb(0, 0, 0);">[test]</p>`);
 });
 
 test("custom tab color navigation using keys", async () => {
@@ -726,7 +724,7 @@ test("custom tab color navigation using keys", async () => {
     await press("ArrowDown");
     expect('.o_font_color_selector button[data-color="black"]').toBeFocused(); // Should do nothing
     await press("Enter");
-    expect(getContent(el)).toBe(`<p><font style="" class="text-black">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p class="text-black">[test]</p>`);
 });
 
 describe.tags("desktop");
@@ -902,11 +900,10 @@ describe("color preview", () => {
         await animationFrame();
         await hover("button[data-color='o-color-1']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-1");
         await hover(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
-        expect("font").toHaveCount(0);
+        expect("p").not.toHaveClass("text-o-color-1");
     });
 
     test("preview color and close dropdown should revert the preview", async () => {
@@ -918,11 +915,10 @@ describe("color preview", () => {
         await animationFrame();
         await hover("button[data-color='o-color-1']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-1");
         await press("escape");
         await animationFrame();
-        expect("font").toHaveCount(0);
+        expect("p").not.toHaveClass("text-o-color-1");
     });
 
     test("preview color and then apply works with undo/redo", async () => {
@@ -934,22 +930,22 @@ describe("color preview", () => {
         await animationFrame();
         await hover("button[data-color='o-color-1']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-1");
         await hover("button[data-color='o-color-2']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-2");
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-2");
         await click("button[data-color='o-color-2']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-2");
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-2");
         await animationFrame();
         execCommand(editor, "historyUndo");
-        expect("font").toHaveCount(0);
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").not.toHaveClass("text-o-color-2");
         execCommand(editor, "historyRedo");
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-2");
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-2");
     });
 
     test("preview color are not restored when undo", async () => {
@@ -961,17 +957,18 @@ describe("color preview", () => {
         await animationFrame();
         await hover("button[data-color='o-color-1']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-1");
         await hover("button[data-color='o-color-2']");
         await animationFrame();
-        expect("font").toHaveCount(1);
-        expect("font").toHaveClass("text-o-color-2");
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").toHaveClass("text-o-color-2");
         await press("escape");
         await animationFrame();
-        expect("font").toHaveCount(0);
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").not.toHaveClass("text-o-color-2");
         execCommand(editor, "historyUndo");
-        expect("font").toHaveCount(0);
+        expect("p").not.toHaveClass("text-o-color-1");
+        expect("p").not.toHaveClass("text-o-color-2");
     });
 
     test("should preview color in table on hover in solid tab", async () => {
