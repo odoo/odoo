@@ -408,9 +408,9 @@ export class StaticList extends DataPoint {
         });
     }
 
-    unlinkFrom(resId, serverData) {
+    unlinkFrom(resId) {
         return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.UNLINK, resId, serverData]]);
+            await this._applyCommands([[x2ManyCommands.UNLINK, resId]]);
             await this._onUpdate();
         });
     }
@@ -449,6 +449,13 @@ export class StaticList extends DataPoint {
 
     async resequence(movedId, targetId) {
         return this.model.mutex.exec(() => this._resequence(movedId, targetId));
+    }
+
+    set(resIds) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.SET, false, resIds]]);
+            await this._onUpdate();
+        });
     }
 
     /**
@@ -581,7 +588,7 @@ export class StaticList extends DataPoint {
             }
             commandsByIds[id].push({ command, index: ++lastCommandIndex });
         }
-        function getOwnCommands(id) {
+        function getOwnCommands(id = "global") {
             commandsByIds[id] = commandsByIds[id] || [];
             return commandsByIds[id];
         }
@@ -595,7 +602,8 @@ export class StaticList extends DataPoint {
         let recordsToLoad = [];
         let nextRecords = [...this.records];
         let nextCurrentIds = [...this.currentIds];
-        let nextTmpIncreaseLimit = this._tmpIncreaseLimit;
+        const initialTmpIncreaseLimit = this._tmpIncreaseLimit;
+        let nextTmpIncreaseLimit = initialTmpIncreaseLimit;
         for (const command of commands) {
             switch (command[0]) {
                 case CREATE: {
@@ -659,12 +667,11 @@ export class StaticList extends DataPoint {
                 case UNLINK: {
                     // If we receive an UNLINK command and we already have a SET command
                     // containing the record to unlink, we just remove it from the SET command.
-                    // If there's a SET command, we know it's the first one (see @_replaceWith).
                     if (command[0] === UNLINK) {
-                        const firstCommand = this._commands[0];
-                        const hasReplaceWithCommand = firstCommand && firstCommand[0] === SET;
-                        if (hasReplaceWithCommand && firstCommand[2].includes(command[1])) {
-                            firstCommand[2] = firstCommand[2].filter((id) => id !== command[1]);
+                        const globalCommand = getOwnCommands();
+                        if (globalCommand && globalCommand[0] === SET) {
+                            const ids = globalCommand[2].filter((id) => id !== command[1]);
+                            globalCommand[2] = [SET, false, ids];
                             break;
                         }
                     }
@@ -718,6 +725,25 @@ export class StaticList extends DataPoint {
                     nextTmpIncreaseLimit = this._tmpIncreaseLimit;
                     addOwnCommand([CLEAR]);
                     break;
+                }
+                case SET: {
+                    // Keep UPDATE commands for records that remain in the relation.
+                    const nextCommandsByIds = {};
+                    for (const id of command[2]) {
+                        if (!commandsByIds[id]) {
+                            continue;
+                        }
+                        nextCommandsByIds[id] = commandsByIds[id].filter((c) => c[0] === UPDATE);
+                    }
+                    commandsByIds = nextCommandsByIds;
+                    nextCurrentIds = [...command[2]];
+                    nextRecords = nextCurrentIds.map(
+                        (id) => this._cache[id] || this._createRecordDatapoint({ id })
+                    );
+                    recordsToLoad = [...nextRecords];
+                    nextTmpIncreaseLimit = Math.max(nextCurrentIds.length - this.limit, 0);
+                    removedIds = {};
+                    addOwnCommand([SET, false, [...nextCurrentIds]]);
                 }
             }
         }
@@ -790,7 +816,7 @@ export class StaticList extends DataPoint {
         this._tmpIncreaseLimit = nextTmpIncreaseLimit;
         this.model._updateConfig(
             this.config,
-            { limit: this.limit + this._tmpIncreaseLimit },
+            { limit: this.limit + this._tmpIncreaseLimit - initialTmpIncreaseLimit },
             { reload: false }
         );
     }
@@ -1067,32 +1093,6 @@ export class StaticList extends DataPoint {
         this.records = currentIds.map((id) => this._cache[id]);
         this._currentIds = nextCurrentIds;
         await this.model._updateConfig(this.config, { limit, offset, orderBy }, { reload: false });
-    }
-
-    async _replaceWith(ids, { reload = false } = {}) {
-        const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
-        if (resIds.length) {
-            const records = await this.model._loadRecords({
-                ...this.config,
-                resIds,
-                context: this.context,
-            });
-            for (const record of records) {
-                this._createRecordDatapoint(record);
-            }
-        }
-        this.records = ids.map((id) => this._cache[id]);
-        const updateCommandsToKeep = this._commands.filter(
-            (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
-        );
-        this._commands = [x2ManyCommands.set(ids)].concat(updateCommandsToKeep);
-        this._currentIds = [...ids];
-        this.count = this._currentIds.length;
-        if (this._currentIds.length > this.limit) {
-            this._tmpIncreaseLimit = this._currentIds.length - this.limit;
-            const nextLimit = this.limit + this._tmpIncreaseLimit;
-            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-        }
     }
 
     async _resequence(movedId, targetId) {
