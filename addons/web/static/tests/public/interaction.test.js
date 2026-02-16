@@ -2494,23 +2494,64 @@ describe("locked", () => {
         expect(queryFirst("span")).toBe(null);
     });
 
-    test("locked add a loading icon when the execution takes more than 400ms", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                button: {
-                    "t-on-click": this.locked(this.onClickLong, true),
-                },
-            };
-            async onClickLong() {
-                await new Promise((resolve) => setTimeout(resolve, 5000));
+    describe("loading effect", () => {
+        let handlerDuration = 5000;
+
+        beforeEach(async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    button: {
+                        "t-on-click": this.locked(this.onClickLong, true),
+                    },
+                };
+                async onClickLong() {
+                    await new Promise((resolve) => setTimeout(resolve, handlerDuration));
+                    expect.step("handler done");
+                }
             }
-        }
-        await startInteraction(Test, TemplateTestDoubleButton);
-        expect(queryFirst("span")).toBe(null);
-        await click("button");
-        await advanceTime(500);
-        expect(queryFirst("span")).not.toBe(null);
+
+            await startInteraction(Test, TemplateTestDoubleButton, {
+                waitForStart: false,
+            });
+
+            const observer = new MutationObserver((mutations) => {
+                for (const m of mutations) {
+                    if ([...m.addedNodes].some((node) => node.tagName === "SPAN")) {
+                        expect.step("loading added");
+                    }
+                }
+            });
+            observer.observe(queryFirst("button"), { childList: true });
+        });
+
+        test("should be added when the handler takes more than 400ms", async () => {
+            expect("span.fa-spin").toHaveCount(0);
+            await click("button");
+            // Advance time more than the debounce delay of makeButtonHandler
+            // (400ms) but less than the handler duration.
+            await advanceTime(500);
+            expect("span.fa-spin").toHaveCount(1);
+            expect.verifySteps(["loading added"]);
+            await advanceTime(handlerDuration);
+            expect.verifySteps(["handler done"]);
+        });
+
+        test("should never be added when the handler takes less than 400ms", async () => {
+            handlerDuration = 100;
+            expect("span.fa-spin").toHaveCount(0);
+            await click("button");
+            // Advance time more than the handler duration but less than the
+            // debounce delay of makeButtonHandler (400ms).
+            await advanceTime(200);
+            expect.verifySteps(["handler done"]);
+            await advanceTime(1000);
+            expect("span.fa-spin").toHaveCount(0);
+            expect.verifySteps([], {
+                message:
+                    "Loading effect should never be added in the DOM for handlers shorter than 400ms",
+            });
+        });
     });
 
     test("locked automatically binds functions", async () => {
