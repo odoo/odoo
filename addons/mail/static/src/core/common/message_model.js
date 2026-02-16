@@ -332,7 +332,7 @@ export class Message extends Record {
     }
 
     get hasTextContent() {
-        return !this.isBodyEmpty || this.edited;
+        return !this.isBodyEmpty || this.subject || this.edited;
     }
 
     isEmpty = fields.Attr(false, {
@@ -352,7 +352,8 @@ export class Message extends Record {
             this.isBodyEmpty &&
             this.attachment_ids.length === 0 &&
             this.trackingValues.length === 0 &&
-            !this.subtype_id?.description
+            !this.subtype_id?.description &&
+            !this.subject
         );
     }
 
@@ -691,6 +692,7 @@ export class Message extends Record {
             attachment_ids: [],
             attachment_tokens: [],
             body: "",
+            subject: "",
             partner_ids: [],
         };
     }
