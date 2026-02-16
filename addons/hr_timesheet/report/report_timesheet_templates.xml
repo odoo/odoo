@@ -24,7 +24,7 @@
                         </tr>
                    </thead>
                    <tbody>
-                        <tr t-foreach="lines" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
+                        <tr t-foreach="lines.sorted('date')" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
                             <td class="align-middle">
                                <span t-field="line.date">2021-09-01</span>
                             </td>
