@@ -1,4 +1,5 @@
-import { Component, onPatched, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, onPatched, useEffect, useRef } from "@odoo/owl";
 
 /**
  * @todo @phoenix i think that most of the "control" code in this component

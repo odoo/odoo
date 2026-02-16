@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, useRef } from "@odoo/owl";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 
 export class CategoryListPopup extends Component {

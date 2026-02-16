@@ -1,6 +1,7 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 
-import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 
 /**
  * @typedef Common

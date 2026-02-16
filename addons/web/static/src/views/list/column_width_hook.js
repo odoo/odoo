@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
@@ -16,7 +17,6 @@ import {
     status,
     useComponent,
     useEffect,
-    useExternalListener,
     xml,
 } from "@odoo/owl";
 

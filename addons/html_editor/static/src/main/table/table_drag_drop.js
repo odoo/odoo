@@ -1,6 +1,7 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
-import { Component, useRef, useExternalListener, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, useRef, onMounted, onWillUnmount } from "@odoo/owl";
 
 const OVERLAY_CLAMP_OFFSET = 5;
 

@@ -1,4 +1,5 @@
-import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { onWillUnmount, reactive, useEffect } from "@odoo/owl";
 import { useThrottleForAnimation } from "./timing";
 import { makeDraggableHook as nativeMakeDraggableHook } from "./draggable_hook_builder";
 

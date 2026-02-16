@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -23,7 +24,6 @@ import {
     useEffect,
     useRef,
     useState,
-    useExternalListener,
     toRaw,
     EventBus,
     reactive,

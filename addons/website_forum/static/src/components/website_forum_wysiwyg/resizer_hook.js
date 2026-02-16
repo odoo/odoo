@@ -1,4 +1,5 @@
-import { useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { useRef } from "@odoo/owl";
 
 /**
  * @param {string} targetRefName

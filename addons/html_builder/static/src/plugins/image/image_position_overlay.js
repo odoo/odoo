@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import {
     Component,
@@ -5,7 +6,6 @@ import {
     onWillStart,
     onWillUnmount,
     useEffect,
-    useExternalListener,
     useRef,
 } from "@odoo/owl";
 

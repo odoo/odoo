@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -10,7 +11,6 @@ import { ErrorHandler } from "@web/core/utils/components";
 import {
     Component,
     onWillDestroy,
-    useExternalListener,
     useEffect,
     useRef,
     useState,
