@@ -14,6 +14,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
     country_id = fields.Many2one(
         'res.country',
         default=lambda self: self.env.company.country_id,
+        domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)],
     )
     rate_combination_mode = fields.Selection([
             ('max', "Maximum Rate"),
