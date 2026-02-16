@@ -4991,7 +4991,7 @@ test(`aggregates are formatted according to field widget`, async () => {
             </list>
         `,
     });
-    expect(`tfoot`).toHaveText("19:24", {
+    expect(`tfoot`).toHaveText("19h 24m", {
         message: "total should be formatted as a float_time",
     });
 });

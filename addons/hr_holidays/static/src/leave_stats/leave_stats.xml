@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-3 flex-wrap">
                     (
-                        <span t-if="leave.work_entry_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/> hours</span>
+                        <span t-if="leave.work_entry_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/></span>
                         <span t-else=""><t t-esc="leave.number_of_days"/> days</span>
                     )
                     </div>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="col-3 flex-wrap">
                             (
-                            <span t-if="leave.work_entry_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/> hours</span>
+                            <span t-if="leave.work_entry_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/></span>
                             <span t-else=""><t t-esc="leave.number_of_days"/> days</span>
                             )
                         </div>

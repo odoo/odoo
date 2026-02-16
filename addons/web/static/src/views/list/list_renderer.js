@@ -763,7 +763,9 @@ export class ListRenderer extends Component {
             if (func) {
                 const aggregatedValue = computeAggregatedValue(fieldValues, func);
                 const formatter = formatters.get(widget, false) || formatters.get(type, false);
+                const options = formatter.extractOptions && formatter.extractOptions(column);
                 const formatOptions = {
+                    ...options,
                     digits: attrs.digits ? JSON.parse(attrs.digits) : undefined,
                     escape: true,
                 };

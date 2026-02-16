@@ -107,12 +107,12 @@ test("leave stats render correctly", async () => {
     expect(queryAll("span:contains(Legal Leave)", { root: individualLeaves })).toHaveCount(1);
     expect(queryAll("span:contains(2 days)", { root: individualLeaves })).toHaveCount(1);
     expect(queryAll("span:contains(Unpaid Leave)", { root: individualLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(01:00 hours)", { root: individualLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(1h)", { root: individualLeaves })).toHaveCount(1);
 
     // Displays all leaves for that department
     expect(queryAll("span:contains(Richard)", { root: DepartmentLeaves })).toHaveCount(2);
     expect(queryAll("span:contains(10/16/2016)", { root: DepartmentLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(02:00 hours)", { root: DepartmentLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(2h)", { root: DepartmentLeaves })).toHaveCount(1);
     expect(queryAll("span:contains(10/20/2016)", { root: DepartmentLeaves })).toHaveCount(1);
     expect(queryAll("span:contains(10/25/2016)", { root: DepartmentLeaves })).toHaveCount(1);
 
