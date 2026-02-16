@@ -58,8 +58,8 @@
                     </div>
                     <MobileFilterPanel t-if="env.isSmall and hasSidePanel" t-props="mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
-                        <CalendarSidePanel t-if="hasSidePanel" t-props="sidePanelProps"/>
                         <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
+                        <CalendarSidePanel t-if="hasSidePanel" t-props="sidePanelProps"/>
                     </div>
                 </div>
             </Layout>
