@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='do_print_picking']" position="after">
                 <field name="l10n_it_show_print_ddt_button" invisible="1"/>
-                <button name="%(l10n_it_stock_ddt.action_report_ddt)d" type="action" string="Print"
+                <button name="action_report_ddt" type="object" string="Print"
                         invisible="not l10n_it_show_print_ddt_button"
                         groups="base.group_user"/>
             </xpath>

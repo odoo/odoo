@@ -53,6 +53,11 @@ class StockPicking(models.Model):
             picking.l10n_it_ddt_number = picking.picking_type_id.l10n_it_ddt_sequence_id.next_by_id()
         super()._action_done()
 
+    def action_report_ddt(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("l10n_it_stock_ddt.action_report_ddt")
+        action['context'] = {'mrp_installed': self.env["ir.module.module"]._installed()}
+        return action
+
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
