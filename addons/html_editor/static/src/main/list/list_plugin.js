@@ -191,7 +191,7 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
-        color_apply_overrides: this.applyColorToListItem.bind(this),
+        post_color_element_handlers: this.postColorAppliedOnList.bind(this),
         format_applied_on_block_handlers: this.postFormatAppliedOnList.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
@@ -770,7 +770,11 @@ export class ListPlugin extends Plugin {
             // text color
             if (liColorStyle) {
                 const font = wrapChildren(block, "font");
-                this.dependencies.color.colorElement(font, liColorStyle.value, "color");
+                if (liColorStyle.type === "style") {
+                    font.style.color = liColorStyle.value;
+                } else if (liColorStyle.type === "class") {
+                    font.classList.add(liColorStyle.value);
+                }
             }
             // font-size
             if (liFontSizeStyle && !isEmptyBlock(block)) {
@@ -1162,6 +1166,18 @@ export class ListPlugin extends Plugin {
             }
         }
         cursors.restore();
+    }
+
+    postColorAppliedOnList(coloredElement, color, mode) {
+        if (mode !== "color" || color === "o_default_color" || color === "") {
+            return;
+        }
+        if (isListItem(coloredElement)) {
+            const sublists = childNodes(coloredElement).filter(isListElement);
+            for (const list of sublists) {
+                list.classList.add("o_default_color");
+            }
+        }
     }
 
     postFormatAppliedOnList(formattedBlocks, formatName, applyStyle) {

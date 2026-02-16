@@ -131,7 +131,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Check that color was applied",
-            trigger: ':iframe p font.text-o-color-1',
+            trigger: ':iframe p.text-o-color-1',
         },
         ...stepUtils.saveForm(),
         {

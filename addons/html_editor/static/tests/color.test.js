@@ -62,10 +62,13 @@ test("should apply a color on empty selection", async () => {
         contentBefore: "<p>[<br></p><p><br></p><p>]<br></p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfterEdit:
-            '<p>[<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-            '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-            '<p>]<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>',
-        contentAfter: "<p>[<br></p><p><br></p><p>]<br></p>",
+            '<p style="color: rgb(255, 0, 0);">[<br></p>' +
+            '<p style="color: rgb(255, 0, 0);"><br></p>' +
+            '<p style="color: rgb(255, 0, 0);">]<br></p>',
+        contentAfter:
+            '<p style="color: rgb(255, 0, 0);">[<br></p>' +
+            '<p style="color: rgb(255, 0, 0);"><br></p>' +
+            '<p style="color: rgb(255, 0, 0);">]<br></p>',
     });
 });
 
@@ -96,8 +99,7 @@ test("should not merge line on color change", async () => {
         contentBefore: "<p><strong>[abcd</strong><br><strong>efghi]</strong></p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<p><font style="color: rgb(255, 0, 0);"><strong>[abcd</strong></font><br>' +
-            '<font style="color: rgb(255, 0, 0);"><strong>efghi]</strong></font></p>',
+            '<p style="color: rgb(255, 0, 0);"><strong>[abcd</strong><br><strong>efghi]</strong></p>',
     });
 });
 
@@ -106,9 +108,9 @@ test("should not apply color on an uneditable element", async () => {
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter: unformat(`
-                <p><font style="color: rgb(255, 0, 0);">[a</font></p>
+                <p style="color: rgb(255, 0, 0);">[a</p>
                 <p contenteditable="false">b</p>
-                <p><font style="color: rgb(255, 0, 0);">c]</font></p>
+                <p style="color: rgb(255, 0, 0);">c]</p>
             `),
     });
 });
@@ -178,7 +180,7 @@ test("should not apply background color on an uneditable selected cell in a tabl
     });
 });
 
-test("should not apply font tag to t nodes (protects if else nodes separation)", async () => {
+test("should not apply font tag to t nodes (protects if else nodes separation) (1)", async () => {
     await testEditor({
         contentBefore: unformat(`[
             <p>
@@ -192,14 +194,14 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
         ]`),
         stepFunction: setColor("red", "color"),
         contentAfter: unformat(`[
-            <p>
+            <p style="color: red;">
                 <t t-if="object.partner_id.parent_id">
-                    <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
+                    <t t-out="object.partner_id.parent_id.name or ''">
                         Azure Interior
                     </t>
                 </t>
                 <t t-else="">
-                    <t t-out="object.partner_id.name or ''" style="color: red;">
+                    <t t-out="object.partner_id.name or ''">
                         Brandon Freeman
                     </t>
                 </t>
@@ -208,9 +210,39 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
     });
 });
 
+test("should not apply font tag to t nodes (protects if else nodes separation) (2)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <p>
+                [<t t-if="object.partner_id.parent_id">
+                   <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>
+                </t>]
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+                </t>
+            </p>
+        `),
+        stepFunction: setColor("red", "color"),
+        contentAfter: unformat(`
+            <p>
+                [<t t-if="object.partner_id.parent_id">
+                    <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
+                        Azure Interior
+                    </t>
+                </t>]
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''">
+                        Brandon Freeman
+                    </t>
+                </t>
+            </p>
+        `),
+    });
+});
+
 test("should remove font tag after removing font color (1)", async () => {
     await testEditor({
-        contentBefore: '<p><font style="color: rgb(255, 0, 0);">[abcabc]</font></p>',
+        contentBefore: '<p style="color: rgb(255, 0, 0);">[abcabc]</p>',
         stepFunction: setColor("", "color"),
         contentAfter: "<p>[abcabc]</p>",
     });
@@ -218,7 +250,15 @@ test("should remove font tag after removing font color (1)", async () => {
 
 test("should remove font tag after removing font color (2)", async () => {
     await testEditor({
-        contentBefore: '<p><font class="text-400">[abcabc]</font></p>',
+        contentBefore: '<p class="text-400">[abcabc]</p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: "<p>[abcabc]</p>",
+    });
+});
+
+test("should remove font tag after removing font color (3)", async () => {
+    await testEditor({
+        contentBefore: '<p><font style="color: rgb(255, 0, 0);">[abcabc]</font></p>',
         stepFunction: setColor("", "color"),
         contentAfter: "<p>[abcabc]</p>",
     });
@@ -395,7 +435,7 @@ test("should apply text color whithout interrupting gradient background color on
             '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcde]</font></p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="color: rgb(255, 0, 0);">[abcde]</font></font></p>',
+            '<p style="color: rgb(255, 0, 0);"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcde]</font></p>',
     });
 });
 test("should apply background color whithout interrupting gradient text color on selected text", async () => {
@@ -516,9 +556,9 @@ test("should apply gradient text color on selected text", async () => {
 test("should remove text gradient and apply new text color if gradient is fully selected", async () => {
     await testEditor({
         contentBefore:
-            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abcd]</font></p>',
+            '<p style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abcd]</p>',
         stepFunction: setColor("#ff0000", "color"),
-        contentAfter: '<p><font style="color: rgb(255, 0, 0);">[abcd]</font></p>',
+        contentAfter: '<p style="color: rgb(255, 0, 0);">[abcd]</p>',
     });
 });
 test("should remove background gradient and apply new background color if gradient is fully selected", async () => {
@@ -571,8 +611,8 @@ test("should not apply color on an invisible text node", async () => {
         `,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter: `
-            <p><font style="color: rgb(255, 0, 0);">[a</font></p>
-            <p><font style="color: rgb(255, 0, 0);">c]</font></p>
+            <p style="color: rgb(255, 0, 0);">[a</p>
+            <p style="color: rgb(255, 0, 0);">c]</p>
         `,
     });
 });
@@ -779,7 +819,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${redToBlueGradient};" class="o_cc o_cc1">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 });
             });
             test("should write o_cc1 gradient when bg-900 is already present", async () => {
@@ -805,7 +845,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${redToBlueGradient};" class="o_cc o_cc1">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 });
             });
         });
@@ -860,7 +900,7 @@ test("should not split unsplittable element when applying color (1)", async () =
         contentBefore: '<div style="color: rgb(255, 0, 0);"><p>[test]</p></div>',
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter:
-            '<div style="color: rgb(255, 0, 0);"><p><font style="color: rgb(0, 0, 255);">[test]</font></p></div>',
+            '<div style="color: rgb(255, 0, 0);"><p style="color: rgb(0, 0, 255);">[test]</p></div>',
     });
 });
 test("should not split unsplittable element when applying color (2)", async () => {
