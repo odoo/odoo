@@ -293,9 +293,10 @@ class SaleOrder(models.Model):
         coupon_history_lines.sudo().unlink()
 
         # Handle any remaining debts and update active status
+        card_in_debt = issuers_to_compensate.card_id.points < 0
         for issuer in issuers_to_compensate.exists():
             issuer.active = True
-            if issuer.card_id.points < 0:
+            if card_in_debt:
                 issuer.compensate_existing_debts()
 
         # Re-redeem points for the tracks that lost their issuer
