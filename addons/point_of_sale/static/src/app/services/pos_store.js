@@ -1455,6 +1455,7 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             config_id: this.config.id,
             device_identifier: this.device.identifier,
+            current_order_uuid: this.getOrder()?.uuid,
             ...(options.context || {}),
         };
     }
