@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarActivityListPopoverItem" t-inherit="mail.ActivityListPopoverItem" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o-mail-ActivityListPopoverItem-name')]" position="replace">
+            <div class="d-flex flex-column text-truncate flex-grow-1 flex-basis-0">
+                <div class="o-mail-ActivityListPopoverItem-name d-flex flex-nowrap align-items-center">
+                    <i t-attf-class="fa {{props.activity.icon}} fa-fw lh-base me-1"/>
+                    <b t-if="props.activity.summary" class="fw-normal text-900 text-truncate" t-out="props.activity.summary"/>
+                    <b t-elif="props.activity.activity_type_id?.name" class="fw-normal text-900 text-truncate" t-out="props.activity.activity_type_id.name"/>
+                </div>
+                <span
+                    t-if="props.activity.res_name"
+                    class="text-action cursor-pointer text-truncate w-100 align-self-start small"
+                    t-custom-click.stop="(ev, isMiddleClick) => this.onClickOpenResRecord(ev, isMiddleClick)"
+                    t-out="props.activity.res_name"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-ActivityListPopoverItem-user')]" position="replace"/>
+        <xpath expr="//ActivityMarkAsDone" position="attributes">
+            <attribute name="onClickDone.bind">onClickDone</attribute>
+        </xpath>
+    </t>
+</templates>

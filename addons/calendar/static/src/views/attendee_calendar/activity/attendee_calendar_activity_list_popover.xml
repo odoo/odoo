@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarActivityListPopover">
+        <t t-if="env.isSmall">
+            <Dialog title.translate="Activities" withBodyPadding="false">
+                <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
+        </t>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarActivityListPopover.popover">
+       <div class="d-flex flex-column h-100">
+            <div class="overflow-y-auto d-flex flex-column flex-grow-1">
+                <AttendeeCalendarActivityListPopoverItem
+                    t-foreach="activities" t-as="activity" t-key="activity.id"
+                    activity="activity"
+                    onActivityChanged="props.onActivityChanged"
+                    onClickEditActivityButton="props.close"
+                    onClickDoneAndScheduleNext="props.close"
+                    onRemoveActivityItem.bind="onRemoveActivityItem"/>
+            </div>
+            <button t-if="extraActivityCount" class="btn btn-secondary p-3 text-center text-primary border-top" t-on-click="onClickViewAll">
+                ...and <t t-out="extraActivityCount"/> more
+            </button>
+        </div>
+    </t>
+</templates>
