@@ -13,32 +13,47 @@
     </t>
 
     <t t-name="board.Content">
-        <div t-if="!env.isSmall" class="o-dashboard-header d-flex justify-content-end">
+        <div t-if="!env.isSmall" class="o-dashboard-header d-flex justify-content-end my-2">
             <Dropdown>
-                <button class="btn btn-secondary m-2 p-2">
-                    <img t-attf-src="/board/static/img/layout_{{board.layout}}.png" width="16" height="16" alt=""/>
-                    Change Layout
+                <button class="btn btn-secondary mx-3 p-2">
+                    <img t-attf-src="/board/static/img/layout_{{board.layout}}.png" width="16" height="14" t-att-alt="board.layout"/>
+                    Layout
                 </button>
                 <t t-set-slot="content">
-                    <t t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-key="layout">
-                        <DropdownItem onSelected="() => this.selectLayout(layout)">
-                            <img t-attf-src="/board/static/img/layout_{{layout}}.png" alt=""/>
-                            <i t-if="layout == board.layout" class="fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
-                        </DropdownItem>
-                    </t>
+                    <DropdownItem
+                        t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')"
+                        t-as="layout"
+                        t-key="layout"
+                        onSelected="() => this.selectLayout(layout)"
+                        class="{ selected: layout == board.layout }"
+                    >
+                        <t t-set="layoutValue" t-value="layout.split('-')"/>
+                        <t t-set="layoutLength" t-value="layoutValue.length"/>
+                        <t t-set="layoutTotal" t-value="layoutValue.reduce((a, b) => parseInteger(a) + parseInteger(b), 0)"/>
+                        <img t-attf-src="/board/static/img/layout_{{layout}}.png" class="img-fluid w-25 me-1"/>
+                        <t t-if="layoutLength > 1">
+                            <t t-foreach="layoutValue" t-as="column" t-key="column_index">
+                                <t t-out="column + '/' + layoutTotal"/>
+                                <t t-if="(layoutLength - 1) gt column_index"> + </t>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-out="layoutLength + ' column'"/>
+                        </t>
+                    </DropdownItem>
                 </t>
             </Dropdown>
         </div>
-        <div class="o-dashboard-layout flex-grow-1" t-attf-class="o-dashboard-layout-{{board.layout}}" t-ref="main">
+        <div class="o-dashboard-layout flex-grow-1 gap-3 mx-3 mt-3 mt-md-0" t-attf-class="o-dashboard-layout-{{board.layout}}" t-ref="main">
             <t t-foreach="board.columns" t-as="column" t-key="column_index">
                 <div t-if="column_index lt board.colNumber" class="o-dashboard-column h-100" t-att-data-idx="column_index">
                     <t t-foreach="column.actions" t-as="action" t-key="action.id">
-                        <div class="o-dashboard-action mx-3 my-1 bg-view border" t-att-data-idx="action_index">
-                            <h3 t-attf-class="o-dashboard-action-header {{action.title ? '' : 'oe_header_empty'}} p-2 m-2">
-                                <span> <t t-esc="action.title"/> </span>
-                                <span t-if="!env.isSmall" class="btn float-end p-1 text-muted" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
-                                <span class="btn float-end p-1 text-muted" t-if="!action.isFolded" t-on-click="() => this.toggleAction(action, !env.isSmall)"><i class="fa fa-window-minimize"/></span>
-                                <span class="btn float-end p-1 text-muted" t-if="action.isFolded"  t-on-click="() => this.toggleAction(action, !env.isSmall)"><i class="fa fa-window-maximize"/></span>
+                        <div class="o-dashboard-action mb-2 bg-view border" t-att-data-idx="action_index">
+                            <h3 t-attf-class="o-dashboard-action-header {{action.title ? '' : 'oe_header_empty'}} d-flex align-items-center justify-content-end gap-1 m-2 py-2 px-0">
+                                <button class="btn btn-light d-flex p-1 opacity-50 opacity-100-hover" t-if="!action.isFolded" t-on-click="() => this.toggleAction(action, !env.isSmall)"><i class="oi oi-chevron-down" aria-hidden="true"/></button>
+                                <button class="btn btn-light d-flex p-1 opacity-50 opacity-100-hover" t-if="action.isFolded"  t-on-click="() => this.toggleAction(action, !env.isSmall)"><i class="oi oi-chevron-right" aria-hidden="true"/></button>
+                                <span class="me-auto"> <t t-esc="action.title"/> </span>
+                                <button t-if="!env.isSmall" class="btn btn-light d-flex p-1 opacity-50 opacity-100-hover" t-on-click="() => this.closeAction(column, action)"><i class="oi oi-close" aria-hidden="true"/></button>
                             </h3>
                             <BoardAction t-if="!action.isFolded" action="action" />
                         </div>

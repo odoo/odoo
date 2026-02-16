@@ -10,10 +10,10 @@
     grid-template-columns: 1fr;
 }
 .o-dashboard-layout-1-1 {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
 }
 .o-dashboard-layout-1-1-1 {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
 }
 .o-dashboard-layout-2-1 {
     grid-template-columns: 2fr 1fr;
@@ -28,6 +28,13 @@
 
 .o-dashboard-action {
     align-self: start;
+    height: fit-content;
+    transition: height 0.3s;
+
+    &.o_dragged {
+        transform: scale(.7) rotate(-4deg);
+        box-shadow: 0 1rem 2rem rgb(191, 191, 191);
+    }
 
     > .o_view_controller {
         padding: 0 6px 6px 6px;
@@ -53,6 +60,6 @@
     }
 }
 
-.o-dashboard-action > h3 > span > i {
-    font-size: 12px;
+.o-dashboard-action-header {
+    cursor: grab;
 }
