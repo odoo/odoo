@@ -148,12 +148,18 @@ def main():
 
             # Install basic modules
             for m in MODULES:
-                install_module(env, m)
+                if not install_module(env, m):
+                    print(f"Aborting: Failed to install required module '{m}'")
+                    sys.exit(1)
 
-            # 5. INSTALL MODULE
-            print(f"Checking module: {args.module}...")
-            if not install_module(env, args.module):
-                sys.exit()
+            # Install User Requested Modules
+            # Split the comma-separated string into a list
+            user_modules = [m.strip() for m in args.modules.split(',') if m.strip()]
+
+            for mod in user_modules:
+                if not install_module(env, mod):
+                    print(f"Aborting: Failed to install required module '{mod}'")
+                    sys.exit(1)
 
         except Exception as e:
             print(f"An error occurred during transaction: {e}")
