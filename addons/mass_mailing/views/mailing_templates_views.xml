@@ -75,7 +75,7 @@
         <field name="model">mailing.mailing</field>
         <field name="arch" type="xml">
             <list string="Mailing List Contacts" sample="1" multi_edit="1">
-                <field name="name" optional="show" readonly="1"/>
+                <field name="subject" optional="show" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
             </list>
         </field>
