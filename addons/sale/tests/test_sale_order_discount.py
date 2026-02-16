@@ -213,3 +213,30 @@ class TestSaleOrderDiscount(SaleCommon):
         # Double the discount by changing the quantity instead of the value
         discount_line.product_uom_qty = 2
         self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.8)
+
+    def test_100_percent_global_discount(self):
+        so = self.empty_order
+        tax = self.env['account.tax'].create({
+            'name': "15 percent", 'amount_type': 'percent', 'amount': 15,
+        })
+        so.write({'order_line': [
+            Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 4,
+                'price_unit': 2.8207,
+                'tax_id': [tax.id],
+            }),
+            Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+                'price_unit': 2.8207,
+                'tax_id': [tax.id],
+            }),
+        ]})
+        wizard = self.env['sale.order.discount'].create({
+            'sale_order_id': so.id,
+            'discount_percentage': 1.0,  # 100%
+            'discount_type': 'so_discount',
+        })
+        wizard.action_apply_discount()
+        self.assertEqual(so.amount_total, 0)

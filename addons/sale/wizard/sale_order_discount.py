@@ -123,7 +123,9 @@ class SaleOrderDiscount(models.TransientModel):
             taxes = line.tax_id.flatten_taxes_hierarchy()
             fixed_taxes = taxes.filtered(lambda t: t.amount_type == 'fixed')
             taxes -= fixed_taxes
-            total_price_per_tax_groups[taxes] += line.price_unit * (1 - (line.discount or 0.0) / 100) * line.product_uom_qty
+            total_price_per_tax_groups[taxes] += self.company_id.currency_id.round(
+                line.price_unit * (1 - (line.discount or 0.0) / 100) * line.product_uom_qty
+            )
 
         discount_dp = self.env['decimal.precision'].precision_get('Discount')
         context = {'lang': self.sale_order_id._get_lang()}  # noqa: F841
