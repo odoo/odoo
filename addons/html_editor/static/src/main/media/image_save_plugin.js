@@ -4,7 +4,7 @@ import {
     backgroundImagePartsToCss,
     getImageSrc,
 } from "@html_editor/utils/image";
-import { loadImage } from "@html_editor/utils/image_processing";
+import { isGif, loadImage } from "@html_editor/utils/image_processing";
 import { rpc } from "@web/core/network/rpc";
 
 /**
@@ -184,7 +184,7 @@ export class ImageSavePlugin extends Plugin {
         if (
             !isImageField &&
             !isBackground &&
-            el.dataset.mimetype !== "image/gif" &&
+            !isGif(el.dataset.mimetypeBeforeConversion) &&
             !el.dataset.hoverEffect
         ) {
             // We are using these sizes instead of the normally used 128, 256, ...
