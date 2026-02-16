@@ -1,0 +1,36 @@
+.o-draggable-dragged,
+.o-draggable-optimistic {
+    --_draggable-max-x: 100vw;
+    --_draggable-max-y: 100vh;
+    --_draggable-min-x: 0vw;
+    --_draggable-min-y: 0vh;
+
+    height: var(--_draggable-height) !important;
+    position: fixed !important;
+    width: var(--_draggable-width) !important;
+
+    left: clamp(
+        var(--_draggable-min-x),
+        var(--_draggable-x) - var(--_draggable-offset-x),
+        var(--_draggable-max-x) - var(--_draggable-width)
+    );
+    top: clamp(
+        var(--_draggable-min-y),
+        var(--_draggable-y) - var(--_draggable-offset-y),
+        var(--_draggable-max-y) - var(--_draggable-height)
+    );
+}
+
+.o-draggable-dragged {
+    pointer-events: none;
+    user-select: none;
+    z-index: 9999;
+}
+
+.o-draggable-no-follow {
+    user-select: none;
+}
+
+.o-draggable-placeholder {
+    visibility: hidden;
+}

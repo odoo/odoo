@@ -56,6 +56,26 @@ export function isVisible(el) {
 }
 
 /**
+ * @param {HTMLElement | Window | Document} target
+ */
+export function getParentFrame(target) {
+    /** @type {Document | null} */
+    const doc = target.ownerDocument || target.document || target;
+    if (doc?.nodeType !== Node.DOCUMENT_NODE) {
+        return null;
+    }
+    const view = doc.defaultView;
+    if (view !== view.parent) {
+        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
+            if (iframe.contentWindow === view) {
+                return iframe;
+            }
+        }
+    }
+    return null;
+}
+
+/**
  * @param {DOMRect} rect
  * @param {Position} pos
  * @returns {number}
