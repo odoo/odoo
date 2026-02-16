@@ -13,6 +13,7 @@ class PosCategory(models.Model):
     _description = "Point of Sale Category"
     _inherit = ['pos.load.mixin']
     _order = "sequence, name"
+    _rec_name = 'complete_name'
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
@@ -23,6 +24,9 @@ class PosCategory(models.Model):
         return random.randint(0, 10)
 
     name = fields.Char(string='Category Name', required=True, translate=True)
+    complete_name = fields.Char(
+        'Complete Name', compute='_compute_complete_name', recursive=True, translate=True,
+        store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
@@ -37,6 +41,18 @@ class PosCategory(models.Model):
     # field to determine whether a pos.category has an image or not.
     has_image = fields.Boolean(compute='_compute_has_image')
 
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        languages = self.env['res.lang'].search([('active', '=', True)])
+        for lang in languages:
+            for category in self:
+                if category.parent_id:
+                    category.with_context(lang=lang.code).complete_name = '%s / %s' % (
+                    category.with_context(lang=lang.code).parent_id.complete_name,
+                    category.with_context(lang=lang.code).name)
+                else:
+                    category.with_context(lang=lang.code).complete_name = category.with_context(lang=lang.code).name
+
     @api.model
     def _load_pos_data_domain(self, data, config):
         domain = []
@@ -48,15 +64,10 @@ class PosCategory(models.Model):
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence', 'hour_until', 'hour_after']
 
-    def _get_hierarchy(self) -> List[str]:
-        """ Returns a list representing the hierarchy of the categories. """
-        self.ensure_one()
-        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [(self.name or '')]
-
     @api.depends('parent_id')
     def _compute_display_name(self):
         for cat in self:
-            cat.display_name = " / ".join(cat._get_hierarchy())
+            cat.display_name = cat.complete_name
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):
