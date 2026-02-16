@@ -44,6 +44,7 @@
                         t-elif="attachment.isImage"
                         class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
                         t-att-class="{
+                            'o-inComposer': env.inComposer,
                             'o-inMessage': env.inMessage,
                             'o-inChatter': env.inChatter,
                             'object-fit-contain': !env.inChatter and env.inMessage,
