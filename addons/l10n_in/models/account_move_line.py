@@ -82,16 +82,17 @@ class AccountMoveLine(models.Model):
         return False
 
     def _get_l10n_in_tax_tag_ids(self):
-
-        def get_tag_ids(*refs):
-            return [self.env.ref(ref).id for ref in refs]
-
+        xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
+        tag_refs = {
+            'sgst': ['l10n_in.tax_tag_base_sgst', 'l10n_in.tax_tag_sgst'],
+            'cgst': ['l10n_in.tax_tag_base_cgst', 'l10n_in.tax_tag_cgst'],
+            'igst': ['l10n_in.tax_tag_base_igst', 'l10n_in.tax_tag_igst'],
+            'cess': ['l10n_in.tax_tag_base_cess', 'l10n_in.tax_tag_cess'],
+            'eco_9_5': ['l10n_in.tax_tag_eco_9_5'],
+        }
         return {
-            'sgst': get_tag_ids('l10n_in.tax_tag_base_sgst', 'l10n_in.tax_tag_sgst'),
-            'cgst': get_tag_ids('l10n_in.tax_tag_base_cgst', 'l10n_in.tax_tag_cgst'),
-            'igst': get_tag_ids('l10n_in.tax_tag_base_igst', 'l10n_in.tax_tag_igst'),
-            'cess': get_tag_ids('l10n_in.tax_tag_base_cess', 'l10n_in.tax_tag_cess'),
-            'eco_9_5': get_tag_ids('l10n_in.tax_tag_eco_9_5'),
+            categ: [xmlid_to_res_id(xml_id) for xml_id in ref]
+            for categ, ref in tag_refs.items()
         }
 
     def _get_l10n_in_gstr_section(self, tax_tags_dict):
