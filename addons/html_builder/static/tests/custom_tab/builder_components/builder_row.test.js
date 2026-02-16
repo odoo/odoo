@@ -150,13 +150,13 @@ const collapseOptionTemplate = ({
     expand = false,
     observeCollapseContent = false,
 } = {}) => xml`
-        <BuilderRow label="'Test Collapse'" expand="${expand}" observeCollapseContent="${observeCollapseContent}">
+        <BuilderRow label="'Test Collapse'" expand="${this.expand}" observeCollapseContent="${this.observeCollapseContent}">
             <BuilderButton classAction="'a'" ${
-                dependency ? "id=\"'test_opt'\"" : ""
+                this.dependency ? "id=\"'test_opt'\"" : ""
             }>A</BuilderButton>
             <t t-set-slot="collapse">
                 <BuilderRow level="1" label="'B'" ${
-                    dependency ? "t-if=\"isActiveItem('test_opt')\"" : ""
+                    this.dependency ? "t-if=\"this.isActiveItem('test_opt')\"" : ""
                 }>
                     <BuilderButton classAction="'b'">B</BuilderButton>
                 </BuilderRow>
@@ -235,10 +235,10 @@ describe("BuilderRow with collapse content", () => {
                             <BuilderSelectItem classAction="'c'" id="'random_opt'">C</BuilderSelectItem>
                         </BuilderSelect>
                         <t t-set-slot="collapse">
-                            <BuilderRow level="1" t-if="isActiveItem('test_opt')" label="'B'">
+                            <BuilderRow level="1" t-if="this.isActiveItem('test_opt')" label="'B'">
                                 <BuilderButton classAction="'b'">B</BuilderButton>
                             </BuilderRow>
-                            <BuilderRow level="1" t-if="isActiveItem('random_opt')" label="'D'">
+                            <BuilderRow level="1" t-if="this.isActiveItem('random_opt')" label="'D'">
                                 <BuilderButton classAction="'d'">D</BuilderButton>
                             </BuilderRow>
                         </t>
