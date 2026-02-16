@@ -28,22 +28,6 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         if process_type == 'billing':
             return 'urn:peppol:pint:billing-1@jp-1'
 
-    def _ubl_default_tax_subtotal_grouping_key(self, tax_category_grouping_key, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        tax_subtotal_grouping_key = super()._ubl_default_tax_subtotal_grouping_key(tax_category_grouping_key, vals)
-
-        # If there is a TaxTotal section in company currency,
-        # its TaxSubtotals nodes should contain a 'Percent' node.
-        currency = vals['currency_id']
-        company = vals['company']
-        if (
-            currency != company.currency_id
-            and tax_subtotal_grouping_key['currency'] == company.currency_id
-        ):
-            tax_subtotal_grouping_key['percent'] = tax_category_grouping_key['percent']
-
-        return tax_subtotal_grouping_key
-
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
         # EXTENDS account.edi.xml.ubl_bis3
         tax_subtotal_node = super()._ubl_get_tax_subtotal_node(vals, tax_subtotal)
@@ -56,7 +40,7 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
             currency != company.currency_id
             and tax_subtotal['currency'] == company.currency_id
         ):
-            tax_subtotal_node['cbc:Percent'] = {'_text': tax_subtotal['percent']}
+            tax_subtotal_node['cbc:Percent']['_text'] = tax_subtotal['percent']
 
         return tax_subtotal_node
 
@@ -64,18 +48,28 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # OVERRIDE
         return self.env['account.edi.ubl']._ubl_tax_totals_node_grouping_key(base_line, tax_data, vals, currency)
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        invoice = vals['invoice']
-        super()._add_invoice_header_nodes(document_node, vals)
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@jp-1'
 
-        # see https://docs.peppol.eu/poac/jp/pint-jp/bis/#profiles
-        document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
+    def _ubl_add_profile_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_profile_id_node(vals)
+        vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:billing'
+
+    def _ubl_add_invoice_period_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_invoice_period_nodes(vals)
+        nodes = vals['document_node']['cac:InvoicePeriod']
+        invoice = vals.get('invoice')
 
         # [aligned-ibrp-052] An Invoice MUST have an invoice period (ibg-14) or an Invoice line period (ibg-26).
-        document_node['cac:InvoicePeriod'] = {
-            'cbc:StartDate': {'_text': invoice.invoice_date},
-            'cbc:EndDate': {'_text': invoice.invoice_date},
-        }
+        if invoice and not nodes:
+            nodes.append({
+                'cbc:StartDate': {'_text': invoice.invoice_date},
+                'cbc:EndDate': {'_text': invoice.invoice_date},
+            })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.ubl_bis3
