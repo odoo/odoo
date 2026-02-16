@@ -345,6 +345,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             }) if invoice.partner_bank_id else None
         }
 
+        if 'sdd_mandate_ids' in invoice.partner_id._fields:
+            if payer_mandate := invoice.partner_id.sdd_mandate_ids.search([
+                ('company_id', '=', invoice.company_id.id),
+                ('state', '=', 'active'),
+            ], limit=1):
+                payer_bank = payer_mandate.partner_bank_id
+                document_node['cac:PaymentMeans']['cac:PaymentMandate'] = {
+                    'cbc:ID': payer_mandate.id,
+                    'cac:PayerFinancialAccount': self._get_financial_account_node({
+                        **vals,
+                        'partner_bank': payer_bank,
+                    }),
+                }
+
     def _add_invoice_payment_terms_nodes(self, document_node, vals):
         invoice = vals['invoice']
         payment_term = invoice.invoice_payment_term_id
