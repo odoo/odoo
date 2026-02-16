@@ -12,7 +12,8 @@ class TestImportFiles(TransactionCase):
         can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available",
     )
     def test_import_quotation_template_xls(self):
-        if not loaded_demo_data(self.env):
+        azure_interior = bool(self.env.ref('res_partner_12', raise_if_not_found=False))
+        if not loaded_demo_data(self.env) or not azure_interior:
             self.skipTest('Needs demo data to be able to import those files')
         model = "sale.order"
         filename = "quotations_import_template.xlsx"

@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             trigger: "body:not(:has(.modal))",
         },
         ...tourUtils.clickSomewhereElse(),
-        tourUtils.editLineMatching("Event Registration", "VIP"),
+        ...tourUtils.editLineMatching("Event Registration", "VIP"),
         tourUtils.editConfiguration(),
         {
             trigger: 'div[name="event_ticket_id"] input',

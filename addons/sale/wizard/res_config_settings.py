@@ -59,6 +59,12 @@ class ResConfigSettings(models.TransientModel):
         readonly=False)
     downpayment_account_id = fields.Many2one(related='company_id.downpayment_account_id', readonly=False)
 
+    sale_order_mandatory_product = fields.Boolean(
+        string="Product is mandatory",
+        compute='_compute_sale_order_mandatory_product',
+        inverse='_inverse_sale_order_mandatory_product',
+    )
+
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_bpost = fields.Boolean("bpost Connector")
@@ -82,7 +88,18 @@ class ResConfigSettings(models.TransientModel):
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_sale_shopee = fields.Boolean("Shopee Sync")
 
-    #=== ONCHANGE METHODS ===#
+    # === COMPUTE METHODS === #
+
+    def _compute_sale_order_mandatory_product(self):
+        view = self.env.ref('sale.view_order_form_free_text', raise_if_not_found=False)
+        self.sale_order_mandatory_product = not view.active
+
+    def _inverse_sale_order_mandatory_product(self):
+        view = self.env.ref('sale.view_order_form_free_text', raise_if_not_found=False)
+        if view:
+            view.active = not self.sale_order_mandatory_product
+
+    # === ONCHANGE METHODS === #
 
     @api.depends('group_discount_per_so_line')
     def _onchange_group_discount_per_so_line(self):
@@ -118,7 +135,7 @@ class ResConfigSettings(models.TransientModel):
                 },
             }
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS === #
 
     def set_values(self):
         super().set_values()

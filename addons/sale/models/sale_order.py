@@ -1296,14 +1296,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in {'draft', 'sent'}:
             return _("Some orders are not in a state requiring confirmation.")
-        if any(
-            not line.display_type
-            and not line.is_downpayment
-            and not line.product_id
-            for line in self.order_line
-        ):
-            return _("Some order lines are missing a product, you need to correct them before going further.")
-
         return False
 
     def _prepare_confirmation_values(self):

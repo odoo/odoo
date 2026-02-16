@@ -1202,6 +1202,7 @@
                                            'default_currency_id': currency_id or company_currency_id,
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
+                                           'from_invoice_tab': True,
                                        }" readonly="state != 'draft'"
                                        aggregated_fields="price_subtotal,price_total"
                                        options="{'hide_composition': True, 'hide_prices': True, 'subsections': True}">
@@ -1223,7 +1224,7 @@
                                                     and [('sale_ok', '=', True)]
                                                     or [('purchase_ok', '=', True)]
                                                "/>
-                                        <field name="name" widget="section_and_note_text" optional="show"/>
+                                        <field name="name" widget="account_label_text" optional="show"/>
                                         <field name="account_id"
                                                context="{
                                                     'partner_id': partner_id,

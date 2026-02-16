@@ -541,7 +541,10 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            if line.product_id:
+                line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            else:
+                line.allowed_uom_ids = self.env['uom.uom'].search([])
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
@@ -557,8 +560,9 @@ class SaleOrderLine(models.Model):
                 taxes = None
                 if line.product_id:
                     taxes = line.product_id.taxes_id._filter_taxes_by_company(company)
-                if not line.product_id or not taxes:
-                    # Nothing to map
+                if not taxes and self.env.context.get('from_order_line_tab'):
+                    taxes = company.account_sale_tax_id
+                if not taxes:
                     line.tax_ids = False
                     continue
                 fiscal_position = line.order_id.fiscal_position_id
@@ -928,7 +932,7 @@ class SaleOrderLine(models.Model):
             # For other delivery methods, they are expected to add their own quantities to the
             # quantities already provided by the `_prepare_qty_delivered` method, including
             # analytic lines quantities for reinvoiceable products.
-            if line.qty_delivered_method == 'manual' and line.product_id.expense_policy != 'no':
+            if line.qty_delivered_method == 'manual' and line.product_id and line.product_id.expense_policy != 'no':
                 line.qty_delivered_method = 'analytic'
 
     def _get_consu_qty_delivered_method(self):

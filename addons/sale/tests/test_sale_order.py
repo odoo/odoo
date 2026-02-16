@@ -193,7 +193,7 @@ class TestSaleOrder(SaleCommon):
         # Html invoice terms (/terms page)
         self.env.company.terms_type = 'html'
         sale_order = self._create_sale_order()
-        self.assertTrue(sale_order.note.startswith("<p>Terms &amp; Conditions: "))
+        self.assertTrue(sale_order.note.startswith("<s>Terms &amp; Conditions: "))
 
     def test_validity_days(self):
         self.env.company.quotation_validity_days = 5

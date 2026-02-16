@@ -74,7 +74,7 @@ registry
             },
             // Assert that the combo configurator is opened with the previous selection when the
             // combo is edited.
-            tourUtils.editLineMatching("Combo product x 3"),
+            ...tourUtils.editLineMatching("Combo product x 3"),
             tourUtils.editConfiguration(),
             comboConfiguratorTourUtils.setQuantity(2),
             comboConfiguratorTourUtils.assertComboItemSelected("Product A1"),
