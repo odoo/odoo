@@ -72,10 +72,35 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: '.modal-footer .btn-primary',
     },
     {
-        content: "It didn't save without a url. Fill url input.",
+        content: "It didn't save without a url. Enter a relative URL containing a space",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
-        run: 'text #',
+        run: "text /url with space",
+    },
+    {
+        content: "Check that a warning is shown for relative URLs with spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning:not(.invisible)",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Enter an absolute URL with spaces (should not show warning)",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+        run: "text http://example.com/url with space",
+    },
+    {
+        content: "Verify the warning is hidden for absolute URLs with spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Clear the URL and enter a valid one without spaces",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+        run: "text #",
+    },
+    {
+        content: "Verify the warning remains hidden when the URL has no spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible",
+        run: () => {}, // It's a check.
     },
     {
         content: "Confirm the new menu entry",
