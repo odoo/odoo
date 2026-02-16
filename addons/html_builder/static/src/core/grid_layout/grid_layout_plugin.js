@@ -42,7 +42,7 @@ export class GridLayoutPlugin extends Plugin {
         on_snippet_dropped_near_handlers: this.onSnippetDroppedNear.bind(this),
         on_snippet_dropped_handlers: withSequence(1000, this.onSnippetDropped.bind(this)),
         // Drag and drop from the page
-        is_draggable_handlers: this.isDraggable.bind(this),
+        is_draggable_predicates: this.isDraggable.bind(this),
         on_element_dragged_handlers: this.onElementDragged.bind(this),
         on_element_over_dropzone_handlers: this.onDropzoneOver.bind(this),
         on_element_move_handlers: this.onDragMove.bind(this),

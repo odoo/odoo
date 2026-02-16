@@ -23,7 +23,7 @@ export class ImageHoverPlugin extends Plugin {
             SetHoverEffectStrokeWidthAction,
         },
         system_attributes: ["data-original-src-before-hover"],
-        default_shape_handlers: (dataset) =>
+        default_shape_providers: (dataset) =>
             dataset.hoverEffect && "html_builder/geometric/geo_square",
         post_compute_shape_listeners: async (svg, params) => {
             let rgba = null;

@@ -19,7 +19,7 @@ export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        get_options_container_top_buttons: withSequence(
+        options_container_top_buttons_providers: withSequence(
             1,
             this.getOptionsContainerTopButtons.bind(this)
         ),
@@ -80,7 +80,7 @@ export class SaveSnippetPlugin extends Plugin {
             this.wrapWithBeforeAfterSaveHandlers.bind(this)
         );
         if (savedName) {
-            if (this.delegateTo("custom_snippets_notification_handlers", savedName)) {
+            if (this.delegateTo("custom_snippets_notification_overrides", savedName)) {
                 return;
             }
             const message = _t(

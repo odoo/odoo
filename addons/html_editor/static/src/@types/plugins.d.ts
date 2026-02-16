@@ -36,10 +36,10 @@ declare module "plugins" {
     import { paste_media_url_command_providers } from "@html_editor/main/link/powerbox_url_paste_plugin";
     import { LocalOverlayShared } from "@html_editor/main/local_overlay_plugin";
     import { ImageCropShared } from "@html_editor/main/media/image_crop_plugin";
-    import { delete_image_overrides, image_name_predicates, ImageShared } from "@html_editor/main/media/image_plugin";
-    import { ImagePostProcessShared, on_image_updated_handlers, process_image_post_handlers, process_image_warmup_handlers } from "@html_editor/main/media/image_post_process_plugin";
+    import { delete_image_overrides, image_name_providers, ImageShared } from "@html_editor/main/media/image_plugin";
+    import { ImagePostProcessShared, on_image_updated_handlers, on_image_processed_handlers, on_will_process_image_handlers } from "@html_editor/main/media/image_post_process_plugin";
     import { closest_savable_providers, ImageSaveShared, on_image_saved_handlers } from "@html_editor/main/media/image_save_plugin";
-    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_added_media_handlers, on_media_dialog_saved_handlers, on_replaced_media_handlers } from "@html_editor/main/media/media_plugin";
+    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_added_media_handlers, on_will_save_media_dialog_handlers, on_replaced_media_handlers } from "@html_editor/main/media/media_plugin";
     import { move_node_blacklist_selectors, move_node_whitelist_selectors, set_movable_element_handlers, unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
     import { layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
     import { power_buttons, power_buttons_visibility_predicates } from "@html_editor/main/power_buttons_plugin";
@@ -155,15 +155,15 @@ declare module "plugins" {
         mount_component_handlers: mount_component_handlers;
         normalize_handlers: normalize_handlers;
         on_added_media_handlers: on_added_media_handlers;
+        on_image_processed_handlers: on_image_processed_handlers;
         on_image_saved_handlers: on_image_saved_handlers;
         on_image_updated_handlers: on_image_updated_handlers;
-        on_media_dialog_saved_handlers: on_media_dialog_saved_handlers;
+        on_will_save_media_dialog_handlers: on_will_save_media_dialog_handlers;
         on_replaced_media_handlers: on_replaced_media_handlers;
+        on_will_process_image_handlers: on_will_process_image_handlers;
         post_mount_component_handlers: post_mount_component_handlers;
         post_redo_handlers: post_redo_handlers;
         post_undo_handlers: post_undo_handlers;
-        process_image_warmup_handlers: process_image_warmup_handlers;
-        process_image_post_handlers: process_image_post_handlers;
         remove_all_formats_handlers: remove_all_formats_handlers;
         restore_savepoint_handlers: restore_savepoint_handlers;
         selectionchange_handlers: selectionchange_handlers;
@@ -203,7 +203,6 @@ declare module "plugins" {
         fully_selected_node_predicates: fully_selected_node_predicates;
         functional_empty_node_predicates: functional_empty_node_predicates;
         has_format_predicates: has_format_predicates;
-        image_name_predicates: image_name_predicates;
         ineligible_link_for_selection_indication_predicates: ineligible_link_for_selection_indication_predicates;
         ineligible_link_for_zwnbsp_predicates: ineligible_link_for_zwnbsp_predicates;
         intangible_char_for_keyboard_navigation_predicates: intangible_char_for_keyboard_navigation_predicates;
@@ -242,6 +241,7 @@ declare module "plugins" {
         content_not_editable_providers: content_not_editable_providers;
         feff_providers: feff_providers;
         hint_targets_providers: hint_targets_providers;
+        image_name_providers: image_name_providers;
         paste_media_url_command_providers: paste_media_url_command_providers;
         removable_descendants_providers: removable_descendants_providers;
         selectors_for_feff_providers: selectors_for_feff_providers;

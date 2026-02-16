@@ -64,7 +64,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @typedef {((containers: BuilderOptionContainer[]) => void)[]} change_current_options_containers_listeners
  * @typedef {((newTargetEl: HTMLElement) => void)[]} on_restore_containers_handlers
  *
- * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} get_options_container_top_buttons
+ * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} options_container_top_buttons_providers
  *
  * @typedef {{
  *     Component: Component;
@@ -91,7 +91,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
  */
 /**
- * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_providers
+ * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_processors
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
@@ -102,7 +102,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  *     }
  */
 /**
- * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} remove_disabled_reason_providers
+ * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} remove_disabled_reason_processors
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
@@ -145,7 +145,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 this.updateContainers(el);
             }
         },
-        get_options_container_top_buttons: (el) => {
+        options_container_top_buttons_providers: (el) => {
             const buttons = [];
             if (el.matches("section")) {
                 buttons.push({
@@ -435,7 +435,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getOptionsContainerTopButtons(el) {
         const buttons = [];
-        for (const getContainerButtons of this.getResource("get_options_container_top_buttons")) {
+        for (const getContainerButtons of this.getResource("options_container_top_buttons_providers")) {
             buttons.push(...getContainerButtons(el));
             for (const button of buttons) {
                 const handler = button.handler;
@@ -526,13 +526,13 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getRemoveDisabledReason(el) {
         const reasons = [];
-        this.dispatchTo("remove_disabled_reason_providers", { el, reasons });
+        this.dispatchTo("remove_disabled_reason_processors", { el, reasons });
         return reasons.length ? reasons.join(" ") : undefined;
     }
 
     getCloneDisabledReason(el) {
         const reasons = [];
-        this.dispatchTo("clone_disabled_reason_providers", { el, reasons });
+        this.dispatchTo("clone_disabled_reason_processors", { el, reasons });
         return reasons.length ? reasons.join(" ") : undefined;
     }
 

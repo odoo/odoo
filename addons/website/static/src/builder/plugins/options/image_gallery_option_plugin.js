@@ -53,7 +53,7 @@ class ImageGalleryOption extends Plugin {
             IndicatorsStyleClassAction,
         },
         system_classes: ["o_empty_gallery_alert"],
-        get_gallery_items_handlers: this.getGalleryItems.bind(this),
+        gallery_items_providers: this.getGalleryItems.bind(this),
         reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
