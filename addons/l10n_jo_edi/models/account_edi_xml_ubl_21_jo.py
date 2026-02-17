@@ -295,7 +295,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'cbc:AllowanceTotalAmount': {
                 '_text': self.format_float(allowance_total_amount, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
-            } if allowance_total_amount else None,
+            },
             'cbc:PrepaidAmount': {
                 '_text': self.format_float(0.0, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
@@ -484,12 +484,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_line_discount_allowance_charge_node(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
-        base_line = vals['base_line']
-        if base_line['discount'] == 0.0:
-            return None
-
         return {
-            'cbc:ChargeIndicator': {'_text': 'false' if vals['discount_amount_currency'] > 0 else 'true'},
+            'cbc:ChargeIndicator': {'_text': 'false'},
             'cbc:AllowanceChargeReason': {'_text': 'DISCOUNT'},
             'cbc:Amount': {
                 '_text': self.format_float(
