@@ -263,17 +263,36 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
+<<<<<<< 2a07d491621b836aecc1e760e0302807876f1b07
     @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
     def scan_barcode(self, token, barcode, check_in_image=None):
+||||||| 5f6fb63d5d7585805642c702d096b2f882e73761
+    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
+    def scan_barcode(self, token, barcode):
+=======
+    def scan_barcode(self, token, barcode):
+        return self.scan_barcode_with_geolocation(token, barcode)
+
+    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
+    def scan_barcode_with_geolocation(self, token, barcode, latitude=False, longitude=False):
+>>>>>>> 2dc06d8a175959963ba5e419ccda176694f18a7f
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
+<<<<<<< 2a07d491621b836aecc1e760e0302807876f1b07
                 notification = employee._attendance_action_change(
                     self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking),
                     self._get_validated_check_in_image_and_type(check_in_image, company.attendance_capture_check_in),
                 )
                 return self._get_attendance_action_response(employee, notification)
+||||||| 5f6fb63d5d7585805642c702d096b2f882e73761
+                employee._attendance_action_change(self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking))
+                return self._get_employee_info_response(employee)
+=======
+                employee._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude, device_tracking_enabled=company.attendance_device_tracking))
+                return self._get_employee_info_response(employee)
+>>>>>>> 2dc06d8a175959963ba5e419ccda176694f18a7f
         return {}
 
     @http.route('/hr_attendance/manual_selection', type="jsonrpc", auth="public")
