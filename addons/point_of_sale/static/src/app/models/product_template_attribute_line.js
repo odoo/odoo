@@ -3,7 +3,7 @@ import { Base } from "./related_models";
 
 export class ProductTemplateAttributeLine extends Base {
     static pythonModel = "product.template.attribute.line";
-
+    static enableLazyGetters = false;
     values() {
         return this.product_template_value_ids;
     }
