@@ -1,5 +1,5 @@
 import re
-from tools_js_expressions import update_template, aggregate_vars, replace_x_path_only
+from tools_js_expressions import update_template, aggregate_vars
 
 EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -660,8 +660,6 @@ WEB_WHITELIST = {
     "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
     "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
 }
-
-
 MAIL_WHITELIST = {
     "discuss.GifPicker.gif": {'gif_value'},  # for-each above t-call
     "mail.MessageSeenIndicatorPopover.card": {'member'},  # for-each above t-call
@@ -675,76 +673,103 @@ MAIL_WHITELIST = {
     "mail.Composer.suggestionCannedResponse": {'option'},  # dynamic t-call
     "mail.Composer.suggestionEmoji": {'option'},  # dynamic t-call
 }
+EVENT_WHITELIST = {
+    "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
+    "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+}
+THIS_TARGETS = ["web", "mail"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
-
-    web_files = [
+    all_files = [
         f for f in file_manager
-        # if ('web/static/src/' in f.path._str or 'mail/static/src/' in f.path._str)
         if 'static/src' in f.path._str
         and f.path.suffix == '.xml'
         and not any(f.path._str.endswith(p) for p in EXCLUDED_PATH)
     ]
 
-    # Step 1: Gather all variables in the web module
     outside_vars = {
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
     }  # vars defined under t-call
-    outside_vars = outside_vars | MAIL_WHITELIST | WEB_WHITELIST
+    outside_vars = outside_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
     inside_vars = {}  # vars defined inside template, eg. using t-set
-    for fileno, file in enumerate(web_files, start=1):
+
+    # Iteration 1: Gather all variables
+    for fileno, file in enumerate(all_files, start=1):
         aggregate_vars(file.content, outside_vars, inside_vars)
 
-    # Step 2: Add this. to all non local template vars (except those coming from external t-call)
-    for fileno, file in enumerate(web_files, start=1):
+    # Iteration 2: Update templates
+    for fileno, file in enumerate(all_files, start=1):
         try:
-            file.content = update_template(file.content, outside_vars, inside_vars)
+            file.content = update_template(file.path._str, file.content, outside_vars, inside_vars, THIS_TARGETS)
         except Exception as e:
             log_error(file.path, e)
 
-        # file_manager.print_progress(fileno, len(web_files))
 
-    # Step 3: Modify x-path targetting web files we might have modified above
-    INHERIT_PATTERN = re.compile(r't-inherit=["\']web\..*?["\']')  # Matches t-inherit="web.xxxxx
-    all_files = [
+def upgrade_this_in_js(file_manager, log_info, log_error):
+    pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
+
+    test_files = [
         f for f in file_manager
-        if 'static/src/' in f.path._str
-        and f.path.suffix == '.xml'
+        if f.path._str.endswith(".js")
         and not any(f.path._str.endswith(p) for p in EXCLUDED_PATH)
     ]
 
-    for fileno, file in enumerate(all_files, start=1):
+    pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
+    for fileno, file in enumerate(test_files, start=1):
+        # add warning for clients who have ${} inside fragments
+        if THIS_TARGETS and not any(
+            f"/{module}/" in file.path._str or f"/{module}_" in file.path._str
+            for module in THIS_TARGETS
+        ):
+            continue
         try:
-            if INHERIT_PATTERN.search(file.content):
-                file.content = replace_x_path_only(file.content, inside_vars)
+            with open(file.path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            def process_match(match):
+                prefix = match.group(1)   # The "xml`" part
+                raw_xml = match.group(2)  # The content inside backticks
+                suffix = match.group(3)   # The closing "`"
+
+                wrapped_xml = f"<t t-name='xyz'>{raw_xml}</t>"
+
+                processed_wrapped = update_template("", wrapped_xml, {}, {}, [])
+
+                inner_xml = re.sub(r'^<[^>]+>', '', processed_wrapped)
+                inner_xml = re.sub(r'</[^>]+>$', '', inner_xml)
+
+                return f"{prefix}{inner_xml}{suffix}"
+
+            new_content = pattern.sub(process_match, content)
+
+            if new_content != content:
+                file.content = new_content
 
         except Exception as e:
-            log_error(file.path, e)
-
-        # file_manager.print_progress(fileno, len(web_files))
+            print(f"Error processing {file.path}: {e}")
 
 
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
 
-    collector.run_sub("Migrating useEffect", upgrade_useeffect)
-    collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
-    collector.run_sub("Migrating onRendered", upgrade_onrendered)
-    collector.run_sub("Migrating useComponent", upgrade_usecomponent)
-    collector.run_sub("Migrating useEnv", upgrade_useenv)
-    collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
-    collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
-    collector.run_sub("Migrating useRef", upgrade_useref)
-    collector.run_sub("Migrating useState", upgrade_usestate)
-    collector.run_sub("Migrating reactive", upgrade_reactive)
-    collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
-    collector.run_sub("Migrating t-portal", upgrade_tportal)
-    collector.run_sub("Migrating t-esc", upgrade_t_esc)
-    collector.run_sub("Migrating t-ref", upgrade_t_ref)
-    collector.run_sub("Migrating t-model", upgrade_t_model)
+    # collector.run_sub("Migrating useEffect", upgrade_useeffect)
+    # collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
+    # collector.run_sub("Migrating onRendered", upgrade_onrendered)
+    # collector.run_sub("Migrating useComponent", upgrade_usecomponent)
+    # collector.run_sub("Migrating useEnv", upgrade_useenv)
+    # collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
+    # collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
+    # collector.run_sub("Migrating useRef", upgrade_useref)
+    # collector.run_sub("Migrating useState", upgrade_usestate)
+    # collector.run_sub("Migrating reactive", upgrade_reactive)
+    # collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
+    # collector.run_sub("Migrating t-portal", upgrade_tportal)
+    # collector.run_sub("Migrating t-esc", upgrade_t_esc)
+    # collector.run_sub("Migrating t-ref", upgrade_t_ref)
+    # collector.run_sub("Migrating t-model", upgrade_t_model)
     collector.run_sub("Migrating this.", upgrade_this)
 
     collector.finalize()
