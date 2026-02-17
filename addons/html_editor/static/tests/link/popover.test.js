@@ -14,7 +14,7 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
-import { cleanLinkArtifacts } from "../_helpers/format";
+import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
@@ -98,6 +98,24 @@ describe("should open a popover", () => {
         queryOne(".o_we_href_input_link").focus();
         await animationFrame();
         expect(queryOne(".o-we-linkpopover").parentElement).toHaveAttribute("style", style);
+    });
+    test("link popover should open and switch to editing if selection inside links", async () => {
+        await setupEditor(
+            unformat(
+                `<div class="o-paragraph">
+                    \ufeff
+                    <a href="https://test" class="btn btn-primary">
+                        \ufeffHello\ufeff[
+                            <span class="fa fa-glass" contenteditable="false">\u200b</span>
+                        ]\ufeffWorld\ufeff
+                    </a>
+                    \ufeff
+                </div>`
+            )
+        );
+        await expectElementCount(".o-we-linkpopover", 1);
+        await click(".o_we_edit_link");
+        await expectElementCount(".o_link_popover_container", 1);
     });
     test("link popover should close when clicking on a contenteditable false element", async () => {
         await setupEditor(
