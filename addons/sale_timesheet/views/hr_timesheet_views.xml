@@ -10,13 +10,10 @@
                     <field name="order_id" string="Sales Order" filter_domain="['|', ('so_line', 'ilike', self), ('order_id', 'ilike', self)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
-                    <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('billable_type', '=', '02_billable_fixed')]"
-                        groups="sales_team.group_sale_salesman"/>
-                    <filter name="billable_time" string="Billed on Timesheets" domain="[('billable_type', '=', '04_billable_time')]"
-                        groups="sales_team.group_sale_salesman"/>
-                    <filter name="billable_milestones" string="Billed on Milestones" domain="[('billable_type', '=', '06_billable_milestones')]"
-                        groups="sales_team.group_sale_salesman"/>
-                    <filter name="billable_manual" string="Billed Manually" domain="[('billable_type', '=', '08_billable_manual')]"
+                    <filter name="billable" string="Billable" domain="[
+                        ('billable_type', 'in', ['02_billable_fixed', '04_billable_time', '06_billable_milestones', '08_billable_manual']),
+                    ]"
+                        context="{'show_target_left': True}"
                         groups="sales_team.group_sale_salesman"/>
                     <filter name="non_billable" string="Non-Billable" domain="[('billable_type', '=', '09_non_billable')]"
                         groups="sales_team.group_sale_salesman"/>
