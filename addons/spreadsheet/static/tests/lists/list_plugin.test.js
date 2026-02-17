@@ -1043,6 +1043,10 @@ test("Can duplicate a list", async () => {
     const listIds = model.getters.getListIds();
     expect(model.getters.getListIds().length).toBe(2);
 
+    undo(model);
+    expect(model.getters.getListIds().length).toBe(1);
+    redo(model);
+
     const expectedDuplicatedDefinition = {
         ...model.getters.getListDefinition(listId),
         id: "2",
