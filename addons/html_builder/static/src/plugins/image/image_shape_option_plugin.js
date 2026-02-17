@@ -89,7 +89,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         },
         on_will_process_image_handlers: this.processImageWarmup.bind(this),
         on_image_processed_handlers: this.processImagePost.bind(this),
-        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
+        hover_effect_allowed_async_predicates: (el) => this.canHaveHoverEffect(el),
         image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
     };
     setup() {

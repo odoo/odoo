@@ -106,7 +106,7 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
-        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
+        hover_effect_allowed_async_predicates: (el) => this.canHaveHoverEffect(el),
         normalize_processors: this.migrateImages.bind(this),
     };
     setup() {

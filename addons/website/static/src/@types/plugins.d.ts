@@ -7,7 +7,7 @@ declare module "plugins" {
     import { ImageHoverShared } from "@website/builder/plugins/image/image_hover_plugin";
     import { AddElementOptionShared } from "@website/builder/plugins/layout_option/add_element_option_plugin";
     import { MenuDataShared } from "@website/builder/plugins/menu_data_plugin";
-    import { hover_effect_allowed_predicates } from "@website/builder/plugins/options/animate_option";
+    import { hover_effect_allowed_async_predicates } from "@website/builder/plugins/options/animate_option";
     import { AnimateOptionShared, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
     import { WebsiteBackgroundVideoShared } from "@website/builder/plugins/options/background_option_plugin";
     import { CardImageOptionShared } from "@website/builder/plugins/options/card_image_option_plugin";
@@ -83,7 +83,7 @@ declare module "plugins" {
         // Overrides
 
         // Predicates
-        hover_effect_allowed_predicates: hover_effect_allowed_predicates;
+        hover_effect_allowed_async_predicates: hover_effect_allowed_async_predicates;
 
         // Processors
         reorder_items_processors: reorder_items_processors;
