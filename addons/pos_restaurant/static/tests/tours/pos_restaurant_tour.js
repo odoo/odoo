@@ -19,7 +19,11 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { checkPreparationTicketData } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
-import { negateStep, assertCurrentOrderDirty } from "@point_of_sale/../tests/generic_helpers/utils";
+import {
+    negateStep,
+    assertCurrentOrderDirty,
+    refresh,
+} from "@point_of_sale/../tests/generic_helpers/utils";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
@@ -482,6 +486,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour({ title: "takeaway", hour: "12:00" }),
+            Chrome.presetTimingSlotIs("12:00"),
             checkPreparationTicketData([{ name: "Water", qty: 1 }], {
                 visibleInDom: ["Takeaway"],
                 invisibleInDom: ["colorIndex"],
@@ -670,6 +675,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             Dialog.confirm("apply"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour({ title: "takeaway", hour: "12:00" }),
+            Chrome.presetTimingSlotIs("12:00"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -701,6 +707,8 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             FloorScreen.clickTable("5"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour({ title: "takeaway", hour: "12:20" }),
+            Chrome.presetTimingSlotIs("12:20"),
+            Chrome.waitRequest(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.cancel({ title: "Existing orderlines" }),
@@ -713,6 +721,31 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             {
                 trigger: ".orders:contains(no orders found)",
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cancel_future_order", {
+    steps: () =>
+        [
+            Chrome.freezeDateTime(1739370000000),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            TextInputPopup.inputText("John"),
+            Dialog.confirm(),
+            Chrome.selectPresetTimingSlot("02/13/2025"),
+            Chrome.selectPresetTimingSlot("15:00"),
+            Chrome.presetTimingSlotIs("15:00"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickOrders(),
+            TicketScreen.deleteOrder("001"),
+            Dialog.confirm(),
+            refresh(),
+            negateStep(...TicketScreen.selectOrder("001")),
         ].flat(),
 });
 
@@ -1267,5 +1300,16 @@ registry.category("web_tour.tours").add("test_guest_count_bank_payment", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickBackToProductScreen(),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Close Register"),
+            Dialog.confirm("Close Register"),
+            Dialog.confirm("Cancel Orders", ".btn-secondary"),
         ].flat(),
 });

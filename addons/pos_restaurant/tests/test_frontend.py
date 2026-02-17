@@ -7,6 +7,7 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command
 import json
+from datetime import datetime, timedelta
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(TestPointOfSaleHttpCommon):
@@ -672,6 +673,38 @@ class TestFrontend(TestFrontendCommon):
         })
         self.start_pos_tour('test_guest_count_bank_payment')
 
+    def test_preset_future_timing_restaurant(self):
+        """
+        Test to set order preset future date inside a tour
+        """
+        self.preset_eat_in = self.env['pos.preset'].create({
+            'name': 'Eat in',
+        })
+        self.preset_takeaway = self.env['pos.preset'].create({
+            'name': 'Takeaway',
+            'identification': 'name',
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_eat_in.id,
+            'available_preset_ids': [(6, 0, [self.preset_takeaway.id])],
+        })
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Takeaway',
+            'attendance_ids': [(0, 0, {
+                'name': 'Takeaway',
+                'dayofweek': str(day),
+                'hour_from': 0,
+                'hour_to': 24,
+                'day_period': 'morning',
+            }) for day in range(0, 7)],
+        })
+        self.preset_takeaway.write({
+            'use_timing': True,
+            'resource_calendar_id': resource_calendar
+        })
+        self.start_pos_tour('test_cancel_future_order', login="pos_user")
+
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({
             'use_presets': True,
@@ -886,3 +919,57 @@ class TestFrontend(TestFrontendCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_name_preset_skip_screen')
+
+    def test_future_orders_are_not_cancelled(self):
+        """
+        This test ensures that a future order is not cancelled when the PoS session is closed.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        session = self.pos_config.current_session_id
+        product = self.env['product.product'].search([('available_in_pos', '=', True)], limit=1)
+
+        present_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 10.0,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': False,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+            })],
+            'amount_tax': 0.0,
+            'amount_total': 10.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'preset_time': datetime.now(),
+        })
+        future_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0002",
+                'product_id': product.id,
+                'price_unit': 10.0,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': False,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+            })],
+            'amount_tax': 0.0,
+            'amount_total': 10.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'preset_time': datetime.now() + timedelta(days=1),
+        })
+
+        self.start_pos_tour('test_futur_orders_are_not_cancelled')
+        self.pos_config.current_session_id.close_session_from_ui()
+        self.assertEqual(present_order.state, 'cancel')
+        self.assertEqual(future_order.state, 'draft')
+        self.assertEqual(future_order.session_id.id, False)
