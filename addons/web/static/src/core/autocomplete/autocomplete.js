@@ -112,7 +112,10 @@ export class AutoComplete extends Component {
         this.hotkeysToRemove = [];
 
         onWillUpdateProps((nextProps) => {
-            if (this.props.value !== nextProps.value || this.forceValFromProp) {
+            if (
+                (this.props.value !== nextProps.value && this.state.value !== nextProps.value) ||
+                this.forceValFromProp
+            ) {
                 this.forceValFromProp = false;
                 if (!this.inEdition) {
                     this.state.value = nextProps.value;
