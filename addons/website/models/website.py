@@ -2481,10 +2481,10 @@ class Website(models.CachedModel):
         street = (kwargs.get("street") or "").strip() or None
         street2 = (kwargs.get("street2") or "").strip() or None
         street_address = " ".join(filter(None, [street, street2])).strip() or None
-        city = (kwargs.get("city") or "").strip() or None
         zip_code = (kwargs.get("zip") or "").strip() or None
-        state = (kwargs.get("state_code") or "").strip() or None
-        country = (kwargs.get("country_code") or "").strip() or None
+        city = kwargs.get("city")
+        state = kwargs.get("state_code")
+        country = kwargs.get("country_code")
 
         if not any([street, street2, city, zip_code, state, country]):
             return None

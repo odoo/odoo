@@ -4,7 +4,7 @@
 
 <template id="event_details" name="Event Header">
     <t t-set="head">
-        <script type="application/ld+json" t-out="event_json_ld"/>
+        <script t-if="event_json_ld" type="application/ld+json" t-out="event_json_ld"/>
     </t>
     <t t-call="website_event.layout" head="head">
         <!-- Remove this in cleanup to something like this because it's already there inside event_json_ld -->
@@ -121,6 +121,7 @@
                                 <h6 class="o_wevent_sidebar_title">Location</h6>
                             </div>
                             <div itemprop="name" class="mb-1" t-field="event.address_id"/>
+                            <!-- TODO remove microdata from here -->
                             <small class="d-block mb-2" t-field="event.address_id" t-options='{
                                 "widget": "contact",
                                 "fields": ["address"],

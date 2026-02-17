@@ -193,7 +193,7 @@ class ProductProduct(models.Model):
             price=price,
             price_currency=website.currency_id.name,
         )
-        seller = SchemaBuilder.create_id_reference("OnlineStore", f"{base_url}/#onlinestore")
+        seller = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
 
         if seller:
             offer.add_nested(seller=seller)

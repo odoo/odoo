@@ -302,12 +302,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website': 1,
                     # layout
                     'ir_ui_view': 1,
-                    # # for schema generation
-                    # 'res_partner': 1,
-                    # 'res_company': 1,
                 }
                 expected_query_count = 6
-                # expected_query_count = 8
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {

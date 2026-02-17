@@ -1066,7 +1066,7 @@ class ProductTemplate(models.Model):
                 description=self.description_sale,
                 product_group_id=product_group_id,
             )
-            brand_obj = SchemaBuilder.create_id_reference("OnlineStore", f"{base_url}/#onlinestore")
+            brand_obj = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
             if brand_obj:
                 product_group.add_nested(brand=brand_obj)
 

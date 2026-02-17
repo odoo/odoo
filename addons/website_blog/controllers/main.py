@@ -218,7 +218,7 @@ class WebsiteBlog(http.Controller):
     def _get_blog_breadcrumb_structured_data(self, website, blog=None):
         base_url = website.get_base_url()
         items = [
-            (website.name or base_url, base_url),
+            (website.name, base_url),
             (_("Blog"), f"{base_url}/blog"),
         ]
         if blog:

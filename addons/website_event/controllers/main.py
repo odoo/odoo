@@ -205,7 +205,7 @@ class WebsiteEventController(http.Controller):
             item_list_elements.append(item_list_element)
         item_list.add_nested(item_list_element=item_list_elements)
 
-        values['event_json_ld'] = SchemaBuilder.render_json(item_list)
+        values['event_list_json_ld'] = SchemaBuilder.render_json(item_list)
         return request.render("website_event.index", values)
 
     # ------------------------------------------------------------

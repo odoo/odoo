@@ -150,9 +150,9 @@ class BlogBlog(models.Model):
             url=f"{base_url}/blog/{slug}",
             description=description,
         )
-        image = SchemaBuilder("ImageObject", url=self._get_background_url(website))
+        image = self._get_background_url(website)
         if image:
-            blog_sd.add_nested(image=image)
+            blog_sd.add_nested(image=SchemaBuilder("ImageObject", url=image))
         return blog_sd
 
 
@@ -198,18 +198,17 @@ class BlogPost(models.Model):
 
     def _to_breadcrumb_structured_data(self, website=None):
         self.ensure_one()
-        items = [
-            (website.name or website.get_base_url(), website.get_base_url()),
-        ]
+        base_url = website.get_base_url()
+        items = [(website.name, base_url)]
         # Add blog breadcrumb only if blog exists
         if self.blog_id:
             items.append((
                 self.blog_id.name,
-                f"{website.get_base_url()}/blog/{self.env['ir.http']._slug(self.blog_id)}",
+                f"{base_url}/blog/{self.env['ir.http']._slug(self.blog_id)}",
             ))
         items.append((
             self.name,
-            f"{website.get_base_url()}{self.website_url}",
+            f"{base_url}{self.website_url}",
         ))
         return create_breadcrumbs(items)
 
@@ -231,9 +230,9 @@ class BlogPost(models.Model):
             )
 
             content_text = text_from_html(post.content, True) if post.content else None
-            article_body = truncate_text(content_text, 300)
+            article_body = truncate_text(content_text, 300) if content_text else None
             word_count = len(content_text.split()) if content_text else None
-
+            lang = website.default_lang_id
             blog_post = SchemaBuilder(
                 "BlogPosting",
                 headline=post.name,
@@ -244,12 +243,7 @@ class BlogPost(models.Model):
                 date_modified=SchemaBuilder.datetime(post.write_date),
                 keywords=", ".join(post.tag_ids.mapped("name")) if post.tag_ids else None,
                 article_section=post.blog_id.name if post.blog_id else None,
-                in_language=(
-                    (post.website_id.default_lang_id.code if post.website_id else website.default_lang_id.code)
-                    .replace("_", "-")
-                    if website.default_lang_id
-                    else None
-                ),
+                in_language=lang.code.replace("_", "-") if lang else None,
                 word_count=word_count,
             )
 
