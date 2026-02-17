@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import fields, models
 from odoo.tools import SQL
 
 python_to_sql_types = {
@@ -32,10 +32,6 @@ class HrLeaveEmployeeReport(models.Model):
         ('cancel', 'Cancelled'),
     ])
     color = fields.Integer(string="Color", related='holiday_status_id.color')
-
-    def init(self):
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute(SQL("""CREATE or REPLACE VIEW %s as (%s)""", SQL.identifier(self._table), self._table_query))
 
     @property
     def _table_query(self):
