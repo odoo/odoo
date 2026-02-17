@@ -1524,7 +1524,7 @@ class SaleOrderLine(models.Model):
 
     def _expected_date(self):
         self.ensure_one()
-        if self.state == 'sale' and self.order_id.date_order:
+        if self.state in ('sale', 'cancel') and self.order_id.date_order:
             order_date = self.order_id.date_order
         else:
             order_date = fields.Datetime.now()

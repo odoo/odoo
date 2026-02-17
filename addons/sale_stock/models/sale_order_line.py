@@ -369,12 +369,15 @@ class SaleOrderLine(models.Model):
             return True
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         procurements = []
+        is_so_cancelled = any(line.state == 'cancel' for line in self)
         for line in self:
             line = line.with_company(line.company_id)
-            if line.state != 'sale' or line.order_id.locked or line.product_id.type != 'consu':
+            # Locked SO cancellation is allowed via mass cancellation and through Shopee or Amazon connectors.
+            if line.product_id.type != 'consu' or not is_so_cancelled and (line.state != 'sale' or line.order_id.locked):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) == 0:
+            qty_demanded = line.qty_delivered if is_so_cancelled else line.product_uom_qty
+            if float_compare(qty, qty_demanded, precision_digits=precision) == 0:
                 continue
 
             references = line.order_id.stock_reference_ids
@@ -382,7 +385,7 @@ class SaleOrderLine(models.Model):
                 self.env['stock.reference'].create(line._prepare_reference_vals())
 
             values = line._prepare_procurement_values()
-            product_qty = line.product_uom_qty - qty
+            product_qty = qty_demanded - qty
 
             line_uom = line.product_uom_id
             quant_uom = line.product_id.uom_id
