@@ -151,6 +151,7 @@ class Manager(Thread):
         helpers.download_iot_handlers()
 
         # Set scheduled actions
+        last_check_time = time.time()
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
         schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
@@ -169,6 +170,14 @@ class Manager(Thread):
                 if system.IS_RPI and system.get_ip() != '10.11.12.1':
                     wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
                 time.sleep(3)
+
+                current_time = time.time()
+                if abs(current_time - last_check_time) > 600:
+                    # The system clock was abruptly changed (e.g., NTP sync just happened).
+                    _logger.warning("System clock was abruptly changed, resetting scheduled jobs to avoid misfires")
+                    for job in schedule.get_jobs():
+                        job._schedule_next_run()  # reset the next execution time
+                last_check_time = current_time
                 schedule.run_pending()
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
