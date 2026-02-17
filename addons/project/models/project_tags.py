@@ -100,6 +100,8 @@ class ProjectTags(models.Model):
                     JOIN project_task_user_rel AS user_rel
                         ON user_rel.task_id = task.id
                         AND user_rel.user_id = %(user_id)s
+                        AND task.active = TRUE
+                        AND task.project_id IS NULL
                     ORDER BY task.id DESC
                     LIMIT 1000
                 ) AS project_tasks_tags
