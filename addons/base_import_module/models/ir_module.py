@@ -41,6 +41,12 @@ class IrModuleModule(models.Model):
         ('official', 'Official Apps'),
         ('industries', 'Industries'),
     ], default='official')
+    total_lines_of_code = fields.Integer(
+        string="Extra lines of Code",
+        store=False,  # info is retrieved from the appstore in web_read
+        help="Number of lines of code that may be billed under an Enterprise subscription."
+            " For exact pricing details, please contact your account manager or visit odoo.com/pricing.",
+    )
 
     @api.model
     @ormcache(cache='stable')
