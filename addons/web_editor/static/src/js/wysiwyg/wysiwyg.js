@@ -3621,8 +3621,8 @@ export class Wysiwyg extends Component {
             let src = attachment.image_src;
             if (!attachment.public) {
                 let accessToken = attachment.access_token;
-                if (!accessToken) {
-                    [accessToken] = await this.orm.call(
+                if (!accessToken && this.env?.model?.orm) {
+                    [accessToken] = await this.env.model.orm.call(
                         'ir.attachment',
                         'generate_access_token',
                         [attachment.id],
@@ -3754,7 +3754,10 @@ export class Wysiwyg extends Component {
                 ...params.kwargs.context,
             };
         }
-        return this.rpc(route, params, {
+        if (!this.env?.model?.rpc) {
+            return;
+        }
+        return this.env.model.rpc(route, params, {
             silent: settings.shadow,
             xhr: settings.xhr,
         });

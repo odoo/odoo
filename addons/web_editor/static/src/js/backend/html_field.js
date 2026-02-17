@@ -417,9 +417,7 @@ export class HtmlField extends Component {
                 }
                 this.wysiwyg.odooEditor.observerActive('commitChanges');
             }
-            if (status(this) !== 'destroyed') {
-                await this.updateValue();
-            }
+            await this.updateValue();
             if (this.isCurrentlySaving) {
                 this.isCurrentlySaving.resolve();
             }
