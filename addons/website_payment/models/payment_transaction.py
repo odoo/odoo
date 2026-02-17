@@ -3,6 +3,7 @@
 from markupsafe import Markup
 
 from odoo import _, fields, models
+from odoo.http import request
 
 
 class PaymentTransaction(models.Model):
@@ -22,6 +23,10 @@ class PaymentTransaction(models.Model):
                     if hasattr(value, 'name'):
                         value = value.name
                     msg.append(Markup('<br/>- %s: %s') % (field_name, value))
+            # To be removed in the forward port, as starting from version 19.2
+            # it is handled through a custom field in the donation form.
+            if request.session.get('donation_comment'):
+                msg.append(Markup('<br/>- Donation Comment: %s') % (request.session.pop('donation_comment')))
             donation_tx.payment_id._message_log(body=Markup().join(msg))
 
     def _send_donation_email(self, is_internal_notification=False, comment=None, recipient_email=None):
