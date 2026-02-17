@@ -53,8 +53,8 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message[data-persistent] [title='Add Star']:not(:visible)",
-            content: _t("Hover on your message and add a star"),
+            trigger: ".o-mail-Message[data-persistent] [title='Bookmark']:not(:visible)",
+            content: _t("Hover on your message to bookmark it"),
             tooltipPosition: "top",
             async run(helpers) {
                 await delay(1000);
@@ -62,9 +62,9 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             },
         },
         {
-            trigger: "button[data-mailbox-id='starred']",
+            trigger: "button[data-mailbox-id='bookmark']",
             content: _t(
-                "Once a message has been starred, you can come back and review it at any time here."
+                "Once a message has been bookmarked, you can come back and review it at any time here."
             ),
             tooltipPosition: "bottom",
             run: "click",

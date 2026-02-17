@@ -28,8 +28,8 @@ patch(Store.prototype, {
                     threads = threads.filter((thread) =>
                         this.tabToThreadType("mailbox").includes(thread.channel?.channel_type)
                     );
-                } else if (tab === "starred") {
-                    threads = [this.starred];
+                } else if (tab === "bookmark") {
+                    threads = [this.bookmarkBox];
                 } else if (tab !== "notification") {
                     threads = threads.filter((thread) =>
                         this.tabToThreadType(tab).includes(thread.channel?.channel_type)

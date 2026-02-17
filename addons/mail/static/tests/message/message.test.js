@@ -11,6 +11,7 @@ import {
     focus,
     hover,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -19,6 +20,7 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
@@ -36,7 +38,6 @@ import {
     contains as webContains,
     Command,
     mockService,
-    onRpc,
     patchWithCleanup,
     serverState,
     withUser,
@@ -1124,7 +1125,7 @@ test("open author avatar card", async () => {
     await contains(".o_card_user_infos > a:text('+5646548')");
 });
 
-test("toggle_star message", async () => {
+test("add and remove bookmark from message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -1132,29 +1133,28 @@ test("toggle_star message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    onRpc("mail.message", "toggle_message_starred", ({ args }) => {
-        expect.step("rpc:toggle_message_starred");
-        expect(args[0][0]).toBe(messageId);
+    listenStoreFetch(["add_bookmark", "remove_bookmark"], {
+        logParams: ["add_bookmark", "remove_bookmark"],
     });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Add Star']");
-    await contains(".o-mail-Message [title='Add Star']" + " i.fa-star-o");
-    await contains("button:has(:text('Starred messages'))", { contains: [".badge", { count: 0 }] });
-    await click(".o-mail-Message [title='Add Star']");
-    await contains("button:has(:text('Starred messages'))", { contains: [".badge:text('1')"] });
-    await expect.waitForSteps(["rpc:toggle_message_starred"]);
+    await contains(".o-mail-Message [title='Bookmark']");
+    await contains(".o-mail-Message [title='Bookmark']" + " i.fa-bookmark-o");
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
+    await click(".o-mail-Message [title='Bookmark']");
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
+    await waitStoreFetch([["add_bookmark", { message_id: messageId }]]);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Remove Star']" + " i.fa-star");
-    await click(".o-mail-Message [title='Remove Star']");
-    await contains("button:has(:text('Starred messages'))", { contains: [".badge", { count: 0 }] });
-    await expect.waitForSteps(["rpc:toggle_message_starred"]);
+    await contains(".o-mail-Message [title='Remove from bookmarks']" + " i.fa-bookmark");
+    await click(".o-mail-Message [title='Remove from bookmarks']");
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
+    await waitStoreFetch([["remove_bookmark", { message_id: messageId }]]);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Add Star']" + " i.fa-star-o");
+    await contains(".o-mail-Message [title='Bookmark']" + " i.fa-bookmark-o");
 });
 
-test("can star a persistent message without thread", async () => {
+test("can bookmark a persistent message without thread", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Test",
@@ -1169,9 +1169,9 @@ test("can star a persistent message without thread", async () => {
     });
     await start();
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message:not([data-starred]):has(:text('Test'))");
-    await click(".o-mail-Message:has(:text('Test')) [title='Add Star']");
-    await contains(".o-mail-Message[data-starred]:has(:text('Test'))");
+    await contains(".o-mail-Message:not([data-bookmarked]):has(:text('Test'))");
+    await click(".o-mail-Message:has(:text('Test')) [title='Bookmark']");
+    await contains(".o-mail-Message[data-bookmarked]:has(:text('Test'))");
 });
 
 test("Name of message author is only displayed in chat window for partners others than the current user", async () => {
@@ -1494,7 +1494,7 @@ test("prevent attachment delete on non-authored message in channels", async () =
     await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
 });
 
-test("Toggle star should update starred counter on all tabs", async () => {
+test("Toggle bookmark should update bookmark counter on all tabs", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1511,8 +1511,8 @@ test("Toggle star should update starred counter on all tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(`${env1.selector} .o-mail-Message [title='Add Star']`);
-    await contains(`${env2.selector} button:has(:text('Starred messages'))`, {
+    await click(`${env1.selector} .o-mail-Message [title='Bookmark']`);
+    await contains(`${env2.selector} button:has(:text('Bookmarks'))`, {
         contains: [".badge:text('1')"],
     });
 });
@@ -2247,7 +2247,7 @@ test("deleted message should not have translate feature", async () => {
     await click(".modal button:contains('Delete')");
     await contains(".o-mail-Message:contains('This message has been removed')");
     await contains(".o-mail-Message [title='Add a Reaction']");
-    await contains(".o-mail-Message [title='Add Star']");
+    await contains(".o-mail-Message [title='Bookmark']");
     await contains(".o-mail-Message [title*='Translate']", { count: 0 });
     await animationFrame(); // in case some extra rendering for expand
     if (queryFirst(".o-mail-Message [title='Expand']")) {

@@ -26,7 +26,7 @@
         </t>
         <t t-elif="props.thread.model === 'mail.box'">
             <div t-if="props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att="attr"/>
-            <div t-elif="props.thread.id === 'starred'" class="fa fa-fw fa-star-o" t-att="attr"/>
+            <div t-elif="props.thread.id === 'bookmark'" class="fa fa-fw fa-bookmark-o" t-att="attr"/>
             <div t-elif="props.thread.id === 'history'" class="fa fa-fw fa-history" t-att="attr"/>
         </t>
     </t>

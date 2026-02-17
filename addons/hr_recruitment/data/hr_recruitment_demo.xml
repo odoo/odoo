@@ -750,9 +750,6 @@
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
     </record>
-    <function model="mail.message" name="toggle_message_starred"
-            eval="[ref('msg_case18_aplicant')]"
-    />
     <record id="msg_case_salesman0_aplicant" model="mail.message">
         <field name="subject">Refuse Application</field>
         <field name="model">hr.applicant</field>

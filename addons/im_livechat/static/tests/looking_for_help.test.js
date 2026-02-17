@@ -66,7 +66,7 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
     await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
-    await click(".o-mail-Mailbox[data-mailbox-id=starred");
+    await click(".o-mail-Mailbox[data-mailbox-id=bookmark]");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
     await waitForChannels([`discuss.channel_${bobChannelId}`], { operation: "delete" });
 });

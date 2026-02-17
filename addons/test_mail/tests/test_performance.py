@@ -1469,7 +1469,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                     }),
                 ],
                 'res_id': record.id,
-                'starred_partner_ids': [
+                'bookmarked_partner_ids': [
                     (4, cls.partners[(record_idx * 5) + msg_idx].id),
                     (4, cls.partners[(record_idx * 5) + (msg_idx * 2) + 1].id),
                 ],
@@ -1632,7 +1632,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                         "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
                                         "res_id": record.id,
                                         "scheduledDatetime": False,
-                                        "starred": False,
+                                        "is_bookmarked": False,
                                         "subject": False,
                                         "subtype_id": self.env.ref("mail.mt_comment").id,
                                         "thread": {"id": record.id, "model": "mail.test.simple"},
@@ -1746,7 +1746,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                         "res_id": record.id,
                                         "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
                                         "scheduledDatetime": False,
-                                        "starred": False,
+                                        "is_bookmarked": False,
                                         "subject": False,
                                         "subtype_id": self.env.ref("mail.mt_comment").id,
                                         "thread": {"id": record.id, "model": "mail.test.simple"},

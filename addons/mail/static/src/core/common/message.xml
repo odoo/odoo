@@ -5,7 +5,7 @@
         <ActionSwiper onRightSwipe="onRightSwipe">
             <t t-set="dummy" t-value="computeActions()"/>
             <div class="o-mail-Message position-relative rounded-0 bg-inherit"
-                t-att-data-starred="message.starred"
+                t-att-data-bookmarked="message.is_bookmarked"
                 t-att-data-persistent="message.persistent"
                 t-att-class="attClass"
                 role="group"
@@ -26,14 +26,14 @@
                             <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">
                                 <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                             </div>
-                            <t t-if="message.starred" t-call="mail.Message.sidebarStarred"/>
+                            <t t-if="message.is_bookmarked and !(props.thread?.eq(this.store.bookmarkBox))" t-call="mail.Message.sidebarBookmark"/>
                         </t>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
                             <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeMedium">
                                 <t t-esc="message.dateSimple"/>
                             </small>
-                            <t t-elif="message.starred" t-call="mail.Message.sidebarStarred"/>
+                            <t t-elif="message.is_bookmarked  and !(props.thread?.eq(this.store.bookmarkBox))" t-call="mail.Message.sidebarBookmark"/>
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
@@ -224,9 +224,9 @@
     <i t-att-class="icon"/>
 </t>
 
-<t t-name="mail.Message.sidebarStarred">
-    <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': isAlignedRight, 'align-self-end me-1': !isAlignedRight, 'mt-2': props.squashed, 'mt-1': !props.squashed }" title="Starred message">
-        <i class="fa fa-star o-mail-starred"/>
+<t t-name="mail.Message.sidebarBookmark">
+    <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': isAlignedRight, 'align-self-end me-1': !isAlignedRight, 'mt-2': props.squashed, 'mt-1': !props.squashed }" title="Bookmark">
+        <i class="fa fa-bookmark o-mail-favorite"/>
     </small>
 </t>
 

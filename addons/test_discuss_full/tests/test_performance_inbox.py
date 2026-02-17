@@ -34,7 +34,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       2 thread:
         #           - fetch slide_channel
         #           - fetch product_template
-        #       - search mail_message_res_partner_starred_rel (_compute_starred)
+        #       - search mail_message_res_partner_bookmarked_rel (_compute_is_bookmarked)
         #       - search message_attachment_rel
         #       - search mail_link_preview
         #       - search mail_message_reaction

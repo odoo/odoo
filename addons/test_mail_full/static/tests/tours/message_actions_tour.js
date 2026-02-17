@@ -1,14 +1,14 @@
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("star_message_tour", {
+registry.category("web_tour.tours").add("bookmark_message_tour", {
     steps: () => [
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Message:not([data-starred]):contains(Test Message)",
-            run: "hover && click #chatterRoot:shadow [title='Add Star']",
+                "#chatterRoot:shadow .o-mail-Message:not([data-bookmarked]):contains(Test Message)",
+            run: "hover && click #chatterRoot:shadow [title='Bookmark']",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message[data-starred]:contains(Test Message)",
+            trigger: "#chatterRoot:shadow .o-mail-Message[data-bookmarked]:contains(Test Message)",
         },
     ],
 });

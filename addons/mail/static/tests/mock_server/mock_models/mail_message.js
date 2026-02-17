@@ -1,13 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import {
-    Command,
-    fields,
-    getKwArgs,
-    makeKwArgs,
-    models,
-    serverState,
-} from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
@@ -166,7 +159,9 @@ export class MailMessage extends models.ServerModel {
                             ["res_partner_id", "=", this.env.user.partner_id],
                         ]).length
                 );
-                data["starred"] = message.starred_partner_ids?.includes(this.env.user?.partner_id);
+                data["is_bookmarked"] = message.bookmarked_partner_ids?.includes(
+                    this.env.user?.partner_id
+                );
                 const trackingValues = MailTrackingValue.browse(message.tracking_value_ids);
                 const formattedTrackingValues =
                     MailTrackingValue._tracking_value_format(trackingValues);
@@ -345,52 +340,6 @@ export class MailMessage extends models.ServerModel {
             });
         }
         return super.unlink(...arguments);
-    }
-
-    /** @param {number[]} ids */
-    toggle_message_starred(ids) {
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const messages = this.browse(ids);
-        const store = new mailDataHelpers.Store();
-        for (const message of messages) {
-            const wasStarred = message.starred_partner_ids.includes(this.env.user.partner_id);
-            this.write([message.id], {
-                starred_partner_ids: [
-                    wasStarred
-                        ? Command.unlink(this.env.user.partner_id)
-                        : Command.link(this.env.user.partner_id),
-                ],
-            });
-            const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "mail.message/toggle_star", {
-                message_ids: [message.id],
-                starred: !wasStarred,
-            });
-            store.add(this.browse(message.id), { starred: !wasStarred });
-        }
-        return store.get_result();
-    }
-
-    unstar_all() {
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const messages = this._filter([["starred_partner_ids", "in", this.env.user.partner_id]]);
-        this.write(
-            messages.map((message) => message.id),
-            { starred_partner_ids: [Command.unlink(this.env.user.partner_id)] }
-        );
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.message/toggle_star", {
-            message_ids: messages.map((message) => message.id),
-            starred: false,
-        });
     }
 
     /** @param {number} id */

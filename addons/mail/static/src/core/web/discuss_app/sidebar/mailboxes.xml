@@ -4,7 +4,7 @@
     <t t-name="mail.DiscussSidebarMailboxes">
         <div class="d-flex flex-column flex-grow-0 o-gap-0_5 bg-inherit">
             <Mailbox t-if="store.self_user?.notification_type === 'inbox'" mailbox="store.inbox"/>
-            <Mailbox mailbox="store.starred"/>
+            <Mailbox mailbox="store.bookmarkBox"/>
             <Mailbox t-if="store.self_user?.notification_type === 'inbox'" mailbox="store.history"/>
         </div>
     </t>
@@ -44,7 +44,7 @@
             <t t-if="mailbox.counter > 0" t-call="mail.discuss_badge">
                 <t t-set="counter" t-value="mailbox.counter"/>
                 <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge ' + (store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'mx-1')"/>
-                <t t-set="counterClass" t-value="(mailbox.id === 'starred' ? 'o-muted' : '')"/>
+                <t t-set="counterClass" t-value="(mailbox.id === 'bookmark' ? 'o-muted' : '')"/>
                 <t t-set="floating" t-value="store.discuss.isSidebarCompact"/>
             </t>
         </button>

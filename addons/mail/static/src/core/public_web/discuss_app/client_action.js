@@ -51,6 +51,10 @@ export class DiscussClientAction extends Component {
         }
         const [model, id] = rawActiveId.split("_");
         if (model === "mail.box") {
+            if (id === "starred") {
+                // legacy value to be kept forever to avoid breaking links
+                return ["mail.box", "bookmark"];
+            }
             return ["mail.box", id];
         }
         return [model, parseInt(id)];

@@ -110,7 +110,7 @@ test("Search should be hightlighted", async () => {
 });
 
 test.tags("desktop");
-test("Search a starred message", async () => {
+test("Search a bookmark", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -120,10 +120,10 @@ test("Search a starred message", async () => {
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
-        starred_partner_ids: [serverState.partnerId],
+        bookmarked_partner_ids: [serverState.partnerId],
     });
     await start();
-    await openDiscuss("mail.box_starred");
+    await openDiscuss("mail.box_bookmark");
     await contains(".o-mail-Message");
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");

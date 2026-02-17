@@ -36,6 +36,10 @@ export class Store extends BaseStore {
 
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
+
+    bookmarkBox = fields.One("mail.thread");
+    history = fields.One("mail.thread");
+    inbox = fields.One("mail.thread");
     isReady = new Deferred();
     self_guest = fields.One("mail.guest");
     self_user = fields.One("res.users");

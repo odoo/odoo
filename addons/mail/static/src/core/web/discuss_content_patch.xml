@@ -17,7 +17,7 @@
                 <t t-set="mailbox" t-value="store.inbox"/>
             </t>
             <t t-call="mail.MobileMailbox">
-                <t t-set="mailbox" t-value="store.starred"/>
+                <t t-set="mailbox" t-value="store.bookmarkBox"/>
             </t>
             <t t-call="mail.MobileMailbox">
                 <t t-set="mailbox" t-value="store.history"/>

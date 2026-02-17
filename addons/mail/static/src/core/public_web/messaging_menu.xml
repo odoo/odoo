@@ -8,7 +8,7 @@
 <t t-name="mail.MessagingMenu.content">
     <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
         <t name="before-content"/>
-        <DiscussContent t-if="['inbox', 'starred'].includes(store.discuss.activeTab) and ui.isSmall"/>
+        <DiscussContent t-if="['inbox', 'bookmark'].includes(store.discuss.activeTab) and ui.isSmall"/>
         <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
             <t t-set="itemIndex" t-value="0"/>
             <t t-foreach="visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="message.id">
@@ -83,7 +83,7 @@
         }" t-on-click="() => this.onClickNavTab(tab.id)" t-att-aria-label="tab.label">
             <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ store.discuss.activeTab === tab.id and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5" />
             <span class="o-xsmaller" t-esc="tab.label" />
-            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-starred': tab.id === 'starred' }" t-esc="tab.counter"/>
+            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-bookmark': tab.id === 'bookmark' }" t-esc="tab.counter"/>
             <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
         </button>
     </nav>

@@ -65,13 +65,13 @@ class MailMessage(models.Model):
             'body',
             'date',
             'id',
+            'is_bookmarked',
             'is_internal',
             'is_message_subtype_note',
             'message_type',
             'model',
             'published_date_str',
             'res_id',
-            'starred',
             'subtype_id',
         }
 

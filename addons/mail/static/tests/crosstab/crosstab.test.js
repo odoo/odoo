@@ -178,14 +178,14 @@ test("Message (hard) delete notification", async () => {
     });
     await start();
     await openDiscuss("mail.box_inbox");
-    await click("[title='Add Star']");
+    await click("[title='Bookmark']");
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
-    await contains("button:has(:text('Starred messages'))", { contains: [".badge:text('1')"] });
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:has(:text('Inbox'))", { contains: [".badge", { count: 0 }] });
-    await contains("button:has(:text('Starred messages'))", { contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
 });

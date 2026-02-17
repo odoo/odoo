@@ -808,15 +808,15 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(mentions_notif), 1, "mute + mentions + mention message = needaction")
         self.assertEqual(len(nothing_notif), 1, "mute + nothing + mention message = needaction")
 
-    def test_mail_message_starred_group(self):
-        """ Test starred message computation for a group. A starred
+    def test_mail_message_bookmark_group(self):
+        """ Test bookmarked message computation for a group. A bookmarked
         message in a group should be considered only if:
             - It's our message
             - OR we have access to the channel
         """
         self.authenticate(self.user_employee.login, self.user_employee.login)
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
-        self.assertEqual(data["Store"]["starred"]["counter"], 0)
+        self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 0)
         test_group = self.env['discuss.channel'].create({
             'name': 'Private Channel',
             'channel_type': 'group',
@@ -824,18 +824,18 @@ class TestChannelInternals(MailCommon, HttpCase):
         })
 
         test_group_own_message = test_group.with_user(self.user_employee.id).message_post(body='TestingMessage')
-        test_group_own_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        test_group_own_message.write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
-        self.assertEqual(data["Store"]["starred"]["counter"], 1)
+        self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 1)
 
         test_group_message = test_group.message_post(body='TestingMessage')
-        test_group_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        test_group_message.write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
-        self.assertEqual(data["Store"]["starred"]["counter"], 2)
+        self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 2)
 
         test_group.write({'channel_partner_ids': False})
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
-        self.assertEqual(data["Store"]["starred"]["counter"], 1)
+        self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 1)
 
     def test_multi_company_chat(self):
         self.assertEqual(self.env.user.company_id, self.company_admin)

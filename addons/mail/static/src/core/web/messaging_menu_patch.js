@@ -104,17 +104,17 @@ patch(MessagingMenu.prototype, {
                 counter:
                     this.store.self_user?.notification_type === "inbox"
                         ? this.store.inbox.counter
-                        : this.store.starred.counter,
+                        : this.store.bookmarkBox.counter,
                 icon:
                     this.store.self_user?.notification_type === "inbox"
                         ? "fa fa-inbox"
-                        : "fa fa-star-o",
-                activeIcon: this.store.self_user?.notification_type !== "inbox" && "fa fa-star",
-                id: this.store.self_user?.notification_type === "inbox" ? "inbox" : "starred",
+                        : "fa fa-bookmark-o",
+                activeIcon: this.store.self_user?.notification_type !== "inbox" && "fa fa-bookmark",
+                id: this.store.self_user?.notification_type === "inbox" ? "inbox" : "bookmark",
                 label:
                     this.store.self_user?.notification_type === "inbox"
                         ? _t("Inbox")
-                        : _t("Starred"),
+                        : _t("Bookmarks"),
                 sequence: 100,
             },
             ...super._tabs,

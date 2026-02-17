@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests import common
-from odoo.tests import new_test_user, tagged, users
+from odoo.tests import HttpCase, new_test_user, tagged, users
 
 
 @tagged("mail_message")
-class TestMailMessage(common.MailCommon):
+class TestMailMessage(common.MailCommon, HttpCase):
     @users("employee")
     def test_can_star_message_without_write_access(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
         message = self.env["mail.message"].sudo().create({
             "author_id": self.partner_admin.id,
             "model": "res.partner",
@@ -17,10 +18,12 @@ class TestMailMessage(common.MailCommon):
         message = message.sudo(False)
         self.env.user.group_ids -= self.env.ref("base.group_partner_manager")
         self.assertFalse(message.has_access("write"))
-        message.toggle_message_starred()
-        self.assertIn(self.env.user.partner_id, message.starred_partner_ids)
-        self.env["mail.message"].unstar_all()
-        self.assertNotIn(self.env.user.partner_id, message.starred_partner_ids)
+        self.make_jsonrpc_request(
+            "/mail/action", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
+        )
+        self.assertIn(self.env.user.partner_id, message.bookmarked_partner_ids)
+        self.make_jsonrpc_request("/mail/action", {"fetch_params": ["remove_all_bookmarks"]})
+        self.assertNotIn(self.env.user.partner_id, message.bookmarked_partner_ids)
 
     def test_mail_message_inexisting_access(self):
         user = new_test_user(self.env, login="Bob", email="bob@test.com")

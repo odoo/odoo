@@ -225,12 +225,15 @@ class MailMessage(models.Model):
         'mail.notification', 'mail_message_id', 'Notifications',
         bypass_search_access=True, copy=False, depends=['notified_partner_ids'])
     # user interface
-    starred_partner_ids = fields.Many2many(
-        'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
+    bookmarked_partner_ids = fields.Many2many(
+        'res.partner', 'mail_message_res_partner_bookmarked_rel', string='Bookmarked By')
     pinned_at = fields.Datetime('Pinned', help='Datetime at which the message has been pinned')
-    starred = fields.Boolean(
-        'Starred', compute='_compute_starred', search='_search_starred', compute_sudo=False,
-        help='Current user has a starred notification linked to this message')
+    is_bookmarked = fields.Boolean(
+        "Bookmarked",
+        compute="_compute_is_bookmarked",
+        search="_search_is_bookmarked",
+        help="Current user has bookmarked this message",
+    )
     # tracking
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
@@ -353,20 +356,24 @@ class MailMessage(models.Model):
             return NotImplemented
         return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
 
-    @api.depends('starred_partner_ids')
-    @api.depends_context('uid')
-    def _compute_starred(self):
-        """ Compute if the message is starred by the current user. """
+    @api.depends("bookmarked_partner_ids")
+    @api.depends_context("uid")
+    def _compute_is_bookmarked(self):
+        """ Compute if the message is bookmarked by the current user. """
         # TDE FIXME: use SQL
-        starred = self.sudo().filtered(lambda msg: self.env.user.partner_id in msg.starred_partner_ids)
-        for message in self:
-            message.starred = message in starred
+        bookmarked = (
+            self.sudo()
+            .filtered(lambda msg: self.env.user.partner_id in msg.bookmarked_partner_ids)
+            .sudo(False)
+        )
+        bookmarked.is_bookmarked = True
+        (self - bookmarked).is_bookmarked = False
 
     @api.model
-    def _search_starred(self, operator, operand):
+    def _search_is_bookmarked(self, operator, operand):
         if operator != 'in':
             return NotImplemented
-        return [('starred_partner_ids', 'in', self.env.user.partner_id.ids)]
+        return [('bookmarked_partner_ids', 'in', self.env.user.partner_id.ids)]
 
     @api.depends('started_poll_ids', 'ended_poll_ids')
     def _compute_has_poll(self):
@@ -904,34 +911,6 @@ class MailMessage(models.Model):
         )
 
     @api.model
-    def unstar_all(self):
-        """ Unstar messages for the current partner. """
-        starred_messages = self.search([("starred_partner_ids", "in", self.env.user.partner_id.id)])
-        # sudo: mail.message - a user can unstar messages they can read
-        starred_messages.sudo().starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
-        self.env.user._bus_send(
-            "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
-        )
-
-    def toggle_message_starred(self):
-        """ Toggle messages as (un)starred. Technically, the notifications related
-            to uid are set to (un)starred.
-        """
-        self.ensure_one()
-        self.check_access('read')
-        starred = not self.starred
-        if starred:
-            # sudo: mail.message - a user can star a message they can read
-            self.sudo().starred_partner_ids = [Command.link(self.env.user.partner_id.id)]
-        else:
-            # sudo: mail.message - a user can unstar a message they can read
-            self.sudo().starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
-        self.env.user._bus_send(
-            "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
-        )
-        return Store().add(self, ["starred"]).get_result()
-
-    @api.model
     def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
         res = {}
         domain = Domain(True if domain is None else domain)
@@ -1227,7 +1206,7 @@ class MailMessage(models.Model):
             value=record_by_message.get,
         )
         if res.is_for_current_user():
-            res.append("starred")
+            res.append("is_bookmarked")
 
         def default_subject(message):
             if record := record_by_message.get(message):

@@ -573,8 +573,8 @@ export class Thread extends Record {
         if (this.model === "mail.box" && this.id === "inbox") {
             return `/mail/inbox/messages`;
         }
-        if (this.model === "mail.box" && this.id === "starred") {
-            return `/mail/starred/messages`;
+        if (this.model === "mail.box" && this.id === "bookmark") {
+            return `/mail/bookmark/messages`;
         }
         if (this.model === "mail.box" && this.id === "history") {
             return `/mail/history/messages`;

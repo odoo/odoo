@@ -259,17 +259,17 @@ test("default thread rendering", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button:text('Inbox')");
-    await contains("button:text('Starred messages')");
+    await contains("button:text('Bookmarks')");
     await contains("button:text('History')");
     await contains(".o-mail-DiscussSidebar-item:has(:text('General'))");
     await contains("button.o-active:text('Inbox')");
     await contains(
         ".o-mail-Thread:text('Congratulations, your inbox is empty New messages appear here.')"
     );
-    await click("button:text('Starred messages')");
-    await contains("button.o-active:text('Starred messages')");
+    await click("button:text('Bookmarks')");
+    await contains("button.o-active:text('Bookmarks')");
     await contains(
-        ".o-mail-Thread:text('No starred messages You can mark any message as 'starred', and it shows up in this mailbox.')"
+        ".o-mail-Thread:text('Bookmark important messages Save messages here to easily keep track of them.')"
     );
     await click("button:text('History')");
     await contains("button.o-active:text('History')");
@@ -1154,7 +1154,7 @@ test("Sidebar compact is crosstab synced", async () => {
     await contains(`${env2.selector} .o-mail-DiscussSidebar.o-compact`);
 });
 
-test("Redirect to the thread containing the starred message and highlight the message", async () => {
+test("Redirect to the thread containing the bookmark and highlight the message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -1168,8 +1168,8 @@ test("Redirect to the thread containing the starred message and highlight the me
     await start();
     await openDiscuss("mail.box_inbox");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await click(".o-mail-Message [title='Add Star']");
-    await click("button:has(:text('Starred messages'))", { contains: [".badge"] });
+    await click(".o-mail-Message [title='Bookmark']");
+    await click("button:has(:text('Bookmarks'))", { contains: [".badge"] });
     await click(".o-mail-Message-header a:text('#General')");
     await contains(".o-mail-DiscussSidebarChannel.o-active:text('General')");
     await contains(".o-mail-Message.o-highlighted:has(:text('Hello there!!!'))");
