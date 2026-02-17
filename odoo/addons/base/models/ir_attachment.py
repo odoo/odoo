@@ -75,6 +75,7 @@ class IrAttachment(models.Model):
     _name = 'ir.attachment'
     _description = 'Attachment'
     _order = 'id desc'
+    _override_search_all = True
 
     def _compute_res_name(self):
         for attachment in self:

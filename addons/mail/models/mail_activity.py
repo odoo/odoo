@@ -29,6 +29,7 @@ class MailActivity(models.Model):
     _description = 'Activity'
     _order = 'date_deadline ASC, id ASC'
     _rec_name = 'summary'
+    _override_search_all = True
 
     @api.model
     def default_get(self, fields):

@@ -1207,6 +1207,9 @@ class TestPrivateReadGroup(common.TransactionCase):
                 [('a', 1 + 1 + 2), ('b', 3), (False, 4)],
             )
 
+        # warmup
+        RelatedInherits._read_group([], ['foo_id_name'], ['__count'])
+        RelatedInherits._read_group([], ['foo_id_name_sudo'], ['__count'])
         expected_query = """
             SELECT "test_read_group_related_inherits__base_id__foo_id"."name",
                     COUNT(*)

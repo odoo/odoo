@@ -1423,7 +1423,7 @@ class Many2many(_RelationalMulti):
 
         # bypass the access during search if method is overwriten to avoid
         # possibly filtering all records of the comodel before joining
-        bypass_access = self.bypass_search_access and type(comodel)._search is not BaseModel._search
+        bypass_access = self.bypass_search_access and getattr(comodel, '_override_search_all', False)
 
         # make the query for the lines
         domain = self.get_comodel_domain(records)

@@ -73,6 +73,7 @@ class MailMessage(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'subject'
+    _override_search_all = True
 
     @api.model
     def default_get(self, fields):
