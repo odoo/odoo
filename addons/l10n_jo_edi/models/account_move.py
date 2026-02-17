@@ -1,12 +1,9 @@
 import base64
-import requests
 import uuid
 from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-
-JOFOTARA_URL = "https://backend.jofotara.gov.jo/core/invoices/"
 
 
 class AccountMove(models.Model):
@@ -195,30 +192,10 @@ class AccountMove(models.Model):
         return super()._get_name_invoice_report()
 
     def _l10n_jo_build_jofotara_headers(self):
-        self.ensure_one()
-        return {
-            'Client-Id': self.sudo().company_id.l10n_jo_edi_client_identifier,
-            'Secret-Key': self.sudo().company_id.l10n_jo_edi_secret_key,
-        }
+        return self.company_id._l10n_jo_build_jofotara_headers()
 
     def _send_l10n_jo_edi_request(self, params, headers):
-        if self.env.company.l10n_jo_edi_demo_mode:
-            return {'EINV_QR': "Demo JoFotara QR"}  # mocked response
-
-        try:
-            response = requests.post(JOFOTARA_URL, json=params, headers=headers, timeout=50)
-        except requests.exceptions.Timeout:
-            return {'error': _("Request timeout! Please try again.")}
-        except requests.exceptions.RequestException as e:
-            return {'error': _("Invalid request: %s", e)}
-
-        if not response.ok:
-            content = response.content.decode()
-            if response.status_code == 403:
-                content = _("Access forbidden. Please verify your JoFotara credentials.")
-            return {'error': _("Request failed: %s", content)}
-        dict_response = response.json()
-        return dict_response
+        return self.company_id._send_l10n_jo_edi_request(params, headers)
 
     def _submit_to_jofotara(self):
         self.ensure_one()
@@ -244,18 +221,7 @@ class AccountMove(models.Model):
         return f"{self.name.replace('/', '_')}_edi.xml"
 
     def _l10n_jo_validate_config(self):
-        error_msgs = []
-        if not self.sudo().company_id.l10n_jo_edi_client_identifier:
-            error_msgs.append(_("Client ID is missing."))
-        if not self.sudo().company_id.l10n_jo_edi_secret_key:
-            error_msgs.append(_("Secret key is missing."))
-        if not self.company_id.l10n_jo_edi_taxpayer_type:
-            error_msgs.append(_("Taxpayer type is missing."))
-        if not self.company_id.l10n_jo_edi_sequence_income_source:
-            error_msgs.append(_("Activity number (Sequence of income source) is missing."))
-
-        if error_msgs:
-            return _("%s \nTo set: Configuration > Settings > Electronic Invoicing (Jordan)", "\n".join(error_msgs))
+        return self.company_id._l10n_jo_validate_config()
 
     def _l10n_jo_validate_fields(self):
         def has_non_digit_vat(partner, partner_type, error_msgs):
