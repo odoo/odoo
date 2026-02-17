@@ -64,8 +64,8 @@ class HrLeaveReport(models.Model):
                 inner join hr_employee as employee on (allocation.employee_id = employee.id)
                 where employee.active IS True
                 union all select
-                    null as allocation_id,
                     request.id as leave_id,
+                    null as allocation_id,
                     request.employee_id as employee_id,
                     request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
