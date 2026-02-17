@@ -93,7 +93,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         logged_in_emp = self.env.user.employee_id
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),
-            'allocation_type': 'accrual',
             'accrual_plan_id': accrual_plan.id,
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': logged_in_emp.id,
@@ -168,7 +167,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         logged_in_emp = self.env.user.employee_id
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),
-            'allocation_type': 'accrual',
             'accrual_plan_id': accrual_plan.id,
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': logged_in_emp.id,
@@ -274,7 +272,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         with freeze_time("2024-01-01"):
             allocation_with_carryover = self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2024-01-01',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan_1.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -290,7 +287,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2024-01-01',
                 'date_to': '2025-12-31',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan_2.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -358,7 +354,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),
             'date_to': date(date.today().year + 1, 12, 31),
-            'allocation_type': 'accrual',
             'accrual_plan_id': accrual_plan.id,
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': logged_in_emp.id,
@@ -425,7 +420,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             logged_in_emp = self.env.user.employee_id
             allocation = self.env['hr.leave.allocation'].sudo().create({
                 'date_from': date(2024, 1, 1),
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -488,7 +482,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             # Allocation 1
             self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2023-01-01',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -498,7 +491,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2023-01-01',
                 'date_to': '2024-10-01',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -565,7 +557,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
 
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),
-            'allocation_type': 'accrual',
             'accrual_plan_id': accrual_plan.id,
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': logged_in_emp.id,
@@ -640,7 +631,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
 
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),
-            'allocation_type': 'accrual',
             'accrual_plan_id': accrual_plan.id,
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': logged_in_emp.id,
@@ -726,7 +716,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2023-01-01',
                 'date_to': '2024-10-01',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan_without_accrual_validity.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -735,7 +724,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             # Allocation 2
             self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2023-01-01',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': self.accrual_plan_with_accrual_validity.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,
@@ -782,7 +770,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         with freeze_time("2023-01-01"):
             self.env['hr.leave.allocation'].sudo().create({
                 'date_from': '2023-01-01',
-                'allocation_type': 'accrual',
                 'accrual_plan_id': self.accrual_plan_with_accrual_validity.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'employee_id': logged_in_emp.id,

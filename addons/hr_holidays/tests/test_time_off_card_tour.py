@@ -19,7 +19,6 @@ class TestTimeOffCardTour(HttpCase):
         self.env['hr.leave.allocation'].create({
             'employee_id': admin_employee.id,
             'work_entry_type_id': work_entry_type.id,
-            'allocation_type': 'regular',
             'type_request_unit': 'half_day',
         })
         self.start_tour('/odoo', 'time_off_card_tour', login='admin')

@@ -10,7 +10,6 @@
                 <field name="name" string="Title"/>
                 <field name="department_id"/>
                 <field name="work_entry_type_id"/>
-                <field name="allocation_type"/>
                 <field name="accrual_plan_id"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
@@ -80,7 +79,6 @@
                 <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
-                    <filter name="group_allocation_type" string="Allocation Type" context="{'group_by':'allocation_type'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                 </group>
                 <searchpanel>
@@ -132,21 +130,21 @@
                             <field name="already_accrued" invisible="1"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
-                                    invisible="allocation_type == 'accrual' or state != 'confirm'"/>
-                                <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
+                                    invisible="accrual_plan_id or state != 'confirm'"/>
+                                <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
                             </div>
                             <div class="o_row" name="validity" invisible="not is_officer">
                                 <field name="date_from" nolabel="1"
-                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
-                                    invisible="allocation_type == 'regular' and state != 'confirm'"/>
+                                    readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
+                                    invisible="not accrual_plan_id and state != 'confirm'"/>
                                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"
-                                    invisible="allocation_type == 'accrual' or state != 'confirm'"/>
+                                    invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
-                                    invisible="allocation_type == 'regular'"/>
+                                    invisible="not accrual_plan_id"/>
                                 <field name="date_to" nolabel="1"
                                     placeholder="No Limit"
-                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
-                                    invisible="allocation_type == 'regular' and state != 'confirm'"/>
+                                    readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
+                                    invisible="not accrual_plan_id and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
                             </div>
@@ -154,9 +152,7 @@
                                  invisible="id or not date_to or date_to &gt;= context_today().strftime('%Y-%m-%d')">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
-                            <field name="accrual_plan_id"
-                                invisible="allocation_type == 'regular'"
-                                required="allocation_type == 'accrual'"
+                            <field name="accrual_plan_id" placeholder="Regular allocation"
                                 readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <field name="work_entry_type_id"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
@@ -167,7 +163,7 @@
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"
-                                    readonly="allocation_type == 'accrual' or state == 'validate'"/>
+                                    readonly="accrual_plan_id or state == 'validate'"/>
                             </div>
                             <div name="duration_display" class="d-flex gap-2 flex-wrap">
                                 <field name="number_of_days_display" nolabel="1" style="width: 6ch;"
@@ -212,19 +208,14 @@
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
             </field>
-            <field name="accrual_plan_id" position="before">
-                <field name="allocation_type"
-                    widget="radio"
-                    readonly="not is_officer or state == 'validate'"/>
-            </field>
             <label for="date_from" position="replace">
-                <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual'"/>
+                <label for="date_from" string="Validity Period" invisible="accrual_plan_id"/>
             </label>
             <field name="date_from" position="attributes">
                 <attribute name="invisible">0</attribute>
             </field>
             <xpath expr="//i[hasclass('fa-long-arrow-right')]" position="replace">
-                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual'"/>
+                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="accrual_plan_id"/>
             </xpath>
             <field name="date_to" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -321,7 +312,6 @@
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
                 <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
-                <field name="allocation_type" readonly="state not in ['confirm']"/>
                 <field name="accrual_plan_id"/>
                 <field name="notes" string="Reason" optional="hide"/>
                 <field name="message_needaction" column_invisible="True"/>
@@ -441,8 +431,8 @@
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="o_hr_holidays_card">
                                                     <field name="work_entry_type_id" class="fw-bold me-1"/>
-                                                    <div class="text-muted">
-                                                        <field name="allocation_type"/>
+                                                    <div class="text-muted" t-if="record.accrual_plan_id.raw_value">
+                                                        <field name="accrual_plan_id"/>
                                                     </div>
                                                 </div>
                                             </div>

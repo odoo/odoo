@@ -577,7 +577,7 @@ class HrEmployee(models.Model):
                     allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
                     precomputed = True
             future_leaves = 0
-            if allocation.allocation_type == 'accrual' and not precomputed:
+            if allocation.accrual_plan_id and not precomputed:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.work_entry_type_id.unit_of_measure == 'hour'\
@@ -621,8 +621,8 @@ class HrEmployee(models.Model):
                 # Defines the order in which allocation will be used to take the leaves in priority
                 sorted_leave_allocations = (
                     allocations_with_date_to.sorted(key='date_to') +
-                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'accrual') +
-                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'regular'))
+                    allocations_without_date_to.filtered('accrual_plan_id') +
+                    allocations_without_date_to.filtered(lambda alloc: not alloc.accrual_plan_id))
 
                 if work_entry_type.unit_of_measure == 'day':
                     leave_duration_field = 'number_of_days'
@@ -637,7 +637,7 @@ class HrEmployee(models.Model):
                     skip_excess = False
 
                     if leave.date_from.date() > target_date and sorted_leave_allocations.filtered(lambda a:
-                        a.allocation_type == 'accrual' and
+                        a.accrual_plan_id and
                         (not a.date_to or a.date_to >= target_date) and
                         a.date_from <= leave.date_to.date()
                     ):

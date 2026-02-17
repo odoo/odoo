@@ -1544,7 +1544,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee_hruser_id,
             'work_entry_type_id': self.holidays_type_2.id,
-            'allocation_type': 'regular'
         })
         allocation.action_approve()
 

@@ -48,7 +48,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_approve()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -102,9 +101,8 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             }
         ])
         with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
-            allocation_form.allocation_type = 'accrual'
-            allocation_form.employee_id = self.employee_emp
             allocation_form.accrual_plan_id = accrual_plan
+            allocation_form.employee_id = self.employee_emp
             allocation_form.work_entry_type_id = self.work_entry_type
             allocation_form.date_from = datetime.date(2024, 3, 20)
             allocation_form.name = 'Accrual allocation for employee'
@@ -135,7 +133,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_approve()
 
@@ -178,7 +175,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_approve()
 
