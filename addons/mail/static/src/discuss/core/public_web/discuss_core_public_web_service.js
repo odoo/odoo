@@ -23,18 +23,15 @@ export class DiscussCorePublicWeb {
             } = payload;
             this.store.insert(data);
             await this.store.fetchChannel(channel_id);
-            const thread = this.store["mail.thread"].get({
-                id: channel_id,
-                model: "discuss.channel",
-            });
+            const channel = this.store["discuss.channel"].get(channel_id);
             if (
-                thread?.channel &&
+                channel &&
                 invitedByUserId &&
                 invitedByUserId !== this.store.self_user?.id &&
                 !invite_to_rtc_call
             ) {
                 this.notificationService.add(
-                    _t("You have been invited to #%s", thread.channel.displayName),
+                    _t("You have been invited to #%s", channel.displayName),
                     { type: "info" }
                 );
             }
