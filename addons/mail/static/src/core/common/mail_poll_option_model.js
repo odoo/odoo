@@ -4,6 +4,16 @@ import { Record } from "@mail/model/record";
 export class MailPollOptionModel extends Record {
     static _name = "mail.poll.option";
 
+    static new() {
+        const option = super.new(...arguments);
+        option.fetchPollVotesCached = option.store.makeCachedFetchData("/mail/poll_option/votes", {
+            poll_option_id: option.id,
+        });
+        return option;
+    }
+
+    /** @type {ReturnType<import("models").Store['makeCachedFetchData']>} */
+    fetchPollVotesCached;
     /** @type {number} */
     id;
     /** @type {number} */
@@ -16,19 +26,5 @@ export class MailPollOptionModel extends Record {
     vote_ids = fields.Many("mail.poll.vote", { inverse: "option_id" });
     /** @type {number} */
     vote_percentage;
-
-    async fetchPollVotesCached() {
-        if (!this.votesFetched) {
-            try {
-                this.votesFetched = true;
-                await this.store.fetchStoreData("/mail/poll_option/votes", {
-                    poll_option_id: this.id,
-                });
-            } catch (e) {
-                this.votesFetched = false;
-                throw e;
-            }
-        }
-    }
 }
 MailPollOptionModel.register();

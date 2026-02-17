@@ -77,13 +77,6 @@ class WebclientController(ThreadController):
                     fields_params={"request_list": params["request_list"]},
                     as_thread=True,
                 )
-        if name == "/mail/poll/options":
-            poll_id = params.get("poll_id")
-            # sudo - mail.poll: validated by "_get_thread_with_access" afterwards.
-            if poll_sudo := request.env["mail.poll"].sudo().search([("id", "=", poll_id)]):
-                message = poll_sudo.start_message_id
-                if self._get_thread_with_access(message.model, message.res_id, mode="read"):
-                    store.add(poll_sudo.option_ids, ["number_of_votes", "option_label"])
         if name == "/mail/poll_option/votes":
             option_id = params.get("poll_option_id")
             # sudo - mail.poll.option: validated by "_get_thread_with_access" afterwards.
