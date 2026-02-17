@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -21,9 +20,6 @@ export class MOListViewDropdown extends BadgeField {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.workorderState = useState({
-            state: this.props.record.data.state,
-        });
         this.colorIcons = {
             "blocked": "text-bg-warning",
             "ready": "text-bg-secondary",
@@ -48,12 +44,11 @@ export class MOListViewDropdown extends BadgeField {
         if (!selectedWorkorders || selectedWorkorders.length == 0) {
             selectedWorkorders = [this.props.record];
         }
-        let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)  
+        let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)
         if (ids && ids.length > 0) {
             await this.callOrm("set_state", [state], ids);
         }
     }
-
 
     async callOrm(functionName, args, ids = undefined) {
         if (!ids){
