@@ -204,6 +204,18 @@ class ResPartner(models.Model):
             else:
                 partner.account_peppol_verification_label = 'not_valid'
 
+    def _compute_peppol_endpoint(self):
+        # Don't recompute on partners corresponding to registered companies
+        partners_not_to_recompute = self._get_partners_to_skip_peppol_computation()
+        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin not in partners_not_to_recompute])
+        super(ResPartner, partners_to_recompute)._compute_peppol_endpoint()
+
+    def _compute_peppol_eas(self):
+        # Don't recompute on partners corresponding to registered companies
+        partners_not_to_recompute = self._get_partners_to_skip_peppol_computation()
+        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin not in partners_not_to_recompute])
+        super(ResPartner, partners_to_recompute)._compute_peppol_eas()
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -243,3 +255,8 @@ class ResPartner(models.Model):
                         'account_peppol_is_endpoint_valid': True,
                     })
         return False
+
+    def _get_partners_to_skip_peppol_computation(self):
+        return self.env['res.company'].search([
+            ('account_peppol_proxy_state', 'in', ['pending', 'active']),
+        ]).mapped('partner_id')
