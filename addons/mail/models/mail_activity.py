@@ -381,8 +381,8 @@ class MailActivity(models.Model):
         domain = Domain(domain).optimize(self)
         if self.env.su or bypass_access or domain.is_false() or tuple(condition_values(self, 'user_id', domain) or ()) == (self.env.uid,):
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
-        if self.env.context.get('_read_groupby'):
-            raise ValueError("Cannot group by mail.activity")
+        if self.env.context.get('_generating_sql_for_fields'):
+            raise ValueError("Cannot generate SQL for whole mail.activity")
 
         # search by ids
         if (ids := condition_values(self, 'id', domain)) is not None:
