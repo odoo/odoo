@@ -1185,21 +1185,20 @@ class TransactionCase(BaseCase):
 
         self.addCleanup(self.muted_registry_logger(self.registry.clear_all_caches))
 
+        # flush everything in setUpClass before introducing a savepoint
+        cr = self.cr
+        cr.flush()
+
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
         # (these are not cleared in self.env.clear or envs.clear)
-        cr = self.env.cr
-
         def _reset(cb, funcs, data):
             cb._funcs = funcs
             cb.data = data
         for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
             self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
-        # flush everything in setUpClass before introducing a savepoint
-        self.env.flush_all()
-
-        savepoint = Savepoint(self.cr)
+        savepoint = Savepoint(cr)
         self.addCleanup(savepoint.close)
 
     @contextmanager
