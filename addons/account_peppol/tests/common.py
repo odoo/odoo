@@ -53,13 +53,18 @@ def mock_lookup_success(peppol_identifier, services=None):
                 {
                     "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{quote_plus(peppol_identifier)}/services/busdox-docid-qns%3A%3A{quote_plus(service)}",
                     "document_id": f"busdox-docid-qns::{service}",
+                    "formats": [service.split('##')[1].split('::')[0]],
                 }
                 for service in services
             ],
         },
     }
 
-    lookup_mock = MockHTTPClient(url=expected_url, return_json=json_response)
+    def url_matching(request):
+        # We don't care about the allowed formats in the request for tests, we just want to make sure the identifier is correct.
+        return request.url.startswith(expected_url)
+
+    lookup_mock = MockHTTPClient(matcher=url_matching, return_json=json_response)
     service_group_mocks = []
 
     # also mock services for SMP name extractions
@@ -96,7 +101,12 @@ def mock_lookup_success(peppol_identifier, services=None):
 def mock_lookup_not_found(peppol_identifier):
     expected_url = f'https://peppol.test.odoo.com/api/peppol/1/lookup?{urlencode({"peppol_identifier": peppol_identifier})}'
     json_response = {"error": {"code": "NOT_FOUND", "message": "no naptr record", "retryable": False}}
-    with MockHTTPClient(url=expected_url, return_status=404, return_json=json_response) as mock_response:
+
+    def url_matching(request):
+        # We don't care about the allowed formats in the request for tests, we just want to make sure the identifier is correct.
+        return request.url.startswith(expected_url)
+
+    with MockHTTPClient(matcher=url_matching, return_status=404, return_json=json_response) as mock_response:
         yield mock_response
 
 

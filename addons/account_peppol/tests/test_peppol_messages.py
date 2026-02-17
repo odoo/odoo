@@ -171,15 +171,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertFalse(wizard.alerts)  # there is no alerts
 
     def test_send_peppol_alerts_not_valid_format_partner(self):
+        self.valid_partner.invoice_edi_format = 'nlcius'
         move = self.create_move(self.valid_partner)
         move.action_post()
         with (
             mock_lookup_success('0208:2718281828', services=[]),
             mock_lookup_not_found('9925:be2718281828'),
         ):
-            wizard = self.create_send_and_print(move, sending_methods=['peppol'])
+            wizard = self.create_send_and_print(move, sending_methods=['peppol'])  # Peppol not checked by default, force it
 
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertEqual(wizard.invoice_edi_format, 'nlcius')
         self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive bis3
         self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
 
