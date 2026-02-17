@@ -414,9 +414,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def ensure_installed(cls, module_name: str):
-        module = cls.env['ir.module.module']._get(module_name)
-        assert module, f"Module '{module}' does not exist!"
-        if module.state != 'installed':
+        if cls.env['ir.module.module']._get(module_name).state != 'installed':
             raise SkipTest(f"Module required for the test is not installed ({module_name})")
 
     # -------------------------------------------------------------------------
