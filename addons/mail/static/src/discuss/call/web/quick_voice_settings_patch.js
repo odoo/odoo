@@ -11,7 +11,7 @@ patch(QuickVoiceSettings.prototype, {
     onClickVoiceSettings() {
         this.actionService.doAction({
             context: {
-                dialog_size: "small",
+                dialog_size: "medium",
                 footer: false,
             },
             name: _t("Voice & Video Settings"),

@@ -8,9 +8,9 @@ import {
 } from "@web/owl2/utils";
 import { Component, onMounted, onPatched, onWillUnmount, toRaw, xml } from "@odoo/owl";
 
+import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
@@ -526,12 +526,9 @@ export function useMicrophoneVolume() {
                 });
                 track = audioStream.getAudioTracks()[0];
             } catch {
-                store.env.services.notification.add(
-                    _t('"%(hostname)s" requires microphone access', {
-                        hostname: browser.location.host,
-                    }),
-                    { type: "warning" }
-                );
+                store.env.services.dialog.add(CallPermissionDeniedDialog, {
+                    permissionType: "microphone",
+                });
                 return;
             }
             if (isClosed) {

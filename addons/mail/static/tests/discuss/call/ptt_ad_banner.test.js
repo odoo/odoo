@@ -32,16 +32,17 @@ test("display banner when ptt extension is not enabled", async () => {
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await click("button:text('Push-to-Talk')");
+    await click("label[aria-label='Enable Push-to-talk']");
     await click("[title*='Close Chat Window']");
     await click("button[title='New Meeting']");
+    await contains(".o-mail-Meeting");
     await click("button[title='Close panel']"); // invitation panel automatically open
     await contains(".o-discuss-PttAdBanner");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await click("button:text('Voice Detection')");
+    await click("label[aria-label='Enable Push-to-talk']");
     await click("[title*='Close Chat Window']");
     await contains(".o-discuss-PttAdBanner", { count: 0 });
 });

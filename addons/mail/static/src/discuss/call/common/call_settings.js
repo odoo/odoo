@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
+import { Tabs, TabHeader, TabPanel } from "@mail/core/common/tabs";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
@@ -16,7 +17,7 @@ export class CallSettings extends Component {
     static defaultProps = {
         withActionPanel: true,
     };
-    static components = { ActionPanel, DeviceSelect };
+    static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
 
     setup() {
         super.setup();
@@ -102,6 +103,10 @@ export class CallSettings extends Component {
         this.store.settings.useCallAutoFocus = !this.store.settings.useCallAutoFocus;
     }
 
+    onChangePushToTalk(ev) {
+        this.store.settings.usePushToTalk = ev.target.checked;
+    }
+
     onChangeShowOnlyVideo(ev) {
         const showOnlyVideo = ev.target.checked;
         this.store.settings.showOnlyVideo = Boolean(showOnlyVideo);
@@ -126,7 +131,7 @@ export class CallSettings extends Component {
 
 export class CallSettingsDialog extends Component {
     static template = xml`
-        <Dialog size="'small'" footer="false" title.translate="Voice &amp; Video Settings">
+        <Dialog size="'medium'" footer="false" title.translate="Voice &amp; Video Settings">
             <CallSettings withActionPanel="false"/>
         </Dialog>
     `;

@@ -10,155 +10,166 @@
 
     <t t-name="discuss.CallSettings.content">
         <div class="o-discuss-CallSettings d-flex flex-column">
-            <h4>Voice</h4>
-            <label class="d-flex align-items-baseline mb-2" title="Microphone" aria-label="Microphone">
-                <span class="flex-shrink-0 pe-2">
-                    Microphone
-                </span>
-                <div class="flex-grow-1"/>
-                <DeviceSelect kind="'audioinput'"/>
-            </label>
-            <div class="d-flex flex-column">
-                <button class="btn d-flex my-1" t-att-class="{'bg-300' : !this.store.settings.usePushToTalk }" t-on-click="() => this.store.settings.usePushToTalk = false">
-                    <input class="form-check-input" type="radio" t-att-checked="this.store.settings.usePushToTalk ? '' : 'checked'"/>
-                    <span class="text-start flex-grow-1 mx-3">Voice Detection</span>
-                </button>
-                <button class="btn d-flex my-1" t-att-class="{'bg-300' : this.store.settings.usePushToTalk }" t-on-click="() => this.store.settings.usePushToTalk = true">
-                    <input class="form-check-input" type="radio" t-att-checked="this.store.settings.usePushToTalk ? 'checked' : ''"/>
-                    <span class="text-start flex-grow-1 mx-3">Push-to-Talk</span>
-                </button>
-                <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS and !this.pttExtService.isEnabled" class="small text-muted fst-italic mb-3" t-out="this.pttExtService.downloadText"/>
-            </div>
-            <div class="d-flex flex-column">
-                <t t-if="!this.store.settings.usePushToTalk">
-                    <span class="me-2 my-1">Voice detection sensitivity</span>
-                    <div class="d-flex align-items-center w-100 h-100">
-                        <button class="btn btn-secondary" t-on-click="this.microphoneVolume.toggle" t-att-disabled="!this.microphoneVolume.isReady">
-                            <div class="position-relative">
-                                <span class="d-flex invisible text-nowrap">
-                                    <t t-out="this.testText.length > this.stopText.length ? this.testText : this.stopText"/>
+            <Tabs direction="'h'" initialTabId="'voice'">
+                <t t-set-slot="headers">
+                    <TabHeader id="'voice'" title.translate="Voice &amp; Audio">
+                        <div class="py-1 px-2"><i class="fa fa-microphone me-2"/>Voice &amp; Audio</div>
+                    </TabHeader>
+                    <TabHeader id="'video'" title.translate="Video">
+                        <div class="py-1 px-2"><i class="fa fa-video-camera me-2"/>Video</div>
+                    </TabHeader>
+                    <TabHeader t-if="this.env.debug" id="'technical'" title.translate="Technical">
+                        <div class="py-1 px-2"><i class="fa fa-cogs me-2"/>Technical</div>
+                    </TabHeader>
+                </t>
+                <t t-set-slot="panels">
+                    <TabPanel id="'voice'">
+                        <div class="d-flex flex-column my-2 p-1">
+                            <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
+                                <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS ? 'w-100' : 'w-50'" aria-label="Microphone">
+                                    <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
+                                        <i class="fa fa-microphone text-muted ms-1 me-2"/>Microphone
+                                    </span>
+                                    <DeviceSelect kind="'audioinput'"/>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS ? 'w-100' : 'w-50'" aria-label="Speakers">
+                                    <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
+                                        <i class="fa fa-volume-up text-muted ms-1 me-2"/>Speakers
+                                    </span>
+                                    <DeviceSelect kind="'audiooutput'"/>
+                                </div>
+                            </div>
+                            <hr class="my-3 border-secondary opacity-75"/>
+                            <div class="d-flex flex-column gap-2">
+                                <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS and !this.pttExtService.isEnabled" class="small text-muted fst-italic alert alert-warning px-3 py-2 m-0" t-out="this.pttExtService.downloadText"/>
+                                <div class="d-flex flex-column border rounded">
+                                    <t t-call="discuss.CallSettings.textToggler">
+                                        <t t-set="text">Enable Push-to-talk</t>
+                                        <t t-set="value" t-value="this.store.settings.usePushToTalk"/>
+                                        <t t-set="onchange" t-value="this.onChangePushToTalk"/>
+                                    </t>
+                                    <hr class="my-0 border-secondary opacity-75"/>
+                                    <div class="o-pb-2_5 pt-1 o-px-2_5">
+                                        <t t-if="!this.store.settings.usePushToTalk">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="text-muted o-ps-0_5 pt-2"><i class="fa fa-info-circle me-2"/>Adjust the slider to set the voice detection sensitivity.</span>
+                                                <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
+                                                    <button class="btn px-3 flex-shrink-0" t-att-class="this.microphoneVolume.isActive ? 'btn-danger' : 'btn-secondary'" t-on-click="this.microphoneVolume.toggle" t-att-disabled="!this.microphoneVolume.isReady">
+                                                        <i class="fa me-2" t-att-class="this.microphoneVolume.isActive ? 'fa-stop' : 'fa-microphone'"/>
+                                                        <t t-out="this.microphoneVolume.isActive ? this.stopText : this.testText"/>
+                                                    </button>
+                                                    <div class="d-flex align-items-center flex-grow-1 gap-2 border rounded px-2 py-1">
+                                                        <input class="o-Discuss-CallSettings-thresholdInput form-range" t-attf-style="--volume: {{this.microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-model="this.store.settings.voiceActivationThreshold" title="Voice detection sensitivity"/>
+                                                        <small class="fw-bold"><t t-out="Math.round(this.store.settings.voiceActivationThreshold * 100)"/>%</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="text-muted o-ps-0_5 pt-2">
+                                                    <i class="fa fa-info-circle me-2"/>
+                                                    <t t-if="this.isMobileOS">Delay after releasing push-to-talk</t>
+                                                    <t t-elif="this.store.settings.isRegisteringKey">Press any key to register it as your shortcut.</t>
+                                                    <t t-else="">Click the button below to register a new shortcut.</t>
+                                                </span>
+                                                <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
+                                                    <button t-if="!this.isMobileOS" class="btn px-4 flex-shrink-0" t-att-class="this.store.settings.isRegisteringKey ? 'btn-danger' : 'btn-secondary'" t-on-click="this.onClickRegisterKeyButton" aria-label="Register new shortcut">
+                                                        <i class="fa me-2" t-att-class="this.store.settings.isRegisteringKey ? 'fa-times' : 'fa-keyboard-o'"/>
+                                                        <t t-out="this.store.settings.pushToTalkKeyText"/>
+                                                    </button>
+                                                    <div class="d-flex align-items-center flex-grow-1 gap-2 border rounded px-2 py-1">
+                                                        <small class="text-muted text-nowrap">Delay:</small>
+                                                        <input class="o-discuss-CallSettings-delayInput form-range" type="range" min="0" max="2000" step="1" t-att-value="this.store.settings.voiceActiveDuration" t-on-input="this.onChangeDelay" title="Delay after releasing push-to-talk"/>
+                                                        <small class="o-discuss-CallSettings-voiceActiveDuration fw-bold"><t t-out="this.store.settings.voiceActiveDuration"/>ms</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </TabPanel>
+                    <TabPanel id="'video'">
+                        <div class="d-flex flex-column my-2 p-1">
+                            <div class="d-flex flex-column flex-grow-1 gap-1" aria-label="Camera">
+                                <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
+                                    <i class="fa fa-video-camera text-muted ms-1 me-2"/>Camera
                                 </span>
-                                <span class="position-absolute start-0 top-0">
-                                    <t t-if="this.microphoneVolume.isActive" t-out="this.stopText"/>
-                                    <t t-else="" t-out="this.testText"/>
-                                </span>
+                                <DeviceSelect kind="'videoinput'"/>
                             </div>
-                        </button>
-                        <label class="w-100 d-flex ms-2" title="Voice detection sensitivity" aria-label="Voice detection sensitivity">
-                            <input class="o-Discuss-CallSettings-thresholdInput form-range rounded" t-attf-style="--volume: {{this.microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-custom-model="this.store.settings.voiceActivationThreshold"/>
-                        </label>
-                    </div>
-                </t>
-                <div t-if="this.store.settings.usePushToTalk" class="d-flex" t-att-class="{'flex-column': this.props.isCompact}">
-                    <div t-if="!this.isMobileOS" class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !this.props.isCompact}">
-                        <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Push-to-talk key" aria-label="Push-to-talk key">
-                            <span class="me-2 my-1 text-truncate text-wrap">Push-to-talk key</span>
-                            <span class="d-flex border border-2 rounded w-100" t-attf-class="{{ this.store.settings.isRegisteringKey ? 'border-success' : 'border-primary' }}">
-                                <span t-if="this.store.settings.pushToTalkKey" class="o-discuss-CallSettings-pushToTalkKeyText ms-1 px-3 fs-3 flex-grow-1" t-out="this.store.settings.pushToTalkKeyText"/>
-                                <button class="btn btn-link px-2 py-0 text-black" t-on-click="this.onClickRegisterKeyButton">
-                                    <i t-if="this.store.settings.isRegisteringKey" title="Discard" aria-label="Discard" class="fa fa-2x fa-times-circle text-muted"/>
-                                    <i t-else="" title="Set new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
-                                </button>
-                            </span>
-                        </label>
-                    </div>
-                    <div class="d-flex align-items-center" t-att-class="{'ms-1 w-50': !this.props.isCompact}">
-                        <label class="d-flex flex-column align-items-start flex-wrap h-100 w-100" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
-                            <span class="me-2 my-1 text-truncate text-wrap">Delay after releasing push-to-talk</span>
-                            <div class="d-flex w-100 align-items-center">
-                                <input class="o-discuss-CallSettings-delayInput flex-grow-1 form-range" type="range" min="0" max="2000" step="1" t-att-value="this.store.settings.voiceActiveDuration" t-on-input="this.onChangeDelay"/>
-                                <span class="o-discuss-CallSettings-voiceActiveDuration p-1 text-end"><t t-out="this.store.settings.voiceActiveDuration"/>ms</span>
+                            <hr class="my-3 border-secondary opacity-75"/>
+                            <div class="d-flex flex-column border rounded">
+                                <t t-if="this.store.settings.hasCanvasFilterSupport">
+                                    <t t-call="discuss.CallSettings.textToggler">
+                                        <t t-set="text">Blur video background</t>
+                                        <t t-set="description">Apply a privacy blur to your surroundings.</t>
+                                        <t t-set="value" t-value="this.store.settings.useBlur"/>
+                                        <t t-set="onchange" t-value="this.onChangeBlur"/>
+                                    </t>
+                                </t>
+                                <t t-if="this.store.settings.useBlur">
+                                    <div class="d-flex gap-3 o-py-2_5 px-3" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
+                                        <div class="d-flex flex-column flex-grow-1 gap-1" title="Background blur intensity" aria-label="Background blur intensity">
+                                            <span class="flex-shrink-0 d-flex justify-content-between fw-bold text-muted small text-uppercase">
+                                                <span>Intensity</span>
+                                                <span class="o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(this.store.settings.backgroundBlurAmount * 5)"/>%</span>
+                                            </span>
+                                            <input class="form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.backgroundBlurAmount" t-on-change="this.onChangeBackgroundBlurAmount"/>
+                                        </div>
+                                        <div class="d-flex flex-column flex-grow-1 gap-1" title="Edge blur intensity" aria-label="Edge blur intensity">
+                                            <span class="flex-shrink-0 d-flex justify-content-between fw-bold text-muted small text-uppercase">
+                                                <span>Edge Softness</span>
+                                                <span class="o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(this.store.settings.edgeBlurAmount * 5)"/>%</span>
+                                            </span>
+                                            <input class="form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.edgeBlurAmount" t-on-change="this.onChangeEdgeBlurAmount"/>
+                                        </div>
+                                    </div>
+                                </t>
+                                <hr class="border-secondary opacity-75 m-0"/>
+                                <t t-call="discuss.CallSettings.textToggler">
+                                    <t t-set="text">Show video participants only</t>
+                                    <t t-set="description">Hide participants who have turned off their camera.</t>
+                                    <t t-set="value" t-value="this.store.settings.showOnlyVideo"/>
+                                    <t t-set="onchange" t-value="this.onChangeShowOnlyVideo"/>
+                                </t>
+                                <hr class="border-secondary opacity-75 m-0"/>
+                                <t t-call="discuss.CallSettings.textToggler">
+                                    <t t-set="text">Auto-focus speaker</t>
+                                    <t t-set="description">Automatically enlarge the person currently speaking.</t>
+                                    <t t-set="value" t-value="this.store.settings.useCallAutoFocus"/>
+                                    <t t-set="onchange" t-value="this.onChangeCallAutoFocus"/>
+                                </t>
                             </div>
-                        </label>
-                    </div>
-                </div>
-                <span t-if="this.store.settings.isRegisteringKey">Press a key to set it as the Push-to-Talk shortcut.</span>
-            </div>
-            <hr class="o-discuss-separator my-4"/>
-            <h4>Audio</h4>
-            <label class="d-flex align-items-baseline mb-2" title="Speakers" aria-label="Speakers">
-                <span class="flex-shrink-0 pe-2">
-                    Speakers
-                </span>
-                <div class="flex-grow-1"/>
-                <DeviceSelect kind="'audiooutput'"/>
-            </label>
-            <hr class="o-discuss-separator my-4"/>
-            <h4>Video</h4>
-            <label class="d-flex align-items-baseline mb-2" title="Camera" aria-label="Camera">
-                <span class="flex-shrink-0 pe-2">
-                    Camera
-                </span>
-                <div class="flex-grow-1"/>
-                <DeviceSelect kind="'videoinput'"/>
-            </label>
-            <div class="d-flex flex-column my-1">
-                <t t-call="discuss.CallSettings.textToggler">
-                    <t t-set="text">Show video participants only</t>
-                    <t t-set="value" t-value="this.store.settings.showOnlyVideo"/>
-                    <t t-set="onchange" t-value="this.onChangeShowOnlyVideo"/>
-                </t>
-            </div>
-            <div class="d-flex flex-column my-1">
-                <t t-call="discuss.CallSettings.textToggler">
-                    <t t-set="text">Auto-focus speaker</t>
-                    <t t-set="value" t-value="this.store.settings.useCallAutoFocus"/>
-                    <t t-set="onchange" t-value="this.onChangeCallAutoFocus"/>
-                </t>
-            </div>
-            <div t-if="this.store.settings.hasCanvasFilterSupport" class="d-flex flex-column my-1 o-discuss-CallSettings-item">
-                <t t-call="discuss.CallSettings.textToggler">
-                    <t t-set="text">Blur video background</t>
-                    <t t-set="value" t-value="this.store.settings.useBlur"/>
-                    <t t-set="onchange" t-value="this.onChangeBlur"/>
-                </t>
-            </div>
-            <t t-if="this.store.settings.useBlur">
-                <div class="d-flex mt-1" t-att-class="{'flex-column': this.props.isCompact}">
-                    <div class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !this.props.isCompact}">
-                        <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Background blur intensity" aria-label="Background blur intensity">
-                            <span class="me-2 text-truncate text-wrap">Background blur intensity</span>
-                            <div class="d-flex w-100 flex-grow-1 align-items-center">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.backgroundBlurAmount" t-on-change="this.onChangeBackgroundBlurAmount"/>
-                                <span class="p-1 text-end o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(this.store.settings.backgroundBlurAmount * 5)"/>%</span>
+                        </div>
+                    </TabPanel>
+                    <TabPanel id="'technical'">
+                        <div class="d-flex flex-column my-2 p-1">
+                            <div class="d-flex flex-column border rounded">
+                                <t t-call="discuss.CallSettings.textToggler">
+                                    <t t-set="text">Log RTC events</t>
+                                    <t t-set="description">Save detailed RTC connection logs for troubleshooting.</t>
+                                    <t t-set="value" t-value="this.store.settings.logRtc"/>
+                                    <t t-set="onchange" t-value="this.onChangeLogRtc"/>
+                                </t>
+                                <button class="btn btn-secondary rounded-top-0" t-on-click="this.onClickDownloadLogs"><i class="fa fa-download me-2"/><span>Download Logs</span></button>
                             </div>
-                        </label>
-                    </div>
-                    <div class="d-flex align-items-center" t-att-class="{'ms-1 w-50': !this.props.isCompact}">
-                        <label class="d-flex flex-column align-items-start flex-wrap h-100 w-100" title="Edge blur intensity" aria-label="Edge blur intensity">
-                            <span class="me-2 text-truncate text-wrap">Edge blur intensity</span>
-                            <div class="d-flex w-100 flex-grow-1 align-items-center">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.edgeBlurAmount" t-on-change="this.onChangeEdgeBlurAmount"/>
-                                <span class="p-1 text-end o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(this.store.settings.edgeBlurAmount * 5)"/>%</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-            </t>
-            <hr class="o-discuss-separator my-4"/>
-            <h4>Technical Settings</h4>
-            <t t-if="this.env.debug">
-                <div class="d-flex flex-column my-1">
-                    <t t-call="discuss.CallSettings.textToggler">
-                        <t t-set="text">Log RTC events</t>
-                        <t t-set="value" t-value="this.store.settings.logRtc"/>
-                        <t t-set="onchange" t-value="this.onChangeLogRtc"/>
-                    </t>
-                </div>
-            </t>
-            <button class="btn btn-secondary mt-1 mb-2 w-100" t-on-click="this.onClickDownloadLogs">Download logs</button>
+                        </div>
+                    </TabPanel>
+                </t>
+            </Tabs>
         </div>
     </t>
     <t t-name="discuss.CallSettings.textToggler">
-        <div class="d-flex flex-wrap align-items-center">
-            <label class="d-flex align-items-center flex-wrap mw-100" t-att-title="text" t-att-aria-label="text">
-                <span class="text-truncate text-wrap" t-out="text"></span>
-            </label>
-            <div class="flex-grow-1"/>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" t-on-change="onchange" t-att-checked="value ? 'checked' : ''" t-att-title="text" t-att-aria-label="text"/>
+        <label class="o-discuss-CallSettings-item d-flex align-items-center justify-content-between o-py-2_5 px-3 gap-1 cursor-pointer" t-att-aria-label="text">
+            <div class="d-flex flex-column user-select-none">
+                <span class="fw-bold" t-out="text"/>
+                <small class="text-muted fst-italic" t-out="description"/>
             </div>
-        </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" t-on-change="onchange" t-att-checked="value" t-att-title="text" t-att-aria-label="text"/>
+            </div>
+        </label>
     </t>
-
 </templates>

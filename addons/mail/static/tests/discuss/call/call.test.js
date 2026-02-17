@@ -953,6 +953,7 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click("button[aria-label='Video Settings']");
     await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
+    await click("button[title='Video']");
     await click("input[title='Auto-focus speaker']:checked");
 });
 
@@ -972,10 +973,11 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     rtc.cameraPermission = "denied";
     await openDiscuss(channelId);
     await click("button[title='New Meeting']");
+    await contains(".o-mail-Meeting");
     await contains("button[title='Stop camera']");
     await contains("button[title='Stop camera'].o-tag-DANGER");
     await contains("button[title='Stop camera'].o-tag-WARNING_BADGE");
-
+    await click("button[title='Exit Fullscreen']");
     await click(".o-mail-DiscussSidebarChannel:text('General')");
     await click("[title='Join Call']");
     await contains("button[title='Turn camera on']");

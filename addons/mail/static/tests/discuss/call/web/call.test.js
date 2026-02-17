@@ -79,7 +79,7 @@ test("show Push-to-Talk button on mobile", async () => {
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await click("button:text('Push-to-Talk')");
+    await click("label[aria-label='Enable Push-to-talk']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
