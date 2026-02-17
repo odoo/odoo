@@ -73,3 +73,36 @@ class TestStockReplenish(TestStockCommon):
         self.assertEqual(len(product.route_ids), 0)
         wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=product.id))
         self.assertEqual(wizard._values['quantity'], 1)
+
+    def test_replenishment_wizard_multi_warehouse_routes(self):
+        """ Ensure that in a multi-warehouse setup, the replenishment wizard only
+            displays routes applicable to the selected warehouse."""
+        def create_replenish_wizard(warehouse, product):
+            return self.env['product.replenish'].create({
+                'product_id': product.id,
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_uom_id': product.uom_id.id,
+                'warehouse_id': warehouse.id,
+            })
+
+        # Warehouse 1 should show reception route in replenishment wizard.
+        replenish = create_replenish_wizard(self.warehouse_1, self.productA)
+        self.assertEqual(replenish.allowed_route_ids, self.warehouse_1.reception_route_id)
+
+        warehouse_2 = self.warehouse_1.copy({'name': 'Base Warehouse 2'})
+        self.warehouse_1.write({
+            'resupply_wh_ids': warehouse_2,
+        })
+
+        # Warehouse 1 should show both resupply and reception routes in replenishment wizard.
+        replenish = create_replenish_wizard(self.warehouse_1, self.productA)
+        self.assertRecordValues(replenish.allowed_route_ids, [
+            {'id': self.warehouse_1.resupply_route_ids.id, 'name': 'Base Warehouse: Supply Product from Base Warehouse 2'},
+            {'id': self.warehouse_1.reception_route_id.id, 'name': 'Base Warehouse: Receive in 1 step (stock)'},
+        ])
+
+        # Warehouse 2 should show only its reception route in replenishment wizard.
+        replenish = create_replenish_wizard(warehouse_2, self.productA)
+        self.assertRecordValues(replenish.allowed_route_ids, [
+            {'id': warehouse_2.reception_route_id.id, 'name': 'Base Warehouse 2: Receive in 1 step (stock)'},
+        ])
