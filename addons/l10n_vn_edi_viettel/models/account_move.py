@@ -737,7 +737,7 @@ class AccountMove(models.Model):
             'line_note': 2,
             'discount': 3,
         }
-        for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type == 'product'):
+        for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type in ('product', 'downpayment')):
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
             item_name = line.name.replace('\n', ' ')

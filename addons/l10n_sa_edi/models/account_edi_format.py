@@ -272,7 +272,7 @@ class AccountEdiFormat(models.Model):
             any(
                 tax.l10n_sa_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU')
                 for tax in invoice.invoice_line_ids.filtered(
-                    lambda line: line.display_type == 'product'
+                    lambda line: line.display_type in ('product', 'downpayment')
                 ).tax_ids
             )
             and (
@@ -392,7 +392,7 @@ class AccountEdiFormat(models.Model):
         if invoice.commercial_partner_id == invoice.company_id.partner_id.commercial_partner_id:
             errors.append(_("- Invoice cannot be posted as the Supplier and Buyer are the same."))
 
-        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line._check_edi_line_tax_required())):
+        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment') and line._check_edi_line_tax_required())):
             errors.append(_("- Invoice lines need at least one tax. Please input it and try again."))
 
         if not journal._l10n_sa_ready_to_submit_einvoices():

@@ -104,7 +104,7 @@ class AccountMove(models.Model):
     @api.depends('line_ids.purchase_line_id')
     def _compute_is_purchase_matched(self):
         for move in self:
-            if any(il.display_type == 'product' and not bool(il.purchase_line_id) for il in move.invoice_line_ids):
+            if any(il.display_type in ('product', 'downpayment') and not bool(il.purchase_line_id) for il in move.invoice_line_ids):
                 move.is_purchase_matched = False
                 continue
             move.is_purchase_matched = True
@@ -524,7 +524,10 @@ class AccountMoveLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.move.line'
 
-    is_downpayment = fields.Boolean()
+    display_type = fields.Selection(
+        selection_add=[('downpayment', 'Downpayment')],
+        ondelete={'downpayment': 'cascade'},
+    )
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
     purchase_line_warn_msg = fields.Text(compute='_compute_purchase_line_warn_msg')

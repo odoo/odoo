@@ -1297,7 +1297,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         ).sudo().create({}).create_invoices()
         credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         self.assertEqual(len(credit_note), 1)
-        self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type == 'product')), 2)
+        self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))), 2)
         down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
         down_payment_line.quantity = 0.4
         credit_note.action_post()

@@ -31,7 +31,7 @@ class AccountMoveLine(models.Model):
             # We don't want to automatically update it on invoices that were sent to MyInvois
             if not line.move_id.l10n_my_edi_state:
                 # There is no product in case of downpayments, so we need to manually set the class code
-                if 'is_downpayment' in line and line.is_downpayment:
+                if line.display_type == 'downpayment':
                     line.l10n_my_edi_classification_code = "022"
                 else:
                     line.l10n_my_edi_classification_code = line.product_id.product_tmpl_id.l10n_my_edi_classification_code or line.l10n_my_edi_classification_code

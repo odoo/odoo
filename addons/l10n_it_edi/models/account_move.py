@@ -675,7 +675,7 @@ class AccountMove(models.Model):
         convert_to_euros = self.currency_id.name != 'EUR'
 
         # Base lines.
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
+        base_amls = self.line_ids.filtered(lambda x: x.display_type in ['product', 'downpayment', 'rounding'])
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
@@ -1864,7 +1864,7 @@ class AccountMove(models.Model):
     def _l10n_it_edi_check_lines_for_tax_kind(self, kind_code, kind_desc, min_len=1):
         assert min_len in (0, 1)
         if self.invoice_line_ids.filtered(lambda line:
-            line.display_type == 'product'
+            line.display_type in ['product', 'downpayment']
             and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= 1),
         ):
             return {

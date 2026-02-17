@@ -1571,7 +1571,7 @@ class SaleOrderLine(models.Model):
                 **optional_values,
             }
         res = {
-            'display_type': self.display_type or 'product',
+            'display_type': 'downpayment' if not self.display_type and self.is_downpayment else self.display_type or 'product',
             'sequence': self.sequence,
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
@@ -1581,12 +1581,11 @@ class SaleOrderLine(models.Model):
             'price_unit': self.price_unit,
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'sale_line_ids': [Command.link(self.id)],
-            'is_downpayment': self.is_downpayment,
             'extra_tax_data': self.extra_tax_data,
             'collapse_prices': self.collapse_prices,
             'collapse_composition': self.collapse_composition,
         }
-        downpayment_lines = self.invoice_lines.filtered('is_downpayment')
+        downpayment_lines = self.invoice_lines.filtered(lambda l: l.display_type == 'downpayment')
         if self.is_downpayment and downpayment_lines:
             res['account_id'] = downpayment_lines.account_id[:1].id
         if optional_values:

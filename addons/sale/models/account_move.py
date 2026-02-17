@@ -115,7 +115,7 @@ class AccountMove(models.Model):
     def button_draft(self):
         res = super().button_draft()
 
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
+        self.line_ids.filtered(lambda l: l.display_type == 'downpayment').sale_line_ids.filtered(
             lambda sol: not sol.display_type)._compute_name()
 
         return res
@@ -123,7 +123,7 @@ class AccountMove(models.Model):
     def button_cancel(self):
         res = super().button_cancel()
 
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
+        self.line_ids.filtered(lambda l: l.display_type == 'downpayment').sale_line_ids.filtered(
             lambda sol: not sol.display_type)._compute_name()
 
         return res
@@ -182,11 +182,6 @@ class AccountMove(models.Model):
         result = self.env['ir.actions.act_window']._for_xml_id('sale.action_service_material')
         result['domain'] = self._domain_services_analytic_line()
         return result
-
-    def _is_downpayment(self):
-        # OVERRIDE
-        self.ensure_one()
-        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
 
     def _get_sale_order_invoiced_amount(self, order):
         """

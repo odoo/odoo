@@ -365,7 +365,7 @@ class AccountMove(models.Model):
         'move_id',
         string='Invoice lines',
         copy=False,
-        domain=[('display_type', 'in', ('product', 'line_section', 'line_subsection', 'line_note'))],
+        domain=[('display_type', 'in', ('product', 'downpayment', 'line_section', 'line_subsection', 'line_note'))],
     )
 
     # === Date fields === #
@@ -1174,7 +1174,7 @@ class AccountMove(models.Model):
                         total_tax_currency += line.amount_currency
                         total += line.balance
                         total_currency += line.amount_currency
-                    elif line.display_type in ('product', 'rounding', 'non_deductible_product', 'non_deductible_product_total'):
+                    elif line.display_type in ('product', 'downpayment', 'rounding', 'non_deductible_product', 'non_deductible_product_total'):
                         # Untaxed amount.
                         total_untaxed += line.balance
                         total_untaxed_currency += line.amount_currency
@@ -1786,9 +1786,9 @@ class AccountMove(models.Model):
         is_invoice = self.is_invoice(include_receipts=True)
 
         if self.id or not is_invoice:
-            base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
+            base_amls = self.line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         else:
-            base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+            base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
 
         tax_lines = []
@@ -3260,7 +3260,7 @@ class AccountMove(models.Model):
         fake_base_line = AccountTax._prepare_base_line_for_taxes_computation(None)
 
         def get_base_lines(move):
-            return move.line_ids.filtered(lambda line: line.display_type in ('product', 'epd', 'rounding', 'cogs', 'non_deductible_product'))
+            return move.line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment', 'epd', 'rounding', 'cogs', 'non_deductible_product'))
 
         def get_tax_lines(move):
             return move.line_ids.filtered('tax_repartition_line_id')
@@ -4942,7 +4942,7 @@ class AccountMove(models.Model):
         if round_from_tax_lines is None:
             round_from_tax_lines = filter_tax_values_to_apply or filter_invl_to_apply
 
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
+        base_amls = self.line_ids.filtered(lambda x: x.display_type in ('product', 'downpayment') and (not filter_invl_to_apply or filter_invl_to_apply(x)))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = self._prepare_tax_lines_for_taxes_computation(tax_amls, round_from_tax_lines)
@@ -5042,7 +5042,7 @@ class AccountMove(models.Model):
         company = self.company_id
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
         tax_lines = self.line_ids.filtered('tax_repartition_line_id')
-        invoice_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        invoice_lines = self.line_ids.filtered(lambda x: x.display_type in ('product', 'downpayment'))
         payment_term = self.invoice_payment_term_id
         early_pay_discount_computation = payment_term.early_pay_discount_computation
         discount_percentage = payment_term.discount_percentage
@@ -6072,7 +6072,7 @@ class AccountMove(models.Model):
             if move.amount_total < 0:
                 line_ids_commands = []
                 for line in move.line_ids:
-                    if line.display_type != 'product':
+                    if line.display_type not in ('product', 'downpayment'):
                         continue
                     line_ids_commands.append(Command.update(line.id, {
                         'quantity': -line.quantity,
@@ -6942,7 +6942,7 @@ class AccountMove(models.Model):
         }
 
         # Invoice lines details.
-        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type == 'product'), start=1):
+        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment')), start=1):
             line_vals = line._prepare_edi_vals_to_export()
             line_vals['index'] = index
             res['invoice_line_vals_list'].append(line_vals)
@@ -7349,10 +7349,8 @@ class AccountMove(models.Model):
         return 'account.report_invoice_document'
 
     def _is_downpayment(self):
-        ''' Return true if the invoice is a downpayment.
-        Down-payments can be created from a sale order. This method is overridden in the sale order module.
-        '''
-        return False
+        self.ensure_one()
+        return self.invoice_line_ids and all(invoice_line.display_type in ['downpayment', 'line_note', 'line_section', 'line_subsection'] for invoice_line in self.invoice_line_ids)
 
     def _refunds_origin_required(self):
         return False
