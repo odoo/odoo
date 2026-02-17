@@ -1193,6 +1193,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         so = self._get_new_sale_order(product=self.product_a)
         so.action_confirm()
+        so.order_line[0].product_uom_qty = 0
 
         picking = so.picking_ids
         self.env['stock.move'].create({
