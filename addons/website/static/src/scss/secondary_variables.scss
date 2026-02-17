@@ -301,3 +301,33 @@ $o-theme-navbar-font: o-get-font-info('navbar') or $o-theme-font !default;
 $o-theme-buttons-font: o-get-font-info('buttons') or $o-theme-font !default;
 
 $o-small-font-size: o-website-value('small-font-size') !default;
+
+// "Rounded Corners" input in the theme tab will customize these three
+// bs border radius values
+$o-theme-border-radius: (
+    'rounded-0': (
+        'border-radius-sm': 0rem,
+        'border-radius': 0rem,
+        'border-radius-lg': 0rem,
+    ),
+    'rounded-1': (
+        'border-radius-sm': .1rem,
+        'border-radius': .25rem,
+        'border-radius-lg': .4rem,
+    ),
+    'rounded-2': (
+        'border-radius-sm': .3rem,
+        'border-radius': .4rem,
+        'border-radius-lg': .7rem,
+    ),
+    'rounded-3': (
+        'border-radius-sm': .4rem,
+        'border-radius': .6rem,
+        'border-radius-lg': 1.2rem,
+    ),
+    'rounded-4': (
+        'border-radius-sm': .6rem,
+        'border-radius': 1.2rem,
+        'border-radius-lg': 2.1rem,
+    ),
+) !default;

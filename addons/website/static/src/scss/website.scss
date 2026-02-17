@@ -70,6 +70,11 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    // Global border radius values
+    @include print-variable('border-radius-sm', $border-radius-sm);
+    @include print-variable('border-radius', $border-radius);
+    @include print-variable('border-radius-lg', $border-radius-lg);
+
     // Note: font-size are not needed as already added by web_editor for the
     // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);
@@ -785,6 +790,23 @@ font[class*='bg-'] {
     // offcanvas, ...) use $body-bg by default, which is why we check it here.
     @if lightness($body-bg) < 50 {
         @include btn-close-white();
+    }
+}
+
+// Input group
+.input-group {
+    button.btn {
+        border-radius: $input-border-radius;
+    }
+    &-sm {
+        button.btn {
+            border-radius: $input-border-radius-sm;
+        }
+    }
+    &-lg {
+        button.btn {
+            border-radius: $input-border-radius-lg;
+        }
     }
 }
 

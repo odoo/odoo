@@ -61,13 +61,13 @@
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput actionParam="'btn-border-radius'" default="null" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" default="null" unit="'px'" saveUnit="'rem'"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" default="null" unit="'px'" saveUnit="'rem'"/>
                 </BuilderRow>
             </t>
         </BuilderRow>

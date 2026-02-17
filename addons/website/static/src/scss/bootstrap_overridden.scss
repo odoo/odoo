@@ -264,7 +264,7 @@ $form-check-input-border: ($input-border-width or 1px) solid $input-border-color
 // We limit the border radius for checkboxes to a maximum of 0.25rem
 // (BS5 default), to prevent checkboxes from appearing too rounded and
 // resembling radio buttons.
-$form-check-input-border-radius: if($input-border-radius != null, min($input-border-radius, .25rem), null) !default;
+$form-check-input-border-radius: if(o-website-value('roundness') == "rounded-0", 0 , if($input-border-radius != null, min($input-border-radius, .25rem), .25rem)) !default;
 // Note that using "input-disabled-bg" here might seems strange at first but it
 // is actually the most consistent found way at the moment:
 // - It does not depend on the "border-color", which is important as the
@@ -321,9 +321,9 @@ $o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 
 $o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;
 
 // Borders
-$border-radius-sm: .3rem !default;
-$border-radius: .4rem !default;
-$border-radius-lg: .6rem !default;
+$border-radius-sm: o-website-value('border-radius-sm') or map-get(map-get($o-theme-border-radius, o-website-value('roundness')), border-radius-sm) !default;
+$border-radius: o-website-value('border-radius') or map-get(map-get($o-theme-border-radius, o-website-value('roundness')), border-radius) !default;
+$border-radius-lg: o-website-value('border-radius-lg') or map-get(map-get($o-theme-border-radius, o-website-value('roundness')), border-radius-lg) !default;
 $border-radius-pill: 50rem !default; // BS Default
 
 // Accordion
