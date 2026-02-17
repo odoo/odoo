@@ -8,7 +8,7 @@
                 <!-- contact address -->
                 <div t-if="order.company?.name" t-esc="order.company.name" />
                 <t t-if="order.company.phone">
-                    <div>Tel:<t t-esc="order.company.phone" /></div>
+                    <div>Tel:<span dir="ltr"><t t-esc="order.company.phone" /></span></div>
                 </t>
                 <t t-if="order.company.vat">
                     <div t-esc="vatText"/>
