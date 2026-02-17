@@ -94,6 +94,10 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'google.co.zw', 'google.cat',
 ])
 
+SETTINGS_TO_TRANSFER_TO_NEW_DEFAULT_WEBSITE = [
+    'channel_id', 'salesperson_id', 'salesteam_id', 'website_slide_google_app_key', 'wa_sale_template_id'
+]
+
 
 class Website(models.CachedModel):
     _name = 'website'
@@ -352,6 +356,8 @@ class Website(models.CachedModel):
             groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
             groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
 
+        self._ensure_default_website_consistency()
+
         return websites
 
     def write(self, vals):
@@ -376,6 +382,9 @@ class Website(models.CachedModel):
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
             (original_company | self.company_id)._compute_website_id()
+
+        if 'sequence' in values:
+            self._ensure_default_website_consistency()
 
         if 'cookies_bar' in values:
             existing_policy_page = self.env['website.page'].search([
@@ -452,6 +461,71 @@ class Website(models.CachedModel):
         for website in self.filtered('homepage_url'):
             if not website.homepage_url.startswith('/'):
                 raise ValidationError(_("The homepage URL should be relative and start with '/'."))
+
+    @api.model
+    def _ensure_default_website_consistency(self):
+        """
+        Ensure the website.default_website record
+        points to the first website by sequence
+        """
+        first_website = self.sudo().search([], limit=1, order='sequence, id')
+        default_website = self.env.ref("website.default_website", raise_if_not_found=False)
+        if not first_website:
+            return
+        if not default_website:
+            # Set the first website as default one
+            self.env['ir.model.data'].create({
+                'name': 'default_website',
+                'module': 'website',
+                'model': 'website',
+                'res_id': first_website.id,
+            })
+            return
+
+        if default_website.id != first_website.id:
+            default_website_data = self.env['ir.model.data'].search([
+                ('module', '=', 'website'),
+                ('name', '=', 'default_website'),
+                ('model', '=', 'website')
+            ], limit=1)
+
+            # Among the settings in SETTINGS_TO_TRANSFER_TO_NEW_DEFAULT_WEBSITE,
+            # take only the existing ones (it depends on the installed modules)
+            intalled_settings = filter(lambda s: s in self._fields, SETTINGS_TO_TRANSFER_TO_NEW_DEFAULT_WEBSITE)
+            transferred_settings = []
+            for s in intalled_settings:
+                if default_website[s] and not first_website[s]:
+                    # If s is set in the old default website and not in the new
+                    # default website, transfer it
+                    first_website[s] = default_website[s]
+                    transferred_settings.append(s)
+
+            # Mark the first website as default
+            default_website_data.res_id = first_website.id
+            self.env['ir.model.data']._update_xmlids([{
+                'xml_id': 'website.default_website',
+                'record': first_website,
+                'noupdate': True,
+            }])
+
+            # Display a notification to inform the user
+            if transferred_settings:
+                self.env.user._bus_send("simple_notification", {
+                    'type': 'info',
+                    'title': _("Default website changed"),
+                    'message': _(
+                        'The new default website is %(default_website_name)s. The following default settings have been transferred from the old default website to the new one: %(transferred_settings)s',
+                        default_website_name=first_website.name,
+                        transferred_settings=", ".join(transferred_settings)),
+                    'sticky': True
+                })
+            else:
+                self.env.user._bus_send("simple_notification", {
+                    'type': 'success',
+                    'title': _("Default website changed"),
+                    'message': _('The new default website is %(default_website_name)s.',
+                        default_website_name=first_website.name),
+                })
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
