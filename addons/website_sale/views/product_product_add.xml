@@ -12,6 +12,7 @@
             </xpath>
             <xpath expr="//field[@name='company_id']" position="before">
                 <field name="website_url" invisible="1"/>  <!-- We need this for `computePath` used in `onAddContent` to redirect to the product after creation. -->
+                <field name="website_published" invisible="1"/>  <!-- Needed so onchange-updated publish state is tracked in the dialog and saved. -->
             </xpath>
         </field>
     </record>
