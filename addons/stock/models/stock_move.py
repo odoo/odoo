@@ -462,8 +462,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move.forecast_availability = move.product_uom._compute_quantity(
                         move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                 elif move.state == 'draft':
-                    # for move _is_consuming and in draft -> the forecast_availability > 0 if in stock
-                    move.forecast_availability = virtual_available_dict[key_virtual_available(move)][move.product_id.id] - move.product_qty
+                    # for move _is_consuming and in draft -> the forecast_availability is compared on the JS side with move.product_qty
+                    move.forecast_availability = virtual_available_dict[key_virtual_available(move)][move.product_id.id]
                 elif move.state in ('waiting', 'confirmed', 'partially_available'):
                     outgoing_unreserved_moves_per_warehouse[move.location_id.warehouse_id].add(move.id)
             elif move.picking_type_id.code == 'incoming':
@@ -2318,7 +2318,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             if not move_out or not line['quantity']:
                 continue
             move_in = line.get('move_in')
-            qty_expected = line['quantity'] + result[move_out][0] if line['replenishment_filled'] else -line['quantity']
+            qty_expected = line['quantity'] + result[move_out][0] if line['replenishment_filled'] else 0
             date_expected = False
             if move_in:
                 date_expected = max(move_in.date, result[move_out][1]) if result[move_out][1] else move_in.date
