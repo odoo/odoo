@@ -2846,20 +2846,86 @@ export class PosStore extends WithLazyGetterTrap {
         await validation.validateOrder(false);
     }
 
-    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+    /**
+     * Handle the preparation history when merging or moving orderlines.
+     * @param {*} srcPrep last_preparation_change source
+     * @param {*} destPrep last_preparation_change target
+     * @param {*} srcLine orderline that's being merge/moved
+     * @param {*} destLine orderline to which srcLine is being merge/moved
+     * @param {*} qty quantity that has been moved
+     * @param {*} histories preparation history lines associated to the moved quantity
+     */
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty, histories) {
         const srcKey = srcLine.preparationKey;
         const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
+        const srcQty = srcLine.qty || 0;
 
-        if (srcQty) {
-            if (srcQty <= qty) {
-                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
-                destPrep[destKey] = newPrep;
-                delete srcPrep[srcKey];
-            } else {
-                srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+        // Moved all the quantity from the source line or more
+        if (srcQty <= qty) {
+            const srcPrepQty = srcPrep[srcKey]?.quantity || 0;
+            const destPrepQty = destPrep[destKey]?.quantity || 0;
+            destPrep[destKey] = {
+                ...(destPrep[destKey] || srcPrep[srcKey] || {}),
+                uuid: destLine.uuid,
+                quantity: destPrepQty + srcPrepQty,
+                history: [
+                    ...(destPrep[destKey]?.history || []),
+                    {
+                        uuid: srcLine.uuid,
+                        tableId: srcLine.order_id.table_id?.id || null,
+                        quantity: srcPrepQty,
+                        history: srcPrep[srcKey]?.history || [],
+                    },
+                ],
+            };
+            delete srcPrep[srcKey];
+        }
+
+        // Moved only part of the quantity from the source line
+        else {
+            if (srcPrep[srcKey]) {
+                if (histories) {
+                    const removeHistoryAndBubbleUpQuantity = (prepline, targets) => {
+                        const toDelete = [];
+                        for (const history of prepline.history) {
+                            const target = targets.find((t) => t.uuid === history.uuid);
+                            if (target) {
+                                prepline.quantity -= target.quantity;
+                                toDelete.push(history.uuid);
+                            }
+
+                            if (prepline.history?.length) {
+                                const beforeQty = history.quantity;
+                                removeHistoryAndBubbleUpQuantity(history, targets);
+                                const qtyDiff = beforeQty - history.quantity;
+                                prepline.quantity -= qtyDiff;
+                            }
+                        }
+                        prepline.history = prepline.history.filter(
+                            (h) => !toDelete.includes(h.uuid)
+                        );
+                    };
+                    removeHistoryAndBubbleUpQuantity(srcPrep[srcKey], histories);
+                } else {
+                    srcPrep[srcKey].quantity -= qty;
+                }
             }
+
+            const newQty = (destPrep[destKey]?.quantity || 0) + qty;
+            const newHistory = histories || [
+                {
+                    uuid: srcLine.uuid,
+                    tableId: srcLine.order_id.table_id?.id || null,
+                    quantity: qty,
+                    history: [],
+                },
+            ];
+            destPrep[destKey] = {
+                ...(destPrep[destKey] || srcPrep[srcKey] || {}),
+                uuid: destLine.uuid,
+                quantity: newQty,
+                history: newHistory,
+            };
         }
     }
 
