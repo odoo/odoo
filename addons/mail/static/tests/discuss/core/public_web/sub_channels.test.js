@@ -31,7 +31,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await click("button[title='Threads']");
-    await click(".o-mail-SubChannelPreview .o-mail-SubChannel-name:text('New Thread')");
+    await click(".o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text('New Thread')");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     // Should access sub-thread when clicking on the notification.
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
