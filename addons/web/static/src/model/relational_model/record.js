@@ -7,6 +7,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import { FetchRecordError } from "./errors";
+import { RequestEntityTooLargeError } from "@web/core/network/rpc";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
@@ -1176,7 +1177,7 @@ export class Record extends DataPoint {
                 kwargs
             );
         } catch (e) {
-            if (onError) {
+            if (onError && !(e instanceof RequestEntityTooLargeError)) {
                 return onError(e, {
                     discard: () => this._discard(),
                     retry: () => this._save(...arguments),
