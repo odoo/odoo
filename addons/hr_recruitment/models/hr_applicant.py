@@ -53,7 +53,7 @@ class HrApplicant(models.Model):
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
 
     partner_id = fields.Many2one('res.partner', "Contact", copy=False, index='btree_not_null')
-    partner_name = fields.Char("Applicant's Name")
+    partner_name = fields.Char("Applicant's Name", tracking=True)
     email_from = fields.Char(
         string="Email",
         size=128,
@@ -61,6 +61,7 @@ class HrApplicant(models.Model):
         inverse='_inverse_partner_email',
         copy=True,
         store=True,
+        tracking=True,
         index='trigram',
     )
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
@@ -71,13 +72,14 @@ class HrApplicant(models.Model):
         inverse='_inverse_partner_email',
         copy=True,
         store=True,
+        tracking=True,
         index='btree_not_null',
     )
     partner_phone_sanitized = fields.Char(
         string="Sanitized Phone Number", compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null'
     )
-    linkedin_profile = fields.Char('LinkedIn Profile', index='btree_not_null')
-    type_id = fields.Many2one('hr.recruitment.degree', "Degree")
+    linkedin_profile = fields.Char('LinkedIn Profile', tracking=True, index='btree_not_null')
+    type_id = fields.Many2one('hr.recruitment.degree', "Degree", tracking=True)
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     color = fields.Integer("Color Index", default=0)
     employee_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False, index='btree_not_null')
@@ -93,7 +95,7 @@ class HrApplicant(models.Model):
                                group_expand='_read_group_stage_ids')
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
-    categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
+    categ_ids = fields.Many2many('hr.applicant.category', string="Tags", tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='company_id.currency_id')
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', domain=_recruiter_domain, check_company=True,
@@ -153,6 +155,7 @@ class HrApplicant(models.Model):
     refuse_date = fields.Datetime('Refuse Date')
     talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool", string="Talent Pools")
     pool_applicant_id = fields.Many2one("hr.applicant", index='btree_not_null')
+    linked_applicant_ids = fields.One2many('hr.applicant', 'pool_applicant_id', 'Applications')
     is_pool_applicant = fields.Boolean(compute="_compute_is_pool")
     is_applicant_in_pool = fields.Boolean(
         compute="_compute_is_applicant_in_pool", search="_search_is_applicant_in_pool"
@@ -671,6 +674,10 @@ class HrApplicant(models.Model):
                 )
         return applicants
 
+    @api.model
+    def _get_sync_fields(self):
+        return ('partner_name', 'email_from', 'partner_phone', 'linkedin_profile', 'categ_ids', 'type_id', 'availability')
+
     def write(self, vals):
         # recruiter change: update date_open
         if vals.get('recruiter_id'):
@@ -694,16 +701,9 @@ class HrApplicant(models.Model):
             vals['date_last_stage_update'] = fields.Datetime.now()
         res = super().write(vals)
 
-        for applicant in self:
-            if applicant.pool_applicant_id and applicant != applicant.pool_applicant_id and (not applicant.is_pool_applicant):
-                if 'email_from' in vals:
-                    applicant.pool_applicant_id.email_from = vals['email_from']
-                if 'partner_phone' in vals:
-                    applicant.pool_applicant_id.partner_phone = vals['partner_phone']
-                if 'linkedin_profile' in vals:
-                    applicant.pool_applicant_id.linkedin_profile = vals['linkedin_profile']
-                if 'type_id' in vals:
-                    applicant.pool_applicant_id.type_id = vals['type_id']
+        if not self.env.context.get('fields_synced', False):
+            sync_fields_in_vals = {field: vals[field] for field in self._get_sync_fields() if field in vals}
+            (self.pool_applicant_id.linked_applicant_ids - self).with_context(fields_synced=True).write(sync_fields_in_vals)
 
         if 'interviewer_ids' in vals:
             interviewers_to_clean = old_interviewers - self.interviewer_ids
