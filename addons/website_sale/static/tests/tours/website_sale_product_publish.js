@@ -60,6 +60,9 @@ registerWebsitePreviewTour(
             run: 'click',
         },
         {
+            trigger: '.modal-dialog .o_field_widget[name="public_categ_ids"] .badge:contains("Test Category")',
+        },
+        {
             trigger: '.modal-footer button.btn-primary',
             run: 'click',
         },
