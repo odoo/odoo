@@ -142,7 +142,7 @@ class WorldlineDriver(CtypesTerminalDriver):
         transaction_id = transaction['TransactionID']
         transaction_amount = transaction['amount'] / 100
         transaction_action_identifier = transaction['actionIdentifier']
-        _logger.info('start transaction #%d amount: %f action_identifier: %d', transaction_id, transaction_amount, transaction_action_identifier)
+        _logger.info('%s, start transaction #%d amount: %f action_identifier: %d', self.device_name, transaction_id, transaction_amount, transaction_action_identifier)
         result = self.easyCTEP.startTransaction(
             ctypes.byref(self.dev),  # std::shared_ptr<ect::CTEPTerminal> trm
             ctypes.c_char_p(str(transaction_amount).encode('utf-8')),  # char const* amount
@@ -156,7 +156,7 @@ class WorldlineDriver(CtypesTerminalDriver):
         self.next_transaction_min_dt = datetime.datetime.now() + datetime.timedelta(seconds=self.DELAY_TIME_BETWEEN_TRANSACTIONS)
 
         if result == 1:
-            _logger.info('succesfully finished transaction #%d', transaction_id)
+            _logger.info('%s, succesfully finished transaction #%d', self.device_name, transaction_id)
             # Transaction successful
             self.send_status(
                 response='Approved',
@@ -170,16 +170,16 @@ class WorldlineDriver(CtypesTerminalDriver):
             error_code = error_code.value.decode('utf-8')
             # Transaction failed
             if error_code not in IGNORE_ERRORS:
-                error_msg = f'transaction #{transaction_id} error: {error_code}: {TERMINAL_ERRORS.get(error_code, "Transaction Error")}'
+                error_msg = f'{self.device_name}, transaction #{transaction_id} error: {error_code}: {TERMINAL_ERRORS.get(error_code, "Transaction Error")}'
                 _logger.info(error_msg)
                 self.send_status(error=error_msg, request_data=transaction)
             # Transaction was cancelled
             else:
-                _logger.info("transaction #%d cancelled by PoS user", transaction_id)
+                _logger.info('%s, transaction #%d cancelled by PoS user', self.device_name, transaction_id)
                 self.send_status(stage='Cancel', request_data=transaction)
         elif result == -1:
             # Terminal disconnection, check status manually
-            _logger.warning("terminal disconnected during transaction #%d", transaction_id)
+            _logger.warning('%s, terminal disconnected during transaction #%d', self.device_name, transaction_id)
             self.send_status(disconnected=True, request_data=transaction)
 
     def cancelTransaction(self, transaction):
@@ -188,12 +188,12 @@ class WorldlineDriver(CtypesTerminalDriver):
         self.send_status(stage='waitingCancel', request_data=transaction)
 
         error_code = create_ctypes_string_buffer()
-        _logger.info("cancel transaction request for %s", transaction)
+        _logger.info('%s, cancel transaction request for %s', self.device_name, transaction)
         result = self.easyCTEP.abortTransaction(ctypes.byref(self.dev), error_code)  # std::shared_ptr<ect::CTEPTerminal> trm
-        _logger.debug("end cancel transaction request")
+        _logger.debug("%s, end cancel transaction request for %s", self.device_name, transaction)
 
         if not result:
             error_code = error_code.value.decode('utf-8')
-            error_msg = f'Cancellation failed: {error_code}: {TERMINAL_ERRORS.get(error_code, "cancellation error")}'
+            error_msg = f'{self.device_name} cancellation failed: {error_code}: {TERMINAL_ERRORS.get(error_code, "cancellation error")}'
             _logger.info(error_msg)
             self.send_status(stage='Cancel', error=error_msg, request_data=transaction)
