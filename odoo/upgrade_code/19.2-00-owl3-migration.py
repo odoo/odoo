@@ -311,6 +311,7 @@ def upgrade_this(file_manager, log_info, log_error):
 
     web_files = [
         f for f in file_manager
+        # if ('web/static/src/' in f.path._str or 'mail/static/src/' in f.path._str)
         if 'static/src' in f.path._str
         and f.path.suffix == '.xml'
         and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
@@ -333,7 +334,7 @@ def upgrade_this(file_manager, log_info, log_error):
         except Exception as e:
             log_error(file.path, e)
 
-        file_manager.print_progress(fileno, len(web_files))
+        # file_manager.print_progress(fileno, len(web_files))
 
     # Step 3: Modify x-path targetting web files we might have modified above
     INHERIT_PATTERN = re.compile(r't-inherit=["\']web\..*?["\']')  # Matches t-inherit="web.xxxxx
@@ -352,7 +353,7 @@ def upgrade_this(file_manager, log_info, log_error):
         except Exception as e:
             log_error(file.path, e)
 
-        file_manager.print_progress(fileno, len(web_files))
+        # file_manager.print_progress(fileno, len(web_files))
 
 
 def upgrade_this_in_tests(file_manager, log_info, log_error):
