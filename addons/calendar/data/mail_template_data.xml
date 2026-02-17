@@ -12,7 +12,7 @@
             <field name="description">Invitation email to new attendees</field>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151; background-color: white;">
+<div style="font-size: 13px; color: #374151; background-color: #F1F1F1;">
     <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
@@ -109,7 +109,7 @@
             </t>
         </div>
         <div t-if="len(object.event_id.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
-            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees"/> more
+            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees">2</t> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
@@ -138,7 +138,7 @@
             <field name="description">Sent to all attendees if the schedule change</field>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151; background-color: white;">
+<div style="font-size: 13px; color: #374151; background-color: #F1F1F1;">
 
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
     <t t-set="customer" t-value="object.event_id.find_partner_customer()"/>
@@ -164,7 +164,7 @@
             <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
         </t>
         <t t-elif="is_online and target_customer">
-            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''"></strong> <t t-if="organizer">with </t><t t-out="organizer.partner_id.name or ''">Colleen Diaz</t>
+            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> <t t-if="organizer">with </t><t t-out="organizer.partner_id.name or ''">Colleen Diaz</t>
             is now scheduled for <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
         </t>
         <t t-else="">
@@ -244,7 +244,7 @@
             </t>
         </div>
         <div t-if="len(object.event_id.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
-            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees"/> more
+            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees">2</t> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
@@ -273,7 +273,7 @@
             <field name="description">Sent to all attendees if a reminder is set</field>
             <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151; background-color: white;">
+<div style="font-size: 13px; color: #374151; background-color: #F1F1F1;">
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
@@ -360,7 +360,7 @@
             </t>
         </div>
         <div t-if="len(object.event_id.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
-            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees"/> more
+            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees">2</t>more
         </div>
     </div>
     <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
@@ -388,7 +388,7 @@
             <field name="description">Used to manually notify attendees</field>
             <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151; background-color: white;">
+<div style="font-size: 13px; color: #374151; background-color: #F1F1F1;">
     <t t-set="is_online" t-value="'appointment_type_id' in object and object.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
@@ -461,7 +461,7 @@
             </t>
         </div>
         <div t-if="len(object.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
-            ... and <t t-out="len(object.attendee_ids) - max_shown_attendees"/> more
+            ... and <t t-out="len(object.attendee_ids) - max_shown_attendees">2</t> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.description)" style="margin: 32px 0 0;">
@@ -488,7 +488,7 @@
             <field name="description">Used to manually notify attendees</field>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151; background-color: white;">
+<div style="font-size: 13px; color: #374151; background-color: #F1F1F1;">
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
     <t t-set="event_name" t-value="object.name or ''"/>
     <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
