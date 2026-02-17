@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-05 18:37+0000\n"
-"PO-Revision-Date: 2026-01-10 09:15+0000\n"
+"PO-Revision-Date: 2026-02-14 09:31+0000\n"
 "Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/mn/>\n"
@@ -3498,7 +3498,7 @@ msgstr "Ажилбар дээр сануулга гарсныг илэрхийл
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Identify Customer"
-msgstr ""
+msgstr "Үйлчлүүлэгч сонгогдсон байх"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction
@@ -3994,6 +3994,14 @@ msgid ""
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"Төлбөрийг үйлчлүүлэгчийн авлагын дансаар бүртгэх бол хоосон орхино.\n"
+"Сэшн хаагдах үед энд сонгосон журналд зохих төлбөрийн хуримтлагдсан дүнгээр "
+"(үйлчүүлэгч сонгогдсон бол барим тус бүрээр) бүртгэл хийнэ.\n"
+"Бэлэн мөнгөний журналын хувьд, хуулганы гүйлгээг тухайн журналын үндсэн "
+"дансанд бүртгэнэ.\n"
+"Банкны журналын хувьд, уг төлбөрийн арга дээр тодорхойлсон төлбөр дамжих "
+"дансанд бүртгэнэ.\n"
+"Зөвхөн бэлэн болон банкны төрөлтэй журналуудыг ашиглахыг зөвшөөрнө."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -9138,6 +9146,9 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
+"%(payment_method)s төлбөрийн арга нь \"Үйлчлүүлэгч сонгогдсон байх\" "
+"тохиргоотой байна, харин %(order)s захиалга дээр хараахан үйлчлүүлэгч "
+"тодорхойлогдоогүй байна."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

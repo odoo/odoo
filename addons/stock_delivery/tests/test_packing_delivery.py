@@ -363,3 +363,38 @@ class TestPacking(TestPackingCommon):
         self.assertTrue(package.quant_ids)
         self.assertEqual(package.weight, self.product_aw.weight, "As the package contains quants, its weight is correctly computed from them.")
         self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+
+    def test_outgoing_picking_return_status(self):
+        '''
+        Ensure outgoing pickings are not considered returns.
+        '''
+        picking_in = self.env['stock.picking'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'carrier_id': self.test_carrier.id,
+        })
+        self.env['stock.move.line'].create({
+            'product_id': self.product_aw.id,
+            'product_uom_id': self.uom_kg.id,
+            'picking_id': picking_in.id,
+            'quantity': 5,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picked': True,
+        })
+        picking_in.button_validate()
+        self.assertEqual(picking_in.state, 'done')
+
+        # Process return
+        wiz_form_return = Form(self.env['stock.return.picking'].with_context(active_id=picking_in.id, active_model='stock.picking'))
+        wiz_return = wiz_form_return.save()
+        wiz_return.product_return_moves.quantity = 3
+        action = wiz_return.action_create_returns()
+        return_picking = self.env["stock.picking"].browse(action["res_id"])
+        return_picking.move_line_ids.quantity = 3
+        return_picking.carrier_id = self.test_carrier
+        return_picking.button_validate()
+        self.test_carrier.can_generate_return = True
+        self.assertFalse(return_picking.is_return_picking)

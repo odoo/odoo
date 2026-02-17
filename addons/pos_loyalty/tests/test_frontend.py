@@ -3240,3 +3240,19 @@ class TestUi(TestPointOfSaleHttpCommon):
                 })]
             })
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_race_conditions_update_program', login="pos_user")
+
+    def test_loyalty_in_trusted_pos(self):
+        """This test ensures that when a order is loaded in trusted pos, loyalty is shown"""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        trusted_pos_config = self.main_pos_config.copy()
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 0,
+        })
+        self.main_pos_config.trusted_config_ids += trusted_pos_config
+        trusted_pos_config.trusted_config_ids += self.main_pos_config
+        self.start_pos_tour("test_loyalty_in_trusted_pos_make_order", login="pos_user")
+        self.start_pos_tour("test_loyalty_in_trusted_pos", login="pos_user", pos_config=trusted_pos_config)
