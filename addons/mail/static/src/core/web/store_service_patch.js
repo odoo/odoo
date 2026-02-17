@@ -43,9 +43,6 @@ const StorePatch = {
             },
             eager: true,
         });
-        this.inbox = fields.One("mail.thread");
-        this.starred = fields.One("mail.thread");
-        this.history = fields.One("mail.thread");
     },
     computeGlobalCounter() {
         return this.inbox?.counter ?? 0;
@@ -68,9 +65,9 @@ const StorePatch = {
             id: "inbox",
             model: "mail.box",
         };
-        this.starred = {
-            display_name: _t("Starred messages"),
-            id: "starred",
+        this.bookmarkBox = {
+            display_name: _t("Bookmarks"),
+            id: "bookmark",
             model: "mail.box",
         };
         this.history = {
@@ -156,11 +153,11 @@ const StorePatch = {
             }
         }
     },
-    async unstarAll() {
+    async removeAllBookmarks() {
         // apply the change immediately for faster feedback
-        this.store.starred.counter = 0;
-        this.store.starred.messages = [];
-        await this.env.services.orm.call("mail.message", "unstar_all");
+        this.store.bookmarkBox.counter = 0;
+        this.store.bookmarkBox.messages = [];
+        await this.store.fetchStoreData("remove_all_bookmarks", undefined, { readonly: false });
     },
     handleClickOnLink(ev, thread) {
         const model = ev.target.dataset.oeModel;

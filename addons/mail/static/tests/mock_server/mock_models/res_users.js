@@ -149,11 +149,11 @@ export class ResUsers extends webModels.ResUsers {
                 id: "inbox",
                 model: "mail.box",
             },
-            starred: {
-                counter: MailMessage._filter([["starred_partner_ids", "in", user.partner_id]])
+            bookmarkBox: {
+                counter: MailMessage._filter([["bookmarked_partner_ids", "in", [user.partner_id]]])
                     .length,
                 counter_bus_id: bus_last_id,
-                id: "starred",
+                id: "bookmark",
                 model: "mail.box",
             },
             initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)

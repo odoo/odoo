@@ -183,14 +183,14 @@ class TestMessageValues(MailCommon):
             message_type='comment',
             subtype_id=note_subtype.id,
         )
-        message.write({'starred_partner_ids': [(4, self.partner_admin.id)]})
+        message.write({'bookmarked_partner_ids': [(4, self.partner_admin.id)]})
 
         # check content
         self.assertEqual(len(message.attachment_ids), 1)
         self.assertFalse(is_html_empty(message.body))
         self.assertEqual(len(message.sudo().notification_ids), 1)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
-        self.assertEqual(message.starred_partner_ids, self.partner_admin)
+        self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)
         self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
@@ -207,7 +207,7 @@ class TestMessageValues(MailCommon):
         record._message_update_content(message, body="", attachment_ids=[])
         self.assertFalse(message.attachment_ids)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
-        self.assertEqual(message.starred_partner_ids, self.partner_admin)
+        self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)
         self.assertFalse(message.sudo()._filter_empty(), 'Subtype with description')
 
         # Completely emptied now
@@ -215,7 +215,7 @@ class TestMessageValues(MailCommon):
         self.assertEqual(message.sudo()._filter_empty(), message)
         record._message_update_content(message.sudo(), body="", attachment_ids=[])
         self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
-        self.assertEqual(message.starred_partner_ids, self.partner_admin)  # starred messages stay (albeit content is removed)
+        self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)  # bookmarked messages stay (albeit content is removed)
 
         # test tracking values
         record.write({'user_id': self.user_admin.id})

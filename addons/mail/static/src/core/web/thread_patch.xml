@@ -9,9 +9,11 @@
                         New messages appear here.
                     </div>
                 </t>
-                <t t-if="props.thread.id === 'starred'">
-                    <h4 class="mb-3 fw-bolder">No starred messages</h4>
-                    You can mark any message as 'starred', and it shows up in this mailbox.
+                <t t-if="props.thread.id === 'bookmark'">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <h4 class="mb-3 fw-bolder">Bookmark important messages</h4>
+                        Save messages here to easily keep track of them.
+                    </div>
                 </t>
                 <t t-if="props.thread.id === 'history'">
                     <img src="/web/static/img/neutral_face.svg" alt="History"/>

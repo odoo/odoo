@@ -1,6 +1,7 @@
 import { markup } from "@odoo/owl";
 import {
     authenticate,
+    Command,
     getKwArgs,
     logout,
     makeKwArgs,
@@ -1063,8 +1064,55 @@ function _process_request_for_all(store, name, params, context = {}) {
 }
 
 function _process_request_for_logged_in_user(store, name, params) {
+    /** @type {import("mock_models").BusBus} */
+    const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+    const bookmark_message_ids = [];
+    if (["add_bookmark", "remove_bookmark"].includes(name)) {
+        const messages = MailMessage.browse(params.message_id);
+        const command = name === "add_bookmark" ? Command.link : Command.unlink;
+        MailMessage.write(messages[0].id, {
+            bookmarked_partner_ids: [command(this.env.user.partner_id)],
+        });
+        bookmark_message_ids.push(...messages.map((m) => m.id));
+    }
+    if (name === "remove_all_bookmarks") {
+        const messages = MailMessage._filter([
+            ["bookmarked_partner_ids", "in", this.env.user.partner_id],
+        ]);
+        MailMessage.write(
+            messages.map((message) => message.id),
+            { bookmarked_partner_ids: [Command.unlink(this.env.user.partner_id)] }
+        );
+        bookmark_message_ids.push(...messages.map((m) => m.id));
+    }
+    if (bookmark_message_ids.length > 0) {
+        const bus_store = new mailDataHelpers.Store();
+        for (const cur_store of [store, bus_store]) {
+            for (const message_id of bookmark_message_ids) {
+                cur_store.add(
+                    MailMessage.browse(message_id),
+                    makeKwArgs({ for_current_user: true })
+                );
+                const bus_last_id = BusBus.lastBusNotificationId;
+                cur_store.add({
+                    bookmarkBox: {
+                        counter: MailMessage._filter([
+                            ["bookmarked_partner_ids", "in", [this.env.user.partner_id]],
+                        ]).length,
+                        counter_bus_id: bus_last_id,
+                        id: "bookmark",
+                        model: "mail.box",
+                    },
+                });
+            }
+        }
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "mail.record/insert", bus_store.get_result());
+    }
     if (name === "/mail/inbox/messages") {
         _resolve_messages.call(
             this,
@@ -1098,10 +1146,10 @@ function _process_request_for_logged_in_user(store, name, params) {
             }
         );
     }
-    if (name === "/mail/starred/messages") {
+    if (name === "/mail/bookmark/messages") {
         _resolve_messages.call(this, store, {
             ...params.fetch_params,
-            domain: [["starred_partner_ids", "in", [this.env.user.partner_id]]],
+            domain: [["bookmarked_partner_ids", "in", [this.env.user.partner_id]]],
         });
     }
     if (name === "/mail/thread/messages") {

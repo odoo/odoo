@@ -185,7 +185,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 'res_id': record.id,
                 'subject': f'Test Rating {msg_idx}',
                 'subtype_id': comment_subtype_id,
-                'starred_partner_ids': [
+                'bookmarked_partner_ids': [
                     (4, cls.customers[(msg_idx * 2)].id),
                     (4, cls.customers[(msg_idx * 2) + 1].id),
                 ],

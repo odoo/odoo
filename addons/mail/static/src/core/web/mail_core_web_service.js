@@ -32,8 +32,8 @@ export class MailCoreWeb {
             if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
                 this.store.inbox.counter--;
             }
-            if (message.starred && notifId > this.store.starred.counter_bus_id) {
-                this.store.starred.counter--;
+            if (message.is_bookmarked && notifId > this.store.bookmarkBox.counter_bus_id) {
+                this.store.bookmarkBox.counter--;
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {

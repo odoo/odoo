@@ -52,7 +52,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   4: _init_messaging (mail)
     #       - search bus_bus (_bus_last_id)
     #       - _get_needaction_count (inbox counter)
-    #       - search mail_message (starred counter)
+    #       - search mail_message (bookmark counter)
     #           - _check_access
     #   23: _process_request_for_all (discuss):
     #       - search discuss_channel (channels_domain)
@@ -134,7 +134,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   22: store add message:
     #       - fetch mail_message
     #       - search mail_message_schedule
-    #       - search mail_message_res_partner_starred_rel
+    #       - search mail_message_res_partner_bookmarked_rel
     #       - search message_attachment_rel
     #       - search mail_message_res_partner_rel
     #       - search mail_message_reaction
@@ -292,8 +292,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         members = self.channel_channel_public_1.channel_member_ids
         member = members.filtered(lambda m: m.partner_id == self.users[0].partner_id).with_user(self.users[0])
         member._mark_as_read(message_0.id)
-        # add star
-        message_0.toggle_message_starred()
+        # add bookmark
+        message_0.bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
         self.env.company.sudo().name = 'YourCompany'
         # add folded channel
         members = self.channel_chat_1.channel_member_ids
@@ -512,10 +512,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "inbox",
                     "model": "mail.box",
                 },
-                "starred": {
+                "bookmarkBox": {
                     "counter": 1,
                     "counter_bus_id": bus_last_id,
-                    "id": "starred",
+                    "id": "bookmark",
                     "model": "mail.box",
                 },
                 "initChannelsUnreadCounter": 3,
@@ -1351,7 +1351,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "reply_to": '"Ernest Employee" <catchall.test@test.mycompany.com>',
                 "res_id": 1,
                 "scheduledDatetime": False,
-                "starred": False,
+                "is_bookmarked": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1390,7 +1390,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "res_id": channel.id,
                 "reply_to": '"test2" <catchall.test@test.mycompany.com>',
                 "scheduledDatetime": False,
-                "starred": True,
+                "is_bookmarked": True,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
                 "trackingValues": [],
@@ -1427,7 +1427,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "reply_to": '"Ernest Employee" <catchall.test@test.mycompany.com>',
                 "res_id": channel.id,
                 "scheduledDatetime": False,
-                "starred": False,
+                "is_bookmarked": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_comment").id,
                 "trackingValues": [],
@@ -1465,7 +1465,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
                 "res_id": channel.id,
                 "scheduledDatetime": False,
-                "starred": False,
+                "is_bookmarked": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
                 "trackingValues": [],
@@ -1502,7 +1502,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "reply_to": '"Ernest Employee" <catchall.test@test.mycompany.com>',
                 "res_id": channel.id,
                 "scheduledDatetime": False,
-                "starred": False,
+                "is_bookmarked": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_comment").id,
                 "trackingValues": [],
@@ -1536,7 +1536,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "reply_to": '"test1" <catchall.test@test.mycompany.com>',
                 "res_id": channel.id,
                 "scheduledDatetime": False,
-                "starred": False,
+                "is_bookmarked": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
                 "trackingValues": [],
@@ -1570,7 +1570,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "reply_to": '"Public user" <catchall.test@test.mycompany.com>',
                 "res_id": channel.id,
                 "scheduledDatetime": False,
-                "starred": False,
+                "is_bookmarked": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
                 "trackingValues": [],

@@ -102,9 +102,12 @@ class TestDiscussChannelReadonly(MailCommon, HttpCase):
         )
 
     def test_readonly_channel_user_can_star_message(self):
+        self.authenticate(self.test_user.login, self.test_user.login)
         message = self.test_channel.message_post(body="Message to star")
-        message.with_user(self.test_user).toggle_message_starred()
-        self.assertIn(self.test_user.partner_id, message.starred_partner_ids)
+        self.make_jsonrpc_request(
+            "/mail/action", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
+        )
+        self.assertIn(self.test_user.partner_id, message.bookmarked_partner_ids)
 
     def test_readonly_channel_user_can_react(self):
         message = self.test_channel.message_post(body="Message to react")

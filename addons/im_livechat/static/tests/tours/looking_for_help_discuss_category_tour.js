@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("im_livechat.looking_for_help_discuss_ca
                 ".o-mail-DiscussSidebarCategory-livechatNeedHelp + .o-mail-DiscussSidebarCategory-channels .o-mail-DiscussSidebarChannel-container:contains(Visitor Accounting) + .o-mail-DiscussSidebarChannel-container:contains(Visitor Sales)",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Sales) .o-mail-starred",
+            trigger: ".o-mail-DiscussSidebarChannel:contains(Sales) .o-mail-favorite",
         },
         {
             trigger:
@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add("im_livechat.looking_for_help_discuss_ca
         },
         {
             trigger:
-                ".o-mail-DiscussSidebarChannel:contains(Accounting):not(:has(.o-mail-starred))",
+                ".o-mail-DiscussSidebarChannel:contains(Accounting):not(:has(.o-mail-favorite))",
         },
         {
             trigger: ".o-mail-DiscussSidebarChannel:contains(Accounting)",

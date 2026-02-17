@@ -190,17 +190,7 @@ class WebclientController(ThreadController):
                 "model": "mail.box",
             },
         )
-        res.attr(
-            "starred",
-            {
-                "counter": user.env["mail.message"].search_count(
-                    [("starred_partner_ids", "in", user.partner_id.ids)],
-                ),
-                "counter_bus_id": bus_last_id,
-                "id": "starred",
-                "model": "mail.box",
-            },
-        )
+        user._store_bookmark_box_global_fields(res, bus_last_id)
 
     @classmethod
     def _get_supported_avatar_card_models(self):

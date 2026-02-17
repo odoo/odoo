@@ -31,7 +31,7 @@ const threadModelPatch = {
             : this.model === "mail.box"
             ? this.store.self_user?.notification_type === "inbox"
                 ? "inbox"
-                : "starred"
+                : "bookmark"
             : ["chat", "group"].includes(this.channel?.channel_type)
             ? "chat"
             : "channel";

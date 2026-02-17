@@ -22,10 +22,10 @@ class TestUIPortal(TestPortal):
             }
         )
 
-    def test_star_message(self):
+    def test_bookmark_message(self):
         self.start_tour(
             f"/my/test_portal_records/{self.record_portal.id}",
-            "star_message_tour",
+            "bookmark_message_tour",
             login=self.user_employee.login,
         )
 

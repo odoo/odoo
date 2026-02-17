@@ -458,17 +458,17 @@ test("reply to message from inbox (message linked to document)", async () => {
     await contains(".o-mail-Message.o-selfAuthored a.o_mail_redirect:text('@Refactoring')");
 });
 
-test("Can reply to starred message", async () => {
+test("Can reply to bookmark", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "RandomName" });
     pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
-        starred_partner_ids: [serverState.partnerId],
+        bookmarked_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     await start();
-    await openDiscuss("mail.box_starred");
+    await openDiscuss("mail.box_bookmark");
     await click("[title='Reply']");
     await contains(".o-mail-Composer-coreHeader:has(:text('RandomName'))");
     await insertText(".o-mail-Composer-input", "abc");
@@ -612,7 +612,7 @@ test("basic rendering: sidebar", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar button:text('Inbox')");
-    await contains(".o-mail-DiscussSidebar button:text('Starred messages')");
+    await contains(".o-mail-DiscussSidebar button:text('Bookmarks')");
     await contains(".o-mail-DiscussSidebar button:text('History')");
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-channel:text('Channels')");
@@ -663,12 +663,12 @@ test("sidebar: change active", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button.o-active:text('Inbox')");
-    await contains("button:not(.o-active):text('Starred messages')");
-    await click("button:text('Starred messages')");
+    await contains("button:not(.o-active):text('Bookmarks')");
+    await click("button:text('Bookmarks')");
     await contains("button:not(.o-active):text('Inbox')");
-    await contains("button.o-active:text('Starred messages')");
+    await contains("button.o-active:text('Bookmarks')");
     expect(browser.localStorage.getItem(LAST_DISCUSS_ACTIVE_ID_LS)).toBe(
-        toRawValue("mail.box_starred")
+        toRawValue("mail.box_bookmark")
     );
 });
 
@@ -750,8 +750,8 @@ test("initially load messages from inbox", async () => {
 
 test("default active id on mailbox", async () => {
     await start();
-    await openDiscuss("mail.box_starred");
-    await contains("button.o-active:text('Starred messages')");
+    await openDiscuss("mail.box_bookmark");
+    await contains("button.o-active:text('Bookmarks')");
 });
 
 test("basic top bar rendering", async () => {
@@ -762,9 +762,9 @@ test("basic top bar rendering", async () => {
     await contains("button:disabled:text('Mark all read')");
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
     await contains(".o-mail-DiscussContent-threadName:disabled");
-    await click("button:text('Starred messages')");
-    await contains("button:disabled:text('Unstar all')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
+    await click("button:text('Bookmarks')");
+    await contains("button:disabled:text('Remove all bookmarks')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Bookmarks" });
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await contains(".o-mail-DiscussContent-header button", { count: 8 });
@@ -799,7 +799,7 @@ test("rendering of inbox message", async () => {
     await contains(".o-mail-Message-header small:text('on Refactoring')");
     await contains(".o-mail-Message-actions i", { count: 4 });
     await contains("[title='Add a Reaction']");
-    await contains("[title='Add Star']");
+    await contains("[title='Bookmark']");
     await contains("[title='Mark as Read']");
     await click("[title='Expand']");
     await contains(".o-dropdown-item:contains('Reply')");
@@ -855,7 +855,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
     await contains(".o-dropdown-item", { count: 6 });
     await contains(".o-dropdown-item:contains('Add a Reaction')");
-    await contains(".o-dropdown-item:contains('Add Star')");
+    await contains(".o-dropdown-item:contains('Bookmark')");
     await contains(".o-dropdown-item:contains('Mark as Read')");
     await contains(".o-dropdown-item:contains('Reply')");
     await contains(".o-dropdown-item:contains('Translate')");
@@ -1174,20 +1174,20 @@ test("post several messages with failures", async () => {
     expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "1" });
 });
 
-test("starred: unstar all", async () => {
+test("bookmarked: unbookmark all", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create([
-        { body: "not empty", starred_partner_ids: [serverState.partnerId] },
-        { body: "not empty", starred_partner_ids: [serverState.partnerId] },
+        { body: "not empty", bookmarked_partner_ids: [serverState.partnerId] },
+        { body: "not empty", bookmarked_partner_ids: [serverState.partnerId] },
     ]);
     await start();
-    await openDiscuss("mail.box_starred");
+    await openDiscuss("mail.box_bookmark");
     await contains(".o-mail-Message", { count: 2 });
-    await contains("button:has(:text('Starred messages'))", { contains: [".badge:text('2')"] });
-    await click("button:enabled:text('Unstar all')");
-    await contains("button:text('Starred messages')", { contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('2')"] });
+    await click("button:enabled:text('Remove all bookmarks')");
+    await contains("button:text('Bookmarks')", { contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Message", { count: 0 });
-    await contains("button:disabled:text('Unstar all')");
+    await contains("button:disabled:text('Remove all bookmarks')");
 });
 
 test.tags("focus required");
@@ -1735,8 +1735,8 @@ test("'Invite People' button should be displayed in the topbar of chats", async 
 
 test("'Invite People' button should not be displayed in the topbar of mailboxes", async () => {
     await start();
-    await openDiscuss("mail.box_starred");
-    await contains("button:text('Unstar all')");
+    await openDiscuss("mail.box_bookmark");
+    await contains("button:text('Remove all bookmarks')");
     await contains("button[title='Invite People']", { count: 0 });
 });
 
@@ -1927,9 +1927,9 @@ test("select another mailbox", async () => {
     await contains(".o-mail-Discuss");
     await click("button:contains('Inbox')");
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
-    await click("button:text('Starred messages')");
-    await contains("button:disabled:text('Unstar all')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
+    await click("button:text('Bookmarks')");
+    await contains("button:disabled:text('Remove all bookmarks')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Bookmarks" });
 });
 
 test('auto-select "Inbox nav bar" when discuss had inbox as active thread', async () => {
@@ -2700,7 +2700,7 @@ test("Read-only channel member cannot respond or create subthread", async () => 
     await hover(".o-mail-Message");
     await contains(".o-mail-Message .o-mail-ActionList-button", { count: 3 });
     await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
-    await contains(".o-mail-Message .o-mail-ActionList-button[title='Add Star']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Bookmark']");
     await contains(".o-mail-Message .o-mail-ActionList-button[title='Mark as Unread']");
     await contains(".o-mail-Message .o-mail-ActionList-button[title='Copy Text']");
 });
@@ -2731,7 +2731,7 @@ test("Read-only channel have reactions for admin", async () => {
     await hover(".o-mail-Message");
     await contains(".o-mail-Message .o-mail-ActionList-button", { count: 3 });
     await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
-    await contains(".o-mail-Message .o-mail-ActionList-button[title='Add Star']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Bookmark']");
     await contains(".o-mail-Message .o-mail-ActionList-button[title='Reply']");
     await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
     await contains(".o-dropdown-item:text('Create Thread')");

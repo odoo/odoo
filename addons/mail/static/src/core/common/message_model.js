@@ -123,6 +123,20 @@ export class Message extends Record {
         return this.store.mt_note?.eq(this.subtype_id);
     }
     /** @type {boolean} */
+    is_bookmarked = fields.Attr(undefined, {
+        onUpdate() {
+            const bookmarkBox = this.store.bookmarkBox;
+            if (this.is_bookmarked === undefined || !bookmarkBox) {
+                return;
+            }
+            if (this.is_bookmarked) {
+                bookmarkBox.messages.add(this);
+            } else {
+                bookmarkBox.messages.delete(this);
+            }
+        },
+    });
+    /** @type {boolean} */
     is_transient;
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
@@ -207,7 +221,6 @@ export class Message extends Record {
     write_date = fields.Datetime();
     /** @type {undefined|Boolean} */
     needaction;
-    starred = false;
     showTranslation = false;
     ended_poll_ids = fields.Many("mail.poll", { inverse: "end_message_id" });
     started_poll_ids = fields.Many("mail.poll", { inverse: "start_message_id" });
@@ -491,7 +504,7 @@ export class Message extends Record {
         });
     }
 
-    get canToggleStar() {
+    get canToggleBookmark() {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
@@ -826,14 +839,39 @@ export class Message extends Record {
         return false;
     }
 
-    async toggleStar() {
-        this.store.insert(
-            await this.store.env.services.orm.silent.call(
-                "mail.message",
-                "toggle_message_starred",
-                [[this.id]]
-            )
+    async addBookmark() {
+        await this.store.fetchStoreData(
+            "add_bookmark",
+            { message_id: this.id },
+            { readonly: false }
         );
+    }
+
+    async removeBookmark(thread) {
+        await this.store.fetchStoreData(
+            "remove_bookmark",
+            { message_id: this.id },
+            { readonly: false }
+        );
+        this.closeNotificationFn?.();
+        if (thread?.eq(this.store.bookmarkBox)) {
+            this.closeNotificationFn = this.store.env.services.notification.add(
+                _t("Bookmark removed"),
+                {
+                    type: "success",
+                    buttons: [
+                        {
+                            name: "Undo",
+                            icon: "fa-undo",
+                            onClick: async () => {
+                                await this.addBookmark();
+                                this.closeNotificationFn();
+                            },
+                        },
+                    ],
+                }
+            );
+        }
     }
 
     async unfollow() {

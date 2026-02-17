@@ -573,7 +573,7 @@ class TestMessageNotify(TestMessagePostCommon):
             {'notification_ids': []},
             {'notified_partner_ids': []},
             {'reaction_ids': []},
-            {'starred_partner_ids': []},
+            {'bookmarked_partner_ids': []},
         ]:
             with self.subTest(parameters=parameters), \
                  self.mock_mail_gateway(), \

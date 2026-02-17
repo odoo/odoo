@@ -32,9 +32,6 @@ export class MailCoreCommon {
                 message.delete();
             }
         });
-        this.busService.subscribe("mail.message/toggle_star", (payload, metadata) =>
-            this._handleNotificationToggleStar(payload, metadata)
-        );
         this.busService.subscribe("res.users.settings", (payload) => {
             if (payload) {
                 this.store.settings.update(payload);
@@ -43,11 +40,6 @@ export class MailCoreCommon {
         this.busService.subscribe("mail.record/insert", (payload) => {
             this.store.insert(payload);
         });
-    }
-
-    _handleNotificationToggleStar(payload, metadata) {
-        const { message_ids: messageIds, starred } = payload;
-        this.store["mail.message"].insert(messageIds.map((id) => ({ id, starred })));
     }
 }
 
