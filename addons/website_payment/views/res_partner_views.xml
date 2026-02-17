@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partners_form_website" model="ir.ui.view">
+        <field name="name">view.res.partner.form.website</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field eval="17" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_address_format')]" position="after">
+                <field name="citizen_id_number"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

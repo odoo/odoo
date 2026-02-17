@@ -20,6 +20,7 @@ This is a bridge module that adds multi-website support for payment providers.
         'views/res_config_settings_views.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_donation.xml',
+        'views/res_partner_views.xml',
     ],
     'auto_install': True,
     'assets': {
