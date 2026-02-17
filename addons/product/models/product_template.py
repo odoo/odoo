@@ -1538,7 +1538,7 @@ class ProductTemplate(models.Model):
     def _get_product_placeholder_filename(self):
         return 'product/static/img/placeholder_thumbnail.png'
 
-    def get_single_product_variant(self, quantity=1):
+    def get_single_product_variant(self, quantity=1, **kwargs):
         """ Method used by the product configurator to check if the product is configurable or not.
 
         We need to open the product configurator if the product:

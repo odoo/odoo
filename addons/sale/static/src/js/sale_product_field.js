@@ -194,13 +194,13 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             {
                 quantity: this.props.record.data.product_uom_qty,
                 context: this.props.context,
+                ...this._getAdditionalRpcParams(),
             }
         );
         return result;
     }
 
     async _onProductTemplateUpdate() {
-        debugger;
         const result = await this._getPreloadedConfigData();
         if (result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
