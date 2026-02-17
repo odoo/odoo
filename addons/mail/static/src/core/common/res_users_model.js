@@ -18,6 +18,8 @@ export class ResUsers extends Record {
     partner_id = fields.One("res.partner", { inverse: "user_ids" });
     /** @type {boolean} false when the user is an internal user, true otherwise */
     share;
+    /** @type {boolean} */
+    active;
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = fields.Html(undefined);
 
