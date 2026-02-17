@@ -263,6 +263,7 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
+        this.iframeRef.el.contentWindow.addEventListener("blur", this.onBlur.bind(this));
         this.iframeLoaded.resolve({
             iframe: this.iframeRef.el,
             bundleControls: this.bundleControls,
