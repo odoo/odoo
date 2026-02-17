@@ -76,6 +76,7 @@
 	<cac:LegalMonetaryTotal>
 		<cbc:TaxExclusiveAmount currencyID="JO">100.000</cbc:TaxExclusiveAmount>
 		<cbc:TaxInclusiveAmount currencyID="JO">121.000</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="JO">0.000</cbc:AllowanceTotalAmount>
 		<cbc:PayableAmount currencyID="JO">121.000</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:InvoiceLine>
@@ -112,6 +113,11 @@
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="JO">100.000</cbc:PriceAmount>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReason>DISCOUNT</cbc:AllowanceChargeReason>
+				<cbc:Amount currencyID="JO">0.000</cbc:Amount>
+			</cac:AllowanceCharge>
 		</cac:Price>
 	</cac:InvoiceLine>
 </Invoice>

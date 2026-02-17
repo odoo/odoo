@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="button_l10n_jo_edi_pos" type="object" string="JoFotara (Jordan)" invisible="country_code != 'JO' or not l10n_jo_edi_pos_enabled or state in ['draft', 'cancel'] or l10n_jo_edi_pos_state in ['demo', 'sent']"/>
+            </header>
+            <button name="action_pos_order_invoice" position="attributes">
+                <attribute name="invisible" add="(country_code == 'JO' and l10n_jo_edi_pos_state not in ['demo', 'sent'])" separator=" or "/>
+            </button>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert"
+                    invisible="not l10n_jo_edi_pos_error">
+                    <div class="p-0 m-0">
+                        <i class="fa fa-warning" role="img" title="JoFotara Error"/>
+                        <span class="mx-1">E-invoicing (Jordan)</span>
+                        <a name="download_l10n_jo_edi_pos_computed_xml" type="object" groups="base.group_no_one" class="float-end">Download XML</a>
+                    </div>
+                    <field name="l10n_jo_edi_pos_error"/>
+                </div>
+            </xpath>
+
+            <group name="other_information" position="inside">
+                <field name="l10n_jo_edi_pos_state" invisible="country_code != 'JO'" readonly="l10n_jo_edi_pos_qr"/>
+                <field name="l10n_jo_edi_pos_return_reason" invisible="country_code !='JO' or not refunded_order_id" readonly="l10n_jo_edi_pos_qr"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_jo_edi_pos_state" widget="badge" optional="hide"
+                    decoration-success="l10n_jo_edi_pos_state in ['demo', 'sent']"/>
+                <field name="l10n_jo_edi_pos_error" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.list.select.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='status']" position="before">
+                <filter string="JoFotara Receipt State" name="l10n_jo_edi_pos_state" context="{'group_by': 'l10n_jo_edi_pos_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
