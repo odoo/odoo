@@ -602,11 +602,7 @@ class MrpWorkorder(models.Model):
             return
         # we need to keep the order of the workorder before removing the start date
         done_wo = set()
-        workorders_to_plan.leave_id.unlink()
-        workorders_to_plan.write({
-            'date_start': False,
-            'date_finished': False,
-        })
+        workorders_to_plan.action_unplan()
         for wo in workorders_to_plan:
             if wo.id in done_wo:
                 continue
