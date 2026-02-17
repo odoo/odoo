@@ -176,6 +176,21 @@ export class ClosePosPopup extends Component {
     }
     async closeSession() {
         this.pos._resetConnectedCashier();
+
+        const draftOrders = this.pos.models["pos.order"].filter(
+            (o) => o.state === "draft" && !o.isSynced && o.lines.length
+        );
+        if (draftOrders.length > 0) {
+            return this.handleClosingError({
+                title: _t("Oh snap !"),
+                message: _t(
+                    "You cannot close the POS while there are still draft orders for the day."
+                ),
+                redirect: false,
+                open_order_ids: [],
+            });
+        }
+
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
         if (!syncSuccess) {
