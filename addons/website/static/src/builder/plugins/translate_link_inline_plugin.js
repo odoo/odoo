@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class TranslateLinkInlinePlugin extends Plugin {
     static id = "translateLinkInline";
@@ -12,6 +13,19 @@ export class TranslateLinkInlinePlugin extends Plugin {
         },
         on_replaced_media_handlers: ({ newMediaEl }) => {
             this.markTranslateInline(newMediaEl);
+        },
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            for (const linkEl of selectElements(snippetEl, "a")) {
+                // Links inside `.o_not_editable` are not editable in
+                // translation mode, so they should not be marked as inline
+                // translatable.
+                // This notably avoids issues with `s_table_of_content`,
+                // whose navbar links are inside `.o_not_editable`.
+                const closestNotEditableEl = linkEl.closest(".o_not_editable");
+                if (!closestNotEditableEl) {
+                    linkEl.classList.add("o_translate_inline");
+                }
+            }
         },
     };
 
