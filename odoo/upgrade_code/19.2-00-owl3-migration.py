@@ -285,6 +285,7 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
         "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
+        "web.FieldTooltip": {'field', 'debug'},  # not sure
         "web.ListRenderer.RecordRow": {'record', 'group', 'groupId'},  # dynamic t-call I guess,
         "web.ListRenderer.GroupRow": {'group'},  # dynamic t-call I guess
         "web.PivotMeasure": {'cell'},  # for each + t-call
@@ -293,9 +294,10 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.SearchPanel.Category": {'section'},  # dynamic t-call
         "web.SearchPanel.FiltersGroup": {'values', 'section', 'group'},  # dynamic t-call
         "web.SelectMenu.ChoiceItem": {'choice', 'choice_index'},  # dynamic t-call
+        "web.SelectMenu.search": {'inputClass'},  # Var above t-call
         "web.TreeEditor.condition:editable": {'node'},  # Nested inherit
         "web.TreeEditor.condition:readonly": {'node'},  # Nested inherit
-        "web.TreeEditor.controls": {'node', 'ancestors'},  # Nested inherit
+        "web.TreeEditor.controls": {'node', 'ancestors', 'parent'},  # Nested inherit
         "web.TreeEditor.connector.value": {'node'},  # Nested inherit
         "web.TreeEditor.condition": {'node'},  # Nested inherit
         "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
