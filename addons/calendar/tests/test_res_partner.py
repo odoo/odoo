@@ -76,3 +76,56 @@ class TestResPartner(TransactionCase):
         self.assertEqual(test_partner_5.meeting_count, 2)
         self.assertEqual(test_partner_6.meeting_count, 1)
         self.assertEqual(test_partner_7.meeting_count, 1)
+
+    def test_view_multicompany_contact_with_inaccessible_meeting_parent(self):
+        """Ensure there's no AccessError raised when a user switched to sibling
+        company requests to view a partner contact that has a scheduled meeting
+        whose ancestor belongs to a company not visible in the current session.
+
+        Scenario:
+        - parent partner in company1, child partner in company1 (child.parent_id = parent)
+        - create two users:
+            * main_user & fake_user: has access to both companies, default company = company1
+        - create a calendar event whose attendees are both users' partners
+        - switch main_user to company2 and try to access the contact of the fake_user
+        Expected: no AccessError and `meeting_count` for the child/restricted partner == 1
+        """
+        company1 = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({'name': 'OtherCompany'})
+
+        parent = self.env['res.partner'].create({'name': 'Company A', 'company_id': company1.id})
+        child = self.env['res.partner'].create({'name': 'test_user', 'company_id': company1.id, 'parent_id': parent.id})
+
+        # users
+        main_user = new_test_user(
+            self.env, login='main_user', groups='base.group_user',
+            company_id=company1.id, company_ids=[company1.id, company2.id]
+        )
+        fake_user = new_test_user(
+            self.env, login='restricted_kanban_user', groups='base.group_user',
+            company_id=company1.id, company_ids=[company1.id, company2.id]
+        )
+        fake_user.partner_id = child
+
+        # create an event that includes both users' partners (imitates the provided payload)
+        self.env['calendar.event'].create({
+            'name': 'test',
+            'start': '2026-02-16 17:00:00',
+            'stop': '2026-02-16 18:00:00',
+            'duration': 1,
+            'allday': False,
+            'partner_ids': [main_user.partner_id.id, fake_user.partner_id.id],
+        })
+
+        # Try to access the contact of fake_user, who has the scheduled meeting.
+        spec = {
+            'display_name': {},
+            'parent_id': {'fields': {'display_name': {}}},
+            'company_id': {'fields': {'display_name': {}}},
+            'meeting_count': {},
+        }
+        vals = self.env['res.partner'].with_user(main_user).with_company(company2).browse(child.id).web_read(spec)
+        self.assertTrue(vals)
+        child_rec = vals[0]
+        self.assertEqual(child_rec['id'], child.id)
+        self.assertEqual(child_rec.get('meeting_count'), 1)
