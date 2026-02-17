@@ -83,12 +83,16 @@ class AccountMoveSend(models.AbstractModel):
         mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
         if 'email' in vals['sending_methods']:
             mail_lang = get_setting('mail_lang') or self._get_default_mail_lang(move, mail_template)
+            reply_to_value = get_setting('reply_to')
+            if not reply_to_value and mail_template.reply_to:
+                reply_to_value = mail_template._render_field('reply_to', move.ids)[move.id]
             vals.update({
                 'mail_template': mail_template,
                 'mail_lang': mail_lang,
                 'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
                 'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
                 'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
+                'reply_to': reply_to_value,
             })
         # Add mail attachments if sending methods support them
         if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
@@ -591,13 +595,16 @@ class AccountMoveSend(models.AbstractModel):
             for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
         ]
 
-        return {
+        params = {
             'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'],
             'attachments': mail_attachments,
         }
+        if move_data.get('reply_to'):
+            params['reply_to'] = move_data.get('reply_to')
+        return params
 
     @api.model
     def _generate_dynamic_reports(self, moves_data):
