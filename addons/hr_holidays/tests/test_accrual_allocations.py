@@ -3075,4 +3075,4 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self._test_get_allocation_future_leaves_regular(regular_before=False)
 
     def test_get_allocation_future_leaves_regular2(self):
-        self._test_get_allocation_future_leaves_regular(regular_before=False)
+        self._test_get_allocation_future_leaves_regular(regular_before=True)

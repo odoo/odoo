@@ -19,6 +19,21 @@
             <xpath expr="//app[@name='account']" position="inside">
                 <div id="india_integration_section" invisible="1">
                     <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
+                        <setting id="gsp_selection" string="GSP" help="Select BVM as GSP Tera is Deprecated" documentation="/applications/finance/fiscal_localizations/india.html">
+                            <div class="text-muted">
+                                Changes to this configuration will be automatically applied to all Indian companies.
+                                Please refer to the <a href="https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/india.html#nic-e-invoice-registration">documentation</a> for detailed guidance on accurate configuration.
+                                <div class="text-warning" invisible="l10n_in_gsp == 'bvm'">
+                                    The current GSP is scheduled for deprecation soon.
+                                    We strongly recommend switching to BVM GSP at the earliest to ensure uninterrupted service.
+                                </div>
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <field name="l10n_in_gsp" nolabel="1"/>
+                                </div>
+                            </div>
+                        </setting>
                     </block>
                 </div>
             </xpath>
