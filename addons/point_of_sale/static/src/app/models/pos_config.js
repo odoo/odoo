@@ -6,6 +6,14 @@ import { imageDataUri } from "@point_of_sale/utils";
 
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
+    static excludedLazyGetters = [
+        "hasCashRounding",
+        "hasGlobalRounding",
+        "displayBigTrackingNumber",
+        "displayTrackingNumber",
+        "receiptLogoUrl",
+        "receiptCompanyLogoUrl",
+    ];
 
     initState() {
         super.initState();
