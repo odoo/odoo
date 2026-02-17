@@ -130,7 +130,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item:text('Rename Thread')");
     await contains(".o-dropdown-item:text('Notification Settings')");
     await contains(".o-dropdown-item:text('Add to Favorites')");
-    await contains(".o-dropdown-item:text('Call Settings')");
+    await contains(".o-dropdown-item:text('Voice & Video Settings')");
     await contains(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-dropdown-item:text('Leave Channel')");
 });
@@ -710,21 +710,21 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-dropdown-item:text('Members')");
-    await contains(".o-dropdown-item:text('Call Settings')");
+    await contains(".o-dropdown-item:text('Voice & Video Settings')");
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
     await contains(".o-dropdown-item:text('Members')", { count: 0 });
     // Fold chat window
     await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains("[title='Open Actions Menu']", { count: 0 });
     await contains(".o-dropdown-item:text('Members')", { count: 0 });
-    await contains(".o-dropdown-item:text('Call Settings')", { count: 0 });
+    await contains(".o-dropdown-item:text('Voice & Video Settings')", { count: 0 });
     // Unfold chat window
     await click(".o-mail-ChatBubble");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-dropdown-item:text('Members')");
-    await contains(".o-dropdown-item:text('Call Settings')");
+    await contains(".o-dropdown-item:text('Voice & Video Settings')");
 });
 
 test("chat window: fold (mobile)", async () => {

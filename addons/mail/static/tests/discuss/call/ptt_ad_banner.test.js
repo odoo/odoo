@@ -31,8 +31,8 @@ test("display banner when ptt extension is not enabled", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Call Settings')");
-    await click("button:text('Push to Talk')");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await click("button:text('Push-to-Talk')");
     await click("[title*='Close Chat Window']");
     await click("button[title='New Meeting']");
     await click("button[title='Close panel']"); // invitation panel automatically open
@@ -40,7 +40,7 @@ test("display banner when ptt extension is not enabled", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Call Settings')");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
     await click("button:text('Voice Detection')");
     await click("[title*='Close Chat Window']");
     await contains(".o-discuss-PttAdBanner", { count: 0 });

@@ -8,10 +8,10 @@
             </div>
             <div t-if="isMobileOS and store.settings.use_push_to_talk and isOfActiveCall" class="d-flex align-items-center flex-wrap justify-content-between p-2">
                 <button class="o-discuss-CallActionList-pushToTalk btn btn-primary d-flex w-100 border-0 shadow-none"
-                    aria-label="Push to talk"
+                    aria-label="Push-to-talk"
                     t-on-touchstart.stop="rtc.onPushToTalk"
                     t-on-touchend.stop="rtc.setPttReleaseTimeout">
-                    <span class="w-100 fs-4 text-center">Push to talk</span>
+                    <span class="w-100 fs-4 text-center">Push-to-talk</span>
                 </button>
             </div>
         </div>

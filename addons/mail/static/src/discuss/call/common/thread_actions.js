@@ -31,8 +31,8 @@ registerThreadAction("call-settings", {
         (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-gear",
-    name: _t("Call Settings"),
-    sequence: 20,
+    name: _t("Voice & Video Settings"),
+    sequence: 5,
     sequenceGroup: 30,
 });
 registerThreadAction("disconnect", {

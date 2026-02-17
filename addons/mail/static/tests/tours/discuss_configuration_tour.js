@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             trigger: "span:contains('Voice detection sensitivity')",
         },
         {
-            trigger: "button:contains('Push to Talk')",
+            trigger: "button:contains('Push-to-Talk')",
             run: "click",
         },
         {
