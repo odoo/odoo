@@ -19,14 +19,14 @@ export class DialogPlugin extends Plugin {
      * @param {Component} DialogClass
      * @param {Object} props
      * @param {DialogServiceInterfaceAddOptions} options
-     * @returns {Promise<void>}
+     * @returns {Promise<any>}
      */
     addDialog(DialogClass, props, options = {}) {
         return new Promise((resolve) => {
             this.services.dialog.add(DialogClass, props, {
-                onClose: () => {
+                onClose: (closeParams) => {
                     this.dependencies.selection.focusEditable();
-                    resolve();
+                    resolve(closeParams);
                 },
                 ...options,
             });

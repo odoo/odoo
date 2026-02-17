@@ -23,16 +23,19 @@ class IrAttachment(models.Model):
     )
 
     def _to_http_stream(self):
-        if (self.type == 'cloud_storage' and
-              self.env['res.config.settings']._get_cloud_storage_configuration()):
-            self.ensure_one()
-            info = self._generate_cloud_storage_download_info()
+        if info := self._get_download_info():
             stream = Stream(type='url', url=info['url'])
             if 'time_to_expiry' in info:
                 # cache the redirection until 10 seconds before the expiry
                 stream.max_age = max(info['time_to_expiry'] - 10, 0)
             return stream
         return super()._to_http_stream()
+
+    def _get_download_info(self):
+        if self.type == 'cloud_storage' and self.env['res.config.settings']._get_cloud_storage_configuration():
+            self.ensure_one()
+            return self._generate_cloud_storage_download_info()
+        return False
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)

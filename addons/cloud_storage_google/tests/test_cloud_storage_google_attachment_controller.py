@@ -41,7 +41,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     "data": {
                         "attachment_id": attachment.id,
                         "store_data": {
-                            "ir.attachment": [
+                            "ir.attachment": self._filter_attachments_fields(
                                 {
                                     "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
                                     "create_date": odoo.fields.Datetime.to_string(
@@ -60,8 +60,17 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                     "type": "cloud_storage",
                                     "url": "[url]",
                                     "voice_ids": [],
+                                    "access_token": False,
+                                    "description": False,
+                                    "image_src": False,
+                                    "image_height": 0,
+                                    "image_width": 0,
+                                    "original_id": False,
+                                    "public": False,
+                                    "res_model": "mail.compose.message",
+                                    "res_id": 0,
                                 }
-                            ],
+                            ),
                         },
                     },
                     "upload_info": {"method": "PUT", "response_status": 200, "url": "[url]"},

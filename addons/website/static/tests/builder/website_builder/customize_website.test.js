@@ -14,8 +14,8 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
-import { ReplaceBgImageAction } from "@html_builder/plugins/background_option/background_image_option_plugin";
 import { renderToString } from "@web/core/utils/render";
+import { ToggleBodyBgImageAction } from "@website/builder/plugins/customize_website_plugin";
 
 defineWebsiteModels();
 
@@ -431,12 +431,12 @@ test("theme background image is properly set", async () => {
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
         "A".repeat(1000);
 
-    // To avoid mocking the media dialog
-    patchWithCleanup(ReplaceBgImageAction.prototype, {
-        async load() {
-            const img = document.createElement("img");
-            img.src = base64Image;
-            return img;
+    patchWithCleanup(ToggleBodyBgImageAction.prototype, {
+        async apply(params) {
+            const { type: currentType, image: currentImage } = this.getCurrentConfig();
+            const oldConfig = { type: currentType, image: currentImage };
+            const newConfig = { type: "image", image: base64Image };
+            await this.applyConfig(oldConfig, newConfig);
         },
     });
 
