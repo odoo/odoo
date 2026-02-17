@@ -1,0 +1,39 @@
+<odoo>
+    <record id="action_estate_view" model="ir.actions.act_window">
+        <field name="name">Estate dashboard</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+    <record id="second_action_estate_view" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="third_action_estate_view" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="forth_action_estate_view" model="ir.actions.act_window">
+        <field name="name">Property Offer</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="fifth_action_estate_view" model="ir.actions.act_window">
+        <field name="name">Users</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="estate_menu_root" name="Real Estate Main Page">
+        <menuitem id="estate_first_level_menu" name="Real Estate">
+                <menuitem id="estate_model_menu_action" action="action_estate_view"/>
+        </menuitem>
+        <menuitem id="estate_first_level_menu2" name="Setting">
+                <menuitem id="estate_model_menu_action2" action="second_action_estate_view"/>
+                <menuitem id="estate_model_menu_action3" action="third_action_estate_view"/>
+                <menuitem id="estate_model_menu_action4" action="forth_action_estate_view"/>
+                <menuitem id="estate_model_menu_action5" action="fifth_action_estate_view"/>
+        </menuitem>
+    </menuitem>
+</odoo>

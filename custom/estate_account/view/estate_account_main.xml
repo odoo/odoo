@@ -1,0 +1,13 @@
+<odoo>
+    <record id="first_action_estate_account_view" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+
+    <menuitem id="estate_menu_root" name="Estate Account">
+        <menuitem id="estate_first_level_menu" name="Dashboard">
+                <menuitem id="first_action_estate_account_view1" action="first_action_estate_account_view"/>
+        </menuitem>
+    </menuitem>
+</odoo>

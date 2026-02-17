@@ -1,0 +1,163 @@
+    <odoo>
+        <record id="estate_property_view_form" model="ir.ui.view">
+            <field name="name">estate.property.form</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <form string="Building">
+                    <header>
+                        <button name="sold_property" type="object" string="Sold" invisible="Status in ('sold', 'cancelled')"/>
+                        <button name="cancel_property" type="object" string="Cancel" invisible="Status in ('sold', 'cancelled')"/>
+                        <field name="Status" widget="statusbar"/>
+                    </header>
+                    <hr/>
+                    <sheet >
+                        <div class="oe_title">
+                            <h1><field name="name"/></h1>
+                            <field name="tags" widget="many2many_tags" />
+                            <!-- I add the design for the tags by using widget many2many_tags-->
+                            <hr/>
+                        </div>
+                        <group col="2">
+                            <group >
+                                <field name="user_id"/>
+                                <field name="Postcode"/>
+                                <field name="Active"/>
+                                <field name="Avaible_Form"/>
+                                <field name="property_type_id"/>
+                            </group>
+                            <group>
+                                <field name="total_offers"/>
+                                <field name="best_offer"/>
+                                <field name="Selling_Price" readonly="1"/>
+                                <field name="expected_price"/>
+                                <field name="Expected_Price"/>
+                            </group>
+                        </group>
+                        <div class="oe_clear"/>
+                        <notebook>
+                            <page string="Description">
+                                <h1>(;</h1>
+                                <group>
+                                    <field name="description"/>
+                                    <dr/>
+                                    <hr/>
+                                    <field name="BedRooms"/>
+                                    <field name="LivingArea" string="Living area (sqm)"/>
+                                    <field name="Facades"/>
+                                    <field name="Grage"/>
+                                    <field name="Garden"/>
+                                    <field name="Garden_area" invisible="not Garden"/>
+                                    <field name="Garden_Orentation" invisible="not Garden"/>
+                                    <field name="total_areas"/>
+                                </group>
+                            </page>
+                            <page string="Offers">
+                                <list string="Offers Recived" >
+                                    <field name="offer"/>
+    <!--                                <field name="offer">-->
+    <!--                                    <list>-->
+    <!--                                        <field name="price"/>-->
+    <!--                                        <field name="partner"/>-->
+    <!--                                        <field name="validitydate"/>-->
+    <!--                                        <field name="deadline"/>-->
+    <!--                                        <field name="state"/>-->
+    <!--                                    </list>-->
+    <!--                                </field>-->
+                                    <!--just use the attrrubite that you declare in the estate.property-->
+                                </list>
+                            </page>
+                            <page string="Other Info">
+                                <group string="Other Information">
+                                    <field name="seller"/>
+                                    <field name="buyer" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                        <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="estate_property_view_list" model="ir.ui.view">
+            <field name="name">estate.property.list</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <list string="estates" >
+                    <!--
+                    default_order="Expected_Price desc"
+                    default_order is used to order the records in the list view but foucs when you try to use
+                    it because it depends on the real attributes , here I mean the compputed atterpute will not be inculded
+                    becouse it did not be saved in the datebase -->
+                    <field name="name"/>
+                    <field name="total_offers"/>
+                    <field name="property_type_id"/>
+                    <field name="tags" widget="many2many_tags"/>
+                    <field name="Postcode"/>
+                    <field name="Status"/>
+                    <field name="BedRooms"/>
+                    <field name="LivingArea"/>
+                    <field name="Expected_Price"/>
+                    <field name="Selling_Price" readonly="1"/>
+                    <field name="Avaible_Form"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="estate_property_view_kanban" model="ir.ui.view">
+            <field name="name">estate.property.kanban</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="property_type_id" records_draggable="false">
+                    <field name="Status"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                           <div class="oe_kanban_card">
+                                <h1><field name="name"/></h1>
+                                <hr/>
+                                <field name="tags"/>
+                                <field name="Status"/>
+                               <br/>
+                                <field name="expected_price"/>
+
+                                <br/>
+                                <field name="property_type_id"/>
+                                <br/>
+                                <div t-if="record.Status.raw_value == 'new'" decoration-success="1">
+                                    <h1  decoration-success="1"> This is new!</h1>
+                                </div>
+<!--                               <div t-if="record.Status.raw_value == 'offerAccepted'">-->
+<!--                                   <field name="best_offer"/>-->
+<!--                               </div>-->
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="estate_property_view_search" model="ir.ui.view">
+            <field name="name">estate.property.search</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <search string="Search Estates">
+                    <field name="description" string="Name and description" filter_domain="['|',('name','ilike',self),('description','ilike',self)]" />
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <separator/> <!-- use this separator to display the results early while searching-->
+                    <filter name="less Price" domain="[('Expected_Price','>=',self)]"/>
+    <!--                <filter name="filter_domain" domain="('LivingArea','>=',self)"/>-->
+                    <field name="Expected_Price"/>
+                    <field name="BedRooms"/>
+                    <field name="Active"/>
+                    <field name="Selling_Price" readonly="1"/>
+                    <field name="LivingArea"/>
+                    <field name="Status"/>
+                    <filter name="New or Offer Received" domain="['|',('Status','=','new'),('Status','=','offerReceived')]"/>
+                    <group string="Group By">
+                        <filter string="Postcode ASC" name="Postcode ASC" context="{'group_by':'Postcode'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </odoo>

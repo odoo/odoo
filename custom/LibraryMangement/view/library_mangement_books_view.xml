@@ -1,0 +1,37 @@
+<odoo>
+    <record id="library_mangement_book_view_form" model="ir.ui.view">
+        <field name="name">library.mangement.book.form</field>
+        <field name="model">library.mangement.book</field>
+        <field name="arch" type="xml">
+            <form string="book">
+                <sheet>
+                    <group >
+                        <field name="name"/>
+                        <field name="auther"/>
+                        <field name="quantities"/>
+                    </group>
+                    <notebook>
+                        <page string="Borrows of the book">
+                            <list>
+                                <field name="borrows"/>
+                            </list>
+                        </page>
+                    </notebook>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="library_mangement_book_view_list" model="ir.ui.view">
+        <field name="name">library.mangement.book.list</field>
+        <field name="model">library.mangement.book</field>
+        <field name="arch" type="xml">
+            <list >
+                <field name="name"/>
+                <field name="auther"/>
+                <field name="quantities"/>
+            </list>
+        </field>
+    </record>
+</odoo>
