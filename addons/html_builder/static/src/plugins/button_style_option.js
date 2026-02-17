@@ -28,7 +28,7 @@ class ButtonStyleOptionPlugin extends Plugin {
 
 export class ButtonStyleOption extends BaseOptionComponent {
     static template = "html_builder.ButtonStyleOption";
-    static selector = ".btn";
+    static selector = "a.btn";
     static dependencies = [];
     static components = {
         BuilderColorPicker,
