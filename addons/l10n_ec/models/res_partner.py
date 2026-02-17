@@ -88,6 +88,18 @@ class ResPartner(models.Model):
                         partner.l10n_ec_vat_validation = _("The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
                                                            "(SRI has stated that this validation is not required anymore for some VAT numbers)", partner.vat)
 
+    @api.depends("l10n_latam_identification_type_id")
+    def _compute_is_company(self):
+        ec_ruc = self.env.ref('l10n_ec.ec_ruc', raise_if_not_found=False)
+        l10n_ec_partners = self.filtered(lambda p: p.country_code == 'EC')
+        if ec_ruc:
+            # Partners with RUC are legal entities => companies
+            l10n_ec_companies = l10n_ec_partners.filtered(lambda p: p.l10n_latam_identification_type_id == ec_ruc)
+            l10n_ec_companies.is_company = True
+            (l10n_ec_partners - l10n_ec_companies).is_company = False
+
+        super(ResPartner, self - l10n_ec_partners)._compute_is_company()
+
     def _l10n_ec_get_identification_type(self):
         """Maps Odoo identification types to Ecuadorian ones.
         Useful for document type domains, electronic documents, ats, others.
