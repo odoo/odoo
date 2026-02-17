@@ -59,9 +59,6 @@ class PosSelfOrderController(http.Controller):
         if amount_total == 0:
             order_ids._process_saved_order(False)
 
-        if preset_id and preset_id.mail_template_id:
-            order_ids._send_self_order_receipt()
-
         return self._generate_return_values(order_ids, pos_config)
 
     def _get_prefixes(self, device_type):
@@ -169,6 +166,16 @@ class PosSelfOrderController(http.Controller):
             raise Unauthorized(_("You are not authorized to remove this order"))
 
         pos_order.remove_from_ui([pos_order.id])
+
+    @http.route('/pos-self-order/send_self_order_receipt', auth='public', type='jsonrpc', website=True)
+    def send_self_order_receipt(self, access_token, order_id, order_access_token, fullTicketImage=None, basicTicketImage=None):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(_("Your order does not exist or has been removed"))
+
+        pos_order.action_send_self_order_receipt(pos_order.email, pos_order.preset_id.mail_template_id.id, fullTicketImage, basicTicketImage)
 
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
