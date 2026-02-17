@@ -60,6 +60,9 @@
                 <xpath expr="//button[@name='button_immediate_upgrade']" position="attributes">
                     <attribute name="invisible">state != 'installed' or (module_type and module_type != 'official')</attribute>
                 </xpath>
+                <xpath expr="//field[@name='installed_version']" position="after">
+                    <field name="total_lines_of_code" string="Extra lines of code" invisible="module_type != 'industries'"/>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="view_module_filter_apps_inherit">

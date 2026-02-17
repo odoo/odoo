@@ -41,6 +41,7 @@ class IrModuleModule(models.Model):
         ('official', 'Official Apps'),
         ('industries', 'Industries'),
     ], default='official')
+    total_lines_of_code = fields.Integer(string="Lines of Code", help="Custom lines of code incur an additional Odoo maintenance fee. Please refer to the Odoo App Store for specific pricing details regarding your custom lines of code.")
 
     @api.model
     @ormcache(cache='stable')
@@ -441,6 +442,8 @@ class IrModuleModule(models.Model):
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
         if 'name' not in fields:
             fields = fields + ['name']
+        if 'total_lines_of_code' not in fields:
+            fields = fields + ['total_lines_of_code']
         payload = {
             'params': {
                 'series': major_version,
