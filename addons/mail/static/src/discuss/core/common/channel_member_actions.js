@@ -3,6 +3,7 @@ import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/ac
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { rpc } from "@web/core/network/rpc";
+import { markup } from "@odoo/owl";
 
 export const channelMemberActionsRegistry = registry.category("discuss.channel.member/actions");
 
@@ -52,10 +53,14 @@ registerChannelMemberAction("remove-member", {
     icon: "fa fa-sign-out",
     name: _t("Remove Member"),
     onSelected: ({ member, store }) => {
+        const dialogTitle = _t(
+            "Are you sure you want to remove %(member_name)s from the members of '%(channel_name)s'?",
+            { member_name: member.name, channel_name: member.channel_id.displayName }
+        );
+        const moreInfo = _t("Don't worry, they can rejoin later or be invited back at any time.");
         store.env.services.dialog.add(ConfirmationDialog, {
-            body: _t('Do you want to remove "%(member_name)s" from this channel?', {
-                member_name: member.name,
-            }),
+            body: markup`<p>${dialogTitle}</p><span class="text-muted small">${moreInfo}</span>`,
+            confirmLabel: _t("Remove Member"),
             cancel: () => {},
             confirm: () => {
                 rpc("/discuss/channel/remove_member", {

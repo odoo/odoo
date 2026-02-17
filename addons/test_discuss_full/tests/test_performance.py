@@ -420,6 +420,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
+                    "active": False,
                 },
                 {
                     "id": user_0.id,
@@ -1858,6 +1859,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         partner = user.partner_id
         if user == self.users[0]:
             return {
+                "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -1871,6 +1873,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[2]:
             return {
+                "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -1878,6 +1881,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[3]:
             return {
+                "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -1885,6 +1889,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[12]:
             return {
+                "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -1892,6 +1897,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[14]:
             return {
+                "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -1899,6 +1905,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[15]:
             return {
+                "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
