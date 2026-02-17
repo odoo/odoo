@@ -66,6 +66,58 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
 
+        first_accrual_plan_level = Command.create({
+            'start_count': 0,
+            'added_value_type': 'day',
+            'added_value': 2,
+            'frequency': 'monthly',
+            'first_day': 15,
+            'action_with_unused_accruals': 'all',
+        })
+        second_accrual_plan_level = Command.create({
+            'start_count': 12,
+            'start_type': 'month',
+            'added_value_type': 'day',
+            'added_value': 3,
+            'frequency': 'monthly',
+            'first_day': 15,
+            'action_with_unused_accruals': 'all',
+        })
+
+        cls.accrual_plan_monthly_end_carryover_year_start = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [first_accrual_plan_level],
+        })
+
+        cls.accrual_plan_monthly_end_carryover_year_end = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [first_accrual_plan_level],
+        })
+
+        cls.accrual_plan_monthly_end_carryover_year_start_2_lvls = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'transition_mode': 'immediately',
+            'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
+        })
+
+        cls.accrual_plan_monthly_start_carryover_year_start_2_lvls = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'transition_mode': 'immediately',
+            'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
+        })
+
     def setAllocationCreateDate(self, allocation_id, date):
         """ This method is a hack in order to be able to define/redefine the create_date
             of the allocations.
@@ -972,9 +1024,21 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'date_from': datetime.date(2020, 8, 16),
             })
             allocation.action_validate()
-        with freeze_time('2022-1-10'):
-            allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 30.82, 2, "Invalid number of days")
+
+        assertions = [
+            # Level transition: accrual of the first level:   15 * 122 / 184 = 9.945
+            ('2020-12-16', leaves := 9.945),
+            # Second level accrual: 10 * 16 / 184 (same period from 2020-07-01 to 2021-01-01 = 184d) = 0.869
+            ('2021-01-01', leaves := leaves + 0.869),
+            # Second level accrual: 10 (for period 2021-01-01 - 2021-07-01)
+            ('2021-07-01', leaves := leaves + 10),
+            # Second level accrual: 10 (for period 2021-07-01 - 2022-01-01)
+            ('2022-01-01', leaves + 10),
+        ]
+        for test_date, expected_days in assertions:
+            with freeze_time(test_date):
+                allocation._update_accrual()
+                self.assertAlmostEqual(allocation.number_of_days, expected_days, 2, "Invalid number of days")
 
     def test_three_levels_accrual(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -1420,13 +1484,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
         self.assertAlmostEqual(allocation.number_of_days, 9.03, 2, "Should accrue 9 day, after 8 months.")
 
+        with freeze_time("2024-03-27"):
+            allocation._update_accrual()
+        self.assertAlmostEqual(allocation.number_of_days, 12.03, 2, "Should accrue 12 day, after 11 months.")
+
         with freeze_time("2024-04-26"):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 0.03, 2, "Allocations not lost on 1st of January, but on allocation date.")
+        self.assertAlmostEqual(allocation.number_of_days, 0, 2, "Allocations not lost on allocation date (carryover).")
 
         with freeze_time("2024-04-27"):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 1.03, 2, "Allocations lost, then 1 accrued.")
+        self.assertAlmostEqual(allocation.number_of_days, 1, 2, "Allocation monthly accrual keeps going.")
 
     def test_accrual_carryover_at_other(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -1461,7 +1529,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time("2024-04-30"):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 72.667, places=3, msg="Carryover at other date, level's maximum leave is 69 + Partial for 4/20 to 5/11 (Accrued gain time is 'start').")
+        self.assertAlmostEqual(allocation.number_of_days, 69, places=3, msg="Carryover at other date, level's maximum leave is 69")
 
     def test_accrual_carrover_other_period_end_multi_level(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -1497,6 +1565,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'maximum',
                     'postpone_max_days': 20,
                 }),
+                # 17 months later - 12d / yearly on 15/07 - max 21 leaves - days lost on carryover
                 (0, 0, {
                     'start_count': 17,
                     'start_type': 'month',
@@ -1524,7 +1593,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time("2026-08-01"):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 1.315, 3)
+        # Do not care about the 2 first levels because lvl 3 reset all days to 0 on carryover (06-05)
+        # - ...
+        # - 2024-08-01 : lvl 3 starts
+        # - X postponed leaves
+        # - ...
+        # - 2026-06-05: carryover date: all days lost
+        # - 2026-07-15: yearly accrual: +12d
+        self.assertAlmostEqual(allocation.number_of_days, 12, 3)
 
     def test_accrual_creation_on_anterior_date(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -3076,3 +3152,117 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_get_allocation_future_leaves_regular2(self):
         self._test_get_allocation_future_leaves_regular(regular_before=False)
+
+    def test_carryover_no_extra_accrual_start(self):
+        """ Assert that no accrual happens on carryover date
+            Using a one level accrual plan which :
+            - Adds 2 days at the start of every month on the 15th of the month
+            - Has carryover at the start of the year
+        """
+        with freeze_time('2025-12-01'):
+            accrual_plan = self.accrual_plan_monthly_end_carryover_year_start
+            allocation = self._create_test_allocation(self.leave_type_day, '2025-12-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        assertions = [
+            # 2025-12-01 -> 2025-12-15 : 14 days / 30 days + 2 days accrual for 2025-12-15 -> 2026-01-15
+            ('2025-12-15', days := 2 * 14 / 30 + 2),
+            # 2026-01-01: carryover date, nothing happens
+            ('2026-01-01', days),
+            # 2026-01-15: monthly accrual keeps going
+            ('2026-01-15', days + 2),
+        ]
+        for test_date, expected_days in assertions:
+            with freeze_time(test_date):
+                allocation._update_accrual()
+                self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_carryover_no_extra_accrual_end(self):
+        """ Assert that no accrual happens on carryover date
+            Using a one level accrual plan which :
+            - Adds 2 days at the end of every month on the 15th of the month
+            - Has carryover at the start of the year
+        """
+        with freeze_time('2025-12-01'):
+            accrual_plan = self.accrual_plan_monthly_end_carryover_year_end
+            allocation = self._create_test_allocation(self.leave_type_day, '2025-12-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        assertions = [
+            # 2025-12-01 -> 2025-12-15 : 14 days
+            ('2025-12-15', days := 2 * 14 / 30),
+            # 2026-01-01: carryover date, nothing happens
+            ('2026-01-01', days),
+            # 2026-01-15: monthly accrual keeps going
+            ('2026-01-15', days + 2),
+        ]
+        for test_date, expected_days in assertions:
+            with freeze_time(test_date):
+                allocation._update_accrual()
+                self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_carryover_no_extra_accrual_end_multi_level(self):
+        """ Assert that no accrual happens on carryover date when the carryover is the last event before the carryover date
+            Using a two levels accrual plan which :
+            - Adds 2 days at the end of every month on the 15th of the month
+            - Has carryover at the start of the year
+            - Has a second level that adds 3 days on the 15th of the month and starting after 11 months
+        """
+        with freeze_time('2025-12-16'):
+            accrual_plan = self.accrual_plan_monthly_end_carryover_year_start_2_lvls
+            allocation = self._create_test_allocation(self.leave_type_day, '2025-12-16', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        assertions = [
+            # Beginning of the accrual: 0 days
+            ('2025-12-16', expected_leaves := 0),
+            # Carryover date, nothing happens
+            ('2026-01-01', expected_leaves),
+            # Monthly accrual keeps going 2025-12-16 -> 2026-01-15 : 30 / 31
+            ('2026-01-15', expected_leaves := 30 / 31 * 2),
+            # Last accrual before level transition
+            ('2026-12-15', expected_leaves := expected_leaves + 11 * 2),
+            # Level transition: accrual happens: 2026-12-15 -> 2026-12-16 : 1 / 31
+            ('2026-12-16', expected_leaves := expected_leaves + 1 / 31 * 2),
+            # Carryover: nothing happens
+            ('2027-01-01', expected_leaves),
+            # Monthly accrual keeps going for the second level: 2026-12-16 -> 2027-01-15: 30 / 31
+            ('2027-01-15', expected_leaves := expected_leaves + 30 / 31 * 3),
+        ]
+        for test_date, expected_days in assertions:
+            with freeze_time(test_date):
+                allocation._update_accrual()
+                self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_carryover_no_extra_accrual_start_multi_level(self):
+        """ Assert that no accrual happens on carryover date when the carryover is the last event before the carryover date
+            Using a two levels accrual plan which :
+            - Adds 2 days at the start of every month on the 15th of the month
+            - Has carryover at the start of the year
+            - Has a second level that adds 3 days on the 15th of the month and starting after 11 months
+        """
+        with freeze_time('2025-12-16'):
+            accrual_plan = self.accrual_plan_monthly_start_carryover_year_start_2_lvls
+            allocation = self._create_test_allocation(self.leave_type_day, '2025-12-16', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        assertions = [
+            # Beginning of the accrual: 2025-12-16 -> 2026-01-15: 30 / 31
+            ('2025-12-16', expected_leaves := 30 / 31 * 2),
+            # Carryover date, nothing happens
+            ('2026-01-01', expected_leaves),
+            # Monthly accrual keeps going
+            ('2026-01-15', expected_leaves := expected_leaves + 2),
+            # Last accrual before level transition: 10 month accrual + 2026-12-15 -> 2026-12-16 = 1 / 31
+            ('2026-12-15', expected_leaves := expected_leaves + 10 * 2 + 1 / 31 * 2),
+            # Level transition: accrual happens: adding the 30 days left
+            ('2026-12-16', expected_leaves := expected_leaves + 30 / 31 * 3),
+            # Carryover: nothing happens
+            ('2027-01-01', expected_leaves),
+            # Monthly accrual keeps going for the second level
+            ('2027-01-15', expected_leaves := expected_leaves + 3),
+        ]
+        for test_date, expected_days in assertions:
+            with freeze_time(test_date):
+                allocation._update_accrual()
+                self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
