@@ -176,7 +176,7 @@ class configmanager(object):
         group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
                          dest='test_enable',
                          help="Enable unit tests.")
-        group.add_option("--test-tags", dest="test_tags",
+        group.add_option("-t", "--test-tags", dest="test_tags",
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
                          "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
