@@ -291,6 +291,7 @@ export class HtmlField extends Component {
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
             stripHistoryIds(value) !== stripHistoryIds(lastValue)
         ) {
+            this.isDirty = undefined;
             this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
             const contentMetadata = getHtmlFieldMetadata(lastValue);
@@ -317,6 +318,11 @@ export class HtmlField extends Component {
         this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
             this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty())
         );
+
+        this.wysiwyg.odooEditor.addEventListener("historyUndo", () => {
+            this.isDirty = undefined;
+            this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty());
+        });
 
         if (this.props.isCollaborative) {
             this.wysiwyg.odooEditor.addEventListener("onExternalHistorySteps", () =>
@@ -439,6 +445,9 @@ export class HtmlField extends Component {
         this.Wysiwyg = wysiwygModule.Wysiwyg;
     }
     _isDirty() {
+        if (this.isDirty) {
+            return true;
+        }
         const strippedPropValue = stripHistoryIds(String(this.props.record.data[this.props.name]));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
         const domParser = new DOMParser();
@@ -464,7 +473,8 @@ export class HtmlField extends Component {
             parsedPreviousValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
         }
         const parsedNewValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
-        return !this.props.readonly && parsedPreviousValue.innerHTML !== parsedNewValue.innerHTML;
+        this.isDirty = !this.props.readonly && parsedPreviousValue.innerHTML !== parsedNewValue.innerHTML;
+        return this.isDirty;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
