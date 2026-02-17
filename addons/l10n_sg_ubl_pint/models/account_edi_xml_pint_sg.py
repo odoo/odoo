@@ -7,6 +7,15 @@ SG_TAX_CATEGORIES = {'SR', 'SRCA-S', 'SRCA-C', 'SROVR-RS', 'SRRC', 'SROVR-LVG', 
 SG_GST_CODES_REQUIRING_ADDRESS = {'SR', 'SRCA-S', 'SRCA-C', 'ZR', 'SRRC', 'SROVR-RS', 'SROVR-LVG', 'SRLVG', 'NA'}
 
 
+class AccountEdiXmlUBL21(models.AbstractModel):
+    _inherit = 'account.edi.xml.ubl_21'
+
+    def _get_customization_ids(self):
+        vals = super()._get_customization_ids()
+        vals['pint_sg'] = 'urn:peppol:pint:billing-1@sg-1'
+        return vals
+
+
 class AccountEdiXmlUBLPINTSG(models.AbstractModel):
     _inherit = "account.edi.xml.ubl_bis3"
     _name = 'account.edi.xml.pint_sg'
