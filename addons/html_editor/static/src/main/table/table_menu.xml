@@ -12,8 +12,8 @@
             <t t-set-slot="content">
                 <div t-on-pointerdown.stop="() => {}">
                     <t t-foreach="items" t-as="item" t-key="item_index">
-                        <DropdownItem onSelected="() => this.onSelected(item)">
-                            <div class="user-select-none d-flex align-items-center" t-att-name="item.name">
+                        <DropdownItem onSelected="() => !item.disable and this.onSelected(item)">
+                            <div class="user-select-none d-flex align-items-center" t-att-name="item.name" t-att-title="item.disable ? item.tooltip : ''" t-att-class="item.disable ? 'disabled text-muted' : ''">
                                 <span t-if="item.icon"
                                     class="fa text-center"
                                     style="width:16px;"

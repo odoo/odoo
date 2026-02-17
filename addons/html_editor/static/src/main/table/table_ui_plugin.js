@@ -6,6 +6,7 @@ import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TableDragDrop } from "./table_drag_drop";
+import { getRowIndex } from "@html_editor/utils/table";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -32,6 +33,7 @@ export class TableUIPlugin extends Plugin {
                 commandId: "openTablePicker",
             },
         ],
+        selectionchange_handlers: this.updateActiveCell.bind(this),
     };
 
     setup() {
@@ -97,6 +99,15 @@ export class TableUIPlugin extends Plugin {
         } else {
             this.openPicker();
         }
+    }
+
+    updateActiveCell(selectionData) {
+        const selection = selectionData.editableSelection;
+        const selectedTd = closestElement(selection.startContainer, ".o_selected_td");
+        if (selection.isCollapsed || !selectedTd) {
+            return;
+        }
+        this.activeTd = false;
     }
 
     onMouseMove(ev) {
@@ -168,8 +179,13 @@ export class TableUIPlugin extends Plugin {
             clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
             toggleAlternatingRows: withAddStep(this.dependencies.table.toggleAlternatingRows),
+            mergeSelectedCells: withAddStep(this.dependencies.table.mergeSelectedCells),
+            unmergeSelectedCell: withAddStep(this.dependencies.table.unmergeSelectedCell),
+            buildTableGrid: this.dependencies.table.buildTableGrid,
         };
-        if (td.cellIndex === 0) {
+        const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
+        const rowIndex = getRowIndex(td.parentElement);
+        if (grid[rowIndex][0] === td) {
             this.rowMenu.open({
                 target: td,
                 props: {
