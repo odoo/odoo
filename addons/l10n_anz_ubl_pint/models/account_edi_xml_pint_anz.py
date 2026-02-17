@@ -5,6 +5,15 @@ from odoo.tools import float_is_zero
 ANZ_TAX_CATEGORIES = {'S', 'E', 'Z', 'G', 'O'}
 
 
+class AccountEdiXmlUBL21(models.AbstractModel):
+    _inherit = 'account.edi.xml.ubl_21'
+
+    def _get_customization_ids(self):
+        vals = super()._get_customization_ids()
+        vals['pint_anz'] = 'urn:peppol:pint:billing-1@aunz-1'
+        return vals
+
+
 class AccountEdiXmlPint_Anz(models.AbstractModel):
     _name = 'account.edi.xml.pint_anz'
     _inherit = ["account.edi.xml.ubl_bis3"]
@@ -81,9 +90,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         return vals_list
 
     def _get_customization_ids(self):
-        vals = super()._get_customization_ids()
-        vals['pint_anz'] = 'urn:peppol:pint:billing-1@aunz-1'
-        return vals
+        # TODO remove in master: backward compatibility
+        return super()._get_customization_ids()
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_bis3
