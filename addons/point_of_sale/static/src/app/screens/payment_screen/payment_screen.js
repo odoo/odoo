@@ -288,16 +288,13 @@ export class PaymentScreen extends Component {
         return this.pos.currency.round(tip);
     }
     async toggleShippingDatePicker() {
-        if (!this.currentOrder.shipping_date) {
-            this.dialog.add(DatePickerPopup, {
-                title: _t("Select the shipping date"),
-                getPayload: (shippingDate) => {
-                    this.currentOrder.shipping_date = shippingDate;
-                },
-            });
-        } else {
-            this.currentOrder.shipping_date = false;
-        }
+        this.dialog.add(DatePickerPopup, {
+            title: _t("Select the shipping date"),
+            defaultValue: this.currentOrder.shipping_date,
+            getPayload: (shippingDate) => {
+                this.currentOrder.shipping_date = shippingDate;
+            },
+        });
     }
     deletePaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
