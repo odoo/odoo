@@ -303,6 +303,10 @@ test("Members are partitioned by online/offline", async () => {
 test("Shows owner / admin in members panel + member actions", async () => {
     const pyEnv = await startServer();
     const [demoPid, johnPid] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "John" }]);
+    pyEnv["res.users"].create([
+        { partner_id: demoPid, active: true },
+        { partner_id: johnPid, active: true },
+    ]);
     const marioGid = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
