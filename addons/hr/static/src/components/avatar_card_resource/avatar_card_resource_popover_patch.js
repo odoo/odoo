@@ -9,6 +9,9 @@ const patchAvatarCardResourcePopover = {
     get showViewProfileBtn() {
         return this.employee;
     },
+    get showImStatus() {
+        return !this.partner || this.partner?.im_status;
+    },
 };
 
 patch(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopover);

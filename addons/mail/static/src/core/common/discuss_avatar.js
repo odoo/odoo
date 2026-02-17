@@ -48,9 +48,12 @@ export class DiscussAvatar extends Component {
 
     get showIcon() {
         if (this.channel) {
+            if (this.channel.channel_type === "chat" && !this.channel.correspondent?.im_status) {
+                return false;
+            }
             return this.channel.showThreadIcon({ ignoreTyping: !this.props.typing });
         }
-        if (this.props.member || this.props.persona) {
+        if (this.props.member?.persona.im_status || this.props.persona?.im_status) {
             return true;
         }
         return false;

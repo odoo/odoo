@@ -250,7 +250,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "avatar_128_access_token": self.chatbot_script.operator_partner_id._get_avatar_128_access_token(),
                     "country_id": False,
                     "id": self.chatbot_script.operator_partner_id.id,
-                    "im_status": "im_partner",
+                    "im_status": False,
                     "im_status_access_token": self.chatbot_script.operator_partner_id._get_im_status_access_token(),
                     "is_public": False,
                     "main_user_id": False,
