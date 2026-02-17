@@ -4,6 +4,7 @@
         <t t-set="partner" t-value="object"/>
         <t t-set="website" t-value="env['website'].get_current_website()"/>
         <div id="body">
+<<<<<<< 343417f6b2f4e311e37dd9bea6436fec0cb9c6c5
             <img t-att-src="website.image_url(website, 'logo')" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
             <p>Hello <t t-out="partner.name"/>,</p>
             <p>The product you were waiting for is now back in stock!</p>
@@ -12,6 +13,51 @@
             </t>
             <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
                 <a t-attf-href="#{product.website_url}" t-attf-style="background-color: {{product.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{product.website_id.get_current_website().company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;">
+||||||| 3eff8c95ac28a6e5b2db47bb3101afce7c665df2
+            <p>Dear Customer,</p>
+            <p>The following product is now available.</p>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a t-attf-href="#{product.website_url}">
+                    <img t-attf-src="/web/image/product.product/#{product.id}/image_1920"/>
+                </a>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
+                <p t-esc="product.name"/>
+                <p t-if="product.product_template_attribute_value_ids"
+                   style="margin-left: 0.5em;">
+                    (<t
+                    t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"
+                    />)
+                </p>
+                <p style="margin-left: 0.5em; margin-right: 0.5em">-</p>
+                <p t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}" hidden=""/>
+            </div>
+            <p t-esc="product.description_sale"/>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a t-attf-href="#{product.website_url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+=======
+            <p>Dear Customer,</p>
+            <p>The following product is now available.</p>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a t-attf-href="#{product.website_url}">
+                    <img t-attf-src="/web/image/product.product/#{product.id}/image_256"/>
+                </a>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
+                <p t-esc="product.name"/>
+                <p t-if="product.product_template_attribute_value_ids"
+                   style="margin-left: 0.5em;">
+                    (<t
+                    t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"
+                    />)
+                </p>
+                <p style="margin-left: 0.5em; margin-right: 0.5em">-</p>
+                <p t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}" hidden=""/>
+            </div>
+            <p t-esc="product.description_sale"/>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a t-attf-href="#{product.website_url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+>>>>>>> ae748a96266529d6ba4a06ded7cf28bb8fc67a16
                     Order Now
                 </a>
             </div>
