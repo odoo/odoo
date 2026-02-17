@@ -5,10 +5,10 @@ import { describe, expect, test } from "@odoo/hoot";
 describe.current.tags("desktop");
 defineMrpModels();
 
-test("ensure the rendering is based on minutes and seconds", async () => {
+test("ensure the rendering is based on hours, minutes and seconds", async () => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.fake"].create({ duration: 150.5 });
     await start();
     await openFormView("res.fake", fakeId);
-    expect(".o_field_mrp_timer").toHaveText("150:30");
+    expect(".o_field_mrp_timer").toHaveText("2h 30m 30s");
 });
