@@ -642,7 +642,7 @@ pre {
             // Primary
             $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
             $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
-            $-btn-primary-outline-color: increase-contrast($-btn-primary-border-color, $-bg-color);
+            $-btn-primary-outline-color: if($-btn-primary, $-btn-primary-color, increase-contrast($-btn-primary-border-color, $-bg-color));
             .btn-fill-primary {
                 @include button-variant($-btn-primary-color, $-btn-primary-border-color);
             }
@@ -653,7 +653,7 @@ pre {
             // Secondary
             $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
             $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
-            $-btn-secondary-outline-color: increase-contrast($-btn-secondary-border-color, $-bg-color);
+            $-btn-secondary-outline-color: if($-btn-secondary, $-btn-secondary-color, increase-contrast($-btn-secondary-border-color, $-bg-color));
             .btn-fill-secondary {
                 @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
             }
