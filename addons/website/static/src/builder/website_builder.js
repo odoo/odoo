@@ -19,6 +19,7 @@ import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
 import { RepeatTranslationStatePlugin } from "./plugins/translation/repeat_translation_state_plugin";
 import { BadgeTranslationPlugin } from "./plugins/translation/badge_translation_plugin";
 import { ButtonTranslationPlugin } from "./plugins/options/button_option_plugin";
+import { NavTabsTranslationPlugin } from "./plugins/options/navtabs_style_option_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
 import { TranslateAnnouncementScrollPlugin } from "./plugins/translate_announcement_scroll_plugin";
@@ -78,6 +79,7 @@ const TRANSLATION_PLUGINS = [
     RepeatTranslationStatePlugin,
     BadgeTranslationPlugin,
     ButtonTranslationPlugin,
+    NavTabsTranslationPlugin,
     OperationPlugin,
     EditInteractionPlugin,
     TranslateTableOfContentOptionPlugin,
