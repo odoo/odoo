@@ -28,8 +28,20 @@ class AuthorizeController(http.Controller):
         if not payment_utils.check_access_token(access_token, reference, partner_id):
             raise ValidationError("Authorize.Net: " + _("Received tampered payment request data."))
 
-        # Make the payment request to Authorize.Net
+        # Retrieve the transaction
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        if not tx_sudo:
+            raise ValidationError(_("Authorize.Net: Transaction not found."))
+
+        # Lock the transaction row to prevent concurrent updates (e.g., from cron jobs)
+        # This prevents sql concurrent updates, which stops ORM from automatically
+        # retrying the route and consuming the single-use OTS token a second time.
+        tx_sudo.env.cr.execute(
+            "SELECT 1 FROM payment_transaction WHERE id = %s FOR NO KEY UPDATE",
+            [tx_sudo.id]
+        )
+
+        # Make the payment request to Authorize.Net
         response_content = tx_sudo._authorize_create_transaction_request(opaque_data)
 
         # Handle the payment request response
