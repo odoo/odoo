@@ -24,6 +24,12 @@ registry.category("web_tour.tours").add('shop_sale_ewallet', {
                 }
             },
         },
+        {
+            trigger: '#order_total .oe_currency_value:not(:contains("50.00"))',
+        },
+        {
+            trigger: '.oe_website_sale_gift_card .alert-success:contains("You have successfully applied the following code:")',
+        },
         tourUtils.goToCheckout(),
         tourUtils.pay(),
         {
