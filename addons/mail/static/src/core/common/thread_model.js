@@ -80,7 +80,15 @@ export class Thread extends Record {
          * @param {import("models").Attachment} a1
          * @param {import("models").Attachment} a2
          */
-        sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
+        sort: (a1, a2) => {
+            if (a1.id < 0) {
+                return -1;
+            }
+            if (a2.id < 0) {
+                return 1;
+            }
+            return a1.id < a2.id ? 1 : -1;
+        },
     });
     can_react = true;
     close_chat_window = fields.Attr(undefined, {
