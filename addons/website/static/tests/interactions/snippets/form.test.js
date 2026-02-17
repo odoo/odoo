@@ -12,7 +12,8 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 setupInteractionWhiteList(["website.form", "website.post_link", "website.form.add_other_option"]);
 
@@ -254,6 +255,44 @@ const formTemplateWithRadioAndSelect = /* html */ `
                     <a href="#" role="button" class="btn btn-primary s_website_form_send" contenteditable="true">Submit</a>
                 </div>
             </form>
+        </section>
+    </div>
+`;
+
+const formWithSendCopyOptionalEmail = /* html */ `
+<div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_copy_email" data-type="email">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="email" name="email_from" data-fill-with="email" id="oub62hlfgjwf"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                    <span class="s_website_form_label_content"/>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </section>
     </div>
 `;
@@ -726,4 +765,16 @@ test("should make 'Other' input fields required when 'Other' option is selected"
     });
     await click("a.s_website_form_send");
     expect.verifySteps(["Valid Radio Value", "Valid Select Value"]);
+});
+
+test("should not include the send a copy payload when the email field is empty", async () => {
+    await startInteractions(formWithSendCopyOptionalEmail);
+    expect(".s_website_form_copy_email").toHaveCount(1);
+    patchWithCleanup(browser, {
+        fetch(_route, { body: formData }) {
+            expect(formData.get("_send_copy_fields")).toBe(null);
+            expect(formData.get("_send_copy_mail_address")).toBe(null);
+        },
+    });
+    await click("a.s_website_form_send");
 });

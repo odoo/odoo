@@ -334,13 +334,46 @@ export class Form extends Interaction {
         const formFields = [];
         // List of placeholder values to ignore for submission
         const valuesToIgnore = ["_other"];
-        new FormData(this.el).forEach((value, key) => {
+        const sendCopyEmail = this.el
+            .querySelector(".s_website_form_copy_email input")
+            ?.value.trim();
+        const fieldsWithLabels = [];
+        const seenKeys = new Set();
+        new FormData(this.el).forEach((value, key, formData) => {
             if (valuesToIgnore.includes(value)) {
                 return;
             }
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
             if (inputElement && inputElement.type !== "file") {
                 formFields.push({ name: key, value: value });
+
+                // Collect label value pairs of visible non empty fields for
+                // "send a copy" option.
+                if (sendCopyEmail) {
+                    const fieldEl = inputElement.closest(
+                        ".s_website_form_field:not(.s_website_form_dnone)"
+                    );
+                    if (!fieldEl) {
+                        return;
+                    }
+                    const labelEl = fieldEl.querySelector(
+                        ".s_website_form_label:not(.d-none) .s_website_form_label_content"
+                    );
+                    const label = labelEl?.innerText?.trim() || "[Unnamed]";
+                    const isOne2Many = fieldEl.dataset.type === "one2many";
+                    if (seenKeys.has(key) && isOne2Many) {
+                        return;
+                    }
+                    seenKeys.add(key);
+                    const rawValues = isOne2Many ? formData.getAll(key) : [value];
+                    const values = rawValues.filter((value) => value.trim() !== "");
+                    if (values.length) {
+                        fieldsWithLabels.push({
+                            label: label,
+                            value: values.join(", "),
+                        });
+                    }
+                }
             }
         });
         let outerIndex = 0;
@@ -414,6 +447,13 @@ export class Form extends Interaction {
         const formData = new FormData();
         for (const [key, value] of Object.entries(formValues)) {
             formData.append(key, value);
+        }
+
+        // If "send a copy" is enabled and an email is provided, appends field
+        // data and recipient address to formData.
+        if (sendCopyEmail) {
+            formData.append("_send_copy_fields", JSON.stringify(fieldsWithLabels));
+            formData.append("_send_copy_mail_address", sendCopyEmail);
         }
 
         // Post form and handle result

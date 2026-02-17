@@ -9,12 +9,12 @@ from psycopg2 import IntegrityError
 import re
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID
+from odoo import Command, http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
-from odoo.tools.misc import hmac, consteq
+from odoo.tools.misc import consteq, get_lang, hmac
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -65,6 +65,8 @@ class WebsiteForm(http.Controller):
             return json.dumps({
                 'error': _("The form's specified model does not exist")
             })
+        visitor_email = kwargs.pop('_send_copy_mail_address', False)
+        visitor_name = kwargs.get('partner_name') or kwargs.get('contact_name') or kwargs.get('name')
 
         try:
             data = self.extract_data(model_record, kwargs)
@@ -76,7 +78,7 @@ class WebsiteForm(http.Controller):
         try:
             id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))
             if id_record:
-                self.insert_attachment(model_record, id_record, data['attachments'])
+                orphan_attachment_ids = self.insert_attachment(model_record, id_record, data['attachments'])
                 # in case of an email, we want to send it immediately instead of waiting
                 # for the email queue to process
 
@@ -91,6 +93,29 @@ class WebsiteForm(http.Controller):
                         if not consteq(kwargs["website_form_signature"], hash_value):
                             raise AccessDenied(self.env._('invalid website_form_signature'))
                     request.env[model_name].sudo().browse(id_record).send()
+
+                if visitor_email and data['send_copy_fields']:
+                    template = self.env.ref('website.send_copy_mail_template', raise_if_not_found=False)
+                    if template:
+                        send_copy_template_sudo = template.sudo()
+                        template_attachments_ids = send_copy_template_sudo.attachment_ids.ids
+                        admin_user = self.env.ref('base.user_admin')
+                        lang = get_lang(request.env).code
+                        # Instead of attaching files to the template (which
+                        # would persist and pollute it), we send them only on
+                        # the outgoing email to keep the template clean.
+                        send_copy_template_sudo.with_context(
+                            lang=lang,
+                            filled_values=data['send_copy_fields'],
+                            visitor_name=visitor_name,
+                            visitor_email=visitor_email,
+                        ).send_mail(
+                            admin_user.id,
+                            force_send=True,
+                            email_values={
+                                'attachment_ids': [Command.link(a_id) for a_id in template_attachments_ids + orphan_attachment_ids],
+                            },
+                        )
 
         # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1
@@ -171,11 +196,16 @@ class WebsiteForm(http.Controller):
             'attachments': [],  # Attached files
             'custom': '',        # Custom fields values
             'meta': '',         # Add metadata if enabled
+            'send_copy_fields': {},  # Add form fields for copy email if enabled.
         }
 
         authorized_fields = model_sudo.with_user(SUPERUSER_ID)._get_form_writable_fields(values)
         error_fields = []
         custom_fields = []
+
+        send_copy_fields = values.pop('_send_copy_fields', False)
+        if send_copy_fields:
+            data['send_copy_fields'] = json.loads(send_copy_fields)
 
         for field_name, field_value in values.items():
             # First decode the field_name encoded at the client side.
@@ -334,3 +364,4 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+        return orphan_attachment_ids

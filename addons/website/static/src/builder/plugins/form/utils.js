@@ -141,6 +141,10 @@ export function renderField(field, resetId = false) {
     template.content.querySelectorAll("[data-name]").forEach((el) => {
         el.dataset.name = getQuotesEncodedName(el.dataset.name);
     });
+    template.content.firstElementChild.classList.toggle(
+        "s_website_form_copy_email",
+        !!field.formCopyEmail
+    );
     return template.content.firstElementChild;
 }
 
@@ -274,6 +278,7 @@ export function setActiveProperties(fieldEl, field) {
         field.linkStateToCountry =
             fieldEl.querySelector(".s_website_form_input").dataset.linkStateToCountry !== "false";
     }
+    field.formCopyEmail = classList.contains("s_website_form_copy_email");
 }
 
 /**

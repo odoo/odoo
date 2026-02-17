@@ -56,6 +56,7 @@ patch(webModels.IrModel.prototype, {
 defineWebsiteModels();
 
 test("change action of form changes available options", async () => {
+    onRpc("get_authorized_fields", () => ({}));
     // reduced version of form_editor_actions
     registry
         .category("website.form_editor_actions")
@@ -846,4 +847,97 @@ test("other option attributes are preserved when switching between radio and sel
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-allowed");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-placeholder");
+});
+
+const sendCopyOptionSelector =
+    ".options-container[data-container-title='Form'] [data-action-id='prepareEmailField'] input[type='checkbox']";
+const sendCopyEmailFieldSelector =
+    ":iframe .s_website_form form .s_website_form_field.s_website_form_copy_email[data-type='email']";
+const toggleSendCopyOption = async () => {
+    await contains(sendCopyOptionSelector).click();
+};
+const changeAction = async (actionlabel) => {
+    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains(`div.o-dropdown-item:contains('${actionlabel}')`).click();
+};
+
+test("Send a copy option creates/removes email field and adapts on action change", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    registry.category("website.form_editor_actions").add("apply_job", {
+        formFields: [
+            {
+                type: "char",
+                name: "partner_name",
+                fillWith: "name",
+                string: "Your Name",
+            },
+            {
+                type: "email",
+                required: true,
+                fillWith: "email",
+                name: "email_from",
+                string: "Your Email",
+            },
+        ],
+        fields: [
+            {
+                name: "job_id",
+                type: "many2one",
+                relation: "hr.job",
+                string: "Applied Job",
+            },
+        ],
+        successPage: "/job-thank-you",
+    });
+
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+    await contains(":iframe section.s_website_form").click();
+
+    expect(`${sendCopyOptionSelector}:checked`).toHaveCount(1);
+    expect(sendCopyEmailFieldSelector).toHaveCount(1);
+
+    await changeAction("Apply for a Job");
+
+    expect(`${sendCopyOptionSelector}:checked`).toHaveCount(1);
+    expect(sendCopyEmailFieldSelector).toHaveCount(1);
+
+    expect(
+        ".options-container[data-container-title='Field'] span:has(.oe_snippet_remove)"
+    ).toHaveAttribute(
+        "title",
+        'The field “email_from” is mandatory when the option "Send a Copy" is enabled'
+    );
+    expect(
+        ".options-container[data-container-title='Field'] .oe_snippet_remove[disabled]"
+    ).toHaveCount(1);
+    expect(
+        ".options-container[data-container-title='Field'] .oe_snippet_clone[disabled]"
+    ).toHaveCount(1);
+    expect(
+        ".options-container[data-container-title='Field'] .hb-row[data-label='Type']"
+    ).not.toBeVisible();
+    expect(
+        ".options-container[data-container-title='Field'] .hb-row[data-label='Input Type']"
+    ).not.toBeVisible();
+
+    await toggleSendCopyOption();
+    expect(sendCopyEmailFieldSelector).toHaveCount(0);
+
+    await changeAction("Send an E-mail");
+    expect(`${sendCopyOptionSelector}:not(:checked)`).toHaveCount(1);
+    expect(sendCopyEmailFieldSelector).toHaveCount(0);
+
+    await changeAction("Apply for a Job");
+    await toggleSendCopyOption();
+    expect(sendCopyEmailFieldSelector).toHaveCount(1);
+    expect(":iframe .s_website_form .s_website_form_field[data-type='email']").toHaveCount(1);
+
+    await toggleSendCopyOption();
+    expect(sendCopyEmailFieldSelector).toHaveCount(0);
+
+    await contains(".options-container[data-container-title='Field'] .oe_snippet_remove").click();
+    await toggleSendCopyOption();
+    expect(`${sendCopyEmailFieldSelector}.s_send_copy_auto_created_email_field`).not.toHaveClass(
+        "s_website_form_required"
+    );
 });
