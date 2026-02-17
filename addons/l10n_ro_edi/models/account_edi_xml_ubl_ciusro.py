@@ -85,8 +85,11 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _export_invoice_constraints(self, invoice, vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        constraints = super()._export_invoice_constraints(invoice, vals)
+        # OVERRIDE 'account.edi.xml.ubl_bis3': don't apply Peppol rules
+        constraints = self.env['account.edi.xml.ubl_20']._export_invoice_constraints(invoice, vals)
+        constraints.update(
+            self._invoice_constraints_cen_en16931_ubl(invoice, vals)
+        )
 
         # Default VAT is only allowed for the receiver (customer), not the provider (supplier)
         supplier = vals['supplier'].commercial_partner_id
