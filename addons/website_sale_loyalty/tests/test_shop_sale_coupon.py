@@ -417,7 +417,9 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+        with MockRequest(
+            self.env, website=self.website, sale_order_id=order.id, path='/shop/cart',
+        ) as request:
             # Check the base cart value
             self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
 

@@ -37,7 +37,7 @@
                             t-out="' (' + order_line.product_uom_id.name + ')'"
                         />
                     </div>
-                    <div t-out="order_line._get_shop_warning()"/>
+                    <div t-out="order_line._get_shop_warning_stock(order_line.product_uom_qty, available_qty)"/>
                     <div
                         name="o_wsale_unavailable_line_button_container"
                         class="mt-2 mt-md-1 d-flex align-items-center gap-2"
@@ -113,6 +113,11 @@
                 role="presentation"
                 aria-label="Delivery method"
             />
+        </span>
+        <span name="o_delivery_method_name" position="after">
+            <span t-if="not order._can_be_delivered_with(dm)" class="badge text-bg-danger ms-1">
+                Not available
+            </span>
         </span>
         <div name="o_pickup_location" position="after">
             <t t-if="dm.delivery_type=='in_store' and pickup_location_data">

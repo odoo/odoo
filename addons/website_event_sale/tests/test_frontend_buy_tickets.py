@@ -5,7 +5,7 @@ from datetime import timedelta
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
-from odoo.tests import JsonRpcException, tagged
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -187,8 +187,10 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         }
 
         # Payment should fail due to exceeding the VIP ticket limit
-        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
-            self.make_jsonrpc_request(url, route_kwargs)
+        result = self.make_jsonrpc_request(url, route_kwargs)
+        self.assertEqual(result['state'], 'error')
+        self.assertIn("There are not enough seats available", result['state_message'])
+
         # Double check that we hit the correct limit for ticket
         with self.assertRaises(ValidationError):
             self.event._verify_seats_availability([
@@ -219,8 +221,10 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         self.assertEqual(self.event.seats_available, 1)
 
         # Payment should fail due to exceeding the event seat limit
-        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
-            self.make_jsonrpc_request(url, route_kwargs)
+        result = self.make_jsonrpc_request(url, route_kwargs)
+        self.assertEqual(result['state'], 'error')
+        self.assertIn("There are not enough seats available", result['state_message'])
+
         # Double check that we hit the correct limit for event
         with self.assertRaises(ValidationError):
             self.event._verify_seats_availability([

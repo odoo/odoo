@@ -58,6 +58,8 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
 
     @mute_logger('odoo.http')
     def test_transaction_route_rejects_unexpected_kwarg(self):
+        self.cart.partner_id.write(self.dummy_partner_address_values.copy())
+        self.cart._set_delivery_method(self.free_delivery)
         url = self._build_url(f'/shop/payment/transaction/{self.cart.id}')
         route_kwargs = {
             'access_token': self.cart._portal_ensure_token(),

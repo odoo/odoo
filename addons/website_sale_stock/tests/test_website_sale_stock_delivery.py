@@ -1,75 +1,90 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.exceptions import ValidationError
+from odoo.fields import Command
+from odoo.http.router import root
 from odoo.tests import tagged
-from odoo.http import request
+from odoo.tests.common import HttpCase
 
 from odoo.addons.payment.tests.common import PaymentCommon
-from odoo.addons.website_sale.controllers.cart import Cart
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
-from odoo.addons.delivery.tests.common import DeliveryCommon
+from odoo.addons.website_sale.controllers.cart import Cart as CartController
+from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
+from odoo.addons.website_sale.tests.common import MockRequest
+from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon, DeliveryCommon):
+class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon, PaymentCommon, HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.storable_product = cls._create_product()
+        cls._add_product_qty_to_wh(cls.storable_product.id, 10.0, cls.warehouse.lot_stock_id.id)
+
+        cls.CheckoutController = CheckoutController()
+        cls.CartController = CartController()
 
     def test_validate_payment_with_no_available_delivery_method(self):
-        """
-        An error should be raised if you try to validate an order with a storable
-        product without any delivery method available
-        """
-        storable_product = self.env['product.product'].create([{
-            'name': 'Storable Product',
-            'sale_ok': True,
-            'is_storable': True,
-            'website_published': True,
-        }])
-        carriers = self.env['delivery.carrier'].search([])
-        carriers.write({'website_published': False})
-
-        WebsiteSaleCartController = Cart()
-        WebsiteSaleController = WebsiteSale()
-        with MockRequest(self.env, website=self.website):
-            WebsiteSaleCartController.add_to_cart(
-                product_template_id=storable_product.product_tmpl_id,
-                product_id=storable_product.id,
+        """The user should be redirected to the delivery method selection step if they didn't select
+        one yet."""
+        self.env['delivery.carrier'].search([]).write({'website_published': False})
+        website = self.website.with_user(self.public_user)
+        with MockRequest(website.env, website=website, path='/shop/cart/add') as request:
+            self.CartController.add_to_cart(
+                product_template_id=self.storable_product.product_tmpl_id,
+                product_id=self.storable_product.id,
                 quantity=1,
             )
-            with self.assertRaises(ValidationError):
-                WebsiteSaleController.shop_payment_validate()
+            cart = request.cart
+            self.assertTrue(cart.order_line)
+
+        with MockRequest(
+            website.env, website=website, path='/shop/address/submit', sale_order_id=cart.id,
+        ) as request:
+            self.CheckoutController.shop_address_submit(
+                address_type='delivery',
+                use_delivery_as_billing=True,
+                name='Test partner',
+                **self.dummy_partner_address_values,
+            )
+            self.assertNotEqual(request.cart.partner_id, self.public_partner)
+
+        # Attempt to pay a little too quickly
+        session = self.authenticate(None, None)
+        session[CART_SESSION_CACHE_KEY] = cart.id
+        root.session_store.save(session)
+        response = self.make_jsonrpc_request(
+            f'/shop/payment/transaction/{cart.id}',
+            params={
+                'provider_id': self.provider.id,
+                'payment_method_id': self.payment_method.id,
+                'token_id': None,
+                'flow': 'direct',
+                'tokenization_requested': False,
+                'landing_route': '/shop/payment/validate',
+                'access_token': cart._portal_ensure_token(),
+            },
+        )
+
+        self.assertEqual(response['redirect'], '/shop/checkout')
 
     def test_validate_order_out_of_stock_zero_price(self):
-        """
-        An error should be raised if you try to validate an order for
-        an out of stock product with 0 price
-        """
-        WebsiteSaleController = WebsiteSale()
-        storable_product = self.env['product.product'].create({
-            'name': 'Storable Product',
-            'sale_ok': True,
-            'is_storable': True,
-            'website_published': True,
-            'allow_out_of_stock_order': False,
-            'lst_price': 0,
-        })
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [Command.create({
-                'product_id': storable_product.id,
+        """The user should be redirected to the cart overview page if they try to buy a product out
+        of stock with 0 price."""
+        self.storable_product.lst_price = 0.0
+        cart = self._create_so(
+            order_line=[Command.create({
+                'product_id': self.storable_product.id,
                 'product_uom_qty': 12.0,
             })],
-            'carrier_id': self.free_delivery.id,
-        })
-        self.free_delivery.write({'website_published': True})
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': storable_product.id,
-            'inventory_quantity': 10.0,
-            'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
-        }).action_apply_inventory()
+            carrier_id=self.free_delivery.id,
+        )
 
-        with MockRequest(self.env, website=self.website):
-            request.cart = sale_order
-            with self.assertRaises(ValidationError):
-                WebsiteSaleController.shop_payment_validate()
+        website = self.website.with_user(self.public_user)
+        with MockRequest(
+            website.env, website=website, path='/shop/payment/validate', sale_order_id=cart.id
+        ):
+            response = self.CheckoutController.shop_payment_validate()
+
+            self.assertEqual(response.location, '/shop/cart')

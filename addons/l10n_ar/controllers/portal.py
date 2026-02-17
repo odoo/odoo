@@ -21,8 +21,8 @@ class L10nARPortalAccount(L10nLatamBasePortalAccount):
             })
         return rendering_values
 
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
         if self._is_argentinean_company():
             mandatory_fields.add('l10n_ar_afip_responsibility_type_id')
         return mandatory_fields

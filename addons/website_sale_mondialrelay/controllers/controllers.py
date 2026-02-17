@@ -54,11 +54,11 @@ class WebsiteSaleMondialrelay(WebsiteSale):
 
         return partner_sudo, _address_type
 
-    def _check_delivery_address(self, partner_sudo):
+    def _check_delivery_address(self, partner_sudo, **kwargs):
         # skip check for mondialrelay partners as the customer can not edit them
         if partner_sudo.is_mondialrelay:
             return True
-        return super()._check_delivery_address(partner_sudo)
+        return super()._check_delivery_address(partner_sudo, **kwargs)
 
 
 class WebsiteSaleDeliveryMondialrelay(Delivery):

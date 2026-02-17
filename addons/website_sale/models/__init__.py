@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import (
+from . import (  # noqa: I001
     account_move,
     crm_team,
     delivery_carrier,
@@ -28,6 +28,7 @@ from . import (
     res_config_settings,
     res_partner,
     res_users,
+    website_checkout_alert_mixin,  # Dependency of sale.order and sale.order.line
     sale_order,
     sale_order_line,
     theme_utils,

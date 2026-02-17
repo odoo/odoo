@@ -8,6 +8,7 @@ from . import (
     test_cart_notification,
     test_cart_payment,
     test_cart_recovery,
+    test_checkout_flow,
     test_combo_configurator,
     test_common,
     test_customize,

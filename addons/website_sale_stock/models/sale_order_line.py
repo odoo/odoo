@@ -6,15 +6,17 @@ from odoo import models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _set_shop_warning_stock(self, desired_qty, new_qty, save=True):
+    def _get_shop_warning_stock(self, desired_quantity, available_quantity):
         self.ensure_one()
-        warning = self.env._(
-            "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is available",
-            desired_qty=desired_qty, product_name=self.product_id.name, new_qty=new_qty
+        if available_quantity <= 0.0:
+            return self.env._("This product is no longer available.")
+        return self.env._(
+            "You requested %(desired)g %(product_name)s, but only %(available)g are available in"
+            " stock.",
+            desired=desired_quantity,
+            product_name=self.product_id.display_name,
+            available=available_quantity,
         )
-        if save:
-            self.shop_warning = warning
-        return warning
 
     def _get_max_line_qty(self):
         max_quantity = self._get_max_available_qty()
@@ -37,10 +39,18 @@ class SaleOrderLine(models.Model):
         return min(max_quantities, default=None)
 
     def _check_availability(self):
+        """Check the current order line is available on the website, meaning there is sufficient
+        stock to fulfill the cart quantity for the product in the current line.
+
+        Note: `self.ensure_one()`.
+
+        :return: True if the product is available, False otherwise.
+        :rtype: bool
+        """
         self.ensure_one()
         if self.product_id.is_storable and not self.product_id.allow_out_of_stock_order:
             cart_qty, avl_qty = self.order_id._get_cart_and_free_qty(self.product_id)
             if cart_qty > avl_qty:
-                self._set_shop_warning_stock(cart_qty, max(avl_qty, 0))
+                self._add_warning_alert(self._get_shop_warning_stock(cart_qty, max(avl_qty, 0)))
                 return False
         return True

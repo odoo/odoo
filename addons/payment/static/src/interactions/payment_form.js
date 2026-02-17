@@ -4,6 +4,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { renderToMarkup } from '@web/core/utils/render';
+import { redirect } from '@web/core/utils/urls';
 import { Interaction } from '@web/public/interaction';
 
 export class PaymentForm extends Interaction {
@@ -407,6 +408,10 @@ export class PaymentForm extends Interaction {
                 this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
             ));
             if (processingValues.state === 'error') {
+                if (processingValues.redirect) {
+                    redirect(processingValues.redirect);
+                    return;
+                }
                 this._displayErrorDialog(
                     _t("Payment processing failed"), processingValues.state_message
                 );

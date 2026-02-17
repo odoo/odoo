@@ -35,7 +35,7 @@ class ProductTemplate(models.Model):
             ])
             if available_delivery_methods_sudo:
                 res['delivery_stock_data'] = utils.format_product_stock_values(
-                    product_sudo, uom=uom, cart_qty=cart_qty
+                    product_sudo, wh_id=request.website.warehouse_id.id, uom=uom, cart_qty=cart_qty
                 )
             else:
                 res['delivery_stock_data'] = {}

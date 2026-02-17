@@ -5,10 +5,10 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'website.checkout.alert.mixin']
 
     name_short = fields.Char(compute='_compute_name_short')
-    shop_warning = fields.Char(string="Warning")
 
     #=== COMPUTE METHODS ===#
 
@@ -41,13 +41,6 @@ class SaleOrderLine(models.Model):
             # creation date.
             return fields.Datetime.now()
         return super()._get_order_date()
-
-    def _get_shop_warning(self, clear=True):
-        self.ensure_one()
-        warn = self.shop_warning
-        if clear:
-            self.shop_warning = ''
-        return warn
 
     def _get_displayed_unit_price(self):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection

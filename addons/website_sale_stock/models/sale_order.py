@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
 
@@ -39,20 +38,15 @@ class SaleOrder(models.Model):
             if available_qty < total_cart_qty:
                 allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
                 if allowed_line_qty > 0:
-                    def format_qty(qty):
-                        return int(qty) if float(qty).is_integer() else qty
                     if order_line:
-                        warning = order_line._set_shop_warning_stock(
-                            format_qty(total_cart_qty),
-                            format_qty(available_qty),
-                            save=False,
-                        )
+                        warning = order_line._get_shop_warning_stock(total_cart_qty, available_qty)
                     else:
                         warning = self.env._(
-                            "You ask for %(desired_qty)s products but only %(available_qty)s is"
-                            " available.",
-                            desired_qty=format_qty(total_cart_qty),
-                            available_qty=format_qty(available_qty),
+                            "You requested %(qty)g %(product_name)s,"
+                            " but only %(avl_qty)g are available in stock.",
+                            qty=total_cart_qty,
+                            product_name=product.display_name,
+                            avl_qty=available_qty,
                         )
                 elif order_line:
                     # Line will be deleted
@@ -62,8 +56,8 @@ class SaleOrder(models.Model):
                     )
                 else:
                     warning = self.env._(
-                        "%(product_name)s has not been added to your cart since it is not available.",
-                        product_name=product.name,
+                        "%(product_name)s was not added to your cart because it is unavailable.",
+                        product_name=product.display_name,
                     )
                 return allowed_line_qty, warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
@@ -80,10 +74,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         product.ensure_one()
 
-        return self._get_cart_qty(product.id), self._get_free_qty(product)
-
-    def _get_free_qty(self, product):
-        return product.with_context(warehouse_id=self._get_shop_warehouse_id()).free_qty
+        return self._get_cart_qty(product.id), self.website_id._get_product_available_qty(product)
 
     def _get_shop_warehouse_id(self):
         """Return the warehouse to use for shop availability checks.
@@ -121,24 +112,29 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
-    def _check_cart_is_ready_to_be_paid(self):
-        values = [
-            line.shop_warning
-            for line in self.order_line
-            if not line._check_availability()
-        ]
-        if values:
-            raise ValidationError(' '.join(values))
-        return super()._check_cart_is_ready_to_be_paid()
+    def _is_cart_ready_for_checkout(self):
+        """Override of `website_sale` to prevent the user from proceeding if there is not enough
+        stock for some order lines."""
+        ready = super()._is_cart_ready_for_checkout()
+        if not self._has_deliverable_products():
+            return ready
+
+        if not self._all_product_available():
+            self._add_warning_alert(
+                self.env._("Unfortunately, there is no longer enough stock to fulfill your order.")
+            )
+            return False
+
+        return ready
+
+    def _all_product_available(self):
+        """Whether all the products are available on the current website."""
+        self.ensure_one()
+        # Uses list comprehension to ensure all products are checked and potential alerts are saved.
+        return all([sol._check_availability() for sol in self.order_line])  # noqa: C419
 
     def _filter_can_send_abandoned_cart_mail(self):
         """Filter sale orders on their product availability."""
         return super()._filter_can_send_abandoned_cart_mail().filtered(
             lambda so: so._all_product_available()
         )
-
-    def _all_product_available(self):
-        self.ensure_one()
-        if not (lines := self.order_line):
-            return True
-        return not any(product._is_sold_out() for product in lines.product_id)

@@ -990,14 +990,26 @@ class Website(models.Model):
         return websites
 
     def _create_checkout_steps(self):
-        generic_steps = self.env['website.checkout.step'].sudo().search([
-            ('website_id', '=', False),
-        ])
+        generic_steps = self.env['website.checkout.step'].sudo().search(
+            [('website_id', '=', False)],
+            order='parent_id NULLS FIRST',  # Create the root-steps first
+        )
+        created_steps = self.env['website.checkout.step']
         for step in generic_steps:
-            is_published = True
+            values = {
+                'website_id': self.id,
+                # "Sub"-steps are not shown explicitly to the user
+                'is_published': not step.parent_id,
+                'parent_id': (
+                    created_steps.filtered(lambda s: s.step_href == step.parent_id.step_href).id
+                    if step.parent_id else False
+                ),
+            }
             if step.step_href == '/shop/extra_info':
-                is_published = self.with_context(website_id=self.id).viewref('website_sale.extra_info').active
-            step.copy({'website_id': self.id, 'is_published': is_published})
+                values['is_published'] = (
+                    self.with_context(website_id=self.id).viewref('website_sale.extra_info').active
+                )
+            created_steps += step.copy(values)
 
     def _get_checkout_step(self, href):
         return self.env['website.checkout.step'].sudo().search([
@@ -1018,20 +1030,14 @@ class Website(models.Model):
         return steps
 
     def _get_checkout_step_values(self):
-        def rewrite(path):
-            return self.env['ir.http'].url_rewrite(path)[0]
-        href = rewrite(request.httprequest.path)
-        # /shop/address is associated with the delivery step
-        if href == rewrite('/shop/address'):
-            href = rewrite('/shop/checkout')
-
+        request_href = self.env['ir.http'].url_unrewrite(request.httprequest.path, self.id)
         allowed_steps_domain = self._get_allowed_steps_domain()
-        current_step = request.env['website.checkout.step'].sudo()
-        for step in current_step.search(allowed_steps_domain):
-            if rewrite(step.step_href) == href:
-                current_step = step
-                href = step.step_href
-                break
+
+        current_step = self._get_checkout_step(request_href)
+        while current_step.parent_id:
+            current_step = current_step.parent_id
+        current_step = current_step.filtered_domain(allowed_steps_domain)
+
         next_step = current_step._get_next_checkout_step(allowed_steps_domain)
         previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
 
@@ -1040,11 +1046,11 @@ class Website(models.Model):
         if next_step.step_href == '/shop/checkout':
             next_href = '/shop/checkout?try_skip_step=true'
         # redirect handled by '/shop/address/submit' route when all values are properly filled
-        if request.httprequest.path == rewrite('/shop/address'):
+        if request_href == '/shop/address':
             next_href = False
 
         return {
-            'current_website_checkout_step_href': href,
+            'current_website_checkout_step_href': current_step.step_href,
             'previous_website_checkout_step': previous_step,
             'next_website_checkout_step': next_step,
             'next_website_checkout_step_href': next_href,
