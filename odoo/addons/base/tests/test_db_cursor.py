@@ -366,6 +366,10 @@ class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
 
     def assertHookData(self):
         for callback, name in zip(self.callbacks, self.callback_names):
+            if name == 'precommit':
+                self.assertFalse(callback._funcs, "precommit is flushed for savepoint between tests")
+                self.assertFalse(callback.data)
+                continue
             self.assertEqual(
                 callback.data[f'test_cursor_hooks_{name}'],
                 ['keep'],
@@ -377,6 +381,8 @@ class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
     def test_1_isolation(self):
         self.assertHookData()
         for callback, name in zip(self.callbacks, self.callback_names):
+            if name == 'precommit':
+                callback.data['test_cursor_hooks_precommit'] = []
             callback.data[f'test_cursor_hooks_{name}'].append("don't keep")
             callback.add(self.other_callback)
 
