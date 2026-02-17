@@ -827,7 +827,7 @@ class HrLeave(models.Model):
             user_tz = ZoneInfo(leave.tz)
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
-            time_off_type_display = leave.work_entry_type_id.name
+            time_off_type_display = leave.work_entry_type_id.display_code or leave.work_entry_type_id.name
             if self.env.context.get('short_name'):
                 short_leave_name = leave.name or time_off_type_display or _('Time Off')
                 leave.display_name = _("%(name)s: %(duration)s", name=short_leave_name, duration=leave.duration_display)
@@ -839,11 +839,17 @@ class HrLeave(models.Model):
                         date_to_utc=format_date(self.env, date_to_utc) or ""
                     )
                 if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-                    leave.display_name = _("%(work_entry_type)s: %(duration)s (%(start)s)",
-                        work_entry_type=time_off_type_display,
-                        duration=leave.duration_display,
-                        start=display_date,
-                    )
+                    if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+                        leave.display_name = self.env._("%(work_entry_type)s: %(duration)s (%(start)s)",
+                            work_entry_type=time_off_type_display,
+                            duration=leave.duration_display,
+                            start=display_date,
+                        )
+                    else:
+                        leave.display_name = self.env._("%(duration)s (%(start)s)",
+                            duration=leave.duration_display,
+                            start=display_date,
+                        )
                 elif not time_off_type_display:
                     leave.display_name = _("%(person)s: %(duration)s (%(start)s)",
                         person=target,
