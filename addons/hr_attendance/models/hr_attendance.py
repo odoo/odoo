@@ -341,9 +341,58 @@ class HrAttendance(models.Model):
         self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
         self.env.add_to_compute(self._fields['overtime_status'], all_attendances)
 
+    # Split the Attendance Shift If it across the employee local midnight and save in UTC
+    def _split_attendance_intervals(self, employee, check_in, check_out):
+        if check_out < check_in:
+            return
+        tz = ZoneInfo(employee._get_tz())
+        current_start_utc = check_in
+        while current_start_utc < check_out:
+            local_start = current_start_utc.replace(tzinfo=UTC).astimezone(tz)
+            next_day_date = local_start.date() + timedelta(days=1)
+            local_midnight = datetime.combine(next_day_date, datetime.min.time(), tzinfo=tz)
+            midnight_utc = local_midnight.astimezone(UTC).replace(tzinfo=None)
+            current_end_utc = min(midnight_utc, check_out)
+            yield (current_start_utc, current_end_utc)
+            current_start_utc = current_end_utc
+
+    def _check_cross_day_shift(self, vals, attendance=None):
+        employee_id = self.env['hr.employee'].browse(vals['employee_id']) if vals.get('employee_id') else attendance.employee_id if attendance else None
+        check_in = fields.Datetime.from_string(vals.get('check_in')) if vals.get('check_in') else attendance.check_in if attendance else None
+        check_out = fields.Datetime.from_string(vals.get('check_out')) if vals.get('check_out') else attendance.check_out if attendance else None
+        if not (employee_id and check_in and check_out):
+            return [vals]
+
+        tz = ZoneInfo(employee_id._get_tz())
+        # Same Day Shift
+        if check_out.astimezone(tz).date() <= check_in.astimezone(tz).date():
+            current_vals = vals.copy()
+            current_vals.update({
+                'employee_id': employee_id.id,
+                'check_in': fields.Datetime.to_string(check_in),
+                'check_out': fields.Datetime.to_string(check_out),
+            })
+            return [current_vals]
+
+        # Cross Day Shift
+        intervals = list(self._split_attendance_intervals(employee_id, check_in, check_out))
+        new_vals_list = []
+        for current_check_in, current_check_out in intervals:
+            current_vals = vals.copy()
+            current_vals.update({
+                'employee_id': employee_id.id,
+                'check_in': fields.Datetime.to_string(current_check_in),
+                'check_out': fields.Datetime.to_string(current_check_out),
+            })
+            new_vals_list.append(current_vals)
+        return new_vals_list
+
     @api.model_create_multi
     def create(self, vals_list):
-        res = super().create(vals_list)
+        final_vals_list = []
+        for vals in vals_list:
+            final_vals_list.extend(self._check_cross_day_shift(vals))
+        res = super().create(final_vals_list)
         res._update_overtime()
         return res
 
@@ -353,6 +402,15 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
         domain_pre = self._get_overtimes_to_update_domain()
+
+        if ('check_out' in vals):
+            for attendance in self:
+                new_vals_list = self._check_cross_day_shift(vals, attendance)
+                vals['check_in'] = new_vals_list[0]['check_in']
+                vals['check_out'] = new_vals_list[0]['check_out']
+                vals['employee_id'] = new_vals_list[0].get('employee_id', attendance.employee_id.id)
+                for extra_vals in new_vals_list[1:]:
+                    self.env['hr.attendance'].create(extra_vals)
         result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
@@ -600,7 +658,12 @@ class HrAttendance(models.Model):
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.check_out = att.check_in.replace(hour=23, minute=59, second=59)
+                    tz = ZoneInfo(att.employee_id._get_tz())
+                    check_in_local = att.check_in.replace(tzinfo=UTC).astimezone(tz)
+                    estimated_checkout_local = check_in_local.replace(hour=23, minute=59, second=59)
+                    estimated_checkout = estimated_checkout_local.astimezone(UTC).replace(tzinfo=None)
+                    att.check_out = estimated_checkout
+
                     excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
                     att.write({
                         "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
