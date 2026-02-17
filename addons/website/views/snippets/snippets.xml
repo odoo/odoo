@@ -465,6 +465,10 @@
                 t-image-preview="/website/static/src/img/snippets_previews/s_facebook_preview.webp">
                 <keywords>social media, fb, feed</keywords>
             </t>
+            <t t-snippet="website.s_whatsapp" string="Whatsapp" group="social" label="Whatsapp"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_whatsapp.webp">
+                    <keywords>cta, whatsapp, social, e-commerce, selling-points, prompt, form, chatbot, call-to-action, assistant, assistance, customer, 24, 7, support, talk</keywords>
+            </t>
             <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
             <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" group="social" label="Map"
                 t-image-preview="/website/static/src/img/snippets_previews/s_map_preview.png"/>

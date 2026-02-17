@@ -42,6 +42,7 @@ class TestSnippets(HttpCase):
             's_snippet_group',  # Snippet groups are not snippets
             's_inline_text',
             's_drag_image_preview_test',
+            's_whatsapp',   # Fixed-position, not part of normal layout flow
         ]
         snippets_names = ','.join({
             f"{el.attrib['data-oe-snippet-key']}:{el.attrib.get('data-o-group', '')}"

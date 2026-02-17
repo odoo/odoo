@@ -233,6 +233,10 @@ class Website(Home):
     def translated_elements(self, **kwargs):
         return list(TRANSLATED_ELEMENTS)
 
+    @http.route('/website/company_phone', type='jsonrpc', auth='public', website=True)
+    def get_company_phone(self):
+        return request.website.company_id.phone or ""
+
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
         """ :param lang: supposed to be value of `url_code` field """
