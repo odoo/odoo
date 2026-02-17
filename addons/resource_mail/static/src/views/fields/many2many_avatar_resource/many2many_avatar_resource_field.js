@@ -78,7 +78,7 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
         return {
             ...super.getTagProps(...arguments),
             color: record.data.color,
-            type: record.data.resource_type,
+            type: !record.model.useSampleModel ? record.data.resource_type : "material",
             imageUrl: record.data.resource_type === "user"
                 ? `/web/image/${this.relation}/${record.resId}/avatar_128`
                 : undefined,
