@@ -170,6 +170,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency_id': invoice.currency_id,
             'company_currency_id': invoice.company_id.currency_id,
             'company': invoice.company_id,
+            'journal': invoice.journal_id,
 
             'use_company_currency': False,  # If true, use the company currency for the amounts instead of the invoice currency
             'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
