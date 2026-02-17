@@ -21,6 +21,7 @@ class AccountMove(models.Model):
         string='Peppol status',
         copy=False,
     )
+    peppol_exclude_product_reference = fields.Boolean(string='Exclude Product Reference')
 
     def action_send_and_print(self):
         for move in self:
