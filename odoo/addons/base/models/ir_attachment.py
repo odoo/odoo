@@ -77,6 +77,7 @@ class IrAttachment(models.Model):
     _name = 'ir.attachment'
     _description = 'Attachment'
     _order = 'id desc'
+    _access_domain_heavy = True
 
     def _compute_res_name(self):
         for attachment in self:
