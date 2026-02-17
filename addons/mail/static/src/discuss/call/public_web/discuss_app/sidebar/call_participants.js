@@ -70,7 +70,7 @@ export class DiscussSidebarCallParticipants extends Component {
         return sessions[0];
     }
 
-    get attClass() {
+    attClass(session) {
         return {
             "justify-content-center bg-inherit": this.compact,
         };
