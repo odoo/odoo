@@ -65,10 +65,10 @@ export class ChatWindow extends Component {
 
     get hasActionsMenu() {
         return (
-            this.partitionedActions.group.length > 0 ||
-            this.partitionedActions.other.length > 0 ||
-            (this.ui.isSmall && this.partitionedActions.quick.length > 2) ||
-            (!this.ui.isSmall && this.partitionedActions.quick.length > 3)
+            this.threadActions.partition.group.length > 0 ||
+            this.threadActions.partition.other.length > 0 ||
+            (this.ui.isSmall && this.threadActions.partition.quick.length > 2) ||
+            (!this.ui.isSmall && this.threadActions.partition.quick.length > 3)
         );
     }
 
