@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import time
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -131,6 +132,12 @@ class AccountEdiProxyClientUser(models.Model):
                 'errors': False,
             }
         }
+        start_time_timestamp = time.monotonic()
+        limit_time = tools.config['limit_time_real']
+        if tools.config.get('limit_time_real_cron', -1) > 0:
+            limit_time = tools.config['limit_time_real_cron']
+        limit_time -= 300  # Margin of 5 minute to avoid timeouts
+
         for edi_user in self:
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
@@ -172,6 +179,9 @@ class AccountEdiProxyClientUser(models.Model):
             )
 
             for uuid, content in all_messages.items():
+                if fields.Datetime.now().timestamp() - start_time_timestamp > limit_time:
+                    need_retrigger = True
+                    break
                 enc_key = content["enc_key"]
                 document_content = content["document"]
                 filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
