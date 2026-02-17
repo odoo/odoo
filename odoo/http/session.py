@@ -220,8 +220,6 @@ def authenticate(session: Session, env: Environment, credential: dict) -> dict:
     session['pre_login'] = credential['login']
     session['pre_uid'] = pre_uid
 
-    env = env(user=pre_uid)
-
     # if 2FA is disabled we finalize immediately
     user = env['res.users'].browse(pre_uid)
     if auth_info.get('mfa') == 'skip' or not user._mfa_url():
