@@ -285,9 +285,12 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
         "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
-        "web.FieldTooltip": {'field', 'debug'},  # not sure
-        "web.ListRenderer.RecordRow": {'record', 'group', 'groupId'},  # dynamic t-call I guess,
+        "web.FieldTooltip": {'field', 'debug', 'resModel'},  # JSON stringify context
+        "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call I guess,
         "web.ListRenderer.GroupRow": {'group'},  # dynamic t-call I guess
+        "web.ListHeaderTooltip": {'field'},  # JSON stringify context
+        "web.Many2ManyBinaryField.attachment_preview": {'file'},  # t-for-each above t-call
+        "web.Many2ManyTagsAvatarField.option": {'autoCompleteItemScope'},  # t-slot-scope above dynamic t-call
         "web.PivotMeasure": {'cell'},  # for each + t-call
         "web.SearchPanelContent": {'section'},  # dynamic t-call
         "web.SearchPanel.Small": {'section'},  # dynamic t-call
@@ -301,6 +304,7 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.TreeEditor.connector.value": {'node'},  # Nested inherit
         "web.TreeEditor.condition": {'node'},  # Nested inherit
         "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
+        "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
     }  # vars defined under t-call
     inside_vars = {}  # vars defined inside template, eg. using t-set
     for fileno, file in enumerate(web_files, start=1):
