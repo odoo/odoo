@@ -222,3 +222,17 @@ registry.category("web_tour.tours").add("test_coupon_code_stays_set", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_multiple_physical_gift_card_sale", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Gift Card", "1", "0", "0"),
+            PosLoyalty.createManualGiftCard("test-card-0000", 125),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
+            ProductScreen.addOrderline("Gift Card", "1", "0", "0"),
+            PosLoyalty.createManualGiftCard("test-card-0001", 100),
+            PosLoyalty.finalizeOrder("Cash", "225"),
+        ].flat(),
+});
