@@ -1,16 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
-import { GRID_IMAGE } from "@website/builder/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { GridImageOption } from "./grid_image_option";
 
-class GridImageOptionPlugin extends Plugin {
+export class GridImageOptionPlugin extends Plugin {
     static id = "gridImageOption";
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(GRID_IMAGE, GridImageOption)],
         builder_actions: {
             SetGridImageModeAction,
         },

@@ -1,8 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { AvatarsHeaderMiddleButtons } from "./avatars_header_buttons";
 
 /**
@@ -23,20 +21,11 @@ function updateZIndex(snippetEl) {
     );
 }
 
-export class AvatarsOption extends BaseOptionComponent {
-    static template = "website.AvatarsOption";
-    static selector = ".s_avatars";
-    static components = {
-        BorderConfigurator,
-    };
-}
-
-class AvatarsOptionPlugin extends Plugin {
+export class AvatarsOptionPlugin extends Plugin {
     static id = "avatarsOption";
     static dependencies = ["builderOptions"];
 
     resources = {
-        builder_options: [AvatarsOption],
         builder_header_middle_buttons: {
             Component: AvatarsHeaderMiddleButtons,
             selector: ".s_avatars",

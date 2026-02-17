@@ -1,25 +1,14 @@
 import { BuilderAction } from '@html_builder/core/builder_action';
-import { BaseOptionComponent } from '@html_builder/core/utils';
-import { SNIPPET_SPECIFIC } from '@html_builder/utils/option_sequence';
 import { Plugin } from '@html_editor/plugin';
 import { withSequence } from '@html_editor/utils/resource';
 import { _t } from '@web/core/l10n/translation';
 import { registry } from '@web/core/registry';
 
-
-export class SupportedPaymentMethodsOption extends BaseOptionComponent {
-    static template = 'website_payment.SupportedPaymentMethodsOption';
-    static selector = '.s_supported_payment_methods';
-}
-
-class SupportedPaymentMethodsOptionPlugin extends Plugin {
+export class SupportedPaymentMethodsOptionPlugin extends Plugin {
     static id = 'supportedPaymentMethodsOption';
     static dependencies = ['edit_interaction'];
     resources = {
         so_content_addition_selector: ['.s_supported_payment_methods'],
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC, SupportedPaymentMethodsOption),
-        ],
         builder_actions: { SupportedPaymentMethodsLimit, SupportedPaymentMethodsHeight },
         get_options_container_top_buttons: withSequence(0, this.getOptionButtons.bind(this)),
         get_overlay_buttons: withSequence(0, { getButtons: this.getOptionButtons.bind(this) }),
@@ -43,7 +32,7 @@ class SupportedPaymentMethodsOptionPlugin extends Plugin {
 }
 
 
-class SupportedPaymentMethodsLimit extends BuilderAction {
+export class SupportedPaymentMethodsLimit extends BuilderAction {
     static id = 'supportedPaymentMethodsLimit';
 
     getValue({ editingElement }) {
@@ -56,7 +45,7 @@ class SupportedPaymentMethodsLimit extends BuilderAction {
 }
 
 
-class SupportedPaymentMethodsHeight extends BuilderAction {
+export class SupportedPaymentMethodsHeight extends BuilderAction {
     static id = 'supportedPaymentMethodsHeight';
 
     getValue({ editingElement }) {

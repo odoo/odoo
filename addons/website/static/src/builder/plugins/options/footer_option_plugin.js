@@ -1,19 +1,10 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
-import {
-    SNIPPET_SPECIFIC_END,
-    SNIPPET_SPECIFIC_NEXT,
-    splitBetween,
-} from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { FooterTemplateChoice, FooterTemplateOption } from "./footer_template_option";
+import { FooterTemplateChoice } from "./footer_template_option";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
@@ -29,102 +20,13 @@ import { ShadowOption } from "@html_builder/plugins/shadow_option";
  * }[]>)[]} footer_templates_providers
  */
 
-const [
-    FOOTER_TEMPLATE,
-    FOOTER_COLORS,
-    FOOTER_WIDTH,
-    FOOTER_SLIDEOUT,
-    FOOTER_SCROLL_TO,
-    FOOTER_COOKIE_POLICY_LINK,
-    FOOTER_COPYRIGHT,
-    FOOTER_BORDER,
-    ...__ERROR_CHECK__
-] = splitBetween(SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, 8);
-if (__ERROR_CHECK__.length > 0) {
-    console.error("Wrong count in footer option split");
-}
-
-export {
-    FOOTER_TEMPLATE,
-    FOOTER_COLORS,
-    FOOTER_WIDTH,
-    FOOTER_SLIDEOUT,
-    FOOTER_SCROLL_TO,
-    FOOTER_COOKIE_POLICY_LINK,
-    FOOTER_COPYRIGHT,
-    FOOTER_BORDER,
-};
-
-export class FooterWidthOption extends BaseOptionComponent {
-    static template = "website.FooterWidthOption";
-    static selector = "#wrapwrap > footer";
-    static applyTo =
-        ":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-}
-
-export class FooterColorsOption extends BaseOptionComponent {
-    static template = "website.FooterColorsOption";
-    static selector = "#wrapwrap > footer";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-}
-
-export class FooterSlideoutOption extends BaseOptionComponent {
-    static template = "website.FooterSlideoutOption";
-    static selector = "#wrapwrap > footer";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-}
-
-export class ToggleFooterCopyrightOption extends BaseOptionComponent {
-    static template = "website.ToggleFooterCopyrightOption";
-    static selector = "#wrapwrap > footer";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-}
-
-export class ToggleFooterCookiePolicyLinkOption extends BaseOptionComponent {
-    static template = "website.ToggleFooterCookiePolicyLinkOption";
-    static selector = "#wrapwrap:has(#website_cookies_bar) > footer";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-}
-
-export class FooterBorder extends BaseOptionComponent {
-    static template = "website.FooterBorder";
-    static selector = "#wrapwrap > footer";
-    static applyTo = "#footer";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-    static components = { BorderConfigurator, ShadowOption };
-}
-
-export class FooterScrollToTopOption extends BaseOptionComponent {
-    static template = "website.FooterScrollToTopOption";
-    static selector = "#wrapwrap > footer";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
-}
-
-class FooterOptionPlugin extends Plugin {
+export class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
     static dependencies = ["customizeWebsite", "builderActions"];
     static shared = ["getFooterTemplates"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(FOOTER_TEMPLATE, FooterTemplateOption),
-            withSequence(FOOTER_WIDTH, FooterWidthOption),
-            withSequence(FOOTER_COLORS, FooterColorsOption),
-            withSequence(FOOTER_SLIDEOUT, FooterSlideoutOption),
-            withSequence(FOOTER_COPYRIGHT, ToggleFooterCopyrightOption),
-            withSequence(FOOTER_COOKIE_POLICY_LINK, ToggleFooterCookiePolicyLinkOption),
-            withSequence(FOOTER_BORDER, FooterBorder),
-            withSequence(FOOTER_SCROLL_TO, FooterScrollToTopOption),
-        ],
         builder_actions: {
             WebsiteConfigFooterAction,
         },

@@ -1,11 +1,11 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
-    addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
@@ -20,10 +20,10 @@ const HEX_GREEN = "#00ff00";
 defineWebsiteModels();
 
 test("change the background shape of elements", async () => {
-    addOption({
-        selector: ".selector",
-        applyTo: ".applyTo",
-        Component: class TestBackgroundOption extends BackgroundOption {
+    addBuilderOption(
+        class TestBackgroundOption extends BackgroundOption {
+            static selector = ".selector";
+            static applyTo = ".applyTo";
             static props = {
                 ...BackgroundOption.props,
                 withColors: { type: Boolean, optional: true },
@@ -37,8 +37,8 @@ test("change the background shape of elements", async () => {
                 withShapes: true,
                 withColorCombinations: false,
             };
-        },
-    });
+        }
+    );
     await setupWebsiteBuilder(`
         <div class="selector">
             <div id="first" class="applyTo" data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>

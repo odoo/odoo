@@ -3,13 +3,13 @@ import { xml } from "@odoo/owl";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
-    addOption,
     addPlugin,
     addActionOption,
     waitForSnippetDialog,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import {
+    addBuilderOption,
     dummyBase64Img,
     getInnerContent,
     getSnippetStructure,
@@ -20,6 +20,7 @@ import { animationFrame, queryText, tick } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 defineWebsiteModels();
 
@@ -86,10 +87,12 @@ test("Use the sidebar 'clone' buttons", async () => {
 });
 
 test("Use the sidebar 'save snippet' buttons", async () => {
-    addOption({
-        selector: "a.btn",
-        template: xml`<BuilderButton classAction="'dummy-class'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = "a.btn";
+            static template = xml`<BuilderButton classAction="'dummy-class'"/>`;
+        }
+    );
     const structureSnippetDesc = {
         name: "Dummy Section",
         groupName: "a",
@@ -358,10 +361,12 @@ test("applying option container button should wait for actions in progress", asy
             }
         },
     });
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'customAction'"/>`;
+        }
+    );
 
     const { getEditableContent, getEditor } = await setupWebsiteBuilder(`
         <p class="test-options-target">plop</p>

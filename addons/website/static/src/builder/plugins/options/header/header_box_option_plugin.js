@@ -9,17 +9,13 @@ import {
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { HeaderBoxOption } from "./header_box_option";
-import { HEADER_BOX } from "./header_option_plugin";
 
-class HeaderBoxOptionPlugin extends Plugin {
+export class HeaderBoxOptionPlugin extends Plugin {
     static id = "HeaderBoxOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(HEADER_BOX, HeaderBoxOption)],
         builder_actions: {
             StyleActionHeaderAction,
             SetShadowClassHeaderAction,

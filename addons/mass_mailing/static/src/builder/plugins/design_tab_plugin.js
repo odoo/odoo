@@ -15,7 +15,7 @@ export const OPTION_POSITIONS = {
     SEPARATORS: 70,
 };
 
-class DesignTabPlugin extends Plugin {
+export class DesignTabPlugin extends Plugin {
     static id = "mass_mailing.DesignTab";
     static dependencies = ["builderActions"];
     resources = {

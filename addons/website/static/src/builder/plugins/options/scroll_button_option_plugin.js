@@ -1,17 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ScrollButtonOption } from "./scroll_button_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { SCROLL_BUTTON } from "@website/builder/option_sequence";
 
-class ScrollButtonOptionPlugin extends Plugin {
+export class ScrollButtonOptionPlugin extends Plugin {
     static id = "scrollButtonOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(SCROLL_BUTTON, ScrollButtonOption)],
         builder_actions: {
             AddScrollButtonAction,
             ScrollButtonSectionHeightClassAction,

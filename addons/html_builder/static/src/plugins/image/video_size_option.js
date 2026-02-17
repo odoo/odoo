@@ -1,11 +1,12 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { MediaSizeOption } from "./media_size_option";
+import { registry } from "@web/core/registry";
 
 export class VideoSizeOption extends BaseOptionComponent {
+    static id = "video_size_option";
     static template = "html_builder.VideoSizeOption";
     static components = { MediaSizeOption };
-    static selector = ".media_iframe_video";
-    static name = "videoSizeOption";
+
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
@@ -13,3 +14,5 @@ export class VideoSizeOption extends BaseOptionComponent {
         }));
     }
 }
+
+registry.category("builder-options").add(VideoSizeOption.id, VideoSizeOption);

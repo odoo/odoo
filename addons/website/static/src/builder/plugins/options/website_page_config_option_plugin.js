@@ -1,14 +1,7 @@
-import { after } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rgbaToHex } from "@web/core/utils/colors";
-import { withSequence } from "@html_editor/utils/resource";
-import { FOOTER_COPYRIGHT } from "./footer_option_plugin";
-import { HEADER_TEMPLATE } from "./header/header_option_plugin";
-import { TopMenuVisibilityOption } from "./website_page_config_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { BreadcrumbOption } from "./breadcrumb_option";
 
 /**
  * @typedef { Object } WebsitePageConfigOptionShared
@@ -19,18 +12,7 @@ import { BreadcrumbOption } from "./breadcrumb_option";
  * @property { WebsitePageConfigOptionPlugin['doesPageOptionExist'] } doesPageOptionExist
  */
 
-export const TOP_MENU_VISIBILITY = after(HEADER_TEMPLATE);
-export const HIDE_FOOTER = after(FOOTER_COPYRIGHT);
-
-export class HideFooterOption extends BaseOptionComponent {
-    static template = "website.HideFooterOption";
-    static selector =
-        "[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
-
-class WebsitePageConfigOptionPlugin extends Plugin {
+export class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
     static dependencies = ["history", "visibility", "builderActions"];
     static shared = [
@@ -49,11 +31,6 @@ class WebsitePageConfigOptionPlugin extends Plugin {
             SetPageWebsiteDirtyAction,
             SetWebsiteBreadcrumbVisibilityAction,
         },
-        builder_options: [
-            withSequence(TOP_MENU_VISIBILITY, TopMenuVisibilityOption),
-            withSequence(HIDE_FOOTER, HideFooterOption),
-            BreadcrumbOption,
-        ],
         target_show: this.onTargetVisibilityToggle.bind(this, true),
         target_hide: this.onTargetVisibilityToggle.bind(this, false),
         save_handlers: this.onSave.bind(this),

@@ -2,7 +2,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 import { filterExtends } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BaseWebsiteBackgroundOption } from "./background_option";
+import { WebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -11,9 +11,9 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { WebsiteParallaxPlugin['applyParallaxType'] } applyParallaxType
  */
 
-class WebsiteParallaxPlugin extends Plugin {
+export class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
-    static dependencies = ["builderActions", "backgroundImageOption"];
+    static dependencies = ["builderActions", "backgroundImageOption", "builderOptions"];
     static shared = ["applyParallaxType"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -26,10 +26,8 @@ class WebsiteParallaxPlugin extends Plugin {
         get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
-        this.backgroundOptionClasses = filterExtends(
-            this.getResource("builder_options"),
-            BaseWebsiteBackgroundOption
-        );
+        const builderOptions = this.dependencies.builderOptions.getBuilderOptions();
+        this.backgroundOptionClasses = filterExtends(builderOptions, WebsiteBackgroundOption);
     }
     applyParallaxType({ editingElement, value }) {
         const isParallax = value !== "none";

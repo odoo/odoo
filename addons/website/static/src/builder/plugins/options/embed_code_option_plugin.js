@@ -1,24 +1,15 @@
-import { BEGIN } from "@html_builder/utils/option_sequence";
 import { EmbedCodeOptionDialog } from "./embed_code_option_dialog";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { cloneContentEls } from "@website/js/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class EmbedCodeOption extends BaseOptionComponent {
-    static template = "website.EmbedCodeOption";
-    static selector = ".s_embed_code";
-}
-
-class EmbedCodeOptionPlugin extends Plugin {
+export class EmbedCodeOptionPlugin extends Plugin {
     static id = "embedCodeOption";
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(BEGIN, EmbedCodeOption)],
         so_content_addition_selector: [".s_embed_code"],
         builder_actions: {
             EditCodeAction,

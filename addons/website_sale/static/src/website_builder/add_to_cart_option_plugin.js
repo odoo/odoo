@@ -1,13 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { AddToCartOption, addToCartValues } from "./add_to_card_option";
+import { addToCartValues } from "./add_to_cart_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-class AddToCartOptionPlugin extends Plugin {
+export class AddToCartOptionPlugin extends Plugin {
     static id = "addToCartOption";
     static dependencies = ["builderActions"];
     resources = {
-        builder_options: [AddToCartOption],
         so_content_addition_selector: [".s_add_to_cart"],
         builder_actions: {
             ProductToCartAction,

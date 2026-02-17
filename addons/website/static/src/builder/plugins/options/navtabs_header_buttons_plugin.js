@@ -6,7 +6,7 @@ import { NavTabsHeaderMiddleButtons } from "./navtabs_header_buttons";
 
 const tabsSectionSelector = "section.s_tabs, section.s_tabs_images";
 
-class NavTabsOptionPlugin extends Plugin {
+export class NavTabsOptionPlugin extends Plugin {
     static id = "navTabsOption";
     static dependencies = ["clone"];
     /** @type {import("plugins").WebsiteResources} */

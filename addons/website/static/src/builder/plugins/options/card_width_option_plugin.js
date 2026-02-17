@@ -2,7 +2,7 @@ import { ClassAction, StyleAction } from "@html_builder/core/core_builder_action
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class CardWidthOptionPlugin extends Plugin {
+export class CardWidthOptionPlugin extends Plugin {
     static id = "cardWidthOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {

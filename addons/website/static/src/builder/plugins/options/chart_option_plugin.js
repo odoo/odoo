@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { ChartOption, DATASET_KEY_PREFIX, getColor } from "./chart_option";
+import { DATASET_KEY_PREFIX, getColor } from "./chart_option";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -8,14 +8,13 @@ import { registry } from "@web/core/registry";
  * @property { ChartOptionPlugin['isPieChart'] } isPieChart
  */
 
-class ChartOptionPlugin extends Plugin {
+export class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
     static dependencies = ["history"];
     static shared = ["isPieChart"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [ChartOption],
         so_content_addition_selector: [".s_chart"],
         builder_actions: {
             SetChartTypeAction,

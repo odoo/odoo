@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class DateTimeFieldPlugin extends Plugin {
+export class DateTimeFieldPlugin extends Plugin {
     static id = "dateTimeField";
     /** @type {import("plugins").BuilderResources} */
     resources = {

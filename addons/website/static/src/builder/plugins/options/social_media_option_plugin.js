@@ -1,17 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
 import { fonts } from "@html_editor/utils/fonts";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { renderToFragment } from "@web/core/utils/render";
-import { SocialMediaLinks } from "./social_media_links";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE, ANIMATE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { AnimateOption } from "./animate_option";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { socialMediaElementsSelector } from "@html_builder/plugins/image/replace_media_option";
 
 /**
  * @typedef { Object } SocialMediaOptionShared
@@ -122,17 +116,7 @@ const socialMediaInfo = new Map(
 
 const defaultAriaLabel = _t("Other social network");
 
-export class SocialMediaOption extends BaseOptionComponent {
-    static template = "website.SocialMediaOption";
-    static selector = ".s_share, .s_social_media";
-}
-
-export class SocialMediaAnimateOption extends AnimateOption {
-    static selector = ".s_social_media, .s_share";
-    static applyTo = socialMediaElementsSelector;
-}
-
-class SocialMediaOptionPlugin extends Plugin {
+export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["history", "animateOption"];
     static shared = [
@@ -148,11 +132,6 @@ class SocialMediaOptionPlugin extends Plugin {
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(TITLE_LAYOUT_SIZE, SocialMediaOption),
-            withSequence(SNIPPET_SPECIFIC, SocialMediaLinks),
-            withSequence(ANIMATE, SocialMediaAnimateOption),
-        ],
         so_content_addition_selector: [".s_share", ".s_social_media"],
         builder_actions: {
             ResetSocialMediaIconSizeAction,

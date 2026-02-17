@@ -3,7 +3,7 @@ import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-class SaveSnippetPlugin extends Plugin {
+export class SaveSnippetPlugin extends Plugin {
     static id = "mass_mailing.SaveSnippetPlugin";
     resources = {
         custom_snippets_notification_handlers: this.handleCustomSnippetNotification.bind(this),

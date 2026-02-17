@@ -18,18 +18,16 @@ import {
     getButtonType,
 } from "@html_editor/utils/button_style";
 
-class ButtonStyleOptionPlugin extends Plugin {
+export class ButtonStyleOptionPlugin extends Plugin {
     static id = "buttonStyleOption";
     resources = {
-        builder_options: [ButtonStyleOption],
         builder_actions: { ButtonStyleAction, ButtonFillColorAction },
     };
 }
 
 export class ButtonStyleOption extends BaseOptionComponent {
+    static id = "button_style_option";
     static template = "html_builder.ButtonStyleOption";
-    static selector = ".btn";
-    static dependencies = [];
     static components = {
         BuilderColorPicker,
         BuilderSelect,
@@ -57,9 +55,8 @@ export class ButtonStyleOption extends BaseOptionComponent {
     }
 }
 
-class ButtonStyleAction extends BuilderAction {
+export class ButtonStyleAction extends BuilderAction {
     static id = "buttonStyleAction";
-    static dependencies = [];
 
     apply({ editingElement, params, value }) {
         const mode = params.mainParam;
@@ -112,7 +109,7 @@ class ButtonStyleAction extends BuilderAction {
     }
 }
 
-class ButtonFillColorAction extends StyleAction {
+export class ButtonFillColorAction extends StyleAction {
     static id = "buttonFillColorAction";
     static dependencies = ["color"];
 
@@ -125,3 +122,4 @@ class ButtonFillColorAction extends StyleAction {
 }
 
 registry.category("builder-plugins").add(ButtonStyleOptionPlugin.id, ButtonStyleOptionPlugin);
+registry.category("builder-options").add(ButtonStyleOption.id, ButtonStyleOption);

@@ -1,10 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
-import { addOption, addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 defineWebsiteModels();
 
@@ -20,11 +22,13 @@ test("do not update builder if in preview mode", async () => {
         };
     }
     addPlugin(P);
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton id="'id1'" action="'customAction'">b1</BuilderButton>
-        <BuilderButton classAction="'b2_class'" t-if="this.isActiveItem('id1')">b2</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton id="'id1'" action="'customAction'">b1</BuilderButton>
+        <BuilderButton classAction="'b2_class'" t-if="this.isActiveItem('id1')">b2</BuilderButton>`;
+        }
+    );
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").hover();

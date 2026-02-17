@@ -13,7 +13,7 @@ const styleClasses = [
 ];
 const sizeClasses = ["btn-sm", "btn-lg"];
 
-class ButtonOptionPlugin extends Plugin {
+export class ButtonOptionPlugin extends Plugin {
     static id = "buttonOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {

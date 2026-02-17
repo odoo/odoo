@@ -678,7 +678,7 @@ class BaseAnimationAction extends BuilderAction {
             this.dependencies.backgroundShapeOption.isShapeEligibleForComputation;
     }
 }
-class SetBackgroundShapeAction extends BaseAnimationAction {
+export class SetBackgroundShapeAction extends BaseAnimationAction {
     static id = "setBackgroundShape";
     apply({ editingElement, params, value }) {
         params = params || {};
@@ -697,7 +697,7 @@ class SetBackgroundShapeAction extends BaseAnimationAction {
         return currentShapeApplied === value;
     }
 }
-class ShowOnMobileAction extends BaseAnimationAction {
+export class ShowOnMobileAction extends BaseAnimationAction {
     static id = "showOnMobile";
     apply({ editingElement }) {
         this.applyShape(editingElement, () => ({
@@ -713,7 +713,7 @@ class ShowOnMobileAction extends BaseAnimationAction {
         return !this.getShapeData(editingElement).showOnMobile;
     }
 }
-class FlipShapeAction extends BaseAnimationAction {
+export class FlipShapeAction extends BaseAnimationAction {
     static id = "flipShape";
     apply({ editingElement, params: { mainParam: axis } }) {
         this.applyShape(editingElement, () => {
@@ -739,7 +739,7 @@ class FlipShapeAction extends BaseAnimationAction {
         return hasFlipClass || this.getShapeData(editingElement).flip.includes(axis);
     }
 }
-class SetBgAnimationSpeedAction extends BaseAnimationAction {
+export class SetBgAnimationSpeedAction extends BaseAnimationAction {
     static id = "setBgAnimationSpeed";
     apply({ editingElement, value }) {
         this.applyShape(editingElement, () => ({
@@ -750,7 +750,7 @@ class SetBgAnimationSpeedAction extends BaseAnimationAction {
         return this.getShapeData(editingElement).shapeAnimationSpeed;
     }
 }
-class BackgroundShapeColorAction extends BaseAnimationAction {
+export class BackgroundShapeColorAction extends BaseAnimationAction {
     static id = "backgroundShapeColor";
     getValue({ editingElement, params: { mainParam: colorName } }) {
         // TODO check if it works when the colorpicker is

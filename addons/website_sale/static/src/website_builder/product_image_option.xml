@@ -27,4 +27,16 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//replace_media_option" position="after">
+        <product_image_option
+            template="website_sale.ProductImageOption"
+            t-attf-selector=".o_wsale_product_images :is({{replaceMediaOptionSelector}})"
+            t-att-exclude="replaceMediaOptionExclude"/>
+    </xpath>
+    <xpath expr="//replace_media_option" position="attributes">
+        <attribute name="t-attf-exclude" add=".o_wsale_product_images :is({{replaceMediaOptionSelector}})" separator=", "/>
+    </xpath>
+</t>
+
 </templates>

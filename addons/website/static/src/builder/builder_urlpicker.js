@@ -33,7 +33,7 @@ export class WebsiteUrlPicker extends BuilderUrlPicker {
     }
 }
 
-class UrlPickerPlugin extends Plugin {
+export class UrlPickerPlugin extends Plugin {
     static id = "urlPickerPlugin";
 
     /** @type {import("plugins").WebsiteResources} */

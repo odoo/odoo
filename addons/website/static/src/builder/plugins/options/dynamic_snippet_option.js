@@ -1,10 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "./dynamic_snippet_hook";
+import { registry } from "@web/core/registry";
 
 export class DynamicSnippetOption extends BaseOptionComponent {
+    static id = "dynamic_snippet_option";
     static template = "website.DynamicSnippetOption";
     static dependencies = ["dynamicSnippetOption"];
-    static selector = ".s_dynamic_snippet";
     static props = {
         slots: { type: Object, optional: true },
     };
@@ -19,3 +20,5 @@ export class DynamicSnippetOption extends BaseOptionComponent {
         this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
     }
 }
+
+registry.category("website-options").add(DynamicSnippetOption.id, DynamicSnippetOption);

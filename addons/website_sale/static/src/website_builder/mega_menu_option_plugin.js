@@ -15,7 +15,7 @@ patch(MegaMenuOptionPlugin.prototype, {
     },
 });
 
-class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
+export class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
     static id = "websiteSaleMegaMenuOptionPlugin";
     static dependencies = [
         "builderOptions",

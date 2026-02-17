@@ -1,26 +1,18 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
-class MasonryBlockTemplateOptionPlugin extends Plugin {
+export class MasonryBlockTemplateOptionPlugin extends Plugin {
     static id = "mass_mailing.MasonryBlock";
     resources = {
-        builder_options: [MasonryBlockTemplateOption],
         builder_actions: {
             ChangeMasonryTemplate,
         },
     };
 }
 
-class MasonryBlockTemplateOption extends BaseOptionComponent {
-    static template = "mass_mailing.MasonryBlockTemplateOption";
-    static selector = ".s_masonry_block";
-    static groups = ["base.group_user"];
-}
-
-class ChangeMasonryTemplate extends BuilderAction {
+export class ChangeMasonryTemplate extends BuilderAction {
     static id = "changeMasonryTemplate";
     apply({ editingElement, value }) {
         editingElement.dataset.templateName = value;

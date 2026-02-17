@@ -7,7 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @typedef {((editingElement: HTMLElement) => void)[]} on_bg_color_updated_handlers
  */
 
-class ColorStylePlugin extends Plugin {
+export class ColorStylePlugin extends Plugin {
     static id = "colorStyle";
     static dependencies = ["color"];
     /** @type {import("plugins").BuilderResources} */

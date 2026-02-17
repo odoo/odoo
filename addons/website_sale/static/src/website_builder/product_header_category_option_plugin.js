@@ -2,25 +2,12 @@ import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { _t } from "@web/core/l10n/translation";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class ProductHeaderCategoryOption extends BaseOptionComponent {
-    static template = "website_sale.ProductHeaderCategoryOption";
-    static selector = "#products_grid:has(header.o_wsale_products_header_is_category)";
-    static editableOnly = false;
-    static reloadTarget = true;
-    static getSnippetTitle() {
-        return _t((this.editable.querySelector("#o_wsale_products_header")?.dataset.categoryName || "Category") + ' Header');
-    };
-    static groups = ["website.group_website_restricted_editor"];
-}
 
-class ProductHeaderCategoryOptionPlugin extends Plugin {
+export class ProductHeaderCategoryOptionPlugin extends Plugin {
     static id = "ProductHeaderCategoryOptionPlugin";
 
     resources = {
-        builder_options: ProductHeaderCategoryOption,
         builder_actions: {
             ToggleCategoryShowTitleAction,
             ToggleCategoryShowDescriptionAction,
@@ -50,7 +37,7 @@ class ProductHeaderCategoryOptionPlugin extends Plugin {
     }
 }
 
-class BaseCategoryToggleAction extends BuilderAction {
+export class BaseCategoryToggleAction extends BuilderAction {
     isApplied({ editingElement: el, params }) {
         return el.classList.contains(params.previewClass);
     }

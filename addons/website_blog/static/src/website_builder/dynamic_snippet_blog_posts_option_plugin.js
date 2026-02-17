@@ -1,11 +1,6 @@
-import {
-    DYNAMIC_SNIPPET,
-    setDatasetIfUndefined,
-} from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { DynamicSnippetBlogPostsOption } from "./dynamic_snippet_blog_posts_option";
 
 /**
  * @typedef { Object } DynamicSnippetBlogPostsOptionShared
@@ -13,14 +8,13 @@ import { DynamicSnippetBlogPostsOption } from "./dynamic_snippet_blog_posts_opti
  * @property { DynamicSnippetBlogPostsOptionPlugin['getModelNameFilter'] } getModelNameFilter
  */
 
-class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
+export class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     static id = "dynamicSnippetBlogPostsOption";
     static dependencies = ["dynamicSnippetOption"];
     static shared = ["fetchBlogs", "getModelNameFilter"];
     modelNameFilter = "blog.post";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: withSequence(DYNAMIC_SNIPPET, DynamicSnippetBlogPostsOption),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {
@@ -30,7 +24,7 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
         return this.modelNameFilter;
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(DynamicSnippetBlogPostsOption.selector)) {
+        if (snippetEl.matches(".s_dynamic_snippet_blog_posts")) {
             setDatasetIfUndefined(snippetEl, "filterByBlogId", -1);
             await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
                 snippetEl,

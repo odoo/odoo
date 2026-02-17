@@ -1,37 +1,18 @@
 import { cropperDataFieldsWithAspectRatio, loadImage } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { ImageToolOption } from "./image_tool_option";
-import { VideoSizeOption } from "./video_size_option";
 import { isImageCorsProtected } from "@html_editor/utils/image";
-import { withSequence } from "@html_editor/utils/resource";
-import {
-    REPLACE_MEDIA,
-    IMAGE_TOOL,
-    ALIGNMENT_STYLE_PADDING,
-} from "@html_builder/utils/option_sequence";
-import {
-    ReplaceMediaOption,
-    searchSupportedParentLinkEl,
-    socialMediaElementsSelector,
-} from "./replace_media_option";
+import { searchSupportedParentLinkEl } from "./replace_media_option";
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
 const IMAGE_LINK_ALIGN_CLASSES = ["mx-auto", "ms-auto", "me-auto"];
 
-export class ImageAndFaOption extends BaseOptionComponent {
-    static template = "html_builder.ImageAndFaOption";
-    static selector = "span.fa, i.fa, img";
-    static exclude = `[data-oe-type='image'] > img, [data-oe-xpath], ${socialMediaElementsSelector}`;
-    static name = "imageAndFaOption";
-}
-class ImageToolOptionPlugin extends Plugin {
+export class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
         "history",
@@ -44,12 +25,6 @@ class ImageToolOptionPlugin extends Plugin {
     static shared = ["getCSSColorValue"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        builder_options: [
-            withSequence(REPLACE_MEDIA, ReplaceMediaOption),
-            withSequence(IMAGE_TOOL, ImageToolOption),
-            withSequence(ALIGNMENT_STYLE_PADDING, ImageAndFaOption),
-            withSequence(IMAGE_TOOL, VideoSizeOption),
-        ],
         builder_actions: {
             ImageAlignClassAction,
             CropImageAction,

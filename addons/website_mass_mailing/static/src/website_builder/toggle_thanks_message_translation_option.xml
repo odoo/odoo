@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_mass_mailing.ToggleThanksMessageTranslationOption">
+    <BuilderRow label.translate="Display Thanks Message">
+        <BuilderCheckbox action="'toggleThanksMessage'"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.TranslationBuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//div" position="inside">
+        <toggle_thanks_message_translation_option
+            selector=".s_newsletter_list"
+            exclude=".s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list, .s_newsletter_grid .s_newsletter_list"
+            editableOnly="false"
+            title="Newsletter block"/>
+        <toggle_thanks_message_translation_option
+            selector=".o_newsletter_popup"
+            applyTo=".o_newsletter_popup .s_newsletter_list"
+            editableOnly="false"
+            title="Newsletter popup"/>
+    </xpath>
+</t>
+
+</templates>

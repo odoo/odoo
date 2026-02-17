@@ -1,32 +1,23 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
-import { ImageGalleryComponent } from "./image_gallery_option";
 import { renderToElement } from "@web/core/utils/render";
 import { updateCarouselIndicators } from "../carousel_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { withSequence } from "@html_editor/utils/resource";
-import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { uniqueId } from "@web/core/utils/functions";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 /**
  * @typedef { Object } ImageGalleryOptionShared
- * @property { ImageGalleryOption['getColumns'] } getColumns
- * @property { ImageGalleryOption['getMode'] } getMode
- * @property { ImageGalleryOption['processImage'] } processImage
- * @property { ImageGalleryOption['restoreSelection'] } restoreSelection
- * @property { ImageGalleryOption['setImages'] } setImages
+ * @property { ImageGalleryOptionPlugin['getColumns'] } getColumns
+ * @property { ImageGalleryOptionPlugin['getMode'] } getMode
+ * @property { ImageGalleryOptionPlugin['processImage'] } processImage
+ * @property { ImageGalleryOptionPlugin['restoreSelection'] } restoreSelection
+ * @property { ImageGalleryOptionPlugin['setImages'] } setImages
  */
 
-export class ImageGalleryImagesOption extends BaseOptionComponent {
-    static template = "website.ImageGalleryImagesOption";
-    static selector = ".s_image_gallery";
-}
-
-class ImageGalleryOption extends Plugin {
+export class ImageGalleryOptionPlugin extends Plugin {
     static id = "imageGalleryOption";
     static dependencies = [
         "media",
@@ -40,10 +31,6 @@ class ImageGalleryOption extends Plugin {
     static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC, ImageGalleryImagesOption),
-            withSequence(SNIPPET_SPECIFIC_END, ImageGalleryComponent),
-        ],
         builder_actions: {
             AddImageAction,
             RemoveAllImagesAction,
@@ -575,4 +562,4 @@ export class IndicatorsStyleClassAction extends ClassAction {
     }
 }
 
-registry.category("website-plugins").add(ImageGalleryOption.id, ImageGalleryOption);
+registry.category("website-plugins").add(ImageGalleryOptionPlugin.id, ImageGalleryOptionPlugin);

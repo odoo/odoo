@@ -52,4 +52,11 @@
         </BuilderRow>
     </xpath>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//dynamic_snippet_option" position="after">
+        <dynamic_snippet_blog_posts_option selector=".s_dynamic_snippet_blog_posts"/>
+    </xpath>
+</t>
+
 </templates>

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { addBackgroundGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
-class SpacingOptionPlugin extends Plugin {
+export class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {

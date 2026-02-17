@@ -1,13 +1,14 @@
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
-    addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 defineWebsiteModels();
 
@@ -30,10 +31,12 @@ test("empty border input is treated as 0", async () => {
             return hasBorder;
         },
     });
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BorderConfigurator label="'Border'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BorderConfigurator label="'Border'"/>`;
+        }
+    );
     await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`, {
         loadIframeBundles: true,
     });
@@ -60,10 +63,12 @@ test("empty border input is treated as 0", async () => {
     expect.verifySteps(["hasBorder"]);
 });
 test("hasBorder is true when multiple-value border starts by 0", async () => {
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BorderConfigurator label="'Border'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BorderConfigurator label="'Border'"/>`;
+        }
+    );
     await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`, {
         loadIframeBundles: true,
     });

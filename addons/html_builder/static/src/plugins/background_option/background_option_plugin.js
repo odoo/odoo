@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
  * }[]} mark_color_level_selector_params
  */
 
-class BackgroundOptionPlugin extends Plugin {
+export class BackgroundOptionPlugin extends Plugin {
     static id = "backgroundOption";
     /** @type {import("plugins").BuilderResources} */
     resources = {
