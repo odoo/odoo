@@ -4,14 +4,27 @@
         <field name="name">job.add.applicants.view.form</field>
         <field name="model">job.add.applicants</field>
         <field name="arch" type="xml">
-            <form string="Add Applicants to Pool">
+            <form string="Add Applicants to Pool" class="o_job_add_applicants">
                 <group>
-                    <field name="job_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="Move to..."/>
+                    <p class="text-muted">
+                        Duplicates this Applicant/Talent profile for the selected Job Position(s)
+                    </p>
+                </group>
+                <div class="my-3"/>
+                <group>
+                    <field
+                        name="job_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
+                        placeholder="Add to New Job"
+                        domain="[('id', 'not in', context.get('active_applicant_job_ids', []))]"
+                        context="{'show_matching_score_in_name': True}"
+                    />
                 </group>
                 <footer>
                     <button
                         name="action_add_applicants_to_job"
-                        string="Create Applications"
+                        string="Apply"
                         type="object"
                         class="btn-primary"
                         data-hotkey="q"

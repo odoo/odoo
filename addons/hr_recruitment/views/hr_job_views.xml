@@ -427,10 +427,10 @@
         <field name="inherit_id" ref="hr.view_hr_job_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="department_id"/>
+                <field name="department_id" optional="hide"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer" optional="hide"/>
-                <field name="no_of_recruitment" optional="hide"/>
+                <field name="no_of_recruitment"/>
             </field>
             <field name="no_of_employee" position="after">
                 <field name="expected_employees" optional="hide"
