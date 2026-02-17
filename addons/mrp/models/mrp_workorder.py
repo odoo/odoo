@@ -601,14 +601,13 @@ class MrpWorkorder(models.Model):
         if not workorders_to_plan:
             return
         # we need to keep the order of the workorder before removing the start date
-        wo_list = list(workorders_to_plan)
         done_wo = set()
         workorders_to_plan.leave_id.unlink()
         workorders_to_plan.write({
             'date_start': False,
             'date_finished': False,
         })
-        for wo in wo_list:
+        for wo in workorders_to_plan:
             if wo.id in done_wo:
                 continue
             date_start = max(from_date or datetime.now(), datetime.now())
@@ -626,8 +625,6 @@ class MrpWorkorder(models.Model):
             best_date_finished = datetime.max
             vals = {}
             for workcenter in workcenters:
-                if not alternative and workcenter != wo.workcenter_id:
-                    continue
                 if not workcenter.resource_calendar_id:
                     raise UserError(self.env._('There is no defined calendar on workcenter %s.', workcenter.name))
                 # Compute theoretical duration
