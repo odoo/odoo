@@ -1807,6 +1807,13 @@
         <field name="country_id" ref="base.fr"/>
     </record>
 
+    <record id="l10n_eg_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">SALEAVE600</field>
+        <field name="country_id" ref="base.eg"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
 <!-- HK : Hong Kong -->
 
     <record id="hk_work_entry_type_attendance" model="hr.work.entry.type">
@@ -3475,6 +3482,12 @@
         <field name="count_as">working_time</field>
         <field name="is_extra_hours" eval="True"/>
         <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+    <record id="l10n_sa_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">SALEAVE600</field>
+        <field name="is_leave" eval="True"/>
         <field name="country_id" ref="base.sa"/>
     </record>
 
