@@ -233,6 +233,14 @@ export default class IndexedDB {
         }
         return this.promises(storeName, arrData, "put");
     }
+    async readAllExceptStores(storeToIgnores = [], options) {
+        const allStoreNames = this.dbStores.map((store) => store[1]);
+        const storeNames =
+            storeToIgnores.length > 0
+                ? allStoreNames.filter((s) => !storeToIgnores.includes(s))
+                : allStoreNames;
+        return this.readAll(storeNames, options);
+    }
 
     readAll(store = [], retry = 0) {
         const storeNames = store.length > 0 ? store : this.dbStores.map((store) => store[1]);

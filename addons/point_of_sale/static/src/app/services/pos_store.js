@@ -56,6 +56,18 @@ export const CONSOLE_COLOR = "#F5B427";
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
+    static excludedLazyGetters = [
+        "defaultPage",
+        "firstPage",
+        "idleTimeout",
+        "session",
+        "company",
+        "showCashMoveButton",
+        "selectedOrder",
+        "linesToRefund",
+        "printOptions",
+        "showSaveOrderButton",
+    ];
 
     static serviceDependencies = [
         "bus_service",
@@ -74,11 +86,10 @@ export class PosStore extends WithLazyGetterTrap {
         "mail.sound_effects",
         "iot_longpolling",
     ];
-    constructor({ traps, env, deps }) {
-        super({ traps });
-        const reactiveSelf = reactive(this);
-        reactiveSelf.ready = reactiveSelf.setup(env, deps).then(() => reactiveSelf);
-        return reactiveSelf;
+
+    constructor() {
+        super({});
+        return reactive(this);
     }
     // use setup instead of constructor because setup can be patched.
     async setup(
@@ -148,9 +159,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.selectedPartner = null;
         this.selectedCategory = null;
         this.searchProductWord = "";
-        this.ready = new Promise((resolve) => {
-            this.markReady = resolve;
-        });
         this.scale = pos_scale;
 
         this.orderCounter = new Counter(0);
@@ -458,20 +466,15 @@ export class PosStore extends WithLazyGetterTrap {
     async processProductAttributes() {
         const productIds = new Set();
         const productTmplIds = new Set();
-        const productByTmplId = {};
+        const productModel = this.models["product.product"].toRaw();
 
-        for (const product of this.models["product.product"].getAll()) {
+        productModel.forEach((product) => {
             if (product.product_template_variant_value_ids.length > 0) {
-                productTmplIds.add(product.raw.product_tmpl_id);
+                const product_tmpl_id = product.raw.product_tmpl_id;
+                productTmplIds.add(product_tmpl_id);
                 productIds.add(product.id);
-
-                if (!productByTmplId[product.raw.product_tmpl_id]) {
-                    productByTmplId[product.raw.product_tmpl_id] = [];
-                }
-
-                productByTmplId[product.raw.product_tmpl_id].push(product);
             }
-        }
+        });
 
         if (productIds.size > 0) {
             try {
@@ -491,19 +494,17 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        for (const product of this.models["product.product"].filter(
-            (p) => !productIds.has(p.id) && p.product_template_variant_value_ids.length > 0
-        )) {
-            productByTmplId[product.raw.product_tmpl_id].push(product);
-        }
-
-        for (const products of Object.values(productByTmplId)) {
-            const nbrProduct = products.length;
-
-            for (let i = 0; i < nbrProduct - 1; i++) {
-                products[i].available_in_pos = false;
+        productModel.forEach((product) => {
+            if (
+                !productIds.has(product.id) &&
+                product.product_template_variant_value_ids.length > 0
+            ) {
+                const tmpl = product.product_tmpl_id;
+                if (tmpl) {
+                    tmpl.available_in_pos = false;
+                }
             }
-        }
+        });
 
         this.productAttributesExclusion = this.computeProductAttributesExclusion();
     }
@@ -706,7 +707,6 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        this.markReady();
         await this.deviceSync.readDataFromServer();
 
         if (this.config.other_devices && this.config.epson_printer_ip) {
@@ -2693,30 +2693,28 @@ export class PosStore extends WithLazyGetterTrap {
 
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
-        const allProducts = this.models["product.template"].getAll();
-        let list = [];
+        let recordIterator;
         const isSearchByWord = searchWord !== "";
 
+        const productTemplateModel = this.models["product.template"].toRaw();
         if (isSearchByWord) {
             if (!this._searchTriggered) {
                 this.setSelectedCategory(0);
                 this._searchTriggered = true;
             }
-            list = this.getProductsBySearchWord(
+            recordIterator = this.getProductsBySearchWord(
                 searchWord,
-                this.selectedCategory?.id ? this.selectedCategory.associatedProducts : allProducts
+                this.selectedCategory?.id
+                    ? this.selectedCategory.associatedProducts.values()
+                    : productTemplateModel.getIterator()
             );
         } else {
             this._searchTriggered = false;
             if (this.selectedCategory?.id) {
-                list = this.selectedCategory.associatedProducts;
+                recordIterator = this.selectedCategory.associatedProducts;
             } else {
-                list = allProducts;
+                recordIterator = productTemplateModel.getIterator();
             }
-        }
-
-        if (!list || list.length === 0) {
-            return [];
         }
 
         const filteredList = [];
@@ -2725,7 +2723,7 @@ export class PosStore extends WithLazyGetterTrap {
             (this.config.iface_available_categ_ids || []).map((c) => c.id)
         );
 
-        for (const p of list) {
+        for (const p of recordIterator) {
             if (filteredList.length >= 100) {
                 break;
             }
@@ -2764,7 +2762,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         const results = [];
         const searchWord = this.searchProductWord.trim();
-        const byCateg = this.models["product.template"].getAllBy("pos_categ_ids");
+        const byCateg = this.models["product.template"].toRaw().getAllBy("pos_categ_ids");
         const selectedCategoryIds = !this.selectedCategory
             ? this.models["pos.category"].map((c) => c.id)
             : this.selectedCategory.getAllChildren().map((c) => c.id);
@@ -2943,7 +2941,9 @@ export function register_payment_method(use_payment_terminal, ImplementedPayment
 export const posService = {
     dependencies: PosStore.serviceDependencies,
     async start(env, deps) {
-        return new PosStore({ traps: {}, env, deps }).ready;
+        const store = new PosStore();
+        await store.setup(env, deps);
+        return reactive(store);
     },
 };
 

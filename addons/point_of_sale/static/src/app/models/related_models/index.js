@@ -19,7 +19,7 @@ import { Base } from "./base";
 import { processModelDefs } from "./model_defs";
 import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
-
+import { reactive, toRaw } from "@odoo/owl";
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
@@ -108,7 +108,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         readFirst() {
-            return this.orderedRecords[0];
+            return this[STORE_SYMBOL].getFirstRecord(this.name);
         }
 
         readBy(key, val) {
@@ -152,37 +152,92 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return this.readFirst(...arguments);
         }
 
+        getIterator() {
+            return this[STORE_SYMBOL].getRecordIterator(this.name);
+        }
+
         // array prototype
         map(fn) {
-            return this.orderedRecords.map(fn);
+            const result = [];
+            let i = 0;
+            for (const rec of this.getIterator()) {
+                result.push(fn(rec, i++));
+            }
+            return result;
         }
 
         reduce(fn, initialValue) {
-            return this.orderedRecords.reduce(fn, initialValue);
+            let acc = initialValue;
+            let i = 0;
+            for (const rec of this.getIterator()) {
+                acc = fn(acc, rec, i++);
+            }
+            return acc;
         }
 
         flatMap(fn) {
-            return this.orderedRecords.flatMap(fn);
+            const out = [];
+            let i = 0;
+            for (const r of this.getIterator()) {
+                const v = fn(r, i++);
+                if (Array.isArray(v)) {
+                    out.push(...v);
+                } else {
+                    out.push(v);
+                }
+            }
+            return out;
         }
 
         forEach(fn) {
-            return this.orderedRecords.forEach(fn);
+            let i = 0;
+            for (const rec of this.getIterator()) {
+                fn(rec, i++);
+            }
         }
 
         some(fn) {
-            return this.orderedRecords.some(fn);
+            let i = 0;
+            for (const rec of this.getIterator()) {
+                if (fn(rec, i++)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         every(fn) {
-            return this.orderedRecords.every(fn);
+            const values = this.getIterator();
+            let i = 0;
+            for (const rec of values) {
+                if (!fn(rec, i++)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         find(fn) {
-            return this.orderedRecords.find(fn);
+            const values = this.getIterator();
+            let i = 0;
+            for (const rec of values) {
+                if (fn(rec, i++)) {
+                    return rec;
+                }
+            }
+            return undefined;
         }
 
         filter(fn) {
-            return this.orderedRecords.filter(fn);
+            const values = this.getIterator();
+            const out = [];
+            let i = 0;
+            for (const rec of values) {
+                if (fn(rec, i++)) {
+                    out.push(rec);
+                }
+            }
+            return out;
         }
 
         sort(fn) {
@@ -190,7 +245,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         indexOf(record) {
-            return this.orderedRecords.indexOf(record);
+            const values = this.getIterator();
+            let i = 0;
+            for (const rec of values) {
+                if (rec === record) {
+                    return i;
+                }
+                i++;
+            }
+            return -1;
         }
 
         get length() {
@@ -205,6 +268,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 const inverseField = inverseMap.get(field);
                 return inverseField && !inverseField.dummy;
             });
+        }
+
+        /**
+         * This prevents reactivity on individual model records while still allowing
+         * the system to react to changes in the record list itself.
+         *
+         * Intended for non-dynamic models (e.g., product.product, product.template)
+         * to avoid the overhead of making every record reactive.
+         **/
+        toRaw() {
+            this.length; // Ensure reactivity when the record map of this model is updated
+            return toRaw(this);
         }
 
         // External callbacks
@@ -339,6 +414,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 model: this,
                 raw: rawData,
             });
+
+            if (ModelRecordClass.enableLazyGetters !== false) {
+                record = reactive(record);
+            }
+
             if (extraFields) {
                 createExtraField(record, extraFields, serverData, vals);
             }
@@ -583,7 +663,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return ormSerialization(record, { dynamicModels, ...opts });
         }
         serializeForIndexedDB(record) {
-            const serialized = { ...record.raw };
+            const rawValues = record[RAW_SYMBOL];
+            const serialized = {};
+            for (const key in rawValues) {
+                const value = rawValues[key];
+                serialized[key] = value instanceof Set ? Array.from(value) : value;
+            }
             const state = record.serializeState();
             if (state) {
                 serialized[SERIALIZED_UI_STATE_PROP] = JSON.stringify(state);
