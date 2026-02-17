@@ -95,6 +95,12 @@ export class NetworkErrorDialog extends ErrorDialog {}
 NetworkErrorDialog.title = _t("Odoo Network Error");
 
 // -----------------------------------------------------------------------------
+// Request Entity Too Large Dialog
+// -----------------------------------------------------------------------------
+export class RequestEntityTooLargeErrorDialog extends ErrorDialog {}
+RequestEntityTooLargeErrorDialog.title = _t("The request sent to the server was too large");
+
+// -----------------------------------------------------------------------------
 // RPC Error Dialog
 // -----------------------------------------------------------------------------
 export class RPCErrorDialog extends ErrorDialog {
