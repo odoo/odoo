@@ -303,6 +303,30 @@ test("should scroll to bottom on receiving new message if the list is initially 
     );
     await contains(".o-mail-Message", { count: 12 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+    // simulate receiving a very long message
+    withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "hello".repeat(10000), message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { count: 13 });
+    await tick(); // wait for the scroll to first unread to complete
+    // simulate receiving another short message
+    withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "end-msg", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { count: 14 });
+    await tick(); // wait in case of an auto-scroll to happen
+    const scrollTop = queryFirst(".o-mail-Thread").scrollTop; // around 590px with chat window sizing
+    const scrollHeight = queryFirst(".o-mail-Thread").scrollHeight; // around 20000px with chat window sizing
+    const clientHeight = queryFirst(".o-mail-Thread").clientHeight; // around 540px with chat window sizing
+    expect(scrollHeight / 4).toBeGreaterThan(scrollTop + clientHeight); // viewport is still at least in the 1st quarter, meaning no scroll to bottom
 });
 
 test("should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)", async () => {
