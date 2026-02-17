@@ -683,8 +683,8 @@ test(`[Offline] create record when offline`, async () => {
     ]);
 
     expect.verifyErrors([
-        `Connection to "/web/dataset/call_kw/foo/onchange" couldn't be established`,
-        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+        `Error: Connection to "/web/dataset/call_kw/foo/onchange" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established or was interrupted`,
     ]);
 
     // go online and save the record.
