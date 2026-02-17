@@ -5,7 +5,7 @@
         <div class="o-mail-SubChannelPreview btn btn-light-subtle d-flex border border-secondary mx-1 px-2 py-1 rounded-2 align-items-center" role="button" t-att-class="{'o-pe-1_5': env.inMessage}" t-attf-class="{{ props.class }}" t-on-click="onClick">
             <div class="d-flex flex-column w-100 bg-inherit">
                 <div class="d-flex w-100 align-items-baseline">
-                    <span class="o-mail-SubChannel-name o-fw-600 text-truncate small" t-esc="props.channel.displayName"/>
+                    <span class="o-mail-SubChannelPreview-name o-fw-600 text-truncate small" t-esc="props.channel.displayName"/>
                     <span class="flex-grow-1"/>
                     <span class="flex-shrink-0 fw-normal text-muted smaller ms-1" t-att-class="{'o-me-0_5 o-xsmaller': env.inMessage}">
                         <t t-if="message" t-out="message.dateSimple"/>
