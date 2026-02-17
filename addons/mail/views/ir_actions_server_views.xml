@@ -85,29 +85,22 @@
                     <group invisible="state != 'mail_post'">
                         <group>
                             <field name="template_id"
+                                string="Template"
                                 placeholder="Choose a template..."
                                 required="state == 'mail_post'"
                                 context="{'default_model': model_name,
                                             'default_use_default_to': True}"/>
-                            <label for="mail_post_method"/>
-                            <div class="d-flex flex-column">
-                                <field name="mail_post_method" required="state == 'mail_post'"/>
-                                <div class="text-muted">
-                                    <span invisible="mail_post_method != 'email'">
-                                        The message will be sent as an email to the recipients of the
-                                        template and will not appear in the messaging history.
-                                    </span>
-                                    <span invisible="mail_post_method != 'note'">
-                                        The message will be posted as an internal note visible to internal
-                                        users in the messaging history.
-                                    </span>
-                                    <span invisible="mail_post_method != 'comment'">
-                                        The message will be posted as a message on the record,
-                                        notifying all followers. It will appear in the messaging history.
-                                    </span>
-                                </div>
-                            </div>
+                            <field name="mail_post_in_chatter" string="Post in Chatter"/>
                             <field name="mail_post_autofollow" invisible="1"/>
+                        </group>
+                    </group>
+                    <!-- Log Note -->
+                    <group invisible="state != 'log_note'">
+                        <group colspan="2">
+                            <field name="log_note_note" class="oe-bordered-editor"
+                                placeholder="Write note to post in the chatter of the record..."
+                                options="{'allowAttachmentCreation': False, 'allowVideo': False, 'embedded_components': False}"
+                                required="state == 'log_note'"/>
                         </group>
                     </group>
                 </xpath>
