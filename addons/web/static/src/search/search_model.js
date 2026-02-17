@@ -1485,15 +1485,18 @@ export class SearchModel extends EventBus {
      * Add filters of type 'filter' determined by the key array dynamicFilters.
      */
     _createGroupOfDynamicFilters(dynamicFilters) {
-        const pregroup = dynamicFilters.map((filter) => ({
-            groupNumber: this.nextGroupNumber,
-            description: filter.description,
-            domain: filter.domain,
-            isDefault: "is_default" in filter ? filter.is_default : true,
-            type: "filter",
-        }));
-        this.nextGroupNumber++;
-        this._createGroupOfSearchItems(pregroup);
+        const groups = groupBy(dynamicFilters, (f) => f.groupNumber ?? "default");
+        for (const filters of Object.values(groups)) {
+            const pregroup = filters.map((filter) => ({
+                groupNumber: this.nextGroupNumber,
+                description: filter.description,
+                domain: filter.domain,
+                isDefault: "is_default" in filter ? filter.is_default : true,
+                type: "filter",
+            }));
+            this.nextGroupNumber++;
+            this._createGroupOfSearchItems(pregroup);
+        }
     }
 
     /**
