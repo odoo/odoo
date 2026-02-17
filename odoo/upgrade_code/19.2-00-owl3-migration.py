@@ -296,6 +296,8 @@ WEB_WHITELIST = {
 
 
 MAIL_WHITELIST = {
+    "discuss.GifPicker.gif": {'gif_value'},  # for-each above t-call
+    "mail.MessageSeenIndicatorPopover.card": {'member'},  # for-each above t-call
     "mail.Composer.extraActions": {'partitionedActions'},  # Var above t-call
     "mail.Composer.quickActions": {'partitionedActions'},  # Var above t-call
     "mail.Composer.suggestionSpecial": {'option'},  # dynamic t-call
