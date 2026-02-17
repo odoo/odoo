@@ -278,15 +278,17 @@ def upgrade_this(file_manager, log_info, log_error):
 
     # Step 1: Gather all variables in the web module
     outside_vars = {
+        "crm.ColumnProgress": {'bar'},  # Nested inherit
         "mail.Composer.quickActions": {'partitionedActions'},  # Var above t-call
         "mail.Composer.extraActions": {'partitionedActions'},  # Var above t-call
-        "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
-        "web.SearchPanel.Category": {'section'},  # dynamic t-call
-        "web.ListRenderer.RecordRow": {'record'},
-        "web.PivotMeasure": {'cell'},  # for each + t-call
-        "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
-        "crm.ColumnProgress": {'bar'},  # Nested inherit
+        "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
+        "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
+        "web.ListRenderer.RecordRow": {'record', 'group', 'groupId'},  # dynamic t-call I guess,
+        "web.ListRenderer.GroupRow": {'group'},  # dynamic t-call I guess
+        "web.PivotMeasure": {'cell'},  # for each + t-call
+        "web.SearchPanel.Category": {'section'},  # dynamic t-call
+        "web.SearchPanel.FiltersGroup": {'values'},  # dynamic t-call
         "web.TreeEditor.condition:editable": {'node'},  # Nested inherit
         "web.TreeEditor.controls": {'node'},  # Nested inherit
         "web.TreeEditor.connector.value": {'node'},  # Nested inherit
