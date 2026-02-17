@@ -272,6 +272,8 @@ class HrEmployee(models.Model):
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
+    id_card_name = fields.Char(groups="hr.group_hr_user")
+    driving_license_name = fields.Char(groups="hr.group_hr_user")
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user")
     related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_user")
     # properties
