@@ -193,6 +193,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             ),
                             "res.users": self._filter_users_fields(
                                 {
+                                    "active": True,
                                     "id": self.test_user.id,
                                     "partner_id": self.test_partner.id,
                                     "share": False,
@@ -247,6 +248,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             ),
                             "res.users": self._filter_users_fields(
                                 {
+                                    "active": True,
                                     "id": self.test_user.id,
                                     "employee_ids": [],
                                     "partner_id": self.test_partner.id,
