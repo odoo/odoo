@@ -136,6 +136,10 @@ export class PosData extends Reactive {
         await this.indexedDB.reset();
     }
 
+    async deleteRecordsInIndexedDB(model, ids) {
+        return await this.indexedDB.delete(model, ids);
+    }
+
     async initIndexedDB(relations) {
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
@@ -922,17 +926,17 @@ export class PosData extends Reactive {
     }
 
     localDeleteCascade(record, removeFromServer = false) {
-        const recordModel = record.constructor.pythonModel;
+        const recordModel = record.model.name;
 
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
             .map((rel) => rel.name);
-        const recordsToDelete = relationsToDelete.flatMap((relation) => record[relation]);
+        const recordsToDelete = relationsToDelete.flatMap((relation) => record[relation] || []);
 
         // Delete all children records before main record
-        this.indexedDB.delete(recordModel, [record.uuid]);
+        this.deleteRecordsInIndexedDB(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.name, [item.uuid]);
+            this.deleteRecordsInIndexedDB(item.model.name, [item.uuid]);
             item.delete({ silent: !removeFromServer });
         }
 
