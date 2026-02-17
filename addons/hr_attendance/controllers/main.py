@@ -130,13 +130,16 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
     def scan_barcode(self, token, barcode):
+        return self.scan_barcode_with_geolocation(token, barcode)
+
+    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
+    def scan_barcode_with_geolocation(self, token, barcode, latitude=False, longitude=False):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
-                employee._attendance_action_change(self._get_geoip_response('kiosk'))
+                employee._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude))
                 return self._get_employee_info_response(employee)
         return {}
 
