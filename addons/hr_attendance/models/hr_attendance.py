@@ -750,6 +750,7 @@ class HrAttendance(models.Model):
         for previous in previous_attendances:
             mapped_previous_duration[previous.employee_id][check_in_tz(previous).date()] += previous.worked_hours
 
+        current_datetime = fields.Datetime.now()
         all_companies = to_verify.employee_id.company_id
 
         for company in all_companies:
@@ -757,20 +758,39 @@ class HrAttendance(models.Model):
             to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
 
             for att in to_verify_company:
-
+                calendar = att.employee_id.resource_calendar_id
+                employee_resource_id = att.employee_id.resource_id.id
                 employee_timezone = pytz.timezone(att.employee_id._get_tz())
                 check_in_datetime = check_in_tz(att)
-                now_datetime = fields.Datetime.now().astimezone(employee_timezone)
+                now_datetime = current_datetime.astimezone(employee_timezone)
                 current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
                 previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
 
-                expected_worked_hours = sum(
-                    att.employee_id.resource_calendar_id.attendance_ids.filtered(
-                        lambda a: a.dayofweek == str(check_in_datetime.weekday())
-                            and (not a.two_weeks_calendar or a.week_type == str(a.get_week_type(check_in_datetime.date())))
-                    ).mapped("duration_hours")
+                work_hours = calendar.attendance_ids.filtered(
+                    lambda a: a.dayofweek == str(check_in_datetime.weekday()) and
+                            (not a.two_weeks_calendar or a.week_type == str(a.get_week_type(check_in_datetime.date())))
                 )
+                expected_worked_hours = sum(work_hours.mapped("duration_hours"))
 
+                # Non-working days have no attendance slots. Keep expected worked hours at 0 and
+                # preserve existing auto check-out behavior.
+                if work_hours:
+                    day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+                    scheduled_start = day_start + timedelta(hours=min(work_hours.mapped("hour_from")))
+                    scheduled_end = day_start + timedelta(hours=max(work_hours.mapped("hour_to")))
+                    leave_at_the_end_of_day = calendar.leave_ids.filtered(
+                        lambda l: (l.resource_id.id == employee_resource_id
+                                    and l.date_to.astimezone(employee_timezone) == scheduled_end
+                                    and l.date_from.astimezone(employee_timezone) > scheduled_start)
+                    )
+                    timeoff_hours = sum(
+                        (
+                            leave.date_to.astimezone(employee_timezone)
+                            - leave.date_from.astimezone(employee_timezone)
+                        ).total_seconds() / 3600
+                        for leave in leave_at_the_end_of_day
+                    )
+                    expected_worked_hours = max(0.0, expected_worked_hours - timeoff_hours)
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
                     att.check_out = att.check_in.replace(hour=23, minute=59, second=59)

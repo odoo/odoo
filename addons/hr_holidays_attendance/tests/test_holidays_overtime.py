@@ -290,3 +290,38 @@ class TestHolidaysOvertime(TransactionCase):
 
         leave.with_user(self.user_manager).action_approve(check_state=False)
         self.assertEqual(self.employee.total_overtime, 8)
+
+    def test_auto_check_out_with_leave(self):
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 0
+        })
+
+        attendance_with_leave = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 12, 3, 8, 0),
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Unpaid Leave',
+            'company_id': self.company.id,
+            'requires_allocation': 'no',
+        })
+
+        leave1 = self.env['hr.leave'].create({
+            'name': 'Time Off',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_unit_hours': True,
+            'request_date_from': datetime(2024, 12, 3),
+            'request_date_to': datetime(2024, 12, 3),
+            'request_hour_from': 15,
+            'request_hour_to': 17,
+        })
+
+        leave1.with_user(self.user_manager).action_approve()
+
+        with freeze_time("2024-12-03 22:00:00"):
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(attendance_with_leave.check_out, datetime(2024, 12, 3, 15, 0))
+            self.assertEqual(attendance_with_leave.worked_hours, 6)

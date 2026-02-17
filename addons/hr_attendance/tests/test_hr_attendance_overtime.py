@@ -461,6 +461,22 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.env['hr.attendance']._cron_auto_check_out()
         self.assertEqual(attendance_utc_pending.check_out, datetime(2024, 1, 30, 18, 0))
 
+    @freeze_time("2024-02-03 23:00:00")
+    def test_auto_check_out_non_working_day(self):
+        """An open attendance on a non-working day should not crash auto check-out."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+        })
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 2, 3, 8, 0),
+        })
+
+        self.assertEqual(attendance.check_out, False)
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertEqual(attendance.check_out, datetime(2024, 2, 3, 9, 0))
+
     @freeze_time("2024-02-05 23:00:00")
     def test_auto_checkout_past_day(self):
         self.company.write({
