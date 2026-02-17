@@ -954,31 +954,29 @@ class PosSession(models.Model):
                 partners = (order.partner_id | order.partner_id.commercial_partner_id)
                 partners._increase_rank('customer_rank')
 
-        if self.company_id.inventory_valuation == 'real_time':
-            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
-            if all_picking_ids:
-                # Combine stock lines
-                stock_move_sudo = self.env['stock.move'].sudo()
-                stock_moves = stock_move_sudo.search([
-                    ('picking_id', 'in', all_picking_ids),
-                    ('company_id.inventory_valuation', '=', 'real_time'),
-                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
-                    ('product_id.is_storable', '=', True),
-                ])
-                for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
-                    for move in stock_moves_batch:
-                        product_accounts = move.product_id._get_product_accounts()
-                        exp_key = product_accounts['expense']
-                        stock_key = product_accounts['stock_valuation']
-                        signed_product_qty = move.quantity
-                        if move._is_in():
-                            signed_product_qty *= -1
-                        amount = signed_product_qty * move._get_price_unit()
-                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-                        if move._is_in():
-                            stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-                        else:
-                            stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+        all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+        if all_picking_ids:
+            # Combine stock lines
+            stock_move_sudo = self.env['stock.move'].sudo()
+            stock_moves = stock_move_sudo.search([
+                ('picking_id', 'in', all_picking_ids),
+                ('product_id.is_storable', '=', True),
+                ('product_id.valuation', '=', 'real_time'),
+            ])
+            for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
+                for move in stock_moves_batch:
+                    product_accounts = move.product_id._get_product_accounts()
+                    exp_key = product_accounts['expense']
+                    stock_key = product_accounts['stock_valuation']
+                    signed_product_qty = move.quantity
+                    if move._is_in():
+                        signed_product_qty *= -1
+                    amount = signed_product_qty * move._get_price_unit()
+                    stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+                    if move._is_in():
+                        stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+                    else:
+                        stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
 
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 

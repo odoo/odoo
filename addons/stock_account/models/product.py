@@ -46,7 +46,11 @@ class ProductTemplate(models.Model):
             raise UserError(self.env._("Only the value 'periodic' and 'real_time' are accepted to search on valuation field."))
         domain_categ = Domain([('categ_id.property_valuation', operator, value)])
         domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), ('company_id.inventory_valuation', operator, value)])
-        return domain_company | domain_categ
+
+        res_domain = domain_company | domain_categ
+        if self.env.company.inventory_valuation and self.env.company.inventory_valuation == value:
+            res_domain |= Domain(['|', ('categ_id', '=', False), ('categ_id.property_valuation', '=', False), ('company_id', '=', False)])
+        return res_domain
 
     @api.depends('tracking')
     def _compute_lot_valuated(self):
