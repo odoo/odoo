@@ -174,7 +174,7 @@ export class ModelFieldSelectorPopover extends Component {
     async followRelation(fieldDef) {
         const { modelsInfo } = await this.keepLast.add(
             this.fieldService.loadPath(
-                fieldDef.relation || this.state.page.resModel,
+                fieldDef.is_property ? fieldDef.relation : this.state.page.resModel,
                 `${fieldDef.name}.*`
             )
         );
