@@ -167,6 +167,10 @@ export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+export function isValidPhone(value) {
+    return !!value && /^\+?[()\d\s-.]{8,18}$/.test(value);
+}
+
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
 
 export async function getImageDataUrl(imageUrl) {

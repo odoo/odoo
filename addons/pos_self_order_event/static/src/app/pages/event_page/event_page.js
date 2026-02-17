@@ -2,7 +2,7 @@ import { Component, useState, useRef } from "@odoo/owl";
 import { Stepper } from "@pos_self_order/app/components/combo_stepper/combo_stepper";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useScrollShadow } from "@pos_self_order/app/utils/scroll_shadow_hook";
-import { isValidEmail } from "@point_of_sale/utils";
+import { isValidEmail, isValidPhone } from "@point_of_sale/utils";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -91,10 +91,6 @@ export class EventPage extends Component {
         return inputTypes[question.question_type] || { type: "text", placeholder: "" };
     }
 
-    isValidPhone(value) {
-        return !!value && /^\+?[()\d\s-.]{8,18}$/.test(value);
-    }
-
     validateQuestion(question, value) {
         if (question.is_mandatory_answer && !value?.trim()) {
             return false;
@@ -106,7 +102,7 @@ export class EventPage extends Component {
             return isValidEmail(value);
         }
         if (question.question_type === "phone") {
-            return this.isValidPhone(value);
+            return isValidPhone(value);
         }
         return true;
     }
