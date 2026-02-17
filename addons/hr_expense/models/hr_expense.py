@@ -1757,29 +1757,48 @@ class HrExpense(models.Model):
         return account
 
     def _get_expense_account_destination(self):
-        self.ensure_one()
-        if self.payment_mode == 'company_account':
-            journal = self.payment_method_line_id.journal_id
-            account_dest = (
-                self.payment_method_line_id.payment_account_id
-                or journal.company_id.expense_outstanding_account_id
-            )
-            if not account_dest:
-                error_msg = _(
-                    "A default outstanding account must be defined in the settings for company-paid expenses. "
-                    "You can alternatively specify one in the Journal for the %(method)s payment method.",
-                    method=self.payment_method_line_id.display_name,
+        # account.move used to allow having several expenses with payment_mode = 'company_account'.
+        # This method needs to support processing several expenses to allow reconciliation of old account.move.line
+        ids = set()
+        for expense in self:
+            if expense.payment_mode == 'company_account':
+                journal = expense.payment_method_line_id.journal_id
+                account_dest = (
+                    expense.payment_method_line_id.payment_account_id
+                    or journal.company_id.expense_outstanding_account_id
                 )
-                if self.env['res.config.settings'].has_access('write'):
-                    action = self.env.ref('hr_expense.action_hr_expense_configuration')
-                    raise RedirectWarning(error_msg, action=action.id, button_text=_("Go to settings"))
-                else:
-                    raise UserError(error_msg)
-        else:
-            if not self.employee_id.sudo().work_contact_id:
-                raise UserError(
-                    _("No work contact found for the employee %(name)s, please configure one.", name=self.employee_id.name)
-                )
-            partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
-            account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
-        return account_dest.id
+                if not account_dest:
+                    error_msg = _(
+                        "A default outstanding account must be defined in the settings for company-paid expenses. "
+                        "You can alternatively specify one in the Journal for the %(method)s payment method.",
+                        method=expense.payment_method_line_id.display_name,
+                    )
+                    if expense.env['res.config.settings'].has_access('write'):
+                        action = expense.env.ref('hr_expense.action_hr_expense_configuration')
+                        raise RedirectWarning(error_msg, action=action.id, button_text=_("Go to settings"))
+                    else:
+                        raise UserError(error_msg)
+            elif not expense.employee_id.sudo().work_contact_id:
+                raise UserError(self.env._(
+                    "No work contact found for the employee %(name)s, please configure one.",
+                    name=expense.employee_id.name,
+                ))
+            else:
+                partner = expense.employee_id.sudo().work_contact_id.with_company(expense.company_id)
+                account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
+            ids.add(account_dest.id)
+
+        # mimics <account.account>.id
+        if not ids:
+            return False
+        if len(ids) > 1:
+            raise UserError(self.env._(
+                "The following expenses payment method leads to several accounts payable and this isn't supported:\n%(expenses)s",
+                expenses=self.browse(ids),
+            ))
+        return ids.pop()
+
+    def _creation_message(self):
+        if self.env.context.get('from_split_wizard'):
+            return _("Expense created from a split.")
+        return super()._creation_message()
