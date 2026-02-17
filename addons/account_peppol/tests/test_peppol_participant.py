@@ -374,7 +374,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
                 default_property_account_receivable_id=receivable.id,
                 default_property_account_payable_id=payable.id
             ))
-        with Form(env_partner, view = partner_view) as partner_form:
+        with Form(env_partner, view=partner_view) as partner_form:
             self.assertEqual(partner_form.peppol_verification_state, "not_verified")
             partner_form.name = "test"
             partner_form.vat = "BE0477472701"
