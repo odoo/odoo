@@ -230,7 +230,7 @@ class HrWorkEntryType(models.Model):
                 allocations = allocation_by_work_entry_type.get(work_entry_type, self.env['hr.leave.allocation'])
                 allowed_excess = work_entry_type.max_allowed_negative if work_entry_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
-                    alloc.allocation_type == 'accrual'
+                    alloc.accrual_plan_id
                     or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
                 if allocations:
@@ -457,7 +457,7 @@ class HrWorkEntryType(models.Model):
         return bool(self.env['hr.leave.allocation'].search_count([
             ('employee_id', '=', employee.id),
             ('state', '=', 'validate'),
-            ('allocation_type', '=', 'accrual'),
+            ('accrual_plan_id', '!=', False),
             '|',
             ('date_to', '>', date.today()),
             ('date_to', '=', False),

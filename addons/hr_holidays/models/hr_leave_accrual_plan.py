@@ -146,7 +146,6 @@ class HrLeaveAccrualPlan(models.Model):
     @api.ondelete(at_uninstall=False)
     def _prevent_used_plan_unlink(self):
         domain = [
-            ('allocation_type', '=', 'accrual'),
             ('accrual_plan_id', 'in', self.ids),
             ('state', 'not in', ('cancel', 'refuse')),
         ]

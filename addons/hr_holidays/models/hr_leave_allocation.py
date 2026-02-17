@@ -134,13 +134,8 @@ class HrLeaveAllocation(models.Model):
     nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
     already_accrued = fields.Boolean()
     yearly_accrued_amount = fields.Float(export_string_translation=False)
-    allocation_type = fields.Selection([
-        ('regular', 'Regular Allocation'),
-        ('accrual', 'Accrual Allocation')
-    ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_accrual_plan_id",
-    inverse="_inverse_accrual_plan_id", store=True, index='btree_not_null', readonly=False, tracking=True)
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', index='btree_not_null', tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Available Time Off')
@@ -155,7 +150,7 @@ class HrLeaveAllocation(models.Model):
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
     @api.depends_context('uid')
-    @api.depends('allocation_type')
+    @api.depends('accrual_plan_id')
     def _compute_is_officer(self):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
@@ -335,26 +330,13 @@ class HrLeaveAllocation(models.Model):
                     unit='hours' if is_hour_allocation else 'days',
                 ))
 
-    @api.depends('allocation_type')
-    def _compute_accrual_plan_id(self):
-        for allocation in self:
-            if (allocation.allocation_type == 'regular' and allocation.accrual_plan_id):
-                allocation.accrual_plan_id = False
-
-    def _inverse_accrual_plan_id(self):
-        for allocation in self:
-            allocation.allocation_type = "accrual" if allocation.accrual_plan_id else "regular"
-
     def _get_request_unit(self):
         self.ensure_one()
-        if self.allocation_type == "accrual" and self.accrual_plan_id:
+        if self.accrual_plan_id:
             return self.accrual_plan_id.sudo().added_value_type
-        elif self.allocation_type == "regular":
-            return self.work_entry_type_id.unit_of_measure
-        else:
-            return "day"
+        return self.work_entry_type_id.unit_of_measure or "day"
 
-    @api.depends("allocation_type", "work_entry_type_id", "accrual_plan_id")
+    @api.depends("work_entry_type_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
@@ -498,7 +480,7 @@ class HrLeaveAllocation(models.Model):
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             expiration_date = False
-            if allocation.allocation_type != 'accrual':
+            if not allocation.accrual_plan_id:
                 continue
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
@@ -693,7 +675,7 @@ class HrLeaveAllocation(models.Model):
         """
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
         allocations = self.search([
-            ('allocation_type', '=', 'accrual'), ('state', '=', 'validate'),
+            ('state', '=', 'validate'),
             ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
@@ -709,7 +691,6 @@ class HrLeaveAllocation(models.Model):
 
         if not (self.accrual_plan_id
                 and self.state == 'validate'
-                and self.allocation_type == 'accrual'
                 and (not self.date_to or self.date_to > accrual_date)
                 and (not self.nextcall or self.nextcall <= accrual_date)):
             return 0
@@ -784,7 +765,7 @@ class HrLeaveAllocation(models.Model):
 
     def _add_lastcalls(self):
         for allocation in self:
-            if allocation.allocation_type != 'accrual':
+            if not allocation.accrual_plan_id:
                 continue
             today = fields.Date.today()
             (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(today)
@@ -850,7 +831,7 @@ class HrLeaveAllocation(models.Model):
 
         if 'number_of_days_display' not in values and 'number_of_hours_display' not in values and 'state' not in values:
             res = super().write(values)
-            if 'allocation_type' in values:
+            if 'accrual_plan_id' in values:
                 self._add_lastcalls()
             return res
 
@@ -858,7 +839,7 @@ class HrLeaveAllocation(models.Model):
         result = super().write(values)
         consumed_leaves = self.employee_id._get_consumed_leaves(work_entry_types=self.work_entry_type_id)
 
-        if 'allocation_type' in values:
+        if 'accrual_plan_id' in values:
             self._add_lastcalls()
         for allocation in self:
             current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
@@ -989,9 +970,9 @@ class HrLeaveAllocation(models.Model):
                 return False
         return True
 
-    @api.onchange('allocation_type')
-    def _onchange_allocation_type(self):
-        if self.allocation_type == 'accrual':
+    @api.onchange('accrual_plan_id')
+    def _onchange_accrual_plan_id(self):
+        if self.accrual_plan_id:
             self.number_of_days = 0.0
         elif not self.number_of_days_display:
             self.number_of_days = 1.0
@@ -1003,7 +984,7 @@ class HrLeaveAllocation(models.Model):
     # call of the cron job.
     @api.onchange('date_from', 'accrual_plan_id', 'date_to', 'employee_id')
     def _onchange_date_from(self):
-        if not self.date_from or self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
+        if not self.date_from or not self.accrual_plan_id or self.state == 'validate'\
            or not self.employee_id:
             return
         self.lastcall = self.date_from
@@ -1048,16 +1029,16 @@ class HrLeaveAllocation(models.Model):
                     if allocation.state == 'confirm':
                         activity_type = confirm_activity
                         note = _(
-                            'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
+                            'New Allocation Request created by %(user)s: %(count)s Days of %(leave_type)s',
                             user=allocation.create_uid.name,
                             count=float_round(allocation.number_of_days, precision_digits=2),
-                            allocation_type=allocation.work_entry_type_id.name,
+                            leave_type=allocation.work_entry_type_id.name,
                         )
                     else:
                         activity_type = approval_activity
                         note = _(
-                            'Second approval request for %(allocation_type)s',
-                            allocation_type=allocation.work_entry_type_id.name,
+                            'Second approval request for %(leave_type)s',
+                            leave_type=allocation.work_entry_type_id.name,
                         )
                         to_second_do |= allocation
                     user_ids = allocation.sudo()._get_responsible_for_approval().ids

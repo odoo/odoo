@@ -1820,7 +1820,7 @@ class HrLeave(models.Model):
         accrual_allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', 'in', concerned_leaves.employee_id.ids),
             ('work_entry_type_id', 'in', concerned_leaves.work_entry_type_id.ids),
-            ('allocation_type', '=', 'accrual'),
+            ('accrual_plan_id', '!=', False),
             ('date_from', '<=', end_datetime),
             '|',
             ('date_to', '>=', start_datetime),

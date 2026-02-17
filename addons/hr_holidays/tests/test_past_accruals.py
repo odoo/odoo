@@ -61,7 +61,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2023-12-01"):
             allocation = self.env['hr.leave.allocation'].create({
                 'employee_id': self.employee_emp_id,
-                'allocation_type': 'accrual',
                 'accrual_plan_id': self.accrual_plan.id,
                 'work_entry_type_id': self.work_entry_type.id,
                 'date_from': date(2000, 1, 1),
