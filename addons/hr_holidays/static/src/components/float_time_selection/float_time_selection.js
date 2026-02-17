@@ -44,9 +44,21 @@ export class FloatTimeSelectionField extends FloatTimeField {
 
     get formattedValue() {
         const unitAmount = super.formattedValue;
-        return DateTime
-            .fromFormat(unitAmount, 'hh:mm', { numberingSystem: 'latn', zone: 'default'})
-            .toLocaleString({ hour: 'numeric', minute: 'numeric'});
+        let hours = 0;
+        let minutes = 0;
+
+        unitAmount.split(" ").forEach((data) => {
+            if (data.endsWith("h")) {
+                hours = parseInt(data);
+            } else if (data.endsWith("m")) {
+                minutes = parseInt(data);
+            }
+        });
+
+        return DateTime.fromObject(
+            { hour: hours, minute: minutes },
+            { numberingSystem: "latn", zone: "default" }
+        ).toFormat("h:mm a");
     }
 
     onCharHoursClick(ev) {
