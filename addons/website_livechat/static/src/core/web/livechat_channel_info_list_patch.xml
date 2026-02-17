@@ -23,7 +23,7 @@
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
                     <a
                         t-foreach="recentConversations" t-as="channel" t-key="channel.localId"
-                        class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary btn-group-item d-flex align-items-center justify-content-start gap-1 w-100 m-0 px-3 py-1"
+                        class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary btn-group-item d-flex flex-column w-100 m-0 px-3 py-1"
                         t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}"
                         target="_blank"
                         t-att-class="{
@@ -33,9 +33,14 @@
                             'rounded-bottom-0 border-bottom': !channel_last,
                         }"
                     >
-                        <i class="fa fa-external-link opacity-75"/>
-                        <span class="ms-1 fw-bold" t-esc="channel.displayName"/>
-                        <span t-if="channel.livechat_end_dt" class="o-xsmaller text-muted" t-out="CLOSED_ON_TEXT(channel)"/>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-external-link me-2 o-mt-0_5 opacity-75"/>
+                            <span>
+                                <t t-if="channel.livechat_end_dt" t-out="CLOSED_ON_TEXT(channel)"/>
+                                <t t-else="">Conversation ongoing</t>
+                            </span>
+                        </div>
+                        <span t-if="channel.description" class="text-start text-muted smaller text-truncate" t-out="channel.description"/>
                     </a>
                 </div>
             </div>

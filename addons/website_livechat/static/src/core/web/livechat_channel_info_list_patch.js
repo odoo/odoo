@@ -2,7 +2,7 @@ import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_
 
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { formatDateTime } from "@web/core/l10n/dates";
+import { toLocaleDateTimeString } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -17,7 +17,7 @@ const livechatChannelInfoListPatch = {
             );
     },
     CLOSED_ON_TEXT(channel) {
-        return _t("(closed on: %(date)s)", { date: formatDateTime(channel.livechat_end_dt) });
+        return toLocaleDateTimeString(channel.livechat_end_dt);
     },
     get countryLanguageLabel() {
         return _t("Country & Language");
