@@ -37,6 +37,11 @@ class WebsitePage(models.Model):
     # for how long a cache entry is considered valid (in seconds)
     _CACHE_DURATION = 3600
 
+    name = fields.Char(
+        string="Page Name",
+        compute='_compute_name', inverse='_inverse_name', store=True,
+        translate=True,
+    )
     url = fields.Char('Page URL', required=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
 
@@ -57,6 +62,15 @@ class WebsitePage(models.Model):
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
+
+    @api.depends('view_id.name')
+    def _compute_name(self):
+        for page in self.with_context(lang='en_US'):
+            page.name = page.view_id.name
+
+    def _inverse_name(self):
+        for page in self.with_context(lang='en_US'):
+            page.view_id.name = page.name
 
     @api.constrains('parent_id')
     def _compute_parent_ids(self):
