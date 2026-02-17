@@ -44,6 +44,8 @@ Invoice = {
     'cbc:PricingCurrencyCode': {},
     'cbc:LineCountNumeric': {},
     'cbc:BuyerReference': {},
+    'cbc:TaxPointDate': {},
+    'cbc:AccountingCost': {},
     'cac:InvoicePeriod': cac.Period,
     'cac:OrderReference': cac.OrderReference,
     'cac:BillingReference': cac.BillingReference,
@@ -64,4 +66,7 @@ Invoice = {
     'cac:WithholdingTaxTotal': cac.TaxTotal,
     'cac:LegalMonetaryTotal': cac.MonetaryTotal,
     'cac:InvoiceLine': InvoiceLine,
+    'cac:ContractDocumentReference': cac.ContractDocumentReference,
+    'cac:DespatchDocumentReference': cac.DespatchDocumentReference,
+    'cac:ProjectReference': cac.ProjectReference,
 }
