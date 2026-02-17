@@ -156,3 +156,6 @@ class TestSnippets(HttpCase):
         website.google_analytics_key = 'G-XXXXXXXXXXX'
         website.cookies_bar = True
         self.start_tour(website.get_client_action_url('/'), 'cookie_bar_updates_gtag_consent')
+
+    def test_shape_color_sync_with_theme_color(self):
+        self.start_tour("/", "shape_color_sync_with_theme_color", login="admin")

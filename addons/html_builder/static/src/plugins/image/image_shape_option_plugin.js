@@ -73,6 +73,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
         process_image_post_handlers: this.processImagePost.bind(this),
         hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
+        theme_color_updated: this.syncShapeColorsWithTheme.bind(this),
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -81,6 +82,27 @@ export class ImageShapeOptionPlugin extends Plugin {
         for (const shapeId of Object.keys(this.imageShapes)) {
             const oldShapeId = shapeId.replace("html_builder", "web_editor");
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
+        }
+    }
+    /**
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String} changedColorValue - Updated theme color variable value
+     * like 'o-color-*'.
+     */
+    async syncShapeColorsWithTheme(changedColorValue) {
+        const imgEls = [...this.document.querySelectorAll("img[data-shape]")];
+        const targetedImgEls = imgEls.filter((imgEl) => {
+            const shapeColors = imgEl.dataset.shapeColors || "";
+            return shapeColors.includes(changedColorValue);
+        });
+        // Update shapes that actually depend on the changed theme color.
+        for (const imgEl of targetedImgEls) {
+            const updateImageAttributes = await this.loadShape(imgEl, {
+                shapeColors: imgEl.dataset.shapeColors,
+            });
+            updateImageAttributes();
         }
     }
     async canHaveHoverEffect(imgEl) {
@@ -357,11 +379,7 @@ export class ImageShapeOptionPlugin extends Plugin {
     }
     getThemedSvgColors(shapeSvgText) {
         const svgColors = this.getSvgColors(shapeSvgText);
-        return svgColors.map((color, i) =>
-            color !== null
-                ? this.dependencies.imageToolOption.getCSSColorValue(`o-color-${i + 1}`)
-                : null
-        );
+        return svgColors.map((color, i) => (color !== null ? `o-color-${i + 1}` : null));
     }
     applyShapeColors(editingElement, newColors) {}
     isTransformableShape(shapeId) {
@@ -457,16 +475,18 @@ export class SetImgShapeColorAction extends BuilderAction {
     static id = "setImgShapeColor";
     static dependencies = ["imageShapeOption", "imageToolOption"];
     getValue({ editingElement: img, params: { index: colorIndex } }) {
-        return img.dataset.shapeColors?.split(";")[colorIndex] || "";
+        // The load function must work with a color variable to keep the color
+        // in sync with theme color changes. Therefore, here the corresponding
+        // hex value of color is returned.
+        const color = img.dataset.shapeColors?.split(";")[colorIndex];
+        return this.dependencies.imageToolOption.getCSSColorValue(color);
     }
     async load({ editingElement: img, params: { index: colorIndex }, value: color }) {
         color = getValueFromVar(color);
         const newColorId = parseInt(colorIndex);
         const oldColors = img.dataset.shapeColors.split(";");
         const newColors = oldColors.slice(0);
-        newColors[newColorId] = this.dependencies.imageToolOption.getCSSColorValue(
-            color === "" ? `o-color-${newColorId + 1}` : color
-        );
+        newColors[newColorId] = color === "" ? `o-color-${newColorId + 1}` : color;
         return this.dependencies.imageShapeOption.loadShape(img, {
             shapeColors: newColors.join(";"),
         });

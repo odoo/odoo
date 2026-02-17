@@ -962,6 +962,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             );
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
+        this.dispatchTo("theme_color_updated", color);
     }
 }
 

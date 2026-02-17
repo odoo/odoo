@@ -33,6 +33,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
         content_not_editable_selectors: ".o_we_shape",
+        theme_color_updated: this.syncShapeColorsWithTheme.bind(this),
     };
     static shared = [
         "getShapeStyleUrl",
@@ -65,6 +66,27 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         const flipEls = [...this.editable.querySelectorAll(".o_we_flip_x, .o_we_flip_y")];
         for (const flipEl of flipEls) {
             this.applyShape(flipEl, () => ({ flip: this.getShapeData(flipEl).flip }));
+        }
+    }
+    /**
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String} changedColorValue - Updated theme color variable value
+     * like 'o-color-*'.
+     */
+    syncShapeColorsWithTheme(changedColorValue) {
+        const shapeEls = [...this.document.querySelectorAll(".o_we_shape")];
+        const targetedShapeEls = shapeEls.filter((shapeEl) => {
+            const { colors } = this.getShapeData(shapeEl.parentElement);
+            return Object.values(colors).includes(changedColorValue);
+        });
+        // Update shapes that actually depend on the changed theme color.
+        for (const shapeEl of targetedShapeEls) {
+            shapeEl.style.setProperty(
+                "background-image",
+                `url("${this.getShapeSrc(shapeEl.parentElement)}")`
+            );
         }
     }
     /**
@@ -220,6 +242,8 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             return "";
         }
         const searchParams = Object.entries(colors).map(([colorName, colorValue]) => {
+            // To convert 'o-color-*' colorValue to respective hex code.
+            colorValue = normalizeColor(colorValue, getHtmlStyle(this.document));
             const encodedCol = encodeURIComponent(colorValue);
             return `${colorName}=${encodedCol}`;
         });
