@@ -24,6 +24,10 @@
                             <img class="rounded o-mail-PollVotesPanel-avatar o_avatar" t-att-src="persona.avatarUrl"/>
                             <span class="mx-2 text-truncate fs-6" t-esc="props.poll.start_message_id.getPersonaName(persona)"/>
                         </div>
+                        <div t-if="option.vote_ids.length === 0 and option.fetchPollVotesCached.status === 'fetched'" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                            <span class="o-mail-PollVotesPanel-emptyEmoji">😅</span>
+                            <span class="text-muted">There are no votes for this answer</span>
+                        </div>
                     </TabPanel>
                 </t>
             </Tabs>

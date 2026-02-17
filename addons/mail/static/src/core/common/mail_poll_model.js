@@ -27,18 +27,6 @@ export class MailPollModel extends Record {
         return this.store.self_user?.eq(this.create_uid);
     }
 
-    async fetchPollOptionsCached() {
-        if (!this.optionsFetched) {
-            try {
-                this.optionsFetched = true;
-                await this.store.fetchStoreData("/mail/poll/options", { poll_id: this.id });
-            } catch (e) {
-                this.optionsFetched = false;
-                throw e;
-            }
-        }
-    }
-
     get numberOfVotes() {
         return this.option_ids.reduce((sum, option) => sum + option.number_of_votes, 0);
     }

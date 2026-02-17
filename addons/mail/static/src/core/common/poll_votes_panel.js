@@ -2,7 +2,7 @@ import { TabHeader, TabPanel, Tabs } from "@mail/core/common/tabs";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";
@@ -27,19 +27,11 @@ export class PollVotesPanel extends Component {
                 this.props.close?.();
             }
         });
-        onWillStart(() => {
-            this.props.poll.fetchPollOptionsCached();
-        });
-        onWillUpdateProps((next) => {
-            if (next.poll?.notEq(this.props.poll)) {
-                next.poll.fetchPollOptionsCached();
-            }
-        });
     }
 
     /** @param {import("models").MailPollOptionModel} option */
     onTabPanelVisible(option) {
-        option.fetchPollVotesCached();
+        option.fetchPollVotesCached.fetch();
     }
 
     get contentClass() {
