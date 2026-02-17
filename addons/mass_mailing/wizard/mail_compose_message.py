@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+import lxml
 
 from odoo import fields, models
 from odoo.tools.misc import file_open
@@ -25,6 +26,15 @@ class MailComposeMessage(models.TransientModel):
             self.mass_mailing_id = mass_mailing.id
         return super()._action_send_mail(auto_commit=auto_commit)
 
+    def inject_style_into_body(self, html, styles):
+        """ Insert a <style> block at the start of <body> because many mobile
+        Outlook clients ignore <head> styles. """
+        root = lxml.html.fromstring(html)
+        style_el = lxml.html.Element("style")
+        style_el.text = f"<!--[if mso]><style>{styles}</style><![endif]-->"
+        root.find(".//body").insert(0, style_el)
+        return Markup(lxml.html.tostring(root, encoding="unicode", method="xml"))
+
     def _prepare_mail_values(self, res_ids):
         """ When being in mass mailing mode, add 'mailing.trace' values directly
         in the o2m field of mail.mail. """
@@ -41,14 +51,15 @@ class MailComposeMessage(models.TransientModel):
             styles = fd.read()
         for res_id, mail_values in mail_values_all.items():
             if mail_values.get('body_html'):
+                mailing_style = Markup(f'<style>{styles}</style>')
                 body = self.env['ir.qweb']._render(
                     'mass_mailing.mass_mailing_mail_layout',
-                    {'body': mail_values['body_html'], 'mailing_style': Markup(f'<style>{styles}</style>')},
+                    {'body': mail_values['body_html'], 'mailing_style': mailing_style},
                     minimal_qcontext=True,
                     raise_if_not_found=False
                 )
                 if body:
-                    mail_values['body_html'] = body
+                    mail_values['body_html'] = self.inject_style_into_body(body, mailing_style)
 
             mail_values.update({
                 'mailing_id': self.mass_mailing_id.id,
