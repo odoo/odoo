@@ -35,3 +35,24 @@ export function selectButton(name) {
         run: "click",
     };
 }
+
+export function expectActionTarget(expectedTarget) {
+    const actionService = odoo.__WOWL_DEBUG__.root.actionService;
+    const original = actionService.doAction;
+
+    return new Promise((resolve, reject) => {
+        actionService.doAction = async (action, options) => {
+            try {
+                if (action.target !== expectedTarget) {
+                    throw new Error(`Expected target "${expectedTarget}", got "${action.target}"`);
+                }
+                resolve();
+            } catch (err) {
+                reject(err);
+            } finally {
+                actionService.doAction = original;
+            }
+            return original(action, options);
+        };
+    });
+}

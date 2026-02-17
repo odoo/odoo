@@ -109,10 +109,9 @@
                         </div>
                         <div class="row g-0 pb-4 ms-2 mt-auto">
                             <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-center gap-2 mb-2 mb-md-0">
-                                <button t-if="record.current_session_state.raw_value != 'closing_control'" class="btn btn-primary" name="open_ui" type="object">
-                                    <t t-if="record.current_session_state.raw_value === 'opened'">Continue Selling</t>
-                                    <t t-else="">Open Register</t>
-                                </button>
+                                <div t-if="record.current_session_state.raw_value != 'closing_control'">
+                                    <widget name="pos_open_ui_button" action="open_ui"/>
+                                </div>
                                 <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
                             </div>
                             <div class="col-12 col-md-6">

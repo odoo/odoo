@@ -22,7 +22,9 @@
                         class="form-control ean"
                         t-model="state.barcodeInput"
                         t-att-disabled="!barcodeReader"
-                        t-attf-placeholder="{{ !barcodeReader ? 'No nomenclature' : '' }}"/>
+                        t-attf-placeholder="{{ !barcodeReader ? 'No nomenclature' : '' }}"
+                        t-on-keydown="onBarcodeInputKeydown"
+                    />
                     <div class="d-flex align-items-center gap-1 ms-1">
                         <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="barcodeScan">
                             <i class="fa fa-barcode" aria-hidden="true"/> Scan

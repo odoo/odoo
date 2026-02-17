@@ -85,6 +85,12 @@ export class DebugWidget extends Component {
         }
         await this.barcodeReader.scan(this.state.barcodeInput);
     }
+    async onBarcodeInputKeydown(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            this.barcodeScan();
+        }
+    }
     async barcodeScanEAN() {
         if (!this.barcodeReader) {
             return;
