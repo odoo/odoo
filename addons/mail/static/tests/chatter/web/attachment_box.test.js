@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     openFormView,
     patchUiSize,
     scroll,
@@ -10,6 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -212,15 +214,14 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
 
 test("removing the last attachment should close the attachment box", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create({
         mimetype: "text/plain",
         name: "Blah.txt",
-        res_id: partnerId,
+        res_id: serverState.partnerId,
         res_model: "res.partner",
     });
     await start();
-    await openFormView("res.partner", partnerId, {
+    await openFormView("res.partner", serverState.partnerId, {
         arch: `
             <form>
                 <sheet></sheet>
@@ -235,4 +236,42 @@ test("removing the last attachment should close the attachment box", async () =>
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("Uploading attachment order, latest upload first", async () => {
+    const pyEnv = await startServer();
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: serverState.partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", serverState.partnerId, {
+        arch: `
+            <form>
+                <sheet></sheet>
+                <chatter open_attachments="True"/>
+            </form>`,
+    });
+    const files = [
+        new File(["hello, world"], "text1.txt", { type: "text/plain" }),
+        new File(["hello, world"], "text2.txt", { type: "text/plain" }),
+        new File(["hello, world"], "text3.txt", { type: "text/plain" }),
+    ];
+    await inputFiles(".o-mail-Chatter-fileUploader", files);
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentContainer:eq(0)[aria-label='text3.txt']"
+    );
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentContainer:eq(1)[aria-label='text2.txt']"
+    );
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentContainer:eq(2)[aria-label='text1.txt']"
+    );
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentContainer:eq(3)[aria-label='Blah.txt']"
+    );
 });
