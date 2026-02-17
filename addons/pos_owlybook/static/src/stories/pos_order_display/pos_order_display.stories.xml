@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="pos_owlybook.OrderDisplayDefault" owl="1">
+    <h1>OrderDisplay</h1>
+    <span>The OrderDisplay component renders a full POS order with order lines,
+    notes, and a summary showing subtotal, taxes, and total.</span>
+    <div class="mt-3 border rounded" style="max-width: 400px; height: 500px; display: flex; flex-direction: column;">
+        <OrderDisplay t-props="props.storyProps"/>
+    </div>
+</t>
+
+<t t-name="pos_owlybook.OrderDisplayWithNotes" owl="1">
+    <h1>OrderDisplay - With Notes</h1>
+    <span>An order with customer notes and internal notes displayed.</span>
+    <div class="mt-3 border rounded" style="max-width: 400px; height: 500px; display: flex; flex-direction: column;">
+        <OrderDisplay t-props="props.storyProps"/>
+    </div>
+</t>
+
+<t t-name="pos_owlybook.OrderDisplayReceipt" owl="1">
+    <h1>OrderDisplay - Receipt Mode</h1>
+    <span>Order displayed in receipt mode (without the order summary).</span>
+    <div class="mt-3 border rounded" style="max-width: 400px; height: 500px; display: flex; flex-direction: column;">
+        <OrderDisplay t-props="props.storyProps"/>
+    </div>
+</t>
+
+</templates>

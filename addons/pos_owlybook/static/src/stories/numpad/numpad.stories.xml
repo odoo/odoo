@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="pos_owlybook.NumpadDefault" owl="1">
+    <h1>Numpad</h1>
+    <span>The Numpad component renders a numeric keypad used in the POS
+    for entering quantities, prices, and discounts. Default layout with
+    digits 1-9, decimal point, zero, and backspace.</span>
+    <div class="mt-3" style="max-width: 300px;">
+        <Numpad t-props="props.storyProps"/>
+    </div>
+</t>
+
+<t t-name="pos_owlybook.NumpadEnhanced" owl="1">
+    <h1>Numpad - Enhanced</h1>
+    <span>Enhanced numpad layout with an extra right column containing
+    quick-add buttons (+10, +20, +50) and backspace.</span>
+    <div class="mt-3" style="max-width: 400px;">
+        <Numpad t-props="props.storyProps"/>
+    </div>
+</t>
+
+<t t-name="pos_owlybook.NumpadDisabled" owl="1">
+    <h1>Numpad - Disabled</h1>
+    <span>Numpad with all buttons in disabled state, as shown when no
+    order line is selected.</span>
+    <div class="mt-3" style="max-width: 300px;">
+        <Numpad t-props="props.storyProps"/>
+    </div>
+</t>
+
+</templates>
