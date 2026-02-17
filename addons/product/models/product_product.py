@@ -6,7 +6,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_compare, groupby
+from odoo.tools import float_compare, groupby, OrderedSet
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
 
@@ -540,7 +540,7 @@ class ProductProduct(models.Model):
         ###############################################
 
         # load/parse attribute value data
-        attribute_to_values = defaultdict(list)  # attribute_name => list[value_name]
+        attribute_to_values = defaultdict(OrderedSet)  # attribute_name => list[value_name]
         for vals in with_import_values:
             current_values = defaultdict(list)
             for value in vals['import_attribute_values'].split(','):
@@ -553,7 +553,7 @@ class ProductProduct(models.Model):
                     raise ValueError(self.env._("It is not possible to import different values for the same attribute: %s", vals['import_attribute_values']))
                 if value_name in current_values[attribute_name]:
                     raise ValueError(self.env._("Duplicate values in attribute values are not allowed: %s", vals['import_attribute_values']))
-                attribute_to_values[attribute_name].append(value_name)
+                attribute_to_values[attribute_name].add(value_name)
                 current_values[attribute_name].append(value_name)
 
         # create missing attribute
