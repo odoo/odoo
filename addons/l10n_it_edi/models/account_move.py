@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 
 WAITING_STATES = ('being_sent', 'processing', 'forward_attempt')
 FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))"
+CAUSALE_PAGAMENTO_INTERMEDIARY_CODES = ('Q', 'R', 'S', 'T', 'U')
 
 
 # -------------------------------------------------------------------------
@@ -1306,7 +1307,7 @@ class AccountMove(models.Model):
             withholding_reason = reason.text if reason is not None else "A"
             withholding_percentage = -float(percentage.text if percentage is not None else "0.0")
 
-            if withholding_percentage == -23.0:
+            if withholding_percentage == -23.0 and reason.text in CAUSALE_PAGAMENTO_INTERMEDIARY_CODES:
                 prezzo_totale = 0.0
                 for line in body_tree.xpath('.//DettaglioLinee'):
                     prezzo_totale += get_float(line, './/PrezzoTotale')
