@@ -100,6 +100,7 @@
                 <separator/>
                 <filter string="Approved" name="validate" domain="[('state', '=', 'validate')]" help="validate"/>
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
+                <filter name="exclude_refused_leaves" string="Exclude Refused" domain="[('state', '!=', 'refuse')]"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
                 <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
                 <filter name="groupby_time_off_type" string="Time Off Type" context="{'group_by': 'work_entry_type_id'}"/>
@@ -117,7 +118,7 @@
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
         <field name="domain">[('employee_id.active','=',True)]</field>
         <field name="context">{'hide_employee_name': 1, 'search_default_my_team': 1, 'search_default_current_year': 1,
-            'search_default_validate': 1, 'search_default_approve': 1}</field>
+            'search_default_exclude_refused_leaves': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Nobody here ? All of the people you're looking for will be working at that time.
