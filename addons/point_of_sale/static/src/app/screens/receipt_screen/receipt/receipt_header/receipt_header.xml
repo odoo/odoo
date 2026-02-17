@@ -9,7 +9,7 @@
                 <!-- contact address -->
                 <div t-if="props.data.company.name" t-esc="props.data.company.name" />
                 <t t-if="props.data.company.phone">
-                    <div>Tel:<t t-esc="props.data.company.phone" /></div>
+                    <div>Tel:<span dir="ltr"><t t-esc="props.data.company.phone" /></span></div>
                 </t>
                 <t t-if="props.data.company.vat">
                     <div t-esc="vatText"/>
