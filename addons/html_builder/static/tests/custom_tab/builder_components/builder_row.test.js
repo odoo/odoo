@@ -150,13 +150,13 @@ const collapseOptionTemplate = ({
     expand = false,
     observeCollapseContent = false,
 } = {}) => xml`
-        <BuilderRow label="'Test Collapse'" expand="${this.expand}" observeCollapseContent="${this.observeCollapseContent}">
+        <BuilderRow label="'Test Collapse'" expand="${expand}" observeCollapseContent="${observeCollapseContent}">
             <BuilderButton classAction="'a'" ${
-                this.dependency ? "id=\"'test_opt'\"" : ""
+                dependency ? "id=\"'test_opt'\"" : ""
             }>A</BuilderButton>
             <t t-set-slot="collapse">
                 <BuilderRow level="1" label="'B'" ${
-                    this.dependency ? "t-if=\"this.isActiveItem('test_opt')\"" : ""
+                    dependency ? "t-if=\"this.isActiveItem('test_opt')\"" : ""
                 }>
                     <BuilderButton classAction="'b'">B</BuilderButton>
                 </BuilderRow>

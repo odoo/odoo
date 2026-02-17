@@ -286,10 +286,9 @@ def compile_expr(expr, bound_variables):
     return " " * leading_ws + compiled + " " * trailing_ws
 
 
-INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
-
-
 def _process_dynamic_string(str, bound_variables):
+    INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
+
     def repl(match):
         # Pick the captured group depending on which syntax matched
         expr = match.group(2) if match.group(2) is not None else match.group(3)
@@ -320,63 +319,9 @@ def process_dynamic_string(node, bound_variables, attr="t-attf-class"):
     node.set(attr, new_value)
 
 
-def is_component(node):
-    return (node.tag and node.tag[0].isupper()) or node.get("t-component") is not None
-
-
-def expand_t_as(name):
-    return {
-        name,
-        f"{name}_index",
-        f"{name}_first",
-        f"{name}_last",
-        f"{name}_value",
-    }
-
-
-def collect_bound_variables(root):
-    bound = set()
-
-    for el in iter_elements(root):
-        # t-set defines exactly one variable
-        t_set = el.get("t-set")
-        if t_set:
-            bound.add(t_set)
-
-        # t-slot-scope defines exactly one variable
-        t_scope = el.get("t-slot-scope")
-        if t_scope:
-            bound.add(t_scope)
-
-        # t-as defines a family
-        t_as = el.get("t-as")
-        if t_as:
-            bound |= expand_t_as(t_as)
-
-    return bound
-
-
 T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")
 COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
 SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
-
-
-def process_xpath_expr(expr, bound_variables, skip_attr=SKIP_XPATH_ATTRS):
-    def repl(match):
-        attr_name = match.group(1)
-        js_expr = match.group(2)
-        if attr_name in skip_attr:
-            # return original string unchanged
-            return match.group(0)
-
-        if attr_name == "call":
-            new_expr = _process_dynamic_string(js_expr, bound_variables)
-        else:
-            new_expr = compile_expr(js_expr, bound_variables)
-        # preserve quotes
-        return match.group(0).replace(js_expr, new_expr)
-
-    return T_ATTR_RE.sub(repl, expr)
 
 
 def iter_elements(root):
@@ -403,120 +348,225 @@ DIRECTIVES = [
 ]
 
 
-def fix_template(root: etree._ElementTree, bound_variables, inside_vars):
-    for node in iter_elements(root):
-        node_vars = get_node_vars(node, bound_variables, inside_vars)
+class TemplateCompiler:
+    """
+    Traverses XML templates to prefix component-scoped variables with `this.`.
 
-        if node.tag == "xpath":
-            expr = node.get("expr")
-            if expr:
-                node.set("expr", process_xpath_expr(expr, node_vars))
+    It relies on a precompiled dictionary of variables assigned to each template
+    (e.g., `<t t-call="web.xyz"> <t t-set="var" t-value="a"/> </t>`).
 
-        if node.tag == "attribute":
-            attr_name = node.get("name")
-            txt = node.text or ""
-            if txt.strip():
-                xp = node.xpath("ancestor::xpath[@expr][1]")
-                xp_expr = xp[0].get("expr") if xp else ""
+    Attributes:
+        t_call_vars (dict[str, set[str]]): Mapping of template calls to their specific variables.
+        all_vars (dict[str, set[str]]): All template available variables keyed by template name.
+        modules (list[str] | bool): List of specific XPaths / inherit to process, or False to process all.
+    """
 
-                if should_compile_attribute_node(attr_name, xp_expr):
-                    if attr_name and attr_name.startswith("t-attf-"):
-                        compiled = _process_dynamic_string(txt, node_vars)
-                    else:
-                        compiled = compile_expr(txt, node_vars)
+    def __init__(self, path: str, t_call_vars: dict[str, set[str]], all_vars: dict[str, set[str]], modules: list[str]):
+        self.t_call_vars = t_call_vars
+        self.allVars = all_vars
+        self.modules = modules
+        self.template_path = path
 
-                    node.text = etree.CDATA(compiled)   # <--- key change
-            continue  # don't treat <attribute> like a normal DOM element
+    def fix_rendering_context(self, root: etree._ElementTree):
+        template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
 
-        for d in DIRECTIVES:
-            if d in node.attrib:
-                val = node.get(d)
-                if val:
-                    node.set(d, compile_expr(val, node_vars))
+        if template_nodes:
+            for template in template_nodes:
+                bound_variables = self.collect_bound_variables(template)
+                bound_variables |= set(self.t_call_vars.get(template.attrib["t-name"], {}))
+
+                self.fix_template(template, bound_variables)
+
+        else:
+            bound_variables = self.collect_bound_variables(root)
+            self.fix_template(root, bound_variables)
+
+    def _should_skip_node(self, node: etree._Element):
+        """
+            Skips non-element nodes (eg. comments), inherits targeting modules
+            outside the target scope, and nodes in external files that
+            are not under an inherit block from target scope.
+        """
 
         if not isinstance(node.tag, str):
-            continue  # skip comments, processing instructions, etc.
-        for attr, value in node.attrib.items():
-            if attr.startswith("t-on-") and value:
-                node.set(attr, compile_expr(value, node_vars))
-            if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
-                node.set(attr, compile_expr(value, node_vars))
-            if attr.startswith("t-attf-"):
-                process_dynamic_string(node, node_vars, attr)
-            if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
-                process_dynamic_string(node, node_vars, attr)
+            return True  # eg. comments
+        if not self.modules:
+            return False
 
-        if is_component(node):
-            for attr, value in node.attrib.items():
-                if not value:
-                    continue
-                if attr.startswith("t-") or attr.endswith(".translate"):
-                    continue  # skip Owl directives
-                if _is_inside_inherit(node) and attr.startswith("position"):
-                    continue  # A component can be replaced with <A position="replace"/> inside inherits
-                node.set(attr, compile_expr(value, node_vars))
-
-
-def is_component_xpath_expr(expr: str) -> bool:
-    # component tag selection: //Navbar, //MyComp, etc.
-    if expr and COMP_REGEXP.match(expr):
-        return True
-    # t-component selection: //t[@t-component='...']
-    if expr and ("@t-component" in expr or "t-component" in expr):
-        return True
-    return False
-
-
-def should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
-    if not attr_name:
-        return False
-
-    if attr_name in DIRECTIVES or attr_name.startswith("t-on-") or attr_name.startswith("t-att-"):
-        return True
-
-    if attr_name in SKIP_XPATH_ATTRS:
-        return False
-
-    if is_component_xpath_expr(xp_expr):
-        return True
-
-    return False
-
-
-def _is_inside_inherit(node: etree._Element):
-    """ Returns the nearest ancestor (or self) that defines a t-inherit. """
-    return node.xpath("ancestor-or-self::*[@t-inherit][1]")
-
-
-def get_node_vars(node: etree._Element, base_vars: set[str], inside_vars: dict[str, set[str]]) -> set[str]:
-    """ If we're inside a t-inherit subtree, merge target template locals into the vars. """
-
-    if _is_inside_inherit(node):
-        target = _is_inside_inherit(node)[0].get("t-inherit")
-        return base_vars | set(inside_vars.get(target, set()))
-    return base_vars
-
-
-def fix_rendering_context(root: etree._ElementTree, outside_vars, inside_vars):
-    template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
-
-    if template_nodes:
-        for template in template_nodes:
-            name = template.attrib["t-name"]
-            bound_variables = collect_bound_variables(template) | set(
-                outside_vars.get(name, {})
+        if self._is_inside_inherit(node):
+            target_module = self._is_inside_inherit(node)[0].get("t-inherit", "").split(".")[0]
+            should_refactor_inherit = any(target_module == m or target_module.startswith(f"{m}_") for m in self.modules)
+            if not should_refactor_inherit:
+                return True   # Don't refactor inherits targetting modules we are not refactoring
+        else:
+            in_target_folder = any(
+                f"/{module}/" in self.template_path or f"/{module}_" in self.template_path
+                for module in self.modules
             )
+            if not in_target_folder:
+                return True  # Don't refactor templates not inside targer folder and not inheriting target
 
-            fix_template(template, bound_variables, inside_vars)
+        return False
 
-    else:
-        bound_variables = collect_bound_variables(root)
-        fix_template(root, bound_variables, inside_vars)
+    def fix_template(self, root: etree._ElementTree, bound_variables):
+        """ Taverse node by node, changing variable context iteractively, and applying
+            replacing logic based on node tags """
+        for node in iter_elements(root):
+            if self._should_skip_node(node):
+                continue
+
+            node_vars = self._get_node_vars(node, bound_variables)
+
+            if node.tag == "xpath":
+                node.set("expr", self._process_xpath_expr(node, node_vars))
+            elif node.tag == "attribute":
+                self._process_attribute(node, node_vars)
+                continue
+
+            for d in DIRECTIVES:
+                if d in node.attrib:
+                    val = node.get(d)
+                    if val:
+                        node.set(d, compile_expr(val, node_vars))
+
+            for attr, value in node.attrib.items():
+                if attr.startswith("t-on-") and value:
+                    node.set(attr, compile_expr(value, node_vars))
+                if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
+                    node.set(attr, compile_expr(value, node_vars))
+                if attr.startswith("t-attf-"):
+                    process_dynamic_string(node, node_vars, attr)
+                if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
+                    process_dynamic_string(node, node_vars, attr)
+
+            if self._is_component(node):
+                for attr, value in node.attrib.items():
+                    if not value:
+                        continue
+                    if attr.startswith("t-") or attr.endswith(".translate"):
+                        continue  # skip Owl directives
+                    if self._is_inside_inherit(node) and attr.startswith("position"):
+                        continue  # A component can be replaced with <A position="replace"/> inside inherits
+                    node.set(attr, compile_expr(value, node_vars))
+
+    def _get_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
+        """ If inside a t-inherit subtree, merge target template locals into the vars. """
+        if self._is_inside_inherit(node):
+            target = self._is_inside_inherit(node)[0].get("t-inherit")
+            return base_vars | (self.allVars.get(target, set())) | (self.t_call_vars.get(target, set()))
+        return base_vars
+
+    def _process_attribute(self, node: etree._Element, node_vars: set[str]):
+        """ Static handler for <attribute> nodes processing """
+        attr_name = node.get("name")
+        txt = node.text or ""
+        if not txt.strip():
+            return
+
+        # Locate the parent xpath expression to decide if we should compile
+        xp = node.xpath("ancestor::xpath[@expr][1]")
+        xp_expr = xp[0].get("expr") if xp else ""
+
+        if self.should_compile_attribute_node(attr_name, xp_expr):
+            if attr_name and attr_name.startswith("t-attf-"):
+                compiled = _process_dynamic_string(txt, node_vars)
+            else:
+                compiled = compile_expr(txt, node_vars)
+
+            node.text = etree.CDATA(compiled)
+
+    @staticmethod
+    def collect_bound_variables(root: etree._ElementTree):
+        def expand_t_as(name):
+            return {
+                name,
+                f"{name}_index",
+                f"{name}_first",
+                f"{name}_last",
+                f"{name}_value",
+            }
+
+        bound = set()
+
+        for el in iter_elements(root):
+            # t-set defines exactly one variable
+            t_set = el.get("t-set")
+            if t_set:
+                bound.add(t_set)
+
+            # t-slot-scope defines exactly one variable
+            t_scope = el.get("t-slot-scope")
+            if t_scope:
+                bound.add(t_scope)
+
+            # t-as defines a family
+            t_as = el.get("t-as")
+            if t_as:
+                bound |= expand_t_as(t_as)
+
+        return bound
+
+    @staticmethod
+    def _is_component(node: etree._Element):
+        return (node.tag and node.tag[0].isupper()) or node.get("t-component") is not None
+
+    @staticmethod
+    def _is_inside_inherit(node: etree._Element):
+        """ Returns the nearest ancestor (or self) that defines a t-inherit. """
+        return node.xpath("ancestor-or-self::*[@t-inherit][1]")
+
+    @staticmethod
+    def _process_xpath_expr(node: etree._Element, bound_variables: set[str]):
+        def repl(match):
+            attr_name = match.group(1)
+            js_expr = match.group(2)
+            if attr_name in SKIP_XPATH_ATTRS:
+                # return original string unchanged
+                return match.group(0)
+
+            if attr_name == "call":
+                new_expr = _process_dynamic_string(js_expr, bound_variables)
+            else:
+                new_expr = compile_expr(js_expr, bound_variables)
+            # preserve quotes
+            return match.group(0).replace(js_expr, new_expr)
+
+        expr = node.get("expr")
+        if expr:
+            return T_ATTR_RE.sub(repl, expr)
+        return node
+
+    @staticmethod
+    def should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
+        def is_component_xpath_expr(expr: str) -> bool:
+            # component tag selection: //Navbar, //MyComp, etc.
+            if expr and COMP_REGEXP.match(expr):
+                return True
+            # t-component selection: //t[@t-component='...']
+            if expr and ("@t-component" in expr or "t-component" in expr):
+                return True
+            return False
+
+        if not attr_name:
+            return False
+
+        if attr_name in DIRECTIVES or attr_name.startswith("t-on-") or attr_name.startswith("t-att-"):
+            return True
+
+        if attr_name in SKIP_XPATH_ATTRS:
+            return False
+
+        if is_component_xpath_expr(xp_expr):
+            return True
+
+        return False
 
 
-def update_template(content: str, outside_vars, inside_vars):
+def update_template(path: str, content: str, t_call_vars, all_vars, modules: list[str]):
+    compiler = TemplateCompiler(path, t_call_vars, all_vars, modules)
+
     def callback(tree):
-        fix_rendering_context(tree, outside_vars, inside_vars)
+        compiler.fix_rendering_context(tree)
 
     result = update_etree(content, callback)
     result = result.replace("<![CDATA[", "").replace("]]>", "")
@@ -524,35 +574,27 @@ def update_template(content: str, outside_vars, inside_vars):
     result = result.replace("&&", "&amp;&amp;")
     return result
 
-
-def replace_x_path_only(content: str, variables: set):
-    def fix_xpath(root: etree._ElementTree):
-        for node in root.xpath("descendant-or-self::*[@t-inherit]"):
-            attr = node.get("t-inherit")
-            if attr.startswith("web."):
-                for xp in node.xpath("descendant-or-self::xpath[@expr]"):
-                    expr = xp.get("expr")
-                    if expr:
-                        xp.set(
-                            "expr",
-                            process_xpath_expr(
-                                expr, variables[attr], SKIP_XPATH_ATTRS.union({"call"})
-                            ),
-                        )
-        return
-
-    result = update_etree(content, fix_xpath)
-    return result
+# ------------------------------------------------------------------------------
+# Variables
+# ------------------------------------------------------------------------------
 
 
 class VariableAggregator:
-    """ Traverses XML templates, aggregating variables per fragment. """
+    """
+        Traverses XML templates, aggregating variables per fragment. The implementation
+        does not take nested inherits or t-call vars not instide the t-call on purpose.
+    """
 
     def __init__(self):
         self.tCallVars = defaultdict(set)
         self.insideVars = defaultdict(set)
 
-    def _aggregate_call_vars(self, root: etree._ElementTree, vars):
+    def aggregate_call_vars(self, root: etree._ElementTree):
+        """
+            Maps all variable inside t-call by t-call keys eg.
+            <t t-call ="web.xyz"> <t t-set="x" t-value=2/> </t>  --> {"web.xyz" : {"x"}}
+            Does not take variables not nested inside t-call into account, handled with whitelist in upgrade_code
+        """
         # Find all nodes with t-call="sometemplate"
         for call_node in root.xpath("descendant-or-self::*[@t-call]"):
             template_name = call_node.get("t-call")
@@ -566,7 +608,12 @@ class VariableAggregator:
                 if var_name:
                     self.tCallVars[template_name].add(var_name)
 
-    def _aggregate_inside_vars(self, root: etree._ElementTree, inside_vars: dict[str, set[str]]):
+    def aggregate_inside_vars(self, root: etree._ElementTree):
+        """
+            Maps all variable inside a template in a dict keyed by template name.
+            Does not take nested inherits into account (eg. <t t-name="web.ext" t-inherit="web.xyz"...
+            --> web.ext variable set will not include web.xyz, handled with whitelist in upgrade_code)
+        """
         templates = root.xpath(
             "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
         )
@@ -593,17 +640,18 @@ class VariableAggregator:
                 if var_name:
                     self.insideVars[template_name].add(var_name)
 
-        # TODO t-set-slot vars
-        # for loop_node in tpl.xpath("descendant-or-self::*[@t-set-slot]"):
+            for set_node in tpl.xpath("descendant-or-self::*[@t-set-slot]"):
+                var_name = set_node.get("t-slot-scope")
+                if var_name:
+                    self.insideVars[template_name].add(var_name)
 
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
-    aggregator = VariableAggregator()
-
     def callback(tree):
-        aggregator._aggregate_call_vars(tree, vars)
-        aggregator._aggregate_inside_vars(tree, inside_vars)
+        aggregator.aggregate_call_vars(tree)
+        aggregator.aggregate_inside_vars(tree)
 
+    aggregator = VariableAggregator()
     update_etree(content, callback)
 
     for template, variables in aggregator.tCallVars.items():
@@ -622,8 +670,7 @@ def aggregate_vars(content: str, vars={}, inside_vars={}):
 
 
 def run_tests_main(test):
-    # variables = test.get("inside_vars", {})
-    return update_template(test["content"], {}, {})
+    return update_template("", test["content"], {}, {}, [])
 
 
 tests = [
@@ -1440,19 +1487,98 @@ tests = [
 # ------------------------------------------------------------------------------
 
 
-def run_test_external_xpath(test):
+def run_test_specific_modules(test):
     variables = test.get("inside_vars", {})
-    return replace_x_path_only(test["content"], variables)
+    modules = test.get("modules", False)
+    path = test.get("path", False)
+    return update_template(path, test["content"], {}, variables, modules)
 
 
-# Tests x-path coming from another xml file
 test_external_xpath = [
     {
-        "name": "x-path only replace",
+        "name": "No replace on inherits targetting modules not in target modules",
         "inside_vars": defaultdict(set),
+        "path": "",
+        "modules": ["website"],
         "content": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+    </t>
+</templates>""",
+        "expected": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+    </t>
+</templates>""",
+    },
+    {
+        "name": "Only replace in files not in path",
+        "inside_vars": defaultdict(set),
+        "path": "",
+        "modules": ["web"],
+        "content": """ <templates id="template" xml:space="preserve"> <t t-if="showDelete"> a </t> </templates>""",
+        "expected": """ <templates id="template" xml:space="preserve"> <t t-if="showDelete"> a </t> </templates>""",
+    },
+    {
+        "name": "Replace x-path if they target correct module",
+        "inside_vars": defaultdict(set),
+        "path": "",
+        "modules": ["web"],
+        "content": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web_bridge.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+            <button t-if="showDelete"/>
+        </xpath>
+    </t>
+</templates>""",
+        "expected": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web_bridge.ListView">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="replace">
+            <button t-if="this.showDelete"/>
+        </xpath>
+    </t>
+</templates>""",
+    },
+    {
+        "name": "Replace inside x-path with variables",
+        "inside_vars": {"web.ListView": {"showDelete"}},
+        "path": "",
+        "modules": ["web"],
+        "content": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='showDelete']" position="replace">
+            <t t-if="showDelete"> a </t>
+            <t t-elif="other"> b </t>
+        </xpath>
+    </t>
+</templates>""",
+        "expected": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='showDelete']" position="replace">
+            <t t-if="showDelete"> a </t>
+            <t t-elif="this.other"> b </t>
+        </xpath>
+    </t>
+</templates>""",
+    },
+    {
+        "name": "Replace x-path if they target bridge module",
+        "inside_vars": defaultdict(set),
+        "path": "",
+        "modules": ["web"],
+        "content": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web_tour.ListView">
         <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
             <attribute name="class" add="o_move_line_list_view" separator=" "/>
         </xpath>
@@ -1472,7 +1598,7 @@ test_external_xpath = [
         """,
         "expected": """
 <templates id="template" xml:space="preserve">
-    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web_tour.ListView">
         <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
             <attribute name="class" add="o_move_line_list_view" separator=" "/>
         </xpath>
@@ -1497,7 +1623,7 @@ test_external_xpath = [
 
 
 def run_test_vars(test):
-    return update_template(test["content"], test["outside_vars"], test["inside_vars"])
+    return update_template("", test["content"], test["outside_vars"], test["inside_vars"], False)
 
 
 test_vars = [
@@ -1532,14 +1658,15 @@ test_vars = [
         """,
     },
     {
-        "name": "x path with no local vars",
-        "inside_vars": defaultdict(set),
+        "name": "x path with local vars",
         "outside_vars": defaultdict(set),
+        "inside_vars": {"web.ListView": {"item"}},
         "content": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
         <xpath expr="//Navbar" position="attributes">
-            <attribute name="setSelectedRecord.bind">setSelectedRecord</attribute>
+            <attribute name="setSelectedRecord.bind">item</attribute>
+            <attribute name="aaaa">notitem</attribute>
         </xpath>
     </t>
 </templates>
@@ -1548,16 +1675,17 @@ test_vars = [
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
         <xpath expr="//Navbar" position="attributes">
-            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+            <attribute name="setSelectedRecord.bind">item</attribute>
+            <attribute name="aaaa">this.notitem</attribute>
         </xpath>
     </t>
 </templates>
         """,
     },
     {
-        "name": "x path with local vars",
-        "outside_vars": defaultdict(set),
-        "inside_vars": {"web.ListView": {"item"}},
+        "name": "x path with outside vars",
+        "outside_vars": {"web.ListView": {"item"}},
+        "inside_vars": defaultdict(set),
         "content": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
@@ -1621,6 +1749,26 @@ test_vars_collection = [
         "content": '<t t-name="web.xyz"> <t t-set="b" t-value="2"/> </t>',
         "expected": ({}, {'abc': {'a'}, 'web.xyz': {'b'}}),
     },
+    {
+        "name": "t-slot-scope-vars",
+        "outside_vars": {},
+        "inside_vars": defaultdict(set),
+        "content": """
+<t t-name="web.Many2XAutocomplete" >
+    <div class="o_input_dropdown" t-ref="autocomplete_container">
+        <AutoComplete t-else="" t-props="autoCompleteProps">
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <t t-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
+                    <t t-out="optionScope.label"/>
+                </t>
+            </t>
+        </AutoComplete>
+        <span class="o_dropdown_button" />
+    </div>
+</t>
+        """,
+        "expected": ({}, {'web.Many2XAutocomplete': {'optionScope'}}),
+    },
 ]
 
 # ------------------------------------------------------------------------------
@@ -1661,7 +1809,7 @@ if __name__ == "__main__":
 
     for name, test_group, func in [
         ("main", tests, run_tests_main),
-        ("xpaths", test_external_xpath, run_test_external_xpath),
+        ("xpaths", test_external_xpath, run_test_specific_modules),
         ("external vars", test_vars, run_test_vars),
         ("vars aggregator", test_vars_collection, run_test_vars_collection),
     ]:
