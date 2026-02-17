@@ -55,7 +55,7 @@ test("Renders the call settings", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Call Settings')");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
     await contains(".o-discuss-CallSettings");
     await contains("label[aria-label='Camera']");
     await contains("label[aria-label='Microphone']");
@@ -71,7 +71,7 @@ test("Renders the call settings", async () => {
     await contains(".o-dropdown-item:has(:text('mockVideoDeviceLabel'))");
     await contains(`.o-dropdown-item:has(:text(${browserDefaultLabel}))`);
     await contains("button:text('Voice Detection')");
-    await contains("button:text('Push to Talk')");
+    await contains("button:text('Push-to-Talk')");
     await contains("span:text('Voice detection sensitivity')");
     await contains(".o-discuss-CallSettings button:text('Test')");
     await contains("label:text('Show video participants only')");
@@ -88,8 +88,8 @@ test("activate push to talk", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Call Settings')");
-    await click("button:text('Push to Talk')");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await click("button:text('Push-to-Talk')");
     await contains("i[aria-label='Register new key']");
     await contains("label:has(:text('Delay after releasing push-to-talk'))");
     await contains("span:text('Voice detection sensitivity')", { count: 0 });
@@ -104,7 +104,7 @@ test("activate blur", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Call Settings')");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
     await click("input[title='Blur video background']");
     await contains("label:has(:text('Blur video background'))");
     await contains("label:has(:text('Edge blur intensity'))");
@@ -155,7 +155,7 @@ test("local storage for call settings", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Call Settings')");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
     await contains("input[title='Show video participants only']:checked");
     await contains("input[title='Blur video background']:checked");
     await contains("label[title='Background blur intensity']:has(:text('15%'))");

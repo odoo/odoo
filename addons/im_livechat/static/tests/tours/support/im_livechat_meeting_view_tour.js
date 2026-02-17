@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("im_livechat.meeting_view_tour", {
         },
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-DiscussContent-panelContainer .o-mail-ActionPanel-header:contains('voice settings')",
+                ".o-livechat-root:shadow .o-mail-DiscussContent-panelContainer .o-mail-ActionPanel-header:text('Voice & Video Settings')",
         },
     ],
 });

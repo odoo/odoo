@@ -38,7 +38,7 @@ export const pttExtensionHookService = {
             downloadURL: `https://chromewebstore.google.com/detail/discuss-push-to-talk/${EXT_ID}`,
             get downloadText() {
                 return _t(
-                    "The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.",
+                    "Push-to-Talk works only while this tab is in focus. To use it outside this tab, we recommend installing our %(anchor_start)sextension%(anchor_end)s.",
                     {
                         anchor_start: markup`<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`,
                         anchor_end: markup`</a>`,
