@@ -37,7 +37,7 @@
                             + (env.inChatter ? ' o-inChatter' : '')
                             + (!env.inChatter and env.inMessage ? ' object-fit-contain' : '')
                             + (!env.inChatter and !env.inMessage ? '  object-fit-cover' : '')
-                            + (env.inChatter ? ' object-fit-scale-down' : '')
+                            + (env.inChatter ? ' object-fit-scale' : '')
                         "
                     />
                     <img
@@ -48,7 +48,7 @@
                             'o-inChatter': env.inChatter,
                             'object-fit-contain': !env.inChatter and env.inMessage,
                             'object-fit-cover': !env.inChatter and !env.inMessage,
-                            'object-fit-scale-down': env.inChatter,
+                            'object-fit-scale': env.inChatter,
                         }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
