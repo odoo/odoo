@@ -211,7 +211,7 @@ class ResUsers(models.Model):
                         model='res.users', res_ids=user.ids,
                         engine='qweb_view', options={'post_process': True})[user.id]
                     body_html = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_encapsulate(
-                        'mail.mail_notification_layout', body, context_record=self,
+                        'mail.mail_notification_layout', body, context_record=user,
                         add_context={
                             'email_add_signature': True,
                             'email_notification_force_header': True,
