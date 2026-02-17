@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.view.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="ZATCA" name="l10n_sa_edi_zatca_page" invisible="not l10n_sa_edi_log_ids">
+                        <field name="l10n_sa_edi_log_ids">
+                            <list editable="bottom" open_form_view="False">
+                                <field name="message" column_invisible="1"/>
+                                <field name="create_date" string="Date"/>
+                                <field name="state" widget="account_document_state"/>
+                                <field name="attachment_name" string="File"/>
+                                <button name="action_retry" string="Retry" type="object" invisible="document_state in ['accepted', 'warning', 'unknown'] or l10n_sa_edi_chain_head_id"/>
+                                <button name="action_retry" string="Process" type="object" invisible="document_state != 'unknown' or l10n_sa_edi_chain_head_id"/>
+                                <button name="action_open_chain_head" string="Blocking Invoice" type="object" invisible="not l10n_sa_edi_chain_head_id"/>
+                                <field name="is_test" optional="True"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.list</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="status_in_payment" position="before">
+                    <field name="l10n_sa_edi_state" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <filter name="group_by_company" position="after">
+                    <filter string="ZATCA State" name="group_by_l10n_sa_edi_state" domain="[]" context="{'group_by': 'l10n_sa_edi_state'}"/>
+                </filter>
+                <filter name="late" position="after">
+                    <separator/>
+                    <filter string="ZATCA Test" name="l10n_sa_edi_test" domain="[('l10n_sa_is_test', '=', True)]"/>
+                </filter>
+            </field>
+        </record>
+    </data>
+</odoo>

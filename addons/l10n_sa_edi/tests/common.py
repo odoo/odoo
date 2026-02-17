@@ -4,11 +4,11 @@ from base64 import b64decode
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import BinaryBytes
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
-class TestSaEdiCommon(AccountEdiTestCommon):
+class TestSaEdiCommon(AccountTestInvoicingCommon):
     """
     Base test class for Saudi Arabia EDI functionality.
 
@@ -20,9 +20,8 @@ class TestSaEdiCommon(AccountEdiTestCommon):
     """
 
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_sa_edi.edi_sa_zatca')
-    @AccountEdiTestCommon.setup_chart_template('sa')
-    @AccountEdiTestCommon.setup_country('sa')
+    @AccountTestInvoicingCommon.setup_chart_template('sa')
+    @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
         super().setUpClass()
 

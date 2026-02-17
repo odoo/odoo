@@ -1,4 +1,4 @@
-from odoo import Command, models
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -18,20 +18,10 @@ class AccountChartTemplate(models.AbstractModel):
                 + self.ref('demo_sa_invoice_3', raise_if_not_found=False)
                 + self.ref('demo_sa_invoice_4', raise_if_not_found=False)
             )
+
             for invoice in demo_invoices:
-                invoice.update({
-                    "edi_document_ids": [
-                        Command.clear(),
-                        *[
-                            Command.create({
-                                "edi_format_id": edi_format.id,
-                                "state": "to_send",
-                            })
-                            for edi_format in invoice.journal_id.edi_format_ids
-                        ],
-                    ],
-                })
-                invoice.button_process_edi_web_services()
+                invoice._l10n_sa_edi_create_document()
+                invoice.l10n_sa_edi_document_id._l10n_sa_post_zatca_edi()
 
     def _l10n_sa_edi_update_res_partner_demo(self):
         demo_partner_updates = {

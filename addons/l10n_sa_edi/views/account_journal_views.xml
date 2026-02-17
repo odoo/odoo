@@ -58,20 +58,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="view_account_form_inherit" model="ir.ui.view">
-            <field name="name">account.move.form.inherit</field>
-            <field name="model">account.move</field>
-            <field name="inherit_id" ref="account.view_move_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_retry_edi_documents_error']" position="attributes">
-                    <attribute name="invisible">l10n_sa_edi_chain_head_id</attribute>
-                </xpath>
-                <xpath expr="//button[@name='action_retry_edi_documents_error']" position="after">
-                    <!-- when invoice is stuck due to chain head, retry action does not make sense (there are no issues with the current invoice), and instead, we redirect them to the affected invoice -->
-                    <button name="action_show_chain_head" type="object" class="oe_link py-0 text-danger" string="Blocking Invoice" invisible="not l10n_sa_edi_chain_head_id"/>
-                </xpath>
-            </field>
-        </record>
     </data>
 </odoo>

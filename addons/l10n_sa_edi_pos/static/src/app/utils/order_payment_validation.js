@@ -19,7 +19,8 @@ patch(OrderPaymentValidation.prototype, {
         if (
             this.order.isInvoiceMandatoryForSA() &&
             this.order.finalized &&
-            !this.order.l10n_sa_invoice_qr_code_str
+            !this.order.l10n_sa_invoice_qr_code_str &&
+            !["accepted", "warning"].includes(this.order.l10n_sa_invoice_edi_state)
         ) {
             const orderError = _t(
                 "%s by going to Backend > Orders > Invoice",

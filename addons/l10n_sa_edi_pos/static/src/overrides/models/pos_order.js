@@ -46,8 +46,12 @@ patch(PosOrder.prototype, {
     },
 
     get notLegal() {
-        return !this.l10n_sa_invoice_qr_code_str;
+        return (
+            !this.l10n_sa_invoice_qr_code_str ||
+            !["accepted", "warning"].includes(this.order.l10n_sa_invoice_edi_state)
+        );
     },
+
     generateQrcode() {
         if (!this.notLegal && this.isSACompany()) {
             return qrCodeSrc(this.l10n_sa_invoice_qr_code_str);
