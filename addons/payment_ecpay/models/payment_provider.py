@@ -3,10 +3,10 @@ import collections
 import hashlib
 from urllib.parse import quote_plus
 
-from odoo.addons.payment_ecpay import const
-
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.payment_ecpay import const
 
 
 class PaymentProvider(models.Model):
@@ -35,7 +35,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return TWD as the only supported currency. """
+        """Override of `payment` to return TWD as the only supported currency."""
         if self.code != 'ecpay':
             return super()._get_supported_currencies()
 
@@ -51,8 +51,8 @@ class PaymentProvider(models.Model):
         """
         if self.state == "enabled":
             return "https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5"
-        else:  # 'test'
-            return "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+        # 'test'
+        return "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
 
     def _ecpay_calculate_signature(self, data):
         """Compute the signature for the provided data.
@@ -68,14 +68,12 @@ class PaymentProvider(models.Model):
         encoding_lst = [
             'HashKey=%s&' % self.ecpay_hash_key,
             ''.join([f'{key}={value}&' for key, value in ordered_data.items()]),
-            'HashIV=%s' % self.ecpay_hash_iv
+            'HashIV=%s' % self.ecpay_hash_iv,
         ]
         safe_characters = '-_.!*()'
         encoding_str = ''.join(encoding_lst)
         encoding_str = quote_plus(str(encoding_str), safe=safe_characters).lower()
-        check_mac_value = hashlib.sha256(encoding_str.encode('utf-8')).hexdigest().upper()
-
-        return check_mac_value
+        return hashlib.sha256(encoding_str.encode('utf-8')).hexdigest().upper()
 
     # === CONSTRAINT METHODS === #
 
@@ -88,7 +86,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         if self.code != 'ecpay':
             return super()._get_default_payment_method_codes()
 

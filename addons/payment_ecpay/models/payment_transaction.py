@@ -2,19 +2,19 @@
 
 from datetime import datetime
 
+from odoo import api, models
+from odoo.tools.urls import urljoin
+
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_ecpay import const
 from odoo.addons.payment_ecpay.controllers.main import EcpayController
-
-from odoo import api, models
-from odoo.tools.urls import urljoin
 
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     @api.model
-    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _compute_reference(self, provider_code, prefix=None, **kwargs):
         """Override of `payment` to ensure that ECPay requirements for references are satisfied.
 
         ECPay requirements for references are as follows:
@@ -52,9 +52,12 @@ class PaymentTransaction(models.Model):
             return res
 
         base_url = self.provider_id.get_base_url()
-        all_payment_methods = {item for sublist in const.PAYMENT_METHODS_MAPPING.values() for item in sublist}
+        all_payment_methods = {
+            item for sublist in const.PAYMENT_METHODS_MAPPING.values() for item in sublist
+        }
         ignore_payment_methods = "#".join(
-            all_payment_methods.difference(const.PAYMENT_METHODS_MAPPING[self.payment_method_code]))
+            all_payment_methods.difference(const.PAYMENT_METHODS_MAPPING[self.payment_method_code])
+        )
 
         if self.sale_order_ids:
             item_details = (
@@ -85,12 +88,14 @@ class PaymentTransaction(models.Model):
             "IgnorePayment": ignore_payment_methods,
             "Remark": self.invoice_ids.display_name or self.sale_order_ids.display_name or " ",
             "PaymentType": "aio",
-            "EncryptType": "1"
+            "EncryptType": "1",
         }
         if language_code := const.LANGUAGE_CODES_MAPPING.get(self.env.context.get("lang", "en_US")):
             rendering_values["Language"] = language_code
 
-        rendering_values.update({"CheckMacValue": self.provider_id._ecpay_calculate_signature(rendering_values)})
+        rendering_values.update({
+            "CheckMacValue": self.provider_id._ecpay_calculate_signature(rendering_values)
+        })
         rendering_values.update({"api_url": self.provider_id._ecpay_get_api_url()})
         return rendering_values
 
@@ -132,6 +137,10 @@ class PaymentTransaction(models.Model):
             self._set_done()
         else:
             self._set_error(
-                self.env._("An error occurred (return code %(return_code)s; return message %(return_message)s).",
-                           return_code=return_code, return_message=return_message)
+                self.env._(
+                    "An error occurred "
+                    "(return code %(return_code)s; return message %(return_message)s).",
+                    return_code=return_code,
+                    return_message=return_message,
+                )
             )

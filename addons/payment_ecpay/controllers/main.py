@@ -16,7 +16,9 @@ class EcpayController(http.Controller):
     _return_url = "/payment/ecpay/return"
     _webhook_url = "/payment/ecpay/webhook"
 
-    @http.route(_return_url, type="http", auth="public", methods=["POST"], csrf=False, save_session=False)
+    @http.route(
+        _return_url, type="http", auth="public", methods=["POST"], csrf=False, save_session=False
+    )
     def ecpay_return_from_checkout(self, **data):
         """Process the notification data sent by ECPay after redirection.
 
@@ -57,10 +59,10 @@ class EcpayController(http.Controller):
         received_signature = payment_data.get("CheckMacValue")
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data.
         expected_signature = tx_sudo.provider_id._ecpay_calculate_signature(payment_data)
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

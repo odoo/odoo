@@ -9,7 +9,6 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     'bank_transfer',
     'jkopay',
     'twqr',
-
     # Brand payment methods.
     'visa',
     'mastercard',
@@ -42,7 +41,4 @@ LANGUAGE_CODES_MAPPING = {
 }
 
 # Mapping of transaction states to ECPay success codes.
-SUCCESS_CODE_MAPPING = {
-    'done': ('1',),
-    'pending': ('2', '10100073')
-}
+SUCCESS_CODE_MAPPING = {'done': ('1',), 'pending': ('2', '10100073')}

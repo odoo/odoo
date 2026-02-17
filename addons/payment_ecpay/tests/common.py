@@ -2,15 +2,17 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class EcpayCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.ecpay = cls._prepare_provider('ecpay', update_values={
-            'ecpay_merchant_id': '3002607',
-            'ecpay_hash_key': 'pwFHCqoQZGmho4w6',
-            'ecpay_hash_iv': 'EkRm7iFT261dpevs',
-        })
+        cls.ecpay = cls._prepare_provider(
+            'ecpay',
+            update_values={
+                'ecpay_merchant_id': '3002607',
+                'ecpay_hash_key': 'pwFHCqoQZGmho4w6',
+                'ecpay_hash_iv': 'EkRm7iFT261dpevs',
+            },
+        )
         cls.provider = cls.ecpay
         cls.amount = 2223
         cls.currency_twd = cls._enable_currency('TWD')
@@ -32,5 +34,5 @@ class EcpayCommon(PaymentCommon):
             'StoreID': '',
             'TradeAmt': '2223',
             'TradeDate': '2025/11/04 17:58:11',
-            'TradeNo': '2511041758118864'
+            'TradeNo': '2511041758118864',
         }
