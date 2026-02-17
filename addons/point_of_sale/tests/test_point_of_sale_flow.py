@@ -2133,3 +2133,46 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertTrue(customer_account_receivable_entry.reconciled)
         self.assertTrue(reversal_receivable_entry.reconciled)
         self.assertEqual(customer_account_receivable_entry.reconciled_lines_ids, reversal_receivable_entry)
+
+    def test_add_two_lines_with_same_uuid_through_sync_from_ui(self):
+        """Test that adding two lines with the same UUID doesn't cause issues."""
+        self.pos_config_usd.open_ui()
+        order_data = {
+            'line_data': [
+                {'product_id': self.product.product_variant_id.id},
+            ],
+        }
+        order, _ = self.create_backend_pos_order({**order_data})
+        sync_from_ui_values = {
+            "access_token": order.access_token,
+            "date_order": fields.Datetime.to_string(fields.Datetime.now()),
+            "session_id": self.pos_config_usd.current_session_id.id,
+            "company_id": self.env.company.id,
+            "amount_tax": 0.0,
+            "amount_total": 10.0,
+            "amount_paid": 0,
+            "amount_return": 0,
+            "uuid": order.uuid,
+            "id": order.id,
+            "state": "draft",
+            "lines": [
+                [
+                0,
+                0,
+                {
+                    "product_id": self.product.product_variant_id.id,
+                    "price_unit": 10.0,
+                    "qty": 2,
+                    "price_subtotal": 20.0,
+                    "price_subtotal_incl": 20.0,
+                    "tax_ids": [],
+                    "uuid": order.lines[0].uuid,
+                }
+                ]
+            ]
+        }
+        self.env['pos.order'].sync_from_ui([{
+            **sync_from_ui_values,
+        }])
+        self.assertEqual(len(order.lines), 1, "Two lines with the same UUID were created")
+        self.assertEqual(order.lines[0].qty, 2, "The quantity of the line should have been updated to 2")

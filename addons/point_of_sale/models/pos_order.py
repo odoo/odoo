@@ -106,6 +106,17 @@ class PosOrder(models.Model):
             for field in ['lines', 'payment_ids']:
                 if order.get(field):
                     existing_ids = set(pos_order[field].ids)
+                    existing_line_ids = {line.uuid: line.id for line in pos_order[field]}
+                    for line in order[field]:
+                        if len(line) < 3:
+                            continue
+                        line_vals = line[2]
+                        if line[0] == Command.CREATE and line_vals.get('uuid') in existing_line_ids:
+                            # If we try to create (line[0] == Command.CREATE) a line with a uuid that already
+                            # exists on another line of the same order, we transform the creation
+                            # into an update (line[0] = Command.UPDATE) of the existing line.
+                            line[0] = Command.UPDATE
+                            line[1] = existing_line_ids[line_vals.get('uuid')]
                     pos_order.write({field: order[field]})
                     added_ids = set(pos_order[field].ids) - existing_ids
                     if added_ids:
