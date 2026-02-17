@@ -14,10 +14,9 @@ class TestCompanyLeave(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestCompanyLeave, cls).setUpClass()
+        super().setUpClass()
         cls.company = cls.env['res.company'].create({'name': 'A company'})
         cls.company.resource_calendar_id.tz = "Europe/Brussels"
-
 
         cls.bank_holiday = cls.env['hr.leave.type'].create({
             'name': 'Bank Holiday',
@@ -26,12 +25,21 @@ class TestCompanyLeave(TransactionCase):
             'requires_allocation': False,
         })
 
-        cls.paid_time_off = cls.env['hr.leave.type'].create({
-            'name': 'Paid Time Off',
+        cls.no_overlap_leave_type = cls.env['hr.leave.type'].create({
+            'name': 'No Overlap Leave Type',
             'request_unit': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
             'requires_allocation': False,
+        })
+
+        cls.overlap_leave_type = cls.env['hr.leave.type'].create({
+            'name': 'Overlap Allowed Leave Type',
+            'request_unit': 'day',
+            'company_id': cls.company.id,
+            'requires_allocation': False,
+            'allow_request_on_top': True,
+            'time_type': 'other',
         })
 
         cls.employee = cls.env['hr.employee'].create({
@@ -45,10 +53,10 @@ class TestCompanyLeave(TransactionCase):
         # Add a company leave on the second day.
         # Check that leave is split into 2.
 
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'holiday_status_id': self.overlap_leave_type.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
         })
@@ -85,12 +93,12 @@ class TestCompanyLeave(TransactionCase):
         # TEST CASE 2: Leaves taken in half-days. Take a 3 days leave
         # Add a company leave on the second day
         # Check that leave is split into 2
-        self.paid_time_off.request_unit = 'half_day'
+        self.overlap_leave_type.request_unit = 'half_day'
 
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'holiday_status_id': self.overlap_leave_type.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
         })
@@ -129,12 +137,12 @@ class TestCompanyLeave(TransactionCase):
         # TEST CASE 3: Time Off taken in half-days. Take a 0.5 days leave
         # Add a company leave on the same day
         # Check that leave refused
-        self.paid_time_off.request_unit = 'half_day'
+        self.overlap_leave_type.request_unit = 'half_day'
 
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'holiday_status_id': self.overlap_leave_type.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
             'request_date_from_period': 'am',
@@ -166,12 +174,12 @@ class TestCompanyLeave(TransactionCase):
         # TEST CASE 4: Leaves taken in days. Take a 1 days leave
         # Add a company leave on the same day
         # Check that leave is refused
-        self.paid_time_off.request_unit = 'day'
+        self.overlap_leave_type.request_unit = 'day'
 
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'holiday_status_id': self.overlap_leave_type.id,
             'request_date_from': date(2020, 1, 9),
             'request_date_to': date(2020, 1, 9),
 
@@ -220,7 +228,7 @@ class TestCompanyLeave(TransactionCase):
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'holiday_status_id': self.overlap_leave_type.id,
             'request_date_from': date(2020, 1, 6),
             'request_date_to': date(2020, 1, 10),
         })
@@ -263,7 +271,7 @@ class TestCompanyLeave(TransactionCase):
         leaves = self.env['hr.leave'].create([{
             'name': 'Holiday - %s' % employee.name,
             'employee_id': employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'holiday_status_id': self.overlap_leave_type.id,
             'request_date_from': date(2020, 3, 29),
             'request_date_to': date(2020, 4, 1),
         } for employee in employees[0:15]])
@@ -285,3 +293,33 @@ class TestCompanyLeave(TransactionCase):
 
         leaves = self.env['hr.leave'].search([('holiday_status_id', '=', self.bank_holiday.id)])
         self.assertEqual(len(leaves), 101)
+
+    def test_08_leave_whole_company(self):
+        self.env['hr.leave'].create({
+            'name': 'Holiday without overlap',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.no_overlap_leave_type.id,
+            'request_date_from': date(2025, 11, 10),
+            'request_date_to': date(2025, 11, 12),
+        })
+
+        company_leave = self.env['hr.leave.generate.multi.wizard'].create({
+            'name': 'Bank Holiday',
+            'allocation_mode': 'company',
+            'company_id': self.company.id,
+            'holiday_status_id': self.bank_holiday.id,
+            'date_from': date(2025, 11, 11),
+            'date_to': date(2025, 11, 11),
+        })
+        company_leave.action_generate_time_off()
+
+        all_leaves = self.env['hr.leave'].search([
+            ('employee_id', '=', self.employee.id),
+            ('holiday_status_id', 'in', [self.bank_holiday.id, self.no_overlap_leave_type.id]),
+        ], order='id')
+        self.assertEqual(len(all_leaves), 1)
+        # As the employee has the overlapping leave, the wizard will not create a new one
+        self.assertEqual(all_leaves[0].date_from, datetime(2025, 11, 10, 7, 0))
+        self.assertEqual(all_leaves[0].date_to, datetime(2025, 11, 12, 16, 0))
+        self.assertEqual(all_leaves[0].number_of_days, 3)
+        self.assertEqual(all_leaves[0].state, 'confirm')
