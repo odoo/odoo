@@ -10,7 +10,7 @@
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.res_partner_id">
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
-                    <t t-if="email_to and !notification.isFailure"> (<t t-out="email_to"/>)</t>
+                    <t t-if="email_to and !notification.isFailure"> <span class="text-muted">(<t t-out="email_to" />)</span></t>
                 </span>
                 <span t-elif="email_to" t-out="email_to"/>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
@@ -25,7 +25,7 @@
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.res_partner_id">
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
-                    <t t-if="email_to and !notification.isFailure"> (<t t-out="email_to"/>)</t>
+                    <t t-if="email_to and !notification.isFailure"> <span class="text-muted">(<t t-out="email_to" />)</span></t>
                 </span>
                 <span t-elif="email_to" t-out="email_to"/>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
