@@ -6,6 +6,13 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="priority">14</field>
         <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1"
+                    role="alert"
+                    invisible="not l10n_fr_is_french or not l10n_fr_siret_warning">
+                    <field name="l10n_fr_siret_warning"/>
+                </div>
+            </xpath>
             <field name="company_registry" position="attributes">
                 <attribute name="invisible">parent_id or not is_company or l10n_fr_is_french</attribute>
             </field>

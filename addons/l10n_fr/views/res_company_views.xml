@@ -10,6 +10,22 @@
              <xpath expr="//field[@name='company_registry']" position="after">
                  <field name="ape" invisible="not is_france_country"/>
              </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1"
+                    role="alert"
+                    invisible="not is_france_country or not l10n_fr_siret_warning">
+                    <field name="l10n_fr_siret_warning"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='company_registry']" position="attributes">
+                <attribute name="invisible" add="is_france_country" separator=" or "/>
+            </xpath>
+            <xpath expr="//field[@name='company_registry']" position="after">
+                <field name="company_registry"
+                       string="SIRET"
+                       options="{'placeholder_field': 'company_registry_placeholder'}"
+                       invisible="not is_france_country"/>
+            </xpath>
         </data>
         </field>
     </record>
