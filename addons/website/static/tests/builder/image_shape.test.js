@@ -3,7 +3,7 @@ import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/ho
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { onRpcReal, testImg } from "./image_test_helpers";
+import { onRpcImg, testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
 
@@ -504,7 +504,7 @@ test("Should reset crop when removing shape with ratio", async () => {
 });
 
 test("Should set the correct aspect ratio to the pill shape", async () => {
-    onRpcReal("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
+    onRpcImg("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
 
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
@@ -530,8 +530,8 @@ test("Should set the correct aspect ratio to the pill shape", async () => {
 });
 
 test("Should not keep the aspect ratio when changing shape", async () => {
-    onRpcReal("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
-    onRpcReal("/html_builder/static/image_shapes/panel/panel_trio_in_r.svg");
+    onRpcImg("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
+    onRpcImg("/html_builder/static/image_shapes/panel/panel_trio_in_r.svg");
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
@@ -576,7 +576,7 @@ test("Should not keep the aspect ratio when changing shape", async () => {
 });
 
 test("Should set default aspect ratio when changing image", async () => {
-    onRpcReal("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
+    onRpcImg("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
     onRpc("ir.attachment", "search_read", () => [
         {
             name: "s_text_image_default_image.webp",
