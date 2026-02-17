@@ -286,10 +286,9 @@ def compile_expr(expr, bound_variables):
     return " " * leading_ws + compiled + " " * trailing_ws
 
 
-INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
-
-
 def _process_dynamic_string(str, bound_variables):
+    INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
+
     def repl(match):
         # Pick the captured group depending on which syntax matched
         expr = match.group(2) if match.group(2) is not None else match.group(3)
@@ -320,63 +319,9 @@ def process_dynamic_string(node, bound_variables, attr="t-attf-class"):
     node.set(attr, new_value)
 
 
-def is_component(node):
-    return (node.tag and node.tag[0].isupper()) or node.get("t-component") is not None
-
-
-def expand_t_as(name):
-    return {
-        name,
-        f"{name}_index",
-        f"{name}_first",
-        f"{name}_last",
-        f"{name}_value",
-    }
-
-
-def collect_bound_variables(root):
-    bound = set()
-
-    for el in iter_elements(root):
-        # t-set defines exactly one variable
-        t_set = el.get("t-set")
-        if t_set:
-            bound.add(t_set)
-
-        # t-slot-scope defines exactly one variable
-        t_scope = el.get("t-slot-scope")
-        if t_scope:
-            bound.add(t_scope)
-
-        # t-as defines a family
-        t_as = el.get("t-as")
-        if t_as:
-            bound |= expand_t_as(t_as)
-
-    return bound
-
-
 T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")
 COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
 SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
-
-
-def process_xpath_expr(expr, bound_variables, skip_attr=SKIP_XPATH_ATTRS):
-    def repl(match):
-        attr_name = match.group(1)
-        js_expr = match.group(2)
-        if attr_name in skip_attr:
-            # return original string unchanged
-            return match.group(0)
-
-        if attr_name == "call":
-            new_expr = _process_dynamic_string(js_expr, bound_variables)
-        else:
-            new_expr = compile_expr(js_expr, bound_variables)
-        # preserve quotes
-        return match.group(0).replace(js_expr, new_expr)
-
-    return T_ATTR_RE.sub(repl, expr)
 
 
 def iter_elements(root):
@@ -403,120 +348,192 @@ DIRECTIVES = [
 ]
 
 
-def fix_template(root: etree._ElementTree, bound_variables, inside_vars):
-    for node in iter_elements(root):
-        node_vars = get_node_vars(node, bound_variables, inside_vars)
+class TemplateCompiler:
+    """ Traverses XML templates, adding `this.` to variables coming from the component.
+        It relies on a precompiled dictionary of variables assigned to each template (eg.
+        a <t-call="web.xyz"> <t t-set="var" t-value="a"/> </t.).
+    """
 
-        if node.tag == "xpath":
-            expr = node.get("expr")
-            if expr:
-                node.set("expr", process_xpath_expr(expr, node_vars))
+    def __init__(self, t_call_vars, all_vars):
+        self.allVars = all_vars
+        self.t_call_vars = t_call_vars
 
-        if node.tag == "attribute":
-            attr_name = node.get("name")
-            txt = node.text or ""
-            if txt.strip():
-                xp = node.xpath("ancestor::xpath[@expr][1]")
-                xp_expr = xp[0].get("expr") if xp else ""
+    def fix_rendering_context(self, root: etree._ElementTree):
+        """ param: t_call_vars - vars inside a t-call tag, keyed by the t-call targer
+            param: all_vars - list of all variables per template used for inherits
+        """
+        template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
 
-                if should_compile_attribute_node(attr_name, xp_expr):
-                    if attr_name and attr_name.startswith("t-attf-"):
-                        compiled = _process_dynamic_string(txt, node_vars)
-                    else:
-                        compiled = compile_expr(txt, node_vars)
+        if template_nodes:
+            for template in template_nodes:
+                bound_variables = self.collect_bound_variables(template)
+                bound_variables |= set(self.t_call_vars.get(template.attrib["t-name"], {}))
 
-                    node.text = etree.CDATA(compiled)   # <--- key change
-            continue  # don't treat <attribute> like a normal DOM element
+                self.fix_template(template, bound_variables)
 
-        for d in DIRECTIVES:
-            if d in node.attrib:
-                val = node.get(d)
-                if val:
-                    node.set(d, compile_expr(val, node_vars))
+        else:
+            bound_variables = self.collect_bound_variables(root)
+            self.fix_template(root, bound_variables)
 
-        if not isinstance(node.tag, str):
-            continue  # skip comments, processing instructions, etc.
-        for attr, value in node.attrib.items():
-            if attr.startswith("t-on-") and value:
-                node.set(attr, compile_expr(value, node_vars))
-            if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
-                node.set(attr, compile_expr(value, node_vars))
-            if attr.startswith("t-attf-"):
-                process_dynamic_string(node, node_vars, attr)
-            if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
-                process_dynamic_string(node, node_vars, attr)
+    def fix_template(self, root: etree._ElementTree, bound_variables):
+        """ Taverse node by node, changing variable context iteractively, and applying
+            replacing logic based on node tags """
+        for node in iter_elements(root):
+            if not isinstance(node.tag, str):
+                continue  # skip comments, processing instructions, etc.
 
-        if is_component(node):
+            node_vars = self._get_node_vars(node, bound_variables)
+
+            if node.tag == "xpath":
+                node.set("expr", self._process_xpath_expr(node, node_vars))
+            elif node.tag == "attribute":
+                self._process_attribute(node, node_vars)
+                continue
+
+            for d in DIRECTIVES:
+                if d in node.attrib:
+                    val = node.get(d)
+                    if val:
+                        node.set(d, compile_expr(val, node_vars))
+
             for attr, value in node.attrib.items():
-                if not value:
-                    continue
-                if attr.startswith("t-") or attr.endswith(".translate"):
-                    continue  # skip Owl directives
-                if _is_inside_inherit(node) and attr.startswith("position"):
-                    continue  # A component can be replaced with <A position="replace"/> inside inherits
-                node.set(attr, compile_expr(value, node_vars))
+                if attr.startswith("t-on-") and value:
+                    node.set(attr, compile_expr(value, node_vars))
+                if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
+                    node.set(attr, compile_expr(value, node_vars))
+                if attr.startswith("t-attf-"):
+                    process_dynamic_string(node, node_vars, attr)
+                if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
+                    process_dynamic_string(node, node_vars, attr)
 
+            if self._is_component(node):
+                for attr, value in node.attrib.items():
+                    if not value:
+                        continue
+                    if attr.startswith("t-") or attr.endswith(".translate"):
+                        continue  # skip Owl directives
+                    if self._is_inside_inherit(node) and attr.startswith("position"):
+                        continue  # A component can be replaced with <A position="replace"/> inside inherits
+                    node.set(attr, compile_expr(value, node_vars))
 
-def is_component_xpath_expr(expr: str) -> bool:
-    # component tag selection: //Navbar, //MyComp, etc.
-    if expr and COMP_REGEXP.match(expr):
-        return True
-    # t-component selection: //t[@t-component='...']
-    if expr and ("@t-component" in expr or "t-component" in expr):
-        return True
-    return False
+    def _get_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
+        """ If inside a t-inherit subtree, merge target template locals into the vars. """
+        if self._is_inside_inherit(node):
+            target = self._is_inside_inherit(node)[0].get("t-inherit")
+            return base_vars | (self.allVars.get(target, set()))
+        return base_vars
 
+    def _process_attribute(self, node: etree._Element, node_vars: set[str]):
+        """ Static handler for <attribute> nodes processing """
+        attr_name = node.get("name")
+        txt = node.text or ""
+        if not txt.strip():
+            return
 
-def should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
-    if not attr_name:
+        # Locate the parent xpath expression to decide if we should compile
+        xp = node.xpath("ancestor::xpath[@expr][1]")
+        xp_expr = xp[0].get("expr") if xp else ""
+
+        if self.should_compile_attribute_node(attr_name, xp_expr):
+            if attr_name and attr_name.startswith("t-attf-"):
+                compiled = _process_dynamic_string(txt, node_vars)
+            else:
+                compiled = compile_expr(txt, node_vars)
+
+            node.text = etree.CDATA(compiled)
+
+    @staticmethod
+    def collect_bound_variables(root: etree._ElementTree):
+        def expand_t_as(name):
+            return {
+                name,
+                f"{name}_index",
+                f"{name}_first",
+                f"{name}_last",
+                f"{name}_value",
+            }
+
+        bound = set()
+
+        for el in iter_elements(root):
+            # t-set defines exactly one variable
+            t_set = el.get("t-set")
+            if t_set:
+                bound.add(t_set)
+
+            # t-slot-scope defines exactly one variable
+            t_scope = el.get("t-slot-scope")
+            if t_scope:
+                bound.add(t_scope)
+
+            # t-as defines a family
+            t_as = el.get("t-as")
+            if t_as:
+                bound |= expand_t_as(t_as)
+
+        return bound
+
+    @staticmethod
+    def _is_component(node: etree._Element):
+        return (node.tag and node.tag[0].isupper()) or node.get("t-component") is not None
+
+    @staticmethod
+    def _is_inside_inherit(node: etree._Element):
+        """ Returns the nearest ancestor (or self) that defines a t-inherit. """
+        return node.xpath("ancestor-or-self::*[@t-inherit][1]")
+
+    @staticmethod
+    def _process_xpath_expr(node: etree._Element, bound_variables: set[str], skip_attr: set[str] = SKIP_XPATH_ATTRS):
+        def repl(match):
+            attr_name = match.group(1)
+            js_expr = match.group(2)
+            if attr_name in skip_attr:
+                # return original string unchanged
+                return match.group(0)
+
+            if attr_name == "call":
+                new_expr = _process_dynamic_string(js_expr, bound_variables)
+            else:
+                new_expr = compile_expr(js_expr, bound_variables)
+            # preserve quotes
+            return match.group(0).replace(js_expr, new_expr)
+
+        expr = node.get("expr")
+        if expr:
+            return T_ATTR_RE.sub(repl, expr)
+        return node
+
+    @staticmethod
+    def should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
+        def is_component_xpath_expr(expr: str) -> bool:
+            # component tag selection: //Navbar, //MyComp, etc.
+            if expr and COMP_REGEXP.match(expr):
+                return True
+            # t-component selection: //t[@t-component='...']
+            if expr and ("@t-component" in expr or "t-component" in expr):
+                return True
+            return False
+
+        if not attr_name:
+            return False
+
+        if attr_name in DIRECTIVES or attr_name.startswith("t-on-") or attr_name.startswith("t-att-"):
+            return True
+
+        if attr_name in SKIP_XPATH_ATTRS:
+            return False
+
+        if is_component_xpath_expr(xp_expr):
+            return True
+
         return False
 
-    if attr_name in DIRECTIVES or attr_name.startswith("t-on-") or attr_name.startswith("t-att-"):
-        return True
 
-    if attr_name in SKIP_XPATH_ATTRS:
-        return False
+def update_template(content: str, t_call_vars, all_vars):
+    compiler = TemplateCompiler(t_call_vars, all_vars)
 
-    if is_component_xpath_expr(xp_expr):
-        return True
-
-    return False
-
-
-def _is_inside_inherit(node: etree._Element):
-    """ Returns the nearest ancestor (or self) that defines a t-inherit. """
-    return node.xpath("ancestor-or-self::*[@t-inherit][1]")
-
-
-def get_node_vars(node: etree._Element, base_vars: set[str], inside_vars: dict[str, set[str]]) -> set[str]:
-    """ If we're inside a t-inherit subtree, merge target template locals into the vars. """
-
-    if _is_inside_inherit(node):
-        target = _is_inside_inherit(node)[0].get("t-inherit")
-        return base_vars | set(inside_vars.get(target, set()))
-    return base_vars
-
-
-def fix_rendering_context(root: etree._ElementTree, outside_vars, inside_vars):
-    template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
-
-    if template_nodes:
-        for template in template_nodes:
-            name = template.attrib["t-name"]
-            bound_variables = collect_bound_variables(template) | set(
-                outside_vars.get(name, {})
-            )
-
-            fix_template(template, bound_variables, inside_vars)
-
-    else:
-        bound_variables = collect_bound_variables(root)
-        fix_template(root, bound_variables, inside_vars)
-
-
-def update_template(content: str, outside_vars, inside_vars):
     def callback(tree):
-        fix_rendering_context(tree, outside_vars, inside_vars)
+        compiler.fix_rendering_context(tree)
 
     result = update_etree(content, callback)
     result = result.replace("<![CDATA[", "").replace("]]>", "")
@@ -530,19 +547,23 @@ def replace_x_path_only(content: str, variables: set):
         for node in root.xpath("descendant-or-self::*[@t-inherit]"):
             attr = node.get("t-inherit")
             if attr.startswith("web."):
-                for xp in node.xpath("descendant-or-self::xpath[@expr]"):
-                    expr = xp.get("expr")
+                for node in node.xpath("descendant-or-self::xpath[@expr]"):
+                    expr = node.get("expr")
                     if expr:
-                        xp.set(
+                        node.set(
                             "expr",
-                            process_xpath_expr(
-                                expr, variables[attr], SKIP_XPATH_ATTRS.union({"call"})
+                            TemplateCompiler._process_xpath_expr(
+                                node, variables[attr], SKIP_XPATH_ATTRS.union({"call"})
                             ),
                         )
         return
 
     result = update_etree(content, fix_xpath)
     return result
+
+# ------------------------------------------------------------------------------
+# Variables
+# ------------------------------------------------------------------------------
 
 
 class VariableAggregator:
@@ -552,7 +573,7 @@ class VariableAggregator:
         self.tCallVars = defaultdict(set)
         self.insideVars = defaultdict(set)
 
-    def _aggregate_call_vars(self, root: etree._ElementTree, vars):
+    def aggregate_call_vars(self, root: etree._ElementTree, vars):
         # Find all nodes with t-call="sometemplate"
         for call_node in root.xpath("descendant-or-self::*[@t-call]"):
             template_name = call_node.get("t-call")
@@ -566,7 +587,7 @@ class VariableAggregator:
                 if var_name:
                     self.tCallVars[template_name].add(var_name)
 
-    def _aggregate_inside_vars(self, root: etree._ElementTree, inside_vars: dict[str, set[str]]):
+    def aggregate_inside_vars(self, root: etree._ElementTree, inside_vars: dict[str, set[str]]):
         templates = root.xpath(
             "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
         )
@@ -599,12 +620,8 @@ class VariableAggregator:
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
     aggregator = VariableAggregator()
-
-    def callback(tree):
-        aggregator._aggregate_call_vars(tree, vars)
-        aggregator._aggregate_inside_vars(tree, inside_vars)
-
-    update_etree(content, callback)
+    aggregator.aggregate_call_vars(etree.fromstring(content), vars)
+    aggregator.aggregate_inside_vars(etree.fromstring(content), inside_vars)
 
     for template, variables in aggregator.tCallVars.items():
         if template not in vars:
