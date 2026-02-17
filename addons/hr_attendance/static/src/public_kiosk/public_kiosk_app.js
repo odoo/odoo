@@ -186,7 +186,8 @@ class kioskAttendanceApp extends Component{
 
         let result;
         try {
-            result = await rpc("attendance_barcode_scanned", {
+            result = await this.makeRpcWithGeolocation('attendance_barcode_scanned',
+            {
                 barcode: barcode,
                 token: this.props.token,
             });
