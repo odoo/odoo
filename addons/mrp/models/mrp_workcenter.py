@@ -631,8 +631,8 @@ class MrpWorkcenterCapacity(models.Model):
     uom_id = fields.Many2one('uom.uom', string='Unit',
         compute="_compute_uom_id", precompute=True, store=True, readonly=False, required=True)
     capacity = fields.Float('Capacity', help="Number of pieces that can be produced in parallel for this product or for all, depending on the unit.")
-    time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
-    time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")
+    time_start = fields.Float('Setup Time', default=_default_time_start, help="Time in minutes for the setup.")
+    time_stop = fields.Float('Cleanup Time', default=_default_time_stop, help="Time in minutes for the cleaning.")
 
     _positive_capacity = models.Constraint(
         'CHECK(capacity >= 0)',
