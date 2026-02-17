@@ -10,6 +10,18 @@ const { DateTime } = luxon;
 
 export class PosOrder extends PosOrderAccounting {
     static pythonModel = "pos.order";
+    static excludedLazyGetters = [
+        "user",
+        "company",
+        "currency",
+        "pickingType",
+        "session",
+        "finalized",
+        "isUnsyncedPaid",
+        "originalSplittedOrder",
+        "isRefund",
+        "floatingOrderName",
+    ];
 
     setup(vals) {
         super.setup(vals);
