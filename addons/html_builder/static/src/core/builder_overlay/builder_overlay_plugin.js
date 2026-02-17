@@ -195,6 +195,9 @@ export class BuilderOverlayPlugin extends Plugin {
             return;
         }
         this.removeHoverOverlay();
+        if (this.overlays.find((overlay) => overlay.overlayTarget === el && overlay.isActive())) {
+            return;
+        }
         const overlay = new BuilderOverlay(el, {
             iframe: this.iframe,
             overlayContainer: this.overlayContainer,
