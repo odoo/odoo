@@ -2,7 +2,7 @@ import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/c
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
-import { handleRPCError } from "./error_handlers";
+import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { ask } from "./make_awaitable_dialog";
 
 /**
