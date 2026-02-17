@@ -919,3 +919,39 @@ test("showDebugInput = false", async () => {
     await openModelFieldSelectorPopover();
     expect(".o_model_field_selector_debug").toHaveCount(0);
 });
+
+test("models with a m2o of the same name should show the correct page data", async () => {
+    class Cat extends models.Model {
+        cat_name = fields.Char();
+        link = fields.Many2one({ relation: "dog" });
+    }
+
+    class Dog extends models.Model {
+        dog_name = fields.Char();
+        link = fields.Many2one({ relation: "fish" });
+    }
+
+    class Fish extends models.Model {
+        fish_name = fields.Char();
+    }
+    defineModels([Cat, Dog, Fish]);
+
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            readonly: false,
+            path: "link",
+            resModel: "cat",
+        },
+    });
+
+    await openModelFieldSelectorPopover();
+    await contains(".o_model_field_selector_popover_relation_icon").click();
+    expect(getDisplayedFieldNames()).toEqual([
+        "Created on",
+        "Display name",
+        "Dog name",
+        "Id",
+        "Last Modified on",
+        "Link",
+    ]);
+});
