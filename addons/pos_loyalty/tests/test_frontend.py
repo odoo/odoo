@@ -3644,3 +3644,22 @@ class TestUi(TestPointOfSaleHttpCommon):
             })
 
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_race_conditions_update_program', login="pos_user")
+
+    def test_multiple_physical_gift_card_sale(self):
+        """
+        Test that the manual gift card sold has been correctly generated.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Run the tour
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_multiple_physical_gift_card_sale",
+            login="pos_user",
+        )
+        self.assertEqual(len(gift_card_program.coupon_ids), 2)
