@@ -426,7 +426,9 @@ export class LinkPopover extends Component {
             const internalMetadata = await this.props
                 .getInternalMetaData(url.href)
                 .catch((error) => {
-                    console.warn(`Error fetching internal metadata for ${url.href}:`, error);
+                    if (!session.test_mode) {
+                        console.warn(`Error fetching internal metadata for ${url.href}:`, error);
+                    }
                     return {};
                 });
             if (internalMetadata.favicon) {
