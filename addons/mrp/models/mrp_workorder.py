@@ -480,7 +480,7 @@ class MrpWorkorder(models.Model):
             return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
-            compute_leaves=compute_leaves, domain=[('count_as', 'in', ['absence', 'working_time'])]
+            compute_leaves=True, domain=[('count_as', 'in', ['absence', 'working_time'])]
         )
 
     @api.onchange('date_finished')
