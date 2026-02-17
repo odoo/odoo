@@ -109,7 +109,14 @@ class MailRenderMixin(models.AbstractModel):
         if self._unrestricted_rendering:
             # If the rendering is unrestricted (e.g. mail.template),
             # check the user is part of the mail editor group to create a new template if the template is dynamic
-            record._check_access_right_dynamic_template()
+            langs = tools.OrderedSet([self.env.lang])
+            for vals in vals_list:
+                for fname, value in vals.items():
+                    field = self._fields[fname]
+                    if field.translate and isinstance(value, dict):
+                        langs.update(value)
+            for lang in langs:
+                record.with_context(lang=lang)._check_access_right_dynamic_template()
         return record
 
     def write(self, vals):
@@ -117,7 +124,13 @@ class MailRenderMixin(models.AbstractModel):
         if self._unrestricted_rendering:
             # If the rendering is unrestricted (e.g. mail.template),
             # check the user is part of the mail editor group to modify a template if the template is dynamic
-            self._check_access_right_dynamic_template()
+            langs = tools.OrderedSet([self.env.lang])
+            for fname, value in vals.items():
+                field = self._fields[fname]
+                if field.translate and isinstance(value, dict):
+                    langs.update(value)
+            for lang in langs:
+                self.with_context(lang=lang)._check_access_right_dynamic_template()
         return True
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
