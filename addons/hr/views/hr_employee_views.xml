@@ -506,7 +506,7 @@
                                         </div>
                                     </group>
                                     <group name="managers" string="Approvers">
-                                        <field name="hr_responsible_id" widget="many2one_avatar_user"/>
+                                        <field name="hr_responsible_id" widget="many2one_avatar_user" domain="[('share', '=', False), ('company_ids', 'in', company_id)]"/>
                                     </group>
                                     <group name="application_group" string="Application Settings" invisible="1">
                                         <label for="hourly_cost"/>

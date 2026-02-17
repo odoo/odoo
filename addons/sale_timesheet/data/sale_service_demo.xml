@@ -38,6 +38,7 @@
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jjo-image.jpg"/>
             <field name="create_date">2020-02-02 00:00:00</field>
             <field name="sex">female</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="work_contact_awa" model="res.partner">
@@ -57,6 +58,7 @@
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_awa-image.jpg"/>
             <field name="create_date">2020-01-01 00:00:00</field>
             <field name="sex">female</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="work_contact_jsm" model="res.partner">
@@ -76,6 +78,7 @@
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jsm-image.jpg"/>
             <field name="create_date">2020-02-02 00:00:00</field>
             <field name="sex">male</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="sale_line_services" model="sale.order.line">

@@ -269,6 +269,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="contract_date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
             <field name="contract_date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
             <field name="wage" eval="6000"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="structure_type_id" ref="hr.structure_type_worker"/>
             <field name="hourly_cost">40</field>
         </record>
@@ -384,6 +385,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="contract_date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
             <field name="contract_date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
             <field name="wage" eval="6500"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="structure_type_id" ref="hr.structure_type_worker"/>
             <field name="hourly_cost">10</field>
         </record>
@@ -449,6 +451,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="image_1920" type="base64" file="hr/static/img/employee_lur-image.jpg"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="hourly_cost">35</field>
         </record>
 
@@ -472,6 +475,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="hourly_cost">55</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="work_contact_fme" model="res.partner">
@@ -526,6 +530,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="sex">female</field>
             <field name="distance_home_work">13</field>
             <field name="hourly_cost">25</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="work_contact_jgo" model="res.partner">
@@ -548,6 +553,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
             <field name="hourly_cost">45</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="work_contact_jth" model="res.partner">
@@ -776,6 +782,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="sex">female</field>
             <field name="distance_home_work">50</field>
             <field name="hourly_cost">40</field>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
         </record>
 
         <record id="work_contact_barty_mcbly" model="res.partner">
