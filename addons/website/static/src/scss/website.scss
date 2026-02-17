@@ -524,9 +524,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
             font-size: inherit;
 
             &:not(.collapsed) {
-                @if $-navbar-mobile-bg-color != null {
-                    background-color: shade-color($-navbar-mobile-bg-color, 5%);
-                }
+                background-color: transparent;
             }
 
             // Replace the default chevron with our Odoo UI icon so it adapts to
@@ -2144,10 +2142,13 @@ header {
         }
     }
 }
+
 :where(header#top) .navbar-nav:where([role="menu"]) {
-    .nav-link:not(.o_nav-link_secondary) {
-        // Desktop Only
-        @include media-breakpoint-up(lg) {
+    .nav-link:not(.o_mega_menu .nav-link) {
+        &:not(.o_nav-link_secondary) {
+            --#{$prefix}accordion-btn-padding-y: var(--#{$prefix}nav-link-padding-y);
+            --#{$prefix}accordion-btn-padding-x: var(--#{$prefix}nav-link-padding-x);
+
             @if o-website-value('header-links-style') == 'outline' {
                 // Need to force the padding in this case so that it stays in mobile
                 padding-right: $navbar-nav-link-padding-x;
@@ -2175,24 +2176,21 @@ header {
                 }
             }
         }
-    }
 
-    .nav-link.active, .show > .nav-link {
-        // Desktop Only
-        @include media-breakpoint-up(lg) {
+        &.active, .show > & {
             @if index(('outline', 'border-bottom'), o-website-value('header-links-style')) {
                 @include active-link-border-color;
             }
-        }
-        // Available in Mobile
-        @if o-website-value('header-links-style') == 'underline' {
-            @include active-link-border-color;
-            span {
-                border-bottom: 0.125em solid;
+
+            @if o-website-value('header-links-style') == 'underline' {
+                @include active-link-border-color;
+                span {
+                    border-bottom: 0.125em solid;
+                }
             }
-        }
-        @if o-website-value('header-links-style') == 'bold' {
-            font-weight: bold !important;
+            @if o-website-value('header-links-style') == 'bold' {
+                font-weight: bold !important;
+            }
         }
     }
 }
