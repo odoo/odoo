@@ -19,6 +19,7 @@ EXCLUDED_FILES = (
     'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
 )
 
+
 class JSTooling:
     @staticmethod
     def is_commented(content: str, position: int) -> bool:
@@ -277,17 +278,18 @@ def upgrade_this(file_manager, log_info, log_error):
 
     # Step 1: Gather all variables in the web module
     outside_vars = {
-        "mail.Composer.quickActions": {'partitionedActions'},
-        "mail.Composer.extraActions": {'partitionedActions'},
-        "web.Breadcrumb.Name": {'breadcrumb'},
-        "web.SearchPanel.Category": {'section'},
+        "mail.Composer.quickActions": {'partitionedActions'},  # Var above t-call
+        "mail.Composer.extraActions": {'partitionedActions'},  # Var above t-call
+        "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
+        "web.SearchPanel.Category": {'section'},  # dynamic t-call
         "web.ListRenderer.RecordRow": {'record'},
-        "web.PivotMeasure": {'cell'},
+        "web.PivotMeasure": {'cell'},  # for each + t-call
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
-        "pos_restaurant.floor_screen_element": {'elemment'},
-        "crm.ColumnProgress" : {'bar'}
+        "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
+        "crm.ColumnProgress": {'bar'},  # Nested inherit
+        "web.TreeEditor.condition:editable": {'node'}  # Nested inherit
     }  # vars defined under t-call
-    inside_vars = {} # vars defined inside template, eg. using t-set
+    inside_vars = {}  # vars defined inside template, eg. using t-set
 
     for fileno, file in enumerate(web_files, start=1):
         aggregate_vars(file.content, outside_vars, inside_vars)
@@ -332,6 +334,7 @@ def upgrade_this_in_tests(file_manager, log_info, log_error):
 
     pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
     for fileno, file in enumerate(test_files, start=1):
+        # add warning for clients who have ${} inside fragments
         try:
             with open(file.path, "r", encoding="utf-8") as f:
                 content = f.read()
