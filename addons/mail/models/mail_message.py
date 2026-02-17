@@ -392,8 +392,8 @@ class MailMessage(models.Model):
         domain = Domain(domain).optimize(self)
         if self.env.su or bypass_access or domain.is_false():
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
-        if self.env.context.get('_read_groupby'):
-            raise ValueError("Cannot group by mail.message")
+        if self.env.context.get('_generating_sql_for_fields'):
+            raise ValueError("Cannot generate SQL for whole mail.message")
 
         # Non-employee see only messages with a subtype and not internal
         domain = self._get_search_domain_share() & domain
