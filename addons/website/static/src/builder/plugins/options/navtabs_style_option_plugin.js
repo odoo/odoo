@@ -134,6 +134,14 @@ class NavTabsStyleOptionPlugin extends Plugin {
     }
 }
 
+export class NavTabsTranslationPlugin extends Plugin {
+    static id = "navTabsTranslation";
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        force_background_translation_state_selectors: ".s_tabs_nav a",
+    };
+}
+
 const getTabsEl = (editingElement) => editingElement.querySelector(".s_tabs_nav");
 
 export class BaseNavtabsStyleOption extends BuilderAction {
