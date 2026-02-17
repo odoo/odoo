@@ -565,9 +565,7 @@ patch(PosStore.prototype, {
 
         this.partnerId2CouponIds = {};
 
-        this.computeDiscountProductIdsForAllRewards({
-            ids: this.data.models["product.product"].getAllIds(),
-        });
+        this.computeDiscountProductIdsForAllRewards();
 
         this.models["product.product"].addEventListener(
             "create",
@@ -586,7 +584,8 @@ patch(PosStore.prototype, {
     },
 
     computeDiscountProductIdsForAllRewards(data) {
-        const products = this.models["product.product"].readMany(data.ids);
+        const productModel = this.models["product.product"].toRaw(); // Limit the number of reactivity proxy instances
+        const products = data ? productModel.readMany(data.ids) : productModel.getAll();
         for (const reward of this.models["loyalty.reward"].getAll()) {
             this.computeDiscountProductIds(reward, products);
         }

@@ -10,6 +10,14 @@ const CONSOLE_COLOR = "#F5B427";
 
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
+    static excludedLazyGetters = [
+        "hasCashRounding",
+        "hasGlobalRounding",
+        "displayBigTrackingNumber",
+        "displayTrackingNumber",
+        "receiptLogoUrl",
+        "receiptCompanyLogoUrl",
+    ];
 
     initState() {
         super.initState();
