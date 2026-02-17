@@ -284,11 +284,14 @@ def upgrade_this(file_manager, log_info, log_error):
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
         "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
+        "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
         "web.ListRenderer.RecordRow": {'record', 'group', 'groupId'},  # dynamic t-call I guess,
         "web.ListRenderer.GroupRow": {'group'},  # dynamic t-call I guess
         "web.PivotMeasure": {'cell'},  # for each + t-call
+        "web.SearchPanelContent": {'section'},  # dynamic t-call
+        "web.SearchPanel.Small": {'section'},  # dynamic t-call
         "web.SearchPanel.Category": {'section'},  # dynamic t-call
-        "web.SearchPanel.FiltersGroup": {'values'},  # dynamic t-call
+        "web.SearchPanel.FiltersGroup": {'values', 'section', 'group'},  # dynamic t-call
         "web.SelectMenu.ChoiceItem": {'choice', 'choice_index'},  # dynamic t-call
         "web.TreeEditor.condition:editable": {'node'},  # Nested inherit
         "web.TreeEditor.condition:readonly": {'node'},  # Nested inherit
@@ -298,7 +301,6 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
     }  # vars defined under t-call
     inside_vars = {}  # vars defined inside template, eg. using t-set
-
     for fileno, file in enumerate(web_files, start=1):
         aggregate_vars(file.content, outside_vars, inside_vars)
 
