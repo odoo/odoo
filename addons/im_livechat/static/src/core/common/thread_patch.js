@@ -10,14 +10,14 @@ patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
         this.IM_STATUS_DELAY = 1500;
-        Object.assign(this.state, { isVisitorOffline: false }); // starting online avoids flickering
+        this.state.isVisitorOffline = false; // starting online avoids flickering
         useEffect(
-            () => {
-                if (!this.props.thread.livechatVisitorMember?.im_status) {
+            (im_status) => {
+                if (!im_status) {
                     return;
                 }
                 clearTimeout(this.imStatusTimeoutId);
-                if (this.props.thread.livechatVisitorMember.im_status === "offline") {
+                if (im_status.includes("offline")) {
                     this.imStatusTimeoutId = setTimeout(
                         () => (this.state.isVisitorOffline = true),
                         this.IM_STATUS_DELAY
@@ -27,19 +27,19 @@ patch(Thread.prototype, {
                 }
                 return () => clearTimeout(this.imStatusTimeoutId);
             },
-            () => [this.props.thread.livechatVisitorMember?.im_status]
+            () => [this.props.thread.channel?.livechatVisitorMember?.im_status]
         );
     },
     get showVisitorDisconnected() {
         return (
-            this.store.self.notEq(this.props.thread.livechatVisitorMember?.persona) &&
-            !this.props.thread.livechat_end_dt &&
-            this.props.thread.livechatVisitorMember &&
+            this.store.self.notEq(this.channel?.livechatVisitorMember?.persona) &&
+            !this.channel?.livechat_end_dt &&
+            this.channel?.livechatVisitorMember &&
             this.state.isVisitorOffline
         );
     },
     get disconnectedText() {
-        const offlineSince = this.props.thread.livechatVisitorMember.persona.offline_since;
+        const offlineSince = this.props.thread.channel?.livechatVisitorMember.persona.offline_since;
         if (!offlineSince) {
             return _t("Visitor is disconnected");
         }

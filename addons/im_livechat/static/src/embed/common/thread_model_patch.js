@@ -1,4 +1,3 @@
-import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
@@ -9,32 +8,6 @@ import { Deferred } from "@web/core/utils/concurrency";
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.chatbotTypingMessage = fields.One("mail.message", {
-            compute() {
-                if (this.channel?.chatbot) {
-                    return {
-                        id: -0.1 - this.id,
-                        thread: this,
-                        author_id: this.channel.chatbot,
-                    };
-                }
-            },
-        });
-        this.livechatWelcomeMessage = fields.One("mail.message", {
-            compute() {
-                if (this.hasWelcomeMessage) {
-                    const livechatService = this.store.env.services["im_livechat.livechat"];
-                    return {
-                        id: -0.2 - this.id,
-                        body: livechatService.options.default_message,
-                        thread: this,
-                        author_id: this.channel?.livechat_agent_history_ids.sort(
-                            (a, b) => a.id - b.id
-                        )[0]?.partner_id,
-                    };
-                }
-            },
-        });
         /**
          * Deferred that resolves once a newly persisted thread is ready to swap
          * with its temporary counterpart (i.e. when the actions following the
@@ -43,34 +16,7 @@ patch(Thread.prototype, {
          * @type {Deferred}
          */
         this.readyToSwapDeferred = new Deferred();
-        this._toggleChatbot = fields.Attr(false, {
-            compute() {
-                return this.channel?.chatbot && !this.channel.livechat_end_dt;
-            },
-            onUpdate() {
-                this.isLoadedDeferred.then(() => {
-                    if (this._toggleChatbot) {
-                        this.channel.chatbot.start();
-                    } else {
-                        this.channel?.chatbot?.stop();
-                    }
-                });
-            },
-            eager: true,
-        });
-        this.requested_by_operator = false;
         this._prevComposerDisabled = false;
-    },
-    /** @returns {boolean} */
-    get isLastMessageFromCustomer() {
-        return this.newestPersistentOfAllMessage?.isSelfAuthored;
-    },
-    get hasWelcomeMessage() {
-        return (
-            this.channel?.channel_type === "livechat" &&
-            !this.channel.chatbot &&
-            !this.requested_by_operator
-        );
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {

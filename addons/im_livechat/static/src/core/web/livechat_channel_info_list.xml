@@ -9,13 +9,13 @@
                 </span>
                 <i class="oi oi-chevron-right opacity-50 small"/>
             </a>
-            <div t-if="!props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
+            <div t-if="!props.thread.channel?.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Status</h6>
                 <t t-call="im_livechat.LivechatStatusSelection">
                     <t t-set="templateParams" t-value="{ livechatThread: props.thread }"/>
                 </t>
             </div>
-            <div t-if="props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
+            <div t-if="props.thread.channel?.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Outcome</h6>
                 <div class="d-flex text-truncate">
                     <t t-if="props.thread.livechat_outcome === 'no_answer'">Never Answered</t>
@@ -26,7 +26,7 @@
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Notes</h6>
-                <textarea class="form-control" t-att-disabled="!store.has_access_livechat"  rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
+                <textarea class="form-control" t-att-disabled="!store.has_access_livechat" rows="3" placeholder="Add your notes here..." t-model="props.thread.channel.livechatNoteText" t-on-blur="onBlurNote"></textarea>
             </div>
             <div t-if="expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Chatbot answers</h6>
@@ -42,10 +42,10 @@
                 <ExpertiseTagsAutocomplete channel="props.thread.channel" disabled="!store.has_access_livechat"/>
             </div>
             <t t-name="extra_infos"/>
-            <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="props.thread.channel?.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Send conversation</h6>
                 <TranscriptSender thread="props.thread"/>
-                <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.transcriptUrl"><i class="pe-2 fa fa-download"/>Download</a>
+                <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.channel.transcriptUrl"><i class="pe-2 fa fa-download"/>Download</a>
             </div>
         </ActionPanel>
     </t>

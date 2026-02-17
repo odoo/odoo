@@ -46,6 +46,13 @@ const discussChannelPatch = {
         );
     },
 
+    get inChathubOnNewMessage() {
+        if (this.channel_type === "livechat") {
+            return Boolean(this.channel.self_member_id);
+        }
+        return super.inChathubOnNewMessage;
+    },
+
     get livechatStatusLabel() {
         if (this.livechat_end_dt) {
             return _t("Conversation has ended");

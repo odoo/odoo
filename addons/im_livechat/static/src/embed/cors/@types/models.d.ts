@@ -1,5 +1,5 @@
 declare module "models" {
-    export interface Thread {
+    export interface DiscussChannel {
         transcriptUrl: Readonly<string>;
     }
 }
