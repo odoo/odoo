@@ -643,8 +643,15 @@ class Field[T]:
             self.inverse = self._inverse_related
         if (
             not self.store
-            and (self.compute_sudo or self.inherited)
-            and all(f.column_type and (f.store or f.compute_sql) for f in field_seq)
+            and all(
+                # representable in SQL
+                f.column_type
+                # and we know how to represent it
+                and (f.store or f.compute_sql)
+                # but we don't traverse a model with heavy permission checks (such as ir.attachment)
+                and (f is field_seq[-1] or not getattr(model.pool[f.model_name], '_access_domain_heavy', False))
+                for f in field_seq
+            )
         ):
             self.compute_sql = self._compute_sql_related
         if not self.store and all(f._description_searchable for f in field_seq):

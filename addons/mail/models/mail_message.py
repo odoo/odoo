@@ -128,6 +128,7 @@ class MailMessage(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'subject'
+    _access_domain_heavy = True
 
     @api.model
     def default_get(self, fields):

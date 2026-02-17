@@ -34,6 +34,7 @@ class MailActivity(models.Model):
     _description = 'Activity'
     _order = 'date_deadline ASC, id ASC'
     _rec_name = 'summary'
+    _access_domain_heavy = True
 
     @api.model
     def default_get(self, fields):
