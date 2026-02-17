@@ -1,0 +1,32 @@
+<templates>
+
+    <t t-name="web.ClocReport">
+        <Dialog title.translate="Count lines of code" footer="true">
+            <div><span>Total billable lines: <span class="fw-bold" t-out="data.total_billable" /></span></div>
+            <table class="table align-baseline">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Model</th>
+                        <th scope="col"># Lines</th>
+                        <th scope="col">Fees</th>
+                        <th scope="col"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="this.records" t-as="record" t-key="record_index">
+                        <td t-out="record.display_name" />
+                        <td t-out="record.model ?? ''" />
+                        <td t-out="record.code_lines" />
+                        <td><i class="fa fa-check" t-if="record.billable" /></td>
+                        <td><button t-if="record.model" class="btn btn-link" t-custom-click="(ev, isMiddleClick) => this.viewRecord(record, isMiddleClick)">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

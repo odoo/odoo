@@ -26,6 +26,9 @@ MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 MAX_LINE_SIZE = 100000
 VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
 
+BOOKED_RE = re.compile(r"(?P<model>(?:\w+\.?)*?)/(?P<res_id>\d+):(?P<rec_name>.*)")
+
+
 class Cloc(object):
     def __init__(self):
         self.modules = {}
@@ -337,3 +340,25 @@ class Cloc(object):
                 for i in sorted(self.errors[m]):
                     e += fmt.format(k='    ' + i, lines=self.errors[m][i], other='', code='')
             print(e)
+
+    def report_as_dict(self):
+        records = []
+        for billable, modules in [(True, self.modules), (False, self.excluded)]:
+            for module, pseudo_records in modules.items():
+                for pseudo_record, counts in pseudo_records.items():
+                    records.append(record := {
+                        "module": module,
+                        "display_name": pseudo_record,
+                        "code_lines": counts[0],
+                        "all_lines": counts[1],
+                        "billable": billable,
+                    })
+                    if model_match := BOOKED_RE.fullmatch(pseudo_record):
+                        record['model'] = model_match['model'].strip()
+                        record['id'] = int(model_match['res_id'].strip())
+                        record['display_name'] = model_match['rec_name'].strip()
+        return {
+            "records": records,
+            "total_billable": sum(self.code.values()),
+            "total_lines": sum(self.total.values()),
+        }
