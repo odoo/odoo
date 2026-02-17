@@ -424,7 +424,7 @@ class AccountMove(models.Model):
 
         # Self-invoices are technically -100%/+100% repartitioned
         # but functionally need to be exported as 100%
-        document_total = self.amount_total
+        document_total = self.amount_total_signed if convert_to_euros else self.amount_total
         if is_self_invoice:
             document_total += sum([abs(v['tax_amount_currency']) for k, v in tax_details['tax_details'].items()])
             if reverse_charge_refund:
