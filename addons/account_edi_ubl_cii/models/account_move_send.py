@@ -16,6 +16,8 @@ _logger = logging.getLogger(__name__)
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
+    _FACTURX_FORMATS = {'facturx', 'facturx_en16931', 'facturx_basicwl', 'facturx_extended'}
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
@@ -145,20 +147,26 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
+        ubl_cii_format = invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format')
+
         # Add PDF to XML
-        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
+        if 'ubl_cii_xml_options' in invoice_data and ubl_cii_format not in self._FACTURX_FORMATS:
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)
 
         # Always silently generate a Factur-X and embed it inside the PDF for inter-portability
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx':
-            xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
+        if ubl_cii_format in self._FACTURX_FORMATS:
+            xml_attachment_values = invoice_data['ubl_cii_xml_attachment_values']
+            xml_facturx = xml_attachment_values['raw']
+            # Factur-X expects a stable embedded filename.
+            xml_facturx_filename = 'factur-x.xml'
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
+            xml_facturx_filename = 'factur-x.xml'
 
         # during tests, no wkhtmltopdf, create the attachment for test purposes
         if tools.config['test_enable']:
             self.env['ir.attachment'].sudo().create({
-                'name': 'factur-x.xml',
+                'name': xml_facturx_filename,
                 'raw': xml_facturx,
                 'res_id': invoice.id,
                 'res_model': 'account.move',
@@ -175,11 +183,10 @@ class AccountMoveSend(models.AbstractModel):
         writer = OdooPdfFileWriter()
         writer.cloneReaderDocumentRoot(reader)
 
-        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
+        writer.addAttachment(xml_facturx_filename, xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
-                and not writer.is_pdfa:
+        if ubl_cii_format in self._FACTURX_FORMATS and not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
             except Exception:
@@ -193,6 +200,9 @@ class AccountMoveSend(models.AbstractModel):
                     'date': fields.Date.context_today(self),
                 },
             )
+            builder = invoice_data.get('ubl_cii_xml_options', {}).get('builder')
+            if builder:
+                content = builder._patch_facturx_pdfa3_metadata(content, xml_facturx_filename)
             if "<pdfaid:conformance>B</pdfaid:conformance>" in content:
                 content.replace("<pdfaid:conformance>B</pdfaid:conformance>", "<pdfaid:conformance>A</pdfaid:conformance>")
             writer.add_file_metadata(content.encode())

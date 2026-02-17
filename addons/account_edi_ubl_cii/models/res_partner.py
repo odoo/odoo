@@ -13,12 +13,21 @@ class ResPartner(models.Model):
 
     invoice_edi_format = fields.Selection(
         selection_add=[
+            # Existing formats (kept for backward-compatibility and for other addons/tests).
             ('facturx', "France (FacturX)"),
             ('ubl_bis3', "EU Standard (Peppol Bis 3.0)"),
             ('xrechnung', "Germany (XRechnung)"),
             ('nlcius', "Netherlands (NLCIUS)"),
             ('ubl_a_nz', "Australia (BIS Billing 3.0 A-NZ)"),
             ('ubl_sg', "Singapore (BIS Billing 3.0 SG)"),
+            # France-specific additions.
+            ('facturx_en16931', "France (Factur-X EN16931)"),
+            ('facturx_basicwl', "France (Factur-X BASIC WL)"),
+            ('facturx_extended', "France (Factur-X Extended)"),
+            ('cii_fr', "France CIUS (CII EN16931)"),
+            ('cii_fr_extended', "France CIUS Extended (CII)"),
+            ('ubl_fr', "France CIUS (UBL EN16931)"),
+            ('ubl_fr_extended', "France CIUS Extended (UBL)"),
         ],
     )
     is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')
@@ -157,6 +166,14 @@ class ResPartner(models.Model):
             'nlcius': {'countries': ['NL'], 'on_peppol': True},
             'ubl_sg': {'countries': ['SG'], 'on_peppol': False},  # Same.
             'facturx': {'countries': ['FR'], 'on_peppol': False},
+            'facturx_en16931': {'countries': ['FR'], 'on_peppol': False},
+            'facturx_basicwl': {'countries': ['FR'], 'on_peppol': False},
+            'facturx_extended': {'countries': ['FR'], 'on_peppol': False},
+            # France CIUS formats
+            'cii_fr': {'countries': ['FR'], 'on_peppol': False},
+            'cii_fr_extended': {'countries': ['FR'], 'on_peppol': False},
+            'ubl_fr': {'countries': ['FR'], 'on_peppol': True},
+            'ubl_fr_extended': {'countries': ['FR'], 'on_peppol': False},
         }
 
     @api.model
@@ -289,6 +306,12 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.ubl_de']
         if invoice_edi_format == 'facturx':
             return self.env['account.edi.xml.cii']
+        if invoice_edi_format == 'facturx_en16931':
+            return self.env['account.edi.xml.facturx_fr_en16931']
+        if invoice_edi_format == 'facturx_basicwl':
+            return self.env['account.edi.xml.facturx_fr_basicwl']
+        if invoice_edi_format == 'facturx_extended':
+            return self.env['account.edi.xml.facturx_fr_extended']
         if invoice_edi_format == 'ubl_a_nz':
             return self.env['account.edi.xml.ubl_a_nz']
         if invoice_edi_format == 'nlcius':
@@ -297,3 +320,12 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.ubl_bis3']
         if invoice_edi_format == 'ubl_sg':
             return self.env['account.edi.xml.ubl_sg']
+        # France CIUS formats
+        if invoice_edi_format == 'cii_fr':
+            return self.env['account.edi.xml.cii_fr']
+        if invoice_edi_format == 'cii_fr_extended':
+            return self.env['account.edi.xml.cii_fr_extended']
+        if invoice_edi_format == 'ubl_fr':
+            return self.env['account.edi.xml.ubl_fr']
+        if invoice_edi_format == 'ubl_fr_extended':
+            return self.env['account.edi.xml.ubl_fr_extended']

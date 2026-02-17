@@ -74,6 +74,20 @@ class AccountMove(models.Model):
     def _get_ubl_cii_builder_from_xml_tree(self, tree):
         customization_id = tree.find('{*}CustomizationID')
         if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
+            # Route CII imports to FR builders when the payload is clearly French.
+            guideline_id = (
+                tree.findtext('.//{*}GuidelineSpecifiedDocumentContextParameter/{*}ID') or ''
+            ).strip()
+            is_french_cii = self.env['account.edi.xml.cii_fr']._is_french_invoice(tree)
+            if guideline_id == 'urn:factur-x.eu:1p0:basicwl' and is_french_cii:
+                return self.env['account.edi.xml.facturx_fr_basicwl']
+            if guideline_id == 'urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended' and is_french_cii:
+                return self.env['account.edi.xml.facturx_fr_extended']
+            if guideline_id == 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr':
+                return self.env['account.edi.xml.cii_fr_extended']
+            if is_french_cii:
+                # EN16931 CII/Factur-X (non-extended) share the same import logic.
+                return self.env['account.edi.xml.cii_fr']
             return self.env['account.edi.xml.cii']
         ubl_version = tree.find('{*}UBLVersionID')
         if ubl_version is not None:
@@ -90,7 +104,11 @@ class AccountMove(models.Model):
                 return self.env['account.edi.xml.ubl_a_nz']
             if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
                 return self.env['account.edi.xml.ubl_sg']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr':
+                return self.env['account.edi.xml.ubl_fr_extended']
             if 'urn:cen.eu:en16931:2017' in customization_id.text:
+                if self.env['account.edi.xml.ubl_fr']._is_french_invoice(tree):
+                    return self.env['account.edi.xml.ubl_fr']
                 return self.env['account.edi.xml.ubl_bis3']
 
     @api.model

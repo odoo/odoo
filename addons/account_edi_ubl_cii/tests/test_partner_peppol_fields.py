@@ -109,3 +109,15 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             self.assertEqual(partner_au._get_suggested_ubl_cii_edi_format(), 'cii')  # AU matches 2 formats but 'cii' has a lower sequence
             self.assertEqual(partner_nz._get_suggested_ubl_cii_edi_format(), 'peppol')
             self.assertFalse(partner_be._get_suggested_ubl_cii_edi_format())
+
+    def test_peppol_formats_have_customization_id(self):
+        """Peppol-supported formats must be resolvable through UBL 2.1 customization IDs."""
+        partner_model = self.env['res.partner']
+        peppol_formats = set(partner_model._get_peppol_formats())
+        customization_ids = set(self.env['account.edi.xml.ubl_21']._get_customization_ids())
+
+        missing_customization_ids = peppol_formats - customization_ids
+        self.assertFalse(
+            missing_customization_ids,
+            f"Missing customization IDs for Peppol formats: {sorted(missing_customization_ids)}",
+        )

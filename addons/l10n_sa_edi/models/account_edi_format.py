@@ -513,8 +513,10 @@ class AccountEdiFormat(models.Model):
                 {
                     'title': edi_document.move_id.name,
                     'date': fields.Date.context_today(self),
+                    'conformance_level': 'EN 16931',
+                    'xml_filename': file_name,
                 },
             )
             if "<pdfaid:conformance>B</pdfaid:conformance>" in content:
-                content.replace("<pdfaid:conformance>B</pdfaid:conformance>", "<pdfaid:conformance>A</pdfaid:conformance>")
+                content = content.replace("<pdfaid:conformance>B</pdfaid:conformance>", "<pdfaid:conformance>A</pdfaid:conformance>")
             pdf_writer.add_file_metadata(content.encode())
