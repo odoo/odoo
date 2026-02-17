@@ -289,8 +289,10 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.PivotMeasure": {'cell'},  # for each + t-call
         "web.SearchPanel.Category": {'section'},  # dynamic t-call
         "web.SearchPanel.FiltersGroup": {'values'},  # dynamic t-call
+        "web.SelectMenu.ChoiceItem": {'choice', 'choice_index'},  # dynamic t-call
         "web.TreeEditor.condition:editable": {'node'},  # Nested inherit
-        "web.TreeEditor.controls": {'node'},  # Nested inherit
+        "web.TreeEditor.condition:readonly": {'node'},  # Nested inherit
+        "web.TreeEditor.controls": {'node', 'ancestors'},  # Nested inherit
         "web.TreeEditor.connector.value": {'node'},  # Nested inherit
         "web.TreeEditor.condition": {'node'},  # Nested inherit
         "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
