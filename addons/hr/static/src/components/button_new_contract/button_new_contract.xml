@@ -2,8 +2,8 @@
 <template>
     <t t-name="hr.ButtonNewContract">
         <span class="w-100 d-flex justify-content-end">
-            <button class="btn btn-link p-0 o_field_widget text-end w-auto" t-on-click="onClickNewContractBtn"
-                    t-ref="datetime-picker-target-new-contract" t-if="props.record.resId and props.record.data.contract_date_start">New Contract</button>
+            <button class="btn btn-link p-0 o_field_widget text-end w-auto" t-on-click="this.onClickNewContractBtn"
+                    t-ref="datetime-picker-target-new-contract" t-if="this.props.record.resId and this.props.record.data.contract_date_start">New Contract</button>
         </span>
     </t>
 </template>

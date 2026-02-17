@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.RainbowMan">
-        <div class="o_reward position-fixed top-0 start-0 w-100 h-100" t-att-class="{ o_reward_fading: state.isFading }" t-on-animationend="onAnimationEnd">
+        <div class="o_reward position-fixed top-0 start-0 w-100 h-100" t-att-class="{ o_reward_fading: this.state.isFading }" t-on-animationend="this.onAnimationEnd">
             <svg class="o_reward_rainbow_man position-absolute top-0 bottom-0 start-0 end-0 m-auto overflow-visible" viewBox="0 0 400 400">
                 <defs>
                     <radialGradient id="o_reward_gradient_bg" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
@@ -42,7 +42,7 @@
                         <ellipse class="o_reward_shadow o_reward_box" cx="200" cy="105%" rx="100" ry="6" fill="#000" opacity="0.25" transform-origin="center"/>
                     </g>
                     <g class="o_reward_face_wrap o_reward_box" transform-origin="center">
-                        <image class="o_reward_face" x="132" y="125" width="136" height="136" t-attf-href="{{props.imgUrl}}"/>
+                        <image class="o_reward_face" x="132" y="125" width="136" height="136" t-attf-href="{{this.props.imgUrl}}"/>
                     </g>
                     <g transform="translate(258 174)">
                         <use href="#o_reward_thumb" class="o_reward_box o_reward_thumbup" transform-origin="center"/>
@@ -59,10 +59,10 @@
                     <div class="o_reward_msg mx-4">
                         <div class="o_reward_msg_card">
                             <div class="o_reward_msg_content text-muted px-3 py-4 bg-view d-inline-block border border-light border-top-0">
-                                <t t-if="!props.Component">
-                                    <t t-out="props.message"/>
+                                <t t-if="!this.props.Component">
+                                    <t t-out="this.props.message"/>
                                 </t>
-                                <t t-else="" t-component="props.Component" t-props="props.props"/>
+                                <t t-else="" t-component="this.props.Component" t-props="this.props.props"/>
                             </div>
                         </div>
                     </div>

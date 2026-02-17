@@ -3,13 +3,13 @@
 
     <t t-name="hr_recruitment_skills.One2ManyTagsSkillsField">
         <div class="d-flex align-items-baseline"
-            t-attf-class="{{ tags.length &amp;&amp; 'gap-1'}}">
+            t-attf-class="{{ this.tags.length &amp;&amp; 'gap-1'}}">
             <div class=" d-inline-flex flex-wrap gap-1 mw-100">
                 <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
                     <BadgeTag color="tag.color" text="tag.text" onClick="tag.onClick" onDelete="tag.onDelete"/>
                 </t>
             </div>
-            <button t-on-click="onAdd"
+            <button t-on-click="this.onAdd"
                 class="btn btn-link text-action"
                 style="padding: 0; line-height: 0; height: min-content;">
                 <i class="fa fa-plus text-info" />

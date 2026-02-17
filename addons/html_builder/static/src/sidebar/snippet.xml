@@ -3,22 +3,22 @@
 
 <t t-name="html_builder.Snippet">
     <div class="o_snippet"
-         t-att-class="{'o_disabled': snippet.isDisabled, 'o_to_install': snippet.isInstallable, 'o_draggable': !snippet.isInstallable and !snippet.isDisabled}"
-         t-att-data-snippet-group="snippet.groupName"
-         t-att-name="snippet.title"
-         t-att-data-id="snippet.id"
-         t-att-data-tooltip="snippet.isDisabled and props.disabledTooltip"
-         t-on-mouseover="onInstallableHover"
-         t-on-mouseout="onInstallableHover">
-        <div class="o_snippet_thumbnail" t-att-data-snippet="snippet.name">
-            <button t-if="!snippet.isInstallable and !snippet.isDisabled" class="o_snippet_thumbnail_area" t-on-click="props.onClickHandler" title="Insert snippet"/>
-            <Image t-if="snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
-            <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
-            <span class="o_snippet_thumbnail_title" t-esc="snippet.title"/>
+         t-att-class="{'o_disabled': this.snippet.isDisabled, 'o_to_install': this.snippet.isInstallable, 'o_draggable': !this.snippet.isInstallable and !this.snippet.isDisabled}"
+         t-att-data-snippet-group="this.snippet.groupName"
+         t-att-name="this.snippet.title"
+         t-att-data-id="this.snippet.id"
+         t-att-data-tooltip="this.snippet.isDisabled and this.props.disabledTooltip"
+         t-on-mouseover="this.onInstallableHover"
+         t-on-mouseout="this.onInstallableHover">
+        <div class="o_snippet_thumbnail" t-att-data-snippet="this.snippet.name">
+            <button t-if="!this.snippet.isInstallable and !this.snippet.isDisabled" class="o_snippet_thumbnail_area" t-on-click="this.props.onClickHandler" title="Insert snippet"/>
+            <Image t-if="this.snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
+            <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{this.snippet.thumbnailSrc}});"/>
+            <span class="o_snippet_thumbnail_title" t-esc="this.snippet.title"/>
             <button
-                t-if="snippet.isInstallable"
+                t-if="this.snippet.isInstallable"
                 class="o_install_btn btn btn-success btn-lg position-absolute start-50 bottom-50 translate-middle-x visually-hidden-focusable z-1"
-                t-on-click="onClickInstall"
+                t-on-click="this.onClickInstall"
                 >
                 Install
             </button>

@@ -128,7 +128,7 @@ test("use isActiveItem base on BuilderButton with 'websiteConfig'", async () => 
         selector: ".test-options-target",
         template: xml`
             <BuilderButton id="'a'" action="'websiteConfig'" actionParam="{views: ['test_template_1']}">1</BuilderButton>
-            <div t-if="isActiveItem('a')" class="test">a</div>`,
+            <div t-if="this.isActiveItem('a')" class="test">a</div>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -155,7 +155,7 @@ test("use isActiveItem base on BuilderCheckbox with 'websiteConfig'", async () =
         selector: ".test-options-target",
         template: xml`
             <BuilderCheckbox id="'a'" action="'websiteConfig'" actionParam="{views: ['test_template_1']}"/>
-            <div t-if="isActiveItem('a')" class="test">a</div>`,
+            <div t-if="this.isActiveItem('a')" class="test">a</div>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();

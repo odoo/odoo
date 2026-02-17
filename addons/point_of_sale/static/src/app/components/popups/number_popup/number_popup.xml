@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.NumberPopup">
-        <Dialog title="props.title" contentClass="'pos-number-popup'" bodyClass="'d-flex flex-column justify-content-center'" size="'sm'">
-            <div t-if="props.subtitle" class="subtitle p-1 mx-auto" t-esc="props.subtitle"/>
+        <Dialog title="this.props.title" contentClass="'pos-number-popup'" bodyClass="'d-flex flex-column justify-content-center'" size="'sm'">
+            <div t-if="this.props.subtitle" class="subtitle p-1 mx-auto" t-esc="this.props.subtitle"/>
             <div class="input-symbol mb-3">
                 <div class="popup-input value active form-control form-control-lg text-center position-relative">
-                    <span t-if="this.state.buffer || !props.placeholder" class="input-value" t-esc="props.formatDisplayedValue(this.state.buffer || '', this.state.type?.name)"/>
-                    <span t-else="" class="text-muted" t-esc="props.placeholder"/>
+                    <span t-if="this.state.buffer || !this.props.placeholder" class="input-value" t-esc="this.props.formatDisplayedValue(this.state.buffer || '', this.state.type?.name)"/>
+                    <span t-else="" class="text-muted" t-esc="this.props.placeholder"/>
                 </div>
-                <div t-if="props.types and props.types.length &gt; 1" class="number-popup-types row mx-0 mt-2 rounded">
-                    <t t-foreach="props.types" t-as="type" t-key="type.name">
+                <div t-if="this.props.types and this.props.types.length &gt; 1" class="number-popup-types row mx-0 mt-2 rounded">
+                    <t t-foreach="this.props.types" t-as="type" t-key="type.name">
                         <button t-on-click="() => this.state.type = type"
                                 class="number-popup-type col btn btn-lg lh-lg o-default-button rounded-0 py-2"
                                 t-att-class="{
@@ -21,19 +21,19 @@
                     </t>
                 </div>
             </div>
-            <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="props.feedback(this.state.buffer)" />
-            <Numpad buttons="props.buttons"/>
+            <div t-if="this.props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="this.props.feedback(this.state.buffer)" />
+            <Numpad buttons="this.props.buttons"/>
             <t t-set-slot="footer">
                 <div class="d-flex flex-grow-1 justify-content-center w-100">
-                    <button t-att-disabled="!props.isValid(state.buffer)"
+                    <button t-att-disabled="!this.props.isValid(this.state.buffer)"
                         class="btn btn-primary btn-lg lh-lg o-default-button me-2 flex-fill"
                         tabindex="1"
-                        t-on-click="confirm">
-                        <t t-esc="confirmButtonLabel"/>
+                        t-on-click="this.confirm">
+                        <t t-esc="this.confirmButtonLabel"/>
                     </button>
                     <button class="btn btn-secondary btn-lg lh-lg o-default-button flex-fill"
                         tabindex="1"
-                        t-on-click="cancel">
+                        t-on-click="this.cancel">
                         Discard
                     </button>
                 </div>

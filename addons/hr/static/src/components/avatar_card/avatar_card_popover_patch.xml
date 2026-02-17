@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="hr.avatarCardUserInfos">
-        <small class="text-muted text-truncate" t-if="employee?.job_title" t-att-title="employee.job_title" t-esc="employee.job_title"/>
-        <span class="text-muted text-truncate" t-if="employee?.department_id" data-tooltip="Department" t-att-title="employee.department_id.name" t-esc="employee.department_id.name"/>
+        <small class="text-muted text-truncate" t-if="this.employee?.job_title" t-att-title="this.employee.job_title" t-esc="this.employee.job_title"/>
+        <span class="text-muted text-truncate" t-if="this.employee?.department_id" data-tooltip="Department" t-att-title="this.employee.department_id.name" t-esc="this.employee.department_id.name"/>
     </t>
 </templates>

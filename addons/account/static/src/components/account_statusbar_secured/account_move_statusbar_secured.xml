@@ -3,9 +3,9 @@
     <!-- Add "secured" indicator to the posted state -->
 
     <t t-name="account.MoveStatusBarSecuredField.ItemLabel">
-        <span t-esc="item.label" />
-        <t t-if="item.value == 'posted'">
-            <i t-attf-class="fa fa-fw ms-1 #{isSecured ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
+        <span t-esc="this.item.label" />
+        <t t-if="this.item.value == 'posted'">
+            <i t-attf-class="fa fa-fw ms-1 #{this.isSecured ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
         </t>
     </t>
 
@@ -27,8 +27,8 @@
             <attribute name="t-esc" />
         </xpath>
 
-        <xpath expr="//*[@t-out='getCurrentLabel()']" position="replace">
-            <t t-set="item" t-value="currentItem"/>
+        <xpath expr="//*[@t-out='this.getCurrentLabel()']" position="replace">
+            <t t-set="item" t-value="this.currentItem"/>
             <t t-call="account.MoveStatusBarSecuredField.ItemLabel"/>
         </xpath>
     </t>

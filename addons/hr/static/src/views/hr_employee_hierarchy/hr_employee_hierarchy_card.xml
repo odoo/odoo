@@ -7,10 +7,10 @@
             <attribute name="class" separator=" " remove="rounded-0"/>
         </xpath>
         <xpath expr="//button[@name='hierarchy_search_subsidiaries']" position="inside">
-            <t t-out="props.node.childResIds.length"/> people
+            <t t-out="this.props.node.childResIds.length"/> people
         </xpath>
         <xpath expr="//button[@name='hierarchy_search_subsidiaries']/t[@t-if]" position="replace">
-            <t t-if="!props.node.nodes.length">
+            <t t-if="!this.props.node.nodes.length">
                 <i class="fa fa-fw fa-caret-right"/>
             </t>
         </xpath>

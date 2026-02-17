@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="stock.ForecastedWarehouseFilter">
-        <div t-if="displayWarehouseFilter" class="btn-group">
-            <Dropdown menuClass="o_filter_menu" items="warehousesItems">
+        <div t-if="this.displayWarehouseFilter" class="btn-group">
+            <Dropdown menuClass="this.o_filter_menu" items="this.warehousesItems">
                 <button class="btn btn-secondary">
-                    <span class="fa fa-home"/> Warehouse: <t t-out="activeWarehouse.name"/>
+                    <span class="fa fa-home"/> Warehouse: <t t-out="this.activeWarehouse.name"/>
                 </button>
             </Dropdown>
         </div>

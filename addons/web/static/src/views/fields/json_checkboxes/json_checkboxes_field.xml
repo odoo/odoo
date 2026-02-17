@@ -3,12 +3,12 @@
 
     <t t-name="account.JsonCheckboxes">
         <div aria-atomic="true">
-            <t t-foreach="checkboxes" t-as="checkbox" t-key="checkbox">
-                <div t-att-class="props.stacked ? 'd-block' : 'd-inline-block me-3'">
+            <t t-foreach="this.checkboxes" t-as="checkbox" t-key="checkbox">
+                <div t-att-class="this.props.stacked ? 'd-block' : 'd-inline-block me-3'">
                     <CheckBox
                         id="checkbox"
                         value="checkbox_value.checked"
-                        disabled="props.readonly || checkbox_value.readonly"
+                        disabled="this.props.readonly || checkbox_value.readonly"
                         onChange="(ev) => this.onChange(checkbox, ev)"
                     >
                         <t t-esc="checkbox_value.label" />

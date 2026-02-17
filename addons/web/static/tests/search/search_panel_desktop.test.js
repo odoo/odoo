@@ -53,7 +53,7 @@ class TestComponent extends Component {
     static components = { SearchBarMenu, SearchPanel };
     static template = xml`
         <div class="o_test_component">
-            <SearchPanel t-if="env.searchModel.display.searchPanel" />
+            <SearchPanel t-if="this.env.searchModel.display.searchPanel" />
             <SearchBarMenu />
         </div>
     `;

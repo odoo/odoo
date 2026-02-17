@@ -4,21 +4,21 @@
     <t t-name="point_of_sale.CashMoveReceipt">
         <div class="pos-receipt">
             <div class="pos-receipt-order-data text-center">
-                <div><t t-esc="props.date" /></div>
+                <div><t t-esc="this.props.date" /></div>
             </div>
             <div class="pos-receipt-center-align">
                 CASH
-                <t t-esc="props.translatedType.toUpperCase()" />
+                <t t-esc="this.props.translatedType.toUpperCase()" />
             </div>
             <div class="pt-3">
                 AMOUNT
-                <span t-esc="props.formattedAmount" class="pos-receipt-right-align" />
+                <span t-esc="this.props.formattedAmount" class="pos-receipt-right-align" />
             </div>
             <div>
                 REASON
-                <span t-esc="props.reason" class="pos-receipt-right-align" />
+                <span t-esc="this.props.reason" class="pos-receipt-right-align" />
             </div>
-            <t t-set="company" t-value="props.order.company" />
+            <t t-set="company" t-value="this.props.order.company" />
             <div class="d-flex gap-2 pt-3">
                 <!-- Left: Company Address -->
                 <div class="w-50 text-break text-start" style="font-size: 75%;">
@@ -34,7 +34,7 @@
                 <!-- Right: Contact Info -->
                 <div class="w-50 text-break text-end" style="font-size: 75%;">
                     <div>
-                        <div t-if="company.vat" t-out="vatText"/>
+                        <div t-if="company.vat" t-out="this.vatText"/>
                         <div t-if="company.phone">
                             Tel: <t t-out="company.phone"/>
                         </div>

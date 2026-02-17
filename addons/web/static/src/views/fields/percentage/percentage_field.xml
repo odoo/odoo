@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PercentageField">
-        <t t-if="props.readonly">
-            <span t-esc="formattedValue"/>
+        <t t-if="this.props.readonly">
+            <span t-esc="this.formattedValue"/>
         </t>
         <t t-else="">
             <div class="d-flex">

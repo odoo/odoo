@@ -145,9 +145,9 @@
         ]"/>
 
         <t t-foreach="catalogStyles" t-as="style" t-key="style_index">
-            <t t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; props.showLists">
+            <t t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; this.props.showLists">
                 <div
-                    t-if="presetAvailable &amp;&amp; style.img &amp;&amp; showImages"
+                    t-if="this.presetAvailable &amp;&amp; style.img &amp;&amp; showImages"
                     class="d-flex align-items-center lh-base pt-1 ps-2"
                     style="color: white; font-size: 0.8em"
                 >
@@ -158,7 +158,7 @@
                     <span t-out="style.label"/>
                 </div>
                 <BuilderSelectItem
-                        t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; props.showLists"
+                        t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; this.props.showLists"
                         id="style.id"
                         action="'composite'"
                         actionParam="[
@@ -170,7 +170,7 @@
                                 }
                             },
                             {
-                                action: (props.recordName === 'wishlist_opt_products_design_classes' ? 'wishlistSetGap' : 'setGap'),
+                                action: (this.props.recordName === 'wishlist_opt_products_design_classes' ? 'wishlistSetGap' : 'setGap'),
                                 actionValue: style.gap + 'px'
                             }
                         ]">
@@ -196,14 +196,14 @@
 </t>
 
 <t t-name="website_sale.ProductsDesignPanel">
-    <BuilderRow label="props.label">
+    <BuilderRow label="this.props.label">
         <t t-call="website_sale.ProductsDesignPanelPresets">
             <t t-set="showImages" t-value="false"/>
         </t>
         <BuilderSlidingPanel
             label.translate="Design"
             extraClasses="'btn-primary fa fa-paint-brush'"
-            openByDefault="props.openByDefault"
+            openByDefault="this.props.openByDefault"
         >
             <t t-set-slot="content">
                 <!-- Presets with images -->
@@ -252,7 +252,7 @@
 
                 <BuilderRow
                     label.translate="Hover Effect"
-                    t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (catalogPanel and this.isActiveItem('o_has_description_opt'))"
+                    t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (this.catalogPanel and this.isActiveItem('o_has_description_opt'))"
                     >
                     <BuilderSelect>
                         <BuilderSelectItem
@@ -285,7 +285,7 @@
                             Border-Primary
                         </BuilderSelectItem>
                         <BuilderSelectItem
-                            t-if="catalogPanel"
+                            t-if="this.catalogPanel"
                             classAction="'o_wsale_products_opt_hover_show_description'">
                             Show description
                         </BuilderSelectItem>
@@ -294,7 +294,7 @@
 
                 <BuilderRow label.translate="Gap">
                     <BuilderRange
-                        t-if="props.recordName === 'wishlist_opt_products_design_classes'"
+                        t-if="this.props.recordName === 'wishlist_opt_products_design_classes'"
                         action="'wishlistSetGap'"
                         min="0"
                         max="28"
@@ -334,13 +334,13 @@
                         <BuilderSelectItem
                             classAction="'.o_wsale_products_opt_cc o_wsale_products_opt_cc1'"
                         >
-                            Theme Preset n&#176;1 (default)
+                            Theme Preset n°1 (default)
                         </BuilderSelectItem>
                         <t t-foreach="[2, 3, 4, 5]" t-as="colorIndex" t-key="colorIndex_index">
                             <BuilderSelectItem
                                 classAction="'o_wsale_products_opt_cc o_wsale_products_opt_cc' + colorIndex"
                             >
-                                Theme Preset n&#176;<t t-out="colorIndex"/>
+                                Theme Preset n°<t t-out="colorIndex"/>
                             </BuilderSelectItem>
                         </t>
                     </BuilderSelect>
@@ -558,7 +558,7 @@
                 </BuilderRow>
 
                 <BuilderRow
-                    t-if="props.showSecondaryImage &amp;&amp; !this.isActiveItem('wsale_design_showcase_list')"
+                    t-if="this.props.showSecondaryImage &amp;&amp; !this.isActiveItem('wsale_design_showcase_list')"
                     label.translate="Secondary Image"
                     tooltip.translate="Needs at least two images to be defined in the Product Page"
                 >
@@ -584,7 +584,7 @@
                         id="'wsale_products_opt_add_to_cart'"
                     />
                     <BuilderButton
-                        t-if="props.recordName === 'shop_opt_products_design_classes'"
+                        t-if="this.props.recordName === 'shop_opt_products_design_classes'"
                         title.translate="Compare"
                         icon="'fa-exchange'"
                         classAction="'o_wsale_products_opt_has_comparison'"
@@ -617,7 +617,7 @@
                 </BuilderRow>
 
                 <BuilderRow
-                    t-if="props.recordName === 'shop_opt_products_design_classes'"
+                    t-if="this.props.recordName === 'shop_opt_products_design_classes'"
                     label.translate="Wishlist"
                     level="1"
                 >

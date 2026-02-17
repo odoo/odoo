@@ -6,9 +6,9 @@
                 <BadgeTag text="tag.text" onDelete="tag.onDelete"/>
             </t>
             <AutoComplete
-                sources="sources"
-                input="inputRef"
-                onChange.bind="onInputChange"
+                sources="this.sources"
+                input="this.inputRef"
+                onChange.bind="this.onInputChange"
                 inputDebounceDelay="0"
             />
         </div>

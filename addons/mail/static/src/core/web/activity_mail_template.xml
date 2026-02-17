@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMailTemplate">
-        <t t-foreach="props.activity.mail_template_ids" t-as="mailTemplate" t-key="mailTemplate.id">
+        <t t-foreach="this.props.activity.mail_template_ids" t-as="mailTemplate" t-key="mailTemplate.id">
             <div class="d-flex align-items-baseline flex-wrap">
                 <div class="text-truncate">
                     <i class="fa fa-envelope-o" title="Mail" role="img"/>

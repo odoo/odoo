@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ResourceEditorWarningOverlay">
-    <div t-if="state.visible" class="position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-center justify-content-center z-3 p-4 bg-light bg-opacity-75" role="alert">
+    <div t-if="this.state.visible" class="position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-center justify-content-center z-3 p-4 bg-light bg-opacity-75" role="alert">
         <div class="border shadow-sm p-4 bg-light text-dark rounded-2 bg-opacity-100">
             <div>
                 <h1 class="fs-2 text-dark mb-4">Your changes might be lost</h1>
@@ -19,17 +19,17 @@
                 </ul>
                 <div class="d-flex justify-content-between mt-5">
                     <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-primary" t-on-click="onInjectCode">Inject code in &lt;head&gt; or &lt;body&gt;</button>
-                        <button type="button" class="btn btn-secondary" t-on-click="onCloseEditor">Close</button>
+                        <button type="button" class="btn btn-primary" t-on-click="this.onInjectCode">Inject code in &lt;head&gt; or &lt;body&gt;</button>
+                        <button type="button" class="btn btn-secondary" t-on-click="this.onCloseEditor">Close</button>
                     </div>
-                    <button type="button" class="btn btn-link" t-on-click="onHideWarning">Edit code</button>
+                    <button type="button" class="btn btn-link" t-on-click="this.onHideWarning">Edit code</button>
                 </div>
             </div>
         </div>
 
         <button type="button"
             class="btn btn-link position-absolute bottom-0 end-0 m-4"
-            t-on-click="onStopAsking">
+            t-on-click="this.onStopAsking">
             Don't show again
         </button>
     </div>

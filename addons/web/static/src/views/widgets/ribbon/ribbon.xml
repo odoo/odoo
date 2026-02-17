@@ -3,8 +3,8 @@
 
     <t t-name="web.Ribbon">
         <div class="ribbon ribbon-top-right">
-            <span t-att-class="classes" t-att-title="props.title">
-                <t t-esc="props.text"/>
+            <span t-att-class="this.classes" t-att-title="this.props.title">
+                <t t-esc="this.props.text"/>
             </span>
         </div>
     </t>

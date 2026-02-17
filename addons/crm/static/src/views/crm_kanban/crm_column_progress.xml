@@ -6,9 +6,7 @@
         </xpath>
 
         <xpath expr="//div[hasclass('o_bar_has_records') and hasclass('progress-bar')]" position="attributes">
-            <attribute name="t-att-data-tooltip">
-                getColumnProgressTooltip(bar)
-            </attribute>
+            <attribute name="t-att-data-tooltip">this.getColumnProgressTooltip(bar)            </attribute>
         </xpath>
 
         <AnimatedNumber position="before">
@@ -24,10 +22,10 @@
         </AnimatedNumber>
 
         <AnimatedNumber position="after">
-            <t t-elif="props.aggregate.value === 0"><b/></t>
+            <t t-elif="this.props.aggregate.value === 0"><b/></t>
 
-            <t t-if="showRecurringRevenue">
-                <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
+            <t t-if="this.showRecurringRevenue">
+                <t t-set="rrmAggregate" t-value="this.getRecurringRevenueGroupAggregate(this.props.group)"/>
                 <AnimatedNumber
                     t-if="rrmAggregate.value"
                     value="rrmAggregate.value"
@@ -36,11 +34,11 @@
                     currencies="[rrmAggregate.currency]"
                     animationClass="'o_animated_grow_huge'"
                 >
-                    <t t-set-slot="prefix" t-if="props.aggregate.value != 0">
+                    <t t-set-slot="prefix" t-if="this.props.aggregate.value != 0">
                         <strong class="me-1">+</strong>
                     </t>
                 </AnimatedNumber>
-                <b t-if="!props.aggregate.value" class="ps-1">MRR</b>
+                <b t-if="!this.props.aggregate.value" class="ps-1">MRR</b>
             </t>
         </AnimatedNumber>
     </t>

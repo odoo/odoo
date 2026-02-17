@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="uom.Many2OneUomField">
-        <UomMany2One t-props="m2oProps">
+        <UomMany2One t-props="this.m2oProps">
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                 <t t-if="autoCompleteItemScope.record?.relative_info">
                     <div class="uom_autocomplete_grid">

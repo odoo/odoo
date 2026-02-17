@@ -21,26 +21,26 @@
         </div>
     </header>
     <main class="position-relative d-flex flex-nowrap">
-        <DocSidebar t-if="!ui.isSmall"/>
-        <t t-if="modelStore.models.length > 0">
-            <DocModel t-if="modelStore.activeModel"/>
+        <DocSidebar t-if="!this.ui.isSmall"/>
+        <t t-if="this.modelStore.models.length > 0">
+            <DocModel t-if="this.modelStore.activeModel"/>
         </t>
-        <div t-elif="!modelStore.error" class="h-100 w-100 d-flex flex-nowrap align-items-center justify-content-center gap-1">
+        <div t-elif="!this.modelStore.error" class="h-100 w-100 d-flex flex-nowrap align-items-center justify-content-center gap-1">
             <i class="fa fa-spinner o-doc-spinner" aria-hidden="true"></i>
             <div>Loading Models</div>
         </div>
 
-        <div t-if="modelStore.error" class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
+        <div t-if="this.modelStore.error" class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
             <DocErrorDialog
-                name="modelStore.error.name"
-                status="modelStore.error.status"
-                traceback="modelStore.error.traceback"
+                name="this.modelStore.error.name"
+                status="this.modelStore.error.status"
+                traceback="this.modelStore.error.traceback"
             />
         </div>
     </main>
-    <ApiKeyModal t-if="modelStore.showApiKeyModal"/>
+    <ApiKeyModal t-if="this.modelStore.showApiKeyModal"/>
     <SearchModal
-        t-if="state.showSearchModal"
+        t-if="this.state.showSearchModal"
         close="() => this.state.showSearchModal = false"
     />
 </t>

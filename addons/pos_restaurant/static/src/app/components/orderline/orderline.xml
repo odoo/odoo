@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_sale.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
         <xpath expr="//t[@t-esc='vals.unitPart']" position="replace">
-            <t t-esc="line.uiState.splitQty or vals.unitPart"/>
+            <t t-esc="this.line.uiState.splitQty or vals.unitPart"/>
         </xpath>
     </t>
 </templates>

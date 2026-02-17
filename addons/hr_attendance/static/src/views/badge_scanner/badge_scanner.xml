@@ -13,8 +13,8 @@
                     <BarcodeScanner onBarcodeScanned="(barcode) => this.onBarcodeScanned(barcode)" />
                     <div class="my-5 text-center">
                         <h5 class="mt8 text-muted">Scan or Tap your badge</h5>
-                        <t t-if="employee">
-                            <h4 class="text-primary mt-3">For <t t-out="employee[0].name"/></h4>
+                        <t t-if="this.employee">
+                            <h4 class="text-primary mt-3">For <t t-out="this.employee[0].name"/></h4>
                         </t>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="website.ThemePreviewForm.ControlPanel.BreadCrumbs">
-        <t t-set="breadcrumb" t-value="breadcrumbs.slice(-1)[0] || {}"/>        
+        <t t-set="breadcrumb" t-value="this.breadcrumbs.slice(-1)[0] || {}"/>        
         <div class="o_breadcrumb d-flex gap-1">
             <div class="active d-flex flex-column">
                 <h4 class="mb-0"><t t-call="web.Breadcrumb.Name"/></h4>

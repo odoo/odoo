@@ -9,7 +9,7 @@
                 separator=" "/>
         </xpath>
         <xpath expr="//button[hasclass('o_select_file_button')]" position="attributes">
-            <attribute name="t-if">containsValidImage</attribute>
+            <attribute name="t-if">this.containsValidImage</attribute>
         </xpath>
         <xpath expr="//button[hasclass('o_select_file_button')]" position="after">
             <button t-else="" class="btn border-0 d-flex justify-content-center align-items-center w-100">

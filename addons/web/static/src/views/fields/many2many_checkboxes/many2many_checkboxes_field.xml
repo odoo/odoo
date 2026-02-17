@@ -3,11 +3,11 @@
 
     <t t-name="web.Many2ManyCheckboxesField">
         <div aria-atomic="true">
-            <t t-foreach="items" t-as="item" t-key="item[0]">
+            <t t-foreach="this.items" t-as="item" t-key="item[0]">
                 <div>
                     <CheckBox
-                        value="isSelected(item)"
-                        disabled="props.readonly"
+                        value="this.isSelected(item)"
+                        disabled="this.props.readonly"
                         onChange="(ev) => this.onChange(item[0], item[1], ev)"
                     >
                         <t t-esc="item[1]" />

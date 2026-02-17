@@ -4,7 +4,7 @@
 <t t-name="html_builder.ImageFormat">
     <BuilderRow label.translate="Format" level="this.props.level">
         <BuilderSelect>
-            <t t-foreach="state.formats" t-as="format" t-key="format.id">
+            <t t-foreach="this.state.formats" t-as="format" t-key="format.id">
                 <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
                     <div class="d-flex align-items-center overflow-hidden">
                         <span class="text-truncate flex-grow-1 me-2" t-out="format.label"/>
@@ -14,13 +14,13 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Quality" tooltip.translate="Increase for more detail, decrease for speed" t-if="state.showQuality and state.formats.length" level="this.props.level">
+    <BuilderRow label.translate="Quality" tooltip.translate="Increase for more detail, decrease for speed" t-if="this.state.showQuality and this.state.formats.length" level="this.props.level">
         <BuilderRange
             action="'setImageQuality'"
             min="0"
             max="100"
-            t-if="!state.compressionUnsupported" />
-        <span t-if="state.compressionUnsupported" class="fst-italic">
+            t-if="!this.state.compressionUnsupported" />
+        <span t-if="this.state.compressionUnsupported" class="fst-italic">
             WebP compression not supported on this browser
         </span>
     </BuilderRow>

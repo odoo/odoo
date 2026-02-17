@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_event.QuestionInputs">
-        <div t-foreach="questions" t-as="question" t-key="question.id" class="global_question input-group mt-3">
+        <div t-foreach="this.questions" t-as="question" t-key="question.id" class="global_question input-group mt-3">
             <span class="input-group-text">
                 <t t-esc="question.title"/>
                 <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
             </span>
-            <select t-if="question.question_type === 'simple_choice'" t-model="stateObject[question.id]" class="form-select">
+            <select t-if="question.question_type === 'simple_choice'" t-model="this.stateObject[question.id]" class="form-select">
                 <option value="">--- Select ---</option>
                 <option t-foreach="question.answer_ids" t-as="choice" t-key="choice.id" t-att-value="choice.id">
                     <t t-esc="choice.name"/>
                 </option>
             </select>
-            <input t-else="" t-model="stateObject[question.id]" class="form-control flex-grow-1"/>
+            <input t-else="" t-model="this.stateObject[question.id]" class="form-control flex-grow-1"/>
         </div>
     </t>
     <t t-name="pos_event.EventRegistrationPopup">
@@ -42,8 +42,8 @@
                 </t>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-secondary" t-on-click="close">Discard</button>
-                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="this.close">Discard</button>
+                <button class="btn btn-primary" t-on-click="this.confirm">Confirm</button>
             </t>
         </Dialog>
     </t>

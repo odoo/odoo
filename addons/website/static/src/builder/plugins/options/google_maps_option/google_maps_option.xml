@@ -6,7 +6,7 @@
         <input
             type="text"
             class="o_we_large"
-            t-att-value="state.formattedAddress"
+            t-att-value="this.state.formattedAddress"
             placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
             t-ref="inputRef"
         />
@@ -25,7 +25,7 @@
             <BuilderSelectItem dataAttributeActionValue="'HYBRID'">Hybrid</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="&#8985; Style" preview="false" t-if="this.isActiveItem('roadmap_opt')">
+    <BuilderRow label.translate="⌙ Style" preview="false" t-if="this.isActiveItem('roadmap_opt')">
         <BuilderSelect dataAttributeAction="'mapColor'">
             <BuilderSelectItem dataAttributeActionValue="">
                 <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>

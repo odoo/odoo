@@ -2,20 +2,20 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.RetryPrintPopup">
-        <Dialog size="'md'" title="props.title">
-            <p t-if="props.message" t-out="props.message" class="text-prewrap"/>
-            <p t-if="props.canRetry">Would you like to continue without printing or retry?</p>
+        <Dialog size="'md'" title="this.props.title">
+            <p t-if="this.props.message" t-out="this.props.message" class="text-prewrap"/>
+            <p t-if="this.props.canRetry">Would you like to continue without printing or retry?</p>
             <t t-set-slot="footer">
                 <div class="d-flex justify-content-between gap-2 w-100">
 
                     <div class="d-flex gap-2">
-                        <button class="btn btn-primary btn-lg" t-on-click="props.close">Continue</button>
-                        <button t-if="props.canRetry" class="btn btn-lg btn-secondary" t-on-click="onClickRetry">Retry</button>
-                        <button t-if="props.download" class="btn btn-lg btn-secondary" t-on-click="onClickDownload">Download</button>
+                        <button class="btn btn-primary btn-lg" t-on-click="this.props.close">Continue</button>
+                        <button t-if="this.props.canRetry" class="btn btn-lg btn-secondary" t-on-click="this.onClickRetry">Retry</button>
+                        <button t-if="this.props.download" class="btn btn-lg btn-secondary" t-on-click="this.onClickDownload">Download</button>
                     </div>
-                    <button t-if="props.tryOnOtherPrinter"
+                    <button t-if="this.props.tryOnOtherPrinter"
                             class="btn btn-lg btn-secondary"
-                            t-on-click="onClickTryOnOtherPrinter">
+                            t-on-click="this.onClickTryOnOtherPrinter">
                         Try on other printer
                     </button>
 

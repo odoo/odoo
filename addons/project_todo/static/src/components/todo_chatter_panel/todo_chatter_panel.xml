@@ -3,15 +3,15 @@
 <templates xml:space="preserve">
 
     <div t-name="project_todo.TodoChatterPanel" t-ref="root">
-        <chatter t-if="state.displayChatter" class="o_FormRenderer_chatterContainer">
+        <chatter t-if="this.state.displayChatter" class="o_FormRenderer_chatterContainer">
             <Chatter
                 threadModel="'project.task'"
-                threadId="props.record.resId"
-                record="props.record"
+                threadId="this.props.record.resId"
+                record="this.props.record"
                 hasParentReloadOnAttachmentsChanged="true"
                 hasParentReloadOnFollowersUpdate="true"
                 hasParentReloadOnMessagePosted="true"
-                saveRecord="props.record.save.bind(props.record, { reload: false })"
+                saveRecord="this.props.record.save.bind(this.props.record, { reload: false })"
             />
         </chatter>
     </div>

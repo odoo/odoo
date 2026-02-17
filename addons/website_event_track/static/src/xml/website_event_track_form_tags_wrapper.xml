@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="website_event_track.WebsiteEventTrackProposalFormTagsWrapper">
-    <input name="tags" type="hidden" class="form-control o_wetrack_select_tags d-none" t-att-value="state.value"/>
+    <input name="tags" type="hidden" class="form-control o_wetrack_select_tags d-none" t-att-value="this.state.value"/>
     <SelectMenu
         togglerClass="'form-control'"
-        choices="state.defaultChoices"
+        choices="this.state.defaultChoices"
         multiSelect="true"
-        onSelect.bind="onSelect"
-        value="state.value"
-        placeholder="state.placeholder"/>
+        onSelect.bind="this.onSelect"
+        value="this.state.value"
+        placeholder="this.state.placeholder"/>
 </t>
 
 </templates>

@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="website.UrlAutoComplete">
         <AutoCompleteWithPages
-            input="inputRef"
-            onInput.bind="onInput"
-            menuCssClass="dropdownClass"
-            menuPositionOptions="dropdownOptions"
-            sources="sources"
-            targetDropdown="props.targetDropdown"
+            input="this.inputRef"
+            onInput.bind="this.onInput"
+            menuCssClass="this.dropdownClass"
+            menuPositionOptions="this.dropdownOptions"
+            sources="this.sources"
+            targetDropdown="this.props.targetDropdown"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <div t-att-class="{

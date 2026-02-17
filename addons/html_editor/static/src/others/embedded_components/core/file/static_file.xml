@@ -4,11 +4,11 @@
         <span class="d-flex flex-grow-1 align-items-center alert alert-info">
             <!-- mimetype icon -->
             <span class="o_file_image d-flex o_image user-select-none"
-                t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"/>
+                t-att-title="this.fileModel.filename" t-att-data-mimetype="this.fileModel.mimetype"/>
             <!-- file name -->
             <span class="o_file_name_container mx-2">
-                <a class="o_link_readonly o-contenteditable-true" t-att-href="fileModel.downloadUrl"
-                    t-out="fileModel.filename"
+                <a class="o_link_readonly o-contenteditable-true" t-att-href="this.fileModel.downloadUrl"
+                    t-out="this.fileModel.filename"
                     contenteditable="true"/>
             </span>
         </span>

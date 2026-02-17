@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
     <t t-name="website_sale.s_dynamic_snippet_category.grid">
         <div
-            t-attf-class="o_category_container d-grid gap-{{ gap }} rounded-{{ rounded }}"
+            t-attf-class="o_category_container d-grid gap-{{ this.gap }} rounded-{{ this.rounded }}"
             contenteditable="false"
-            t-attf-style="--DynamicCategory-columns: {{ colsCount }}; grid-auto-rows: minmax({{ rowSize }}, auto);"
+            t-attf-style="--DynamicCategory-columns: {{ this.colsCount }}; grid-auto-rows: minmax({{ this.rowSize }}, auto);"
         >
-            <t t-foreach="data" t-as="category" t-key="category_index">
+            <t t-foreach="this.data" t-as="category" t-key="category_index">
                 <t t-out="category"/>
             </t>
         </div>

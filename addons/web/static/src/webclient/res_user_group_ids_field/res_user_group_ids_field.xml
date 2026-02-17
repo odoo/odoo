@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="web.ResUserGroupIdsField">
-    <Record fields="fields" fieldNames="Object.keys(fields)" values="values" hooks="hooks" t-slot-scope="data">
-        <FormRenderer record="data.record" archInfo="archInfo" readonly="props.readonly"/>
+    <Record fields="this.fields" fieldNames="Object.keys(this.fields)" values="this.values" hooks="this.hooks" t-slot-scope="data">
+        <FormRenderer record="data.record" archInfo="this.archInfo" readonly="this.props.readonly"/>
     </Record>
 </t>
 

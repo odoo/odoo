@@ -43,7 +43,7 @@ test("hotkeys work on dialogs", async () => {
             <Dialog title="'Wow(l) Effect'">
                 Hello!
                 <t t-set-slot="footer">
-                    <button t-on-click="onClickOk">Ok</button>
+                    <button t-on-click="this.onClickOk">Ok</button>
                 </t>
             </Dialog>
         `;
@@ -188,7 +188,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
     expect.assertions(4);
     class SubComponent extends Component {
         static template = xml`
-            <div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>
+            <div class="o_subcomponent" t-esc="this.props.text" t-on-click="this._onClick"/>
         `;
         static props = ["*"];
         _onClick() {
@@ -200,7 +200,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
         static components = { Dialog, SubComponent };
         static template = xml`
             <Dialog>
-                <SubComponent text="'Wow(l) Effect'" onClicked="_onSubcomponentClicked"/>
+                <SubComponent text="'Wow(l) Effect'" onClicked="this._onSubcomponentClicked"/>
             </Dialog>
         `;
         static props = ["*"];

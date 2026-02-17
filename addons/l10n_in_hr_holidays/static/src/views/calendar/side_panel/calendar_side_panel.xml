@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-inherit="hr_holidays.TimeOffCalendarSidePanel" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_calendar_filter')]" position="inside">
-            <div class="d-flex flex-column mt-4" t-if="leaveState.optionalHolidays.length">
+            <div class="d-flex flex-column mt-4" t-if="this.leaveState.optionalHolidays.length">
                 <h5>Optional Holidays</h5>
                 <ul class="ps-0">
-                    <li t-foreach="leaveState.optionalHolidays" t-as="optionalHoliday" t-key="optionalHoliday.id"
+                    <li t-foreach="this.leaveState.optionalHolidays" t-as="optionalHoliday" t-key="optionalHoliday.id"
                         class="mt-2 list-unstyled"
-                        t-att-class="optionalHoliday.end.startOf('day') &lt; currentDateTime.startOf('day') ? 'text-muted' : 'fw-bold'">
-                        <span t-out="getFormattedDateSpan(optionalHoliday.start, optionalHoliday.end)"/>
+                        t-att-class="optionalHoliday.end.startOf('day') &lt; this.currentDateTime.startOf('day') ? 'text-muted' : 'fw-bold'">
+                        <span t-out="this.getFormattedDateSpan(optionalHoliday.start, optionalHoliday.end)"/>
                         : <t t-out="optionalHoliday.title"/>
                     </li>
                 </ul>

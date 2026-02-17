@@ -5,7 +5,7 @@
             <button class="btn btn-primary o_form_button_save" t-on-click="() => this.save()"  data-hotkey="c">Select &amp; Close</button>
         </xpath>
         <xpath expr="//button[hasclass('o_form_button_save_new')]" position="replace">
-            <button class="btn btn-primary o_form_button_save_new" t-on-click="saveAndNew" data-hotkey="n">Select &amp; New</button>
+            <button class="btn btn-primary o_form_button_save_new" t-on-click="this.saveAndNew" data-hotkey="n">Select &amp; New</button>
         </xpath>
     </t>
 </templates>

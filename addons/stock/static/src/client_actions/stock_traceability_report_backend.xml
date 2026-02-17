@@ -3,7 +3,7 @@
 
     <t t-name="stock.TraceabilityReport">
         <div class="o_action">
-            <Layout display="display">
+            <Layout display="this.display">
                 <t t-set-slot="control-panel-buttons">
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                         <button type="button" class="btn btn-primary" t-on-click="() => this.onClickPrint()">Print</button>
@@ -11,7 +11,7 @@
                 </t>
 
                 <div class="container-fluid o_stock_reports_page o_stock_reports_no_print">
-                    <t t-if="state.lines.length">
+                    <t t-if="this.state.lines.length">
                         <h1 class="o_report_heading text-start">Traceability Report</h1>
                         <div class="o_stock_reports_table table-responsive">
                             <table class="table">
@@ -28,7 +28,7 @@
                                 </thead>
                                 <tbody>
                                     <t t-call="stock.ReportMRPLines">
-                                        <t t-set="lines" t-value="state.lines"/>
+                                        <t t-set="lines" t-value="this.state.lines"/>
                                         <t t-set="hasUpDown" t-value="true"/>
                                     </t>
                                 </tbody>

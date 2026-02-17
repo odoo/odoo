@@ -3,8 +3,8 @@
 
     <t t-name="pos_restaurant.OrderChangeReceipt" t-inherit="point_of_sale.OrderChangeReceipt" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('receipt-header')]" position="inside">
-            <div class="pos-customer-info" t-if="data.customer_count">
-                <t t-out="'Guest: ' + data.customer_count"/>
+            <div class="pos-customer-info" t-if="this.data.customer_count">
+                <t t-out="'Guest: ' + this.data.customer_count"/>
             </div>
         </xpath>
     </t>

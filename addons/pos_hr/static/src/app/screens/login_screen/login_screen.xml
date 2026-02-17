@@ -10,7 +10,7 @@
                     <input
                         t-ref="autofocus"
                         type="text"
-                        t-on-input="maskedInput"
+                        t-on-input="this.maskedInput"
                         class="form-control form-control-lg rounded flex-grow-1"
                         placeholder="Enter your PIN" />
                     <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.selectCashier(false, true)">

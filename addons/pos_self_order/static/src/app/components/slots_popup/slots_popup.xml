@@ -8,13 +8,13 @@
                     <h3>When would you like to receive your orders ?</h3>
                     <span>We'll do everything to be on time!<br/>Thanks a lot!</span>
                 </div>
-                <button class="btn btn-close" t-on-click="close"/>
+                <button class="btn btn-close" t-on-click="this.close"/>
             </div>
-            <select class="form-select form-select-lg mb-5" t-model="state.selectedSlot">
+            <select class="form-select form-select-lg mb-5" t-model="this.state.selectedSlot">
                 <option value="0">
                     Select a hour
                 </option>
-                <t t-foreach="slots" t-as="slot" t-key="slot_index">
+                <t t-foreach="this.slots" t-as="slot" t-key="slot_index">
                     <option t-att-value="slot[0]" t-esc="slot[0]" disabled="1" />
                     <option t-foreach="Object.values(slot[1])" t-as="s" t-key="s_index" t-att-value="s.datetime.ts" t-esc="s.toFormat('HH:mm')" />
                 </t>

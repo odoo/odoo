@@ -3,34 +3,34 @@
 
     <t t-name="account.ProductLabelSectionAndNoteField">
         <div class="o_field_product_label_section_and_note_cell">
-            <t t-if="isNote()">
+            <t t-if="this.isNote()">
                 <textarea
                     class="o_input d-print-none border-0 fst-italic"
                     placeholder="Enter a description"
                     rows="1"
-                    t-att-class="sectionAndNoteClasses"
-                    t-att-readonly="sectionAndNoteIsReadonly"
-                    t-att-value="label"
+                    t-att-class="this.sectionAndNoteClasses"
+                    t-att-readonly="this.sectionAndNoteIsReadonly"
+                    t-att-value="this.label"
                     t-ref="labelNodeRef"
-                    t-key="props.readonly"
+                    t-key="this.props.readonly"
                 />
             </t>
-            <t t-elif="isSectionOrSubSection">
+            <t t-elif="this.isSectionOrSubSection">
                 <input
                     type="text"
                     class="o_input text-wrap border-0 w-100"
                     placeholder="Enter a description"
-                    t-att-class="sectionAndNoteClasses"
-                    t-att-readonly="sectionAndNoteIsReadonly"
-                    t-att-value="label"
+                    t-att-class="this.sectionAndNoteClasses"
+                    t-att-readonly="this.sectionAndNoteIsReadonly"
+                    t-att-value="this.label"
                     t-ref="labelNodeRef"
-                    t-key="props.readonly"
+                    t-key="this.props.readonly"
                 />
             </t>
             <t t-else="">
                 <div class="d-flex align-items-center gap-1">
-                    <Many2One t-props="this.m2oProps" cssClass="'w-100'" t-on-keydown="onM2oInputKeydown"/>
-                    <t t-if="showLabelVisibilityToggler">
+                    <Many2One t-props="this.m2oProps" cssClass="'w-100'" t-on-keydown="this.onM2oInputKeydown"/>
+                    <t t-if="this.showLabelVisibilityToggler">
                         <button
                             class="btn fa fa-bars text-start o_external_button px-1"
                             type="button"
@@ -41,10 +41,10 @@
                     </t>
                 </div>
                 <div
-                    t-if="props.readonly"
+                    t-if="this.props.readonly"
                     class="o_input d-print-none border-0 fst-italic"
-                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and label) }"
-                    t-out="label"
+                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !(this.columnIsProductAndLabel.value and this.label) }"
+                    t-out="this.label"
                 />
                 <textarea
                     t-else=""
@@ -52,13 +52,13 @@
                     placeholder="Enter a description"
                     rows="1"
                     type="text"
-                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and (label or labelVisibility.value)) }"
-                    t-att-value="label"
+                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !(this.columnIsProductAndLabel.value and (this.label or this.labelVisibility.value)) }"
+                    t-att-value="this.label"
                     t-ref="labelNodeRef"
                 />
             </t>
-            <t t-if="isPrintMode.value">
-                <div class="d-none d-print-block text-wrap" t-out="label"/>
+            <t t-if="this.isPrintMode.value">
+                <div class="d-none d-print-block text-wrap" t-out="this.label"/>
             </t>
         </div>
     </t>

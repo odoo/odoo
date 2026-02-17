@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.EmbeddedTableOfContent">
-    <div class="px-1" t-att-class="{ 'pb-1' : !state.folded and state.toc.headings.length }">
+    <div class="px-1" t-att-class="{ 'pb-1' : !this.state.folded and this.state.toc.headings.length }">
         <div class="d-flex align-items-center cursor-pointer user-select-none" t-on-click="() => { this.state.folded = !this.state.folded; }">
             <div class="o_embedded_toc_label p-1 fw-bold">
                 Table of Contents
-                <i t-attf-class="align-self-center fa fa-fw fa-caret-#{ state.folded ? 'right' : 'down' }"/>
+                <i t-attf-class="align-self-center fa fa-fw fa-caret-#{ this.state.folded ? 'right' : 'down' }"/>
             </div>
         </div>
-        <div t-if="!state.folded" class="o_embedded_toc_content">
+        <div t-if="!this.state.folded" class="o_embedded_toc_content">
             <t t-foreach="this.state.toc.headings" t-as="heading" t-key="heading_index">
                 <a href="#" contenteditable="false"
                     t-out="heading.name"
@@ -17,7 +17,7 @@
             </t>
         </div>
     </div>
-    <div class="p-1" t-if="displayTocHint()">
+    <div class="p-1" t-if="this.displayTocHint()">
         <i class="o_embedded_toc_hint px-1">
             Add headings to fill the Table of Contents
         </i>

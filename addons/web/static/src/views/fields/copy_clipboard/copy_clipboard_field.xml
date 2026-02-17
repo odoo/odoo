@@ -3,13 +3,13 @@
 
     <t t-name="web.CopyClipboardField">
         <div class="d-grid rounded-2 overflow-hidden">
-            <Field t-props="fieldProps"/>
-            <CopyButton className="copyButtonClassName" content="props.record.data[props.name]" icon="copyButtonIcon" successText="successText"/>
+            <Field t-props="this.fieldProps"/>
+            <CopyButton className="this.copyButtonClassName" content="this.props.record.data[this.props.name]" icon="this.copyButtonIcon" successText="this.successText"/>
         </div>
     </t>
 
     <t t-name="web.CopyClipboardButtonField">
-        <CopyButton t-if="props.record.data[props.name]" className="copyButtonClassName" content="props.record.data[props.name]" copyText="copyText" disabled="disabled" successText="successText"/>
+        <CopyButton t-if="this.props.record.data[this.props.name]" className="this.copyButtonClassName" content="this.props.record.data[this.props.name]" copyText="this.copyText" disabled="this.disabled" successText="this.successText"/>
     </t>
 
 </templates>

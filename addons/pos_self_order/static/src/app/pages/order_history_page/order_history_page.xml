@@ -4,8 +4,8 @@
         <div class="d-flex flex-column h-100 o_self_background overflow-hidden">
              <div class="d-flex flex-column overflow-y-auto h-100">
                <div class="container my-auto o_self_container py-3" style="max-width: 660px">
-                <h1 t-if="orders.length > 0" class="mb-3">My Orders</h1>
-                <t t-foreach="orders" t-as="order" t-key="order.access_token">
+                <h1 t-if="this.orders.length > 0" class="mb-3">My Orders</h1>
+                <t t-foreach="this.orders" t-as="order" t-key="order.access_token">
                     <div class="o_so_order mx-auto d-flex flex-column mb-2 mb-md-3 bg-white rounded-4 shadow-sm p-3">
                         <div class="o_so_order_header pb-2" t-on-click="() => this.editOrder(order)">
                             <div class="d-flex align-items-center justify-content-between">
@@ -14,7 +14,7 @@
                                     <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="order.date_order.toFormat('dd/MM/yyyy')" /></span>
                                 </div>
                                 <div class="d-flex justify-content-around gap-1 align-items-center">
-                                    <div t-if="selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" t-on-click="() => this.selfOrder.downloadReceipt(order)">
+                                    <div t-if="this.selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" t-on-click="() => this.selfOrder.downloadReceipt(order)">
                                         <i  class="fa fa-download" aria-hidden="true" />
                                     </div>
                                     <span class="badge py-2 rounded-pill text-capitalize"
@@ -22,7 +22,7 @@
                                             'text-bg-success': order.state === 'paid',
                                             'text-bg-primary': order.state !== 'paid'
                                         }"
-                                        t-esc="getOrderState(order.state)"/>
+                                        t-esc="this.getOrderState(order.state)"/>
                                 </div>
                             </div>
                         </div>
@@ -35,11 +35,11 @@
                                 >
                                 <div class="d-flex w-100 justify-content-between">
                                     <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} ">
-                                        <t t-set="lineName" t-value="getNameAndDescription(line)" />
+                                        <t t-set="lineName" t-value="this.getNameAndDescription(line)" />
                                         <div class="fw-bold mb-0 o_self_product_name" t-esc="lineName.productName" />
                                         <div t-if="line.qty">
                                             <span class="small" t-esc="`${line.qty}x `" />
-                                            <span class="flex-grow-1 me-3 small text-muted" t-esc="selfOrder.formatMonetary(getPrice(line) / line.qty)"/>
+                                            <span class="flex-grow-1 me-3 small text-muted" t-esc="this.selfOrder.formatMonetary(this.getPrice(line) / line.qty)"/>
                                         </div>
                                         <span
                                             t-if="lineName.attributes"
@@ -57,7 +57,7 @@
                                         </div>
                                     </div>
                                     <span t-attf-class="card-text line_price o-so-tabular-nums"
-                                        t-esc="selfOrder.formatMonetary(getPrice(line))"/>
+                                        t-esc="this.selfOrder.formatMonetary(this.getPrice(line))"/>
                                 </div>
                             </div>
                             <div class="d-flex mt-2">
@@ -66,12 +66,12 @@
                                         <tbody>
                                             <tr class="text-end">
                                                 <th class="pt-2 pb-0 pe-0">Total:</th>
-                                                <th class="pt-2 pb-0 pe-0 o-so-tabular-nums" t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_total)"/>
+                                                <th class="pt-2 pb-0 pe-0 o-so-tabular-nums" t-if="!this.selfOrder.priceLoading" t-esc="this.selfOrder.formatMonetary(order.amount_total)"/>
                                                  <span t-else="" class="spinner-border"/>
                                             </tr>
                                              <tr class="text-end text-muted">
                                                 <th class="py-0 pe-0 fw-normal">Tax:</th>
-                                                <th class="py-0 pe-0 fw-normal o-so-tabular-nums" t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_tax)"/>
+                                                <th class="py-0 pe-0 fw-normal o-so-tabular-nums" t-if="!this.selfOrder.priceLoading" t-esc="this.selfOrder.formatMonetary(order.amount_tax)"/>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </t>
-                <div t-if="orders.length === 0" class="d-flex justify-content-center mt-3">
+                <div t-if="this.orders.length === 0" class="d-flex justify-content-center mt-3">
                     <div>No order found</div>
                 </div>
                </div>
@@ -88,7 +88,7 @@
 
             <div class="o_self_footer bg-white border-top py-3">
                 <div class="container o_self_container ">
-                  <button  class="btn btn-lg btn-secondary" t-on-click="back">
+                  <button  class="btn btn-lg btn-secondary" t-on-click="this.back">
                       <i class="oi oi-chevron-left d-md-none" />
                       <span class="d-none d-md-inline">Back</span>
                   </button>

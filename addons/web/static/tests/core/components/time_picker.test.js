@@ -288,7 +288,7 @@ test("false, null and undefined are accepted values", async () => {
     class Parent extends Component {
         static components = { TimePicker };
         static props = {};
-        static template = xml`<TimePicker value="state.value"/>`;
+        static template = xml`<TimePicker value="this.state.value"/>`;
 
         setup() {
             this.state = useState({
@@ -319,7 +319,7 @@ test("click-out triggers onChange", async () => {
                 <Dropdown>
                     <button class="open">Open</button>
                     <t t-set-slot="content">
-                        <TimePicker onChange.bind="onChange"/>
+                        <TimePicker onChange.bind="this.onChange"/>
                     </t>
                 </Dropdown>
                 <button class="outside">Outside</button>
@@ -354,7 +354,7 @@ test("changing the props value updates the input", async () => {
     class Parent extends Component {
         static components = { TimePicker };
         static props = {};
-        static template = xml`<TimePicker value="state.value" onChange.bind="onChange"/>`;
+        static template = xml`<TimePicker value="this.state.value" onChange.bind="this.onChange"/>`;
 
         setup() {
             this.state = useState({
@@ -400,7 +400,7 @@ test("ensure placeholder is customizable", async () => {
     class Parent extends Component {
         static components = { TimePicker };
         static props = {};
-        static template = xml`<TimePicker placeholder="state.placeholder"/>`;
+        static template = xml`<TimePicker placeholder="this.state.placeholder"/>`;
 
         setup() {
             this.state = useState({ placeholder: undefined });

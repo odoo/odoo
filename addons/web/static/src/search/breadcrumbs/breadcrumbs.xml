@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Breadcrumbs">
-        <t t-set="currentBreadcrumbs" t-value="props.breadcrumbs.slice(-1)"/>
-        <t t-set="visiblePathBreadcrumbs" t-value="props.breadcrumbs.slice(-3, -1)"/>
-        <t t-set="collapsedBreadcrumbs" t-value="props.breadcrumbs.slice(0, -3).reverse()"/>
+        <t t-set="currentBreadcrumbs" t-value="this.props.breadcrumbs.slice(-1)"/>
+        <t t-set="visiblePathBreadcrumbs" t-value="this.props.breadcrumbs.slice(-3, -1)"/>
+        <t t-set="collapsedBreadcrumbs" t-value="this.props.breadcrumbs.slice(0, -3).reverse()"/>
         <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
 
         <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
-            <t t-if="env.isSmall">
+            <t t-if="this.env.isSmall">
                 <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.at(-1)"/>
                 <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected">
                     <i class="oi oi-fw oi-arrow-left"/>
@@ -23,7 +23,7 @@
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                                    <DropdownItem onSelected="breadcrumb.onSelected" attrs="{ href: breadcrumb.url, 'data-tooltip': getBreadcrumbTooltip(breadcrumb)}">
+                                    <DropdownItem onSelected="breadcrumb.onSelected" attrs="{ href: breadcrumb.url, 'data-tooltip': this.getBreadcrumbTooltip(breadcrumb)}">
                                         <t t-call="web.Breadcrumb.Name"/>
                                     </DropdownItem>
                                 </t>

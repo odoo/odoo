@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainSelectorDialog">
-        <Dialog title="dialogTitle" size="'xl'">
-            <div t-if="props.text" class="mb-3" t-out="props.text"/>
-            <DomainSelector t-props="domainSelectorProps" />
+        <Dialog title="this.dialogTitle" size="'xl'">
+            <div t-if="this.props.text" class="mb-3" t-out="this.props.text"/>
+            <DomainSelector t-props="this.domainSelectorProps" />
             <t t-set-slot="footer">
-                <t t-if="props.readonly">
-                    <button class="btn btn-secondary" t-on-click="() => props.close()">Close</button>
+                <t t-if="this.props.readonly">
+                    <button class="btn btn-secondary" t-on-click="() => this.props.close()">Close</button>
                 </t>
                 <t t-else="">
-                    <button class="btn btn-primary" t-att-disabled="disabled" t-on-click="onConfirm" t-ref="confirm"><t t-esc="confirmButtonText"/></button>
-                    <button class="btn btn-secondary" t-on-click="onDiscard"><t t-esc="discardButtonText"/></button>
+                    <button class="btn btn-primary" t-att-disabled="this.disabled" t-on-click="this.onConfirm" t-ref="confirm"><t t-esc="this.confirmButtonText"/></button>
+                    <button class="btn btn-secondary" t-on-click="this.onDiscard"><t t-esc="this.discardButtonText"/></button>
                 </t>
             </t>
         </Dialog>

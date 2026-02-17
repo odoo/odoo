@@ -3,10 +3,10 @@
 <templates>
     <t t-name="base_automation.ActionsOne2ManyField">
         <div class="d-flex align-items-center" t-ref="root">
-            <t t-if="currentActions.length === 0">
+            <t t-if="this.currentActions.length === 0">
                 <span class="text-muted">no action defined...</span>
             </t>
-            <t t-foreach="currentActions" t-as="action" t-key="action.id">
+            <t t-foreach="this.currentActions" t-as="action" t-key="action.id">
                 <div style="min-width: fit-content;" t-att-data-action-id="action.id">
                     <div class="fs-5 d-flex align-items-center">
                         <i
@@ -34,9 +34,9 @@
                     <i class="fa fa-lg fa-plus text-primary"></i>
                 </div>
             </t>
-            <t t-if="hiddenActionsCount">
+            <t t-if="this.hiddenActionsCount">
                 <div class="fs-3 align-self-center text-muted text-nowrap">
-                    <t t-out="moreText"/>
+                    <t t-out="this.moreText"/>
                 </div>
             </t>
         </div>

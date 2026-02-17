@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BooleanFavoriteField">
-        <div class="o_favorite" t-att-class="{'o_disabled': props.readonly}" t-on-click.prevent.stop="update">
-            <button class="btn btn-link btn-link-inline" t-att-class="{'pe-none' : props.readonly}">
-                <i t-att-class="iconClass" role="img" t-att-title="label" t-att-aria-label="label"/>
-                <t t-if="!props.readonly and !props.noLabel" t-esc="label"/>
+        <div class="o_favorite" t-att-class="{'o_disabled': this.props.readonly}" t-on-click.prevent.stop="this.update">
+            <button class="btn btn-link btn-link-inline" t-att-class="{'pe-none' : this.props.readonly}">
+                <i t-att-class="this.iconClass" role="img" t-att-title="this.label" t-att-aria-label="this.label"/>
+                <t t-if="!this.props.readonly and !this.props.noLabel" t-esc="this.label"/>
             </button>
         </div>
     </t>

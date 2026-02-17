@@ -32,7 +32,7 @@
         </BuilderButton>
     </BuilderRow>
 
-    <BuilderRow label.translate="Direction" t-if="isActiveItem('avatars_label_opt')" level="1">
+    <BuilderRow label.translate="Direction" t-if="this.isActiveItem('avatars_label_opt')" level="1">
         <BuilderButtonGroup>
             <BuilderButton className="'fa fa-fw fa-long-arrow-right'" title.translate="Row" classAction="'flex-row'"/>
             <BuilderButton className="'fa fa-fw fa-long-arrow-down'" title.translate="Column" classAction="'flex-column'"/>
@@ -50,12 +50,12 @@
 </t>
 
 <t t-name="website.AvatarsHeaderMiddleButtons">
-    <button class="btn btn-success-color-hover ms-0 py-0 px-1 me-1" aria-label="Add Avatar" t-on-click="addAvatar">
+    <button class="btn btn-success-color-hover ms-0 py-0 px-1 me-1" aria-label="Add Avatar" t-on-click="this.addAvatar">
         <span class="oi oi-fw oi-plus"/>
         <span class="oi oi-user"/>
     </button>
-    <button class="btn btn-danger-color-hover py-0 px-1 me-3" t-att-disabled="state.disableRemoveButton"
-            aria-label="Remove Avatar" t-on-click="removeAvatar">
+    <button class="btn btn-danger-color-hover py-0 px-1 me-3" t-att-disabled="this.state.disableRemoveButton"
+            aria-label="Remove Avatar" t-on-click="this.removeAvatar">
         <span class="oi oi-fw oi-minus"/>
         <span class="oi oi-user"/>
     </button>

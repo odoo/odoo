@@ -3,12 +3,12 @@
 
     <t t-inherit="delivery.locationSelector.location" t-inherit-mode="extension">
         <small name="location_opening_hours" position="before">
-            <t t-if="props.additionalData and !!props.additionalData.in_store_stock_data">
-                <t t-if="!!props.additionalData.in_store_stock_data.in_stock">
-                    <t t-if="!!props.additionalData.in_store_stock_data.show_quantity">
+            <t t-if="this.props.additionalData and !!this.props.additionalData.in_store_stock_data">
+                <t t-if="!!this.props.additionalData.in_store_stock_data.in_stock">
+                    <t t-if="!!this.props.additionalData.in_store_stock_data.show_quantity">
                         <span class="badge text-bg-warning mt-1 align-self-start">
                             <i class="fa fa-circle text-warning me-2"/>
-                            <t t-out="props.additionalData.in_store_stock_data.quantity"/> <t t-out="props.additionalData.in_store_stock_data.uom_name"/>
+                            <t t-out="this.props.additionalData.in_store_stock_data.quantity"/> <t t-out="this.props.additionalData.in_store_stock_data.uom_name"/>
                             in stock
                         </span>
                     </t>

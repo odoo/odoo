@@ -3,12 +3,12 @@
 
     <t t-name="stock.StockOrderpoint.listView" t-inherit="web.ListView">
         <xpath expr="//SelectionBox" position="after">
-            <button t-if="hasSelectedRecords" type="button" t-on-click="onClickOrder"
+            <button t-if="this.hasSelectedRecords" type="button" t-on-click="this.onClickOrder"
                     class="o_button_snooze btn btn-secondary me-1" data-tooltip="Replenish products up to the Max Quantity
                     set. If a Quantity To Order has been manually forced, this quantity will be ordered instead.">
                 Order
             </button>
-            <button t-if="hasSelectedRecords" type="button" t-on-click="onClickSnooze"
+            <button t-if="this.hasSelectedRecords" type="button" t-on-click="this.onClickSnooze"
                     class="o_button_snooze btn btn-secondary me-1">
                 Snooze
             </button>

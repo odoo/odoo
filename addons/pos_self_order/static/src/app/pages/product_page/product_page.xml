@@ -2,16 +2,16 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductPage">
         <div class="o_self_product_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
-            <t t-set="product" t-value="productTemplate"/>
+            <t t-set="product" t-value="this.productTemplate"/>
 
             <!-- Header -->
-            <div class="o_self_product_page_header text-bg-primary" t-att-class="{'o_self_shadow_top': scrollShadow.top}">
+            <div class="o_self_product_page_header text-bg-primary" t-att-class="{'o_self_shadow_top': this.scrollShadow.top}">
                 <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
                     <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="() => this.goBack()">
                         <i class="oi oi-close fa-fw" aria-hidden="true"/>
-                        <span  t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
+                        <span  t-att-class="{'invisible': this.state.showStickyTitle}">Discard</span>
                     </button>
-                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-esc="product.name"/>
+                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !this.state.showStickyTitle}" t-esc="product.name"/>
                 </div>
             </div>
 
@@ -34,28 +34,28 @@
                     <div class="container o_self_container o_self_product_page_attributes">
                         <div class="d-flex flex-column z-0">
                             <div class="mt-3 mt-kiosk-p-4 mb-2" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
-                            <AttributeSelection t-if="productTemplate.attribute_line_ids.length" productTemplate="productTemplate" />
+                            <AttributeSelection t-if="this.productTemplate.attribute_line_ids.length" productTemplate="this.productTemplate" />
                          </div>
                    </div>
                </div>
-                 <div  t-if="showQtyButtons and selfOrder.ordering" class="d-flex container o_self_container justify-content-end pt-0 py-3">
+                 <div  t-if="this.showQtyButtons and this.selfOrder.ordering" class="d-flex container o_self_container justify-content-end pt-0 py-3">
                      <t t-call="pos_self_order.QuantityWidget" />
                  </div>
-                 <t t-if="hasMissingAttributeValues() and shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
+                 <t t-if="this.hasMissingAttributeValues() and this.shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
             </div>
 
             <!-- Footer -->
-            <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+            <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
                 <div class="container o_self_container ">
-                    <div  t-if="isArchivedCombination()" class="alert alert-warning text-center mb-3">
+                    <div  t-if="this.isArchivedCombination()" class="alert alert-warning text-center mb-3">
                         This combination does not exist.
                     </div>
                    <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
                         <div class="ms-auto text-start">
                             <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Selection</h4>
-                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(getProductPrice())" />
+                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="this.selfOrder.formatMonetary(this.getProductPrice())" />
                         </div>
-                        <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
+                        <button t-if="this.selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="this.addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
                             <span>Add to cart</span>
                         </button>
                     </div>

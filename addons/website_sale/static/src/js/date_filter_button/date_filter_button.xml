@@ -4,14 +4,14 @@
         <Dropdown position="'bottom-end'">
             <button class="border-0 bg-transparent fw-normal">
                 <i class="fa fa-calendar-o me-2"/>
-                <span t-out="props.selectedDateFilter.label"/>
+                <span t-out="this.props.selectedDateFilter.label"/>
                 <i class="fa fa-caret-down ms-2"/>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="dateFilters" t-as="filter" t-key="filter.id">
+                <t t-foreach="this.dateFilters" t-as="filter" t-key="filter.id">
                     <DropdownItem
                         tag="'div'"
-                        class="{ 'selected': props.selectedDateFilter.id === filter.id, 'd-flex justify-content-between': true }"
+                        class="{ 'selected': this.props.selectedDateFilter.id === filter.id, 'd-flex justify-content-between': true }"
                         closingMode="'none'"
                         onSelected="() => this.props.update(filter)"
                     >

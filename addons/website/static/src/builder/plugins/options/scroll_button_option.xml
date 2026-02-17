@@ -14,7 +14,7 @@
         <BuilderNumberInput styleAction="{ mainParam: 'height', force: true, allowImportant: false }" unit="'px'" min="0"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Scroll Down Button" t-if="this.isActiveItem('full_height_opt') and !state.scrollDownButtonDisabled">
+    <BuilderRow label.translate="Scroll Down Button" t-if="this.isActiveItem('full_height_opt') and !this.state.scrollDownButtonDisabled">
         <BuilderCheckbox id="'scroll_button_opt'" action="'addScrollButton'"/>
     </BuilderRow>
 

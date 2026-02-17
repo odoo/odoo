@@ -3,13 +3,13 @@
 
 <t t-name="survey.survey_breadcrumb_template">
     <ol class="breadcrumb justify-content-end bg-transparent">
-        <t t-set="canGoBack" t-value="surveyCanGoBack"/>
-        <t t-foreach="pages" t-as="page" t-key="page_index">
-            <t t-set="isActivePage" t-value="page.id === currentPageId"/>
+        <t t-set="canGoBack" t-value="this.surveyCanGoBack"/>
+        <t t-foreach="this.pages" t-as="page" t-key="page_index">
+            <t t-set="isActivePage" t-value="page.id === this.currentPageId"/>
             <li t-att-class="'breadcrumb-item' + (isActivePage ? ' active fw-bold' : '')"
                 t-att-data-page-id="page.id"
                 t-att-data-page-title="page.title">
-                <t t-if="currentPageId === page.id">
+                <t t-if="this.currentPageId === page.id">
                     <!-- Users can only go back and not forward -->
                     <!-- As soon as we reach the current page, set "can_go_back" to False -->
                     <t t-set="canGoBack" t-value="false" />

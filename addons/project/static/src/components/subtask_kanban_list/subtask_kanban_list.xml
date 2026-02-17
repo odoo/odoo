@@ -3,9 +3,9 @@
 <templates>
 
     <t t-name="project.SubtaskKanbanList">
-        <t t-if="props.record.displaySubtasks">
+        <t t-if="this.props.record.displaySubtasks">
             <div class="subtask_list">
-                <div t-foreach="closedList" t-as="record" t-key="record.id"  class="subtask_list_row">
+                <div t-foreach="this.closedList" t-as="record" t-key="record.id"  class="subtask_list_row">
                     <a t-attf-class="subtask_name_col {{ ['1_done', '1_canceled'].includes(record.data.state) ? 'text-muted opacity-50' : '' }}"
                         t-att-title="record.data.display_name"
                         t-esc="record.data.display_name"
@@ -21,16 +21,16 @@
                         class="`subtask_state_widget_col d-flex justify-content-center align-items-center`"
                         record="record"
                         type="'project_task_state_selection'"
-                        fieldInfo="fieldInfo.state"/>
+                        fieldInfo="this.fieldInfo.state"/>
                 </div>
                 <div class="subtask_create" t-on-click.stop="(ev) => this.onSubTaskCreated(ev)"
                     t-on-keydown="(ev) => ev.code === 'Escape' ? this._onBlur(ev) : ()=>{}">
-                    <t t-if="subtaskCreate.open">
+                    <t t-if="this.subtaskCreate.open">
                         <SubtaskCreate
-                            name="subtaskCreate.name"
-                            isReadonly="props.isReadonly" 
-                            onSubtaskCreateNameChanged.bind="_onSubtaskCreateNameChanged"
-                            onBlur.bind="_onBlur" />
+                            name="this.subtaskCreate.name"
+                            isReadonly="this.props.isReadonly" 
+                            onSubtaskCreateNameChanged.bind="this._onSubtaskCreateNameChanged"
+                            onBlur.bind="this._onBlur" />
                     </t>
                     <t t-else="">
                         <i class="fa fa-plus my-2"/> Add Sub-task

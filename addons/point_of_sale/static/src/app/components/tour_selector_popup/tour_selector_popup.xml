@@ -11,7 +11,7 @@
             </div>
             <div class="payment-methods-overview overflow-auto w-100 d-flex flex-wrap gap-1">
                 <div t-foreach="this.tours" t-as="name" t-key="name">
-                    <input class="form-check-input d-none" type="checkbox" t-att-name="name" t-att-id="name" t-on-change="onCheck" />
+                    <input class="form-check-input d-none" type="checkbox" t-att-name="name" t-att-id="name" t-on-change="this.onCheck" />
                     <label class="btn btn-secondary btn d-flex" t-att-for="name" t-att-class="{'active': this.state.selectedTours.has(name)}">
                         <span t-esc="name" />
                     </label>
@@ -20,8 +20,8 @@
             <t t-set-slot="footer">
                 <div class="modal-footer-left d-flex gap-2">
                     <div class="modal-footer-left d-flex gap-2">
-                        <button class="button highlight btn btn btn-primary" t-on-click="confirm">Confirm</button>
-                        <button class="button btn btn btn-secondary" t-on-click="props.close">Close</button>
+                        <button class="button highlight btn btn btn-primary" t-on-click="this.confirm">Confirm</button>
+                        <button class="button btn btn btn-secondary" t-on-click="this.props.close">Close</button>
                     </div>
                 </div>
             </t>

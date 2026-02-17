@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectTaskCalendarFilterSection.filter" t-inherit="web.CalendarFilterSection.filter" t-inherit-mode="primary">
-        <xpath expr="//span[@t-esc='filter.label']" position="before">
-            <span t-if="props.model.isCheckProject and !filter.value" class="text-danger pe-1">
+        <xpath expr="//span[@t-esc='this.filter.label']" position="before">
+            <span t-if="this.props.model.isCheckProject and !this.filter.value" class="text-danger pe-1">
                 <i class="fa fa-lock"/>
             </span>
         </xpath>

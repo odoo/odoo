@@ -2,10 +2,10 @@
 <template id="template" xml:space="preserve">
 
     <t t-name="sale.QtyAtDate">
-        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
-            t-on-click="showPopup"
-            t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''"
-            t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue }}"
+        <a t-att-tabindex="this.props.record.data.display_qty_widget ? '0' : '-1'"
+            t-on-click="this.showPopup"
+            t-att-class="!this.props.record.data.display_qty_widget ? 'invisible' : ''"
+            t-attf-class="fa fa-area-chart cursor-pointer {{ this.calcData.forecasted_issue }}"
         />
     </t>
 
@@ -16,21 +16,21 @@
                 <tbody>
                     <tr>
                         <td>
-                            <strong t-out="availableLabel"/>
+                            <strong t-out="this.availableLabel"/>
                             <br/>
                         </td>
                         <td class="text-end">
-                            <b t-out='props.record.data.qty_available_today'
-                             t-att-class="props.record.data.qty_available_today &lt; props.calcData.leftToDeliver ? 'text-danger': ''"/>
-                            <t t-out='props.record.data.product_uom_id[1]'/>
+                            <b t-out='this.props.record.data.qty_available_today'
+                             t-att-class="this.props.record.data.qty_available_today &lt; this.props.calcData.leftToDeliver ? 'text-danger': ''"/>
+                            <t t-out='this.props.record.data.product_uom_id[1]'/>
                         </td>
                     </tr>
                     <tr>
-                        <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
+                        <td><strong t-out="this.forecastedLabel"/><br/><small>On <span t-out="this.props.calcData.delivery_date"/></small></td>
                         <td class="text-end">
-                            <b t-out='props.record.data.virtual_available_at_date'
-                            t-att-class="props.record.data.qty_available_today &lt; props.calcData.leftToDeliver ? 'text-danger': ''"/>
-                            <t t-out='props.record.data.product_uom_id[1]'/>
+                            <b t-out='this.props.record.data.virtual_available_at_date'
+                            t-att-class="this.props.record.data.qty_available_today &lt; this.props.calcData.leftToDeliver ? 'text-danger': ''"/>
+                            <t t-out='this.props.record.data.product_uom_id[1]'/>
                         </td>
                     </tr>
                 </tbody>

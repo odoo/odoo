@@ -2,15 +2,15 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenPaymentLines">
-            <div t-if="props.paymentLines.length" class="paymentlines d-flex flex-column overflow-y-auto gap-2" t-attf-class="{{!this.ui.isSmall ? 'mb-3' : 'flex-grow-1'}}">
-                <t t-foreach="props.paymentLines" t-as="line" t-key="line.uuid">
+            <div t-if="this.props.paymentLines.length" class="paymentlines d-flex flex-column overflow-y-auto gap-2" t-attf-class="{{!this.ui.isSmall ? 'mb-3' : 'flex-grow-1'}}">
+                <t t-foreach="this.props.paymentLines" t-as="line" t-key="line.uuid">
                     <t t-if="line.isSelected()">
                         <div t-attf-class="paymentline selected d-flex align-items-center rounded-3"
-                            t-att-class="selectedLineClass(line)">
+                            t-att-class="this.selectedLineClass(line)">
                             <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
                                  <span class="payment-name"><t t-esc="line.payment_method_id.name"/></span>
                                  <div class="payment-amount px-3">
-                                    <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
+                                    <PriceFormatter price="this.env.utils.formatCurrency(line.getAmount())" />
                                 </div>
                             </div>
                             <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
@@ -125,11 +125,11 @@
                     </t>
                     <t t-else="">
                         <div class="paymentline d-flex align-items-center bg-view border rounded-3"
-                            t-att-class="unselectedLineClass(line)">
+                            t-att-class="this.unselectedLineClass(line)">
                              <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
                                  <t t-esc="line.payment_method_id?.name" />
                                  <div class="payment-amount px-3">
-                                    <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
+                                    <PriceFormatter price="this.env.utils.formatCurrency(line.getAmount())" />
                                 </div>
                              </div>
                             <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">

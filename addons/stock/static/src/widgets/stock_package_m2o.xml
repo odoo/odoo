@@ -2,8 +2,8 @@
 <templates>
 
     <t t-name="stock.StockPackageMany2One">
-        <t t-if="!isEditing" t-out="displayValue.display_name"/>
-        <Many2One t-else="" t-props="m2oProps"/>
+        <t t-if="!this.isEditing" t-out="this.displayValue.display_name"/>
+        <Many2One t-else="" t-props="this.m2oProps"/>
     </t>
 
 </templates>

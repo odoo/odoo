@@ -183,7 +183,7 @@
                     combinationColor: 'menu',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_one_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_one_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -194,7 +194,7 @@
                     combinationColor: 'header-sales_one',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_two_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_two_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -205,7 +205,7 @@
                     combinationColor: 'header-sales_two',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_three_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_three_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -216,7 +216,7 @@
                     combinationColor: 'header-sales_three',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_four_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_four_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -236,9 +236,9 @@
             'header_sales_three_opt',
             'header_sales_four_opt',
         ]"/>
-        <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
+        <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
             <BuilderButtonGroup applyTo="'#o_main_nav'"
-                    action="hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
+                    action="this.hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
                 <BuilderButton
                     title.translate="Small"
                     iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
@@ -254,7 +254,7 @@
             </BuilderButtonGroup>
         </BuilderRow>
 
-        <BuilderRow t-if="isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
+        <BuilderRow t-if="this.isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
             <BuilderNumberInput
                 action="'customizeWebsiteVariable'"
                 actionParam="'sidebar-width'"

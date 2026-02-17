@@ -6,14 +6,14 @@
         <xpath expr="//Many2One" position="after">
             <!-- Show configuration button for custom lines/products -->
             <button
-                t-if="!props.readonly and hasConfigurationButton"
+                t-if="!this.props.readonly and this.hasConfigurationButton"
                 type="button"
                 class="btn btn-secondary fa fa-pencil px-2"
                 tabindex="-1"
                 draggable="false"
-                t-att-aria-label="configurationButtonHelp"
-                t-att-data-tooltip="configurationButtonHelp"
-                t-on-click="onEditConfiguration"
+                t-att-aria-label="this.configurationButtonHelp"
+                t-att-data-tooltip="this.configurationButtonHelp"
+                t-on-click="this.onEditConfiguration"
             />
         </xpath>
     </t>

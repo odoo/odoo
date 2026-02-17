@@ -1,17 +1,17 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableMenu">
-        <Dropdown menuClass="'m-0'" position="props.type === 'column' ? 'bottom' : 'right'" state="props.dropdownState" bottomSheet="false">
+        <Dropdown menuClass="'m-0'" position="this.props.type === 'column' ? 'bottom' : 'right'" state="this.props.dropdownState" bottomSheet="false">
             <button
                 t-ref="menuRef"
-                t-att-data-type="props.type"
+                t-att-data-type="this.props.type"
                 class="o-we-table-menu oi"
-                t-attf-class="oi-ellipsis-{{ props.type === 'column' ? 'h w-100' : 'v h-100 px-0' }}"
+                t-attf-class="oi-ellipsis-{{ this.props.type === 'column' ? 'h w-100' : 'v h-100 px-0' }}"
                 title="Click to open options&#10;Drag to move"
                 t-on-pointerdown.prevent="() => {}"
             />
             <t t-set-slot="content">
                 <div t-on-pointerdown.stop="() => {}">
-                    <t t-foreach="items" t-as="item" t-key="item_index">
+                    <t t-foreach="this.items" t-as="item" t-key="item_index">
                         <DropdownItem onSelected="() => this.onSelected(item)">
                             <div class="user-select-none d-flex align-items-center" t-att-name="item.name">
                                 <span t-if="item.icon"

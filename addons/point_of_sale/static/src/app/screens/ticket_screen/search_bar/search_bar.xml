@@ -7,33 +7,33 @@
                 <div class="input-group">
                     <span class="input-group-text"><i class="fa-fw oi oi-search" role="img" aria-label="Search Products" title="Search Products"/></span>
                     <input class="form-control form-control-lg" t-ref="autofocus"
-                    t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
-                    <div t-if="state.showSearchFields and state.searchInput" class="fields z-1 bg-light">
+                    t-model="this.state.searchInput" t-on-keydown="this.onSearchInputKeydown" t-on-keyup="this.onSearchInputKeyup" type="text" t-att-placeholder="this.props.placeholder" />
+                    <div t-if="this.state.showSearchFields and this.state.searchInput" class="fields z-1 bg-light">
                         <ul class="py-1 px-0 small">
-                            <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName" t-if="state.selectedFilter === 'SYNCED' or fieldName !== 'INVOICE_NUMBER'">
+                            <t t-foreach="this.searchFieldsList" t-as="fieldName" t-key="fieldName" t-if="this.state.selectedFilter === 'SYNCED' or fieldName !== 'INVOICE_NUMBER'">
                                 <li class="ps-5 py-1 text-start"
-                                    t-att-class="{ highlight: fieldName == searchFieldsList[state.selectedSearchFieldId] }"
+                                    t-att-class="{ highlight: fieldName == this.searchFieldsList[this.state.selectedSearchFieldId] }"
                                     t-on-click="() => this._onClickSearchField(fieldName)">
                                     <span class="field">
-                                        <t t-esc="props.config.searchFields.get(fieldName)"></t>
+                                        <t t-esc="this.props.config.searchFields.get(fieldName)"></t>
                                     </span>
                                     <span>: </span>
                                     <span class="term text-primary fw-bolder">
-                                        <t t-esc="state.searchInput"></t>
+                                        <t t-esc="this.state.searchInput"></t>
                                     </span>
                                 </li>
                             </t>
                         </ul>
                     </div>
-                    <div t-if="props.config.filter.show"
+                    <div t-if="this.props.config.filter.show"
                         class="filter btn btn-secondary d-flex align-items-center dropdown-toggle"
-                        t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
+                        t-on-click.stop="() => { this.state.showFilterOptions = !this.state.showFilterOptions }">
                         <span>
-                            <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
+                            <t t-esc="this.props.config.filter.options.get(this.state.selectedFilter).text" />
                         </span>
-                        <ul t-if="state.showFilterOptions" class="options dropdown-menu dropdown-menu-end py-1">
-                            <t t-foreach="filterOptionsList" t-as="key" t-key="key">
-                                <t t-set="_option" t-value="props.config.filter.options.get(key)" />
+                        <ul t-if="this.state.showFilterOptions" class="options dropdown-menu dropdown-menu-end py-1">
+                            <t t-foreach="this.filterOptionsList" t-as="key" t-key="key">
+                                <t t-set="_option" t-value="this.props.config.filter.options.get(key)" />
                                 <li class="dropdown-item" t-on-click="() => this._onSelectFilter(key)" t-att-class="{ 'indented': _option.indented }">
                                     <t t-esc="_option.text"></t>
                                 </li>

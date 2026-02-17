@@ -7,7 +7,7 @@
             <h2 class="mb-2">API key</h2>
 
             <p class="mb-1">To try the API, please insert your API key here</p>
-            <a href="#" t-on-click="openAPIKeyForm">Generate a new API key here</a>
+            <a href="#" t-on-click="this.openAPIKeyForm">Generate a new API key here</a>
             <input
                 class="mt-2 w-100"
                 type="password"
@@ -17,8 +17,8 @@
             />
 
             <div class="d-flex flex-nowrap flex-content-between mt-2">
-                <button class="btn me-1" t-on-click="save">Save</button>
-                <button class="btn" t-on-click="cancel">Discard</button>
+                <button class="btn me-1" t-on-click="this.save">Save</button>
+                <button class="btn" t-on-click="this.cancel">Discard</button>
             </div>
         </div>
     </div>

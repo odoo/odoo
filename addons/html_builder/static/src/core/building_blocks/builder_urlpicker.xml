@@ -4,13 +4,13 @@
 <t t-name="html_builder.BuilderUrlPicker">
     <BuilderComponent>
         <BuilderTextInputBase
-                t-props="textInputBaseProps"
-                inputRef="inputRef"
-                commit="commit"
-                preview="preview"
-                value="state.value"
+                t-props="this.textInputBaseProps"
+                inputRef="this.inputRef"
+                commit="this.commit"
+                preview="this.preview"
+                value="this.state.value"
         >
-            <button class="btn" title="Preview this URL in a new tab" t-on-click="openPreviewUrl">
+            <button class="btn" title="Preview this URL in a new tab" t-on-click="this.openPreviewUrl">
                 <i class="fa fa-fw fa-external-link"/>
             </button>
         </BuilderTextInputBase>

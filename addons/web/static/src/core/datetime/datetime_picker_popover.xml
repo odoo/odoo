@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.DateTimePickerPopover">
-        <DateTimePicker t-props="props.pickerProps">
+        <DateTimePicker t-props="this.props.pickerProps">
             <t t-set-slot="buttons">
                 <div class="o_datetime_buttons d-flex gap-2">
                     <button
                         class="btn btn-sm btn-secondary"
                         title="Clear"
                         tabindex="-1"
-                        t-on-click="props.pickerProps.onReset"
+                        t-on-click="this.props.pickerProps.onReset"
                     >
                         <i class="fa fa-eraser" />
                     </button>
                     <button
                         class="btn btn-sm btn-primary"
                         tabindex="-1"
-                        t-on-click="props.close"
+                        t-on-click="this.props.close"
                     >
                         <span>Apply</span>
                     </button>

@@ -6,20 +6,20 @@
             <attribute name="class" remove="mw-100" add="w-100 align-items-start" separator=" "/>
         </xpath>
         <xpath expr="//TagsList" position="before">
-            <t t-if="tags.length gt 5">
+            <t t-if="this.tags.length gt 5">
                 <div class="d-flex w-100">
                     <div class="flex-grow-1">
-                        <strong><t t-out="attendeesCount"/> attendees</strong>
-                        <br/><t t-out="acceptedCount"/> accepted
-                        <br/><t t-out="declinedCount"/> declined
-                        <br/><t t-out="uncertainCount"/> uncertain
+                        <strong><t t-out="this.attendeesCount"/> attendees</strong>
+                        <br/><t t-out="this.acceptedCount"/> accepted
+                        <br/><t t-out="this.declinedCount"/> declined
+                        <br/><t t-out="this.uncertainCount"/> uncertain
                     </div>
-                    <i role="button" t-on-click="onExpanderClick" t-att-class="state.expanded ? 'oi oi-chevron-up' : 'oi oi-chevron-down'"></i>
+                    <i role="button" t-on-click="this.onExpanderClick" t-att-class="this.state.expanded ? 'oi oi-chevron-up' : 'oi oi-chevron-down'"></i>
                 </div>
             </t>
         </xpath>
         <xpath expr="//TagsList" position="replace">
-            <t t-if="!state.expanded and tags.length > 10"> </t>
+            <t t-if="!this.state.expanded and this.tags.length > 10"> </t>
             <t t-else="">$0</t>
         </xpath>
     </t>

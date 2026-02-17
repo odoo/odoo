@@ -3,18 +3,18 @@
 
 <t t-name="html_builder.ShadowOption">
     <BuilderRow label.translate="Shadow">
-        <BuilderSelect action="props.setShadowClassAction">
+        <BuilderSelect action="this.props.setShadowClassAction">
             <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow'">
-                <t t-set="onClick" t-value="getOnClick('shadow')"/>
+                <t t-set="onClick" t-value="this.getOnClick('shadow')"/>
                 <t t-call="html_builder.ShadowOptionItem">Normal</t>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-sm'">
-                <t t-set="onClick" t-value="getOnClick('shadow-sm')"/>
+                <t t-set="onClick" t-value="this.getOnClick('shadow-sm')"/>
                 <t t-call="html_builder.ShadowOptionItem">Small</t>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-lg'">
-                <t t-set="onClick" t-value="getOnClick('shadow-lg')"/>
+                <t t-set="onClick" t-value="this.getOnClick('shadow-lg')"/>
                 <t t-call="html_builder.ShadowOptionItem">Large</t>
             </BuilderSelectItem>
             <BuilderSelectItem id="'custom_shadow'" actionParam="'o-shadow-custom'">Custom</BuilderSelectItem>
@@ -22,12 +22,12 @@
     </BuilderRow>
     <t t-if="this.isActiveItem('custom_shadow')">
         <BuilderRow label.translate="Outset/Inset" level="1">
-            <BuilderButtonGroup action="props.setShadowModeAction">
+            <BuilderButtonGroup action="this.props.setShadowModeAction">
                 <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
                 <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
             </BuilderButtonGroup>
         </BuilderRow>
-        <BuilderContext action="props.setShadowStyleAction">
+        <BuilderContext action="this.props.setShadowStyleAction">
             <BuilderRow label.translate="Color" level="1">
                 <BuilderColorPicker actionParam="'color'" enabledTabs="['solid', 'custom']"/>
             </BuilderRow>
@@ -55,7 +55,7 @@
         </div>
         <a class="fa fa-pencil btn o-hb-shadow-button"
                 title="Edit"
-                t-on-click="onClick"/>
+                t-on-click="this.onClick"/>
     </div>
 </t>
 

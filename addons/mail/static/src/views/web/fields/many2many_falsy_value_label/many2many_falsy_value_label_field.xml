@@ -2,8 +2,8 @@
 <templates>
     <t t-name="mail.Many2ManyFalsyValueLabelField">
         <div class="o-mail-Many2ManyFalsyValueLabelField d-flex align-items-center gap-1">
-            <span t-if="props.readonly and !props.record.data[props.name].records.length" t-out="falsyValueLabel" class="text-muted"/>
-            <Many2ManyTagsField t-else="" t-props="m2mProps"/>
+            <span t-if="this.props.readonly and !this.props.record.data[this.props.name].records.length" t-out="this.falsyValueLabel" class="text-muted"/>
+            <Many2ManyTagsField t-else="" t-props="this.m2mProps"/>
         </div>
     </t>
 </templates>

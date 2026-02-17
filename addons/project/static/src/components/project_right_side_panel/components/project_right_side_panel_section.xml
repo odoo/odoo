@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="project.ProjectRightSidePanelSection">
-        <div class="o_rightpanel_section" t-att-name="props.name" t-if="props.show">
-            <div class="d-flex align-items-center justify-content-between gap-1 pe-3" t-att-class="props.headerClassName" t-if="props.header">
-                <div class="o_rightpanel_title flex-grow-1 ps-3 py-3 py-md-2" t-if="props.slots.title" t-attf-class="{{ env.isSmall ? 'd-flex align-items-center' : '' }}">
+        <div class="o_rightpanel_section" t-att-name="this.props.name" t-if="this.props.show">
+            <div class="d-flex align-items-center justify-content-between gap-1 pe-3" t-att-class="this.props.headerClassName" t-if="this.props.header">
+                <div class="o_rightpanel_title flex-grow-1 ps-3 py-3 py-md-2" t-if="this.props.slots.title" t-attf-class="{{ this.env.isSmall ? 'd-flex align-items-center' : '' }}">
                     <h3 class="m-0 lh-lg"><t t-slot="title"/></h3>
                 </div>
                 <t t-slot="header"/>
             </div>
-            <div class="o_rightpanel_data" t-if="props.showData" t-att-class="props.dataClassName">
+            <div class="o_rightpanel_data" t-if="this.props.showData" t-att-class="this.props.dataClassName">
                 <t t-slot="default"/>
             </div>
         </div>

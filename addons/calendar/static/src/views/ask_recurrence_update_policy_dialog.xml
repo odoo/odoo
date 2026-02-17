@@ -2,7 +2,7 @@
 <templates>
     <t t-name="calendar.AskRecurrenceUpdatePolicyDialog">
         <Dialog size="'sm'" title.translate="Edit Recurrent event">
-            <t t-foreach="Object.entries(possibleValues)" t-as="value" t-key="value[0]">
+            <t t-foreach="Object.entries(this.possibleValues)" t-as="value" t-key="value[0]">
                 <t t-set="name" t-value="value[0]"/>
                 <t t-set="state" t-value="value[1]"/>
                 <div class="form-check o_radio_item">
@@ -11,7 +11,7 @@
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="confirm">
+                <button class="btn btn-primary" t-on-click="this.confirm">
                     Confirm
                 </button>
             </t>

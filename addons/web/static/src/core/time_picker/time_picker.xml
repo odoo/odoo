@@ -3,35 +3,35 @@
     <t t-name="web.TimePicker">
         <div
             class="o_time_picker d-flex align-items-center justify-content-center"
-            t-att-class="cssClass"
+            t-att-class="this.cssClass"
         >
             <Dropdown
-                t-if="!env.isSmall"
-                state="dropdownState"
-                menuRef="menuRef"
+                t-if="!this.env.isSmall"
+                state="this.dropdownState"
+                menuRef="this.menuRef"
                 manual="true"
                 focusToggleOnClosed="false"
                 position="'bottom-start'"
                 menuClass="'o_time_picker_dropdown pt-0 mt-0'"
-                navigationOptions="navigationOptions"
-                onOpened.bind="onDropdownOpened"
+                navigationOptions="this.navigationOptions"
+                onOpened.bind="this.onDropdownOpened"
             >
                 <input
                     type="text"
                     t-ref="inputRef"
                     class="o_time_picker_input form-control px-0"
-                    t-att-class="inputCssClass"
-                    t-model="state.inputValue"
-                    t-on-input="onInput"
-                    t-on-focus="ensureOpen"
-                    t-on-click="ensureOpen"
-                    t-on-change="onChange"
-                    t-on-keydown.capture="onKeydown"
-                    t-att-placeholder="getPlaceholder()"
+                    t-att-class="this.inputCssClass"
+                    t-model="this.state.inputValue"
+                    t-on-input="this.onInput"
+                    t-on-focus="this.ensureOpen"
+                    t-on-click="this.ensureOpen"
+                    t-on-change="this.onChange"
+                    t-on-keydown.capture="this.onKeydown"
+                    t-att-placeholder="this.getPlaceholder()"
                     tabindex="-1"
                 />
                 <t t-set-slot="content">
-                    <t t-foreach="suggestions" t-as="value" t-key="value_index">
+                    <t t-foreach="this.suggestions" t-as="value" t-key="value_index">
                         <DropdownItem
                             class="'o_time_picker_option'"
                             t-out="value.toString()"
@@ -42,13 +42,13 @@
                 </t>
             </Dropdown>
             <input
-                t-if="env.isSmall"
+                t-if="this.env.isSmall"
                 type="time"
                 t-ref="inputRef"
                 class="o_time_picker_input form-control px-0"
-                t-att-class="inputCssClass"
-                t-model="state.inputValue"
-                t-on-change="onChange"
+                t-att-class="this.inputCssClass"
+                t-model="this.state.inputValue"
+                t-on-change="this.onChange"
             />
         </div>
     </t>

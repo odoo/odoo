@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.selfOrderIndex">
-        <div t-if="!selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
+        <div t-if="!this.selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
             We're currently closed.
         </div>
-        <div t-if="selfOrder.rpcLoading">
+        <div t-if="this.selfOrder.rpcLoading">
             <LoadingOverlay />
         </div>
-        <Router t-if="selfIsReady" pos_config_id="selfOrder.config.id">
+        <Router t-if="this.selfIsReady" pos_config_id="this.selfOrder.config.id">
             <t t-set-slot="default" route="`/pos-self/${selfOrder.config.id}`">
                 <LandingPage />
             </t>
@@ -15,10 +15,10 @@
                 <ProductListPage />
             </t>
             <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
-                <ProductPage  productTemplate="selfOrder.models['product.template'].get(url.id)" />
+                <ProductPage  productTemplate="this.selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
-                <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
+                <ComboPage productTemplate="this.selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="cart" route="`/pos-self/${selfOrder.config.id}/cart`">
                 <CartPage/>

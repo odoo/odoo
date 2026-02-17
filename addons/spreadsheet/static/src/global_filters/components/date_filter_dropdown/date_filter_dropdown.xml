@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="spreadsheet.DateFilterDropdown">
-        <t t-foreach="dateOptions" t-as="option" t-key="option.type">
+        <t t-foreach="this.dateOptions" t-as="option" t-key="option.type">
             <DropdownItem tag="'div'"
-                            class="{ 'selected': isSelected(option), 'd-flex justify-content-between o-date-filter-dropdown': true }"
+                            class="{ 'selected': this.isSelected(option), 'd-flex justify-content-between o-date-filter-dropdown': true }"
                             closingMode="'none'"
                             attrs="{ 'data-id': option.type }"
                             onSelected="() => this.update(option)">
@@ -11,15 +11,15 @@
                 <div class="o-date-option-label" t-esc="option.label"/>
                 <t t-if="option.type === 'range'">
                     <div class="d-flex flex-row" t-on-click.stop="">
-                        <DateTimeInput type="'date'" value="dateFrom()" onChange="(dateFrom) => this.setDateFrom(dateFrom)" />
+                        <DateTimeInput type="'date'" value="this.dateFrom()" onChange="(dateFrom) => this.setDateFrom(dateFrom)" />
                         <span class="d-flex align-items-center">to</span>
-                        <DateTimeInput type="'date'" value="dateTo()" onChange="(dateTo) => this.setDateTo(dateTo)" />
+                        <DateTimeInput type="'date'" value="this.dateTo()" onChange="(dateTo) => this.setDateTo(dateTo)" />
                     </div>
                 </t>
-                <t t-elif="isFixedPeriod(option.type)">
+                <t t-elif="this.isFixedPeriod(option.type)">
                     <div class="d-flex justify-content-between">
                         <button class="btn-previous fa fa-caret-left" t-on-click="() => this.selectPrevious(option.type)" />
-                        <input class="o_input" type="text" t-att-value="getDescription(option.type)" readonly="true"/>
+                        <input class="o_input" type="text" t-att-value="this.getDescription(option.type)" readonly="true"/>
                         <button class="btn-next fa fa-caret-right" t-on-click="() => this.selectNext(option.type)" />
                     </div>
                 </t>

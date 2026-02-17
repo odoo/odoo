@@ -417,7 +417,7 @@ test("popover repositions when content changes", async () => {
         static template = xml`
             <div id="popover">
                 <button t-on-click="() => this.state.expanded = true">Expand</button>
-                <div t-if="state.expanded" style="height: 200px; width: 200px;">
+                <div t-if="this.state.expanded" style="height: 200px; width: 200px;">
                     Large content that changes the popover dimensions
                 </div>
             </div>
@@ -484,7 +484,7 @@ test("arrow follows target and can get sucked", async () => {
         static props = ["*"];
         static template = xml`
             <div class="popover-container" t-ref="popover-container">
-                <div class="popover-target" t-ref="popover-target" t-on-click="openPopover"/>
+                <div class="popover-target" t-ref="popover-target" t-on-click="this.openPopover"/>
             </div>
         `;
         setup() {

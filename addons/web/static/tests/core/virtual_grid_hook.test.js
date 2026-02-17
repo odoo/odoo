@@ -44,7 +44,7 @@ function getTestComponent(virtualGridParams) {
     class Item extends Component {
         static props = ["row", "col"];
         static template = xml`
-            <div class="item" t-att-data-row-id="props.row.id" t-att-data-col-id="props.col.id" t-att-style="style" t-esc="content"/>
+            <div class="item" t-att-data-row-id="this.props.row.id" t-att-data-col-id="this.props.col.id" t-att-style="this.style" t-esc="this.content"/>
         `;
         get content() {
             return `${this.props.row.id}|${this.props.col.id}`;
@@ -61,9 +61,9 @@ function getTestComponent(virtualGridParams) {
         static components = { Item };
         static template = xml`
             <div class="scrollable" t-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
-                <div class="inner" t-att-style="innerStyle">
-                    <t t-foreach="virtualRows" t-as="row" t-key="row.id">
-                        <t t-foreach="virtualColumns" t-as="col" t-key="col.id">
+                <div class="inner" t-att-style="this.innerStyle">
+                    <t t-foreach="this.virtualRows" t-as="row" t-key="row.id">
+                        <t t-foreach="this.virtualColumns" t-as="col" t-key="col.id">
                             <Item row="row" col="col"/>
                         </t>
                     </t>

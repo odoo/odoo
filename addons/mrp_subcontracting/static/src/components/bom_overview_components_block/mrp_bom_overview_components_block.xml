@@ -3,12 +3,12 @@
 
     <t t-name="mrp_subcontracting.BomOverviewComponentsBlock" t-inherit="mrp.BomOverviewComponentsBlock" t-inherit-mode="extension">
         <xpath expr="//t[@name='byproducts']" position="after">
-            <t t-if="data.subcontracting">
+            <t t-if="this.data.subcontracting">
                 <BomOverviewSpecialLine
                     type="'subcontracting'"
-                    showOptions="props.showOptions"
-                    data="props.data"
-                    precision="props.precision"
+                    showOptions="this.props.showOptions"
+                    data="this.props.data"
+                    precision="this.props.precision"
                     />
             </t>
         </xpath>

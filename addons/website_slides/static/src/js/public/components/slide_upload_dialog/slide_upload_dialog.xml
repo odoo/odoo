@@ -2,35 +2,35 @@
 <templates xml:space="preserve">
 
     <t t-name="website_slides.SlideUploadDialog" owl="1">
-        <Dialog size="state.size" title="state.title" contentClass="'o_w_slide_upload_dialog_content'">
+        <Dialog size="this.state.size" title="this.state.title" contentClass="'o_w_slide_upload_dialog_content'">
             <t t-set-slot="footer">
-                <button t-if="state.page ==='select'" type="button" class="btn" t-on-click="() => this.props.close()">
+                <button t-if="this.state.page ==='select'" type="button" class="btn" t-on-click="() => this.props.close()">
                     <span>Discard</span>
                 </button>
-                <t t-elif="!['select', 'upload'].includes(state.page)">
+                <t t-elif="!['select', 'upload'].includes(this.state.page)">
                     <div id="o_w_slide_upload_btns"/>
-                    <button class="btn" t-on-click="onClickGoBack">
+                    <button class="btn" t-on-click="this.onClickGoBack">
                         <span>Back</span>
                     </button>
                 </t>
             </t>
             <div class="o_w_slide_upload_modal_container">
                 <SlideUploadCategory
-                    t-if="Object.keys(slideCategoryData).includes(state.page)"
-                    alertMsg="state.alertMsg"
-                    categoryId="props.categoryId"
-                    channelId="props.channelId"
-                    slideCategory="state.page"
-                    canPublish="props.canPublish"
-                    canUpload="props.canUpload"
-                    upload.bind="uploadSlide"
+                    t-if="Object.keys(this.slideCategoryData).includes(this.state.page)"
+                    alertMsg="this.state.alertMsg"
+                    categoryId="this.props.categoryId"
+                    channelId="this.props.channelId"
+                    slideCategory="this.state.page"
+                    canPublish="this.props.canPublish"
+                    canUpload="this.props.canUpload"
+                    upload.bind="this.uploadSlide"
                 >
                     <t t-set-slot="tutorial">
-                        <t t-call="{{pagesTemplates[state.page]}}"/>
+                        <t t-call="{{this.pagesTemplates[this.state.page]}}"/>
                     </t>
                 </SlideUploadCategory>
                 <t t-else="">
-                    <t t-call="{{pagesTemplates[state.page]}}"/>
+                    <t t-call="{{this.pagesTemplates[this.state.page]}}"/>
                 </t>
             </div>
         </Dialog>

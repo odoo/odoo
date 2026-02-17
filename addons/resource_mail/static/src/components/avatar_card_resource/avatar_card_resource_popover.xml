@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="resource_mail.AvatarCardResourcePopover" t-inherit="mail.AvatarCardPopover">
         <xpath expr="//span[hasclass('o_avatar')]/img" position="replace">
-            <t t-if="displayAvatar">$0</t>
+            <t t-if="this.displayAvatar">$0</t>
         </xpath>
     </t>
 </templates>

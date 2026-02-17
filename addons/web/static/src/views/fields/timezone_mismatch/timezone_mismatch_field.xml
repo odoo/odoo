@@ -3,9 +3,9 @@
 
     <t t-name="web.TimezoneMismatchField" t-inherit="web.SelectionField" t-inherit-mode="primary">
         <xpath expr="." position="inside">
-            <span t-if="mismatch"
+            <span t-if="this.mismatch"
                 class="o_tz_warning fa fa-exclamation-triangle position-static align-self-center m-0 ms-2"
-                t-att-title="mismatchTitle" />
+                t-att-title="this.mismatchTitle" />
         </xpath>
     </t>
 

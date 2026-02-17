@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.PollVotesPanel">
-        <Dialog size="'md'" bodyClass="'d-flex flex-column'" header="true" footer="false" contentClass="contentClass">
+        <Dialog size="'md'" bodyClass="'d-flex flex-column'" header="true" footer="false" contentClass="this.contentClass">
             <t t-set-slot="header">
                 <div class="d-flex flex-column fs-4">
-                    <span class="fw-bold" t-esc="props.poll.poll_question"/>
-                    <span class="text-muted smaller" t-esc="props.poll.voteCountText(props.poll.numberOfVotes)"/>
+                    <span class="fw-bold" t-esc="this.props.poll.poll_question"/>
+                    <span class="text-muted smaller" t-esc="this.props.poll.voteCountText(this.props.poll.numberOfVotes)"/>
                 </div>
             </t>
-            <Tabs initialTabId="props.poll.option_ids[0]?.id" direction="store.useMobileView ? 'h' : 'v'" ref="tabsRef">
+            <Tabs initialTabId="this.props.poll.option_ids[0]?.id" direction="this.store.useMobileView ? 'h' : 'v'" ref="this.tabsRef">
                 <t t-set-slot="headers">
-                    <TabHeader t-foreach="props.poll.option_ids" t-as="option" t-key="option.id" id="option.id">
+                    <TabHeader t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" id="option.id">
                         <div class="p-2 d-flex justify-content-between w-100">
                             <span class="me-2" t-esc="option.option_label"/>
                             <span t-esc="option.number_of_votes"/>
@@ -18,11 +18,11 @@
                     </TabHeader>
                 </t>
                 <t t-set-slot="panels">
-                    <TabPanel t-foreach="props.poll.option_ids" t-as="option" t-key="option.id" id="option.id" onBecameVisible="() => this.onTabPanelVisible(option)">
-                        <div t-foreach="option.vote_ids" t-as="vote" t-key="vote.id" class="d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': ui.isSmall}">
+                    <TabPanel t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" id="option.id" onBecameVisible="() => this.onTabPanelVisible(option)">
+                        <div t-foreach="option.vote_ids" t-as="vote" t-key="vote.id" class="d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': this.ui.isSmall}">
                             <t t-set="persona" t-value="vote.user_id?.partner_id or vote.guest_id"/>
                             <img class="rounded o-mail-PollVotesPanel-avatar o_avatar" t-att-src="persona.avatarUrl"/>
-                            <span class="mx-2 text-truncate fs-6" t-esc="props.poll.start_message_id.getPersonaName(persona)"/>
+                            <span class="mx-2 text-truncate fs-6" t-esc="this.props.poll.start_message_id.getPersonaName(persona)"/>
                         </div>
                     </TabPanel>
                 </t>

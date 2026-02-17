@@ -9,7 +9,7 @@
             <BuilderSelectItem actionValue="'nav-pills'" classAction="'s_tabs_pills_template'" id="'pills_opt'">Pills</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <t t-if="isActiveItem('tabs_opt') or isActiveItem('buttons_opt')">
+    <t t-if="this.isActiveItem('tabs_opt') or this.isActiveItem('buttons_opt')">
         <BuilderRow label.translate="Background" level="1">
             <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav'" styleAction="'--tabs-bg-color'" />
         </BuilderRow>
@@ -17,14 +17,14 @@
             <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav .nav-link'" styleAction="'--tabs-link-color'" />
         </BuilderRow>
     </t>
-    <BuilderRow t-if="isActiveItem('pills_opt') or isActiveItem('underline_opt')"
+    <BuilderRow t-if="this.isActiveItem('pills_opt') or this.isActiveItem('underline_opt')"
             label.translate="Direction">
         <BuilderSelect action="'setDirection'">
             <BuilderSelectItem actionValue="'horizontal'" id="'horizontal_opt'">Horizontal</BuilderSelectItem>
             <BuilderSelectItem actionValue="'vertical'">Vertical</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <t t-if="isActiveItem('horizontal_opt') or !(isActiveItem('pills_opt') or isActiveItem('underline_opt'))">
+    <t t-if="this.isActiveItem('horizontal_opt') or !(this.isActiveItem('pills_opt') or this.isActiveItem('underline_opt'))">
         <BuilderRow label.translate="Fill and Justify">
             <BuilderSelect applyTo="'.s_tabs_nav .nav'">
                 <BuilderSelectItem classAction="''" id="'regular_opt'">Regular</BuilderSelectItem>
@@ -32,7 +32,7 @@
                 <BuilderSelectItem classAction="'nav-justified'">Equal Widths</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow t-if="isActiveItem('regular_opt')" label.translate="Alignment" level="1">
+        <BuilderRow t-if="this.isActiveItem('regular_opt')" label.translate="Alignment" level="1">
             <BuilderSelect applyTo="'.s_tabs_nav .nav'">
                 <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
                 <BuilderSelectItem classAction="'justify-content-center mx-auto'">Center</BuilderSelectItem>

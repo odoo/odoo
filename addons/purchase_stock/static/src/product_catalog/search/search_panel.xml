@@ -8,14 +8,14 @@
     </t>
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
-            <t t-if="suggest.suggestToggle.isOn">
+            <t t-if="this.suggest.suggestToggle.isOn">
                 <attribute name="class">o_search_panel_sections mt-4</attribute>
             </t>
         </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
-            <t t-if="displaySuggest">
+            <t t-if="this.displaySuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-                <t t-if="suggest.suggestToggle.isOn">
+                <t t-if="this.suggest.suggestToggle.isOn">
                     <div class="o_suggest_feature">
                         <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
                         <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
@@ -28,7 +28,7 @@
     <!-- ───────────────── Header ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.Header">
         <div name="search_panel_suggestion" class="d-flex pt-4 mt-3">
-            <header class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
+            <header class=" text-uppercase cursor-default" t-att-title="this.tooltipTitle">
                 <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
                 <b class="me-2">Suggest</b>
             </header>
@@ -38,8 +38,8 @@
                         class="form-check-input"
                         type="checkbox"
                         role="switch"
-                        t-att-checked="suggest.suggestToggle.isOn? true : false"
-                        t-on-click="toggleSuggest"
+                        t-att-checked="this.suggest.suggestToggle.isOn? true : false"
+                        t-on-click="this.toggleSuggest"
                     />
                 </div>
             </div>
@@ -50,9 +50,9 @@
         <div class="d-flex align-items-center ms-2 pt-2">
             <span class="me-2 fw-bold">Replenish for</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="suggest.numberOfDays"
-                t-on-input="onDaysInput"
-                t-on-mousedown="selectAllOnClick"/>
+                t-att-value="this.suggest.numberOfDays"
+                t-on-input="this.onDaysInput"
+                t-on-mousedown="this.selectAllOnClick"/>
             <span class="ms-2">day(s)</span>
         </div>
     </t>
@@ -61,13 +61,13 @@
         <div class="d-inline-flex align-items-center ms-2 mt-2 fw-bold">Based on</div>
         <div class="d-inline-flex align-items-center ms-1 me-2">
             <div class="o_TimePeriodSelectionField">
-                <TimePeriodSelectionField t-props="timePeriodProps"/>
+                <TimePeriodSelectionField t-props="this.timePeriodProps"/>
             </div>
             <span class="m-1">x</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="suggest.percentFactor"
-                t-on-input="onPercentFactorInput"
-                t-on-mousedown="selectAllOnClick"/>
+                t-att-value="this.suggest.percentFactor"
+                t-on-input="this.onPercentFactorInput"
+                t-on-mousedown="this.selectAllOnClick"/>
             <span>%</span>
         </div>
     </t>
@@ -75,9 +75,9 @@
     <t t-name="PurchaseSuggest.SearchPanel.Footer">
         <div class="d-flex align-items-center mt-3 ms-2">
             <div class="text-info fw-bold">
-                <span name="suggest_total"><t t-out="estimatedSuggestPrice"/></span>
+                <span name="suggest_total"><t t-out="this.estimatedSuggestPrice"/></span>
             </div>
-            <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="addAllProducts">
+            <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="this.addAllProducts">
                 Add All
             </button>
         </div>

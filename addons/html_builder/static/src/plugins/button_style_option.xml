@@ -12,7 +12,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="state.type === 'custom'">
+    <t t-if="this.state.type === 'custom'">
         <BuilderRow label.translate="Text" level="1">
             <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
         </BuilderRow>

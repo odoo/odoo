@@ -4,15 +4,15 @@
         <Dropdown
             menuClass="'mt-1'"
             navigationOptions="{ 'shouldFocusChildInput': false }"
-            state="dropdownState"
+            state="this.dropdownState"
             manual="true"
             position="'bottom-start'">
-            <input class="o_input w-100 o-date-filter-input" readonly="true" t-att-value="inputValue" t-on-click="onInputClick"/>
+            <input class="o_input w-100 o-date-filter-input" readonly="true" t-att-value="this.inputValue" t-on-click="this.onInputClick"/>
             <t t-set-slot="content">
                 <DateFilterDropdown
-                    value="props.value"
-                    update.bind="props.update"
-                    model="props.model"
+                    value="this.props.value"
+                    update.bind="this.props.update"
+                    model="this.props.model"
                 />
             </t>
         </Dropdown>

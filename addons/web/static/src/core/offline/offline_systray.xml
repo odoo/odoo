@@ -3,7 +3,7 @@
 
     <t t-name="web.OfflineSystray">
         <div t-if="this.offlineService.offline" t-on-click="() => this.offlineService.checkConnection()">
-            <i t-if="env.isSmall"
+            <i t-if="this.env.isSmall"
                 class="fa fa-chain-broken o_nav_entry text-danger"
                 role="img"
                 aria-label="Working offline"

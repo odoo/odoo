@@ -3,13 +3,13 @@
 
     <t t-name="mail.VoicePlayer">
         <div class="o-mail-VoicePlayer d-flex align-items-center my-1 position-relative">
-            <t t-set="playOrPause"><t t-if="state.repeat">Repeat</t><t t-elif="state.playing">Pause</t><t t-else="">Play</t></t>
+            <t t-set="playOrPause"><t t-if="this.state.repeat">Repeat</t><t t-elif="this.state.playing">Pause</t><t t-else="">Play</t></t>
             <button class="border-0 btn shadow-none rounded-pill fa fa-fw ms-2 me-3 bg-200"
                 t-att-class="{
-                    'fa-stop text-danger btn-sm': state.playing,
-                    'btn-light btn-sm': !state.playing,
-                    'fa-play': !state.playing and !state.repeat,
-                    'fa-repeat': !state.playing and state.repeat,
+                    'fa-stop text-danger btn-sm': this.state.playing,
+                    'btn-light btn-sm': !this.state.playing,
+                    'fa-play': !this.state.playing and !this.state.repeat,
+                    'fa-repeat': !this.state.playing and this.state.repeat,
                 }"
                 t-att-title="playOrPause" t-on-click.stop="() => this.onClickPlayPause()"/>
             <div class="o-mail-VoicePlayer-wrapper">
@@ -20,7 +20,7 @@
                     <canvas class="position-absolute" t-ref="wave"/>
                 </div>
             </div>
-            <div class="mx-2 text-muted" style="font-variant-numeric: tabular-nums;"><t t-esc="state.visualTime"/></div>
+            <div class="mx-2 text-muted" style="font-variant-numeric: tabular-nums;"><t t-esc="this.state.visualTime"/></div>
         </div>
     </t>
 

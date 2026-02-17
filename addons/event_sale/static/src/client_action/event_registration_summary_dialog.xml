@@ -3,8 +3,8 @@
 
     <t t-inherit="event.EventRegistrationSummaryDialog" t-inherit-mode="extension">
         <xpath expr="//div[@id='registration_header']" position="inside">
-            <t t-if="registration.sale_status_value">
-                <span class="badge rounded-pill" t-out="registration.sale_status_value" t-att-class="registration.has_to_pay ? 'text-bg-danger' : 'text-bg-success'"/>
+            <t t-if="this.registration.sale_status_value">
+                <span class="badge rounded-pill" t-out="this.registration.sale_status_value" t-att-class="this.registration.has_to_pay ? 'text-bg-danger' : 'text-bg-success'"/>
             </t>
         </xpath>
     </t>

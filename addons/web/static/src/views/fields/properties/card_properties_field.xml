@@ -3,7 +3,7 @@
     <t t-name="web.CardPropertiesField">
         <div t-ref="properties" class="w-100 fw-normal text-muted">
             <div class="o_card_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 mb-1"
-                t-foreach="propertiesList"
+                t-foreach="this.propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
                 t-if="propertyConfiguration.value and propertyConfiguration.view_in_cards">
@@ -13,12 +13,12 @@
                     <label t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)"
                         t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>
                     <PropertyValue
-                        id="generateUniqueDomID()"
-                        canChangeDefinition="state.canChangeDefinition"
+                        id="this.generateUniqueDomID()"
+                        canChangeDefinition="this.state.canChangeDefinition"
                         comodel="propertyConfiguration.comodel || ''"
-                        context="props.context"
+                        context="this.props.context"
                         domain="propertyConfiguration.domain || '[]'"
-                        readonly="props.readonly"
+                        readonly="this.props.readonly"
                         selection="propertyConfiguration.selection"
                         string="propertyConfiguration.string"
                         tags="propertyConfiguration.tags"
@@ -26,7 +26,7 @@
                         value="propertyConfiguration.value"
                         onChange.bind="() => {}"
                         onTagsChange.bind="() => {}"
-                        record="props.record"
+                        record="this.props.record"
                     />
                     <span class="o_property_field_value_suffix" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
                 </div>

@@ -6,30 +6,30 @@
                 <h4>Data to import</h4>
                 <div class="mb-2 d-flex align-items-center">
                     <i class="fa fa-file white me-2"></i>
-                    <div class="fst-italic truncate"><t t-esc="fileName"/></div>
-                    <span class="fst-italic"><t t-esc="fileExtension"/></span>
+                    <div class="fst-italic truncate"><t t-esc="this.fileName"/></div>
+                    <span class="fst-italic"><t t-esc="this.fileExtension"/></span>
                 </div>
 
-                <div t-if="props.options.sheets.length > 0" class="flex-row my-2">
+                <div t-if="this.props.options.sheets.length > 0" class="flex-row my-2">
                     <label for="o_import_sheet">Sheet:</label>
                     <select
                         class="o_select o_import_sheet w-100 mb-3 form-select"
                         name="o_import_sheet"
                         t-on-change="ev => this.props.onOptionChanged('sheet', ev.target.value)"
-                        t-att-value="props.options.sheet"
+                        t-att-value="this.props.options.sheet"
                     >
-                        <option t-foreach="props.options.sheets" t-as="sheet" t-key="sheet" t-att-value="sheet" t-att-selected="sheet === props.options.sheet">
+                        <option t-foreach="this.props.options.sheets" t-as="sheet" t-key="sheet" t-att-value="sheet" t-att-selected="sheet === this.props.options.sheet">
                             <t t-esc="sheet" />
                         </option>
                     </select>
                 </div>
-                <CheckBox value="props.options.has_headers" onChange.bind="isChecked => this.props.onOptionChanged('has_headers', isChecked)">
+                <CheckBox value="this.props.options.has_headers" onChange.bind="isChecked => this.props.onOptionChanged('has_headers', isChecked)">
                     Use first row as header
                 </CheckBox>
             </div>
-            <div t-if="fileExtension.toLowerCase() === '.csv'" class="o_import_formatting pt-3 pb-4 border-top">
+            <div t-if="this.fileExtension.toLowerCase() === '.csv'" class="o_import_formatting pt-3 pb-4 border-top">
                 <h4>Formatting</h4>
-                <div t-foreach="Object.entries(props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
+                <div t-foreach="Object.entries(this.props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
                     <label t-att-for="`${option[0]}-${option_index}`">
                         <t t-esc="option[1].label" />
                         <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-esc="'?'" />
@@ -60,7 +60,7 @@
                 </div>
                 <button class="btn btn-primary w-100" t-on-click="() => this.props.onReload()">Reimport</button>
             </div>
-            <div t-if="props.isBatched" class="pt-3 pb-4 border-top" >
+            <div t-if="this.props.isBatched" class="pt-3 pb-4 border-top" >
                 <h4>Batch Import</h4>
                 <div class="o_import_batch_alert fw-bold pb-2">
                     The file will be imported by batches
@@ -68,15 +68,15 @@
                 <div class="d-flex">
                     <div class="o_import_batch_limit w-50 pe-1">
                         <label class="mb-1" for="o_import_batch_limit">Batch limit</label>
-                        <input class="w-100" id="o_import_batch_limit" t-att-value="getOptionValue('limit')" t-on-change="(ev) => this.setOptionValue('limit', ev.target.value || 1)" />
+                        <input class="w-100" id="o_import_batch_limit" t-att-value="this.getOptionValue('limit')" t-on-change="(ev) => this.setOptionValue('limit', ev.target.value || 1)" />
                     </div>
                     <div class="w-50 ps-1" data-tooltip="Warning: ignores the labels line, empty lines and lines composed only of empty cells">
                         <label class="mb-1" for="o_import_row_start">Start at line</label>
-                        <input class="w-100" id="o_import_row_start" t-att-value="getOptionValue('skip')" t-on-change="onLimitChange" />
+                        <input class="w-100" id="o_import_row_start" t-att-value="this.getOptionValue('skip')" t-on-change="this.onLimitChange" />
                     </div>
                 </div>
             </div>
-            <div t-if="props.hasBinaryFields" class="pt-3 pb-4 border-top o_import_file">
+            <div t-if="this.props.hasBinaryFields" class="pt-3 pb-4 border-top o_import_file">
                 <h4>Files to import</h4>
                 <div class="o_import_grid gap-1">
                     <!-- First row-->
@@ -88,21 +88,21 @@
                         </label>
                     </div>
                     <div class="o_import_grid_col o_grid_span_2">
-                        <t t-esc="binaryFilesLabel"/>
+                        <t t-esc="this.binaryFilesLabel"/>
                     </div>
 
                     <!-- Second row-->
-                    <t t-if="env.debug">
+                    <t t-if="this.env.debug">
                         <div class="o_import_grid_col">
                             <label for="o_input_maxSizePerBatch">Max size per batch</label>
-                            <sup t-if="props.binaryFilesParams.maxSizePerBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.maxSizePerBatch.help" t-esc="'?'"/>
+                            <sup t-if="this.props.binaryFilesParams.maxSizePerBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="this.props.binaryFilesParams.maxSizePerBatch.help" t-esc="'?'"/>
                         </div>
                         <div class="o_import_grid_col">
                                 <input type="number"
                                        id="o_input_maxSizePerBatch"
-                                       t-att-value="props.binaryFilesParams.maxSizePerBatch.value"
-                                       t-att-max="props.binaryFilesParams.maxSizePerBatch.max"
-                                       t-att-min="props.binaryFilesParams.maxSizePerBatch.min"
+                                       t-att-value="this.props.binaryFilesParams.maxSizePerBatch.value"
+                                       t-att-max="this.props.binaryFilesParams.maxSizePerBatch.max"
+                                       t-att-min="this.props.binaryFilesParams.maxSizePerBatch.min"
                                        t-on-change="(event) => this.props.onBinaryFilesParamsChanged('maxSizePerBatch', event.target.value)"/>
                         </div>
                         <div class="o_import_grid_col">
@@ -112,13 +112,13 @@
                         <!-- Third row-->
                         <div class="o_import_grid_col">
                             <label for="o_input_delayAfterEachBatch">Delay after each batch</label>
-                            <sup t-if="props.binaryFilesParams.delayAfterEachBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.delayAfterEachBatch.help" t-esc="'?'"/>
+                            <sup t-if="this.props.binaryFilesParams.delayAfterEachBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="this.props.binaryFilesParams.delayAfterEachBatch.help" t-esc="'?'"/>
                         </div>
                         <div class="o_import_grid_col">
                                 <input type="number"
                                        id="o_input_delayAfterEachBatch"
-                                       t-att-value="props.binaryFilesParams.delayAfterEachBatch.value"
-                                       t-att-min="props.binaryFilesParams.delayAfterEachBatch.min"
+                                       t-att-value="this.props.binaryFilesParams.delayAfterEachBatch.value"
+                                       t-att-min="this.props.binaryFilesParams.delayAfterEachBatch.min"
                                        t-on-change="(event) => this.props.onBinaryFilesParamsChanged('delayAfterEachBatch', event.target.value)"/>
                         </div>
                         <div class="o_import_grid_col">
@@ -128,20 +128,20 @@
                 </div>
 
             </div>
-            <div t-if="env.debug" class="o_import_debug_options pt-3 pb-4 border-top">
+            <div t-if="this.env.debug" class="o_import_debug_options pt-3 pb-4 border-top">
                 <h4>Advanced</h4>
                 <div data-tooltip="If the model uses openchatter, history tracking will set up subscriptions and send notifications during the import, but lead to a slower import.">
-                    <CheckBox value="!props.options.tracking_disable" onChange.bind="(isChecked) => this.props.onOptionChanged('tracking_disable', !isChecked)">
+                    <CheckBox value="!this.props.options.tracking_disable" onChange.bind="(isChecked) => this.props.onOptionChanged('tracking_disable', !isChecked)">
                         Track history during import
                     </CheckBox>
                 </div>
-                <CheckBox value="props.options.advanced" onChange.bind="(isChecked) => this.props.onOptionChanged('advanced', isChecked)">
+                <CheckBox value="this.props.options.advanced" onChange.bind="(isChecked) => this.props.onOptionChanged('advanced', isChecked)">
                     Allow matching with subfields
                 </CheckBox>
             </div>
             <div class="pt-3 pb-4 border-top">
                 <h4>Help</h4>
-                <t t-foreach="props.importTemplates" t-as="template" t-key="template">
+                <t t-foreach="this.props.importTemplates" t-as="template" t-key="template">
                     <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
                         <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
                     </a>

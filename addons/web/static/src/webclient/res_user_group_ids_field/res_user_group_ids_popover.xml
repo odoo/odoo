@@ -7,39 +7,39 @@
             <tbody>
                 <tr>
                     <td>
-                        <span t-if="privilege" class="fw-bold" t-out="privilege.name"/>
+                        <span t-if="this.privilege" class="fw-bold" t-out="this.privilege.name"/>
                         <span t-else="">Group</span>
                     </td>
                     <td>
                         <a class="fw-bold" href="#" t-on-click="() => this.onGroupClicked(group)" t-out="group.name"/>
                     </td>
                 </tr>
-                <tr t-if="impliedGroups.length">
+                <tr t-if="this.impliedGroups.length">
                     <td>Implied by</td>
                     <td>
-                        <div t-foreach="impliedGroups" t-as="group" t-key="group.id">
-                            - <t t-out="getGroupDisplayName(group)"/>
+                        <div t-foreach="this.impliedGroups" t-as="group" t-key="group.id">
+                            - <t t-out="this.getGroupDisplayName(group)"/>
                         </div>
                     </td>
                 </tr>
-                <tr t-if="exclusiveImplyGroups.length">
+                <tr t-if="this.exclusiveImplyGroups.length">
                     <td>Exclusively implies</td>
                     <td>
-                        <div t-foreach="exclusiveImplyGroups" t-as="group" t-key="group.id">
-                            - <t t-esc="getGroupDisplayName(group)"/>
+                        <div t-foreach="this.exclusiveImplyGroups" t-as="group" t-key="group.id">
+                            - <t t-esc="this.getGroupDisplayName(group)"/>
                         </div>
                     </td>
                 </tr>
-                <tr t-if="jointImplyGroups.length or jointExtraImplyGroups.length">
+                <tr t-if="this.jointImplyGroups.length or this.jointExtraImplyGroups.length">
                     <td>Jointly implies</td>
                     <td>
-                        <div t-foreach="jointImplyGroups" t-as="group" t-key="group.id" class="text-muted">
-                            - <t t-esc="getGroupDisplayName(group)"/>
+                        <div t-foreach="this.jointImplyGroups" t-as="group" t-key="group.id" class="text-muted">
+                            - <t t-esc="this.getGroupDisplayName(group)"/>
                         </div>
-                        <t t-if="jointExtraImplyGroups.length">
-                            <t t-if="state.showExtraGroups">
-                                <div t-foreach="jointExtraImplyGroups" t-as="group" t-key="group.id" class="text-muted">
-                                    - <t t-esc="getGroupDisplayName(group)"/>
+                        <t t-if="this.jointExtraImplyGroups.length">
+                            <t t-if="this.state.showExtraGroups">
+                                <div t-foreach="this.jointExtraImplyGroups" t-as="group" t-key="group.id" class="text-muted">
+                                    - <t t-esc="this.getGroupDisplayName(group)"/>
                                 </div>
                             </t>
                             <div t-else="">
@@ -52,7 +52,7 @@
                     <td class="align-top text-danger">Incompatibility</td>
                     <td>
                         <div t-foreach="group.disjointIds" t-as="groupId" t-key="groupId">
-                            - <t t-esc="getGroupDisplayName(groups[groupId])"/>
+                            - <t t-esc="this.getGroupDisplayName(this.groups[groupId])"/>
                         </div>
                     </td>
                 </tr>

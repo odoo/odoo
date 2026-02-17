@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <tr t-name="mrp.BomOverviewLine" t-on-click="() => this.props.toggleFolded(identifier)">
+    <tr t-name="mrp.BomOverviewLine" t-on-click="() => this.props.toggleFolded(this.identifier)">
         <td name="td_mrp_bom">
-            <div class="text-truncate" t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px">
-                <t t-if="hasFoldButton">
+            <div class="text-truncate" t-attf-style="margin-left: {{ this.marginMultiplicator * 20 }}px">
+                <t t-if="this.hasFoldButton">
                     <t t-set="title_fold">Fold</t>
                     <t t-set="title_unfold">Unfold</t>
-                    <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-att-aria-label="props.isFolded ? title_unfold : title_fold" t-att-title="props.isFolded ? title_unfold : title_fold" style="margin-right: 1px">
-                        <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
+                    <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold" style="margin-right: 1px">
+                        <i t-attf-class="fa fa-fw fa-caret-{{ this.props.isFolded ? 'right' : 'down' }}" role="img"/>
                     </span>
                 </t>
-                <a href="#" t-on-click.prevent="() => this.goToAction(data.link_id, data.link_model)" t-esc="data.name"/>
-                <t t-if="data.phantom_bom">
+                <a href="#" t-on-click.prevent="() => this.goToAction(this.data.link_id, this.data.link_model)" t-esc="this.data.name"/>
+                <t t-if="this.data.phantom_bom">
                     <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
                 </t>
             </div>
         </td>
         <td class="text-end" name="quantity">
-            <t t-if="data.type == 'operation'" t-esc="formatFloatTime(data.quantity)"/>
-            <t t-else="" t-esc="formatFloat(data.quantity, {'digits': [false, precision]})"/>
+            <t t-if="this.data.type == 'operation'" t-esc="this.formatFloatTime(this.data.quantity)"/>
+            <t t-else="" t-esc="this.formatFloat(this.data.quantity, {'digits': [false, this.precision]})"/>
         </td>
-         <td t-if="showUom" class="text-start" t-esc="data.uom_name"/>
-         <td t-if="forecastMode" class="text-center">
-            <t t-if="hasQuantity">
-                <t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> /
-                <t t-esc="formatFloat(data.quantity_on_hand, {'digits': [false, precision]})"/>
+         <td t-if="this.showUom" class="text-start" t-esc="this.data.uom_name"/>
+         <td t-if="this.forecastMode" class="text-center">
+            <t t-if="this.hasQuantity">
+                <t t-esc="this.formatFloat(this.data.quantity_available, {'digits': [false, this.precision]})"/> /
+                <t t-esc="this.formatFloat(this.data.quantity_on_hand, {'digits': [false, this.precision]})"/>
             </t>
         </td>
-        <td t-if="forecastMode" class="text-center">
-            <div t-if="data.hasOwnProperty('status')" class="o_field_badge">
+        <td t-if="this.forecastMode" class="text-center">
+            <div t-if="this.data.hasOwnProperty('status')" class="o_field_badge">
                 <span
-                    t-on-click.prevent="goToForecast"
+                    t-on-click.prevent="this.goToForecast"
                     title="Forecast Report"
-                    t-attf-class="badge rounded-pill o_mrp_overview_badge {{statusBackgroundClass}}"
-                    t-att-role="data.type != 'operation' ? 'button' : undefined"
-                    t-out="data.status"
+                    t-attf-class="badge rounded-pill o_mrp_overview_badge {{this.statusBackgroundClass}}"
+                    t-att-role="this.data.type != 'operation' ? 'button' : undefined"
+                    t-out="this.data.status"
                 />
             </div>
         </td>
-        <td t-if="forecastMode" class="text-center">
-            <span t-if="hasLeadTime"><t t-esc="data.lead_time"/> Days</span>
+        <td t-if="this.forecastMode" class="text-center">
+            <span t-if="this.hasLeadTime"><t t-esc="this.data.lead_time"/> Days</span>
         </td>
-        <td t-if="forecastMode">
-            <div t-if="data.route_name &amp;&amp; data.route_detail">
-                <span t-attf-class="{{ data.route_alert ? 'text-danger' : '' }}"><t t-esc="data.route_name"/>: </span>
-                <a href="#" t-on-click.prevent="() => this.goToRoute(data.route_type)" t-esc="data.route_detail"/>
+        <td t-if="this.forecastMode">
+            <div t-if="this.data.route_name &amp;&amp; this.data.route_detail">
+                <span t-attf-class="{{ this.data.route_alert ? 'text-danger' : '' }}"><t t-esc="this.data.route_name"/>: </span>
+                <a href="#" t-on-click.prevent="() => this.goToRoute(this.data.route_type)" t-esc="this.data.route_detail"/>
             </div>
         </td>
-        <td t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-attf-colspan="{{ forecastMode ? 1 : 2 }}" t-esc="formatMonetary(data.bom_cost)"/>
-        <td t-if="showAttachments" class="text-center">
-            <span t-if="data.has_attachments">
-                <a href="#" role="button" t-on-click.prevent="goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
+        <td t-attf-class="text-end {{ this.data.type == 'component' ? 'opacity-50' : '' }}" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}" t-esc="this.formatMonetary(this.data.bom_cost)"/>
+        <td t-if="this.showAttachments" class="text-center">
+            <span t-if="this.data.has_attachments">
+                <a href="#" role="button" t-on-click.prevent="this.goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
             </span>
         </td>
     </tr>

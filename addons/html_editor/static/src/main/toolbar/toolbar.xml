@@ -1,9 +1,9 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.Toolbar">
-        <div class="o-we-toolbar d-flex align-items-center m-0" t-att-class="props.class"
+        <div class="o-we-toolbar d-flex align-items-center m-0" t-att-class="this.props.class"
             style="overflow-x: auto; overflow-y:hidden" t-on-pointerdown.prevent=""
-                t-att-data-namespace="state.namespace" data-prevent-closing-overlay="true">
-            <t t-foreach="state.buttonGroups" t-as="buttonGroup" t-key="buttonGroup.id">
+                t-att-data-namespace="this.state.namespace" data-prevent-closing-overlay="true">
+            <t t-foreach="this.state.buttonGroups" t-as="buttonGroup" t-key="buttonGroup.id">
                 <span class="o-we-toolbar-vertical-separator"></span>
                 <div class="btn-group" t-att-name="buttonGroup.id">
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
@@ -11,7 +11,7 @@
                                 <t t-component="button.Component"
                                     t-props="button.props"
                                     title="button.description"
-                                    getSelection.bind="props.getSelection"
+                                    getSelection.bind="this.props.getSelection"
                                     isDisabled="'isDisabled' in button.props ? button.props.isDisabled : !!button.isDisabled"/>
                             </t>
                             <button t-else=""

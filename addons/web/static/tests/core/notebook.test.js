@@ -146,8 +146,8 @@ test("notebook set vertically", async () => {
 test("notebook pages rendered by a template component", async () => {
     class NotebookPageRenderer extends Component {
         static template = xml`
-                <h3 t-esc="props.heading"></h3>
-                <p t-esc="props.text" />
+                <h3 t-esc="this.props.heading"></h3>
+                <p t-esc="this.props.text" />
             `;
         static props = {
             heading: String,
@@ -156,7 +156,7 @@ test("notebook pages rendered by a template component", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook defaultPage="'page_three'" pages="pages">
+        static template = xml`<Notebook defaultPage="'page_three'" pages="this.pages">
                 <t t-set-slot="page_one" title="'Page 1'" isVisible="true">
                     <h3>Page 1</h3>
                     <p>First page set directly as a slot</p>
@@ -212,7 +212,7 @@ test("each page is different", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook pages="pages"/>`;
+        static template = xml`<Notebook pages="this.pages"/>`;
         static components = { Notebook };
         static props = ["*"];
         setup() {
@@ -326,7 +326,7 @@ test("icons can be given for each page tab", async () => {
     class Parent extends Component {
         static components = { Notebook };
         static template = xml`
-            <Notebook defaultPage="'1'" icons="icons">
+            <Notebook defaultPage="'1'" icons="this.icons">
                 <t t-set-slot="1" title="'page1'" isVisible="true">
                     <div class="page1" />
                 </t>

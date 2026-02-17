@@ -4,9 +4,9 @@
 <t t-name="hr_attendance.attendance_menu">
     <t t-if="this.state.isDisplayed">
         <Dropdown position="'bottom-end'"
-                  beforeOpen.bind="searchReadEmployee"
+                  beforeOpen.bind="this.searchReadEmployee"
                   menuClass="'p-0'"
-                  state="dropdown">
+                  state="this.dropdown">
             <button>
                 <i class="fa fa-circle"
                    t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"

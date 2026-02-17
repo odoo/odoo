@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="survey.paginated_results_rows">
-        <t t-foreach="records" t-as="input_line" t-key="input_line.id">
+        <t t-foreach="this.records" t-as="input_line" t-key="input_line.id">
             <tr>
                 <td>
                     <a t-att-href="input_line.url">
@@ -11,7 +11,7 @@
                 </td>
                 <td>
                     <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
-                    <t t-if="hide_filter">
+                    <t t-if="this.hide_filter">
                         <t t-esc="input_line.value"/>
                     </t>
                     <t t-else="">

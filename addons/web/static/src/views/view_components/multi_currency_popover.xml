@@ -4,13 +4,13 @@
     <t t-name="web.MultiCurrencyPopover">
         <div class="o_multi_currency_popover">
             <div class="popover-body">
-                <t t-foreach="currencies" t-as="currency" t-key="currency.id">
+                <t t-foreach="this.currencies" t-as="currency" t-key="currency.id">
                     <div>
-                        <t t-out="formatedValue(currency.value, currency.id)"/> at <t t-out="formatedValue(currency.rate, defaultCurrency)"/> on <t t-out="currency.date"/>
+                        <t t-out="this.formatedValue(currency.value, currency.id)"/> at <t t-out="this.formatedValue(currency.rate, this.defaultCurrency)"/> on <t t-out="currency.date"/>
                     </div>
                 </t>
-                <div t-if="props.currencyIds.includes(false)">
-                    <t t-esc="formatedValue(this.props.value)"/> without currency
+                <div t-if="this.props.currencyIds.includes(false)">
+                    <t t-esc="this.formatedValue(this.props.value)"/> without currency
                 </div>
             </div>
         </div>

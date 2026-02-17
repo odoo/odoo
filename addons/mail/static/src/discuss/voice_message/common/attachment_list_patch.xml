@@ -7,11 +7,11 @@
             </t>
             <t t-else="">$0</t>
         </xpath>
-        <xpath expr="(//div[@t-if='!isMobileOS'])" position="attributes">
-            <attribute name="t-if">!isMobileOS and !attachment.voice</attribute>
+        <xpath expr="(//div[@t-if='!this.isMobileOS'])" position="attributes">
+            <attribute name="t-if">!this.isMobileOS and !attachment.voice</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o-Attachment-uploaded')]" position="attributes">
-            <attribute name="t-att-class">!isMobileOS and !attachment.voice ? 'end-0' : 'start-0'</attribute>
+            <attribute name="t-att-class">!this.isMobileOS and !attachment.voice ? 'end-0' : 'start-0'</attribute>
         </xpath>
     </t>
 </templates>

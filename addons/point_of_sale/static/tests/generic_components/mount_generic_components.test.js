@@ -21,8 +21,8 @@ test("test that generic components can be mounted; the goal is to ensure that th
             <div class="test-container">
                 <OdooLogo />
                 <CenteredIcon icon="'fa-smile'"/>
-                <Input tModel="[state, 'number']"/>
-                <NumericInput tModel="[state, 'number']" />
+                <Input tModel="[this.state, 'number']"/>
+                <NumericInput tModel="[this.state, 'number']" />
             </div>
         `;
         setup() {

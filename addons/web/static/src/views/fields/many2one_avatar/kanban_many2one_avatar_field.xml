@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanMany2OneAvatarField">
-        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
-        <t t-set="value" t-value="props.record.data[props.name]"/>
-        <KanbanMany2One t-props="m2oProps">
+        <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
+        <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
+        <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
                 <span class="o_avatar o_m2o_avatar">
                     <img t-attf-src="/web/image/{{relation}}/{{value.id}}/avatar_128?unique={{value.write_date.toMillis()}}" class="rounded"/>

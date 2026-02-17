@@ -3,16 +3,16 @@
     <t t-name="ProductCatalogKanbanRecord">
         <article
             class="o_product_catalog_kanban_record"
-            t-att-class="getRecordClasses() + (productCatalogData.quantity ? ' o_product_added' : '')"
-            t-att-data-id="props.record.id"
-            t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-            t-on-click="onGlobalClick"
+            t-att-class="this.getRecordClasses() + (this.productCatalogData.quantity ? ' o_product_added' : '')"
+            t-att-data-id="this.props.record.id"
+            t-att-tabindex="this.props.record.model.useSampleModel ? -1 : 0"
+            t-on-click="this.onGlobalClick"
             t-ref="root"
         >
             <div class="d-flex flex-column h-100">
-                <t t-call="{{ templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}"
+                <t t-call="{{ this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}"
                    t-call-context="this.renderingContext"/>
-                <t t-component="orderLineComponent" productId="props.record.resId" t-props="productCatalogData"/>
+                <t t-component="this.orderLineComponent" productId="this.props.record.resId" t-props="this.productCatalogData"/>
             </div>
             <t t-call="{{ this.constructor.menuTemplate }}"/>
         </article>

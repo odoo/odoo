@@ -2,10 +2,10 @@
 <template xml:space="preserve">
     <div t-name="ComponentA">
         <div>text node</div>
-        <ComponentB title="no export" t-att-title="no export">
+        <ComponentB title="this.no this.export" t-att-title="this.no this.export">
             <div>slot</div>
         </ComponentB>
-        <t t-component="ComponentB" title="no export" t-att-title="no export">
+        <t t-component="this.ComponentB" title="this.no this.export" t-att-title="this.no this.export">
             <div>slot 2</div>
         </t>
         <img title="do export" />

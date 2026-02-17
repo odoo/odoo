@@ -2,8 +2,8 @@
 
 <templates xml:space="preserve">
     <t t-name="ProductCatalogKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
-        <t t-if="showNoContentHelper" position="replace">
-            <t t-if="showNoContentHelper">
+        <t t-if="this.showNoContentHelper" position="replace">
+            <t t-if="this.showNoContentHelper">
                 <div class="o_view_nocontent" role="alert">
                     <div class="o_nocontent_help">
                         <p class="o_view_nocontent_smiling_face">

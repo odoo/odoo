@@ -2,23 +2,23 @@
     <t t-name="mass_mailing.MassMailingIframe">
         <div class="o_mass_mailing_iframe_wrapper"
             t-att-class="{
-                'o_mass_mailing_fullscreen': state.showFullscreen,
-                [props.extraClass]: props.extraClass,
+                'o_mass_mailing_fullscreen': this.state.showFullscreen,
+                [this.props.extraClass]: this.props.extraClass,
             }">
             <div class="d-flex w-100 h-100">
                 <div class="flex-grow-1" t-att-class="{'align-self-center': this.state.isMobile}">
-                    <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+                    <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
                     <div t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
                         <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                             t-att-scrolling="this.state.isMobile ? '' : 'no'"
-                            t-att-class="{ 'd-none': props.showThemeSelector or props.showCodeView }"
-                            t-ref="iframeRef" t-on-blur="onBlur"/>
+                            t-att-class="{ 'd-none': this.props.showThemeSelector or this.props.showCodeView }"
+                            t-ref="iframeRef" t-on-blur="this.onBlur"/>
                     </div>
                 </div>
-                <div t-if="!props.readonly and props.withBuilder and !props.showThemeSelector and !props.showCodeView">
+                <div t-if="!this.props.readonly and this.props.withBuilder and !this.props.showThemeSelector and !this.props.showCodeView">
                     <div class="position-sticky o_mass_mailing-builder_sidebar o_builder_sidebar_open"
                         t-att-class="{ 'd-none': this.env.isSmall }" t-ref="sidebarRef">
-                        <LazyComponent t-if="state.ready" Component="'mass_mailing.MassMailingBuilder'"
+                        <LazyComponent t-if="this.state.ready" Component="'mass_mailing.MassMailingBuilder'"
                             props="() => ({
                                 builderProps: this.getBuilderProps(),
                                 toggleCodeView: this.props.toggleCodeView,
@@ -38,9 +38,9 @@
     </t>
     <t t-name="mass_mailing.IframeBody">
         <div class="o_mass_mailing_value"
-            t-att-class="{ 'o_readonly': props.readonly, 'note-editable': !props.readonly, 'o_rtl': isRTL }">
-            <t t-if="props.readonly">
-                <t t-out="props.config.value"/>
+            t-att-class="{ 'o_readonly': this.props.readonly, 'note-editable': !this.props.readonly, 'o_rtl': this.isRTL }">
+            <t t-if="this.props.readonly">
+                <t t-out="this.props.config.value"/>
             </t>
         </div>
         <div class="o_mass_mailing_processing_container" style="

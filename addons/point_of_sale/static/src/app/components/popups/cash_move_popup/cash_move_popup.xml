@@ -5,26 +5,26 @@
         <Dialog header="false">
             <div class="input-amount d-flex mb-2 gap-2">
                 <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
-                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
+                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{this.state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
                         Cash In
                     </button>
-                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
+                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{this.state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
                         Cash Out
                     </button>
                 </div>
                 <div t-attf-class="{{this.ui.isSmall ? 'mw-50 h-50' : 'w-25'}}">
-                    <Input tModel="[state, 'amount']"
-                        icon="{type: 'string', value: pos.currency.symbol}"
-                        iconOnLeftSide="pos.currency.position === 'before'"
-                        isValid.bind="env.utils.isValidFloat"
+                    <Input tModel="[this.state, 'amount']"
+                        icon="{type: 'string', value: this.pos.currency.symbol}"
+                        iconOnLeftSide="this.pos.currency.position === 'before'"
+                        isValid.bind="this.env.utils.isValidFloat"
                         autofocus="true"
                         getRef="(ref) => this.inputRef = ref"
-                        t-on-click="openNumpadDialog"
-                        readonly="ui.isSmall ? true : false" />
+                        t-on-click="this.openNumpadDialog"
+                        readonly="this.ui.isSmall ? true : false" />
                 </div>
             </div>
             <div class="form-floating">
-                <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
+                <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="this.state.reason" style="height:100px;" />
                 <label for="reason">Reason</label>
             </div>
             <t t-set-slot="footer">
@@ -32,11 +32,11 @@
                     <!-- First line of buttons -->
                     <div class="d-flex gap-2">
                         <button class="button confirm btn btn-lg lh-lg btn-primary"
-                            t-on-click="confirm"
-                            t-att-disabled="!isValidCashMove()">
+                            t-on-click="this.confirm"
+                            t-att-disabled="!this.isValidCashMove()">
                             Confirm
                         </button>
-                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
+                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="this.props.close">
                             Discard
                         </button>
                     </div>

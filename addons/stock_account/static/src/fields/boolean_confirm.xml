@@ -3,9 +3,9 @@
     <t t-name="stock_account.BooleanToggleConfirm">
         <ConfirmCheckBox
             className="'o_field_boolean o_boolean_toggle'"
-            id="props.id"
-            value="props.record.data[props.name] or false"
-            disabled="isReadonly"
+            id="this.props.id"
+            value="this.props.record.data[this.props.name] or false"
+            disabled="this.isReadonly"
             onChange="(value) => this.onChange(value)"
         />
     </t>

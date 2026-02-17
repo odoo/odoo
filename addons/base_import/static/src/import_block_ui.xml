@@ -7,9 +7,9 @@
             <div class="o_spinner mb-4">
                 <img src="/web/static/img/spin.svg" alt="Loading..."/>
             </div>
-            <div t-if="props.message or props.blockComponent">
-                <div class="o_message text-center px-4" t-esc="props.message" />
-                <t t-if="props.blockComponent" t-component="props.blockComponent.class" t-props="props.blockComponent.props"/>
+            <div t-if="this.props.message or this.props.blockComponent">
+                <div class="o_message text-center px-4" t-esc="this.props.message" />
+                <t t-if="this.props.blockComponent" t-component="this.props.blockComponent.class" t-props="this.props.blockComponent.props"/>
             </div>
         </div>
     </t>

@@ -66,7 +66,7 @@ test("multiple overlays", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml`
-            <div class="overlayed" t-att-class="props.className"></div>
+            <div class="overlayed" t-att-class="this.props.className"></div>
         `;
         static props = ["*"];
     }
@@ -100,7 +100,7 @@ test("sequence", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml`
-            <div class="overlayed" t-att-class="props.className"></div>
+            <div class="overlayed" t-att-class="this.props.className"></div>
         `;
         static props = ["*"];
     }
@@ -137,8 +137,8 @@ test("allow env as option", async () => {
         static props = ["*"];
         static template = xml`
             <ul class="outer">
-                <li>A=<t t-out="env.A"/></li>
-                <li>B=<t t-out="env.B"/></li>
+                <li>A=<t t-out="this.env.A"/></li>
+                <li>B=<t t-out="this.env.B"/></li>
             </ul>
         `;
         setup() {

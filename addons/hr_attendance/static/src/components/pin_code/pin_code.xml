@@ -13,17 +13,17 @@
                     <h3 class="mt-2 mb-1"><t t-esc="this.props.employeeData.employee_name"/></h3>
                     <h5 class="text-muted my-0">
                         Please enter your PIN to
-                        <t t-if="checkedIn">check out</t>
+                        <t t-if="this.checkedIn">check out</t>
                         <t t-else="">check in</t>
                     </h5>
                     <div class="o_hr_kiosk_mode_code mb-2">
                         <div class="row">
                             <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
                                 <div class="row g-0 my-2" >
-                                    <input t-att-value="state.codePin" class="o_hr_attendance_PINbox py-0 border-0 bg-white text-center fs-3" type="password" disabled="true"/>
+                                    <input t-att-value="this.state.codePin" class="o_hr_attendance_PINbox py-0 border-0 bg-white text-center fs-3" type="password" disabled="true"/>
                                 </div>
                                 <div class="row g-2">
-                                    <div class="col-4" t-foreach="padButtons" t-as="btn" t-key="btn[0]">
+                                    <div class="col-4" t-foreach="this.padButtons" t-as="btn" t-key="btn[0]">
                                         <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1">
                                             <t t-esc="btn[0]"/>
                                         </a>

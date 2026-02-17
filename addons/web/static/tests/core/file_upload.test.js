@@ -16,11 +16,11 @@ import { Component, xml } from "@odoo/owl";
 
 class FileUploadProgressTestRecord extends FileUploadProgressRecord {
     static template = xml`
-        <t t-set="progressTexts" t-value="getProgressTexts()"/>
+        <t t-set="progressTexts" t-value="this.getProgressTexts()"/>
         <div class="file_upload">
             <div class="file_upload_progress_text_left" t-esc="progressTexts.left"/>
             <div class="file_upload_progress_text_right" t-esc="progressTexts.right"/>
-            <FileUploadProgressBar fileUpload="props.fileUpload"/>
+            <FileUploadProgressBar fileUpload="this.props.fileUpload"/>
         </div>
     `;
 }
@@ -30,7 +30,7 @@ class Parent extends Component {
     };
     static template = xml`
         <div class="parent">
-            <FileUploadProgressContainer fileUploads="fileUploadService.uploads" shouldDisplay="props.shouldDisplay" Component="FileUploadProgressTestRecord"/>
+            <FileUploadProgressContainer fileUploads="this.fileUploadService.uploads" shouldDisplay="this.props.shouldDisplay" Component="this.FileUploadProgressTestRecord"/>
         </div>
     `;
     static props = ["*"];

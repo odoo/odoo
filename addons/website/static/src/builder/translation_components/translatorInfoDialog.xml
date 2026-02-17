@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <div t-name="website_builder.TranslatorInfoDialog">
-    <WebsiteDialog close="props.close"
-        title="title"
-        primaryTitle="strongOkButton"
-        secondaryTitle="okButton"
+    <WebsiteDialog close="this.props.close"
+        title="this.title"
+        primaryTitle="this.strongOkButton"
+        secondaryTitle="this.okButton"
         primaryClick="() => this.onStrongOkClick()">
         <p>You are about to enter the translation mode.</p>
         <p>Here are the visuals used to help you translate efficiently:</p>

@@ -7,43 +7,43 @@
             class="hb-row d-flex position-relative pe-2"
             t-att-class="this.getLevelClass()"
             t-ref="root"
-            t-att-data-label="props.label"
-            t-att-data-disabled="props.disabled"
-            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-att-data-label="this.props.label"
+            t-att-data-disabled="this.props.disabled"
+            t-att-aria-disabled="this.props.disabled ? 'true' : undefined"
             >
 
             <button
                 t-ref="collapse"
-                t-if="props.slots.collapse"
+                t-if="this.props.slots.collapse"
                 class="o_hb_collapse_toggler btn border-0 bg-transparent"
-                t-att-class="{ 'active fa-rotate-90': state.expanded }"
+                t-att-class="{ 'active fa-rotate-90': this.state.expanded }"
                 title="Toggle more options"
-                t-on-click="toggleCollapseContent"
-                t-att-aria-expanded="state.expanded ? 'true' : 'false'"
-                t-att-aria-controls="collapseContentId">
+                t-on-click="this.toggleCollapseContent"
+                t-att-aria-expanded="this.state.expanded ? 'true' : 'false'"
+                t-att-aria-controls="this.collapseContentId">
                 <i
                     class="fa fa-caret-right"
                     role="img"
                 />
             </button>
 
-            <t t-if="props.label">
+            <t t-if="this.props.label">
                 <div
                     class="hb-row-label d-flex align-items-center"
-                    t-att-class="{'hb-row-label-actionable': props.slots.collapse, 'bg-transparent': !props.label.trim()}"
+                    t-att-class="{'hb-row-label-actionable': this.props.slots.collapse, 'bg-transparent': !this.props.label.trim()}"
                     t-attf-class="#{this.props.extraLabelClass || ''}"
-                    t-on-pointerover="openTooltip"
-                    t-on-pointerleave="closeTooltip"
-                    t-on-click="toggleCollapseContent"
+                    t-on-pointerover="this.openTooltip"
+                    t-on-pointerleave="this.closeTooltip"
+                    t-on-click="this.toggleCollapseContent"
                     >
 
-                    <span class="text-nowrap text-truncate" t-out="props.label" t-ref="label"/>
-                    <i t-if="props.tooltip" class="fa fa-question icon-sup"/>
+                    <span class="text-nowrap text-truncate" t-out="this.props.label" t-ref="label"/>
+                    <i t-if="this.props.tooltip" class="fa fa-question icon-sup"/>
                 </div>
                 <div
                     class="hb-row-content d-flex"
                     t-ref="content"
-                    t-on-click="onRowContentClick"
+                    t-on-click="this.onRowContentClick"
                     >
                     <t t-slot="default"/>
                 </div>
@@ -57,7 +57,7 @@
                 <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>
-        <div t-if="displayCollapseContent" t-att-class="collapseContentClass" t-ref="collapse-content" t-att-id="collapseContentId">
+        <div t-if="this.displayCollapseContent" t-att-class="this.collapseContentClass" t-ref="collapse-content" t-att-id="this.collapseContentId">
             <t t-slot="collapse"/>
         </div>
     </BuilderComponent>

@@ -13,7 +13,7 @@
                 t-attf-class="d-flex align-items-center gap-3 btn btn-light mb-2 me-3"
             >
                 <i class="fa fa-image fs-2 opacity-25" role="img"/>
-                <div class="placeholder opacity-25" t-att-style="`width: ${(c % 3) + 4}rem`"/>
+                <div class="placeholder opacity-25" t-att-style="`width: ${(this.c % 3) + 4}rem`"/>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
                     t-foreach="[...Array(10).keys()]"
                     t-as="category_placeholder"
                     t-key="category_placeholder"
-                    t-attf-class="d-block placeholder placeholder-xs opacity-25 col-{{(p % 4) + 4}}"
+                    t-attf-class="d-block placeholder placeholder-xs opacity-25 col-{{(this.p % 4) + 4}}"
                 />
             </div>
             <hr class="my-4"/>
@@ -43,7 +43,7 @@
                     t-foreach="[...Array(9).keys()]"
                     t-as="category_placeholder"
                     t-key="category_placeholder"
-                    t-attf-class="d-block placeholder placeholder-xs opacity-25 col-{{(p % 3) + 6}}"
+                    t-attf-class="d-block placeholder placeholder-xs opacity-25 col-{{(this.p % 3) + 6}}"
                 />
             </div>
         </div>

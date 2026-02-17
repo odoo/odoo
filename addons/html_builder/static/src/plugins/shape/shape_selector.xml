@@ -5,13 +5,13 @@
     <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
         <div class="o-hb-select-pager-tab-container d-flex" t-ref="tabs">
             <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
-                <button type="button" class="o-hb-select-pager-tab p-0 text-uppercase" t-att-class="{ 'active': state.activeGroup === group[0] }" t-on-click="() => this.scrollToShapes(group[0])" t-att-data-group-id="group[0]">
+                <button type="button" class="o-hb-select-pager-tab p-0 text-uppercase" t-att-class="{ 'active': this.state.activeGroup === group[0] }" t-on-click="() => this.scrollToShapes(group[0])" t-att-data-group-id="group[0]">
                     <span class="w-100" t-out="group[1].label"/>
                 </button>
             </t>
         </div>
     </header>
-    <div class="o_pager_container" t-ref="root" t-on-scroll="onScroll">
+    <div class="o_pager_container" t-ref="root" t-on-scroll="this.onScroll">
         <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
             <div t-att-data-shape-group-id="group[0]">
                 <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">
@@ -21,8 +21,8 @@
                             <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
                                 <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose" t-if="!shape[1].isTechnical">
                                     <BuilderButton type="''" action="this.props.shapeActionId" actionValue="shape[0]">
-                                        <div t-att-class="props.imgThroughDiv ? 'o_we_shape_btn_content' : ''">
-                                            <t t-if="props.imgThroughDiv">
+                                        <div t-att-class="this.props.imgThroughDiv ? 'o_we_shape_btn_content' : ''">
+                                            <t t-if="this.props.imgThroughDiv">
                                                 <div class="o_we_shape" t-att-class="this.getShapeClass(shape[0])" t-att-style="this.props.getShapeStyle(shape[0])"/>
                                             </t>
                                             <t t-else="" >

@@ -8,17 +8,17 @@
         <xpath expr="//div[@role='alert']/p[1]" position="after">
             <p class="mt-2">
                 The error occurred during the execution of the automation rule
-                "<t t-esc="automationName"/>"
-                (ID: <t t-esc="automationId"/>).
+                "<t t-esc="this.automationName"/>"
+                (ID: <t t-esc="this.automationId"/>).
             </p>
-            <p t-if="!isUserAdmin">
+            <p t-if="!this.isUserAdmin">
                 You can ask an administrator to disable or fix this automation.
             </p>
         </xpath>
         <xpath expr="//t[@t-set-slot='footer']" position="inside">
-            <t t-if="isUserAdmin">
-                <button class="btn btn-secondary ms-auto ms-md-2 o_disable_action_button" t-on-click.prevent="disableAutomation">Disable</button>
-                <button class="btn btn-secondary ms-auto ms-md-2 o_edit_action_button" t-on-click.prevent="editAutomation">Edit</button>
+            <t t-if="this.isUserAdmin">
+                <button class="btn btn-secondary ms-auto ms-md-2 o_disable_action_button" t-on-click.prevent="this.disableAutomation">Disable</button>
+                <button class="btn btn-secondary ms-auto ms-md-2 o_edit_action_button" t-on-click.prevent="this.editAutomation">Edit</button>
             </t>
         </xpath>
     </t>

@@ -3,63 +3,63 @@
 
     <div t-name="mrp.BomOverviewTable" class="o_content">
         <div class="o_mrp_bom_report_page px-0 overflow-auto border-bottom bg-view">
-            <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
+            <div t-if="!!this.data.components || !!this.data.lines || !!this.data.operations" class="container-fluid">
                 <table class="o_mrp_bom_expandable table">
                     <thead>
                         <tr>
                             <th name="th_mrp_bom_h">Product</th>
-                            <th t-attf-class="{{ showUom ? 'text-center' : 'text-end' }}" t-attf-style="text-indent:{{ showUom ? (forecastMode ? -10 : -50) : 0 }}px"
-                                t-attf-colspan="{{ showUom ? 2 : 1 }}">Quantity</th>
-                            <th t-if="forecastMode" class="text-center" title="Availabilities on products.">Free to Use / On Hand</th>
-                            <th t-if="forecastMode" class="text-center">Status</th>
-                            <th t-if="forecastMode" class="text-center" title="Resupply lead time.">Lead Time</th>
-                            <th t-if="forecastMode">Route</th>
+                            <th t-attf-class="{{ this.showUom ? 'text-center' : 'text-end' }}" t-attf-style="text-indent:{{ this.showUom ? (this.forecastMode ? -10 : -50) : 0 }}px"
+                                t-attf-colspan="{{ this.showUom ? 2 : 1 }}">Quantity</th>
+                            <th t-if="this.forecastMode" class="text-center" title="Availabilities on products.">Free to Use / On Hand</th>
+                            <th t-if="this.forecastMode" class="text-center">Status</th>
+                            <th t-if="this.forecastMode" class="text-center" title="Resupply lead time.">Lead Time</th>
+                            <th t-if="this.forecastMode">Route</th>
                             <th t-else=""/>
                             <th class="text-end"
                                 title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">Cost</th>
-                            <th t-if="showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
+                            <th t-if="this.showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
                         </tr>
                     </thead>
                     <tbody>
                         <BomOverviewLine
-                            showOptions="props.showOptions"
-                            currentWarehouseId="props.currentWarehouseId"
-                            data="data"
-                            precision="props.precision"
+                            showOptions="this.props.showOptions"
+                            currentWarehouseId="this.props.currentWarehouseId"
+                            data="this.data"
+                            precision="this.props.precision"
                             />
 
                         <BomOverviewComponentsBlock
-                            showOptions="props.showOptions"
-                            currentWarehouseId="props.currentWarehouseId"
-                            data="data"
-                            precision="props.precision"
-                            changeFolded.bind="props.changeFolded"/>
+                            showOptions="this.props.showOptions"
+                            currentWarehouseId="this.props.currentWarehouseId"
+                            data="this.data"
+                            precision="this.props.precision"
+                            changeFolded.bind="this.props.changeFolded"/>
                     </tbody>
-                    <tfoot t-if="showUnitCosts">
+                    <tfoot t-if="this.showUnitCosts">
                         <tr>
                             <td name="td_mrp_bom_f" class="text-end" colspan="2">
-                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-esc="data.name"/>
+                                <span t-if="!!this.data.byproducts &amp;&amp; this.data.byproducts.length > 0" t-esc="this.data.name"/>
                             </td>
-                            <td t-if="showUom &amp;&amp; (data.byproducts.length || data.product_uom_name != data.uom_name)">
-                                <t t-out="data.product_uom_name"/>
+                            <td t-if="this.showUom &amp;&amp; (this.data.byproducts.length || this.data.product_uom_name != this.data.uom_name)">
+                                <t t-out="this.data.product_uom_name"/>
                             </td>
-                            <td name="free_to_use" t-if="forecastMode"/>
-                            <td name="status" t-if="forecastMode"/>
-                            <td name="lead_time" t-if="forecastMode"/>
-                            <td name="route_column" class="text-end" t-attf-colspan="{{ data.byproducts.length || showUom &amp;&amp; data.product_uom_name != data.uom_name || !showUom ? 1 : 2 }}"><strong>Unit Cost</strong></td>
-                            <td name="cost" class="text-end" width="5rem"><t t-out="formatMonetary(data.bom_unit_cost / data.quantity)"/></td>
-                            <td t-if="showAttachments"/>
+                            <td name="free_to_use" t-if="this.forecastMode"/>
+                            <td name="status" t-if="this.forecastMode"/>
+                            <td name="lead_time" t-if="this.forecastMode"/>
+                            <td name="route_column" class="text-end" t-attf-colspan="{{ this.data.byproducts.length || this.showUom &amp;&amp; this.data.product_uom_name != this.data.uom_name || !this.showUom ? 1 : 2 }}"><strong>Unit Cost</strong></td>
+                            <td name="cost" class="text-end" width="5rem"><t t-out="this.formatMonetary(this.data.bom_unit_cost / this.data.quantity)"/></td>
+                            <td t-if="this.showAttachments"/>
                         </tr>
-                        <t t-if="data.byproducts &amp;&amp; data.byproducts.length > 0" t-foreach="data.byproducts" t-as="byproduct" t-key="byproduct.id">
+                        <t t-if="this.data.byproducts &amp;&amp; this.data.byproducts.length > 0" t-foreach="this.data.byproducts" t-as="byproduct" t-key="byproduct.id">
                             <tr>
                                 <td name="td_mrp_bom_b" class="text-end" colspan="2" t-esc="byproduct.name"/>
-                                <td t-if="showUom"><t t-out="byproduct['product_uom_name']"/></td>
-                                <td name="free_to_use" t-if="forecastMode"/>
-                                <td name="status" t-if="forecastMode"/>
-                                <td name="lead_time" t-if="forecastMode"/>
+                                <td t-if="this.showUom"><t t-out="byproduct['product_uom_name']"/></td>
+                                <td name="free_to_use" t-if="this.forecastMode"/>
+                                <td name="status" t-if="this.forecastMode"/>
+                                <td name="lead_time" t-if="this.forecastMode"/>
                                 <td name="route_column" class="text-end"><strong>Unit Cost</strong></td>
-                                <td name="cost" class="text-end" width="5rem"><t t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
-                                <td t-if="showAttachments"/>
+                                <td name="cost" class="text-end" width="5rem"><t t-esc="this.formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
+                                <td t-if="this.showAttachments"/>
                             </tr>
                         </t>
                     </tfoot>

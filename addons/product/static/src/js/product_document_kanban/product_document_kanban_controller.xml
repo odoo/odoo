@@ -7,10 +7,10 @@
     >
         <xpath expr="." position="inside">
             <UploadButton
-                formData="formData"
-                allowedMIMETypes="allowedMIMETypes"
+                formData="this.formData"
+                allowedMIMETypes="this.allowedMIMETypes"
                 load.bind="() => this.model.root.load()"
-                uploadRoute="uploadRoute"
+                uploadRoute="this.uploadRoute"
             />
         </xpath>
     </t>

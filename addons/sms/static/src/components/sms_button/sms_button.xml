@@ -3,9 +3,9 @@
 
     <t t-name="sms.SendSMSButton">
         <a
-            t-att-title="title"
-            t-att-href="phoneHref"
-            t-on-click.prevent.stop="onClick"
+            t-att-title="this.title"
+            t-att-href="this.phoneHref"
+            t-on-click.prevent.stop="this.onClick"
             class="ms-3 d-inline-flex align-items-center o_field_phone_sms"
         ><i class="fa fa-mobile"></i><small class="fw-bold ms-1">SMS</small></a>
     </t>

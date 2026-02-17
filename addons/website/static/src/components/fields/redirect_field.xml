@@ -3,9 +3,9 @@
 
 <t t-name="website.RedirectField">
     <button type="button" class="btn oe_stat_button btn-outline-secondary flex-grow-1 flex-lg-grow-0"
-        t-on-click="onClick"
-        t-att-aria-label="info"
-        t-att-title="info">
+        t-on-click="this.onClick"
+        t-att-aria-label="this.info"
+        t-att-title="this.info">
         <t t-set="textClass" t-if="Object.hasOwn(this.props.record.data, 'publish_on') and this.props.record.data.publish_on">text-warning</t>
         <t t-set="textClass" t-elif="this.props.record.data[this.props.name]">text-success</t>
         <t t-set="textClass" t-else="">text-danger</t>

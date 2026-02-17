@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
-            <t t-if="ui.isSmall">
-                <DiscussSearch t-if="!['inbox', 'starred'].includes(store.discuss.activeTab)" class="'w-100 px-2 py-2'"/>
+            <t t-if="this.ui.isSmall">
+                <DiscussSearch t-if="!['inbox', 'starred'].includes(this.store.discuss.activeTab)" class="'w-100 px-2 py-2'"/>
             </t>
             <t t-else="">
                 <div class="flex-grow-1"/>
-                <button t-if="!ui.isSmall" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-sm btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">
+                <button t-if="!this.ui.isSmall" t-att-class="this.ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-sm btn-link px-2 py-1'" t-on-click.stop="this.onClickNewMessage">
                     New Message
                 </button>
             </t>

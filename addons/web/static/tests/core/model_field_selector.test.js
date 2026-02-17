@@ -72,7 +72,7 @@ test("creating a field chain from scratch", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="false"
                 update="(path) => this.onUpdate(path)"
             />
@@ -315,7 +315,7 @@ test("Using back button in popover", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 update="(path) => this.onUpdate(path)"
             />
         `;
@@ -469,7 +469,7 @@ test("Edit path in popover debug input", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
                 update="(pathInfo) => this.onUpdate(pathInfo)"
             />
@@ -581,7 +581,7 @@ test("start on complex path and click prev", async () => {
 test("support of invalid paths (allowEmpty=false)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `` });
@@ -626,7 +626,7 @@ test("support of invalid paths (allowEmpty=false)", async () => {
 test("support of invalid paths (allowEmpty=true)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" allowEmpty="true" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `` });
@@ -673,7 +673,7 @@ test("debug input", async () => {
     let num = 1;
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="state.path" update.bind="update"/>`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `` });
@@ -729,7 +729,7 @@ test("debug input", async () => {
 test("focus on search input", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `foo` });
@@ -754,7 +754,7 @@ test("support properties", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
                 update="(path, fieldInfo) => this.onUpdate(path)"
             />
@@ -848,7 +848,7 @@ test("clear button (allowEmpty=true)", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 allowEmpty="true"
                 isDebugMode="true"
                 update="(path, fieldInfo) => this.onUpdate(path)"
@@ -901,9 +901,9 @@ test("Modify path in popover debug input and click away", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
-                update.bind="update"
+                update.bind="this.update"
             />
         `;
         static props = ["*"];

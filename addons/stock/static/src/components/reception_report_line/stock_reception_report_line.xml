@@ -2,31 +2,31 @@
 <templates xml:space="preserve">
 
     <tr t-name="stock.ReceptionReportLine" class="align-middle">
-        <td t-esc="data.product.display_name"/>
+        <td t-esc="this.data.product.display_name"/>
         <td>
-            <t t-esc="formatFloat(data.quantity)"/> <t t-if="props.showUom" t-esc="data.uom"/>
-            <button class="btn btn-link fa fa-area-chart" t-on-click="onClickForecast" name="forecasted_report_link"/>
+            <t t-esc="this.formatFloat(this.data.quantity)"/> <t t-if="this.props.showUom" t-esc="this.data.uom"/>
+            <button class="btn btn-link fa fa-area-chart" t-on-click="this.onClickForecast" name="forecasted_report_link"/>
         </td>
-        <td t-if="data.is_qty_assignable">
-            <button t-if="!data.is_assigned"
-                t-on-click="onClickAssign"
+        <td t-if="this.data.is_qty_assignable">
+            <button t-if="!this.data.is_assigned"
+                t-on-click="this.onClickAssign"
                 class="btn btn-sm btn-primary"
                 name="assign_link">
                 Assign
             </button>
             <button t-else=""
-                t-on-click="onClickUnassign"
+                t-on-click="this.onClickUnassign"
                 class="btn btn-sm btn-primary"
                 name="unassign_link">
                 Unassign
             </button>
         </td>
         <td>
-            <button t-if="data.is_qty_assignable &amp;&amp; data.source"
+            <button t-if="this.data.is_qty_assignable &amp;&amp; this.data.source"
                 class="btn btn-sm btn-primary"
-                t-attf-disabled="{{ !data.is_assigned }}"
+                t-attf-disabled="{{ !this.data.is_assigned }}"
                 name="print_label"
-                t-on-click="onClickPrint">
+                t-on-click="this.onClickPrint">
                 <span class="d-sm-block">Print Label</span>
             </button>
         </td>

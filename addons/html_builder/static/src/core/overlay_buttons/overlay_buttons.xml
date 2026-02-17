@@ -1,8 +1,8 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.OverlayButtons">
-    <div t-att-class="{'d-none': !state.showUi or !state.isVisible}" class="o-we-toolbar o_overlay_options shadow rounded my-2">
-        <t t-foreach="state.buttons" t-as="button" t-key="button_index">
+    <div t-att-class="{'d-none': !this.state.showUi or !this.state.isVisible}" class="o-we-toolbar o_overlay_options shadow rounded my-2">
+        <t t-foreach="this.state.buttons" t-as="button" t-key="button_index">
             <!-- Disabled buttons do not display their title -->
             <span class="btn-group" t-att-title="button.disabledReason" t-att-aria-label="button.disabledReason">
                 <t t-if="button.Component" t-component="button.Component" t-props="button.props || {}"/>

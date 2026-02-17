@@ -4,8 +4,8 @@
     <t t-name="web_hierarchy.HierarchyRenderer">
         <div class="o_hierarchy_renderer o_renderer w-100 d-flex justify-content-center" t-ref="renderer">
             <div class="o_hierarchy_container d-flex flex-column w-100 w-lg-75 h-100 p-2">
-                <t t-foreach="rows" t-as="row" t-key="row_index">
-                    <t t-set="previousRow" t-value="!row_first ? rows[row_index - 1] : null"/>
+                <t t-foreach="this.rows" t-as="row" t-key="row_index">
+                    <t t-set="previousRow" t-value="!row_first ? this.rows[row_index - 1] : null"/>
                     <t t-if="!row_first">
                         <div t-if="row.parentNode and previousRow.nodes.length > 1"
                             class="o_hierarchy_parent_node_container d-flex justify-content-center"
@@ -24,8 +24,8 @@
                         <t t-foreach="row.nodes" t-as="node" t-key="node.id">
                             <HierarchyCard
                                 node="node"
-                                openRecord="props.openRecord"
-                                archInfo="props.archInfo"
+                                openRecord="this.props.openRecord"
+                                archInfo="this.props.archInfo"
                             />
                         </t>
                     </div>

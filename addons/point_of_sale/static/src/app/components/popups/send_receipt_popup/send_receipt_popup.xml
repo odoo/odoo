@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.SendReceiptPopup">
         <Dialog title="''" footer="false" size="'md'" contentClass="`send-receipt-popup ${!this.ui.isSmall? 'rounded-4' : ''}`" bodyClass="'d-flex flex-column gap-2 py-3'">
-            <t t-foreach="sendList" t-as="item" t-key="item_index">
+            <t t-foreach="this.sendList" t-as="item" t-key="item_index">
                 <div t-if="item.show()" class="d-flex">
                     <input type="text" t-attf-class="{{ item.inputClass }} o_input position-relative p-3 border border-end-0 rounded-start-2 text-body" t-att-placeholder="item.placeholder" t-model="this.state[item.model]" />
                     <div class="d-flex gap-1">
@@ -14,7 +14,7 @@
                 </div>
             </t>
             <div class="notice text-center">
-                <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
+                <t t-set="usedMethod" t-value="this.sendReceipt.lastArgs?.[0]?.name" />
                 <div t-if="this.sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
                 <div t-if="this.sendReceipt.status === 'success'" class="text-success">
                     <t t-if="this.order.is_invoiced">Receipt and invoice sent successfully</t>

@@ -7,40 +7,40 @@
         />
         <div
             t-ref="pointer"
-            t-if="isVisible"
+            t-if="this.isVisible"
             t-attf-class="
                 o_tour_pointer
-                {{ props.pointerState.onClick ? 'cursor-pointer' : '' }}
+                {{ this.props.pointerState.onClick ? 'cursor-pointer' : '' }}
             "
             t-attf-style="
-                --TourPointer__width: {{ constructor.width }}px;
-                --TourPointer__height: {{ constructor.height }}px;
+                --TourPointer__width: {{ this.constructor.width }}px;
+                --TourPointer__height: {{ this.constructor.height }}px;
             "
         >   
             <div
                 t-ref="dropzone"
-                t-if="props.pointerState.isZone"
+                t-if="this.props.pointerState.isZone"
                 class="o_tour_dropzone pe-none"
             />
             <div
-                t-if="!this.state.showContent and !props.pointerState.isZone"
+                t-if="!this.state.showContent and !this.props.pointerState.isZone"
                 t-on-mouseover="() => this.openContent()"
-                t-attf-class="o_tour_pointer_tip o_{{ state.direction }}"
+                t-attf-class="o_tour_pointer_tip o_{{ this.state.direction }}"
             />
         </div>
     </t>
     <t t-name="web_tour.TourPointer.Content">
         <div 
             class="o_tour_pointer o_tour_pointer_content px-3 py-2"
-            t-on-click="props.onClick"
-            t-on-mouseleave="props.closeContent"
-            t-on-mouseover="props.openContent"
+            t-on-click="this.props.onClick"
+            t-on-mouseleave="this.props.closeContent"
+            t-on-mouseover="this.props.openContent"
         >
             <span>
-                <t t-out="props.content" />
+                <t t-out="this.props.content" />
             </span>
             <div class="d-flex justify-content-end">
-                <button class="btn btn-link shadow-none" t-on-click="onStopClicked">Stop Tour</button>
+                <button class="btn btn-link shadow-none" t-on-click="this.onStopClicked">Stop Tour</button>
             </div>
         </div>
     </t>

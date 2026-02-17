@@ -6,7 +6,7 @@
                     label.translate="Colors"
                     extraClasses="'btn-secondary p-0 d-flex o-hb-theme-color-slider-btn'"
                     darkBackground="true"
-                    openByDefault="!!colorPresetToShow">
+                    openByDefault="!!this.colorPresetToShow">
                     <div class="d-flex w-100">
                         <t t-foreach="[1,2,3,4,5]" t-as="i" t-key="i">
                             <span class="flex-grow-1 o_preview_alpha_background"
@@ -30,13 +30,13 @@
                                             <span class="fst-italic">Main</span>
                                             <div class="d-flex flex-row gap-1">
                                                 <BuilderColorPicker
-                                                    title="Primary"
+                                                    title="this.Primary"
                                                     action="'customizeWebsiteColor'"
                                                     actionParam="'o-color-1'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
-                                                    title="Secondary"
+                                                    title="this.Secondary"
                                                     action="'customizeWebsiteColor'"
                                                     actionParam="'o-color-2'"
                                                     enabledTabs="['solid', 'custom']"
@@ -69,7 +69,7 @@
                                                     <t t-set-slot="fixedButton">
                                                         <Image class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
                                                     </t>
-                                                    <t t-foreach="palettes" t-as="palette" t-key="palette.name">
+                                                    <t t-foreach="this.palettes" t-as="palette" t-key="palette.name">
                                                         <BuilderSelectItem actionValue="`'${palette.name}'`">
                                                             <div class="o-color-palette-pill d-flex flex-row border rounded-pill overflow-hidden">
                                                                 <t t-foreach="palette.colors" t-as="color" t-key="color">
@@ -85,8 +85,8 @@
                                 </BuilderRow>
                             </BuilderOptionsSection>
                             <BuilderOptionsSection title.translate="Color Presets">
-                                <t t-foreach="state.presets" t-as="preset" t-key="preset.id">
-                                    <BuilderRow t-slot-scope="row" initialExpandAnim="colorPresetToShow === preset.id">
+                                <t t-foreach="this.state.presets" t-as="preset" t-key="preset.id">
+                                    <BuilderRow t-slot-scope="row" initialExpandAnim="this.colorPresetToShow === preset.id">
                                         <div class="o_cc_preview_wrapper w-100" t-on-click="row.toggleCollapseContent">
                                             <div inert="" t-att-class="`o_cc${preset.id}`"
                                                 class="p-2 d-flex justify-content-between align-items-center ms-3">
@@ -199,10 +199,10 @@
                                     <div class="o_we_gray_preview d-flex w-100">
                                         <t t-foreach="[0,1,2,3,4,5,6,7,8]" t-as="i" t-key="i">
                                             <t t-set="grayCode" t-value="(9 - i) * 100"/>
-                                            <span t-att-title="getGrayTitle(grayCode)"
+                                            <span t-att-title="this.getGrayTitle(grayCode)"
                                                 t-attf-variable="#{grayCode}"
                                                 t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"
-                                                t-attf-style="background-color: {{grays[grayCode]}} !important"
+                                                t-attf-style="background-color: {{this.grays[grayCode]}} !important"
                                             />
                                         </t>
                                     </div>

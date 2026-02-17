@@ -2,16 +2,16 @@
 <templates id="template" xml:space="preserve">
 
 <!-- Products Search Bar autocomplete item -->
-<we-button t-name="website_sale.ribbonSelectItem" t-att-data-set-ribbon="ribbon.id">
-    <t t-out="ribbon.name"/>
-    <span t-attf-class="fa fa-arrow-#{isLeft ? 'left' : 'right'} ms-1"></span>
+<we-button t-name="website_sale.ribbonSelectItem" t-att-data-set-ribbon="this.ribbon.id">
+    <t t-out="this.ribbon.name"/>
+    <span t-attf-class="fa fa-arrow-#{this.isLeft ? 'left' : 'right'} ms-1"></span>
     <span
         t-attf-class="o_wsale_color_preview ms-1"
-        t-attf-style="background-color: #{ribbon.bg_color}"
+        t-attf-style="background-color: #{this.ribbon.bg_color}"
     />
     <span
         t-attf-class="o_wsale_color_preview ms-1"
-        t-attf-style="background-color: #{textColor} !important;"
+        t-attf-style="background-color: #{this.textColor} !important;"
     />
 </we-button>
 

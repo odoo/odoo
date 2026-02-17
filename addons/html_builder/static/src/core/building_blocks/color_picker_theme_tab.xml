@@ -1,11 +1,11 @@
 <templates xml:space="preserve">
 <t t-name="html_builder.ColorPickerThemeTab">
     <div class="p-2 d-flex flex-column gap-1 o_cc_preview_wrapper"
-        t-on-click="props.onColorClick"
-        t-on-mouseover="props.onColorPointerOver"
-        t-on-mouseout="props.onColorPointerOut"
-        t-on-mouseleave="props.onColorPointerLeave"
-        t-on-focusin="props.onFocusin" t-on-focusout="props.onFocusout">
+        t-on-click="this.props.onColorClick"
+        t-on-mouseover="this.props.onColorPointerOver"
+        t-on-mouseout="this.props.onColorPointerOut"
+        t-on-mouseleave="this.props.onColorPointerLeave"
+        t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
         <!-- List all Presets -->
         <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
             <t t-set="className" t-value="'o_cc' + number"/>

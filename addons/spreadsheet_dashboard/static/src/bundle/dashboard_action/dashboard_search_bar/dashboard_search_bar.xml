@@ -2,42 +2,42 @@
 <templates>
     <t t-name="spreadsheet_dashboard.DashboardSearchBar">
         <div class="o_sp_dashboard_search d-flex flex-wrap flex-lg-nowrap gap-1 gap-lg-2 w-100 w-lg-auto">
-            <div class="d-flex flex-grow-1 input-group w-auto" t-if="visibilityState.showSearchBar" >
+            <div class="d-flex flex-grow-1 input-group w-auto" t-if="this.visibilityState.showSearchBar" >
                 <Dropdown
-                    state="inputDropdownState"
+                    state="this.inputDropdownState"
                     manual="true"
                     noClasses="true"
                     position="'bottom-fit'"
                     menuClass="'o_searchview_autocomplete'"
-                    navigationOptions="inputDropdownNavOptions"
-                    onStateChanged.bind="onInputDropdownChanged"
-                    menuRef="menuRef"
+                    navigationOptions="this.inputDropdownNavOptions"
+                    onStateChanged.bind="this.onInputDropdownChanged"
+                    menuRef="this.menuRef"
                     bottomSheet="false"
                 >
 
                     <div
                         class="o_searchview form-control d-flex align-items-center py-1 border-end-0 gap-1">
-                        <button class="btn border-0 p-0" t-on-click="onSearchClick">
+                        <button class="btn border-0 p-0" t-on-click="this.onSearchClick">
                             <i class="oi oi-search me-2"></i>
                         </button>
                         <div
                             class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
-                            <t t-foreach="facets" t-as="facet" t-key="facet.id">
+                            <t t-foreach="this.facets" t-as="facet" t-key="facet.id">
                                 <DashboardFacet facet="facet"
                                     clearFilter="() => this.clearFilter(facet.id)"
-                                    onClick.bind="openFilterValueDropdown" />
+                                    onClick.bind="this.openFilterValueDropdown" />
                             </t>
                             <input type="text"
                                 class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
-                                t-att-tabindex="env.isSmall ? -1 : 0"
+                                t-att-tabindex="this.env.isSmall ? -1 : 0"
                                 accesskey="Q"
                                 placeholder="Search..."
                                 role="searchbox"
                                 t-ref="autofocus"
-                                t-on-click="onSearchClick"
-                                t-on-input="onSearchInput"
-                                t-on-keydown="onSearchInputKeydown"
-                                t-on-pointerdown="onSearchInputPointerDown"
+                                t-on-click="this.onSearchClick"
+                                t-on-input="this.onSearchInput"
+                                t-on-keydown="this.onSearchInputKeydown"
+                                t-on-pointerdown="this.onSearchInputPointerDown"
                             />
                         </div>
                         <t t-set-slot="content">
@@ -49,20 +49,20 @@
                 <Dropdown menuClass="'pt-0 px-2'"
                     manual="true"
                     position="'bottom-end'"
-                    state="filtersValuesDropdown">
+                    state="this.filtersValuesDropdown">
                     <button
                         class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown"
-                        t-on-click="toggleFilterValueDropdown" />
+                        t-on-click="this.toggleFilterValueDropdown" />
                     <t t-set-slot="content">
                         <div class="p-2">
-                            <DashboardSearchBarMenu model="props.model" close.bind="closeFilterValueDropdown" />
+                            <DashboardSearchBarMenu model="this.props.model" close.bind="this.closeFilterValueDropdown" />
                         </div>
                     </t>
                 </Dropdown>
             </div>
-            <div class="o_sp_date_filter_button d-flex" t-if="firstDateFilter">
-                <DashboardDateFilter value="firstDateFilterValue"
-                                update.bind="updateFirstDateFilter"
+            <div class="o_sp_date_filter_button d-flex" t-if="this.firstDateFilter">
+                <DashboardDateFilter value="this.firstDateFilterValue"
+                                update.bind="this.updateFirstDateFilter"
                                 model="this.props.model"/>
             </div>
         </div>

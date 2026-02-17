@@ -2,7 +2,7 @@
 <templates>
     <t t-name="account.AccountNumberCharField" t-inherit="web.CharField">
         <xpath expr="//input" position="attributes">
-            <attribute name="t-on-input">validateAccountNumberDebounced</attribute>
+            <attribute name="t-on-input">this.validateAccountNumberDebounced</attribute>
         </xpath>
     </t>
 

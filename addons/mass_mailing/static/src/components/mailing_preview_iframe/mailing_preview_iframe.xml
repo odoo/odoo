@@ -4,8 +4,8 @@
 
     <t t-name="mass_mailing.MailingPreviewIframe">
         <div class="o_mass_mailing_iframe_wrapper">
-            <div t-att-class="{'o_is_mobile': state.isMobileMode}"
-                 t-attf-style="overflow: hidden;#{!state.isMobileMode? 'height:60vh;' : ''}">
+            <div t-att-class="{'o_is_mobile': this.state.isMobileMode}"
+                 t-attf-style="overflow: hidden;#{!this.state.isMobileMode? 'height:60vh;' : ''}">
                 <iframe t-ref="iframeRef" t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
             </div>
         </div>
@@ -13,7 +13,7 @@
 
     <t t-name="mass_mailing.MailingPreviewIframeBody">
         <div style="pointer-events: none;">
-            <t t-out="props.record.data.body_html"/>
+            <t t-out="this.props.record.data.body_html"/>
         </div>
     </t>
 

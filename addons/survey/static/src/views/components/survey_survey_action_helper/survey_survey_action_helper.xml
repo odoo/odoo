@@ -13,9 +13,9 @@
                 </div>
 
                 <div class="row g-2 g-md-3 mx-auto mt-2 justify-content-center">
-                    <t t-set="templateNames" t-value="Object.keys(surveyTemplateData)"/>
+                    <t t-set="templateNames" t-value="Object.keys(this.surveyTemplateData)"/>
                     <div class="col-12 col-md-4 col-xl-3" t-foreach="templateNames" t-as="templateName" t-key="templateName">
-                        <t t-set="templateInfo" t-value="surveyTemplateData[templateName]"/>
+                        <t t-set="templateInfo" t-value="this.surveyTemplateData[templateName]"/>
                         <button
                             type="button"
                             t-attf-class="o_survey_load_sample o_survey_sample_card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"

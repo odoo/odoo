@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ParallaxOption">
-    <BuilderRow t-if="isActiveItem('toggle_bg_image_id') and !isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" tooltip.translate="Select a motion style for scrolling" level="2" preview="false">
+    <BuilderRow t-if="this.isActiveItem('toggle_bg_image_id') and !this.isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" tooltip.translate="Select a motion style for scrolling" level="2" preview="false">
         <BuilderSelect action="'setParallaxType'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'fixed'">Fixed</BuilderSelectItem>
@@ -14,25 +14,25 @@
     </BuilderRow>
     <BuilderContext preview="false">
         <BuilderRow level="3" label.translate="Intensity" tooltip.translate="Adjust how strong the scroll effect appears" >
-            <BuilderRange t-if="isActiveItem('parallax_top_opt')"
+            <BuilderRange t-if="this.isActiveItem('parallax_top_opt')"
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.15"
                 max="3"
                 step="0.15"
             />
-            <BuilderRange t-if="isActiveItem('parallax_bottom_opt')" 
+            <BuilderRange t-if="this.isActiveItem('parallax_bottom_opt')" 
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="-0.15"
                 max="-3"
                 step="0.15"
             />
-            <BuilderRange t-if="isActiveItem('parallax_zoom_in_opt')"
+            <BuilderRange t-if="this.isActiveItem('parallax_zoom_in_opt')"
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.05"
                 max="0.95"
                 step="0.05"
             />
-            <BuilderRange t-if="isActiveItem('parallax_zoom_out_opt')"
+            <BuilderRange t-if="this.isActiveItem('parallax_zoom_out_opt')"
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.15"
                 max="3"

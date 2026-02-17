@@ -366,7 +366,7 @@ test("Edit contenteditable", async () => {
 test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="sources"/>`;
+        static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="this.sources"/>`;
         static props = ["*"];
 
         sources = [

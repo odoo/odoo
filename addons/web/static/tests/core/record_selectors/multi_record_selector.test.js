@@ -35,7 +35,7 @@ defineModels([Partner, Users]);
 async function mountMultiRecordSelector(props) {
     class Parent extends Component {
         static components = { MultiRecordSelector };
-        static template = xml`<MultiRecordSelector t-props="recordProps" />`;
+        static template = xml`<MultiRecordSelector t-props="this.recordProps" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ resIds: props.resIds });

@@ -1,33 +1,33 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.slides.fullscreen.content">
-        <t t-if="slide.category === 'document'">
+        <t t-if="this.slide.category === 'document'">
             <div class="ratio h-100">
-                <iframe t-att-src="slide.embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" frameborder="0" aria-label="Slides"/>
+                <iframe t-att-src="this.slide.embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" frameborder="0" aria-label="Slides"/>
             </div>
         </t>
-        <t t-if="slide.category === 'infographic'">
+        <t t-if="this.slide.category === 'infographic'">
             <div class="o_wslides_fs_player w-100 h-100 overflow-auto d-flex align-items-start justify-content-center">
-                <img t-att-src="'/web/image/slide.slide/'+ slide.id +'/image_1024'" class="img-fluid position-relative m-auto" alt="Slide image"/>
+                <img t-att-src="'/web/image/slide.slide/'+ this.slide.id +'/image_1024'" class="img-fluid position-relative m-auto" alt="Slide image"/>
             </div>
         </t>
     </t>
 
     <t t-name="website.slides.fullscreen.video.google_drive">
         <div class="player ratio ratio-16x9 embed-responsive-item h-100">
-            <iframe t-att-src="slide.embedUrl" allowFullScreen="true" frameborder="0" autoplay="1" allow="autoplay"></iframe>
+            <iframe t-att-src="this.slide.embedUrl" allowFullScreen="true" frameborder="0" autoplay="1" allow="autoplay"></iframe>
         </div>
     </t>
 
     <t t-name="website.slides.fullscreen.video.youtube">
         <div class="o_wslides_fs_youtube_player player ratio ratio-16x9 embed-responsive-item h-100">
-            <iframe t-att-id="'youtube-player' + slide.id" t-att-src="slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+            <iframe t-att-id="'youtube-player' + this.slide.id" t-att-src="this.slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
         </div>
     </t>
 
     <t t-name="website.slides.fullscreen.video.vimeo">
         <div class="o_wslides_fs_vimeo_player player ratio ratio-16x9 embed-responsive-item h-100">
-            <t t-out="slide.embedCode"/>
+            <t t-out="this.slide.embedCode"/>
         </div>
     </t>
 

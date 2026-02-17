@@ -7,7 +7,7 @@
         t-inherit-mode="primary"
     >
         <section position="before">
-            <section t-if="showSections" class="o_search_panel_sections mt-5">
+            <section t-if="this.showSections" class="o_search_panel_sections mt-5">
                 <header class="d-flex align-items-center cursor-default gap-2 mb-3">
                     <i class="fa fa-filter"/>
                     <span class="text-uppercase fw-bold">Sections</span>
@@ -18,9 +18,9 @@
                                 class="form-check-input"
                                 type="checkbox"
                                 role="switch"
-                                t-att-checked="selectedSection.filtered ? true : false"
+                                t-att-checked="this.selectedSection.filtered ? true : false"
                                 t-on-click="() => this.setSelectedSection(
-                                    selectedSection.sectionId, !selectedSection.filtered
+                                    this.selectedSection.sectionId, !this.selectedSection.filtered
                                 )"
                             />
                         </div>
@@ -33,10 +33,10 @@
                         t-as="sectionId"
                         t-key="sectionId"
                         t-att-class="'list-group-item p-0 mb-1 border-0 cursor-pointer ' + (
-                            selectedSection.sectionId == sectionId ? 'o_selected_section' : ''
+                            this.selectedSection.sectionId == sectionId ? 'o_selected_section' : ''
                         )"
-                        t-on-dragstart="(e) => onDragStart(sectionId, e)"
-                        t-on-dragover="(e) => onDragOver(e)"
+                        t-on-dragstart="(e) => this.onDragStart(sectionId, e)"
+                        t-on-dragover="(e) => this.onDragOver(e)"
                         t-on-drop="(e) => this.onDrop(sectionId, e)"
                     >
                         <div class="d-flex align-items-center">
@@ -55,14 +55,14 @@
                                 class="ms-2 o_section_input"
                                 type="text"
                                 t-model="this.state.newSectionName"
-                                t-on-keydown="onSectionInputKeydown"
-                                t-on-blur="createSection"
+                                t-on-keydown="this.onSectionInputKeydown"
+                                t-on-blur="this.createSection"
                             />
                             <div
                                 t-else=""
                                 class="w-100 ms-2 d-flex align-items-center justify-content-between overflow-hidden"
                                 t-on-click="() => this.setSelectedSection(
-                                    sectionId, selectedSection.filtered
+                                    sectionId, this.selectedSection.filtered
                                 )"
                                 t-att-title="section.name"
                             >
@@ -78,8 +78,8 @@
                     type="text"
                     placeholder="Enter a description"
                     t-model="this.state.newSectionName"
-                    t-on-keydown="onSectionInputKeydown"
-                    t-on-blur="createSection"
+                    t-on-keydown="this.onSectionInputKeydown"
+                    t-on-blur="this.createSection"
                 />
                 <button
                     t-else=""

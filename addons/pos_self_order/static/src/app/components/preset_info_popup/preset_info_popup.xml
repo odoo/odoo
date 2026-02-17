@@ -8,42 +8,42 @@
             <div class="select_popup_preset_info w-100 d-flex flex-column h-100 overflow-hidden">
                 <div class="d-flex justify-content-between align-items-center px-2 mt-2 mb-4">
                     <h2 class="mb-0">We need more info</h2>
-                    <button class="btn-close" aria-label="close" t-on-click="close"/>
+                    <button class="btn-close" aria-label="close" t-on-click="this.close"/>
                 </div>
                 <div class="d-flex flex-column gap-3 overflow-y-auto overflow-x-hidden flex-grow-1">
-                    <select t-if="preset.needsPartner and existingPartners.length"
+                    <select t-if="this.preset.needsPartner and this.existingPartners.length"
                         class="partner-select form-select form-select-lg"
-                        t-on-change="selectExistingPartner"
+                        t-on-change="this.selectExistingPartner"
                         t-model="state.selectedPartnerId">
                         <option value="">
                             Select your address
                         </option>
-                        <t t-foreach="existingPartners" t-as="partner" t-key="partner.id">
+                        <t t-foreach="this.existingPartners" t-as="partner" t-key="partner.id">
                             <option t-att-value="partner.id" t-esc="partner.name + ' ' + partner.pos_contact_address" />
                         </t>
                     </select>
-                    <input t-if="preset.needsName || preset.needsPartner"
+                    <input t-if="this.preset.needsName || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Name"
                         t-model="state.name"
-                        t-att-disabled="partnerIsSelected" />
-                    <input t-if="preset.needsEmail || preset.needsPartner"
+                        t-att-disabled="this.partnerIsSelected" />
+                    <input t-if="this.preset.needsEmail || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Email"
                         t-model="state.email"
-                        t-att-disabled="partnerIsSelected" />
-                    <t t-if="preset.needsName || preset.needsPartner">
+                        t-att-disabled="this.partnerIsSelected" />
+                    <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <input type="text"
                             class="form-control form-control-lg"
                             placeholder="Phone"
                             t-model="state.phone"
-                            t-att-disabled="partnerIsSelected"/>
-                        <p t-if="!checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
+                            t-att-disabled="this.partnerIsSelected"/>
+                        <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
                     </t>
-                    <t t-if="preset.needsPartner">
-                        <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
+                    <t t-if="this.preset.needsPartner">
+                        <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="this.partnerIsSelected">
                             <option value="">
                                 Select a country
                             </option>
@@ -56,17 +56,17 @@
                                 class="form-control form-control-lg w-75"
                                 placeholder="Street and Number"
                                 t-model="state.street"
-                                t-att-disabled="partnerIsSelected"/>
+                                t-att-disabled="this.partnerIsSelected"/>
                             <input
                                 type="text"
                                 class="form-control form-control-lg w-25"
                                 placeholder="Zip"
                                 t-model="state.zip"
-                                t-att-disabled="partnerIsSelected"/>
+                                t-att-disabled="this.partnerIsSelected"/>
                         </div>
                         <div class="d-flex gap-3">
                             <t t-set="availableState" t-value="this.states" />
-                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-model="state.stateId" t-att-disabled="partnerIsSelected">
+                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-model="state.stateId" t-att-disabled="this.partnerIsSelected">
                                 <option value="">
                                     Select a state
                                 </option>
@@ -78,17 +78,17 @@
                                 class="form-control form-control-lg"
                                 placeholder="City"
                                 t-model="state.city"
-                                t-att-disabled="partnerIsSelected"/>
+                                t-att-disabled="this.partnerIsSelected"/>
                         </div>
                     </t>
                 </div>
                 <div class="w-100 d-flex mt-3">
                     <button class="btn btn-secondary flex-grow-1 me-1"
-                        t-on-click="props.close">
+                        t-on-click="this.props.close">
                         Cancel
                     </button>
                     <button class="btn btn-primary flex-grow-1 ms-1"
-                        t-on-click="setInformations"
+                        t-on-click="this.setInformations"
                         t-att-disabled="!this.validSelection">
                         Continue
                     </button>

@@ -3,16 +3,16 @@
 
     <t t-name="project.ProjectMilestone">
         <div class="list-group">
-            <div class="o_rightpanel_milestone list-group-item list-group-item-action d-flex gap-2 border-0 cursor-pointer" t-att-class="state.colorClass" t-on-click="toggleIsReached">
-                <t t-if="milestone.is_reached" t-set="title">Mark as incomplete</t>
+            <div class="o_rightpanel_milestone list-group-item list-group-item-action d-flex gap-2 border-0 cursor-pointer" t-att-class="this.state.colorClass" t-on-click="this.toggleIsReached">
+                <t t-if="this.milestone.is_reached" t-set="title">Mark as incomplete</t>
                 <t t-else="" t-set="title">Mark as reached</t>
-                <i class="fa fa-fw mt-1" t-att-class="state.checkboxIcon" t-att-title="title"/>
+                <i class="fa fa-fw mt-1" t-att-class="this.state.checkboxIcon" t-att-title="title"/>
                 <div class="o_milestone_detail d-flex justify-content-between flex-grow-1 gap-2">
-                    <div t-att-title="milestone.name">
-                        <t t-esc="milestone.name"/>
+                    <div t-att-title="this.milestone.name">
+                        <t t-esc="this.milestone.name"/>
                     </div>
                     <span class="d-flex justify-content-center align-items-center">
-                        <t t-esc="deadline"/>
+                        <t t-esc="this.deadline"/>
                     </span>
                 </div>
             </div>

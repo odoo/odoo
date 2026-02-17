@@ -11,11 +11,11 @@
                         <h3 t-esc="this.props.title" class="mb-0 pb-0" />
                         <span t-esc="this.props.subtitle" />
                     </div>
-                    <button class="btn btn-close" t-on-click="props.close"/>
+                    <button class="btn btn-close" t-on-click="this.props.close"/>
                 </div>
                 <div t-ref="category-list" class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
                     <button class="btn py-3 d-flex flex-column align-items-center text-center text-nowrap"
-                        t-foreach="categories" t-as="category" t-key="category.id"
+                        t-foreach="this.categories" t-as="category" t-key="category.id"
                         t-on-click="(ev) => this.onClickScrollTracked(ev, category.id)"
                         t-att-class="{
                             'btn-primary': this.state.selectedCategoryId === category.id,
@@ -25,7 +25,7 @@
                     </button>
                 </div>
                 <div class="w-100 overflow-x-hidden">
-                    <div t-foreach="getSelectedCategorySubCategories" t-as="subCateg" t-key="subCateg.id" class="mt-3 w-100">
+                    <div t-foreach="this.getSelectedCategorySubCategories" t-as="subCateg" t-key="subCateg.id" class="mt-3 w-100">
                         <h5 t-if="subCateg.name" t-esc="subCateg.name" />
                         <t t-set="options" t-value="subCateg.options" />
                         <div class="container-fluid mt-2 mx-auto px-0 overflow-x-hidden no-scrollbar">
@@ -44,12 +44,12 @@
                 </div>
                 <div class="w-100 d-flex mt-3 me-1">
                     <button class="btn btn-secondary flex-grow-1 me-1"
-                        t-on-click="props.close">
+                        t-on-click="this.props.close">
                         Cancel
                     </button>
                     <button class="btn btn-primary flex-grow-1"
-                        t-on-click="confirmSelection"
-                        t-att-disabled="!state.selectedOptionId">
+                        t-on-click="this.confirmSelection"
+                        t-att-disabled="!this.state.selectedOptionId">
                         Confirm
                     </button>
                 </div>

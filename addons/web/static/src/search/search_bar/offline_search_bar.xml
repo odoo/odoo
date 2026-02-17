@@ -18,7 +18,7 @@
                             <t t-call="web.OfflineSearchBar.Facets">
                                 <t t-set="facets" t-value="this.currentSearch.facets"/>
                             </t>
-                            <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="onRemoveSearch">
+                            <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="this.onRemoveSearch">
                                 <i class="oi oi-close small"/>
                             </div>
                             <div t-elif="this.currentSearch.facets.length" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 opacity-50" data-tooltip="Can't remove that search">
@@ -31,8 +31,8 @@
                                 role="searchbox"
                                 t-att-disabled="this.isSearchMenuDisabled"
                                 t-ref="autofocus"
-                                t-on-input="onSearchInput"
-                                t-on-compositionend="onCompositionEnd"
+                                t-on-input="this.onSearchInput"
+                                t-on-compositionend="this.onCompositionEnd"
                             />
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                     />
                 </div>
                 <t t-set-slot="content">
-                    <DropdownItem t-foreach="state.searches.slice(0, state.limit)" t-as="search" t-key="search_index"
+                    <DropdownItem t-foreach="this.state.searches.slice(0, this.state.limit)" t-as="search" t-key="search_index"
                         t-if="search.facets.length"
                         onSelected="() => this.onSelect(search)"
                         class="{
@@ -57,9 +57,9 @@
                             <t t-set="facets" t-value="search.facets"/>
                         </t>
                     </DropdownItem>
-                    <DropdownItem t-if="state.searches.length > state.limit"
+                    <DropdownItem t-if="this.state.searches.length > this.state.limit"
                         closingMode="'none'"
-                        onSelected.bind="onShowMoreSearches">
+                        onSelected.bind="this.onShowMoreSearches">
                         <button class="btn btn-link p-0" data-available-offline="">More...</button>
                     </DropdownItem>
                 </t>

@@ -3,7 +3,7 @@
     <t t-name="hr_holidays.KanbanRenderer">
         <div class="d-flex flex-column h-100">
             <div class="o_timeoff_calendar">
-                <TimeOffDashboard t-if="showDashboard" employeeId="employeeId"/>
+                <TimeOffDashboard t-if="this.showDashboard" employeeId="this.employeeId"/>
             </div>
             <t t-call="web.KanbanRenderer"/>
         </div>

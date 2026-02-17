@@ -14,7 +14,7 @@
 
     <BuilderRow label.translate="Size" t-if="this.state.useSize">
         <BuilderSelect>
-            <BuilderSelectItem t-foreach="coverSizeClasses" t-as="className" t-key="className" classAction="className" t-out="coverSizeLabel(className)"/>
+            <BuilderSelectItem t-foreach="this.coverSizeClasses" t-as="className" t-key="className" classAction="className" t-out="this.coverSizeLabel(className)"/>
         </BuilderSelect>
     </BuilderRow>
 

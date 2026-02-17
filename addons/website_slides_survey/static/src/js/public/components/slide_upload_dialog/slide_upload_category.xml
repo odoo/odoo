@@ -6,16 +6,16 @@
         t-inherit-mode="extension"
     >
         <xpath expr="//canvas[@id='data_canvas']" position="before">
-            <t t-if="props.slideCategory === 'certification'">
+            <t t-if="this.props.slideCategory === 'certification'">
                 <SelectMenu
-                    choices="state.choices.certifications"
-                    value="state.choices.certificationId"
+                    choices="this.state.choices.certifications"
+                    value="this.state.choices.certificationId"
                     required="true"
-                    onSelect.bind="onCertificationSelect"
+                    onSelect.bind="this.onCertificationSelect"
                 >
-                    <t t-out="displayCertificationValue"/>
+                    <t t-out="this.displayCertificationValue"/>
                 </SelectMenu>
-                <span t-if="state.showCertificationRequiredError" class="text-danger">Please select a certification.</span>
+                <span t-if="this.state.showCertificationRequiredError" class="text-danger">Please select a certification.</span>
             </t>
         </xpath>
     </t>

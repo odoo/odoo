@@ -90,12 +90,12 @@ test("CodeEditor shouldn't accepts markup values", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor value="props.value" />`;
+        static template = xml`<CodeEditor value="this.props.value" />`;
         static props = ["*"];
     }
     class GrandParent extends Component {
         static components = { Parent };
-        static template = xml`<Parent value="state.value"/>`;
+        static template = xml`<Parent value="this.state.value"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ value: `<div>Some Text</div>` });
@@ -115,7 +115,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
 test("onChange props called when code is edited", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" onChange.bind="onChange" />`;
+        static template = xml`<CodeEditor maxLines="10" onChange.bind="this.onChange" />`;
         static props = ["*"];
         onChange(value) {
             expect.step(value);
@@ -132,9 +132,9 @@ test("onChange props not called when value props is updated", async () => {
         static components = { CodeEditor };
         static template = xml`
             <CodeEditor
-                value="state.value"
+                value="this.state.value"
                 maxLines="10"
-                onChange.bind="onChange"
+                onChange.bind="this.onChange"
             />
         `;
         static props = ["*"];
@@ -165,8 +165,8 @@ test("Default value correctly set and updates", async () => {
         static template = xml`
             <CodeEditor
                 mode="'xml'"
-                value="state.value"
-                onChange.bind="onChange"
+                value="this.state.value"
+                onChange.bind="this.onChange"
                 maxLines="200"
             />
         `;
@@ -222,7 +222,7 @@ test("Mode props update imports the mode", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="state.mode" />`;
+        static template = xml`<CodeEditor maxLines="10" mode="this.state.mode" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ mode: "xml" });
@@ -260,7 +260,7 @@ test("Theme props updates imports the theme", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" theme="state.theme" />`;
+        static template = xml`<CodeEditor maxLines="10" theme="this.state.theme" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ theme: "" });
@@ -313,7 +313,7 @@ test("initial value cannot be undone", async () => {
 test("code editor can take an initial cursor position", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="2" value="value" initialCursorPosition="initialPosition" onChange="onChange"/>`;
+        static template = xml`<CodeEditor maxLines="2" value="this.value" initialCursorPosition="this.initialPosition" onChange="this.onChange"/>`;
         static props = ["*"];
 
         setup() {
@@ -365,7 +365,7 @@ test("code editor can take an initial cursor position", async () => {
 test("qweb mode readonly attributes", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="props.state.mode" value="props.state.value" modeOptions="props.state.modeOptions" initialCursorPosition="props.state.initialCursorPosition"/>`;
+        static template = xml`<CodeEditor maxLines="10" mode="this.props.state.mode" value="this.props.state.value" modeOptions="this.props.state.modeOptions" initialCursorPosition="this.props.state.initialCursorPosition"/>`;
         static props = ["*"];
     }
 

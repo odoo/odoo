@@ -5,7 +5,7 @@
         <t t-set="val_decimal" t-value="val - val_integer"/>
         <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
         <div class="o_website_rating_static"
-             t-att-style="inline_mode ? 'display:inline' : ''"
+             t-att-style="this.inline_mode ? 'display:inline' : ''"
              t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
              t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
             <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
@@ -69,7 +69,7 @@
     </t>
 
     <t t-name="portal_rating.rating_star_input">
-        <div class="o-mail-Composer-starCard mb-2" t-if="widget.options['display_rating']">
+        <div class="o-mail-Composer-starCard mb-2" t-if="this.widget.options['display_rating']">
             <t t-set="val_integer" t-value="Math.floor(default_rating)"/>
             <t t-set="val_decimal" t-value="default_rating - val_integer"/>
             <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>

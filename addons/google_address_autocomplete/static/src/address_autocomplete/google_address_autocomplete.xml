@@ -3,12 +3,12 @@
 <templates>
     <t t-name="google_address_autocomplete.AddressAutoCompleteTemplate">
         <AutoComplete
-            value="props.record.data[props.name] || ''"
-            sources="sources"
-            placeholder="props.placeholder"
+            value="this.props.record.data[this.props.name] || ''"
+            sources="this.sources"
+            placeholder="this.props.placeholder"
             searchOnInputClick="false"
             inputDebounceDelay="350"
-            input="input"
+            input="this.input"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <strong t-esc="optionScope.label"/>

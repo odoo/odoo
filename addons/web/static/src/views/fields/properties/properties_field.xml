@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField">
-        <div t-ref="properties" class="row" t-att-columns="renderedColumnsCount">
-            <t t-set="unfoldedSeparators" t-value="state.unfoldedSeparators"/>
-            <t t-set="_groupedPropertiesList" t-value="groupedPropertiesList"/>
-            <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
+        <div t-ref="properties" class="row" t-att-columns="this.renderedColumnsCount">
+            <t t-set="unfoldedSeparators" t-value="this.state.unfoldedSeparators"/>
+            <t t-set="_groupedPropertiesList" t-value="this.groupedPropertiesList"/>
+            <t t-foreach="this.groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
                 <t t-set="foldable" t-value="propertiesListGroup.name and propertiesListGroup.title and propertiesListGroup.title.length"/>
                 <div class="o_inner_group o_group col-lg-6 o_property_group"
                     t-att-property-name="propertiesListGroup.name || ''">
@@ -17,10 +17,10 @@
                             </div>
                             <span t-if="propertiesListGroup.title" t-out="propertiesListGroup.title"/>
                             <i
-                                t-if="state.isInEditMode and !propertiesListGroup.columnSeparator"
+                                t-if="this.state.isInEditMode and !propertiesListGroup.columnSeparator"
                                 class="o_field_property_open_popover fa fa-pencil ms-3"
                                 t-on-click.prevent.stop="(event) => this.onPropertyEdit(event, propertiesListGroup.name)"/>
-                            <i t-if="state.isInEditMode"
+                            <i t-if="this.state.isInEditMode"
                                 class="oi oi-draggable ms-1 d-none d-sm-block"/>
                         </div>
                     </div>
@@ -31,40 +31,40 @@
                         t-if="!propertyConfiguration.hidden"
                         class="o_property_field o_wrap_label text-900"
                         t-att-class="{
-                            'd-flex flex-row': !env.isSmall and !propertiesListGroup.isFolded, 'o_property_folded': propertiesListGroup.isFolded,
-                            'mb-4': renderedColumnsCount === 1, 'mb-3': renderedColumnsCount !== 1
+                            'd-flex flex-row': !this.env.isSmall and !propertiesListGroup.isFolded, 'o_property_folded': propertiesListGroup.isFolded,
+                            'mb-4': this.renderedColumnsCount === 1, 'mb-3': this.renderedColumnsCount !== 1
                         }"
                         t-att-property-name="propertyConfiguration.name">
-                        <t t-set="domId" t-value="generateUniqueDomID()"/>
+                        <t t-set="domId" t-value="this.generateUniqueDomID()"/>
                         <label
                             class="o_field_property_label o_form_label text-break d-flex align-items-baseline mb-0 pe-2"
-                            t-att-class="{'w-auto': env.isSmall}"
+                            t-att-class="{'w-auto': this.env.isSmall}"
                             t-att-for="domId">
                             <span
                                 t-if="propertyConfiguration.string and propertyConfiguration.string.length"
                                 t-out="propertyConfiguration.string"
-                                t-att-class="{'o_property_field_highlight': state.movedPropertyName === propertyConfiguration.name}"/>
+                                t-att-class="{'o_property_field_highlight': this.state.movedPropertyName === propertyConfiguration.name}"/>
                             <i
                                 t-else="" class="o_field_property_empty_label mt-1">
                                 New Property
                             </i>
                             <i
-                                t-if="state.isInEditMode"
+                                t-if="this.state.isInEditMode"
                                 class="o_field_property_open_popover fa fa-pencil ms-2"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
-                            <i t-if="state.isInEditMode"
+                            <i t-if="this.state.isInEditMode"
                                 class="oi oi-draggable ms-1 d-none d-sm-block mt-1"/>
                         </label>
                         <div class="o_property_field_value d-flex w-100">
                             <div class="w-100">
                                 <PropertyValue
                                     id="domId"
-                                    canChangeDefinition="state.canChangeDefinition"
+                                    canChangeDefinition="this.state.canChangeDefinition"
                                     comodel="propertyConfiguration.comodel || ''"
                                     currencyField="propertyConfiguration.currency_field || ''"
-                                    context="props.context"
+                                    context="this.props.context"
                                     domain="propertyConfiguration.domain || '[]'"
-                                    readonly="props.readonly"
+                                    readonly="this.props.readonly"
                                     selection="propertyConfiguration.selection"
                                     string="propertyConfiguration.string"
                                     tags="propertyConfiguration.tags"
@@ -72,7 +72,7 @@
                                     value="propertyConfiguration.value"
                                     onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
                                     onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
-                                    record="props.record"
+                                    record="this.props.record"
                                 />
                             </div>
                             <span class="o_property_field_value_suffix w-50" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
@@ -81,11 +81,11 @@
                     <div
                         t-if="propertiesListGroup_index === _groupedPropertiesList.length - 1 and this.displayAddPropertyButton"
                         class="o_field_property_add d-none d-sm-block"
-                        t-att-class="{'g-col-2': props.columns !== 1}">
+                        t-att-class="{'g-col-2': this.props.columns !== 1}">
                         <button
-                            t-if="state.isInEditMode and definitionRecordId"
+                            t-if="this.state.isInEditMode and this.definitionRecordId"
                             class="btn btn-link text-break m-0"
-                            t-on-click="onPropertyCreate">
+                            t-on-click="this.onPropertyCreate">
                             <i class="fa fa-plus"/>
                             Add Property
                         </button>

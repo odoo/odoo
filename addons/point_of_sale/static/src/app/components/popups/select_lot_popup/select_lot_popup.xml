@@ -4,11 +4,11 @@
         <Dialog size="'md'">
             <t t-set-slot="header">
                 <h4 class="modal-title title">
-                    <span t-esc="props.title"/> <span class="fst-italic" t-esc="props.name"/>
+                    <span t-esc="this.props.title"/> <span class="fst-italic" t-esc="this.props.name"/>
                 </h4>
             </t>
-            <div t-ref="root" class="lot-container" t-on-keydown="onKeyDown">
-                <t t-if="!props.isSingleItem" t-foreach="state.values" t-as="v" t-key="v.id">
+            <div t-ref="root" class="lot-container" t-on-keydown="this.onKeyDown">
+                <t t-if="!this.props.isSingleItem" t-foreach="this.state.values" t-as="v" t-key="v.id">
                     <div class="lot-item input-group mb-2">
                         <span class="form-control" t-esc="v.text"/>
                         <button class="btn btn-danger" t-on-click="() => this.removeItem(v.id)">
@@ -18,16 +18,16 @@
                 </t>
                 <AutoComplete
                     placeholder.translate="Lot/Serial number"
-                    sources="getSources()"
-                    value="state.value"
+                    sources="this.getSources()"
+                    value="this.state.value"
                     autoSelect="true"
                     autofocus="true"
-                    input="inputRef"
+                    input="this.inputRef"
                 />
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary btn-lg" t-on-click="confirm">Apply</button>
-                <button class="btn btn-secondary btn-lg" t-on-click="close">Discard</button>
+                <button class="btn btn-primary btn-lg" t-on-click="this.confirm">Apply</button>
+                <button class="btn btn-secondary btn-lg" t-on-click="this.close">Discard</button>
             </t>
        </Dialog>
     </t>

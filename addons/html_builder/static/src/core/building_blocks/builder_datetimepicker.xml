@@ -5,11 +5,11 @@
     <BuilderComponent>
         <div t-ref="root" class="w-100">
             <BuilderTextInputBase
-                    t-props="textInputBaseProps"
-                    commit="commit"
-                    preview="preview"
-                    onFocus.bind="onFocus"
-                    value="displayValue"
+                    t-props="this.textInputBaseProps"
+                    commit="this.commit"
+                    preview="this.preview"
+                    onFocus.bind="this.onFocus"
+                    value="this.displayValue"
             />
         </div>
     </BuilderComponent>

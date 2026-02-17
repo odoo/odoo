@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="stock.ForecastedButtons">
-        <button title="Replenish" t-on-click="_onClickReplenish"
+        <button title="Replenish" t-on-click="this._onClickReplenish"
             class="o_forecasted_replenish_btn btn btn-primary">
             Replenish
         </button>
-        <button title="Update Quantity" t-on-click="_onClickUpdateQuantity"
+        <button title="Update Quantity" t-on-click="this._onClickUpdateQuantity"
             class="o_forecasted_update_qty_btn btn btn-secondary">
             Update Quantity
         </button>

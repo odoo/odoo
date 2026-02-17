@@ -6,7 +6,7 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 
 class Parent extends Component {
     static template = xml`
-        <t t-component="Component" t-props="componentProps"/>
+        <t t-component="this.Component" t-props="this.componentProps"/>
         <div class="outsideDiv">Outside div</div>
     `;
     static props = ["*"];

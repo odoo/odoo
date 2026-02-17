@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.PrintingFailurePopup">
-        <div class="self_order_out_of_paper_popup o_dialog" t-att-id="id">
+        <div class="self_order_out_of_paper_popup o_dialog" t-att-id="this.id">
             <div role="dialog" class="modal d-block" tabindex="-1" t-on-click="() => this.props.close()">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -14,7 +14,7 @@
                             </div>
                             <div class="mt-4 pb-2 fs-3"><t t-esc="this.props.message"/></div>
                             <div class="pb-4 fs-3">We invite you to get the receipt at the counter. Please remember your order number:</div>
-                            <h1 class="text-center mb-4" t-esc="props.trackingNumber"/>
+                            <h1 class="text-center mb-4" t-esc="this.props.trackingNumber"/>
                         </div>
                     </div>
                 </div>

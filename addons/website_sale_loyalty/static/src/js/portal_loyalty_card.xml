@@ -3,8 +3,8 @@
     <t t-inherit="loyalty.portal_loyalty_card_dialog" t-inherit-mode="extension">
         <div name="history_lines" position="after">
             <div
-                t-if="props.program.program_type == 'loyalty'"
-                t-foreach="props.rewards"
+                t-if="this.props.program.program_type == 'loyalty'"
+                t-foreach="this.props.rewards"
                 t-as="reward"
                 t-key="reward_index"
                 class="mb-2 mt-2"
@@ -16,9 +16,9 @@
                     <span class="text-primary" t-out="reward.points"/>
                 </div>
             </div>
-            <div t-if="props.rewards.length > 0" class="d-flex justify-content-center">
+            <div t-if="this.props.rewards.length > 0" class="d-flex justify-content-center">
                 <a
-                    t-if="props.program.program_type == 'loyalty'"
+                    t-if="this.props.program.program_type == 'loyalty'"
                     type="button"
                     href="/shop"
                     class="btn btn-primary"
@@ -27,18 +27,18 @@
                 </a>
             </div>
             <div
-                t-if="props.program.program_type == 'ewallet'
-                and props.program.trigger_products.length"
+                t-if="this.props.program.program_type == 'ewallet'
+                and this.props.program.trigger_products.length"
             >
                 <form
                     method="post"
                     action="/wallet/top_up"
                     class="d-flex w-75 w-md-50 m-auto gap-1"
                 >
-                    <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                    <input type="hidden" name="csrf_token" t-att-value="this.csrf_token"/>
                     <select name="trigger_product_id" class="form-select">
                         <t
-                            t-foreach="props.program.trigger_products"
+                            t-foreach="this.props.program.trigger_products"
                             t-as="product"
                             t-key="product_index"
                         >

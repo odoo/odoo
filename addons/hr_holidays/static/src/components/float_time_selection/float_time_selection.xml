@@ -3,8 +3,8 @@
 
     <t t-name="hr_holidays.FloatTimeSelectionField" t-inherit="web.FloatTimeField">
         <xpath expr="//input" position="attributes">
-            <attribute name="t-on-input">handleInputChange</attribute>
-            <attribute name="t-on-click">onCharHoursClick</attribute>
+            <attribute name="t-on-input">this.handleInputChange</attribute>
+            <attribute name="t-on-click">this.onCharHoursClick</attribute>
         </xpath>
     </t>
 </templates>

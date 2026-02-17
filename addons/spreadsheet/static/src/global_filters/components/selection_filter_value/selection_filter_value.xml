@@ -5,7 +5,7 @@
             <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
                 <BadgeTag text="tag.text" onDelete="tag.onDelete"/>
             </t>
-            <AutoComplete input="inputRef" sources="sources"/>
+            <AutoComplete input="this.inputRef" sources="this.sources"/>
         </div>
     </t>
 </templates>

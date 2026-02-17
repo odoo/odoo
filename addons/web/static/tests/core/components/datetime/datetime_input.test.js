@@ -20,7 +20,7 @@ const { DateTime } = luxon;
 
 class DateTimeInputComp extends Component {
     static components = { DateTimeInput };
-    static template = xml`<DateTimeInput t-props="props" />`;
+    static template = xml`<DateTimeInput t-props="this.props" />`;
     static props = ["*"];
 }
 
@@ -220,7 +220,7 @@ describe("DateTimeInput (date)", () => {
     test("popover should be inside a bottom sheet", async () => {
         class Root extends Component {
             static components = { DateTimeInput };
-            static template = xml`<div class="d-flex"><DateTimeInput t-props="props" /></div>`;
+            static template = xml`<div class="d-flex"><DateTimeInput t-props="this.props" /></div>`;
             static props = ["*"];
         }
         await mountWithCleanup(Root, {

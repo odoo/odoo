@@ -2,15 +2,15 @@
 <templates>
 
     <t t-name="l10n_dk.VerificationCodeWidget">
-        <div class="row w-50 mt-0 pt-0" t-on-focusout="_save">
+        <div class="row w-50 mt-0 pt-0" t-on-focusout="this._save">
             <t t-foreach="Array(6)" t-as="i" t-key="i_index">
                 <input class="verification_code col border border-2 rounded m-1 p-0 text-center"
                        type="text"
                        maxlength="1"
                        t-att-id="i_index"
                        t-ref="input_{{i_index}}"
-                       t-on-keyup="onKeyUp"
-                       t-on-paste="onPaste"/>
+                       t-on-keyup="this.onKeyUp"
+                       t-on-paste="this.onPaste"/>
             </t>
         </div>
     </t>

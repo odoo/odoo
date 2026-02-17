@@ -7,9 +7,9 @@
     </t>
     <t t-name="account.Many2ManyTagsJournalsMany2xAutocomplete" t-inherit="web.Many2XAutocomplete" t-inherit-mode="primary">
         <xpath expr="//t[@t-set-slot='option']/t" position="after">
-            <t t-if="optionScope.data.record and !props.group_company_id">
+            <t t-if="this.optionScope.data.record and !this.props.group_company_id">
                 <span class="text-muted ms-3 fst-italic">
-                    <t t-out="optionScope.data.record.company_id.display_name"/>
+                    <t t-out="this.optionScope.data.record.company_id.display_name"/>
                 </span>
             </t>
         </xpath>

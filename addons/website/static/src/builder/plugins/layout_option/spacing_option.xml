@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.SpacingOption">
-    <BuilderRow label.translate="Spacing" tooltip.translate="Vertical and Horizontal spacing" level="props.level" applyTo="props.applyTo">
+    <BuilderRow label.translate="Spacing" tooltip.translate="Vertical and Horizontal spacing" level="this.props.level" applyTo="this.props.applyTo">
         <BuilderNumberInput action="'setGridSpacing'" actionParam="'row-gap'" unit="'px'" default="0" prefixIcon="'oi oi-arrows-v'"/>
         <BuilderNumberInput action="'setGridSpacing'" actionParam="'column-gap'" unit="'px'" default="0" max="60" prefixIcon="'oi oi-arrows-h'"/>
     </BuilderRow>

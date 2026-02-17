@@ -6,14 +6,14 @@
             <t t-else="">
                 <div class="input-group">
                     <t t-call="web.CharField"/>
-                    <button type="button" title="Open section" class="btn oe_edit_only o_icon_button" t-on-click.stop="onExternalBtnClick">
+                    <button type="button" title="Open section" class="btn oe_edit_only o_icon_button" t-on-click.stop="this.onExternalBtnClick">
                         <i class="fa fa-fw o_button_icon fa-external-link"/>
                     </button>
                 </div>
             </t>
         </xpath>
-        <xpath expr="//span[@t-esc='formattedValue']" position="after">
-            <t t-if="props.record.data.is_page">
+        <xpath expr="//span[@t-esc='this.formattedValue']" position="after">
+            <t t-if="this.props.record.data.is_page">
                 <i class="fa fa-fw o_button_icon fa-pencil"/>
             </t>
         </xpath>

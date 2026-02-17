@@ -12,18 +12,18 @@
                             <t t-if="this.state.expanded">Hide details</t>
                             <t t-if="!this.state.expanded">Show details</t>
                         </button>
-                        <div t-if="state.expanded" class="bg-100 mb-0 clearfix mt-3 position-relative o_error_detail">
-                            <button class="btn position-absolute bg-100" t-ref="copyButton" t-on-click="copyToClipboard">
+                        <div t-if="this.state.expanded" class="bg-100 mb-0 clearfix mt-3 position-relative o_error_detail">
+                            <button class="btn position-absolute bg-100" t-ref="copyButton" t-on-click="this.copyToClipboard">
                                 <i class="fa fa-clipboard" />
                             </button>
                             <div class="ps-3 pt-3">
-                                <pre t-esc="props.error.stack"/>
+                                <pre t-esc="this.props.error.stack"/>
                             </div>
                         </div>
                     </div>
                     <div class="m-2 p-2">
                         <div class="flex align-self-center">
-                            <button class="btn btn-primary" t-on-click="fullReset">Reload data</button>
+                            <button class="btn btn-primary" t-on-click="this.fullReset">Reload data</button>
                         </div>
                     </div>
                 </div>

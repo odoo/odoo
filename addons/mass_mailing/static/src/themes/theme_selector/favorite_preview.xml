@@ -8,8 +8,8 @@
     <t t-name="mass_mailing.FavoritePreviewBody">
         <div class="o_favorite_template_preview">
             <div class="o_mass_mailing_value o_readonly"
-                t-att-class="{'o_rtl': isRTL}">
-                <t t-out="bodyArch"/>
+                t-att-class="{'o_rtl': this.isRTL}">
+                <t t-out="this.bodyArch"/>
             </div>
         </div>
     </t>

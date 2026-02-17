@@ -100,7 +100,7 @@ test("dependency definition should not be outdated", async () => {
         static selector = ".test-options-target";
         static template = xml`
             <BuilderMany2One action="'testAction'" model="'test'" limit="10" id="'test_many2one_opt'"/>
-            <BuilderRow t-if="getItemValueJSON('test_many2one_opt')?.id === 2"><span>Dependant</span></BuilderRow>
+            <BuilderRow t-if="this.getItemValueJSON('test_many2one_opt')?.id === 2"><span>Dependant</span></BuilderRow>
         `;
         setup() {
             super.setup();

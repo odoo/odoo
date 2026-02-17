@@ -3,9 +3,9 @@
 
 <t t-inherit="quiz.validation" t-inherit-mode="extension">
     <xpath expr="//button[hasclass('o_quiz_js_quiz_reset')]" position="after">
-        <a t-if="widget.nextSuggestion"
-            t-attf-class="btn border o_quiz_js_quiz_next_track #{widget.track.completed ? 'btn-secondary' : 'btn-light'}"
-            t-att-href="widget.nextSuggestion.suggestion.website_url">
+        <a t-if="this.widget.nextSuggestion"
+            t-attf-class="btn border o_quiz_js_quiz_next_track #{this.widget.track.completed ? 'btn-secondary' : 'btn-light'}"
+            t-att-href="this.widget.nextSuggestion.suggestion.website_url">
             Next Track
         </a>
     </xpath>

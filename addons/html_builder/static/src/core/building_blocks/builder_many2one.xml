@@ -4,27 +4,27 @@
 <t t-name="html_builder.BuilderMany2One">
     <BuilderComponent>
         <SelectMany2X
-            model="props.model"
-            fields="props.fields"
-            limit="props.limit"
-            nullText="props.nullText"
-            domain="props.domain"
-            selected="domState.selected ? [domState.selected] : []"
-            select="select.bind(this)"
-            preview="hasPreview ? preview.bind(this) : undefined"
-            revert.bind="revert"
-            create="props.createAction ? create.bind(this) : undefined"
+            model="this.props.model"
+            fields="this.props.fields"
+            limit="this.props.limit"
+            nullText="this.props.nullText"
+            domain="this.props.domain"
+            selected="this.domState.selected ? [this.domState.selected] : []"
+            select="this.select.bind(this)"
+            preview="this.hasPreview ? this.preview.bind(this) : undefined"
+            revert.bind="this.revert"
+            create="this.props.createAction ? this.create.bind(this) : undefined"
 
-            message="domState.selected?.display_name || props.defaultMessage"
+            message="this.domState.selected?.display_name || this.props.defaultMessage"
         />
         <button type="button"
-                t-if="domState.selected and props.allowUnselect"
+                t-if="this.domState.selected and this.props.allowUnselect"
                 class="o-hb-btn o-hb-btn-has-icon btn btn-secondary"
                 t-on-click="() => this.select()"
-                t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
-                t-on-pointerleave="revert"
-                t-on-focusin="hasPreview ? () => this.preview() : undefined"
-                t-on-focusout="revert"
+                t-on-pointerenter="this.hasPreview ? () => this.preview() : undefined"
+                t-on-pointerleave="this.revert"
+                t-on-focusin="this.hasPreview ? () => this.preview() : undefined"
+                t-on-focusout="this.revert"
                 aria-label="Unselect">
             <i class="oi oi-close" role="presentation"/>
         </button>

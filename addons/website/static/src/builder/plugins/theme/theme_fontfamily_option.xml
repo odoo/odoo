@@ -4,15 +4,15 @@
 <t t-name="html_builder.ThemeFontFamilyOption">
     <BuilderFontFamilyPicker
         action="'customizeWebsiteVariable'"
-        actionParam="props.cssVariable"
+        actionParam="this.props.cssVariable"
         valueParamName="'actionValue'"/>
     <BuilderButton
-        t-if="state.isFontSpecified"
+        t-if="this.state.isFontSpecified"
         action="'customizeWebsiteVariable'"
-        actionParam="props.cssVariable"
+        actionParam="this.props.cssVariable"
         className="'btn-danger-color-hover'"
-        icon="props.buttonIcon"
-        title="props.buttonTitle"/>
+        icon="this.props.buttonIcon"
+        title="this.props.buttonTitle"/>
 </t>
 
 </templates>

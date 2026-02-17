@@ -4,23 +4,23 @@
 <t t-name="html_builder.BuilderButton">
     <BuilderComponent>
         <button type="button" class="o-hb-btn btn" t-att-style="this.props.style"
-            t-att-data-action-id="info.actionId"
-            t-att-data-action-param="info.actionParam"
-            t-att-data-action-value="info.actionValue"
-            t-att-data-class-action="info.classAction"
-            t-att-data-style-action="info.styleAction"
-            t-att-data-style-action-value="info.styleActionValue"
-            t-att-data-attribute-action="info.attributeAction"
-            t-att-data-attribute-action-value="info.attributeActionValue"
-            t-att-class="className"
-            t-att-title="(state.isActive and props.titleActive) or props.title"
-            t-att-aria-label="props.title"
+            t-att-data-action-id="this.info.actionId"
+            t-att-data-action-param="this.info.actionParam"
+            t-att-data-action-value="this.info.actionValue"
+            t-att-data-class-action="this.info.classAction"
+            t-att-data-style-action="this.info.styleAction"
+            t-att-data-style-action-value="this.info.styleActionValue"
+            t-att-data-attribute-action="this.info.attributeAction"
+            t-att-data-attribute-action-value="this.info.attributeActionValue"
+            t-att-class="this.className"
+            t-att-title="(this.state.isActive and this.props.titleActive) or this.props.title"
+            t-att-aria-label="this.props.title"
             t-on-click="() => this.onClick()"
-            t-on-pointerenter="() => this.onPointerEnter(props.id)"
-            t-on-pointerleave="() => this.onPointerLeave(props.id)">
-            <Image t-if="props.iconImg" src="props.iconImg" attrs="{alt:props.iconImgAlt}"/>
-            <i t-if="props.icon" t-att-class="iconClassName" role="img"/>
-            <t t-if="props.label"  t-out="props.label"/>
+            t-on-pointerenter="() => this.onPointerEnter(this.props.id)"
+            t-on-pointerleave="() => this.onPointerLeave(this.props.id)">
+            <Image t-if="this.props.iconImg" src="this.props.iconImg" attrs="{alt:this.props.iconImgAlt}"/>
+            <i t-if="this.props.icon" t-att-class="this.iconClassName" role="img"/>
+            <t t-if="this.props.label"  t-out="this.props.label"/>
             <t t-slot="default"/>
         </button>
     </BuilderComponent>

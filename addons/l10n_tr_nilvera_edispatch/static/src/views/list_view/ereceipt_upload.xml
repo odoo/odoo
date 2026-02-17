@@ -5,8 +5,8 @@
         <FileUploader
             acceptedFileExtensions="'.xml'"
             multiUpload="true"
-            onUploaded.bind="onEreceiptFileUpload"
-            onUploadComplete.bind="onEreceiptUploadComplete"
+            onUploaded.bind="this.onEreceiptFileUpload"
+            onUploadComplete.bind="this.onEreceiptUploadComplete"
             >
             <t t-set-slot="toggler">
                 <t t-slot="toggler"/>

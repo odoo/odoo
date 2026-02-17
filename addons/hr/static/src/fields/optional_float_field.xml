@@ -2,19 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="hr.OptionalFloatField">
-        <span t-if="props.readonly" t-esc="formattedValue" />
+        <span t-if="this.props.readonly" t-esc="this.formattedValue" />
         <input 
             t-else="" 
-            t-on-focusin="onFocusIn" 
-            t-on-focusout="onFocusOut" 
-            t-att-id="props.id" 
+            t-on-focusin="this.onFocusIn" 
+            t-on-focusout="this.onFocusOut" 
+            t-att-id="this.props.id" 
             t-ref="numpadDecimal"  
-            t-att-type="props.inputType" 
+            t-att-type="this.props.inputType" 
             inputmode="decimal" 
             class="o_input" 
             autocomplete="off"
-            t-att-step="props.step" 
-            t-att-placeholder="props.placeholder"/>
+            t-att-step="this.props.step" 
+            t-att-placeholder="this.props.placeholder"/>
     </t>
 
 </templates>

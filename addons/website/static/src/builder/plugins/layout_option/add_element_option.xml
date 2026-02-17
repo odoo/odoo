@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="website.AddElementOption">
-    <BuilderRow label.translate="Add Elements" level="props.level" preview="false"
-                action="'addGridElement'" applyTo="props.applyTo">
+    <BuilderRow label.translate="Add Elements" level="this.props.level" preview="false"
+                action="'addGridElement'" applyTo="this.props.applyTo">
         <BuilderButton actionParam="'image'" type="'success'">Image</BuilderButton>
         <BuilderButton actionParam="'text'" type="'success'">Text</BuilderButton>
         <BuilderButton actionParam="'button'" type="'success'">Button</BuilderButton>

@@ -3,18 +3,18 @@
 
     <t t-name="mrp.BomOverviewExtraBlock">
         <BomOverviewSpecialLine
-            type="props.type"
-            isFolded="state.isFolded"
-            showOptions="props.showOptions"
-            data="props.data"
-            precision="props.precision"
-            toggleFolded.bind="onToggleFolded"/>
+            type="this.props.type"
+            isFolded="this.state.isFolded"
+            showOptions="this.props.showOptions"
+            data="this.props.data"
+            precision="this.props.precision"
+            toggleFolded.bind="this.onToggleFolded"/>
 
-        <t t-if="!state.isFolded" t-foreach="props.type == 'operations' ? props.data.operations : props.data.byproducts" t-as="extra_data" t-key="extra_data.index">
+        <t t-if="!this.state.isFolded" t-foreach="this.props.type == 'operations' ? this.props.data.operations : this.props.data.byproducts" t-as="extra_data" t-key="extra_data.index">
             <BomOverviewLine
-                showOptions="props.showOptions"
+                showOptions="this.props.showOptions"
                 data="extra_data"
-                precision="props.precision"
+                precision="this.props.precision"
                 />
         </t>
     </t>

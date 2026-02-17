@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.MegaMenuOption">
-    <t t-set="templatePrefix" t-value="state.templatePrefix"/>
+    <t t-set="templatePrefix" t-value="this.state.templatePrefix"/>
     <BuilderRow label.translate="Template">
         <BuilderSelect id="'mega_menu_template_opt'" action="'selectTemplate'">
             <BuilderSelectItem
@@ -79,7 +79,7 @@
             </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Size" t-if="!hasHeaderTemplates(['hamburger', 'sidebar'])">
+    <BuilderRow label.translate="Size" t-if="!this.hasHeaderTemplates(['hamburger', 'sidebar'])">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Full-Width</BuilderSelectItem>
             <BuilderSelectItem classAction="'o_mega_menu_container_size'">Narrow</BuilderSelectItem>

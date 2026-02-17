@@ -4,11 +4,11 @@
     <t t-inherit="sale.ListRenderer.RecordRow" t-inherit-mode="extension">
         <t t-name="composition_button" position="after">
             <DropdownItem
-                onSelected="() => this.toggleIsOptional(record)"
-                attrs="{ 'class': disableOptionalButton ? 'disabled' : '' }"
+                onSelected="() => this.toggleIsOptional(this.record)"
+                attrs="{ 'class': this.disableOptionalButton ? 'disabled' : '' }"
             >
                 <i class="me-1 fa fa-fw fa-dot-circle-o"/>
-                <span t-if="record.data.is_optional">Unset Optional</span>
+                <span t-if="this.record.data.is_optional">Unset Optional</span>
                 <span t-else="">Set Optional</span>
             </DropdownItem>
         </t>

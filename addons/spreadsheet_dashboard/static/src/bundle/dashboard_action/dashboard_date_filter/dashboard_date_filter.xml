@@ -4,13 +4,13 @@
         <Dropdown navigationOptions="{ 'shouldFocusChildInput': false }">
             <button class="btn btn-secondary o-btn-date-filter">
                 <i class="fa fa-calendar me-2"/>
-                <span class="o-date-filter-value" t-esc="inputValue"/>
+                <span class="o-date-filter-value" t-esc="this.inputValue"/>
             </button>
             <t t-set-slot="content">
                 <DateFilterDropdown
-                    value="props.value"
-                    update="props.update"
-                    model="props.model"
+                    value="this.props.value"
+                    update="this.props.update"
+                    model="this.props.model"
                 />
             </t>
         </Dropdown>

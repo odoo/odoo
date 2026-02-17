@@ -7,32 +7,32 @@
 
 <t t-name="hr_attendance.BarcodeScanner" t-inherit="barcodes.BarcodeScanner" t-inherit-mode="primary">
     <xpath expr="//div[hasclass('o_barcode_mobile_container')]" position="replace">
-        <div class="o_hr_attendance_kiosk d-flex justify-content-around" t-att-class="{'position-relative' : !isDisplayStandalone}">
-            <button t-if="isBarcodeScannerSupported" t-on-click="openMobileScanner" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3" t-att-class="{'position-absolute' : !isDisplayStandalone}">
+        <div class="o_hr_attendance_kiosk d-flex justify-content-around" t-att-class="{'position-relative' : !this.isDisplayStandalone}">
+            <button t-if="this.isBarcodeScannerSupported" t-on-click="this.openMobileScanner" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3" t-att-class="{'position-absolute' : !this.isDisplayStandalone}">
                 <i class="fa fa-3x fa-barcode mb-3"/>
                 <span class="d-block">Scan your badge</span>
             </button>
-            <a t-if="!isDisplayStandalone" class="o_hr_attendance_install_btn btn btn-secondary d-flex align-items-center justify-content-center fw-bolder position-relative"
-            t-att-style="props.fromTrialMode ? 'left: 25%;' : 'left: 115%;'"
-            t-att-href="installURL" target="_blank">Install</a>
+            <a t-if="!this.isDisplayStandalone" class="o_hr_attendance_install_btn btn btn-secondary d-flex align-items-center justify-content-center fw-bolder position-relative"
+            t-att-style="this.props.fromTrialMode ? 'left: 25%;' : 'left: 115%;'"
+            t-att-href="this.installURL" target="_blank">Install</a>
         </div>
     </xpath>
 </t>
 
 <t t-name="hr_attendance.PublicKiosksSettingScreen">
-    <div class="align-self-center" t-att-class="{'h2 mt-5': !env.isSmall, 'my-3 text-center h5': env.isSmall}">
+    <div class="align-self-center" t-att-class="{'h2 mt-5': !this.env.isSmall, 'my-3 text-center h5': this.env.isSmall}">
         Choose how to record attendances
     </div>
-    <div class="o_hr_kiosk_mode_main d-flex m-auto" t-att-class="{'gap-5': !env.isSmall, 'gap-3 flex-column': env.isSmall}">
-        <div class="d-flex flex-column align-items-center text-center gap-2" t-att-style="!env.isSmall ? 'max-width: min-content;' : ''">
+    <div class="o_hr_kiosk_mode_main d-flex m-auto" t-att-class="{'gap-5': !this.env.isSmall, 'gap-3 flex-column': this.env.isSmall}">
+        <div class="d-flex flex-column align-items-center text-center gap-2" t-att-style="!this.env.isSmall ? 'max-width: min-content;' : ''">
             <button
                 t-on-click="() => this.setSetting('manual')"
                 class="btn btn-light"
                 t-att-class="{
-                    'd-flex flex-row rounded-2 ps-2 align-items-center gap-2' : env.isSmall,
-                    'btn-lg rounded-3': !env.isSmall
+                    'd-flex flex-row rounded-2 ps-2 align-items-center gap-2' : this.env.isSmall,
+                    'btn-lg rounded-3': !this.env.isSmall
                 }">
-                <t t-if="env.isSmall">
+                <t t-if="this.env.isSmall">
                     <img src="/hr_attendance/static/img/tablet-pin.svg" alt="Manual Attendance" width="40%"/>
                     <h6 class="m-0">Manually (optional PIN)</h6>
                 </t>
@@ -40,20 +40,20 @@
                     <img src="/hr_attendance/static/img/tablet-pin.svg" height="170px" alt="Manual Attendance"/>
                 </t>
             </button>
-            <t t-if="!env.isSmall">
+            <t t-if="!this.env.isSmall">
                 <h5 class="m-0">Select on Tablet</h5>
                 <em>with optional PIN code</em>
             </t>
         </div>
-        <div class="d-flex flex-column align-items-center text-center gap-2" t-att-style="!env.isSmall ? 'max-width: min-content;' : ''">
+        <div class="d-flex flex-column align-items-center text-center gap-2" t-att-style="!this.env.isSmall ? 'max-width: min-content;' : ''">
             <button
                 t-on-click="() => this.setSetting('barcode')"
                 class="btn btn-light"
                 t-att-class="{
-                    'flex-row d-flex rounded-2 ps-2 align-items-center gap-2' : env.isSmall,
-                    'btn-lg rounded-3': !env.isSmall
+                    'flex-row d-flex rounded-2 ps-2 align-items-center gap-2' : this.env.isSmall,
+                    'btn-lg rounded-3': !this.env.isSmall
                 }">
-                <t t-if="env.isSmall">
+                <t t-if="this.env.isSmall">
                     <img src="/hr_attendance/static/img/tablet-cam.svg" alt="Attendance with barcode" width="40%"/>
                     <h6 class="m-0">Badge with Barcode</h6>
                 </t>
@@ -61,19 +61,19 @@
                     <img src="/hr_attendance/static/img/tablet-cam.svg" height="170px" alt="Attendance with barcode"/>
                 </t>
             </button>
-            <t t-if="!env.isSmall">
+            <t t-if="!this.env.isSmall">
                 <h5 class="m-0 w-75">Badge with Barcode on Tablet</h5>
             </t>
         </div>
-        <div class="d-flex flex-column align-items-center text-center gap-2" t-att-style="!env.isSmall ? 'max-width: min-content;' : ''">
+        <div class="d-flex flex-column align-items-center text-center gap-2" t-att-style="!this.env.isSmall ? 'max-width: min-content;' : ''">
             <button
                 t-on-click="() => this.setSetting('barcode_manual')"
                 class="btn btn-light"
                 t-att-class="{
-                    'flex-row d-flex rounded-2 ps-2 align-items-center gap-2' : env.isSmall,
-                    'btn-lg rounded-3': !env.isSmall
+                    'flex-row d-flex rounded-2 ps-2 align-items-center gap-2' : this.env.isSmall,
+                    'btn-lg rounded-3': !this.env.isSmall
                 }">
-                <t t-if="env.isSmall">
+                <t t-if="this.env.isSmall">
                     <img src="/hr_attendance/static/img/tablet-rfid.svg" alt="Manual Attendance or with barcode" width="40%"/>
                     <h6 class="m-0">RFID Token with reader</h6>
                 </t>
@@ -82,7 +82,7 @@
                     alt="Manual Attendance or with barcode"/>
                 </t>
             </button>
-            <t t-if="!env.isSmall">
+            <t t-if="!this.env.isSmall">
                 <h5 class="m-0 w-75">RFID Token with reader on tablet</h5>
             </t>
         </div>
@@ -91,22 +91,23 @@
 
 <t t-name="hr_attendance.public_kiosk_app">
     <MainComponentsContainer/>
-    <CardLayout fromTrialMode="this.props.fromTrialMode" companyImageUrl="this.companyImageUrl" kioskReturn.bind="kioskReturn" activeDisplay = "this.state.active_display">
+    <CardLayout fromTrialMode="this.props.fromTrialMode" companyImageUrl="this.companyImageUrl" kioskReturn.bind="this.kioskReturn"
+        activeDisplay="this.state.active_display" >
         <t t-if="this.state.active_display === 'settings'">
             <t t-call="hr_attendance.PublicKiosksSettingScreen"/>
         </t>
         <t t-if="this.state.active_display === 'main'">
-            <t t-if="state.displayDemoMessage">
+            <t t-if="this.state.displayDemoMessage">
                 <div
                     class="alert alert-info flex-row justify-content-between d-flex"
-                    t-att-class="{'align-self-center col-6': !env.isSmall}"
-                    t-att-style="!env.isSmall? 'min-width: fit-content;' : ''">
+                    t-att-class="{'align-self-center col-6': !this.env.isSmall}"
+                    t-att-style="!this.env.isSmall? 'min-width: fit-content;' : ''">
                         <div>
                             Connect an RFID reader, and scan a token.
                             <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label.translate="'Read the Documentation'" alertLink="true"/>/
                             <DocumentationLink path="'https://duckduckgo.com/?q=rfid+reader'" label.translate="'Buy an RFID Device'" alertLink="true"/>
                         </div>
-                        <button t-on-click="removeDemoMessage" type="button" class="btn-close float-end ms-2" title="Close"/>
+                        <button t-on-click="this.removeDemoMessage" type="button" class="btn-close float-end ms-2" title="Close"/>
                 </div>
             </t>
             <div class="o_hr_kiosk_mode_main d-flex flex-column gap-3 m-auto">

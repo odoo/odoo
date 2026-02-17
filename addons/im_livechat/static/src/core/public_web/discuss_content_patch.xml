@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
         <xpath expr="//Composer" position="replace">
-            <span t-if="thread?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted">
+            <span t-if="this.thread?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted">
                 This live chat conversation has ended
             </span>
             <t t-else="">$0</t>

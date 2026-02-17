@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.CardImagePositionOption">
-    <BuilderRow label="props.label" level="props.level" t-if="state.show">
+    <BuilderRow label="this.props.label" level="this.props.level" t-if="this.state.show">
         <BuilderButton
             icon="'fa-crosshairs'"
             preview="false"
