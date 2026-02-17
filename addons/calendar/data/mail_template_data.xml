@@ -12,7 +12,7 @@
             <field name="description">Invitation email to new attendees</field>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151; background-color: white;">
     <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
@@ -138,7 +138,7 @@
             <field name="description">Sent to all attendees if the schedule change</field>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151; background-color: white;">
 
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
     <t t-set="customer" t-value="object.event_id.find_partner_customer()"/>
@@ -273,7 +273,7 @@
             <field name="description">Sent to all attendees if a reminder is set</field>
             <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151; background-color: white;">
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
@@ -388,7 +388,7 @@
             <field name="description">Used to manually notify attendees</field>
             <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151; background-color: white;">
     <t t-set="is_online" t-value="'appointment_type_id' in object and object.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
@@ -488,7 +488,7 @@
             <field name="description">Used to manually notify attendees</field>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151; background-color: white;">
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
     <t t-set="event_name" t-value="object.name or ''"/>
     <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
