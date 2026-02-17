@@ -12,7 +12,7 @@ class TestPosMrp(CommonPosMrpTest):
     def test_bom_kit_order_total_cost(self):
         order, _ = self.create_backend_pos_order({
             'line_data': [
-                {'product_id': self.product_product_kit_one.id}
+                {'product_id': self.product_product_kit_two.id}
             ],
             'payment_data': [
                 {'payment_method_id': self.cash_payment_method.id}
@@ -20,7 +20,7 @@ class TestPosMrp(CommonPosMrpTest):
         })
 
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-        self.assertEqual(order.lines[0].total_cost, 10.0)
+        self.assertEqual(order.lines[0].total_cost, 20.0)
 
     def test_bom_kit_with_kit_invoice_valuation(self):
         self.product_product_kit_one.categ_id = self.category_fifo_realtime

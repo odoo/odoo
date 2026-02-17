@@ -1786,6 +1786,10 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         return self.product_id.is_storable and self.product_id.cost_method in ['fifo', 'average']
 
+    def _get_product_cost_with_moves(self, moves):
+        self.ensure_one()
+        return moves._get_price_unit()
+
     def _compute_total_cost(self, stock_moves):
         """
         Compute the total cost of the order lines.
@@ -1794,9 +1798,9 @@ class PosOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.is_total_cost_computed):
             product = line.product_id
             cost_currency = product.sudo().cost_currency_id
-            if line._is_product_storable_fifo_avco() and stock_moves:
-                moves = line._get_stock_moves_to_consider(stock_moves, product)
-                product_cost = moves._get_price_unit()
+            moves = line._get_stock_moves_to_consider(stock_moves, product) if stock_moves else None
+            if moves and line._is_product_storable_fifo_avco():
+                product_cost = line._get_product_cost_with_moves(moves)
                 if (cost_currency.is_zero(product_cost) and line.order_id.shipping_date and line.refunded_orderline_id):
                     product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
             else:
