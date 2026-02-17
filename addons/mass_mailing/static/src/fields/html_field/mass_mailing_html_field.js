@@ -14,6 +14,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
+import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -237,6 +238,7 @@ export class MassMailingHtmlField extends HtmlField {
         delete config.Plugins;
         return {
             ...config,
+            allowChecklist: false,
             record: this.props.record,
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/png",
@@ -260,7 +262,8 @@ export class MassMailingHtmlField extends HtmlField {
                 ...MAIN_EDITOR_PLUGINS,
                 ...DYNAMIC_FIELD_PLUGINS,
                 ...registry.category("basic-editor-plugins").getAll(),
-            ],
+                PowerButtonsPlugin,
+            ].filter((P) => !["banner", "prompt"].includes(P.id)),
         };
     }
 

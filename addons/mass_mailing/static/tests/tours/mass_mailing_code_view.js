@@ -51,8 +51,8 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             trigger: ".o_builder_sidebar_open",
             content: "Wait for the html_builder to be visible",
         }, {
-            trigger: '.o_snippet[name="Headings"] button',
-            content: 'Click the "Headings" snippet category to drop a snippet in the editor',
+            trigger: '.o_snippet[name="Text"] button',
+            content: 'Click the "Text" snippet category to drop a snippet in the editor',
             run: "click",
         },
         {
