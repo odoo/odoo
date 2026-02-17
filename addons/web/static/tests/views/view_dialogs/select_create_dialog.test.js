@@ -866,6 +866,13 @@ test("SelectCreateDialog with open action", async () => {
             expect.step(`execute_action: ${name}`, params);
         },
     });
+
+    let searchLimit;
+    onRpc("instrument", "name_search", ({ kwargs }) => {
+        expect.step("name_search");
+        searchLimit = kwargs.limit;
+    });
+
     Instrument._views["list"] = /* xml */ `
         <list action="test_action" type="object">
             <field name="name"/>
@@ -888,6 +895,15 @@ test("SelectCreateDialog with open action", async () => {
     ).click();
     expect("input").toHaveValue("Instrument 10");
     expect.verifySteps([]);
+
+    await contains(".o_field_widget[name=instrument] input").edit("Instrument", { confirm: false });
+    await runAllTimers();
+    await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
+    expect.verifySteps(["name_search"]);
+    expect(searchLimit).toBe(1000, { message: "The name_search should have been called with a limit of 1000" });
+
+    expect(".modal .modal-lg").toHaveCount(1);
+    expect(".modal .modal-lg .o_data_row").toHaveCount(25, { message: "should contain 25 records" });
 });
 
 test.tags("mobile");

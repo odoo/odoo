@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
 const SEARCH_LIMIT = 7;
-const SEARCH_MORE_LIMIT = 320;
+const SEARCH_MORE_LIMIT = 1000;
 
 export class RecordAutocomplete extends Component {
     static props = {

@@ -224,7 +224,7 @@ export class Many2XAutocomplete extends Component {
         quickCreate: null,
         searchLimit: 7,
         searchThreshold: 0,
-        searchMoreLimit: 320,
+        searchMoreLimit: 1000,
         setInputFloats: () => {},
         specification: {},
         value: "",

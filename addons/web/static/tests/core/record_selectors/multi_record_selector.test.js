@@ -10,7 +10,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { click, fill, press, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     _name = "partner";
@@ -299,4 +299,40 @@ test("Can pass domain to search more", async () => {
     await animationFrame();
 
     expect(".o_data_row").toHaveCount(8, { message: "should contain 8 records" });
+});
+
+test.tags("desktop");
+test("Quick search dialog uses 1000 records limit when clicking search more", async () => {
+    Partner._records = [];
+    for (let i = 0; i < 10; i++) {
+        Partner._records.push({
+            id: i + 1,
+            name: "Partner " + i,
+        });
+    }
+
+    let searchLimit;
+    onRpc("partner", "name_search", ({ kwargs }) => {
+        expect.step("name_search");
+        searchLimit = kwargs.limit;
+    });
+
+    Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
+    await mountMultiRecordSelector({
+        resModel: "partner",
+        resIds: [],
+    });
+
+    await contains(".o-autocomplete input").edit("Partner", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["name_search"]);
+    expect(searchLimit).toBe(8, { message: "The name_search should have been called with a limit of 8" });
+
+    await click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await animationFrame();
+    expect.verifySteps(["name_search"]);
+    expect(searchLimit).toBe(1000, { message: "The name_search should have been called with a limit of 1000" });
+
+    expect(".modal .modal-dialog").toHaveCount(1);
+    expect(".modal .modal-dialog .o_data_row").toHaveCount(10, { message: "should contain 10 records" });
 });
