@@ -1,6 +1,15 @@
 from odoo import models
 
 
+class AccountEdiXmlUBL21(models.AbstractModel):
+    _inherit = 'account.edi.xml.ubl_21'
+
+    def _get_customization_ids(self):
+        vals = super()._get_customization_ids()
+        vals['pint_jp'] = 'urn:peppol:pint:billing-1@jp-1'
+        return vals
+
+
 class AccountEdiXmlPint_Jp(models.AbstractModel):
     _name = 'account.edi.xml.pint_jp'
     _inherit = ["account.edi.xml.ubl_bis3"]
