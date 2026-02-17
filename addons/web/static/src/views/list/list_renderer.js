@@ -770,6 +770,9 @@ export class ListRenderer extends Component {
                 if (currencyId) {
                     formatOptions.currencyId = currencyId;
                 }
+                if (column.options && column.options.scale) {
+                    formatOptions.scale = column.options.scale;
+                }
                 aggregates[fieldName] = {
                     help: multiCurrency ? "" : attrs[func],
                     value: formatter ? formatter(aggregatedValue, formatOptions) : aggregatedValue,

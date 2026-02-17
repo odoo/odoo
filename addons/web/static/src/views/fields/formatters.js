@@ -360,12 +360,13 @@ formatMonetary.extractOptions = ({ options }) => ({
  * @returns {string}
  */
 export function formatPercentage(value, options = {}) {
+    const scale = options.scale ?? 100;
     value = value || 0;
     options = Object.assign({ trailingZeros: false, thousandsSep: "" }, options);
     if (!options.digits && options.field) {
         options.digits = options.field.digits;
     }
-    const formatted = formatFloatNumber(value * 100, options);
+    const formatted = formatFloatNumber(value * scale, options);
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 }
 formatPercentage.extractOptions = formatFloat.extractOptions;
