@@ -214,14 +214,14 @@ patch(PosStore.prototype, {
                 }, {});
 
                 oldChanges.forEach((pointObj) => {
-                    const { points, barcode = "", gift_code = "" } = pointObj;
+                    const { points, barcode = "", code = "" } = pointObj;
                     const key =
-                        barcode && gift_code
-                            ? `${points}-${barcode}-${gift_code}`
+                        barcode && code
+                            ? `${points}-${barcode}-${code}`
                             : barcode
                             ? `${points}-${barcode}`
-                            : gift_code
-                            ? `${points}--${gift_code}`
+                            : code
+                            ? `${points}--${code}`
                             : `${points}`;
 
                     if (pointsCount[key] && pointsCount[key] > 0) {
