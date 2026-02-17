@@ -3,10 +3,20 @@ import { Base } from "./related_models";
 
 export class ResPartner extends Base {
     static pythonModel = "res.partner";
+    static enableLazyGetters = false;
+
+    setup(_vals) {
+        super.setup(_vals);
+        this._searchString = null;
+    }
 
     get searchString() {
+        if (this._searchString) {
+            return this._searchString;
+        }
+
         const fields = ["name", "barcode", "phone", "email", "vat", "parent_name", "address"];
-        return fields
+        this._searchString = fields
             .map((field) => {
                 if (field === "phone" && this[field]) {
                     return this[field].replace(/[+\s()-]/g, "");
@@ -15,6 +25,7 @@ export class ResPartner extends Base {
             })
             .filter(Boolean)
             .join(" ");
+        return this._searchString;
     }
 
     exactMatch(searchWord) {

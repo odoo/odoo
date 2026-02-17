@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
@@ -33,8 +32,7 @@ export class Chrome extends Component {
             this.pos.navigateToFirstPage();
         }
 
-        const reactivePos = reactive(this.pos);
-        window.posmodel = reactivePos;
+        window.posmodel = this.pos;
         useOwnDebugContext();
         if (this.env.debug) {
             initDebugFormatters();

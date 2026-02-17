@@ -9,6 +9,9 @@ patch(ProductTemplate.prototype, {
 
         return this.models["event.event"].get(this._event_id);
     },
+    set event_id(event) {
+        this._event_id = event ? event.id : undefined;
+    },
     get canBeDisplayed() {
         if (this.event_id) {
             return true;
