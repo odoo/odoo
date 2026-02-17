@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from math import ceil
 from markupsafe import Markup
+from lxml import etree
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
@@ -1691,3 +1692,16 @@ class HrLeave(models.Model):
             if exceeding_duration <= excess_limit:
                 continue
             leave._force_cancel(reason, 'mail.mt_note')
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        result = super().get_view(view_id=view_id, view_type=view_type, **options)
+
+        doc = etree.XML(result["arch"])
+        if doc.get("js_class") == "time_off_calendar_dashboard":
+            if self.env.user.company_id.id != self.env.company.id:
+                for node in doc.xpath("//calendar"):
+                    node.set("create", "false")
+                result["arch"] = etree.tostring(doc, encoding="unicode")
+
+        return result
