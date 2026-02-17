@@ -287,7 +287,11 @@ def upgrade_this(file_manager, log_info, log_error):
         "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
         "crm.ColumnProgress": {'bar'},  # Nested inherit
-        "web.TreeEditor.condition:editable": {'node'}  # Nested inherit
+        "web.TreeEditor.condition:editable": {'node'},  # Nested inherit
+        "web.TreeEditor.controls": {'node'},  # Nested inherit
+        "web.TreeEditor.connector.value": {'node'},  # Nested inherit
+        "web.TreeEditor.condition": {'node'},  # Nested inherit
+        "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
     }  # vars defined under t-call
     inside_vars = {}  # vars defined inside template, eg. using t-set
 
