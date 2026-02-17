@@ -8,6 +8,7 @@ from unittest.mock import patch
 from urllib.parse import parse_qs, quote_plus
 
 from odoo.exceptions import ValidationError, UserError
+from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import mute_logger
 
@@ -564,3 +565,39 @@ class TestPeppolParticipant(TransactionCase):
 
         # Should successfully deregister despite client_gone error
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
+
+    def test_do_not_reset_peppol_endpoint(self):
+        be_country = self.env.ref('base.be')
+        self.env.company.write({
+            'country_id': be_country.id,
+            'vat': 'BE0477472701',
+        })
+        settings = self.env['res.config.settings'].create({
+            'account_peppol_eas': '0088',
+            'account_peppol_endpoint': '88888888888',
+            'account_peppol_phone_number': '+32483123456',
+            'account_peppol_contact_email': 'yourcompany@test.example.com',
+        })
+        settings.button_create_peppol_proxy_user()
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        with Form(self.env.company.partner_id) as partner:
+            # Test with NewID record
+            partner.vat = 'BE0477472701'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        other_company = self.env['res.company'].create({'name': 'new company 3', 'country_id': be_country.id})
+        self.env = self.env(context=dict(allowed_company_ids=other_company.ids))
+        # Do not raise even if no access to a registered company
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0475646428',
+        }])
