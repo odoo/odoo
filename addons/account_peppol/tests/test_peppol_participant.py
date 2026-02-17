@@ -388,3 +388,52 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             p_rec = partner_form.save()
             self.assertEqual(p_rec.commercial_partner_id, p_rec)
             self.assertEqual(p_rec.commercial_partner_id.name, "test")
+
+    def test_do_not_reset_peppol_endpoint(self):
+        be_country = self.env.ref('base.be')
+        self.env.company.write({
+            'country_id': be_country.id,
+            'vat': 'BE0477472701',
+        })
+        with self._mock_requests([
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
+        ]):
+            wizard = self.env['peppol.registration'].create({
+                'peppol_eas': '0088',
+                'peppol_endpoint': '88888888888',
+                'phone_number': '+32483123456',
+                'contact_email': 'yourcompany@test.example.com',
+            })
+            wizard.button_register_peppol_participant()
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        with Form(self.env.company.partner_id) as partner:
+            # Test with NewID record
+            partner.vat = 'BE0477472701'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        company_partner = self.env.company.partner_id
+
+        other_company = self.env['res.company'].create({'name': 'new company 3', 'country_id': be_country.id})
+        self.env = self.env(context=dict(allowed_company_ids=other_company.ids))
+        # Do not raise even if no access to a registered company
+
+        company_partner.vat = 'BE0477472701'
+        self.assertRecordValues(company_partner, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0475646428',
+        }])
