@@ -560,14 +560,17 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 @mixin accordion-style-vertical-menu {
     .top_menu > .accordion {
         ul > li > a.nav-link {
-            background-color: inherit;
+            &:where(:not(.active)) {
+                // Needed when header is dark
+                background-color: inherit;
+            }
 
             &.active {
-                color: var(--navbar-active-color);
+                color: var(--header-link-style-accordion-color, var(--navbar-active-color));
             }
 
             &:hover {
-                color: var(--nav-link-hover-color);
+                color: var(--header-link-style-accordion-color, var(--nav-link-hover-color));
             }
         }
 
@@ -2315,10 +2318,12 @@ header {
 // Navbar Links Styles
 @mixin active-link-border-color {
     $header-text-color: o-website-value('header-text-color');
+
     @if $header-text-color {
         border-color: format-color($header-text-color);
     } @else {
         border-color: var(--#{$variable-prefix}nav-active-color);
+
         &:hover {
             border-color: var(--#{$variable-prefix}nav-link-color);
         }
@@ -2334,16 +2339,19 @@ header {
         }
     }
 }
+
 :where(header#top) .navbar-nav:where([role="menu"]) {
-    .nav-link:not(.o_nav-link_secondary) {
-        // Desktop Only
-        @include media-breakpoint-up(lg) {
+    .nav-link:not(.o_mega_menu *) {
+        &:not(.o_nav-link_secondary) {
+            --#{$prefix}accordion-btn-padding-y: var(--#{$prefix}nav-link-padding-y);
+            --#{$prefix}accordion-btn-padding-x: var(--#{$prefix}nav-link-padding-x);
+
             @if o-website-value('header-links-style') == 'outline' {
                 // Need to force the padding in this case so that it stays in mobile
                 padding-right: $navbar-nav-link-padding-x;
                 padding-left: $navbar-nav-link-padding-x;
                 border: $border-width solid transparent;
-                @include border-radius($nav-pills-border-radius);
+                border-radius: $nav-pills-border-radius;
             } @else if o-website-value('header-links-style') == 'block' {
                 // There is no way to control navbar links vertical padding in BS4
                 // independently from nav ones, just double them here instead
@@ -2365,24 +2373,86 @@ header {
                 }
             }
         }
-    }
 
-    .nav-link.active, .show > .nav-link {
-        // Desktop Only
-        @include media-breakpoint-up(lg) {
+        &.active, .show > & {
             @if index(('outline', 'border-bottom'), o-website-value('header-links-style')) {
                 @include active-link-border-color;
             }
-        }
-        // Available in Mobile
-        @if o-website-value('header-links-style') == 'underline' {
-            @include active-link-border-color;
-            span {
-                border-bottom: 0.125em solid;
+
+            @if o-website-value('header-links-style') == 'underline' {
+                @include active-link-border-color;
+                span {
+                    border-bottom: 0.125em solid;
+                }
+            }
+
+            @if o-website-value('header-links-style') == 'bold' {
+                font-weight: bold !important;
             }
         }
-        @if o-website-value('header-links-style') == 'bold' {
-            font-weight: bold !important;
+    }
+}
+
+// Vertical headers specific links style tweaks
+:where(header#top.o_header_sidebar, header#top .o_navbar_mobile) {
+    @if index(('fill', 'pills', 'outline'), o-website-value('header-links-style')) {
+        $-accordion-link-radius: if(o-website-value('header-links-style') == 'pills', $border-radius-pill, $border-radius-sm);
+
+        .nav-item:not(.o_mega_menu *) {
+            --border-width: 0;
+
+            padding: map-get($spacers, 1) map-get($spacers, 3) !important;
+
+            .accordion-collapse li:not(.o_mega_menu *) {
+                padding-block: map-get($spacers, 1);
+            }
+
+            .nav-link:not(.o_mega_menu *):not(.accordion-collapse .nav-link) {
+                padding: map-get($spacers, 1) * 3 !important;
+            }
+
+            .accordion-item .nav-link:not(.o_mega_menu *) {
+                padding-block: map-get($spacers, 2);
+                border-radius: $-accordion-link-radius !important;
+
+                &.active {
+                    --header-link-style-accordion-color: var(--#{$prefix}nav-pills-link-active-color);
+                }
+            }
+        }
+    }
+
+    @if o-website-value('header-links-style') == 'outline' {
+        .accordion-item .nav-link.active:not(.o_mega_menu *) {
+            border: $border-width solid currentColor !important;
+            background-color: transparent !important;
+        }
+    }
+
+    @if o-website-value('header-links-style') == 'block' {
+        .accordion-item .nav-link.active:not(.o_mega_menu *) {
+            --header-link-style-accordion-color: var(--#{$prefix}nav-pills-link-active-color);
+        }
+    }
+
+    @if o-website-value('header-links-style') == 'border-bottom' {
+        .nav-item:not(.o_mega_menu *) {
+            .nav-link:not(.o_mega_menu *) {
+                padding-bottom: map-get($spacers, 3) - $nav-link-padding-y !important;
+            }
+        }
+
+        .accordion-button:not(.o_mega_menu *) {
+            --accordion-border-width: 0;
+        }
+
+        .accordion-item .nav-link:not(.o_mega_menu *) {
+            padding-bottom: map-get($spacers, 2) - $nav-link-padding-y !important;
+            border-bottom: $nav-link-padding-y solid var(--header-border-bottom-links-border-color, transparent) !important;
+
+            &.active {
+                --header-border-bottom-links-border-color: currentColor;
+            }
         }
     }
 }

@@ -483,7 +483,7 @@
 </template>
 
 <template id="navbar_nav" name="Navbar Nav">
-    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav navbar-nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{is_vertical_nav and 'o_mega_menu_is_offcanvas mx-n3'} #{_nav_class} #{(_navbar_pills and not is_mobile) and 'nav-pills'}" role="menu">
+    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav navbar-nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{is_vertical_nav and 'o_mega_menu_is_offcanvas mx-n3'} #{_nav_class} #{_navbar_pills and 'nav-pills'}" role="menu">
         <t t-out="0"/>
     </ul>
 </template>
@@ -530,6 +530,7 @@
                     <ul class="navbar-nav">
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box"
+                            _form_classes.f="mt-1"
                             _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
                             _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
                             _input_group_classes.f="mb-3"
