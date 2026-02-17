@@ -63,7 +63,11 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         return nsmap
 
     def _export_invoice_constraints(self, invoice, vals):
-        constraints = super()._export_invoice_constraints(invoice, vals)
+        # OVERRIDE 'account.edi.xml.ubl_bis3': don't apply Peppol rules
+        constraints = self.env['account.edi.xml.ubl_20']._export_invoice_constraints(invoice, vals)
+        constraints.update(
+            self._invoice_constraints_cen_en16931_ubl(invoice, vals)
+        )
         constraints.update(
             self._invoice_constraints_eracun_new(invoice, vals)
         )
