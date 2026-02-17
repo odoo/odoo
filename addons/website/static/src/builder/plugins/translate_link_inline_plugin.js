@@ -12,6 +12,14 @@ export class TranslateLinkInlinePlugin extends Plugin {
             }
             return container;
         },
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            if (snippetEl.matches("a")) {
+                snippetEl.classList.add("o_translate_inline");
+            }
+            for (const linkEl of snippetEl.querySelectorAll("a")) {
+                linkEl.classList.add("o_translate_inline");
+            }
+        },
     };
 }
 
