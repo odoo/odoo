@@ -13,6 +13,103 @@ class AccountEdiXmlUbl_21(models.AbstractModel):
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_ubl_21.xml"
 
+<<<<<<< 8f0a5d31d62ea6fc2a1c94be8501735a01323954
+||||||| 3727b804779281d39b79533c8195cf7932ce106d
+    def _export_invoice_ecosio_schematrons(self):
+        return {
+            'invoice': 'org.oasis-open:invoice:2.1',
+            'credit_note': 'org.oasis-open:creditnote:2.1',
+        }
+
+    def _export_invoice_vals(self, invoice):
+        # EXTENDS account.edi.xml.ubl_20
+        vals = super()._export_invoice_vals(invoice)
+
+        vals.update({
+            'AddressType_template': 'account_edi_ubl_cii.ubl_21_AddressType',
+            'PaymentTermsType_template': 'account_edi_ubl_cii.ubl_21_PaymentTermsType',
+            'PartyType_template': 'account_edi_ubl_cii.ubl_21_PartyType',
+            'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_21_InvoiceLineType',
+            'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteLineType',
+            'DebitNoteLineType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteLineType',
+            'InvoiceType_template': 'account_edi_ubl_cii.ubl_21_InvoiceType',
+            'CreditNoteType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteType',
+            'DebitNoteType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteType',
+        })
+
+        vals['vals'].update({
+            'ubl_version_id': 2.1,
+            'buyer_reference': invoice.commercial_partner_id.ref,
+        })
+
+        return vals
+
+    @api.model
+    def _get_customization_ids(self):
+        return {
+            'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
+            'nlcius': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0',
+            'ubl_sg': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0',
+            'xrechnung': 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
+            'ubl_a_nz': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0',
+            'pint_jp': 'urn:peppol:pint:billing-1@jp-1',
+            'pint_sg': 'urn:peppol:pint:billing-1@sg-1',
+            'pint_my': 'urn:peppol:pint:billing-1@my-1',
+            'oioubl_21': 'OIOUBL-2.1',
+        }
+
+    def _get_selfbilling_customization_ids(self):
+        return {
+            'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
+        }
+
+=======
+    def _export_invoice_ecosio_schematrons(self):
+        return {
+            'invoice': 'org.oasis-open:invoice:2.1',
+            'credit_note': 'org.oasis-open:creditnote:2.1',
+        }
+
+    def _export_invoice_vals(self, invoice):
+        # EXTENDS account.edi.xml.ubl_20
+        vals = super()._export_invoice_vals(invoice)
+
+        vals.update({
+            'AddressType_template': 'account_edi_ubl_cii.ubl_21_AddressType',
+            'PaymentTermsType_template': 'account_edi_ubl_cii.ubl_21_PaymentTermsType',
+            'PartyType_template': 'account_edi_ubl_cii.ubl_21_PartyType',
+            'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_21_InvoiceLineType',
+            'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteLineType',
+            'DebitNoteLineType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteLineType',
+            'InvoiceType_template': 'account_edi_ubl_cii.ubl_21_InvoiceType',
+            'CreditNoteType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteType',
+            'DebitNoteType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteType',
+        })
+
+        vals['vals'].update({
+            'ubl_version_id': 2.1,
+            'buyer_reference': invoice.commercial_partner_id.ref,
+        })
+
+        return vals
+
+    @api.model
+    def _get_customization_ids(self):
+        return {
+            'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
+            'nlcius': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0',
+            'ubl_sg': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0',
+            'xrechnung': 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
+            'ubl_a_nz': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0',
+            'oioubl_21': 'OIOUBL-2.1',
+        }
+
+    def _get_selfbilling_customization_ids(self):
+        return {
+            'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
+        }
+
+>>>>>>> 7ae99679141138e90aaa1b163b6131bdb017a6a8
     # -------------------------------------------------------------------------
     # EXPORT: Templates
     # -------------------------------------------------------------------------
