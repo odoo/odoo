@@ -1,0 +1,46 @@
+<templates>
+
+    <t t-name="web.ClocReport">
+        <Dialog title="dialogTitle" footer="true">
+            <table class="table table-sm table-hover align-baseline">
+                <colgroup>
+                    <col />
+                    <col style="width: 30ch;"/>
+                    <col style="width: 8ch;"/>
+                    <col style="width: 3ch;"/>
+                    <col />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Model</th>
+                        <th class="text-end" scope="col">#&#160;Lines</th>
+                        <th scope="col">Billable</th>
+                        <th scope="col"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="this.modules" t-as="module" t-key="module.name">
+                        <tr style="--table-bg: var(--table-striped-bg)">
+                            <th colspan="2"><span t-esc="module.display_name" /></th>
+                            <th class="text-end"><span t-esc="module.code_lines" /></th>
+                            <th class="text-end" ><i class="fa fa-check" t-if="module.code_lines" /></th>
+                            <th/>
+                        </tr>
+                        <tr t-foreach="module.records" t-as="record" t-key="record_index">
+                            <td class="ps-4"  t-out="record.display_name" />
+                            <td t-out="record.model ?? ''" />
+                            <td class="text-end" t-out="record.code_lines" />
+                            <td class="text-end" ><i class="fa fa-check" t-if="record.billable" /></td>
+                            <td><button t-if="record.model" class="btn btn-link" t-custom-click="(ev, isMiddleClick) => this.viewRecord(record, isMiddleClick)">View</button></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
