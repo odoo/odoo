@@ -4,7 +4,7 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install', 'mail_track')
@@ -341,3 +341,32 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             {'display_type': 'tax',             'tax_ids': [],          'balance': 15.0,    'account_id': account_2.id},
             {'display_type': 'payment_term',    'tax_ids': [],          'balance': 100.0,   'account_id': self.company_data['default_account_receivable'].id},
         ])
+
+    def test_negative_factor_percent(self):
+        account_1 = self.company_data['default_account_tax_sale'].copy()
+        with self.assertRaisesRegex(ValidationError, r"Invoice and credit note distribution should have a total factor \(\+\) equals to 100\."):
+            self.env['account.tax'].create({
+                'name': "tax",
+                'amount': 15.0,
+                'include_base_amount': True,
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': account_1.id,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': account_1.id,
+                    }),
+                ],
+            })
