@@ -5,6 +5,7 @@ import { mockFetch } from "@odoo/hoot-mock";
 import {
     ConnectionAbortedError,
     ConnectionLostError,
+    RequestEntityTooLargeError,
     RPCError,
     rpc,
     rpcBus,
@@ -130,8 +131,19 @@ test("check connection aborted", async () => {
 
 test("trigger a ConnectionLostError when response isn't json parsable", async () => {
     mockFetch(() => new Response("<h...", { status: 500 }));
-
     const error = new ConnectionLostError("/test/");
+    onRpcResponse(({ detail }) => {
+        expect(detail.error).toEqual(error);
+    });
+    await expect(rpc("/test/")).rejects.toThrow(error);
+});
+
+test("trigger a RequestEntityTooLargeError when status is 413 even if response isn't json parsable", async () => {
+    mockFetch(() => new Response("<h...", { status: 413 }));
+    const error = new RequestEntityTooLargeError();
+    onRpcResponse(({ detail }) => {
+        expect(detail.error).toEqual(error);
+    });
     await expect(rpc("/test/")).rejects.toThrow(error);
 });
 
