@@ -1416,22 +1416,33 @@ We can redirect you to the public employee list."""
         employee_versions = self.env['hr.version'].sudo().search([('employee_id', '=', self.id)]).filtered(
             lambda v: v._is_overlapping_period(date_from_date, date_to_date))
         if not employee_versions:
-            # Checking the calendar directly allows to not grey out the leaves taken
-            # by the employee or fallback to the company calendar
-            return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC),
-                self.company_id,
-            )
+            return {
+                (date_from_date + timedelta(days=i)).strftime('%Y-%m-%d'): True
+                for i in range((date_to_date - date_from_date).days + 1)
+            }
         unusual_days = {}
-        for version in employee_versions:
-            tmp_date_from = max(date_from_date, version.date_start)
+        sorted_versions = employee_versions.sorted(key=lambda v: v.date_version)
+        next_date_to_generate = date_from_date
+        for version in sorted_versions:
+            tmp_date_from = max(date_from_date, version.date_version)
             tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
+            if tmp_date_from > next_date_to_generate:
+                unusual_days.update({
+                    (next_date_to_generate + timedelta(days=i)).strftime('%Y-%m-%d'): True
+                    for i in range((tmp_date_from - next_date_to_generate).days)
+                })
             unusual_days.update(version.resource_calendar_id.sudo(False)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
+                datetime.combine(tmp_date_from, time.min).replace(tzinfo=UTC),
+                datetime.combine(tmp_date_to, time.max).replace(tzinfo=UTC),
                 self.company_id,
             ))
+            next_date_to_generate = tmp_date_to + timedelta(days=1)
+
+        if date_to_date and next_date_to_generate <= date_to_date:
+            unusual_days.update({
+                (next_date_to_generate + timedelta(days=i)).strftime('%Y-%m-%d'): True
+                for i in range((date_to_date - next_date_to_generate).days + 1)
+            })
         return unusual_days
 
     def _employee_attendance_intervals(self, start, stop, lunch=False):
