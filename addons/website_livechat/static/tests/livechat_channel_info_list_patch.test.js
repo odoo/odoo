@@ -65,12 +65,14 @@ test("Show recent conversations in channel info list", async () => {
         {
             channel_member_ids: [],
             channel_type: "livechat",
+            description: "question about the live chat app",
             livechat_status: "in_progress",
             livechat_visitor_id: visitorId,
         },
         {
             channel_member_ids: [],
             channel_type: "livechat",
+            description: "question about the discuss app",
             livechat_status: "in_progress",
             livechat_visitor_id: visitorId,
         },
@@ -107,6 +109,12 @@ test("Show recent conversations in channel info list", async () => {
     await openDiscuss(channelIds.at(-1));
     await contains(".o-livechat-LivechatChannelInfoList-recentConversation", {
         count: 2,
-        text: "Bob",
+        text: "Conversation ongoing",
     });
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the discuss app')"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the live chat app')"
+    );
 });
