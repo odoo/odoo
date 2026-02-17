@@ -188,6 +188,8 @@ class HrEmployee(models.Model):
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
+    id_card_name = fields.Char('id_card_name', compute='_compute_id_card_name_and_driving_license_name', groups="hr.group_hr_user")
+    driving_license_name = fields.Char('driving_license_name', compute='_compute_id_card_name_and_driving_license_name', groups="hr.group_hr_user")
     private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user")
     related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_user")
@@ -766,6 +768,13 @@ class HrEmployee(models.Model):
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+
+    @api.depends('name')
+    def _compute_id_card_name_and_driving_license_name(self):
+        for employee in self:
+            name = employee.name.replace(' ', '_') + '_' if employee.name else ''
+            employee.id_card_name = "%sid_card" % (name)
+            employee.driving_license_name = "%sdriving_license" % (name)
 
     def _get_partner_count_depends(self):
         return ['user_id']
