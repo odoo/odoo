@@ -3,8 +3,6 @@
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError, UserError
-
-from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 
 RRULE_WEEKDAYS = {'SUN': rrule.SU, 'MON': rrule.MO, 'TUE': rrule.TU, 'WED': rrule.WE, 'THU': rrule.TH, 'FRI': rrule.FR, 'SAT': rrule.SA}
