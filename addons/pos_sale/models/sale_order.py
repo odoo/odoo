@@ -248,3 +248,12 @@ class SaleOrderLine(models.Model):
                     downpayment_sol.name = _("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
             else:
                 super()._compute_name()
+
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line(**optional_values)
+        if not self.is_downpayment:
+            return res
+        downpayment_lines = self.sudo().pos_order_line_ids.order_id.account_move.invoice_line_ids.filtered('is_downpayment')
+        if downpayment_lines:
+            res['account_id'] = downpayment_lines.account_id[:1].id
+        return res
