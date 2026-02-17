@@ -645,6 +645,21 @@ class AccountMoveSend(models.TransientModel):
         return
 
     @api.model
+    def _check_move_constrains(self, moves):
+        for move in moves:
+            if move_constraints := self._get_move_constraints(move):
+                raise UserError(next(iter(move_constraints.values()), None))
+
+    @api.model
+    def _get_move_constraints(self, move):
+        constraints = {}
+        if move.state != 'posted':
+            constraints['not_posted'] = _("You can't generate invoices that are not posted.")
+        if not move.is_sale_document(include_receipts=True):
+            constraints['not_sale_document'] = _("You can only generate sales documents.")
+        return constraints
+
+    @api.model
     def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
         """ Generate the invoice PDF and electronic documents.
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
