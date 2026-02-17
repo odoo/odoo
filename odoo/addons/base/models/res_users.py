@@ -1030,7 +1030,7 @@ class Users(models.Model):
         if self.env.cr.rowcount != 1:
             self.env.registry.clear_cache()
             return False
-        data_fields = self.env.cr.fetchone()
+        data_fields = [data for data in self.env.cr.fetchone() if data is not None]
         # generate hmac key
         key = (u'%s' % (data_fields,)).encode('utf-8')
         # hmac the session id
