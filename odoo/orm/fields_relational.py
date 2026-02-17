@@ -552,7 +552,7 @@ class Many2one(_Relational):
         if self.compute_sudo or self.delegate or model.env.su:
             coquery = None
         else:
-            coquery = comodel._search(Domain.TRUE, active_test=False)
+            coquery = comodel.with_context(_generating_sql=True)._search(Domain.TRUE, active_test=False)
             if not coquery.where_clause:
                 coquery = None
         if coquery is None:
