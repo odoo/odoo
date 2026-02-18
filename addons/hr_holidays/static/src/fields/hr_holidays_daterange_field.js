@@ -23,10 +23,10 @@ function timeValuesFromFloat(floatValue) {
     };
 }
 
-function parseTimeInput(value) {
-    const [hoursPart, minutesPart] = value.split(":");
-    return timeValuesFromParts(Number(hoursPart), Number(minutesPart));
-}
+// function parseTimeInput(value) {
+//     const [hoursPart, minutesPart] = value.split(":");
+//     return timeValuesFromParts(Number(hoursPart), Number(minutesPart));
+// }
 
 export class HrHolidaysDateRangeField extends dateRangeField.component {
     static template = "hr_holidays.HrHolidaysDateRangeField";
@@ -45,7 +45,7 @@ export class HrHolidaysDateRangeField extends dateRangeField.component {
     setup() {
         super.setup();
         this.leaveType = useState({
-            request_unit: this.props.record.data.leave_type_request_unit,
+            request_unit: this.props.record.data.work_entry_type_request_unit,
         });
         this.popover = usePopover(HourTimeSelectionPopover, {
             onClose: this.onClose.bind(this),
@@ -58,9 +58,9 @@ export class HrHolidaysDateRangeField extends dateRangeField.component {
 
         useEffect(
             () => {
-                this.leaveType.request_unit = this.props.record.data.leave_type_request_unit;
+                this.leaveType.request_unit = this.props.record.data.work_entry_type_request_unit;
             },
-            () => [this.props.record.data.leave_type_request_unit]
+            () => [this.props.record.data.work_entry_type_request_unit]
         );
     }
 
@@ -69,8 +69,38 @@ export class HrHolidaysDateRangeField extends dateRangeField.component {
         const anchor = ev.target;
         this.activeHourField = fieldName;
         this.activeHourAnchor = anchor;
-        const parsedValues = parseTimeInput(anchor.value);
-        this.setTimeValues(parsedValues || timeValuesFromFloat(this.getHourValue(fieldName)));
+
+        let hours = 0;
+        let minutes = 0;
+        let seconds = 0;
+
+        if (anchor.value) {
+            const h = anchor.value.match(/(\d+)\s*h/i);
+            const m = anchor.value.match(/(\d+)\s*m/i);
+            const s = anchor.value.match(/(\d+)\s*s/i);
+
+            hours = h ? parseInt(h[1], 10) : 0;
+            minutes = m ? parseInt(m[1], 10) : 0;
+            seconds = s ? parseInt(s[1], 10) : 0;
+        }
+
+        if (!anchor.value) {
+            const fallback = timeValuesFromFloat(this.getHourValue(fieldName));
+            this.setTimeValues(fallback);
+        } else {
+            const floatValue = hours + minutes / 60 + seconds / 3600;
+
+            const parsedValues = {
+                hours: String(hours).padStart(2, "0"),
+                minutes: String(minutes).padStart(2, "0"),
+                floatValue,
+            };
+
+            this.setTimeValues(parsedValues);
+
+            anchor.value = `${parsedValues.hours}:${parsedValues.minutes}`;
+        }
+
         this.popover.open(anchor, {
             timeValues: this.timeValues,
             onTimeChange: this.onTimeChange.bind(this),
