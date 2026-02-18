@@ -1,4 +1,7 @@
+/* global posmodel */
+
 import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
@@ -452,5 +455,31 @@ registry.category("web_tour.tours").add("self_order_mobile_no_access_token", {
             Utils.checkIsNoBtn("My Order"),
             Utils.clickBtn("Order Now"),
             Utils.negateStep(Utils.checkBtn("Order")),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+            Utils.checkIsNoBtn("Order Now"),
+            {
+                trigger: "body",
+                run: async () => {
+                    // Simulate mobile self-order deletion from the backend
+                    await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
+                        order_ids: [posmodel.currentOrder.id],
+                    });
+                },
+            },
+            Utils.clickBtn("Order Now"),
+            ProductPage.isShown(),
         ].flat(),
 });
