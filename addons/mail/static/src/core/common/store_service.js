@@ -21,6 +21,7 @@ import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
 import { cookie } from "@web/core/browser/cookie";
+import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -498,20 +499,28 @@ export class Store extends BaseStore {
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
     ) {
         const validMentions = {};
+        const segments = isMarkup(body)
+            ? Array.from(
+                  createDocumentFragmentFromContent(body).querySelectorAll("a"),
+                  (a) => a.textContent
+              )
+            : [body];
         validMentions.threads = mentionedChannels.filter((thread) => {
-            if (thread.channel?.parent_channel_id) {
-                return body.includes(
-                    `#${thread.channel.parent_channel_id.displayName} > ${thread.displayName}`
-                );
-            }
-            return body.includes(`#${thread.displayName}`);
+            const mention = thread.channel?.parent_channel_id
+                ? `#${thread.channel?.parent_channel_id.displayName} > ${thread.displayName}`
+                : `#${thread.displayName}`;
+            return segments.some((segment) => segment.includes(mention));
         });
         validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
+            segments.some((segment) =>
+                segment.includes(`@${thread?.getPersonaName?.(partner) ?? partner.name}`)
+            )
         );
-        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
+        validMentions.roles = mentionedRoles.filter((role) =>
+            segments.some((segment) => segment.includes(`@${role.name}`))
+        );
         validMentions.specialMentions = this.specialMentions
-            .filter((special) => body.includes(`@${special.label}`))
+            .filter((special) => segments.some((segment) => segment.includes(`@${special.label}`)))
             .map((special) => special.label);
         return validMentions;
     }

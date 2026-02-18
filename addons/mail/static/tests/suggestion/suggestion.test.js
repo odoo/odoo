@@ -1375,3 +1375,64 @@ test("Mentioning @-role with more than 50 users shows warning dialog", async () 
     await click(".modal-footer button:text('Send Message')");
     await contains(".o-mail-Message a.o-discuss-mention:text('@VIPs')");
 });
+
+test("[text composer] should send notifications to users with names containing HTML entities", async () => {
+    const pyEnv = await startServer();
+    const partnerRaw = {
+        email: "tim.ascii@example.com",
+        name: "' !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+    };
+    const partnerId = pyEnv["res.partner"].create(partnerRaw);
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await click(`.o-mail-Composer-suggestion:contains(${partnerRaw.email})`);
+    await click(".o-mail-Composer [title='Send']");
+    await contains(".o-mail-Message .o_mail_redirect", { text: `@${partnerRaw.name}` });
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover span", {
+        text: `${partnerRaw.name} (${partnerRaw.email})`,
+    });
+});
+
+test.tags("html composer");
+test("should send notifications to users with names containing HTML entities", async () => {
+    const pyEnv = await startServer();
+    const partnerRaw = {
+        email: "tim.ascii@example.com",
+        name: "' !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+    };
+    const partnerId = pyEnv["res.partner"].create(partnerRaw);
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "@");
+    await click(`.o-mail-Composer-suggestion:contains(${partnerRaw.email})`);
+    await click(".o-mail-Composer [title='Send']");
+    await contains(".o-mail-Message .o_mail_redirect", { text: `@${partnerRaw.name}` });
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover span", {
+        text: `${partnerRaw.name} (${partnerRaw.email})`,
+    });
+});
