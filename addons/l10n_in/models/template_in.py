@@ -85,13 +85,13 @@ class AccountChartTemplate(models.AbstractModel):
                 },
                 'fiscal_position_in_export': {
                     'name': _("Export"),
-                    'sequence': 4,
+                    'sequence': 5,
                     'auto_apply': True,
                     'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
                 },
                 'fiscal_position_in_lut_sez': {
                     'name': _("SEZ - LUT (WOP)"),
-                    'sequence': 5,
+                    'sequence': 4,
                     'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
                     'country_id': country_in_id,
                     'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."),
