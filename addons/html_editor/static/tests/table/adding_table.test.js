@@ -196,7 +196,6 @@ test("add table inside empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
-                <br>
             </li>
         </ul>`
     );
@@ -249,7 +248,6 @@ test("add table inside non-empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
-                <br>
             </li>
         </ul>`
     );
