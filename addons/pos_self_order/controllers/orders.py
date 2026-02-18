@@ -1,4 +1,4 @@
-from odoo import http, fields
+from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
@@ -10,48 +10,17 @@ class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
         pos_config, table = self._verify_authorization(access_token, table_identifier, order)
-        preset_id = order['preset_id'] if pos_config.use_presets else False
-        preset_id = pos_config.env['pos.preset'].browse(preset_id) if preset_id else False
 
-        if not preset_id and pos_config.use_presets:
-            raise BadRequest("Invalid preset")
-
-        # Create the order
-        if 'picking_type_id' in order:
-            del order['picking_type_id']
-
-        if 'name' in order:
-            del order['name']
-
-        pos_reference, tracking_number = pos_config._get_next_order_refs()
-        if device_type == 'kiosk':
-            order['floating_order_name'] = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
-
-        if not order.get('floating_order_name') and table:
-            floating_order_name = f"Self-Order T {table.table_number}"
-        elif not order.get('floating_order_name'):
-            floating_order_name = f"Self-Order {tracking_number}"
-
-        # The goal of this is to reduce collisions with other pos.order tracking numbers
-        # when several kiosks are used with different pos.configurations.
-        # This is a little hack in stable, in master the prefix will be chosen differently.
-        prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
-        order['pos_reference'] = pos_reference
-        order['source'] = 'kiosk' if device_type == 'kiosk' else 'mobile'
-        order['floating_order_name'] = order.get('floating_order_name') or floating_order_name
-        order['tracking_number'] = f"{prefix}{tracking_number}"
-        order['user_id'] = request.session.uid
-        order['date_order'] = str(fields.Datetime.now())
-        order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
-        order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
-        order['self_ordering_table_id'] = table.id if table else False
-
-        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
-        line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
+        # Create a safe copy of the order with only the necessary fields for order creation to
+        # avoid potential security issues and to reduce the payload size
+        safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, device_type, table)
+        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
+        preset_id = order_ids.preset_id
 
-        self._verify_line_price(line_ids, pos_config, preset_id)
-
+        # Recompute all prices from newly created lines to ensure price correctness and
+        # avoid potential manipulation from the frontend
+        order_ids.recompute_prices()
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
             'state': 'paid' if amount_total == 0 else 'draft',
@@ -68,6 +37,12 @@ class PosSelfOrderController(http.Controller):
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config):
+        orders = self.env['pos.order']._load_pos_self_data_read(order, config)
+
+        for o in orders:
+            del o['email']
+            del o['mobile']
+
         return {
             'pos.order': self.env['pos.order']._load_pos_self_data_read(order, config),
             'res.partner': self.env['res.partner']._load_pos_self_data_read(order.partner_id, config),
@@ -77,81 +52,7 @@ class PosSelfOrderController(http.Controller):
         }
 
     def _verify_line_price(self, lines, pos_config, preset_id):
-        pricelist = preset_id.pricelist_id or pos_config.pricelist_id if preset_id else pos_config.pricelist_id
-
-        for line in lines:
-            if len(line.combo_line_ids) == 0:
-                continue
-
-            product = line.product_id
-            lst_price = pricelist._get_product_price(product, quantity=line.qty) if pricelist else product.lst_price
-            selected_attributes = line.attribute_value_ids
-            price_extra = sum(attr.price_extra for attr in selected_attributes if attr.attribute_id.create_variant != 'always')
-            lst_price += price_extra
-            fiscal_pos = preset_id.fiscal_position_id or pos_config.default_fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
-            self._compute_combo_price(line, pricelist, fiscal_pos)
-
-    def _compute_combo_price(self, parent_line, pricelist, fiscal_position):
-        """
-        This method is a python version of odoo/addons/point_of_sale/static/src/app/models/utils/compute_combo_items.js
-        It is used to compute the price of combo items on the server side when an order is received from
-        the POS frontend. In an accounting perspective, isn't correct but we still waiting the combo
-        computation from accounting side.
-        """
-        child_lines = parent_line.combo_line_ids
-        currency = parent_line.order_id.currency_id
-        taxes = fiscal_position.map_tax(parent_line.product_id.taxes_id)
-        parent_line.tax_ids = taxes
-        parent_lst_price = pricelist._get_product_price(parent_line.product_id, parent_line.qty)
-        child_line_free = []
-        child_line_extra = []
-
-        child_lines_by_combo = {}
-        for line in child_lines:
-            combo = line.combo_item_id.combo_id
-            child_lines_by_combo.setdefault(combo, []).append(line)
-
-        for combo, child_lines in child_lines_by_combo.items():
-            free_count = 0
-            max_free = combo.qty_free
-
-            for line in child_lines:
-                qty_free = max(0, max_free - free_count)
-                free_qty = min(line.qty, qty_free)
-                extra_qty = line.qty - free_qty
-
-                if free_qty > 0:
-                    child_line_free.append(line)
-                    free_count += free_qty
-
-                if extra_qty > 0:
-                    child_line_extra.append(line)
-
-        original_total = sum(line.combo_item_id.combo_id.base_price * line.qty for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0)
-        remaining_total = parent_lst_price
-
-        for index, child in enumerate(child_line_free):
-            combo_item = child.combo_item_id
-            combo = combo_item.combo_id
-            unit_devision_factor = original_total or 1
-            price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
-            remaining_total -= price_unit * child.qty
-
-            if index == len(child_line_free) - 1:
-                price_unit += remaining_total
-
-            selected_attributes = child.attribute_value_ids
-            price_extra = sum(attr.price_extra for attr in selected_attributes)
-            total_price = price_unit + price_extra + child.combo_item_id.extra_price
-            child.price_unit = total_price
-
-        for child in child_line_extra:
-            combo_item = child.combo_item_id
-            price_unit = currency.round(combo_item.combo_id.base_price)
-            selected_attributes = child.attribute_value_ids
-            price_extra = sum(attr.price_extra for attr in selected_attributes)
-            total_price = price_unit + price_extra + child.combo_item_id.extra_price
-            child.price_unit = total_price
+        lines.order_id.recompute_prices()
 
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
