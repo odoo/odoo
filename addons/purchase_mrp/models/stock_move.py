@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models, fields
+from collections import defaultdict
+
+from odoo import _, api, models, fields
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -64,3 +66,26 @@ class StockMove(models.Model):
             if kit_bom:
                 return line._compute_kit_quantities_from_moves(line.move_ids - self, kit_bom)
         return super()._get_qty_received_without_self()
+
+    @api.model
+    def _round_in_svl_value(self, svl_vals_list):
+        moves = self.env['stock.move'].browse({val['stock_move_id'] for val in svl_vals_list})
+        move_kit_pol_mapping = {move.id: move.purchase_line_id for move in moves if move.purchase_line_id and move.purchase_line_id.product_id != move.product_id}
+        if not move_kit_pol_mapping:
+            return svl_vals_list
+        vals_per_kit_line = defaultdict(list)
+        for val in svl_vals_list:
+            if pol := move_kit_pol_mapping.get(val['stock_move_id']):
+                vals_per_kit_line[pol].append(val)
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        currency = self.env['res.company'].browse(company_id).currency_id
+        for vals in vals_per_kit_line.values():
+            total_value = sum(val['unit_cost'] * val['quantity'] for val in vals)
+            total_rounded_value = sum(val['value'] for val in vals)
+            total_rounding_error = currency.round(total_value - total_rounded_value)
+            nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
+            rounding_error = float_round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, precision_rounding=currency.rounding)
+            for val in vals[:nber_rounding_steps]:
+                val['value'] = currency.round(val['value'] + rounding_error)
+                val['remaining_value'] = val['value']
+        return svl_vals_list
