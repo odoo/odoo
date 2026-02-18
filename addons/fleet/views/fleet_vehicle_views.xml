@@ -70,6 +70,14 @@
                             invisible="vehicle_type != 'car'">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
+                        <button name="action_open_incident_form_view"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-exclamation-circle"
+                            context="{'xml_id':'fleet_vehicle_incident_action'}"
+                            help="show the incidents related to this vehicle">
+                            <field name="incident_count" widget="statinfo" string="Incidents"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image_128" widget='image' class="oe_avatar"/>
