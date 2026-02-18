@@ -526,6 +526,11 @@ class StockMove(models.Model):
                 if forced_quantity:
                     val['description'] = _('Correction of %s (modification of past move)', move.picking_id.name or move.name)
             svl_vals_list += vals
+        self._round_in_svl_value(svl_vals_list)
+        return svl_vals_list
+
+    @api.model
+    def _round_in_svl_value(self, svl_vals_list):
         return svl_vals_list
 
     def _get_src_account(self, accounts_data):
