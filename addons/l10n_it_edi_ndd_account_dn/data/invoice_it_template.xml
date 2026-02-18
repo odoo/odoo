@@ -2,10 +2,10 @@
 <odoo>
     <template id="account_invoice_it_FatturaPA_export_debit_note" inherit_id="l10n_it_edi.account_invoice_it_FatturaPA_export">
         <xpath expr="//DatiOrdineAcquisto" position="after">
-            <Datifatturecollegate t-elif="record.debit_origin_id">
+            <DatiFattureCollegate t-elif="record.debit_origin_id">
                 <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
                 <Data t-out="format_date(record.debit_origin_id.date)"/>
-            </Datifatturecollegate>
+            </DatiFattureCollegate>
         </xpath>
     </template>
 </odoo>
