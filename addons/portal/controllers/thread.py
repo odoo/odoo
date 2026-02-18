@@ -140,7 +140,7 @@ class PortalWebClientController(WebclientController):
             Domain("body", "!=", False)
             & Domain(
                 "body",
-                "not like",
+                "not =like",
                 '<span class="o-mail-Message-edited" data-o-datetime="%"></span>',
             )
         ) | Domain("attachment_ids", "!=", False)
