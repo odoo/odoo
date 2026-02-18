@@ -9,7 +9,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.append(current_dir)
 
-from tools_js_expressions import aggregate_vars, update_template, replace_x_path_only
+from tools_js_expressions import aggregate_vars, update_template
 
 EXCLUDED_FILES = (
     'addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -333,7 +333,7 @@ def upgrade_this(file_manager, log_info, log_error):
     # Iteration 2: Update templates
     for fileno, file in enumerate(all_files, start=1):
         try:
-            if any(f"{t}/static/src/" in file.path._str for t in targets):
+            if any(f"{t}/static/src/" in file.path._str for t in targets) or targets == []:
                 file.content = update_template(file.content, outside_vars, inside_vars, modules=False)
             else:
                 file.content = update_template(file.content, outside_vars, inside_vars, modules=targets)
