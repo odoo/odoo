@@ -15,6 +15,7 @@ class SaleOrder(models.Model):
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
     is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
+    is_all_delivered = fields.Boolean(compute='_compute_is_all_delivered')
     shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
 
     def _compute_partner_shipping_id(self):
@@ -28,6 +29,15 @@ class SaleOrder(models.Model):
     def _compute_is_service_products(self):
         for so in self:
             so.is_all_service = all(line.product_id.type == 'service' for line in so.order_line.filtered(lambda x: not x.display_type))
+
+    @api.depends('order_line')
+    def _compute_is_all_delivered(self):
+        for so in self:
+            so.is_all_delivered = not any(
+                line.product_id.type == 'consu'
+                and line.qty_delivered < line.product_uom_qty
+                for line in so.order_line
+            )
 
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
@@ -149,6 +159,35 @@ class SaleOrder(models.Model):
                 'default_carrier_id': carrier.id,
                 'default_total_weight': self._get_estimated_weight()
             }
+        }
+
+    def action_open_shipment_wizard(self):
+        self.ensure_one()
+        delivery_note = self.env['delivery.note'].create({
+            'partner_id': self.partner_id.id,
+            'carrier_id': self.carrier_id.id,
+            'sale_order_id': self.id,
+            'origin': self.name,
+        })
+        delivery_note.note_line_ids = [
+            self.env['delivery.note.line'].create({
+                'note_id': delivery_note.id,
+                'product_id': line.product_id.id,
+                'product_uom_id': line.product_uom_id.id,
+                'product_uom_qty': line.product_uom_qty - line.qty_delivered,
+                'quantity_ordered': line.product_uom_qty - line.qty_delivered,
+                'sale_order_line_id': line.id
+            }).id
+            for line
+            in self.order_line.filtered(lambda line: line.product_id.type == 'consu')
+        ]
+        return {
+            'name': _('Ship Order %s', self.name),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'delivery.note',
+            'res_id': delivery_note.id,
+            'target': 'new',
         }
 
     def _action_confirm(self):

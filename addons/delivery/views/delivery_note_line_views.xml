@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="delivery_note_list_view" model="ir.ui.view">
+        <field name="name">delivery.note.line.list</field>
+        <field name="model">delivery.note.line</field>
+        <field name="arch" type="xml">
+            <list string="Delivery Note Line" create="false" delete="false" editable="bottom">
+                <field
+                    name="product_image"
+                    widget="image"
+                    options="{'size': [24, 24], 'img_class': 'o_avatar rounded border object-fit-contain'}"
+                    width="30"
+                    nolabel="1"
+                />
+                <field name="product_id" readonly="True" nolabel="1"/>
+                <field name="product_uom_qty" nolabel="1"/>
+                <field name="product_uom_id" readonly="True" nolabel="1"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

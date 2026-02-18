@@ -19,6 +19,7 @@ When creating invoices from picking, the system is able to add and compute the s
         'views/report_shipping.xml',
         'views/report_deliveryslip.xml',
         'views/report_package_barcode.xml',
+        'views/sale_order_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
         'wizard/stock_put_in_pack_views.xml',
         'views/stock_package_type_views.xml',

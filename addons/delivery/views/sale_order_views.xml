@@ -10,6 +10,14 @@
                 <!-- modified through an onchange, must be present but not readonly -->
                 <field name="recompute_delivery_price" invisible="1"/>
             </header>
+            <button id="create_invoice" position="before">
+                <button
+                    string="Ship"
+                    name="action_open_shipment_wizard"
+                    type="object"
+                    class="btn-primary"
+                    invisible="is_all_service or not order_line or not delivery_set or is_all_delivered"/>
+            </button>
             <div name="so_button_below_order_lines" position="inside">
                 <button
                     string="Add shipping"
