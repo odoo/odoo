@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.resource.models.utils import extract_comodel_domain
 from odoo.exceptions import ValidationError, AccessError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -62,7 +63,11 @@ class ProjectTask(models.Model):
         scale = self.env.context.get('gantt_scale')
         if not (start_date and scale):
             return sales_orders
-        search_on_comodel = self._search_on_comodel(domain, "sale_order_id", "sale.order")
+        comodel_domain = extract_comodel_domain(self, domain, "sale_order_id")
+        if comodel_domain.is_true():
+            # no field in the domain was related to sale_order_id
+            return sales_orders
+        search_on_comodel = self.env["sale.order"].search(comodel_domain)
         if search_on_comodel:
             return search_on_comodel
         return sales_orders
