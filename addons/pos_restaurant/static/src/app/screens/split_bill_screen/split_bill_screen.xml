@@ -4,17 +4,17 @@
     <t t-name="pos_restaurant.SplitBillScreen">
         <div class="splitbill-screen screen h-100">
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
-                <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view position-relative">
                     <button class="button back back-button btn btn-secondary lh-lg" t-on-click="this.back">
                         <i class="oi oi-chevron-left fa-fw"/><t t-if="!this.ui.isSmall" t-out="' Back'"/>
                     </button>
-                    <div class="top-content-center flex-grow-1" t-att-class="{'pe-5':!this.ui.isSmall}">
-                        <h4 class="mb-0">Bill Splitting</h4>
+                    <div class="top-content-center position-absolute start-50 translate-middle-x">
+                        <h2 class="mb-0">Bill Splitting</h2>
                     </div>
                 </div>
 
                 <div class="main d-flex flex-column flex-lg-row flex-grow-1 overflow-hidden">
-                    <div class="flex-grow-1 w-100 w-lg-50 border-end border-bottom bg-view overflow-auto">
+                    <div class="flex-grow-1 w-100 w-lg-50 border-end border-bottom bg-view overflow-auto" t-att-style="!this.ui.isSmall ? 'font-size: x-large;' : ''">
                         <OrderDisplay mode="'receipt'" order="this.currentOrder" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
                              <Orderline line="line"
@@ -26,7 +26,7 @@
                     </div>
                     <div class="controls d-flex flex-column flex-nowrap w-100 w-lg-50 p-1">
                         <div class="order-info m-auto py-3 py-lg-4 rounded-3 text-center">
-                            <div class="d-flex flex-row justify-content-center align-items-baseline">
+                            <div class="d-flex flex-row justify-content-center align-items-baseline border-bottom">
                                 <t t-set="price" t-value="this.env.utils.formatCurrency(this.newOrderPrice)" />
                                 <span class="subtotal text-dark fw-bold"
                                     t-att-style="'font-size:' + this.adjustFontSize(price)"
@@ -38,10 +38,8 @@
                                     / <PriceFormatter price="this.env.utils.formatCurrency(this.currentOrder.priceIncl)" />
                                 </span>
                             </div>
-                            <div class="text-dark"
-                                t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
-                                <t t-out="this.getNumberOfProducts()" /> product(s) selected
-                            </div>
+                            <div class="text-dark mt-2"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-4' : 'fs-2' }}"><t t-out="this.getNumberOfProducts()" /> product(s) selected</div>
                             <t t-set="discountPc" t-value="this.getGlobalDiscountPc()" />
                             <div t-if="discountPc.value" class="discount text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
