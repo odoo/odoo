@@ -319,14 +319,74 @@ export const websiteService = {
                     }
                 }
             },
+            /**
+             * Shows the website loader.
+             *
+             * @param {Object} [props]
+             *
+             * @param {string} [props.title] - Default title displayed at the
+             *                                 top of the loader.
+             *
+             * @param {"colors"|"generic"|"images"|"text"} [props.flag] -
+             *   Default loading animation type.
+             *
+             * @param {boolean} [props.showCloseButton=false] -
+             *   Whether to show a close button in the top-right corner.
+             *
+             * @param {string} [props.bottomMessageTemplate] -
+             *   Template ID to show a custom message above the progress bar.
+             *
+             * @param {boolean} [props.showProgressBar=true] -
+             *   Whether to display the progress bar.
+             *
+             * @param {() => number} [props.getProgress] -
+             *   Function that returns the current progress (0-100) for real
+             *   updates. When not provided, the loader simulates progress
+             *   automatically.
+             *
+             * @param {Array<Object>} [props.loadingSteps] - List of loading
+             *                                               steps.
+             *
+             * @param {string} [props.loadingSteps[].title] -
+             *   Step-specific title displayed when this step is active.
+             *   Overrides the top-level `title` prop.
+             *
+             * @param {"colors"|"generic"|"images"|"text"} [props.loadingSteps[].flag] -
+             *   Step-specific loading animation type.
+             *   Overrides the top-level `flag` prop.
+             *
+             * @param {string} [props.loadingSteps[].description] -
+             *   Text shown while this step is in progress, and later marked
+             *   as completed once the step finishes.
+             *
+             * @param {boolean} [props.loadingSteps[].completed] -
+             *   Whether this step has finished. Used to mark the step as done
+             *   in the UI.
+             */
             showLoader(props) {
                 bus.trigger("SHOW-WEBSITE-LOADER", props);
             },
-            hideLoader() {
-                bus.trigger("HIDE-WEBSITE-LOADER");
+            /**
+             * Hides the website loader.
+             *
+             * @param {Object} [props]
+             * @param {boolean} [props.completeRemainingProgress] -
+             *   If true, completes progress to 100% before hiding.
+             */
+            hideLoader(props) {
+                bus.trigger("HIDE-WEBSITE-LOADER", props);
             },
-            prepareOutLoader() {
-                bus.trigger("PREPARE-OUT-WEBSITE-LOADER");
+            /**
+             * Redirect out from the loader.
+             *
+             * @param {Object} [props]
+             * @param {boolean} [props.completeRemainingProgress] -
+             *   If true, completes progress to 100% before redirecting.
+             * @param {Function} [props.redirectAction] - Callback function to
+             *                                            execute the redirect.
+             */
+            redirectOutFromLoader(props) {
+                bus.trigger("REDIRECT-OUT-FROM-WEBSITE-LOADER", props);
             },
             /**
              * Returns the (translated) "functional" name of a model

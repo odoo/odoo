@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useSubEnv, onMounted, useEnv } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 /*
  * Common code for theme installation/update handler.
@@ -22,7 +23,18 @@ export function useLoaderOnClick() {
             const name = params.clickParams.name;
             if (["button_refresh_theme", "button_choose_theme"].includes(name)) {
                 website.invalidateSnippetCache = true;
-                website.showLoader({ showTips: name !== "button_refresh_theme" });
+                const loadingSteps = [
+                    {
+                        title: _t("Switch themes, stay on trend."),
+                        description: _t("Applying your Style/Colors"),
+                        flag: "colors",
+                    },
+                ];
+                website.showLoader({
+                    loadingSteps: loadingSteps,
+                    bottomMessageTemplate:
+                        name !== "button_refresh_theme" ? "website.website_loader.tour_tip" : false,
+                });
                 try {
                     const resParams = params.getResParams();
                     const callback = await orm.silent.call(resParams.resModel, name, [
@@ -40,7 +52,7 @@ export function useLoaderOnClick() {
                         website.hideLoader();
                     }
                 } catch (error) {
-                    website.hideLoader();
+                    website.hideLoader({ completeRemainingProgress: false });
                     throw error;
                 }
             } else {

@@ -34,23 +34,3 @@ class WebsiteBackend(http.Controller):
     @http.route('/website/iframefallback', type="http", auth='user', website=True, readonly=True)
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
-
-    @http.route('/website/track_installing_modules', type='jsonrpc', auth='user', readonly=True)
-    def website_track_installing_modules(self, selected_features, total_features=None):
-        """
-        During the website configuration, this route allows to track the
-        website features being installed and their dependencies in order to
-        show the progress between installed and yet to install features.
-        """
-        features_not_installed = request.env['website.configurator.feature']\
-            .browse(selected_features).module_id.upstream_dependencies(exclude_states=())\
-            .filtered(lambda feature: feature.state != 'installed')
-
-        # On the 1st run, the total tallies the targeted, not yet installed
-        # features. From then on, the compared to total should not change.
-        total_features = total_features or len(features_not_installed)
-        features_info = {
-            'total': total_features,
-            'nbInstalled': total_features - len(features_not_installed)
-        }
-        return features_info
