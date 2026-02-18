@@ -38,10 +38,16 @@ class PosOrder(models.Model):
         self.ensure_one()
         is_paid = self.state in ('paid', 'done', 'invoiced')
         if is_paid:
-            return {
+            result = {
                 'id': self.id,
                 'paid_order': self.read([], load=False)
             }
+            lines_with_event = self.lines.filtered(lambda line: line.event_ticket_id)
+            if lines_with_event:
+                config_id = self.config_id.id
+                event_registrations_fields = self.env['event.registration']._load_pos_data_fields(config_id)
+                result['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
+            return result
 
         online_payments = self.sudo().env['pos.payment'].search_read(domain=['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '!=', False)], fields=['payment_method_id', 'amount'], load=False)
         return_data = {

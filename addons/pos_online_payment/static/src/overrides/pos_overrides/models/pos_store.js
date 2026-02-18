@@ -38,6 +38,20 @@ patch(PosStore.prototype, {
             console.error("Called process_online_payments_data_from_server on the wrong order.");
         }
         if ("paid_order" in opData) {
+            if (opData['event.registration']?.length) {
+                for (const registration of opData['event.registration']) {
+                    const line = order.lines.find((l) => l.id === registration.pos_order_line_id);
+                    if (line) {
+                        const existingIds = (line.event_registration_ids || []).map(r => r.id);
+                        if (!existingIds.includes(registration.id)) {
+                            line.event_registration_ids = [
+                                ...(line.event_registration_ids || []),
+                                registration,
+                            ];
+                        }
+                    }
+                }
+            }
             opData.is_paid = true;
             // only one line will have the `online_payment_resolver` method
             order.payment_ids.forEach((line) => line.onlinePaymentResolver?.(true));
