@@ -3869,6 +3869,9 @@ class SnippetsMenu extends Component {
                         });
                     } else {
                         dragAndDropResolve();
+                        if ($toInsertParent[0].classList.contains("o_dirty")) {
+                            this.isDirty = true;
+                        }
                         this._openAddSnippetDialog($target[0].dataset.snippetGroup, $target[0]);
                     }
                 } else {
@@ -4675,11 +4678,24 @@ class SnippetsMenu extends Component {
             this._openAddSnippetDialog(ev.currentTarget.dataset.snippetGroup, ev.currentTarget);
         } else {
             const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
-            for (const el of $els) {
-                if (!el.children.length) {
-                    $(el).odooBounce('o_we_snippet_area_animation');
-                }
+            const snippetEls = [...$els].filter((el) => !el.children.length);
+            if (!snippetEls.length) {
+                return;
             }
+
+            this.options.wysiwyg.odooEditor.observerUnactive();
+            for (const el of snippetEls) {
+                el.classList.add("o_catch_attention", "o_we_snippet_area_animation");
+            }
+            this.options.wysiwyg.odooEditor.observerActive();
+
+            setTimeout(() => {
+                this.options.wysiwyg.odooEditor.observerUnactive();
+                for (const el of snippetEls) {
+                    el.classList.remove("o_catch_attention", "o_we_snippet_area_animation");
+                }
+                this.options.wysiwyg.odooEditor.observerActive();
+            }, 400);
         }
     }
     /**
@@ -5149,13 +5165,16 @@ class SnippetsMenu extends Component {
                     hookEl = this._getClosestDropzone(dropZoneEls)
                         || dropZoneEls[dropZoneEls.length - 1];
                     hookEl.classList.add("o_hook_drop_zone");
+                    if (hookEl.parentElement.classList.contains("o_dirty")){
+                        this.isDirty = true;
+                    }
                 }
             } else {
                 hookEl = initialSnippetEl;
             }
 
             if (hookEl) {
-                const hookParentEl = hookEl.parentNode;
+                this.hookParentEl = hookEl.parentNode;
                 // Excludes snippets that cannot be placed at the target location.
                 [...this.snippets.values()].forEach((snippet) => {
                     if (snippet.disabled) {
@@ -5164,7 +5183,7 @@ class SnippetsMenu extends Component {
                         const $snippetSelectorChildren =
                                 this._getSelectors($(snippet.baseBody)).$selectorChildren;
                         const hasSelectorChild = [...$snippetSelectorChildren].some(snippetSelectorChild => {
-                            return snippetSelectorChild === hookParentEl;
+                            return snippetSelectorChild === this.hookParentEl;
                         });
                         const forbidSanitize = snippet.data.oeForbidSanitize;
                         let isForbidden = false;
@@ -5254,6 +5273,12 @@ class SnippetsMenu extends Component {
                     }
                 });
             });
+            // Remove `o_dirty` from the parent when no snippet is selected in
+            // the `add_snippet_dialog`, preventing the discard modal from
+            // appearing incorrectly.
+            if (!isSnippetChosen && !this.isDirty) {
+                this.hookParentEl.classList.remove("o_dirty");
+            }
         });
     }
     /**
