@@ -538,3 +538,31 @@ class TestDropshipPostInstall(common.TransactionCase):
         return_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         self.assertEqual(purchase_order.order_line.qty_received, 0)
+
+    def test_dest_address_for_dropship_and_mto(self):
+        """
+        Test that the destination address is correctly set on the purchase order
+        when using both the MTO and the Dropship routes
+        """
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        routes = (mto_route | buy_route | dropship_route)
+        routes.write({'active': True})
+        self.dropship_product.route_ids = routes
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'partner_shipping_id': self.customer.id,
+            'order_line': [(0, 0, {
+                'name': self.dropship_product.name,
+                'product_id': self.dropship_product.id,
+                'product_uom_qty': 1.00,
+                'price_unit': 1,
+            })],
+        })
+        so.action_confirm()
+        po = self.env['purchase.order'].search([('origin', '=', so.name)])
+        self.env.invalidate_all()  # Trigger _compute_dest_address_id
+        po.picking_type_id = self.env['stock.picking.type'].search([('name', '=', 'Dropship')], limit=1)
+        self.assertEqual(po.dest_address_id, self.customer)
