@@ -35,7 +35,7 @@ test("readonly", async () => {
         resId: 1,
         arch: /* xml */ `
             <form>
-                <field name="update_path" widget="field_selector" readonly="1"/>
+                <field name="update_path" widget="field_selector" options="{'model': 'contact'}" readonly="1"/>
             </form>
         `,
     });
@@ -46,35 +46,17 @@ test("readonly", async () => {
     expect(".o_field_widget[name='update_path'] .o_input").toHaveCount(0);
 });
 
-test("no specified options", async () => {
-    await mountView({
-        type: "form",
-        resModel: "update.record.action",
-        arch: /* xml */ `
-            <form>
-                <field name="update_path" widget="field_selector"/>
-            </form>
-        `,
-    });
-    await contains(".o_field_widget[name='update_path'] .o_input").click();
-    expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
-        [
-            "Created on",
-            "Display name",
-            "Id",
-            "Last Modified on",
-            "Model",
-            "Non searchable",
-            "Update path",
-        ],
-        { message: "should display fields from same model by default" }
-    );
-});
-
 test("model option", async () => {
+    UpdateRecordAction._records = [
+        {
+            id: 1,
+            model: "update.record.action",
+        },
+    ];
     await mountView({
         type: "form",
         resModel: "update.record.action",
+        resId: 1,
         arch: /* xml */ `
             <form>
                 <field name="model"/>

@@ -10,7 +10,7 @@ export class FieldSelectorField extends Component {
     static components = { ModelFieldSelector };
     static props = {
         ...standardFieldProps,
-        resModel: { type: String, optional: true },
+        model: { type: String },
         allowProperties: { type: Boolean, optional: true },
         followRelation: { type: [Boolean, Function], optional: true },
     };
@@ -36,7 +36,7 @@ export class FieldSelectorField extends Component {
     }
 
     get resModel() {
-        return this.props.record.data[this.props.resModel] || this.props.record.resModel;
+        return this.props.record.data[this.props.model] || this.props.model;
     }
 
     get selectorProps() {
@@ -74,7 +74,7 @@ export const fieldSelectorField = {
         return {
             allowProperties: options.allow_properties ?? true,
             followRelation: options.follow_relations ?? true,
-            resModel: options.model,
+            model: options.model,
         };
     },
 };
