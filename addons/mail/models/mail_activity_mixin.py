@@ -8,7 +8,7 @@ import pytz
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import SQL
+from odoo.tools import SQL, groupby
 
 _logger = logging.getLogger(__name__)
 
@@ -235,12 +235,45 @@ class MailActivityMixin(models.AbstractModel):
         return [('activity_ids', 'in', activity_ids)]
 
     def write(self, vals):
+        """Trigger res_name update on related activities, as we cannot depend on arbitrary res_model and res_id in compute methods.
+
+        As a result display_name computation for models implementing this mixin should be kept simple.
+        """
         # Delete activities of archived record.
         if 'active' in vals and vals['active'] is False:
             self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
             ).unlink()
-        return super(MailActivityMixin, self).write(vals)
+
+        def update_activity_res_name():
+            """Check if the display_name of various activity mixin records changed during the transaction.
+
+            If so force the recompute of the res_name of the linked activities, if any.
+            """
+            display_name_by_model = self.env.cr.precommit.data.pop('mail_activity_mixin_write_original_display_names', {})
+            to_recompute_activities_sudo = self.env['mail.activity'].sudo()
+            for model, display_name_by_record in display_name_by_model.items():
+                # group by env to only use sudo if it was originally used etc...
+                for env, records in groupby(display_name_by_record.keys(), lambda record: record.env):
+                    records = env[model].concat(*records).exists()
+                    modified_records = env[model].concat(*[
+                        record for record, new_display_name in zip(records, records.mapped('display_name'))
+                        if display_name_by_record[record] != new_display_name
+                    ])
+                    to_recompute_activities_sudo |= modified_records.sudo().activity_ids
+            to_recompute_activities_sudo._compute_res_name()
+
+        # add the original display_name when the records were first encountered to be checked later.
+        observed_field_names = ([self._rec_name] + [
+            field_name.split('.')[0]
+            for field_name in self._fields[self._rec_name].get_depends(self)[0]
+        ]) if self._rec_name else []
+        if any(field_name for field_name in observed_field_names if field_name in vals):
+            precommit_data = self.env.cr.precommit.data.setdefault('mail_activity_mixin_write_original_display_names', {})
+            precommit_data[self._name] = dict(zip(self, self.mapped(self._rec_name))) | precommit_data.setdefault(self._name, {})
+            self.env.cr.precommit.add(update_activity_res_name)
+
+        return super().write(vals)
 
     def unlink(self):
         """ Override unlink to delete records activities through (res_model, res_id). """

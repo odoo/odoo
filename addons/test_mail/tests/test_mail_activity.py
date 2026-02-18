@@ -867,6 +867,36 @@ class TestActivityMixin(TestActivityCommon):
             self.assertFalse(record, "Should not find record if the only late activity is done")
 
     @users('employee')
+    def test_record_renamed(self):
+        """Check that MailActivity.res_name is updated with its related record display_name when it changes."""
+        container = self.env['mail.test.container'].create({'name': 'Container'})
+        test_record = self.test_record.with_user(self.env.user)
+        my_activity = test_record.activity_schedule(summary='My Activity', user_id=self.env.uid)
+        admin_activity = test_record.activity_schedule(summary='Admin Activity', user_id=self.user_admin.id)
+        activities = my_activity + admin_activity
+        self.assertEqual(activities.mapped('res_name'), ['Test'] * 2)
+        # change name directly
+        with self.assertQueryCount(5):
+            test_record.name = 'Renamed Test Record'
+            test_record.env.cr.precommit.run()
+        self.assertEqual(activities.mapped('res_name'), ['Renamed Test Record'] * 2)
+        # change company -> rename record
+        with self.assertQueryCount(3):
+            test_record.container_id = container
+            test_record.env.cr.precommit.run()
+        self.assertEqual(activities.mapped('res_name'), ['Container: activity test for False'] * 2)
+        # change company name -> cannot be detected easily, not updated
+        with self.assertQueryCount(5):
+            test_record.container_id.name = 'New Container Name'
+            test_record.env.cr.precommit.run()
+        self.assertEqual(activities.mapped('res_name'), ['Container: activity test for False'] * 2)
+        # change completely unrelated field
+        with self.assertQueryCount(1):
+            test_record.date = self.env.cr.now()
+            test_record.env.cr.precommit.run()
+        self.assertEqual(activities.mapped('res_name'), ['Container: activity test for False'] * 2)
+
+    @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
         act1 = test_record.activity_schedule(summary='Active')

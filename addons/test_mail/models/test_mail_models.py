@@ -196,11 +196,17 @@ class MailTestActivity(models.Model):
     _name = 'mail.test.activity'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char()
+    name = fields.Char(compute='_compute_name', readonly=False, store=True)
     date = fields.Date()
     email_from = fields.Char()
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company')
+    container_id = fields.Many2one('mail.test.container')
+
+    @api.depends('container_id.name', 'email_from')
+    def _compute_name(self):
+        for activity_record in self:
+            activity_record.name = f'{activity_record.container_id.name}: activity test for {activity_record.email_from}'
 
     def action_start(self, action_summary):
         return self.activity_schedule(
