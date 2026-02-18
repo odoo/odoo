@@ -2,84 +2,85 @@
 <odoo>
 
 <template id="s_countdown" name="Countdown">
-    <section class="s_countdown pt48 pb48"
-        data-display="dhms" data-end-action="nothing" data-size="175"
+    <section class="s_countdown pt48 pb48 text-o-color-1"
+        data-display="dhms" data-end-action="nothing" data-size="120"
         t-att-data-end-time="60 * round(datetime.datetime.now().timestamp() / 60) + 228300"
         data-layout="circle" data-layout-background="none"
         data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
-        data-text-color="o-color-1" data-layout-background-color="400" data-progress-bar-color="o-color-1">
-        <div class="container">
-            <div class="s_countdown_canvas_wrapper text-center d-flex justify-content-center">
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">2</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Days</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 146.0226550063448 34.80596474923991" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
-                </div>
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">16</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Hours</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 19.30049945197547 126.87500000000003" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
-                </div>
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">30</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Minutes</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 87.5 166.25" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
-                </div>
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 8.75 87.50000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
-                </div>
-            </div>
-            <div class="s_countdown_inline d-flex flex-column align-items-start o_countdown_default">
-                <div class="s_countdown_inline_wrapper d-none">
-                    <t t-call="website.s_countdown_inline_default_template"/>
-                </div>
+        color="var(--o-color-1)" data-layout-background-color="400" data-progress-bar-color="o-color-1" data-vxml="001">
+        <div class="container align-items-start">
+            <div class="s_countdown_wrapper s_countdown_canvas_wrapper d-inline-flex gap-1 o_countdown_no_bg_color">
+                <t t-call="website.s_countdown_circle_template"/>
             </div>
         </div>
     </section>
 </template>
 
-<template id="s_countdown_inline_default_template" groups="base.group_user">
-    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
-    <div class="o_template_default o_count_inline_text o_colored_item alert mb-0">
-        <p>
-            <i class="fa fa-clock-o"/> Sale ends in
-            <span class="o_not_editable oe_unremovable" contenteditable="false">
-                <t t-foreach="metrics" t-as="metric">
-                    <span class="o_count_item">
-                        <span class="o_count_item_nbs d-inline-flex fw-bold"/>
-                        <span class="o_count_item_label fw-bold">
-                            <span class="o_skeletton rounded bg-200 ps-5"/>
-                        </span>
-                    </span>
-                </t>
-            </span>
-        </p>
+<template id="s_countdown_circle_template" groups="base.group_user">
+    <div class="o_template_circle d-inline-flex gap-1">
+        <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">2</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Days</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 0 1 100.10774057369516 23.860518514235936" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+        </div>
+        <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">16</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Hours</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 1 1 13.234155309494916 87" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+        </div>
+        <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">30</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Minutes</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 0 1 60 114" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+        </div>
+        <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 1 1 6 60.00000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+        </div>
     </div>
 </template>
 
-<template id="s_countdown_inline_dominoes_template" groups="base.group_user">
+<template id="s_countdown_text_inline_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_text_inline o_count_inline_text o_colored_item alert mb-0">
+        <div>
+            <span>
+                <i class="fa fa-clock-o"/> Sale ends in
+            </span>
+            <div class="oe_unremovable d-inline-flex countdown_metrics" tabindex="0">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item">
+                        <span class="o_count_item_nbs d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label fw-bold"><span class="o_first_letter"/><span class="o_other_letters"/></span>
+                    </span>
+                </t>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_dominoes_template" groups="base.group_user">
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_dominoes">
-        <div class="o_not_editable oe_unremovable d-flex gap-1" contenteditable="false">
+        <div class="oe_unremovable countdown_metrics d-flex gap-1" tabindex="0">
             <t t-foreach="metrics" t-as="metric">
                 <span class="o_count_item d-flex gap-1">
                     <span class="d-flex flex-column align-items-center">
-                        <span class="o_count_item_nbs d-inline-flex">
-                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
-                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                        <span class="o_count_item_nbs d-inline-flex" style="font-size: 1.5rem">
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fw-bold"/>
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fw-bold"/>
                         </span>
-                        <span class="o_count_item_label small"/>
+                        <span class="o_count_item_label small"><span class="o_first_letter"/><span class="o_other_letters"/></span>
                     </span>
                 </span>
-                <span t-if="metric_last == false" class="o_count_separator mt-1 fs-4">:</span>
+                <span t-if="metric_last == false" class="o_count_separator mt-1" style="font-size: 1.5rem">:</span>
             </t>
         </div>
     </div>
 </template>
 
-<template id="s_countdown_inline_wrapped_numbers_template" groups="base.group_user">
+<template id="s_countdown_wrapped_numbers_template" groups="base.group_user">
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_wrapped_numbers">
-        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+        <div class="oe_unremovable countdown_metrics d-inline-flex gap-1" tabindex="0">
             <t t-foreach="metrics" t-as="metric">
                 <span class="o_count_item d-flex gap-1">
                     <span class="d-flex flex-column align-items-center">
                         <span class="o_count_item_nbs o_colored_item d-flex justify-content-center align-items-center rounded p-2"/>
-                        <span class="o_count_item_label small"/>
+                        <span class="o_count_item_label small"><span class="o_first_letter"/><span class="o_other_letters"/></span>
                     </span>
                 </span>
                 <span t-if="metric_last == false" class="o_count_separator align-items-center">:</span>
@@ -88,32 +89,34 @@
     </div>
 </template>
 
-<template id="s_countdown_inline_text_template" groups="base.group_user">
+<template id="s_countdown_text_template" groups="base.group_user">
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_text o_count_inline_text">
-        <p>
-            <i class="fa fa-clock-o"/> Sale ends in
-            <span class="o_not_editable oe_unremovable" contenteditable="false">
+        <div>
+            <span>
+                <i class="fa fa-clock-o"/> Sale ends in
+            </span>
+            <div class="oe_unremovable d-inline-flex countdown_metrics" tabindex="0">
                 <t t-foreach="metrics" t-as="metric">
                     <span class="o_count_item o_colored_text">
                         <span class="o_count_item_nbs d-inline-flex fw-bold"/>
-                        <span class="o_count_item_label fw-bold"/>
+                        <span class="o_count_item_label fw-bold"><span class="o_first_letter"/><span class="o_other_letters"/></span>
                     </span>
                 </t>
-            </span>
-        </p>
+            </div>
+        </div>
     </div>
 </template>
 
-<template id="s_countdown_inline_big_numbers_template" groups="base.group_user">
+<template id="s_countdown_big_numbers_template" groups="base.group_user">
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_big_numbers">
-        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+        <div class="oe_unremovable countdown_metrics d-inline-flex gap-1" tabindex="0">
             <t t-foreach="metrics" t-as="metric">
                 <span class="o_count_item d-flex gap-1">
                     <span class="d-flex flex-column align-items-center">
                         <span class="o_count_item_nbs o_colored_text fs-3 fw-bold"/>
-                        <span class="o_count_item_label small"/>
+                        <span class="o_count_item_label small"><span class="o_first_letter"/><span class="o_other_letters"/></span>
                     </span>
                 </span>
                 <span t-if="metric_last == false" class="o_count_separator fs-3 fw-bold">:</span>

@@ -183,6 +183,7 @@ export class HistoryPlugin extends Plugin {
         "addStep",
         "canRedo",
         "canUndo",
+        "disableIsCurrentStepModifiedWarning",
         "ignoreDOMMutations",
         "getHistorySteps",
         "getNodeById",

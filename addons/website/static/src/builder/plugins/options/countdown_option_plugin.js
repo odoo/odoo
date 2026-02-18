@@ -6,7 +6,9 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
+import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { SelectTemplateAction } from "../customize_website_plugin";
 
 export class CountdownOption extends BaseOptionComponent {
     static template = "website.CountdownOption";
@@ -26,8 +28,8 @@ class CountdownOptionPlugin extends Plugin {
         builder_actions: {
             SetEndActionAction,
             PreviewEndMessageAction,
-            SetLayoutAction,
-            SelectCountdownInlineTemplateAction,
+            SelectCountdownTemplateAction,
+            SetColorInlineCountdownAction,
         },
         on_cloned_handlers: ({ cloneEl }) => {
             const countdownEls = getElementsWithOption(cloneEl, ".s_countdown");
@@ -86,33 +88,6 @@ export class BaseCountdownAction extends BuilderAction {
         return editingElement.dataset.endAction === value;
     }
 
-    setLayout({ editingElement, value }) {
-        switch (value) {
-            case "circle":
-                editingElement.dataset.progressBarStyle = "disappear";
-                editingElement.dataset.progressBarWeight = "thin";
-                editingElement.dataset.layoutBackground = "none";
-                break;
-            case "boxes":
-                editingElement.dataset.progressBarStyle = "none";
-                editingElement.dataset.layoutBackground = "plain";
-                break;
-            case "clean":
-                editingElement.dataset.progressBarStyle = "none";
-                editingElement.dataset.layoutBackground = "none";
-                break;
-            case "text":
-                editingElement.dataset.progressBarStyle = "none";
-                editingElement.dataset.layoutBackground = "none";
-                break;
-        }
-        editingElement.dataset.layout = value;
-    }
-
-    isLayoutApplied({ editingElement, value }) {
-        return editingElement.dataset.layout === value;
-    }
-
     isEndMessagePreviewed({ editingElement }) {
         return !!editingElement?.classList.contains("s_countdown_enable_preview");
     }
@@ -149,50 +124,46 @@ export class PreviewEndMessageAction extends BaseCountdownAction {
     }
 }
 
-export class SetLayoutAction extends BaseCountdownAction {
-    static id = "setLayout";
-    apply(context) {
-        return this.setLayout(context);
-    }
-    isApplied(context) {
-        return this.isLayoutApplied(context);
-    }
-}
-
-export class SelectCountdownInlineTemplateAction extends BuilderAction {
-    static id = "selectCountdownInlineTemplate";
-    static dependencies = ["builderActions", "edit_interaction"];
-
-    setup() {
-        this.getAction = this.dependencies.builderActions.getAction;
-    }
-
-    async prepare({ actionParam }) {
-        await this.getAction("selectTemplate").prepare({ actionParam: actionParam });
-    }
-
-    isApplied({ editingElement, params: { templateClass } }) {
-        if (templateClass) {
-            return !!editingElement.querySelector(`.${templateClass}`);
-        }
-        return true;
-    }
+export class SelectCountdownTemplateAction extends SelectTemplateAction {
+    static id = "selectCountdownTemplate";
+    static dependencies = [...super.dependencies, "edit_interaction"];
 
     apply(action) {
         this.dependencies.edit_interaction.restartInteractions(
             action.editingElement.closest(".s_countdown")
         );
-        this.getAction("selectTemplate").apply(action);
+        const countdownEl = action.editingElement.closest(".s_countdown");
+        countdownEl.dataset.layoutBackground = "none";
+        if (action.params.view === "website.s_countdown_circle_template") {
+            countdownEl.dataset.progressBarStyle = "disappear";
+            countdownEl.dataset.progressBarWeight = "thin";
+            countdownEl.dataset.layout = "circle";
+            action.editingElement.classList.add("s_countdown_canvas_wrapper");
+            action.editingElement.classList.remove("s_countdown_inline_wrapper");
+        } else {
+            countdownEl.dataset.progressBarStyle = "none";
+            countdownEl.dataset.layoutBackground = "none";
+            countdownEl.dataset.layout = "text";
+            action.editingElement.classList.remove("s_countdown_canvas_wrapper");
+            action.editingElement.classList.add("s_countdown_inline_wrapper");
+        }
+        super.apply(action);
         // Reset the monospace font option if we select a template that doesn't provide it.
-        if (["o_template_default", "o_template_text"].includes(action.params.templateClass)) {
+        if (["o_template_text_inline", "o_template_text"].includes(action.params.templateClass)) {
             action.editingElement
                 .closest(".o_count_monospace")
                 ?.classList.remove("o_count_monospace");
         }
     }
+}
 
-    clean(action) {
-        return this.getAction("selectTemplate").clean(action);
+export class SetColorInlineCountdownAction extends StyleAction {
+    static id = "setColorInlineCountdown";
+
+    apply(context) {
+        super.apply(context);
+        const countdownWrapperEl = context.editingElement.closest(".s_countdown_wrapper");
+        countdownWrapperEl.classList.toggle("o_countdown_no_bg_color", !context.value);
     }
 }
 
