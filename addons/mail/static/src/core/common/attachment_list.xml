@@ -8,7 +8,10 @@
                 'o-inChatWindow': env.inChatWindow,
             }"
         >
-            <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer}" role="menu" >
+            <div class="d-flex flex-wrap gap-2" t-att-class="{
+                'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
+                'justify-content-center': env.inChatter and !env.inComposer,
+            }" role="menu">
                 <div t-foreach="props.attachments" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
                      class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
