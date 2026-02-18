@@ -166,13 +166,13 @@
                                                     </t>
                                                     <t t-elif="leave_unit == 'hour'">
                                                         <span class="mx-1">-</span>
-                                                        <field name="request_hour_from" widget="float_time_selection"/>
+                                                        <field name="request_hour_from"/>
                                                         <span class="mx-1">–</span>
                                                         <t t-if="!same_day">
                                                             <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                             <span class="mx-1">-</span>
                                                         </t>
-                                                        <field name="request_hour_to" widget="float_time_selection"/>
+                                                        <field name="request_hour_to"/>
                                                     </t>
                                                 </div>
                                             </div>
@@ -259,13 +259,13 @@
                                                 </t>
                                                 <t t-elif="leave_unit == 'hour'">
                                                     <span class="mx-1">-</span>
-                                                    <field name="request_hour_from" widget="float_time_selection"/>
+                                                    <field name="request_hour_from"/>
                                                     <span class="mx-1">–</span>
                                                     <t t-if="!same_day">
                                                         <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                         <span class="mx-1">-</span>
                                                     </t>
-                                                    <field name="request_hour_to" widget="float_time_selection"/>
+                                                    <field name="request_hour_to"/>
                                                 </t>
                                         </div>
                                     </div>
@@ -355,26 +355,26 @@
                             <div id="full_date" class="o_row">
                                 <field
                                     name="request_date_from"
-                                    widget="daterange"
+                                    widget="hr_holidays_daterange"
                                     readonly="state != 'confirm'"
                                     required="not date_from or not date_to"
-                                    options="{'end_date_field': 'request_date_to', 'always_range': '1'}"/>
+                                    options="{
+                                        'end_date_field': 'request_date_to',
+                                        'always_range': '1',
+                                        'end_period_field': 'request_date_to_period',
+                                        'start_period_field': 'request_date_from_period',
+                                        'hour_from_field': 'request_hour_from',
+                                        'hour_to_field': 'request_hour_to'
+                                    }"/>
                                 <field name="request_date_to" required="not date_from or not date_to" invisible="1"/> <!-- For Form view test-->
                                 <div>
                                     ( <field name="duration_display" readonly="1" class="w-auto"/> )
                                 </div>
                             </div>
-                            <!-- half day or custom hours-->
-                            <label for="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
-                            <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
-                                <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
-                                <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
-                            </div>
-                            <label for="request_hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
-                            <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
-                                <field name="request_hour_from" readonly="state == 'validate'" required="work_entry_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
-                                <field name="request_hour_to" readonly="state == 'validate'" required="work_entry_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
-                            </div>
+                            <field name="request_date_from_period" invisible="1"/>
+                            <field name="request_date_to_period" invisible="1"/>
+                            <field name="request_hour_from"  invisible="1"/>
+                            <field name="request_hour_to"  invisible="1"/>
                             <div colspan="2" class="alert alert-info" role="alert" invisible="work_entry_type_request_unit != 'hour' or not tz_mismatch or dashboard_warning_message">
                                 <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's work timezone</span>
                                 (<field name="tz" class="oe_inline fw-bold"/>).
