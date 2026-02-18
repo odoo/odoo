@@ -54,6 +54,27 @@ class TestTrackingAPI(TestTrackingCommon):
             self.assertMessageFields(record_su.message_ids, {'tracking_values': []})
 
     @users('employee')
+    def test_tracking_custom(self):
+        test_tracking_records = self.test_tracking_records.with_env(self.env)
+        test_tracking_records._track_add(
+            {record.id: {'false_field': 'old'} for record in test_tracking_records},
+            end_values={record.id: {'false_field': 'new'} for record in test_tracking_records},
+            fields_info={'false_field': {'string': 'False Field', 'type': 'char'}},
+        )
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.flush_tracking()
+        self.assertEqual(len(self._new_msgs), len(test_tracking_records), 'Should have generated 1 tracking msg / record')
+        for record in test_tracking_records:
+            track_msg = self._new_msgs.filtered(lambda m: m.res_id == record.id)
+            self.assertMessageFields(
+                track_msg, {
+                    'author_id': self.partner_employee,
+                    'tracking_values': [('false_field', 'char', 'old', 'new')],
+                }
+            )
+
+    @users('employee')
     def test_tracking_default_subtype(self):
         """ Update some tracked fields not linked to some subtype -> message with onchange """
         customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})

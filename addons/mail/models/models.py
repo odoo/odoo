@@ -278,11 +278,11 @@ class Base(models.AbstractModel):
             if col_name not in initial_values:
                 continue
             initial_value = initial_values[col_name]
-            new_value = self._track_convert_value(col_name, self[col_name])
+            new_value = self._track_convert_value(col_name, self[col_name]) if col_name in self else self.env.cr.precommit.data.get(f'mail.tracking.endvalues{self._name}', {}).get(col_name, False)
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
-            if self._fields[col_name].type == "properties":
+            if col_name in self and self._fields[col_name].type == "properties":
                 definition_record_field = self._fields[col_name].definition_record
                 if self[definition_record_field] == initial_values[definition_record_field]:
                     # track the change only if the parent changed
@@ -332,7 +332,7 @@ class Base(models.AbstractModel):
         # get the properties definition with the value
         # (not just the dict with the value)
         self.ensure_one()
-        if (field := self._fields[fname]).type == 'properties':
+        if fname in self and (field := self._fields[fname]).type == 'properties':
             return field.convert_to_read(value, self)
         return value
 

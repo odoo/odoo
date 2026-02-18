@@ -546,6 +546,39 @@ class MailThread(models.AbstractModel):
     def _track_disabled(self):
         return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
 
+    def _track_add(
+            self,
+            initial_values: dict[int, dict[str, typing.Any]],
+            end_values: dict[int, dict[str, typing.Any]] | None = None,
+            fields_info: dict[str, dict[str, str]] | None = None,
+        ):
+        if not self:
+            return
+        self.env.cr.precommit.add(self._track_finalize)
+
+        # store field information, in case not reachable by fields_get
+        current_fields_info = self.env.cr.precommit.data.setdefault(f'mail.tracking.fieldsinfo.{self._name}', {})
+        for fname, fvalues in (fields_info or {}).items():
+            current_fields_info.setdefault(fname, {}).update(**fvalues)
+
+        # store initial values, required to detect and log changes
+        current_initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
+        for record in self.filtered(lambda r: r.id):
+            record_values = current_initial_values.setdefault(record.id, {})
+            if record_values is not None:  # None means tracking was disabled for this record
+                record_init_values = initial_values.get(record.id)
+                for fname, fvalue in record_init_values.items():
+                    record_values.setdefault(fname, record._track_convert_value(fname, fvalue))
+
+        # store potential end values, used in place of current record value (manual tracking)
+        if end_values:
+            current_end_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.endvalues{self._name}', {})
+            for record in self.filtered(lambda r: r.id):
+                record_values = current_end_values.setdefault(record.id, {})
+                record_end_values = end_values.get(record.id)
+                for fname, fvalue in record_end_values.items():
+                    record_values.setdefault(fname, record._track_convert_value(fname, fvalue))
+
     def _track_prepare(self, field_names: Iterable[str]):
         """ Prepare the tracking of `fields_iter` for `self` for tracked
         fields (see `_track_get_fields`). Store initial values for tracked fields
@@ -557,13 +590,12 @@ class MailThread(models.AbstractModel):
         tracked_fnames = self._track_get_fields().intersection(field_names)
         if not self or not tracked_fnames:
             return
-        self.env.cr.precommit.add(self._track_finalize)
-        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self.filtered(lambda r: r.id):
-            record_values = initial_values.setdefault(record.id, {})
-            if record_values is not None:  # None means tracking was disabled for this record
-                for fname in tracked_fnames:
-                    record_values.setdefault(fname, record._track_convert_value(fname, record[fname]))
+        self._track_add(
+            {
+                record.id: {fname: record[fname] for fname in tracked_fnames}
+                for record in self
+            }, None
+        )
 
     def _track_discard(self):
         """ Prevent any tracking of fields on `self`. """
@@ -583,7 +615,10 @@ class MailThread(models.AbstractModel):
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
             return
-        fnames = self._track_get_fields()
+
+        # tracked fields to check are those at model level as well as those
+        # manually put in initial values
+        fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
 
         # Clean the context to get rid of residual default_* keys that could
         # cause issues afterward during the mail.message generation. Example:
@@ -635,6 +670,13 @@ class MailThread(models.AbstractModel):
 
         return model_fields and set(self.fields_get(model_fields, attributes=()))
 
+    def _track_get_fields_info(self, tracked_fields: Iterable[str]):
+        tracked_fields_get = self.fields_get(tracked_fields, attributes=('string', 'type', 'selection', 'currency_field'))
+        if set(tracked_fields_get.keys()) < set(tracked_fields):
+            current_fields_info = self.env.cr.precommit.data.get(f'mail.tracking.fieldsinfo.{self._name}', {})
+            tracked_fields_get.update(current_fields_info)
+        return tracked_fields_get
+
     # track / post main API (WIP)
     # ------------------------------------------------------
 
@@ -658,7 +700,7 @@ class MailThread(models.AbstractModel):
         if not tracked_fields:
             return {}
 
-        tracked_fields_get = self.fields_get(tracked_fields, attributes=('string', 'type', 'selection', 'currency_field'))
+        tracked_fields_get = self._track_get_fields_info(tracked_fields)
         tracking = dict()
         for record in self:
             try:
@@ -719,7 +761,7 @@ class MailThread(models.AbstractModel):
         :param dict[str, ValuesType] track_init_values: original values of the
             record; only modified fields are present in the dict
 
-        :returns: subtype record (may be void for pure logs)
+        :returns: MailMessageSubtype record (may be void for pure logs)
         """
         self.ensure_one()
         return self.env['mail.message.subtype']
