@@ -321,7 +321,7 @@ def process_dynamic_string(node, bound_variables, attr="t-attf-class"):
 
 T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")
 COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
-SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot", "call"}  # attributes to skip
+SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
 
 
 def iter_elements(root):
@@ -349,23 +349,24 @@ DIRECTIVES = [
 
 
 class TemplateCompiler:
-    """ Traverses XML templates, adding `this.` to variables coming from the component.
-        It relies on a precompiled dictionary of variables assigned to each template (eg.
-        a <t-call="web.xyz"> <t t-set="var" t-value="a"/> </t.).
+    """
+    Traverses XML templates to prefix component-scoped variables with `this.`.
 
-        @param allVars:
-        @param t_call_vars
-        @param x_path_only
+    It relies on a precompiled dictionary of variables assigned to each template
+    (e.g., `<t t-call="web.xyz"> <t t-set="var" t-value="a"/> </t>`).
+
+    Attributes:
+        t_call_vars (dict[str, set[str]]): Mapping of template calls to their specific variables.
+        all_vars (dict[str, set[str]]): All template available variables keyed by template name.
+        modules (list[str] | bool): List of specific XPaths / inherit to process, or False to process all.
     """
 
-    def __init__(self, t_call_vars, all_vars, xpath_only):
-        self.allVars = all_vars
+    def __init__(self, t_call_vars: dict[str, set[str]], all_vars: dict[str, set[str]], modules: list[str] | bool):
         self.t_call_vars = t_call_vars
+        self.allVars = all_vars
+        self.modules = modules
 
     def fix_rendering_context(self, root: etree._ElementTree):
-        """ param: t_call_vars - vars inside a t-call tag, keyed by the t-call targer
-            param: all_vars - list of all variables per template used for inherits
-        """
         template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
 
         if template_nodes:
@@ -385,6 +386,14 @@ class TemplateCompiler:
         for node in iter_elements(root):
             if not isinstance(node.tag, str):
                 continue  # skip comments, processing instructions, etc.
+
+            if self.modules:  # If targetting specific modules
+                inherit_nodes = self._is_inside_inherit(node)
+                if not inherit_nodes:
+                    continue
+                inherit_module = inherit_nodes[0].get("t-inherit", "").split(".")[0]
+                if inherit_module not in self.modules:
+                    continue
 
             node_vars = self._get_node_vars(node, bound_variables)
 
@@ -487,11 +496,11 @@ class TemplateCompiler:
         return node.xpath("ancestor-or-self::*[@t-inherit][1]")
 
     @staticmethod
-    def _process_xpath_expr(node: etree._Element, bound_variables: set[str], skip_attr: set[str] = SKIP_XPATH_ATTRS):
+    def _process_xpath_expr(node: etree._Element, bound_variables: set[str]):
         def repl(match):
             attr_name = match.group(1)
             js_expr = match.group(2)
-            if attr_name in skip_attr:
+            if attr_name in SKIP_XPATH_ATTRS:
                 # return original string unchanged
                 return match.group(0)
 
@@ -533,8 +542,8 @@ class TemplateCompiler:
         return False
 
 
-def update_template(content: str, t_call_vars, all_vars):
-    compiler = TemplateCompiler(t_call_vars, all_vars)
+def update_template(content: str, t_call_vars, all_vars, modules: list[str]):
+    compiler = TemplateCompiler(t_call_vars, all_vars, modules)
 
     def callback(tree):
         compiler.fix_rendering_context(tree)
@@ -545,39 +554,27 @@ def update_template(content: str, t_call_vars, all_vars):
     result = result.replace("&&", "&amp;&amp;")
     return result
 
-
-def replace_x_path_only(content: str, variables: set):
-    def fix_xpath(root: etree._ElementTree):
-        for node in root.xpath("descendant-or-self::*[@t-inherit]"):
-            attr = node.get("t-inherit")
-            if attr.startswith("web."):
-                for node in node.xpath("descendant-or-self::xpath[@expr]"):
-                    expr = node.get("expr")
-                    if expr:
-                        node.set(
-                            "expr",
-                            TemplateCompiler._process_xpath_expr(
-                                node, variables[attr], SKIP_XPATH_ATTRS.union({"call"})
-                            ),
-                        )
-        return
-
-    result = update_etree(content, fix_xpath)
-    return result
-
 # ------------------------------------------------------------------------------
 # Variables
 # ------------------------------------------------------------------------------
 
 
 class VariableAggregator:
-    """ Traverses XML templates, aggregating variables per fragment. """
+    """
+        Traverses XML templates, aggregating variables per fragment. The implementation
+        does not take nested inherits or t-call vars not instide the t-call on purpose.
+    """
 
     def __init__(self):
         self.tCallVars = defaultdict(set)
         self.insideVars = defaultdict(set)
 
-    def aggregate_call_vars(self, root: etree._ElementTree, vars):
+    def aggregate_call_vars(self, root: etree._ElementTree):
+        """
+            Maps all variable inside t-call by t-call keys eg.
+            <t t-call ="web.xyz"> <t t-set="x" t-value=2/> </t>  --> {"web.xyz" : {"x"}}
+            Does not take variables not nested inside t-call into account, handled with whitelist in upgrade_code
+        """
         # Find all nodes with t-call="sometemplate"
         for call_node in root.xpath("descendant-or-self::*[@t-call]"):
             template_name = call_node.get("t-call")
@@ -591,7 +588,12 @@ class VariableAggregator:
                 if var_name:
                     self.tCallVars[template_name].add(var_name)
 
-    def aggregate_inside_vars(self, root: etree._ElementTree, inside_vars: dict[str, set[str]]):
+    def aggregate_inside_vars(self, root: etree._ElementTree):
+        """
+            Maps all variable inside a template in a dict keyed by template name.
+            Does not take nested inherits into account (eg. <t t-name="web.ext" t-inherit="web.xyz"...
+            --> web.ext variable set will not include web.xyz, handled with whitelist in upgrade_code)
+        """
         templates = root.xpath(
             "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
         )
@@ -624,8 +626,8 @@ class VariableAggregator:
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
     def callback(tree):
-        aggregator.aggregate_call_vars(tree, vars)
-        aggregator.aggregate_inside_vars(tree, inside_vars)
+        aggregator.aggregate_call_vars(tree)
+        aggregator.aggregate_inside_vars(tree)
 
     aggregator = VariableAggregator()
     update_etree(content, callback)
@@ -646,8 +648,7 @@ def aggregate_vars(content: str, vars={}, inside_vars={}):
 
 
 def run_tests_main(test):
-    # variables = test.get("inside_vars", {})
-    return update_template(test["content"], {}, {})
+    return update_template(test["content"], {}, {}, False)
 
 
 tests = [
@@ -1466,14 +1467,81 @@ tests = [
 
 def run_test_external_xpath(test):
     variables = test.get("inside_vars", {})
-    return replace_x_path_only(test["content"], variables)
+    modules = test.get("modules", False)
+    return update_template(test["content"], {}, variables, modules)
 
 
 # Tests x-path coming from another xml file
 test_external_xpath = [
     {
+        "name": "No replace on inherits targetting modules not in target modules",
+        "inside_vars": defaultdict(set),
+        "modules": ["random_module"],
+        "content": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+    </t>
+</templates>""",
+        "expected": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+    </t>
+</templates>""",
+    },
+    {
+        "name": "Replace inside x-path variables",
+        "inside_vars": defaultdict(set),
+        "modules": ["web"],
+        "content": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+            <button t-if="showDelete"/>
+        </xpath>
+    </t>
+</templates>""",
+        "expected": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="replace">
+            <button t-if="this.showDelete"/>
+        </xpath>
+    </t>
+</templates>""",
+    },
+    {
+        "name": "Replace inside x-path with variables",
+        "inside_vars": {"web.ListView": {"showDelete"}},
+        "modules": ["web"],
+        "content": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+            <t t-if="showDelete"> a </t>
+            <t t-elif="other"> b </t>
+        </xpath>
+    </t>
+</templates>""",
+        "expected": """
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="replace">
+            <t t-if="showDelete"> a </t>
+            <t t-elif="this.other"> b </t>
+        </xpath>
+    </t>
+</templates>""",
+    },
+    {
         "name": "x-path only replace",
         "inside_vars": defaultdict(set),
+        "modules": ["web"],
         "content": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
@@ -1521,7 +1589,7 @@ test_external_xpath = [
 
 
 def run_test_vars(test):
-    return update_template(test["content"], test["outside_vars"], test["inside_vars"])
+    return update_template(test["content"], test["outside_vars"], test["inside_vars"], False)
 
 
 test_vars = [

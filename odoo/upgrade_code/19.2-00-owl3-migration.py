@@ -311,52 +311,34 @@ MAIL_WHITELIST = {
 
 
 def upgrade_this(file_manager, log_info, log_error):
-
-    web_files = [
+    targets = ["web", "mail"]
+    all_files = [
         f for f in file_manager
-        # if ('web/static/src/' in f.path._str or 'mail/static/src/' in f.path._str)
         if 'static/src' in f.path._str
         and f.path.suffix == '.xml'
         and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
     ]
 
-    # Step 1: Gather all variables in the web module
     outside_vars = {
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
     }  # vars defined under t-call
     outside_vars = outside_vars | MAIL_WHITELIST | WEB_WHITELIST
     inside_vars = {}  # vars defined inside template, eg. using t-set
-    for fileno, file in enumerate(web_files, start=1):
+
+    # Iteration 1: Gather all variables
+    for fileno, file in enumerate(all_files, start=1):
         aggregate_vars(file.content, outside_vars, inside_vars)
 
-    # Step 2: Add this. to all non local template vars (except those coming from external t-call)
-    for fileno, file in enumerate(web_files, start=1):
-        try:
-            file.content = update_template(file.content, outside_vars, inside_vars)
-        except Exception as e:
-            log_error(file.path, e)
-
-        # file_manager.print_progress(fileno, len(web_files))
-
-    # Step 3: Modify x-path targetting web files we might have modified above
-    INHERIT_PATTERN = re.compile(r't-inherit=["\']web\..*?["\']')  # Matches t-inherit="web.xxxxx
-    all_files = [
-        f for f in file_manager
-        if 'static/src/' in f.path._str
-        and f.path.suffix == '.xml'
-        and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
-    ]
-
+    # Iteration 2: Update templates
     for fileno, file in enumerate(all_files, start=1):
         try:
-            if INHERIT_PATTERN.search(file.content):
-                file.content = replace_x_path_only(file.content, inside_vars)
-
+            if any(f"{t}/static/src/" in file.path._str for t in targets):
+                file.content = update_template(file.content, outside_vars, inside_vars, modules=False)
+            else:
+                file.content = update_template(file.content, outside_vars, inside_vars, modules=targets)
         except Exception as e:
             log_error(file.path, e)
-
-        # file_manager.print_progress(fileno, len(web_files))
 
 
 def upgrade_this_in_tests(file_manager, log_info, log_error):
