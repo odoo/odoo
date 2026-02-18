@@ -14,7 +14,7 @@
                         t-if="this.state.selectedLocationData.id"
                         t-out="this.state.selectedLocationData.name"
                     />
-                    <t t-else="">Click and Collect</t>
+                    <t t-else="" t-out="this.props.deliveryMethodName"/>
                 </h6>
                 <div class="d-flex justify-content-between">
                     <t t-if="this.state.inStoreStockData?.in_stock">
