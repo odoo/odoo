@@ -236,9 +236,18 @@ body {
                 max-width: 100% !important;
             }
 
-            // Vertical alignment when top-menu has visually "no background"
+            // Remove the left/right padding when the header has no visible
+            // separation from the body:
+            // - The header has no background color (transparent)
+            // - The header background color matches the body
+            // - The header has no shadow defined
             $-menu-color: o-color('menu-custom') or o-color('menu');
-            @if (not $-menu-color or $-menu-color == o-color('body')) {
+            $-menu-box-shadow: o-website-value('menu-box-shadow');
+            $-menu-border-width: o-website-value('menu-border-width');
+            @if (
+                (not $-menu-color or ($-menu-color == o-color('body') and o-website-value('body-image') == null))
+                and ($-menu-box-shadow == none)
+            ) {
                 > header {
                     .navbar, .container {
                         padding-left: 0;
