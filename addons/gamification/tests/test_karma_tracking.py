@@ -79,8 +79,25 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(results[1]['karma_gain_total'], 20)
         self.assertEqual(results[1]['karma_position'], 2)
 
-        results = self.env['res.users']._get_tracking_karma_gain_position([])
-        self.assertEqual(len(results), 0)
+        results = self.env['res.users']._get_tracking_karma_gain_position(
+            [],
+            from_date=self.test_date + relativedelta(months=1, day=1),
+            limit=1,
+            offset=1,
+        )
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['user_id'], self.test_user.id)
+        self.assertEqual(results[0]['karma_gain_total'], 20)
+        self.assertEqual(results[0]['karma_position'], 2)
+
+        results = self.env['res.users']._get_tracking_karma_gain_position(
+            [],
+            target_user_id=self.test_user.id,
+        )
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['user_id'], self.test_user.id)
+        self.assertEqual(results[0]['karma_gain_total'], 40)
+        self.assertEqual(results[0]['karma_position'], 2)
 
     @freeze_time('2021-02-02')
     def test_consolidation_cron(self):
