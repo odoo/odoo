@@ -1119,6 +1119,34 @@ class ResPartner(models.Model):
         return []
 
     @api.model
+    def _import_retrieve_customer_from_bank_account_number(self, customer_values):
+        account_numbers = customer_values.get('account_numbers')
+        company = customer_values.get('company')
+        if not account_numbers or not company:
+            return
+
+        company_domain = Domain.OR([
+            [*self._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ])
+
+        bank_account_ids = self.env['res.partner.bank']._search([
+            Domain.AND([
+                company_domain,
+                [
+                    ('account_number', 'in', account_numbers),
+                    ('allow_out_payment', '=', True),
+                ]
+            ])
+        ])
+
+        return {
+            'criteria': [{
+                'domain': [('bank_ids', 'in', bank_account_ids)],
+            }]
+        }
+
+    @api.model
     def _import_retrieve_customer_from_phone(self, customer_values):
         phone = customer_values.get('phone')
         if not phone:
@@ -1150,7 +1178,7 @@ class ResPartner(models.Model):
 
         return {
             'criteria': [{
-                'domain': [('name', 'ilike', name)],
+                'domain': [('name', '=ilike', name)],
             }],
         }
 
