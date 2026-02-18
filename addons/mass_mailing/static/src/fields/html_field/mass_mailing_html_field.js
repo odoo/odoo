@@ -15,6 +15,7 @@ import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
 import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -112,6 +113,14 @@ export class MassMailingHtmlField extends HtmlField {
             },
             () => [this.codeViewRef.el]
         );
+
+        useRecordObserver(async (record) => {
+            // consult the mailing_model_name field so it can be recognized by the observer
+            record.data.mailing_model_name;
+            if (this.editor && !this.editor.isDestroyed && this.editor.isReady) {
+                this.editor.dispatchTo("on_mailing_model_updated_handlers");
+            }
+        });
     }
 
     get withBuilder() {

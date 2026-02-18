@@ -7,6 +7,7 @@
     'description': """UTM and mass mailing on lead / opportunities""",
     'depends': ['crm', 'mass_mailing'],
     'data': [
+        'views/crm_lead_views.xml',
         'views/mailing_mailing_views.xml',
     ],
     'demo': [
@@ -18,6 +19,7 @@
         ],
     },
     'auto_install': True,
+    'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
