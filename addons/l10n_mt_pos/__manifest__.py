@@ -5,6 +5,7 @@
     "category": "Accounting/Localizations/Point of Sale",
     "description": """Malta Compliance Letter for EXO Number""",
     "depends": [
+        "l10n_mt",
         "point_of_sale",
     ],
     "data": [
