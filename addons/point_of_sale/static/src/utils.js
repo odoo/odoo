@@ -1,6 +1,7 @@
 /* global QRCode */
 
 import { session } from "@web/session";
+import { cookie } from "@web/core/browser/cookie";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
@@ -216,4 +217,20 @@ export function generateQRCodeDataUrl(
 
     const qr_code_svg = new XMLSerializer().serializeToString(svg);
     return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
+}
+
+/**
+ * DANGER: Do NOT use this method for receipt QR codes.
+ * It generates a white qr code in dark mode, which makes the QR code invisible on receipts.
+ * For receipts, use `generateQRCodeDataUrl(url)` directly.
+ *
+ * @param {string} url - The URL or text to encode in the QR code.
+ */
+export function getDisplayQrCodeDataUrl(url) {
+    const colorScheme = cookie.get("pos_color_scheme") ?? "light";
+    const isLightMode = colorScheme === "light";
+    return generateQRCodeDataUrl(url, {
+        colorDark: isLightMode ? "black" : "white",
+        colorLight: "transparent",
+    });
 }
