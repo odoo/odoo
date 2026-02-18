@@ -29,6 +29,7 @@ def uninstall_hook(env):
     multi_company_rules += pl_item_rule or env['ir.rule']
     multi_company_rules.write({'active': True})
 
+
 def _create_extra_variant_images(env):
     products = env['product.product'].search([('product_tmpl_id.image_1920', '!=', False)])
     image_vals = []

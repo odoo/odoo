@@ -52,39 +52,6 @@ class ProductProduct(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    def _compute_image_1920(self):
-        for product in self:
-            extra_image = product.product_variant_image_ids.sorted('sequence')[:1]
-            if (
-                extra_image
-                and extra_image.attribute_value_ids
-                and extra_image._is_applicable_to_variant(product)
-            ):
-                product.image_1920 = extra_image.image_1920
-            else:
-                product.image_1920 = product.product_tmpl_id.image_1920
-
-            product._set_image_fields('image_1920', 'image_variant_1920')
-
-    def _set_image_fields(self, template_field, variant_field):
-        for record in self:
-            # There is only one variant, always write on the template.
-            if (
-                self.search_count([
-                    ('product_tmpl_id', '=', record.product_tmpl_id.id),
-                    ('active', '=', True),
-                ]) <= 1
-            ):
-                record[variant_field] = False
-                record.product_tmpl_id[template_field] = record[template_field]
-            # We are trying to add a field to the variant, but the template field is
-            # not set, write on the template instead and then set variant field same as template.
-            elif (record[template_field] and not record.product_tmpl_id[template_field]):
-                record.product_tmpl_id[template_field] = record[template_field]
-                record[variant_field] = record.product_tmpl_id[template_field]
-            else:
-                record[variant_field] = record[template_field]
-
     def _get_base_unit_price(self, price):
         self.ensure_one()
         return self.base_unit_count and price / self.base_unit_count
@@ -147,13 +114,19 @@ class ProductProduct(models.Model):
         """Return a list of records implementing `image.mixin` to
         display on the carousel on the website for this variant.
 
-        It contains in this order: the main image of the variant the Variant Extra Images,
-        and the Template Extra Images.
+        Variant and template extra images are combined into a single list
+        and ordered by their sequence, so the end user experiences a single
+        unified carousel regardless of image source.
+
+        If no extra images exist, the main image of the variant is returned
+        (which will fall back on the main image of the template, if unset).
         """
         self.ensure_one()
-        variant_images = list(self.product_variant_image_ids)
-        template_images = list(self.product_tmpl_id.product_template_image_ids.filtered('is_template_image'))
-        return variant_images + template_images if (variant_images + template_images) else [self]
+        variant_images = self.product_variant_image_ids
+        template_images = self.product_tmpl_id.product_template_image_ids.filtered('is_template_image')
+        images = (variant_images | template_images).sorted('sequence')
+
+        return list(images) or [self]
 
     def _get_combination_info_variant(self, **kwargs):
         """Return the variant info based on its combination.
@@ -269,6 +242,14 @@ class ProductProduct(models.Model):
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
 
+        if 'product_variant_image_ids' in vals:
+            removed_image_ids = [
+                cmd[1] for cmd in vals['product_variant_image_ids']
+                if cmd[0] == 3
+            ]
+            if removed_image_ids:
+                self.env['product.image'].browse(removed_image_ids).unlink()
+
         return super().write(vals)
 
     def _is_in_wishlist(self):
@@ -314,3 +295,11 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.env['website'].image_url(self, 'image_1024')
+
+    def _set_main_image_from_extra_images(self):
+        for product in self:
+            first_extra_image = product.product_variant_image_ids.sorted("sequence")[:1]
+
+            product.image_variant_1920 = (
+                first_extra_image.image_1920 if first_extra_image else False
+            )

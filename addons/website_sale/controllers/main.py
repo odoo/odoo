@@ -774,6 +774,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda p: p.id == int(product_variant_id)
             )
             product_template = product.product_tmpl_id or image_to_resequence.product_tmpl_id
+            if not product:
+                product = product_template.product_variant_ids.filtered(
+                    lambda p: p.id == int(product_variant_id)
+                )
 
         if not product and not product_template:
             raise ValidationError(_("Product not found"))

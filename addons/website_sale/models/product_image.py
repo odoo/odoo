@@ -105,13 +105,23 @@ class ProductImage(models.Model):
                 normal_vals.append(vals)
 
         images = super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
-        images.filtered(lambda img: img.attribute_value_ids)._sync_variant_images()
+        images.filtered_domain([('attribute_value_ids', '!=', False)])._sync_variant_images()
         return images
 
     def write(self, vals):
         res = super().write(vals)
         if 'attribute_value_ids' in vals:
             self._sync_variant_images()
+            return res
+
+        if 'sequence' in vals or 'image_1920' in vals:
+            self.mapped('product_variant_ids')._set_main_image_from_extra_images()
+        return res
+
+    def unlink(self):
+        variants = self.product_variant_ids
+        res = super().unlink()
+        variants._set_main_image_from_extra_images()
         return res
 
     # === BUSINESS METHODS === #
@@ -126,20 +136,28 @@ class ProductImage(models.Model):
         :return: None
         :rtype: None
         """
+        impacted_variants = self.env['product.product']
         for image in self:
             product_template = (
                 image.product_variant_ids[:1].product_tmpl_id or image.product_tmpl_id
             )
+            old_variants = image.product_variant_ids
 
             if not product_template or not image.attribute_value_ids:
+                impacted_variants |= image.product_variant_ids
+                new_variants = self.env['product.product']
                 image.product_variant_ids = [Command.clear()]
                 continue
 
-            compatible_variants = product_template.product_variant_ids.filtered(
+            new_variants = product_template.product_variant_ids.filtered(
                 image._is_applicable_to_variant
             )
 
-            image.product_variant_ids = [Command.set(compatible_variants.ids)]
+            image.product_variant_ids = [Command.set(new_variants.ids)]
+
+            impacted_variants |= (old_variants | new_variants)
+
+        impacted_variants._set_main_image_from_extra_images()
 
     def _is_applicable_to_variant(self, variant):
         """Check whether this image applies to the given product variant.

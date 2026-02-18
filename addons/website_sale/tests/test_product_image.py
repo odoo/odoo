@@ -222,17 +222,13 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         }).unlink()
         self.assertEqual(template.image_1920, red_image)
 
-        # CASE: display variant image first if set
-        self.assertEqual(product_green._get_images()[0].image_1920, green_image)
-
         # CASE: display variant fallback after variant o2m, correct fallback
         # write on the variant field, otherwise it will write on the fallback
         product_green.image_variant_1920 = False
         images = product_green._get_images()
         # images on fields are resized to max 1920
-        # image_png = Image.open(io.BytesIO(base64.b64decode(images[1].image_1920)))
-        self.assertEqual(images[0].image_1920, red_image)
-        # self.assertEqual(image_png.size, (1268, 1920))
+        image_png = Image.open(io.BytesIO(base64.b64decode(images[0].image_1920)))
+        self.assertEqual(image_png.size, (1268, 1920))
         self.assertEqual(images[1].image_1920, image_gif)
         self.assertEqual(images[2].image_1920, image_svg)
 
