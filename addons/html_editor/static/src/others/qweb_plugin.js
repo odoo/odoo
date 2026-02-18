@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
-import { isElement } from "@html_editor/utils/dom_info";
+import { isElement, PROTECTED_QWEB_SELECTOR } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 
 const isUnsplittableQWebElement = (node) =>
@@ -20,7 +20,6 @@ const isUnsplittableQWebElement = (node) =>
             "t-raw",
         ].some((attr) => node.getAttribute(attr)));
 
-const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
 const QWEB_DATA_ATTRIBUTES = [
     "data-oe-t-group",
     "data-oe-t-inline",
@@ -149,7 +148,7 @@ export class QWebPlugin extends Plugin {
             const qwebNode =
                 selection &&
                 selection.anchorNode &&
-                closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
+                closestElement(selection.anchorNode, PROTECTED_QWEB_SELECTOR);
             if (qwebNode && this.editable.contains(qwebNode)) {
                 // select the whole qweb node
                 const [anchorNode, anchorOffset] = leftPos(qwebNode);

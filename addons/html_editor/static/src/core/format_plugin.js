@@ -13,6 +13,7 @@ import {
     isZwnbsp,
     isZWS,
     previousLeaf,
+    PROTECTED_QWEB_SELECTOR,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -180,7 +181,9 @@ export class FormatPlugin extends Plugin {
     }
 
     removeFormat() {
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const targetedNodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter(this.dependencies.selection.isNodeEditable);
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 !formatsSpecs[format].removeStyle ||
@@ -203,7 +206,11 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(isTextNode);
+        const targetedTextNodes = targetedNodes.filter(
+            (node) =>
+                node.matches?.(PROTECTED_QWEB_SELECTOR) ||
+                (isTextNode(node) && (isVisibleTextNode(node) || isZWS(node)))
+        );
         const isFormatted = formatsSpecs[format].isFormatted;
         return targetedTextNodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
@@ -232,15 +239,18 @@ export class FormatPlugin extends Plugin {
     }
 
     hasAnyFormat(targetedNodes) {
+        const editableTargetedNodes = targetedNodes.filter(
+            this.dependencies.selection.isNodeEditable
+        );
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
-                this.hasSelectionFormat(format, targetedNodes)
+                this.hasSelectionFormat(format, editableTargetedNodes)
             ) {
                 return true;
             }
         }
-        return targetedNodes.some((node) =>
+        return editableTargetedNodes.some((node) =>
             this.getResource("has_format_predicates").some((predicate) => predicate(node))
         );
     }
@@ -307,8 +317,8 @@ export class FormatPlugin extends Plugin {
         const tagetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
-                .filter(Boolean)
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
+                .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
