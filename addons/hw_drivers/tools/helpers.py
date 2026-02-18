@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import certifi
 import configparser
 import contextlib
 import datetime
@@ -532,6 +533,7 @@ def download_iot_handlers(auto=True, server_url=None):
     :param auto: If True, the download will depend on the parameter set in the database
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
+<<<<<<< cbe08465d43d49f7119a07d7090ded6a26ac8677
     etag = get_conf('iot_handlers_etag')
     try:
         response = requests.post(
@@ -566,6 +568,53 @@ def download_iot_handlers(auto=True, server_url=None):
     with writable():
         zip_file.extractall(path)
 
+||||||| 0ebe2eaee2539c4f5087a74a7d3d7bb75126c923
+    Get the drivers from the configured Odoo server
+    """
+    server = get_odoo_server_url()
+    if server:
+        urllib3.disable_warnings()
+        pm = urllib3.PoolManager()
+        server = server + '/iot/get_handlers'
+        try:
+            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.status != 200:
+                _logger.error('Bad IoT handlers response received: status %s', resp.status)
+                return
+            if resp.data:
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                delete_iot_handlers()
+                path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+                with writable():
+                    zip_file.extractall(path)
+        except zipfile.BadZipFile:
+            _logger.exception('Bad IoT handlers response received: not a zip file')
+        except Exception:
+            _logger.exception('Could not reach configured server to download IoT handlers')
+=======
+    Get the drivers from the configured Odoo server
+    """
+    server = get_odoo_server_url()
+    if server:
+        urllib3.disable_warnings()
+        pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+        server = server + '/iot/get_handlers'
+        try:
+            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.status != 200:
+                _logger.error('Bad IoT handlers response received: status %s', resp.status)
+                return
+            if resp.data:
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                delete_iot_handlers()
+                path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+                with writable():
+                    zip_file.extractall(path)
+        except zipfile.BadZipFile:
+            _logger.exception('Bad IoT handlers response received: not a zip file')
+        except Exception:
+            _logger.exception('Could not reach configured server to download IoT handlers')
+>>>>>>> 25f47a9553a0c6c95c6ad6466ed34407d2dcb3f8
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
