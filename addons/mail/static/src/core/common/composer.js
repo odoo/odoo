@@ -6,7 +6,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
-import { propComputed, useSelection } from "@mail/utils/common/hooks";
+import { propComputed, useSelection, useVisible } from "@mail/utils/common/hooks";
 import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -217,6 +217,11 @@ export class Composer extends Component {
             { capture: true }
         );
         if (this.props.dropzoneRef) {
+            if (this.composer().message) {
+                useVisible(this.props.dropzoneRef, (isVisible) => {
+                    this.composer().isEditComposerVisible = Boolean(isVisible);
+                });
+            }
             useCustomDropzone(
                 this.props.dropzoneRef,
                 MailAttachmentDropzone,
@@ -226,7 +231,10 @@ export class Composer extends Component {
                 },
                 () =>
                     this.props.allowUpload &&
-                    (!this.store.rtc.isFullscreen || this.env.inMeetingView)
+                    (!this.store.rtc.isFullscreen || this.env.inMeetingView) &&
+                    (this.composer().message
+                        ? this.composer().isEditComposerVisible
+                        : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
             );
         }
         useChildSubEnv({ inComposer: true });
@@ -540,6 +548,15 @@ export class Composer extends Component {
             (isHtmlEmpty(this.props.composer.composerHtml) && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
+    }
+
+    /** @param {import("models").Attachment} attachment */
+    async unlinkAttachment(attachment) {
+        if (this.message && attachment.in(this.message.attachment_ids)) {
+            this.composer().attachments.delete(attachment);
+            return;
+        }
+        await this.attachmentUploader.unlink(attachment);
     }
 
     get hasSuggestions() {
@@ -945,10 +962,7 @@ export class Composer extends Component {
     }
 
     get askDeleteFromEdit() {
-        return (
-            !this.props.composer.composerText &&
-            this.props.composer.message.attachment_ids.length === 0
-        );
+        return !this.composer().composerText && this.composer().attachments.length === 0;
     }
 
     onClickInsertCannedResponse(ev) {

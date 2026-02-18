@@ -50,6 +50,7 @@ export class Composer extends Record {
     attachments = fields.Many("ir.attachment");
     /** @type {boolean} */
     emailAddSignature = true;
+    isEditComposerVisible = false;
     message = fields.One("mail.message");
     mentionedPartners = fields.Many("res.partner");
     mentionedRoles = fields.Many("res.role");

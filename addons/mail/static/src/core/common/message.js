@@ -38,7 +38,7 @@ import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
-import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -125,7 +125,7 @@ export class Message extends Component {
             });
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
-        this.messageBody = useRef("body");
+        this.messageBody = signal.ref(HTMLDivElement);
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
@@ -213,7 +213,7 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
-                    : this.prepareMessageBody(this.messageBody.el) ?? [];
+                    : this.prepareMessageBody(this.messageBody()) ?? [];
                 return () => {
                     for (const root of roots) {
                         root.destroy();

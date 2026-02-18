@@ -1496,7 +1496,7 @@ test("Can delete a message", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
-    await insertText(".o-mail-Message.o-editing .o-mail-Composer-input", "", { replace: true });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
     await contains(".o-mail-Message:has(:text('not empty'))");
     await contains(
@@ -1522,20 +1522,88 @@ test("Clear message body should not open message delete dialog if it has attachm
             pyEnv["ir.attachment"].create({ name: "test.txt", mimetype: "text/plain" }),
         ],
     });
+    onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
-    await insertText(".o-mail-Message.o-editing .o-mail-Composer-input", "", { replace: true });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-textContent:has(:text('not empty'))", { count: 0 });
-    // weak test, no guarantee that we waited long enough for the potential dialog to show
-    await contains(
-        ".modal-body p:text('Are you sure you want to permanently delete this message?')",
-        {
-            count: 0,
-        }
+    await expect.waitForSteps(["update_content"]);
+});
+
+test("Clear message body and remove attachments should open message delete dialog", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            pyEnv["ir.attachment"].create({ name: "test.txt", mimetype: "text/plain" }),
+        ],
+        body: "not empty",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
+    await click(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('test.txt')) .o-mail-Attachment-unlink"
     );
+    triggerHotkey("Enter");
+    await contains(
+        ".modal-body p:text('Are you sure you want to permanently delete this message?')"
+    );
+});
+
+test("Can remove saved attachments while editing a message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const [rickId, mortyId] = pyEnv["ir.attachment"].create([
+        {
+            name: "rick.txt",
+            mimetype: "text/plain",
+        },
+        {
+            name: "morty.txt",
+            mimetype: "text/plain",
+        },
+    ]);
+    pyEnv["mail.message"].create({
+        attachment_ids: [rickId, mortyId],
+        body: "<p>Hello</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    onRpcBefore("/mail/attachment/delete", ({ attachment_id }) => expect.step(`${attachment_id}`));
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('rick.txt'))"
+    );
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('morty.txt'))"
+    );
+    await click(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('rick.txt')) .o-mail-Attachment-unlink"
+    );
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('rick.txt'))",
+        { count: 0 }
+    );
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('morty.txt'))"
+    );
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps([`${rickId}`]);
+    await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
+    await contains(".o-mail-Message .o-mail-AttachmentContainer", { count: 1 });
+    await contains(".o-mail-Message .o-mail-AttachmentContainer:has(:text('morty.txt'))");
 });
 
 test("highlight the message mentioning the current user inside the channel", async () => {

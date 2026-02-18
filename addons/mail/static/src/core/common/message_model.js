@@ -640,6 +640,17 @@ export class Message extends Record {
         this.store.env.services.notification.add(_t("Text copied"), { type: "success" });
     }
 
+    /**
+     * Edit the message body and/or its attachments
+     *
+     * @param {string} body - New HTML body content for the message.
+     * @param {import("models").Attachment[]} [attachments=[]] - Attachments to keep on the message after the edit.
+     * @param {Object} [options={}]
+     * @param {import("models").ResPartner[]} [options.mentionedPartners=[]] - Partners mentioned in the new body.
+     * @param {import("models").ResRole[]} [options.mentionedRoles=[]] - Roles mentioned in the new body.
+     * @returns {Promise<Object|undefined>} The store-insert data returned by the server, or
+     *   `undefined` if the edit was a no-op (body and attachments unchanged).
+     */
     async edit(body, attachments = [], { mentionedPartners = [], mentionedRoles = [] } = {}) {
         const messageBodyEl = createElementWithContent("div", this.body);
         const updatedBodyEl = createElementWithContent("div", body);
@@ -655,12 +666,8 @@ export class Message extends Record {
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
-            attachment_ids: attachments
-                .concat(this.attachment_ids)
-                .map((attachment) => attachment.id),
-            attachment_tokens: attachments
-                .concat(this.attachment_ids)
-                .map((attachment) => attachment.ownership_token),
+            attachment_ids: attachments.map((attachment) => attachment.id),
+            attachment_tokens: attachments.map((attachment) => attachment.ownership_token),
             body: await generateEmojisOnHtml(body),
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             role_ids: validMentions?.roles?.map((role) => role.id),
@@ -689,7 +696,9 @@ export class Message extends Record {
             this.thread.messageInEdition.composer = undefined;
         }
         this.composer = {
+            attachments: [...this.attachment_ids],
             composerHtml: prepareBodyForEditing(this.body),
+            isEditComposerVisible: true,
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,
             selection: {

@@ -304,6 +304,30 @@ test("chatter: dropping attachments should close pinned messages and search pane
     await contains(".o-mail-pinnedMessages", { count: 0 });
 });
 
+test("chatter: drop attachment while editing a message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        body: "<p>Hello</p>",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    const textFile = new File(["hello, world"], "test.txt", { type: "text/plain" });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-mail-Message .o-mail-Composer");
+    await dragenterFiles(".o-mail-Message-body", [textFile]);
+    await contains(".o-Dropzone");
+    await dropFiles(".o-Dropzone.o-mail-Composer-dropzone", [textFile]);
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)"
+    );
+    await contains(".o-mail-AttachmentContainer");
+});
+
 test("attachment created without message_post refreshes the chatter on reload", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

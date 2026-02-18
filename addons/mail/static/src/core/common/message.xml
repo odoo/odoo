@@ -99,9 +99,9 @@
                                                         'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !this.isEditing and !this.message.isNote and !this.props.squashed,
                                                         'flex-grow-1': this.isEditing,
                                                         'o_track': this.message.message_type == 'tracking'
-                                                        }" t-custom-ref="body">
+                                                        }" t-ref="this.messageBody">
                                                 <i t-if="this.message.isEmpty" class="text-muted opacity-75" t-out="this.message.inlineBody"/>
-                                                <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
+                                                <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" dropzoneRef="this.messageBody" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
                                                 <t t-else="">
                                                     <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
                                                     <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-ref="this.shadowBody"/>
@@ -126,7 +126,7 @@
                             </div>
                             <div class="position-relative">
                                 <AttachmentList
-                                    t-if="this.message.extra_body_attachment_ids.length > 0"
+                                    t-if="this.message.extra_body_attachment_ids.length > 0 and !this.isEditing"
                                     attachments="this.message.extra_body_attachment_ids"
                                     unlinkAttachment.bind="this.onClickAttachmentUnlink"
                                     messageSearch="this.props.messageSearch"/>

@@ -140,7 +140,8 @@ const chatterPatch = {
             },
             () =>
                 (!this.store.meetingViewOpened || this.env.inMeetingView) &&
-                (this.state.thread?.isTransient || this.state.thread?.canPostMessage)
+                (this.thread()?.isTransient || this.thread()?.canPostMessage) &&
+                !this.thread()?.messageInEdition?.composer?.isEditComposerVisible
         );
         useOnChange(
             () => [this.thread(), this.thread()?.isLoadingAttachments],
