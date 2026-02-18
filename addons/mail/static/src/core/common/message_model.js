@@ -658,12 +658,8 @@ export class Message extends Record {
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
-            attachment_ids: attachments
-                .concat(this.attachment_ids)
-                .map((attachment) => attachment.id),
-            attachment_tokens: attachments
-                .concat(this.attachment_ids)
-                .map((attachment) => attachment.ownership_token),
+            attachment_ids: attachments.map((attachment) => attachment.id),
+            attachment_tokens: attachments.map((attachment) => attachment.ownership_token),
             body: await generateEmojisOnHtml(body),
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             role_ids: validMentions?.roles?.map((role) => role.id),
@@ -693,6 +689,7 @@ export class Message extends Record {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
+            attachments: [...this.attachment_ids],
             composerHtml: prepareBodyForEditing(this.body),
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,

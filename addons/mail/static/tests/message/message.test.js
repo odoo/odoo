@@ -1580,6 +1580,57 @@ test("Clear message body should not open message delete dialog if it has attachm
     );
 });
 
+test("Can remove saved attachments while editing a message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const [rickId, mortyId] = pyEnv["ir.attachment"].create([
+        {
+            name: "rick.txt",
+            mimetype: "text/plain",
+        },
+        {
+            name: "morty.txt",
+            mimetype: "text/plain",
+        },
+    ]);
+    pyEnv["mail.message"].create({
+        attachment_ids: [rickId, mortyId],
+        body: "<p>Hello</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    onRpcBefore("/mail/attachment/delete", ({ attachment_id }) => expect.step(`${attachment_id}`));
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(
+        ".o-mail-Message.o-editing .o-inComposer .o-mail-AttachmentContainer:has(:text('rick.txt'))"
+    );
+    await contains(
+        ".o-mail-Message.o-editing .o-inComposer .o-mail-AttachmentContainer:has(:text('morty.txt'))"
+    );
+    await click(
+        ".o-mail-Message.o-editing .o-inComposer .o-mail-AttachmentContainer:has(:text('rick.txt')) .o-mail-Attachment-unlink"
+    );
+    await contains(
+        ".o-mail-Message.o-editing .o-inComposer .o-mail-AttachmentContainer:has(:text('rick.txt'))",
+        {
+            count: 0,
+        }
+    );
+    await contains(
+        ".o-mail-Message.o-editing .o-inComposer .o-mail-AttachmentContainer:has(:text('morty.txt'))"
+    );
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps([`${rickId}`]);
+    await contains(".o-mail-Message .o-mail-AttachmentContainer:has(:text('morty.txt'))");
+    await contains(".o-mail-Message .o-mail-AttachmentContainer:has(:text('rick.txt'))", {
+        count: 0,
+    });
+});
+
 test("highlight the message mentioning the current user inside the channel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "Test Partner" });
