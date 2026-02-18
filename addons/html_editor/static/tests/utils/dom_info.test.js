@@ -1,5 +1,4 @@
 import {
-    areSimilarElements,
     getDeepestEditablePosition,
     getDeepestPosition,
     isEmptyBlock,
@@ -612,44 +611,6 @@ describe("isShrunkBlock", () => {
     test("should not consider a block containing a canvas as a shrunk block", () => {
         const [canvas] = insertTestHtml("<canvas></canvas>");
         const result = isShrunkBlock(canvas);
-        expect(result).toBe(false);
-    });
-});
-
-describe("areSimilarElements", () => {
-    test("should consider elements with same classes and styles in different orders as similar", () => {
-        const [span1, span2] = insertTestHtml(
-            "<span class='first second' style='color: red; color2: blue'>hello</span><span class='second first' style='color2: blue; color: red'>world</span>"
-        );
-        const result = areSimilarElements(span1, span2);
-        expect(result).toBe(true);
-    });
-    test("return false when the number of styles are different", () => {
-        const [span1, span2] = insertTestHtml(
-            "<span class='first second' style='color: red; color2: blue'>hello</span><span class='second first' style='color2: blue;'>world</span>"
-        );
-        const result = areSimilarElements(span1, span2);
-        expect(result).toBe(false);
-    });
-    test("return false when the number of classes are different", () => {
-        const [span1, span2] = insertTestHtml(
-            "<span class='first' style='color: red; color2: blue'>hello</span><span class='second first' style='color2: blue;'>world</span>"
-        );
-        const result = areSimilarElements(span1, span2);
-        expect(result).toBe(false);
-    });
-    test("return false when classes are different", () => {
-        const [span1, span2] = insertTestHtml(
-            "<span class='first' style='color: red; color2: blue'>hello</span><span class='second' style='color2: blue;'>world</span>"
-        );
-        const result = areSimilarElements(span1, span2);
-        expect(result).toBe(false);
-    });
-    test("return false when styles are different", () => {
-        const [span1, span2] = insertTestHtml(
-            "<span class='first second' style='color2: blue'>hello</span><span class='second first' style='color2: blue; color: red'>world</span>"
-        );
-        const result = areSimilarElements(span1, span2);
         expect(result).toBe(false);
     });
 });

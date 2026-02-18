@@ -6,7 +6,9 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { cleanTextNode, fillEmpty, removeClass, splitTextNode, unwrapContents } from "../utils/dom";
 import {
-    areSimilarElements,
+    hasPseudoElementContent,
+    hasSameClasses,
+    hasSameStyleAttributes,
     hasVisibleContent,
     isContentEditable,
     isElement,
@@ -35,6 +37,7 @@ import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../u
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
+const NOT_A_NUMBER = /[^\d]/g;
 
 function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
@@ -64,6 +67,7 @@ export class FormatPlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
+        "areSimilarElements",
         "isSelectionFormat",
         "insertAndSelectZws",
         "mergeAdjacentInlines",
@@ -702,8 +706,56 @@ export class FormatPlugin extends Plugin {
         }
         return (
             !isSelfClosingElement(node) &&
-            areSimilarElements(node, previousSibling) &&
+            this.areSimilarElements(node, previousSibling) &&
             isMergeable(node)
+        );
+    }
+
+    areSimilarElements(node, node2) {
+        if (![node, node2].every((n) => n?.nodeType === Node.ELEMENT_NODE)) {
+            return false; // The nodes don't both exist or aren't both elements.
+        }
+        if (node.nodeName !== node2.nodeName) {
+            return false; // The nodes aren't the same type of element.
+        }
+        for (const name of new Set([...node.getAttributeNames(), ...node2.getAttributeNames()])) {
+            if (name === "style") {
+                if (!hasSameStyleAttributes(node, node2)) {
+                    return false;
+                }
+            } else if (name === "class") {
+                if (!hasSameClasses(node, node2)) {
+                    return false; // The nodes don't have the same classes.
+                }
+            } else if (node.getAttribute(name) !== node2.getAttribute(name)) {
+                return false; // The nodes don't have the same attributes.
+            }
+        }
+        if (
+            [node, node2].some(
+                (n) => hasPseudoElementContent(n, ":before") || hasPseudoElementContent(n, ":after")
+            )
+        ) {
+            return false; // The nodes have pseudo elements with content.
+        }
+        if (isBlock(node)) {
+            return false;
+        }
+        const nodeStyle = getComputedStyle(node);
+        const node2Style = getComputedStyle(node2);
+        if (node.matches("code.o_inline_code")) {
+            if (
+                nodeStyle.padding === node2Style.padding &&
+                nodeStyle.margin === node2Style.margin
+            ) {
+                return true;
+            }
+        }
+        return (
+            !+nodeStyle.padding.replace(NOT_A_NUMBER, "") &&
+            !+node2Style.padding.replace(NOT_A_NUMBER, "") &&
+            !+nodeStyle.margin.replace(NOT_A_NUMBER, "") &&
+            !+node2Style.margin.replace(NOT_A_NUMBER, "")
         );
     }
 
