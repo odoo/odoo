@@ -1751,7 +1751,16 @@ class HrEmployee(models.Model):
             self.version_id.write(version_vals)
 
             for employee in self:
-                employee._track_set_log_message(Markup("<b>%s</b>") % self.env._("Modified on the Employee Record '%s'") % employee.version_id.display_name)
+                version_sudo = employee.version_id.sudo()
+                start = format_date_abbr(self.env, version_sudo.date_start) if version_sudo.date_start else False
+                end = format_date_abbr(self.env, version_sudo.date_end) if version_sudo.date_end else False
+                if start and end:
+                    msg = self.env._("Modified from %(start)s to %(end)s") % {'start': start, 'end': end}
+                elif start:
+                    msg = self.env._("Modified from %s") % (start)
+                else:
+                    msg = self.env._("Modified")
+                employee._track_set_log_message(Markup("<b>%s</b>") % msg)
         if res and ('resource_calendar_id' in vals or 'hours_per_week' in vals or 'hours_per_day' in vals):
             resources = self.env['resource.resource']
             for employee in self:
