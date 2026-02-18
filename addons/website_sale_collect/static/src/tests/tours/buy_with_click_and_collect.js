@@ -14,7 +14,7 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
         clickOnElement("Choose location", '#submit_location_large'),
         {
             content: "Check pickup location is set",
-            trigger: '[name="click_and_collect_availability"] h6:contains("Shop 1")',
+            trigger: '[name="click_and_collect_availability"] div:contains("Shop 1")',
         },
     ],
 });
