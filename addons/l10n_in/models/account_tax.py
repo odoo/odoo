@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.tools import frozendict
 
 
@@ -33,6 +34,13 @@ class AccountTax(models.Model):
     l10n_in_section_id = fields.Many2one('l10n_in.section.alert', string="Section")
     l10n_in_tds_feature_enabled = fields.Boolean(related='company_id.l10n_in_tds_feature')
     l10n_in_tcs_feature_enabled = fields.Boolean(related='company_id.l10n_in_tcs_feature')
+
+    @api.model
+    @api.readonly
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        if tds_tcs_section_ids := self.env.context.get('l10n_in_applicable_tds_tcs_section_ids'):
+            domain = Domain(domain or Domain.TRUE) & Domain('l10n_in_section_id', 'in', tds_tcs_section_ids)
+        return super().name_search(name, domain, operator, limit)
 
     @api.depends('country_code', 'invoice_repartition_line_ids.tag_ids')
     def _compute_l10n_in_gst_tax_type(self):
