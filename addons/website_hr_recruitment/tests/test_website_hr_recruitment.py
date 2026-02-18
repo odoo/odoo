@@ -110,6 +110,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(applicant.partner_name, 'Georges')
         self.assertEqual(applicant.email_from, 'georges@test.com')
         self.assertEqual(applicant.partner_phone, '12345678')
+        self.assertEqual(applicant.medium_id, self.env['utm.mixin']._utm_ref('utm.utm_medium_website'))
         self.assertTrue(
             any(
                 html2plaintext(message.body) == 'Other Information:\n___________\n\ndescription : This is a short introduction\nAdditional info : Test'
