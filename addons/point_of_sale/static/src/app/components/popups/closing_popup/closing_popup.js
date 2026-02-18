@@ -8,16 +8,16 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
-import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
+import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
 
 const { DateTime } = luxon;
 
 export class ClosePosPopup extends Component {
-    static components = { SaleDetailsButton, Input, Dialog, PaymentMethodBreakdown };
+    static components = { SaleDetailsButton, Dialog, PaymentMethodBreakdown, CashInput };
     static template = "point_of_sale.ClosePosPopup";
     static props = [
         "orders_details",
@@ -141,6 +141,17 @@ export class ClosePosPopup extends Component {
             this.state.notes = "";
             this.moneyDetails = null;
         }
+    }
+    handleCashCountBlur() {
+        const counted = this.state.payments[this.props.default_cash_details.id].counted;
+        this.setManualCashInput(counted);
+        this.state.payments[this.props.default_cash_details.id].counted =
+            this.env.utils.parseAndFormatCurrency(counted);
+    }
+    handlePaymentCountBlur(paymentId) {
+        this.state.payments[paymentId].counted = this.env.utils.parseAndFormatCurrency(
+            this.state.payments[paymentId].counted
+        );
     }
     getDifference(paymentId) {
         const counted = this.state.payments[paymentId].counted;

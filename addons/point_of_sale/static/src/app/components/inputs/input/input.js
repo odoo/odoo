@@ -29,6 +29,8 @@ export class Input extends TModelInput {
         callback: { type: Function, optional: true },
         isOpenCallback: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
+        onBlur: { type: Function, optional: true },
+        onClick: { type: Function, optional: true },
     };
     static defaultProps = {
         class: "",

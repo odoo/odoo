@@ -62,11 +62,11 @@
                     <div class="col-12" t-if="pos.config.cash_control" t-att-class="{'col-md-6': !this.isOnePmUsed()}">
                         <label class="form-label">Cash Count</label>
                         <div class="d-flex w-100 gap-2 mt-1">
-                            <Input
-                                tModel="[state.payments[props.default_cash_details.id], 'counted']"
-                                callback.bind="(value) => this.setManualCashInput(value)"
-                                isValid.bind="env.utils.isValidFloat"
+                            <CashInput
                                 class="'cash-input w-100'"
+                                tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                                isValid="(val) => env.utils.isValidFloat(val)"
+                                onBlur="() => this.handleCashCountBlur()"
                             />
                             <button
                                 class="icon fa fa-money btn btn-secondary"
@@ -80,10 +80,11 @@
                                 <t t-esc="pm.name" /> Count
                             </label>
                             <div class="d-flex w-100 gap-2 mt-1">
-                                <Input
-                                    tModel="[state.payments[pm.id], 'counted']"
-                                    isValid.bind="env.utils.isValidFloat"
+                                <CashInput
                                     class="'w-100'"
+                                    tModel="[state.payments[pm.id], 'counted']"
+                                    isValid="(val) => env.utils.isValidFloat(val)"
+                                    onBlur="() => this.handlePaymentCountBlur(pm.id)"
                                 />
                                 <t t-if="pm.type == 'cash'">
                                     <button
