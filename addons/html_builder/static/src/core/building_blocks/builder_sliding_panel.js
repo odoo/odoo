@@ -34,6 +34,7 @@ export class BuilderSlidingPanel extends Component {
         this.openButtonRef = useRef("openButton");
         this.state = useState({
             optionContainerName: "",
+            displayClass: "d-none",
         });
         onMounted(() => {
             this.optionsContainerEls = document.querySelectorAll("div.options-container");
@@ -48,7 +49,7 @@ export class BuilderSlidingPanel extends Component {
             }
         });
         useHotkey("escape", this.hideSlidingPanel.bind(this), {
-            isAvailable: () => !this.slidingPanelRef.el.classList.contains("d-none"),
+            isAvailable: () => this.state.displayClass !== "d-none",
         });
         onWillUnmount(() => {
             clearTimeout(this.updateDisplayTimeout);
@@ -56,31 +57,19 @@ export class BuilderSlidingPanel extends Component {
         });
     }
 
-    updateDisplay(className) {
-        const slidingPanelEl = this.slidingPanelRef.el;
-        if (!slidingPanelEl) {
-            return;
-        }
-        slidingPanelEl.classList.remove(
-            "d-none",
-            "d-block",
-            "hb-panel-slide-in",
-            "hb-panel-slide-out"
-        );
-        slidingPanelEl.classList.add(className);
-    }
-
     showSlidingPanel() {
-        this.updateDisplay("hb-panel-slide-in");
-        this.updateDisplayTimeout = setTimeout(() => this.updateDisplay("d-block"), 200);
+        clearTimeout(this.updateDisplayTimeout);
+        this.state.displayClass = "hb-panel-slide-in";
+        this.updateDisplayTimeout = setTimeout(() => (this.state.displayClass = "d-block"), 200);
     }
 
     hideSlidingPanel() {
-        this.updateDisplay("hb-panel-slide-out");
+        clearTimeout(this.updateDisplayTimeout);
+        this.state.displayClass = "hb-panel-slide-out";
         // We set a timeout slightly shorter than 200 because some flicker may
         // happen otherwise.
         this.updateDisplayTimeout = setTimeout(() => {
-            this.updateDisplay("d-none");
+            this.state.displayClass = "d-none";
             this.openButtonRef.el.focus();
         }, 180);
     }

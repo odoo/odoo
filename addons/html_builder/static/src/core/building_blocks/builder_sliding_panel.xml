@@ -10,9 +10,9 @@
         <t t-out="props.textContent"/>
     </button>
     <div t-ref="slidingPanel"
-        class="hb-sliding-panel mb-1 h-100 d-none"
+        class="hb-sliding-panel mb-1 h-100"
         t-on-click="onBackdropClick"
-        t-att-class="{'hb-sliding-panel-dark': props.darkBackground}"
+        t-att-class="state.displayClass + ( props.darkBackground ? ' hb-sliding-panel-dark' : '' )"
     >
         <div class="hb-sliding-panel-content d-flex flex-column" t-att-class="props.fullHeight ? 'h-100' : 'pb-3'">
             <div class="hb-sliding-panel-header">
@@ -23,7 +23,7 @@
                     </button>
                 </div>
             </div>
-            <t t-slot="default" close="this.hideSlidingPanel.bind(this)"/>
+            <t t-if="state.displayClass !== 'd-none'" t-slot="default" close="this.hideSlidingPanel.bind(this)"/>
         </div>
     </div>
 </t>
