@@ -295,6 +295,13 @@ export class MediaDialog extends Component {
     onTabChange(tab) {
         this.state.activeTab = tab;
     }
+
+    async close() {
+        if (this.uploadService) {
+            await this.uploadService.destroyUpload();
+        }
+        await this.props.close();
+    }
 }
 MediaDialog.template = 'web_editor.MediaDialog';
 MediaDialog.defaultProps = {
