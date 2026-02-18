@@ -30,7 +30,9 @@ export class ImageShapeOption extends BaseOptionComponent {
                 showImageShape4: this.isShapeVisible(editingElement, 4),
                 showImageShapeTransform: this.imageShapeOption.isTransformableShape(shape),
                 showImageShapeAnimation: this.imageShapeOption.isAnimableShape(shape),
-                togglableRatio: this.imageShapeOption.isTogglableRatioShape(shape),
+                togglableRatio:
+                    this.imageShapeOption.isTogglableRatioShape(shape) &&
+                    !this.imageShapeOption.originalOrCurrentImageIsGif(editingElement),
             };
         });
     }
