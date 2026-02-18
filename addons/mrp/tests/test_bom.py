@@ -1596,6 +1596,21 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_1.is_outdated_bom, False,
             "Making a modification in the MO shouldn't mark the BoM as updated")
 
+        # Updates the BoM by adding another component).
+        bom.bom_line_ids = [Command.create({'product_id': self.product_1.id, 'product_qty': 1})]
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "new component was added to the BoM, it should be marked as updated")
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.product_qty, 10,
+            "MO's quantity should be kept")
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
+        self.assertEqual(mo_1.workorder_ids.operation_id.id, bom.operation_ids.id)
+        self.assertEqual(mo_1.move_raw_ids.bom_line_id, bom.bom_line_ids)
+        bom.bom_line_ids = bom.bom_line_ids[:-1]
+        # Call "Update BoM" action, it should reset the MO as defined by the BoM.
+        mo_1.action_update_bom()
+
         # Now, adds an operation and a by-product in the BoM.
         bom.byproduct_ids = [Command.create({'product_id': by_product.id, 'product_qty': 2})]
         bom_byproduct = bom.byproduct_ids
