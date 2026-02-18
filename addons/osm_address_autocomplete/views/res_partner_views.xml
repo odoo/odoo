@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='street']" position="attributes">
                 <attribute name="widget">osm_address_autocomplete</attribute>
-                <attribute name="options">{'street': 'street', 'street_number': 'street_number', 'street2': 'street2', 'city': 'city', 'zip': 'zip', 'state_id': 'state_id', 'country_id': 'country_id'}</attribute>
+                <attribute name="options">{"street": "street", "street_number": "street_number", "street2": "street2", "city": "city", "zip": "zip", "state_id": "state_id", "country_id": "country_id"}</attribute>
             </xpath>
             <xpath expr="//field[@name='city']" position="attributes">
                 <attribute name="widget">osm_address_autocomplete</attribute>
-                <attribute name="options">{'street': 'street', 'street_number': 'street_number', 'street2': 'street2', 'city': 'city', 'zip': 'zip', 'state_id': 'state_id', 'country_id': 'country_id'}</attribute>
+                <attribute name="options">{"street": "street", "street_number": "street_number", "street2": "street2", "city": "city", "zip": "zip", "state_id": "state_id", "country_id": "country_id"}</attribute>
             </xpath>
             <!-- Agregar campos de latitude y longitude hidden -->
             <xpath expr="//field[@name='state_id']" position="after">

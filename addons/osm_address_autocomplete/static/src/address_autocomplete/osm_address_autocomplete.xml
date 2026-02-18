@@ -5,6 +5,7 @@
         <AutoComplete
             value="props.record.data[props.name] || ''"
             sources="sources"
+            onSelect.bind="onSelect"
             placeholder="props.placeholder"
             searchOnInputClick="false"
             inputDebounceDelay="350"

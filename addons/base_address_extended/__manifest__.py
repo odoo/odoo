@@ -4,13 +4,8 @@
     'name': 'Extended Addresses with OpenStreetMap',
     'summary': 'Add extra fields on addresses and integrate OpenStreetMap for geolocation',
     'sequence': 19,
-<<<<<<< HEAD
-    'version': '1.1',
-    'category': 'Hidden',
-=======
     'version': '2.0',
     'category': 'Sales/Sales',
->>>>>>> 5ec06c51f0d1 (update contactos y cuentas)
     'description': """
 Extended Addresses Management with OpenStreetMap Integration
 ============================================================
@@ -34,9 +29,6 @@ It is primarily used for EDIs that might need a special city code.
         'views/res_country_view.xml',
         'views/res_partner_map_views.xml',
     ],
-<<<<<<< HEAD
-    'depends': ['base', 'contacts'],
-=======
     'assets': {
         'web.assets_backend': [
             'base_address_extended/static/src/js/partner_map_handler.js',
@@ -47,7 +39,6 @@ It is primarily used for EDIs that might need a special city code.
     },
     'depends': ['base', 'contacts', 'web'],
     'author': 'Odoo S.A.',
->>>>>>> 5ec06c51f0d1 (update contactos y cuentas)
     'license': 'LGPL-3',
     'installable': True,
 }

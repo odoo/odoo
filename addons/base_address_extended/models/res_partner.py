@@ -57,8 +57,6 @@ class Partner(models.Model):
             self.city = False
             self.zip = False
             self.state_id = False
-<<<<<<< HEAD
-=======
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
@@ -229,4 +227,4 @@ class Partner(models.Model):
                         _logger.warning(f"Could not geocode partner {partner.name}: {str(e)}")
         
         return result
->>>>>>> 5ec06c51f0d1 (update contactos y cuentas)
+

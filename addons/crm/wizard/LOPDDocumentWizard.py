@@ -5,15 +5,19 @@ class LOPDDocumentWizard(models.TransientModel):
     _description = 'Asistente para importar documento LOPD'
 
     partner_id = fields.Many2one('res.partner', string='Contacto', required=True)
+    document_type = fields.Selection(
+        [('lopd', 'LOPD'), ('sepa', 'SEPA')],
+        string='Tipo de documento',
+        required=True,
+        default='lopd',
+    )
     name = fields.Char(string='Nombre del documento', required=True, default='LOPD_Firmada')
     datas = fields.Binary(string='Archivo', required=True)
     filename = fields.Char(string='Nombre del archivo')
 
     def action_import_document(self):
-        """Importa el documento y lo vincula al partner"""
         self.ensure_one()
-        
-        # Crear el adjunto
+
         attachment = self.env['ir.attachment'].create({
             'name': self.name,
             'datas': self.datas,
@@ -21,10 +25,10 @@ class LOPDDocumentWizard(models.TransientModel):
             'res_id': self.partner_id.id,
             'type': 'binary',
         })
-        
-        # Actualizar el partner con el documento
+
+        target_field = 'lopd_document_id' if self.document_type == 'lopd' else 'billing_sepa_document_id'
         self.partner_id.write({
-            'lopd_document_id': attachment.id,
+            target_field: attachment.id,
         })
-        
+
         return {'type': 'ir.actions.act_window_close'}

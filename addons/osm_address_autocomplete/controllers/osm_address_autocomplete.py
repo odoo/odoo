@@ -2,6 +2,7 @@
 
 import logging
 import re
+import time
 
 import requests
 
@@ -11,11 +12,14 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 NOMINATIM_ENDPOINT = "https://nominatim.openstreetmap.org"
-TIMEOUT = 6.0
-MAX_RETRIES = 2
+TIMEOUT = 2.5
+MAX_RETRIES = 0
 
 
 class OSMAddressAutoCompleteController(http.Controller):
+
+    def _is_retryable_http_status(self, status_code):
+        return status_code in (408, 409, 425, 429, 500, 502, 503, 504)
 
     def _extract_lat_lon(self, result):
         if not isinstance(result, dict):
@@ -50,8 +54,34 @@ class OSMAddressAutoCompleteController(http.Controller):
     def _get_user_agent(self):
         return request.env["ir.config_parameter"].sudo().get_param(
             "osm_address_autocomplete.user_agent",
-            "OdooOSMAutocomplete/1.0 (contact: admin@example.com)",
+            "OdooOSMAutocomplete/1.0 (+https://odoo.local; contact: admin@localhost)",
         )
+
+    def _get_nominatim_endpoint(self):
+        return request.env["ir.config_parameter"].sudo().get_param(
+            "osm_address_autocomplete.endpoint",
+            NOMINATIM_ENDPOINT,
+        )
+
+    def _get_timeout(self):
+        value = request.env["ir.config_parameter"].sudo().get_param(
+            "osm_address_autocomplete.timeout",
+            str(TIMEOUT),
+        )
+        try:
+            return max(1.0, float(value))
+        except (TypeError, ValueError):
+            return TIMEOUT
+
+    def _get_max_retries(self):
+        value = request.env["ir.config_parameter"].sudo().get_param(
+            "osm_address_autocomplete.max_retries",
+            str(MAX_RETRIES),
+        )
+        try:
+            return max(0, int(value))
+        except (TypeError, ValueError):
+            return MAX_RETRIES
 
     def _get_accept_language(self):
         lang = request.env.user.lang or "es_ES"
@@ -68,18 +98,32 @@ class OSMAddressAutoCompleteController(http.Controller):
             "User-Agent": self._get_user_agent(),
             "Accept-Language": self._get_accept_language(),
         }
+        endpoint = self._get_nominatim_endpoint().rstrip("/")
+        timeout = self._get_timeout()
+        max_retries = self._get_max_retries()
         last_exc = None
-        for _ in range(MAX_RETRIES + 1):
+        for attempt in range(max_retries + 1):
             try:
-                return requests.get(
-                    f"{NOMINATIM_ENDPOINT}{route}",
+                response = requests.get(
+                    f"{endpoint}{route}",
                     params=params,
                     headers=headers,
-                    timeout=TIMEOUT,
-                ).json()
-            except (TimeoutError, ValueError, requests.RequestException) as exc:
+                    timeout=(2.5, timeout),
+                )
+                response.raise_for_status()
+                return response.json()
+            except requests.HTTPError as exc:
                 last_exc = exc
-        _logger.error("OSM request failed after retries: %s", last_exc)
+                status = exc.response.status_code if exc.response else None
+                if status and not self._is_retryable_http_status(status):
+                    break
+                if attempt < max_retries:
+                    time.sleep(min(0.3 * (attempt + 1), 0.9))
+            except (ValueError, requests.RequestException) as exc:
+                last_exc = exc
+                if attempt < max_retries:
+                    time.sleep(min(0.3 * (attempt + 1), 0.9))
+        _logger.warning("OSM request failed: %s", last_exc)
         raise last_exc
 
     def _build_simplified_display_for_search(self, address):
@@ -296,7 +340,7 @@ class OSMAddressAutoCompleteController(http.Controller):
         try:
             results = self._nominatim_get("/search", params)
         except (TimeoutError, ValueError, requests.RequestException) as exc:
-            _logger.error("OSM autocomplete search failed: %s", exc)
+            _logger.info("OSM autocomplete search unavailable: %s", exc)
             return {"results": []}
 
         unique_results = []
@@ -324,7 +368,7 @@ class OSMAddressAutoCompleteController(http.Controller):
         try:
             result = self._nominatim_get("/details", params)
         except (TimeoutError, ValueError, requests.RequestException) as exc:
-            _logger.error("OSM autocomplete details failed: %s", exc)
+            _logger.info("OSM autocomplete details unavailable: %s", exc)
             return {}
 
         address = result.get("address") or {}
@@ -355,8 +399,6 @@ class OSMAddressAutoCompleteController(http.Controller):
 
         # Obtener coordenadas del resultado de Nominatim
         lat, lon = self._extract_lat_lon(result)
-        _logger.info(f"Nominatim raw result lat/lon: {result.get('lat')} / {result.get('lon')}")
-
         if lat is None or lon is None:
             try:
                 lookup = self._nominatim_get(
@@ -368,7 +410,7 @@ class OSMAddressAutoCompleteController(http.Controller):
                     },
                 )
             except (TimeoutError, ValueError, requests.RequestException) as exc:
-                _logger.error("OSM lookup failed: %s", exc)
+                _logger.info("OSM lookup unavailable: %s", exc)
                 lookup = None
 
             if isinstance(lookup, list) and lookup:
@@ -391,7 +433,7 @@ class OSMAddressAutoCompleteController(http.Controller):
                         },
                     )
                 except (TimeoutError, ValueError, requests.RequestException) as exc:
-                    _logger.error("OSM search fallback failed: %s", exc)
+                    _logger.info("OSM search fallback unavailable: %s", exc)
                     search = None
 
                 if isinstance(search, list) and search:
@@ -403,17 +445,12 @@ class OSMAddressAutoCompleteController(http.Controller):
         if lat is not None and lon is not None:
             standard["latitude"] = lat
             standard["longitude"] = lon
-            _logger.info(f"Coordinates extracted: latitude={standard['latitude']}, longitude={standard['longitude']}")
-        else:
-            _logger.warning("No coordinates found in result")
-
-        _logger.info(f"OSM Details Response (complete): {standard}")
         return standard
 
-    @http.route("/osm/autocomplete/address", methods=["POST"], type="jsonrpc", auth="user")
+    @http.route("/osm/autocomplete/address", methods=["POST"], type="json", auth="user")
     def autocomplete_address(self, partial_address, country_id=None, city_name=None, state_name=None):
         return self._perform_place_search(partial_address, country_id=country_id, city_name=city_name, state_name=state_name)
 
-    @http.route("/osm/autocomplete/details", methods=["POST"], type="jsonrpc", auth="user")
+    @http.route("/osm/autocomplete/details", methods=["POST"], type="json", auth="user")
     def autocomplete_details(self, place_id, country_id=None):
         return self._perform_place_details(place_id)

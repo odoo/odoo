@@ -98,26 +98,25 @@
             <field name="view_id" ref="crm_lead_view_pivot"/>
             <field name="act_window_id" ref="action_report_crm_lead_salesteam"/>
         </record>
-        <record id="action_report_crm_lead_salesteam_view_tree" model="ir.actions.act_window.view">
+        <!--<record id="action_report_crm_lead_salesteam_view_tree" model="ir.actions.act_window.view">
             <field name="sequence">4</field>
             <field name="view_mode">list</field>
             <field name="view_id" ref="crm_lead_view_tree_reporting"/>
             <field name="act_window_id" ref="action_report_crm_lead_salesteam"/>
-        </record>
+        </record>-->
 
-       <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
+       <!--<record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
             <field name="context">{
                 'search_default_team_id': [active_id],
-                'list_view_ref': 'crm.crm_lead_view_tree_opportunity_reporting',
                 'search_default_filter_opportunity': True,
                 'search_default_filter_create_date': 1}</field>
             <field name="domain">[]</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the channels of the sales pipeline.</field>
-        </record>
+        </record>-->
 
         <record id="crm_team_view_tree" model="ir.ui.view">
             <field name="name">crm.team.list.inherit.crm</field>
@@ -319,20 +318,8 @@
                                 Leads
                             </a>
                         </div>
-                        <div t-if="record.use_opportunities.raw_value">
-                            <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
-                                Opportunities
-                            </a>
-                        </div>
                     </xpath>
 
-                    <xpath expr="//div[@name='manage_reports']/div[@name='o_team_kanban_report_separator']" position="after">
-                        <div t-if="record.use_opportunities.raw_value">
-                            <a name="%(crm.crm_activity_report_action_team)d" type="action">
-                                Activities
-                            </a>
-                        </div>
-                    </xpath>
                 </data>
             </field>
         </record>

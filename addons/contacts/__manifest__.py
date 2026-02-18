@@ -3,10 +3,10 @@
 
 
 {
-    'name': 'Contacts',
+    'name': 'Clientes',
     'category': 'Sales/CRM',
     'sequence': 150,
-    'summary': 'Centralize your address book',
+    'summary': 'Gestiona clientes, cuentas y contactos',
     'description': """
 This module gives you a quick view of your contacts directory, accessible from your home page.
 You can track your vendors, customers and other contacts.

@@ -64,6 +64,12 @@ export class OSMAddressAutoComplete extends CharField {
         });
     }
 
+    onSelect(option) {
+        if (option && typeof option.onSelect === "function") {
+            option.onSelect();
+        }
+    }
+
     _parseStreetAndNumber(text) {
         if (!text || typeof text !== "string") {
             return { street: null, number: null };
@@ -106,17 +112,25 @@ export class OSMAddressAutoComplete extends CharField {
                         stateName = stateName.display_name || stateName[1] || "";
                     }
 
-                    const suggestions = await rpc("/osm/autocomplete/address", {
-                        partial_address: request,
-                        country_id: countryId || null,
-                        city_name: cityName.trim() || null,
-                        state_name: stateName.toString().trim() || null,
-                    });
+                    try {
+                        const suggestions = await Promise.race([
+                            rpc("/osm/autocomplete/address", {
+                                partial_address: request,
+                                country_id: countryId || null,
+                                city_name: cityName.trim() || null,
+                                state_name: stateName.toString().trim() || null,
+                            }),
+                            new Promise((resolve) => setTimeout(() => resolve({ results: [] }), 2500)),
+                        ]);
 
-                    return (suggestions.results || []).map((result) => ({
-                        label: result.formatted_address,
-                        onSelect: () => this.selectAddressProposition(result, countryId || false),
-                    }));
+                        const mapped = (suggestions?.results || []).map((result) => ({
+                            label: result.formatted_address,
+                            onSelect: () => this.selectAddressProposition(result, countryId || false),
+                        }));
+                        return mapped;
+                    } catch {
+                        return [];
+                    }
                 },
                 optionSlot: "option",
                 placeholder: _t("Searching for addresses..."),
@@ -133,12 +147,18 @@ export class OSMAddressAutoComplete extends CharField {
             }
         }
 
-        const address = await rpc("/osm/autocomplete/details", {
-            place_id: option.place_id,
-            country_id: countryId || null,
-        });
-
-        console.log("📍 Address Response from Backend:", address);
+        let address = {};
+        try {
+            address = await Promise.race([
+                rpc("/osm/autocomplete/details", {
+                    place_id: option.place_id,
+                    country_id: countryId || null,
+                }),
+                new Promise((resolve) => setTimeout(() => resolve({}), 3000)),
+            ]);
+        } catch {
+            address = {};
+        }
 
         if (!address || !Object.keys(address).length) {
             if (option && option.label) {
@@ -170,7 +190,6 @@ export class OSMAddressAutoComplete extends CharField {
             
             // Solo procesar si el campo existe en el modelo
             if (!(recordFieldName in fields)) {
-                console.warn(`⚠️ Field ${recordFieldName} not in model`);
                 return;
             }
             
@@ -209,7 +228,6 @@ export class OSMAddressAutoComplete extends CharField {
             }
             
             if (value === null || value === undefined || value === "") {
-                console.log(`⚠️ No value for ${fieldName}`);
                 return;
             }
             
@@ -218,25 +236,18 @@ export class OSMAddressAutoComplete extends CharField {
                 if (Array.isArray(value)) {
                     value = { id: value[0], display_name: value[1] };
                 } else if (typeof value === "string") {
-                    console.log(`⚠️ Skipping ${recordFieldName} because value is not a valid many2one`);
                     return;
                 }
             }
-            
-            console.log(`✅ Setting ${recordFieldName} = `, value);
+
             valuesToUpdate[recordFieldName] = value;
         });
-        
-        console.log("📦 Values to Update:", valuesToUpdate);
-        
+
         if (Object.keys(valuesToUpdate).length > 0) {
             this.props.record.update(valuesToUpdate);
             if (selectedStreet && this.props.name === streetFieldName && this.input.el) {
                 this.input.el.value = selectedStreet;
             }
-            console.log("✅ Record updated!");
-        } else {
-            console.warn("❌ No values to update");
         }
     }
 }
