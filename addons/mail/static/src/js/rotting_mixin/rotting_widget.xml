@@ -10,7 +10,7 @@
     <t t-name="mail.Many2OneFieldRotting">
         <div class="d-inline-flex">
             <Many2One t-props="m2oProps"/>
-            <span class="badge rounded-pill text-bg-danger ms-2" t-if="props.record.data.is_rotting">
+            <span class="badge rounded-pill text-bg-danger ms-2 flex-shrink-0" t-if="props.record.data.is_rotting">
                 <t t-out="dayCount"/>
             </span>
 

@@ -17,6 +17,7 @@ export class BadgeSelectionField extends Component {
             validate: (s) => ["sm", "md", "lg"].includes(s),
             default: "md",
         },
+        nowrap: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -116,11 +117,19 @@ export const badgeSelectionField = {
             ],
             default: "md",
         },
+        {
+            label: "No wrap",
+            name: "nowrap",
+            type: "boolean",
+            help: _t("Ensure badges are displayed inline by preventing flex wrap"),
+            default: false,
+        },
     ],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: (fieldInfo, dynamicInfo) => ({
         domain: dynamicInfo.domain,
         size: fieldInfo.options.size,
+        nowrap: fieldInfo.options.nowrap,
     }),
 };
 

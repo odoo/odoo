@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BadgeSelectionField">
-        <div class="d-flex flex-wrap gap-1">
+        <div class="d-flex gap-1" t-att-class="{'flex-wrap': !props.inline}">
             <t t-if="props.readonly">
                 <span t-esc="string" t-att-raw-value="value" />
             </t>
