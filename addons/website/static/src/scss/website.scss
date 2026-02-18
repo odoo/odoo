@@ -1142,15 +1142,20 @@ header {
     }
 
     nav.navbar {
-        @if o-website-value('menu-border-width') {
+        $-menu-border-width: o-website-value('menu-border-width');
+        @if $-menu-border-width {
+            // When the header should only have a bottom border, only take the
+            // first value of the variable 'menu-border-width' to behave as if
+            // the input only accepted one number.
+            $-menu-border-bottom-width: nth($-menu-border-width, 1); 
             border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
-            border-width: 0 0 o-website-value('menu-border-width') 0 !important;
+            border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
             &.o_border_right_only {
-                border-width: 0 o-website-value('menu-border-width') 0 0 !important;
+                border-width: 0 $-menu-border-bottom-width 0 0 !important;
             }
             &.o_full_border {
-                border-width: o-website-value('menu-border-width') !important;
+                border-width: $-menu-border-width !important;
             }
         }
         border-radius: o-website-value('menu-border-radius') !important;
