@@ -54,6 +54,14 @@ registry.category("web_tour.tours").add("message_actions_tour", {
             trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
             run: "click",
         },
+        // If it fails here, it means the edited message has not been fetched correctly.
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message:contains(Message content changed)",
+            run: function () {
+                window.location.reload();
+            },
+            expectUnloadPage: true,
+        },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(Message content changed)",
             run: "hover && click #chatterRoot:shadow button[title='Expand']",
