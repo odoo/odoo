@@ -112,7 +112,8 @@ class StockMove(models.Model):
                 self.quantity, self.purchase_line_id.product_uom, rounding_method='HALF-UP'
             )
             batch_moves = self._get_batch_moves()
-            for move in batch_moves:
+            same_product_moves = self.picking_id.move_ids.filtered(lambda m: m.product_id == self.product_id)
+            for move in (batch_moves | same_product_moves):
                 if move == self or move.state != 'done' or move.purchase_line_id != self.purchase_line_id:
                     continue
                 qty_received -= move.product_uom._compute_quantity(

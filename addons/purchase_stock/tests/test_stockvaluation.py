@@ -3957,3 +3957,34 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'quantity': 20.0, 'unit_cost': 1.0, 'value': 20},
             {'quantity': 30.0, 'unit_cost': 1.0, 'value': 30},
         ])
+
+    def test_multiple_move_same_prod_svl(self):
+        """Check that when a picking has multiple move of the same product
+        the svls are created with correct values.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+        self.product1.standard_price = 1.0
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 100.0,
+                    'price_unit': 1.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        self._bill(po)
+        receipt_1 = po.picking_ids[0]
+        receipt_1.move_ids.description_picking = "some other descr"
+        po.order_line.product_qty = 105
+        receipt_1.button_validate()
+        self.assertRecordValues(receipt_1.move_ids.stock_valuation_layer_ids.sorted('quantity'), [
+            {'quantity': 5.0, 'unit_cost': 1.0, 'value': 5},
+            {'quantity': 100.0, 'unit_cost': 1.0, 'value': 100},
+        ])
