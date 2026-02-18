@@ -6,7 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 export class SaleUpdateLineButton extends Interaction {
     static selector = ".o_portal_sale_sidebar";
     dynamicContent = {
-        "a.js_update_line_json": {
+        "button.js_update_line_json": {
             "t-on-click.prevent.withTarget": this.onUpdateLineClick,
         },
         ".js_quantity": {

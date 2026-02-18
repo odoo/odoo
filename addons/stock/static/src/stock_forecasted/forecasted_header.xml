@@ -6,14 +6,14 @@
                 <h3 name="product_name">
                     <t t-if="props.docs.product_templates">
                         <t t-foreach="props.docs.product_templates" t-as="product_template" t-key='product_template.id'>
-                            <a href="#"
+                            <button class="btn btn-link p-0 fs-3"
                             t-on-click.prevent="() => this.props.openView('product.template', 'form', product_template.id)"
                             t-out="product_template.display_name"/>
                         </t>
                     </t>
                     <t t-elif="props.docs.product_variants">
                         <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
-                            <a href="#"
+                            <button class="btn btn-link p-0 fs-3"
                             t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)"
                             t-out="product_variant.display_name"/>
                         </t>
@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-md-auto text-center" name="on_hand">
                     <div class="h3">
-                        <a href="#"
+                        <button class="btn btn-link p-0 fs-3 lh-1"
                             t-on-click.prevent="() => this._onClickInventory()"
                            t-out="_formatFloat(this.quantityOnHand)"/>
                     </div>

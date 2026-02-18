@@ -6,12 +6,12 @@
             <tr class="bg-light">
                 <th>
                     <i t-if="props.source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
-                    <a href="#" t-on-click.prevent="() => this.onClickLink(props.source[0].model, props.source[0].id, 'form')" t-out="props.source[0].name"/>
+                    <button class="btn btn-link p-0" t-on-click.prevent="() => this.onClickLink(props.source[0].model, props.source[0].id, 'form')" t-out="props.source[0].name"/>
                     <span t-if="props.source.length > 1">
-                        (<a href="#" t-on-click.prevent="() => this.onClickLink(props.source[1].model, props.source[1].id, 'form')" t-out="props.source[1].name"/>)
+                        (<button class="btn btn-link p-0" t-on-click.prevent="() => this.onClickLink(props.source[1].model, props.source[1].id, 'form')" t-out="props.source[1].name"/>)
                     </span>
                     <span t-if="props.source[0].model == 'stock.picking' and props.source[0].partner_id">:
-                        <a href="#" t-on-click.prevent="() => this.onClickLink('res.partner', props.source[0].partner_id, 'form')" t-out="props.source[0].partner_name"/>
+                        <button class="btn btn-link p-0" t-on-click.prevent="() => this.onClickLink('res.partner', props.source[0].partner_id, 'form')" t-out="props.source[0].partner_name"/>
                     </span>
                 </th>
                 <th>Expected Delivery: <t t-esc="props.scheduledDate"/></th>
