@@ -2573,6 +2573,8 @@ class MrpProduction(models.Model):
         # For draft MO, all the work will be done by compute methods.
         # For cancelled and done MO, we don't want to do anything more than assinging the BoM.
         if self.state == 'draft' and self.bom_id == bom:
+            # Only remove manual lines (not coming from BoM)
+            workorders_to_unlink = workorders_to_unlink.filtered(lambda w: not w.operation_id)
             # Empties `bom_id` field so when the BoM is reassigns to this field, depending computes
             # will be triggered (doesn't happen if the field's value doesn't change).
             self.bom_id = False
