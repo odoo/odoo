@@ -374,9 +374,38 @@
             <t t-if="question.question_type == 'scale'" t-call="survey.question_scale"/>
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
             <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
+            <t t-if="question.question_type == 'upload_file'" t-call="survey.question_upload_file"/>
             <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
                  border-0 py-0 px-3 alert alert-danger mt-2 #{'slide_in' if is_post_submit_question else ''}" role="alert">
                 <span t-if="is_post_submit_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="question_upload_file" name="Question: upload file">
+        <div class="o_survey_upload_container">
+            <div class="o_survey_upload_area">
+                <input type="file"
+                    t-att-data-question-type="question.question_type"
+                    id="fileInput"
+                    t-att-name="question.id"
+                    class="d-none o_survey_file_input"
+                    accept="image/*,application/pdf"/>
+
+                <label class="o_survey_upload_label">
+                    <i class="fa fa-cloud-upload fa-3x"></i>
+                    <p class="o_survey_upload_text">
+                        <strong>Choose file</strong> or drag here
+                    </p>
+                    <small class="o_survey_upload_hint">Max 1 file • 10MB • JPG, PNG, PDF</small>
+                </label>
+            </div>
+
+            <div class="o_survey_uploaded_files mt-3"></div>
+            <div t-if='question.comments_allowed'>
+                <textarea type="text" class="form-control o_survey_question_text_box o_survey_comment bg-transparent rounded-0 p-0 mt-3"
+                        t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"
+                        t-att-name="'%s_%s' % (question.id, 'comment')"><t t-out="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>

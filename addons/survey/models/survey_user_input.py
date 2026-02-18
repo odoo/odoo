@@ -302,6 +302,8 @@ class SurveyUser_Input(models.Model):
             self._save_line_choice(question, old_answers, answer, comment)
         elif question.question_type == 'matrix':
             self._save_line_matrix(question, old_answers, answer, comment)
+        elif question.question_type == 'upload_file':
+            self._save_line_uploaded_files(question, old_answers, answer, comment)
         else:
             raise AttributeError(question.question_type + ": This type of question has no saving function")
 
@@ -368,6 +370,8 @@ class SurveyUser_Input(models.Model):
             vals['value_numerical_box'] = float(answer)
         elif answer_type == 'scale':
             vals['value_scale'] = int(answer)
+        elif answer_type == 'upload_file':
+            vals['value_attachment_id'] = int(answer)
         else:
             vals['value_%s' % answer_type] = answer
         return vals
@@ -380,6 +384,27 @@ class SurveyUser_Input(models.Model):
             'answer_type': 'char_box',
             'value_char_box': comment,
         }
+
+    def _save_line_uploaded_files(self, question, old_answers, answer, comment):
+        self.ensure_one()
+
+        if old_answers:
+            old_answers.value_attachment_id.sudo().unlink()
+            old_answers.value_attachment_id = self.env['ir.attachment'].browse(answer).exists() or False
+            if old_answers.value_attachment_id:
+                old_answers.value_attachment_id.sudo().write({
+                    'res_model': 'survey.user_input',
+                    'res_id': self.id,
+                })
+            return old_answers
+        else:
+            vals = self._get_line_answer_values(question, answer, question.question_type)
+            user_input_line = self.env['survey.user_input.line'].create(vals)
+            user_input_line.value_attachment_id.sudo().write({
+                'res_model': 'survey.user_input',
+                'res_id': self.id,
+            })
+            return user_input_line
 
     # ------------------------------------------------------------
     # STATISTICS / RESULTS
@@ -739,13 +764,15 @@ class SurveyUser_InputLine(models.Model):
         ('scale', 'Number'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('suggestion', 'Suggestion')], string='Answer Type')
+        ('suggestion', 'Suggestion'),
+        ('upload_file', 'Upload File')], string='Answer Type')
     value_char_box = fields.Char('Text answer')
     value_numerical_box = fields.Float('Numerical answer')
     value_scale = fields.Integer('Scale value')
     value_date = fields.Date('Date answer')
     value_datetime = fields.Datetime('Datetime answer')
     value_text_box = fields.Text('Free Text answer')
+    value_attachment_id = fields.Many2one('ir.attachment', string='Uploaded File')
     suggested_answer_id = fields.Many2one('survey.question.answer', string="Suggested answer")
     matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
     # scoring
@@ -776,6 +803,8 @@ class SurveyUser_InputLine(models.Model):
                     line.display_name = f'{line.suggested_answer_id.value}: {line.matrix_row_id.value}'
                 else:
                     line.display_name = line.suggested_answer_id.value
+            elif line.answer_type == 'upload_file' and line.value_attachment_id:
+                line.display_name = line.value_attachment_id.name
 
             if not line.display_name:
                 line.display_name = _('Skipped')
@@ -857,11 +886,12 @@ class SurveyUser_InputLine(models.Model):
 
             if line.answer_type == 'suggestion':
                 field_name = 'suggested_answer_id'
+            elif line.answer_type == 'upload_file':
+                field_name = 'value_attachment_id'
             elif line.answer_type:
                 field_name = 'value_%s' % line.answer_type
             else:  # skipped
                 field_name = False
-
             if field_name and not line[field_name]:
                 raise ValidationError(_('The answer must be in the right type'))
 

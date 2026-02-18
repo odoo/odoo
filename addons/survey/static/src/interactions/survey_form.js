@@ -48,6 +48,19 @@ export class SurveyForm extends Interaction {
         ".o_survey_breadcrumb_container": {
             "t-att-class": () => ({ "d-none": !this.showBreadcrumb }),
         },
+        ".o_survey_upload_area": {
+            "t-on-dragenter": this.onDragEnter,
+            "t-on-dragover": this.onDragOver,
+            "t-on-drop": this.onFileDrop,
+            "t-on-click": this.onUploadAreaClick,
+            "t-on-dragleave": this.onDragLeave,
+        },
+        ".o_survey_uploaded_file_remove": {
+            "t-on-click": this.onRemoveUploadedFile,
+        },
+        "#fileInput": {
+            "t-on-change": this.onFileInputChange,
+        },
         _background: {
             "t-att-class": () => ({ o_survey_background_transition: this.background.transition }),
             "t-att-style": () => {
@@ -94,6 +107,7 @@ export class SurveyForm extends Interaction {
             image: "",
             shouldUpdate: false,
         };
+        this._fileMetaByQuestion = {};
 
         // NOTE: the following few lines are only there to solve a bug where when
         // the user changes the language of the survey and the page is reloaded,
@@ -349,6 +363,168 @@ export class SurveyForm extends Interaction {
         }
     }
 
+    onDragEnter(ev) {
+        ev.preventDefault();
+        const areaEl = ev.currentTarget;
+        areaEl.classList.add("drag-mode", "drag-over");
+    }
+
+    onDragOver(ev) {
+        ev.preventDefault();
+    }
+
+    _validateSingleFile(files) {
+        if (!files.length) return null;
+
+        if (files.length > 1) {
+            this.services.notification.add(
+                _t("Only one file can be uploaded at a time. Extra files were ignored."),
+                { type: "warning" }
+            );
+        }
+
+        const file = files[0];
+        const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+
+        if (file.size > MAX_SIZE) {
+            this.services.notification.add(
+                _t(
+                    "The file %s is too large. Maximum allowed size is 10 MB.",
+                    file.name
+                ),
+                { type: "warning" }
+            );
+            return null;
+        }
+
+        return file;
+    }
+
+    _syncFileInputAndPreview(questionId) {
+        const inputEl = this.el.querySelector(`.o_survey_file_input[name="${questionId}"]`);
+        if (!inputEl) return;
+
+        const fileMeta = this._fileMetaByQuestion[questionId];
+
+        if (fileMeta) {
+            const dt = new DataTransfer();
+            dt.items.add(fileMeta.file);
+            inputEl.files = dt.files;
+        } else {
+            inputEl.value = "";
+            return;
+        }
+
+        const container = inputEl.closest(".o_survey_upload_container");
+        if (!container) return;
+
+        const preview = container.querySelector(".o_survey_uploaded_files");
+        if (!preview) return;
+
+        preview.innerHTML = "";
+        const item = document.createElement("div");
+        item.className = "o_survey_uploaded_file_item";
+
+        const info = document.createElement("div");
+        info.className = "o_survey_uploaded_file_info";
+
+        const icon = document.createElement("i");
+        icon.className = "fa fa-file-o o_survey_uploaded_file_icon";
+
+        const name = document.createElement("span");
+        name.className = "o_survey_uploaded_file_name";
+        name.textContent = fileMeta.file.name;
+
+        const remove = document.createElement("i");
+        remove.className = "fa fa-times o_survey_uploaded_file_remove";
+        remove.title = _t("Remove");
+
+
+        info.append(icon, name);
+        item.append(info, remove);
+        preview.append(item);
+    }
+
+    onFileInputChange(ev) {
+        const inputEl = ev.currentTarget;
+        const questionId = Number(inputEl.name);
+        const newFiles = Array.from(inputEl.files || []);
+
+        if (this._fileMetaByQuestion[questionId] && newFiles.length) {
+            this.services.notification.add(
+                _t("You can only upload one file per question."),
+                { type: "warning" }
+            );
+            return;
+        }
+
+        const file = this._validateSingleFile(newFiles);
+        if (!file) {
+            inputEl.value = "";
+            return;
+        }
+
+        this._fileMetaByQuestion[questionId] = { file: file, uploadedId: null };
+        this._syncFileInputAndPreview(questionId);
+    }
+
+    onFileDrop(ev) {
+        ev.preventDefault();
+
+        const areaEl = ev.currentTarget;
+        areaEl.classList.remove("drag-over", "drag-mode");
+
+        const inputEl = areaEl.querySelector(".o_survey_file_input");
+        if (!inputEl) return;
+
+        const questionId = Number(inputEl.getAttribute("name"));
+        if (this._fileMetaByQuestion[questionId]) {
+            this.services.notification.add(
+                _t("You can only upload one file per question."),
+                { type: "warning" }
+            );
+            return;
+        }
+
+        const files = Array.from(ev.dataTransfer.files || []);
+        const file = this._validateSingleFile(files);
+        if (!file) return;
+
+        this._fileMetaByQuestion[questionId] = { file: file, uploadedId: null };
+        this._syncFileInputAndPreview(questionId);
+    }
+
+    onRemoveUploadedFile(ev) {
+        ev.preventDefault();
+
+        const row = ev.currentTarget.closest(".o_survey_uploaded_file_item");
+        if (!row) return;
+
+        const container = row.closest(".o_survey_upload_container");
+        if (!container) return;
+
+        const inputEl = container.querySelector(".o_survey_file_input");
+        if (!inputEl) return;
+
+        const questionId = Number(inputEl.getAttribute("name"));
+
+        if (!this._fileMetaByQuestion[questionId]) return;
+
+        delete this._fileMetaByQuestion[questionId];
+        if (inputEl) inputEl.value = "";
+        const preview = container.querySelector(".o_survey_uploaded_files");
+        if (preview) preview.innerHTML = "";
+    }
+
+    onUploadAreaClick(ev) {
+        ev.currentTarget.querySelector("#fileInput").click();
+    }
+
+    onDragLeave(ev) {
+        const areaEl = ev.currentTarget;
+        areaEl.classList.remove("drag-over", "drag-mode");
+    }
+
     replaceContent(content, locationEl) {
         const parser = new DOMParser();
         const contentEls = parser.parseFromString(content, "text/html").body.children;
@@ -562,7 +738,11 @@ export class SurveyForm extends Interaction {
                     return;
                 }
             }
-            this.prepareSubmitValues(formData, params);
+            const res = await this.prepareSubmitValues(formData, params);
+            if (res?.stop) {
+                this.submitting = false;
+                return;
+            }
         }
 
         if (this.options.sessionInProgress) {
@@ -659,6 +839,14 @@ export class SurveyForm extends Interaction {
         }
         const formContentEl = this.el.querySelector(".o_survey_form_content");
         this.replaceContent(result.survey_content, formContentEl);
+
+        // Rebuild files for ALL upload questions on the page
+        const containers = this.el.querySelectorAll(".o_survey_upload_container");
+
+        containers.forEach(container => {
+            const questionId = Number(container.querySelector(".o_survey_file_input").getAttribute("name"));
+            this._syncFileInputAndPreview(questionId);
+        });
 
         if (result.survey_progress && this.surveyProgressEl) {
             this.replaceContent(result.survey_progress, this.surveyProgressEl);
@@ -883,7 +1071,7 @@ export class SurveyForm extends Interaction {
      * @param {FormData} formData
      * @param {Object} params
      */
-    prepareSubmitValues(formData, params) {
+    async prepareSubmitValues(formData, params) {
         for (const [key, value] of formData) {
             if (["csrf_token", "page_id", "question_id", "token"].includes(key)) {
                 params[key] = value;
@@ -918,8 +1106,53 @@ export class SurveyForm extends Interaction {
                 case "matrix":
                     params = this.prepareSubmitAnswersMatrix(params, el);
                     break;
+                case "upload_file": {
+                    const questionId = el.name;
+                    const fileMeta = this._fileMetaByQuestion[questionId];
+                    if (!fileMeta || fileMeta.uploadedId != null) {
+                        continue;
+                    }
+                    const uploadedAttachmentId = await this.prepareSubmitAttachment(fileMeta.file);
+                    fileMeta.uploadedId = uploadedAttachmentId;
+                    if (!uploadedAttachmentId) {
+                        return { stop: true };
+                    }
+                    params[el.name] = fileMeta.uploadedId;
+                    break;
+                }
             }
         }
+    }
+
+    async prepareSubmitAttachment(file) {
+        const formData = new FormData();
+        formData.append("csrf_token", odoo.csrf_token);
+        formData.append("files", file);
+
+        let res;
+        try {
+            res = await fetch("/survey/upload_files", {
+                method: "POST",
+                body: formData,
+            });
+        } catch {
+            this.services.notification.add(
+                _t("File upload failed."),
+                { type: "danger" }
+            );
+            return false;
+        }
+
+        if (!res.ok) {
+            this.services.notification.add(
+                _t("File upload failed. Please try again."),
+                { type: "danger" }
+            );
+            return false;
+        }
+
+        const result = await res.json();
+        return result.attachment_id;
     }
 
     /**
