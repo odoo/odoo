@@ -43,7 +43,7 @@
                 </button>
             </button>
             <field name="journal_id" position="before">
-                <field name="project_id" groups="project.group_project_user"
+                <field name="project_id" groups="project.group_project_user" required="project_required"
                     context="{'default_allow_billable': True, 'default_partner_id': partner_id, 'order_id': id, 'order_state' : state}"/>
             </field>
         </field>

@@ -35,6 +35,15 @@ class SaleOrder(models.Model):
     project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True), ('is_template', '=', False)], copy=False, index='btree_not_null',
                                  help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
     project_account_id = fields.Many2one('account.analytic.account', related='project_id.account_id')
+    project_required = fields.Boolean(string="Project Required", compute="_compute_project_required")
+
+    @api.depends('order_line.product_id')
+    def _compute_project_required(self):
+        for order in self:
+            order.project_required = False
+            if not any(l.service_tracking in ('project_only', 'task_in_project') for l in order.order_line):
+                if any(l.service_tracking == 'task_global_project' and not l.product_id.project_id for l in order.order_line):
+                    order.project_required = True
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(

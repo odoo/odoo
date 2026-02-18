@@ -419,14 +419,6 @@ class SaleOrderLine(models.Model):
                         so_line._timesheet_create_task(project)
                     so_line._handle_milestones(project)
 
-                elif not project:
-                    raise UserError(_(
-                        "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
-                        "The following product need a project in which to put its task: %(product_name)s",
-                        order=so_line.order_id.name,
-                        product_name=so_line.product_id.name,
-                    ))
-
     def _handle_milestones(self, project):
         self.ensure_one()
         if self.product_id.service_policy != 'delivered_milestones':
