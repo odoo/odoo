@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import uuid
 from datetime import timedelta
 
 import odoo.tests
@@ -183,7 +184,9 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 'amount_paid': 0,
                 'amount_tax': 0,
                 'amount_return': 0,
+                'uuid': uuid.uuid4().hex,
                 'lines': [[0, 0, {
+                    'uuid': uuid.uuid4().hex,
                     'product_id': product.id,
                     'qty': qty,
                     'price_unit': price_unit,
@@ -193,3 +196,58 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 }]],
             }
         }
+
+    def test_preparation_categories_are_loaded(self):
+        """
+        Preparation categories needs to be loaded in the self-ordering interface
+        if there are printers linked to those categories, even if those
+        categories are not available for the self-ordering interface.
+        If a category is missing changes cannot be computed
+        """
+        moda_categ = self.env['pos.category'].create({'name': 'MODA'})
+        stva_categ = self.env['pos.category'].create({'name': 'STVA'})
+        adgu_categ = self.env['pos.category'].create({'name': 'ADGU'})
+        manv_categ = self.env['pos.category'].create({'name': 'MANV'})
+        ltra_categ = self.env['pos.category'].create({'name': 'LTRA'})
+        lowe_categ = self.env['pos.category'].create({'name': 'LOWE'})
+        mool_categ = self.env['pos.category'].create({'name': 'MOOL'})
+        self.cola.pos_categ_ids = [moda_categ.id, stva_categ.id, lowe_categ.id, mool_categ.id, adgu_categ.id, manv_categ.id, ltra_categ.id]
+
+        printer_1 = self.env['pos.printer'].create({
+            'name': 'Preparation Printer',
+            'printer_ip': '127.0.0.1',
+            'printer_type': 'epson_epos',
+            'product_categories_ids': [moda_categ.id, stva_categ.id],
+        })
+
+        printer_2 = self.env['pos.printer'].create({
+            'name': 'Preparation Printer',
+            'printer_ip': '127.0.0.1',
+            'printer_type': 'epson_epos',
+            'product_categories_ids': [adgu_categ.id, manv_categ.id, ltra_categ.id],
+        })
+
+        self.pos_config.write({
+            'use_presets': False,
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'limit_categories': True,
+            'iface_available_categ_ids': [mool_categ.id],
+            'preparation_printer_ids': [printer_1.id, printer_2.id],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        data = self.make_request_to_controller('/pos-self/data/' + str(self.pos_config.id), {
+            'access_token': self.pos_config.access_token,
+        })
+        loaded_category_ids = [category['id'] for category in data['pos.category']]
+        self.assertIn(mool_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
+        self.assertIn(adgu_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
+        self.assertIn(manv_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
+        self.assertIn(ltra_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
+        self.assertIn(moda_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
+        self.assertIn(stva_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
+        self.assertNotIn(lowe_categ.id, loaded_category_ids, "The category not linked to any printer should not be loaded")
+        self.start_tour(self_route, "test_preparation_categories_are_loaded")

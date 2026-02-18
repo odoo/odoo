@@ -20,3 +20,8 @@ class PosConfig(models.Model):
         if self.self_ordering_mode == 'mobile':
             return res or bool(self.self_order_online_payment_method_id)
         return res
+
+    @api.model
+    def _load_pos_self_data_fields(self, pos_config_id):
+        fields = super()._load_pos_self_data_fields(pos_config_id)
+        return fields + ['self_order_online_payment_method_id']

@@ -165,16 +165,16 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
         LandingPage.selectLocation("Test-In"),
         ProductPage.clickCategory("Uncategorised"),
         ProductPage.clickProduct("Office Combo"),
-        ProductPage.clickComboProduct("Desk Organizer"),
-        {
-            trigger: `button:disabled:contains("Next")`,
-        },
-        ...ProductPage.setupAttribute([
-            { name: "Size", value: "M" },
-            { name: "Fabric", value: "Leather" },
+        ...ProductPage.setupCombo([
+            {
+                product: "Desk Organizer",
+                attributes: [
+                    { name: "Size", value: "M" },
+                    { name: "Fabric", value: "Leather" },
+                ],
+            },
         ]),
         Utils.clickBtn("Next"),
-        Utils.clickBtn("Add to cart"),
     ],
 });
 

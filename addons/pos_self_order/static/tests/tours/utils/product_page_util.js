@@ -1,5 +1,4 @@
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function clickProduct(productName) {
     return {
@@ -120,9 +119,8 @@ export function setupCombo(products) {
         steps.push(clickComboProduct(product.product));
 
         if (product.attributes.length > 0) {
-            Utils.checkMissingRequiredsExists();
-            steps.push(...setupAttribute(product.attributes));
-            negateStep(Utils.checkMissingRequiredsExists());
+            steps.push(...setupAttribute(product.attributes, false));
+            steps.push(Utils.clickBtn("Next"));
         }
     }
 

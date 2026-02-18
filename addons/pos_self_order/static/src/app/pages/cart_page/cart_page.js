@@ -107,7 +107,22 @@ export class CartPage extends Component {
             return;
         }
 
-        if (!this.selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
+        const order = this.selfOrder.currentOrder;
+        const partner = order.partner_id || {};
+        const time = order.preset_time ? order.preset_time.toSQL() : null;
+        const isValidRequiredInfo = this.selfOrder.isValidSelection(time, {
+            id: parseInt(partner.id),
+            name: partner.name || order.floating_order_name,
+            email: partner.email || order.email,
+            phone: partner.phone || order.mobile,
+            street: partner.street,
+            city: partner.city,
+            country_id: partner.country_id,
+            state_id: partner.state_id,
+            zip: partner.zip,
+        });
+
+        if (!isValidRequiredInfo && orderingMode !== "table") {
             let result = null;
 
             // Show timing selection popup only if preset uses timing
@@ -121,6 +136,7 @@ export class CartPage extends Component {
                 if (!result) {
                     return;
                 }
+                this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(result);
             }
 
             // Always show preset info popup when requirements aren't filled
@@ -131,11 +147,6 @@ export class CartPage extends Component {
 
             const email = this.selfOrder.currentOrder.partner_id?.email || infos.email;
             this.selfOrder.currentOrder.email = email;
-
-            // Set preset time only if timing was selected
-            if (result) {
-                this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(result);
-            }
         }
 
         if (
