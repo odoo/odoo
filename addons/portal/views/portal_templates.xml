@@ -272,13 +272,13 @@
                         t-attf-aria-label="'Icon for %s' % entry.name"/>
                 </div>
                 <div t-att-class="'alert-link' if bg_color else ''">
-                    <div t-attf-class="mt-0 mb-1 fs-5 fw-normal lh-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
+                    <div t-attf-class="fs-5 lh-1 #{'d-flex gap-2 align-items-center' if placeholder_count or count else ''}">
                     <t t-out="count"/>
                         <span t-if="entry.placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="entry.placeholder_count"/>
-                        <h5 t-field="entry.name"/>
+                        <h5 class="mb-0" t-field="entry.name"/>
                     </div>
                     <div class="opacity-75">
-                        <p t-field="entry.description"/>
+                        <p class="mt-1 mb-0" t-field="entry.description"/>
                     </div>
                 </div>
             </a>
