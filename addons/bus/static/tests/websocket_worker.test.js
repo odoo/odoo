@@ -144,3 +144,22 @@ test("check connection health during inactivity", async () => {
     await advanceTime(worker.CONNECTION_CHECK_DELAY + 1000);
     await expect.waitForSteps(["check_connection_health_sent"]);
 });
+
+test("bus subscription id is captured from the initial call to update channel", async () => {
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _sendToServer(payload) {
+            if (payload.event_name === "subscribe") {
+                expect.step(`subscribe - ${payload.data.last}`);
+            }
+        },
+    });
+    const worker = await startWebSocketWorker();
+    const client = new MessagePort();
+    worker.registerClient(client);
+    const initialNotificationId = worker.lastNotificationId;
+    worker._addChannel(client, "foo");
+    worker.lastNotificationId += 10;
+    await runAllTimers();
+    await expect.waitForSteps([`subscribe - ${initialNotificationId}`]);
+    expect(worker.lastNotificationId).toBe(initialNotificationId + 10);
+});

@@ -246,7 +246,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(len(notifications), 1)
             self.assertEqual(notifications[0]['message']['type'], 'notif_on_global_channel')
             self.assertEqual(notifications[0]['message']['payload'], 'message')
-
+        self._reset_bus()
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[(channel, "PRIVATE")]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
             channel._bus_send("notif_on_global_channel", "message")
@@ -356,3 +356,27 @@ class TestWebsocketCaryall(WebsocketCase):
                 terminate_done_event.wait(timeout=5),
                 'Server should have terminated the connection as it didn\'t receive any response.',
             )
+
+    def test_subscribe_returns_new_channel_notifications(self):
+        with freeze_time() as frozen_time:
+            websocket = self.websocket_connect()
+            initial_id = self.env["bus.bus"]._bus_last_id()
+            self.subscribe(websocket, ["foo"], initial_id)
+            self.env["bus.bus"]._sendone("bar", "bar_notif_type", "message")
+            self.env["bus.bus"]._sendone("foo", "foo_notif_type", "message")
+            self.trigger_notification_dispatching(["foo"])
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(len(notifications), 1)
+            self.assertEqual(notifications[0]['message']['type'], "foo_notif_type")
+            frozen_time.tick(delta=timedelta(seconds=Websocket.MAX_NOTIFICATION_HISTORY_SEC + 1))
+            self.env["bus.bus"]._sendone("foo", "foo_notif_type", "message")
+            self.trigger_notification_dispatching(["foo"])
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(len(notifications), 1)
+            # Subscription come after the `_last_notif_sent_id` has been increased
+            # after dispatching notification from the "foo" channel. But should notif
+            # should still be received as the notif is older than the subscription.
+            self.subscribe(websocket, ["foo", "bar"], initial_id)
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(len(notifications), 1)
+            self.assertEqual(notifications[0]['message']['type'], "bar_notif_type")

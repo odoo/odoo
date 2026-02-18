@@ -21,7 +21,13 @@ from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
 from ..models.bus import dispatch, hashable, channel_with_db
 
 
-class WebsocketCase(HttpCase):
+class BusCase:
+    def _reset_bus(self):
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.env["bus.bus"].sudo().search([]).unlink()
+
+
+class WebsocketCase(HttpCase, BusCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -171,9 +177,3 @@ class WebsocketCase(HttpCase):
         if expected_reason:
             # ensure the close reason is the one we expected
             self.assertEqual(payload[2:].decode(), expected_reason)
-
-
-class BusCase:
-    def _reset_bus(self):
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        self.env["bus.bus"].sudo().search([]).unlink()
