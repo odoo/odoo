@@ -19,3 +19,6 @@ class Website(models.Model):
 
     def _get_product_available_qty(self, product, **kwargs):
         return product.with_context(warehouse_id=self.warehouse_id.id).free_qty
+
+    def _get_free_qty(self, product, **kwargs):
+        return product.with_context(warehouse_id=self.warehouse_id.id).free_qty

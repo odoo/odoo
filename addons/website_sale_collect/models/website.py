@@ -39,3 +39,6 @@ class Website(models.Model):
             product.with_context(warehouse_id=wh.id).free_qty
             for wh in self.sudo().in_store_dm_id.warehouse_ids
         ], default=0)
+
+    def _get_free_qty(self, product, **kwargs):
+        return super()._get_free_qty(product)

@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
                 and order_sudo.pickup_location_data
             ):  # Get stock values for the product variant in the selected store.
                 res['in_store_stock'] = utils.format_product_stock_values(
-                    product_or_template.sudo(), wh_id=order_sudo.pickup_location_data['id']
+                    product_or_template.sudo(), wh_id=order_sudo.pickup_location_data['id'], free_qty=website._get_free_qty(product_or_template)
                 )
             else:
                 res['in_store_stock'] = utils.format_product_stock_values(
