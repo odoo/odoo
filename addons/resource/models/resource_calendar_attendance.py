@@ -182,10 +182,8 @@ class ResourceCalendarAttendance(models.Model):
                     break  # It should already be set by the user
                 case 'times' if attendance.interval and attendance.count:
                     attendance.until = attendance.date + timedelta(**{attendance.recurrency_type: attendance.interval * attendance.count})
-                case 'forever':
+                case _:  # 'forever' or missing parameters
                     attendance.until = date.max
-                case _:
-                    attendance.until = None
 
     def _compute_display_name(self):
         for attendance in self:
