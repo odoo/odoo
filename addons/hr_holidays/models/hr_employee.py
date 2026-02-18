@@ -254,8 +254,8 @@ class HrEmployee(models.Model):
         return [('id', 'in', holidays.employee_id.ids)]
 
     def _search_part_of_department(self, operator, value):
-        version_ids = self.env['hr.version'].sudo()._search([('member_of_department', operator, value)])
-        return [('version_ids', 'in', version_ids)]
+        versions = self.env['hr.version'].sudo().search([('member_of_department', operator, value)])
+        return [('id', 'in', versions.employee_id.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
