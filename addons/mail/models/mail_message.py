@@ -366,8 +366,8 @@ class MailMessage(models.Model):
             .filtered(lambda msg: self.env.user.partner_id in msg.bookmarked_partner_ids)
             .sudo(False)
         )
-        bookmarked.is_bookmarked = True
-        (self - bookmarked).is_bookmarked = False
+        for message in self:
+            message.is_bookmarked = message in bookmarked
 
     @api.model
     def _search_is_bookmarked(self, operator, operand):
