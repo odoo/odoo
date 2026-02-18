@@ -3,7 +3,6 @@
 
 import logging
 import re
-import werkzeug
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -70,10 +69,16 @@ class SurveyInvite(models.TransientModel):
     def _inverse_send_email(self):
         pass
 
+    def _get_survey_inputs(self):
+        return self.survey_id.user_input_ids
+
     @api.depends('partner_ids', 'survey_id')
     def _compute_existing_partner_ids(self):
         for wizard in self:
-            wizard.existing_partner_ids = list(set(wizard.survey_id.user_input_ids.partner_id.ids) & set(wizard.partner_ids.ids))
+            wizard.existing_partner_ids = list(
+                set(wizard._get_survey_inputs().partner_id.ids)
+                & set(wizard.partner_ids.ids),
+            )
 
     @api.depends('emails', 'survey_id')
     def _compute_existing_emails(self):
@@ -185,14 +190,24 @@ class SurveyInvite(models.TransientModel):
     # Wizard validation and send
     # ------------------------------------------------------
 
-    def _prepare_answers(self, partners, emails):
-        existing_answers = self.env['survey.user_input'].search([
+    def _get_existing_answers_domain(self, partners, emails):
+        return fields.Domain([
             '&', ('survey_id', '=', self.survey_id.id),
             '|',
             ('partner_id', 'in', partners.ids),
-            ('email', 'in', emails)
+            ('email', 'in', emails),
         ])
-        partners_done, emails_done, answers = self._get_done_partners_emails(existing_answers)
+
+    def _prepare_answers(self, partners, emails):
+        existing_answers = self.env['survey.user_input'].search(
+            self._get_existing_answers_domain(
+                partners,
+                emails,
+            ),
+        )
+        partners_done, emails_done, answers = self._get_done_partners_emails(
+            existing_answers,
+        )
 
         for new_partner in partners - partners_done:
             answers |= self.survey_id._create_answer(partner=new_partner, check_attempts=False, **self._get_answers_values())

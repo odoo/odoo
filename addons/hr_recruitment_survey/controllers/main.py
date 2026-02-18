@@ -10,3 +10,20 @@ class ApplicantSurvey(main.Survey):
             result["applicant_id"] = answer.applicant_id.id
 
         return result
+
+    def _check_validity(
+        self,
+        survey_sudo,
+        answer_sudo,
+        answer_token,
+        ensure_token=True,
+        check_partner=True,
+    ):
+        validity_code = super()._check_validity(
+            survey_sudo, answer_sudo, answer_token, ensure_token, check_partner
+        )
+        if validity_code is not True:
+            return validity_code  # survey is invalid already
+        if answer_sudo.state == 'cancelled':
+            return "survey_closed"
+        return True
