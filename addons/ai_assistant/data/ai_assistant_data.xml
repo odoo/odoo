@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Default AI Provider - CONFIGURE YOUR API KEY AFTER INSTALLATION -->
+        <record id="default_ai_provider" model="ai.provider">
+            <field name="name">OpenAI</field>
+            <field name="api_key">YOUR_OPENAI_API_KEY_HERE</field>
+            <field name="model_name">openai/gpt-5-mini</field>
+            <field name="api_url">https://api.openai.com/v1/chat/completions</field>
+            <field name="max_tokens">2000</field>
+            <field name="temperature">0.7</field>
+            <field name="active">False</field>
+        </record>
+
+        <!-- Default AI Configuration -->
+        <record id="default_ai_config" model="ai.config">
+            <field name="name">Default AI Configuration</field>
+            <field name="provider_id" ref="default_ai_provider"/>
+            <field name="enable_database_search">True</field>
+            <field name="enable_record_creation">False</field>
+            <field name="enable_record_update">False</field>
+            <field name="max_conversation_messages">20</field>
+            <field name="conversation_timeout">30</field>
+            <field name="welcome_message">Hello! I'm your AI assistant for Odoo. I can help you search for information, answer questions, and guide you through various tasks. How can I assist you today?</field>
+            <field name="show_in_systray">True</field>
+            <field name="active">True</field>
+            <field name="sales_prompt">You are helping the user with Sales operations. Focus on sales orders, quotations, customers, and revenue-related questions.</field>
+            <field name="crm_prompt">You are helping the user with CRM operations. Focus on leads, opportunities, pipeline management, and customer relationship tasks.</field>
+            <field name="accounting_prompt">You are helping the user with Accounting operations. Focus on invoices, payments, journal entries, and financial reports.</field>
+            <field name="inventory_prompt">You are helping the user with Inventory/Stock operations. Focus on products, stock moves, warehouses, and inventory management.</field>
+        </record>
+
+        <!-- Cron Job for closing inactive conversations -->
+        <record id="ir_cron_close_inactive_conversations" model="ir.cron">
+            <field name="name">AI Assistant: Close Inactive Conversations</field>
+            <field name="model_id" ref="model_ai_conversation"/>
+            <field name="state">code</field>
+            <field name="code">model.close_inactive_conversations()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

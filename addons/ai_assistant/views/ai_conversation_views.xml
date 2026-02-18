@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- AI Message Views -->
+    <record id="view_ai_message_tree" model="ir.ui.view">
+        <field name="name">ai.message.tree</field>
+        <field name="model">ai.message</field>
+        <field name="arch" type="xml">
+            <tree string="Messages" create="false" delete="false">
+                <field name="create_date"/>
+                <field name="role"/>
+                <field name="content"/>
+                <field name="is_error"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ai_message_form" model="ir.ui.view">
+        <field name="name">ai.message.form</field>
+        <field name="model">ai.message</field>
+        <field name="arch" type="xml">
+            <form string="Message" create="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="conversation_id"/>
+                            <field name="role"/>
+                            <field name="create_date"/>
+                        </group>
+                        <group>
+                            <field name="is_error"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="content" widget="text"/>
+                    </group>
+                    <group string="Metadata" attrs="{'invisible': [('metadata', '=', False)]}">
+                        <field name="metadata" widget="text"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Conversation Views -->
+    <record id="view_ai_conversation_form" model="ir.ui.view">
+        <field name="name">ai.conversation.form</field>
+        <field name="model">ai.conversation</field>
+        <field name="arch" type="xml">
+            <form string="AI Conversation">
+                <header>
+                    <button name="close_conversation" type="object" string="Close Conversation"
+                            class="oe_highlight" attrs="{'invisible': [('state', '=', 'closed')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_messages" icon="fa-comments">
+                            <field name="message_count" widget="statinfo" string="Messages"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="last_message_date"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <group string="Context">
+                        <group>
+                            <field name="context_module"/>
+                            <field name="context_model"/>
+                        </group>
+                        <group>
+                            <field name="context_record_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Messages">
+                            <field name="message_ids" mode="tree">
+                                <tree create="false" delete="false" decoration-info="role == 'user'" decoration-success="role == 'assistant'" decoration-danger="is_error == True">
+                                    <field name="create_date"/>
+                                    <field name="role"/>
+                                    <field name="content"/>
+                                    <field name="is_error" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" invisible="1"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_conversation_tree" model="ir.ui.view">
+        <field name="name">ai.conversation.tree</field>
+        <field name="model">ai.conversation</field>
+        <field name="arch" type="xml">
+            <tree string="AI Conversations">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="message_count"/>
+                <field name="state"/>
+                <field name="last_message_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ai_conversation_search" model="ir.ui.view">
+        <field name="name">ai.conversation.search</field>
+        <field name="model">ai.conversation</field>
+        <field name="arch" type="xml">
+            <search string="Search Conversations">
+                <field name="name"/>
+                <field name="user_id"/>
+                <filter string="My Conversations" name="my_conversations" domain="[('user_id', '=', uid)]"/>
+                <filter string="Active" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Closed" name="closed" domain="[('state', '=', 'closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="User" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_conversation" model="ir.actions.act_window">
+        <field name="name">AI Conversations</field>
+        <field name="res_model">ai.conversation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_my_conversations': 1, 'search_default_active': 1}</field>
+    </record>
+
+</odoo>

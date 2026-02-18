@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- AI Provider Views -->
+    <record id="view_ai_provider_form" model="ir.ui.view">
+        <field name="name">ai.provider.form</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <form string="AI Provider">
+                <header>
+                    <button name="test_connection" type="object" string="Test Connection" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="active" widget="boolean_toggle"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model_name"/>
+                            <field name="api_url"/>
+                        </group>
+                        <group>
+                            <field name="api_key" password="True"/>
+                            <field name="max_tokens"/>
+                            <field name="temperature"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Help">
+                            <group>
+                                <div class="alert alert-info" role="alert">
+                                    <h4>Configuration Help</h4>
+                                    <ul>
+                                        <li><strong>API Key:</strong> Your OpenAI API key (get it from platform.openai.com)</li>
+                                        <li><strong>Model Name:</strong> The OpenAI model to use (e.g., openai/gpt-5-mini, gpt-4, gpt-3.5-turbo)</li>
+                                        <li><strong>Temperature:</strong> Controls randomness (0 = focused, 1 = creative, max 2)</li>
+                                        <li><strong>Max Tokens:</strong> Maximum length of AI responses</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_provider_tree" model="ir.ui.view">
+        <field name="name">ai.provider.tree</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <tree string="AI Providers">
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ai_provider" model="ir.actions.act_window">
+        <field name="name">AI Providers</field>
+        <field name="res_model">ai.provider</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- AI Config Views -->
+    <record id="view_ai_config_form" model="ir.ui.view">
+        <field name="name">ai.config.form</field>
+        <field name="model">ai.config</field>
+        <field name="arch" type="xml">
+            <form string="AI Configuration">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="active" widget="boolean_toggle"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="provider_id"/>
+                        </group>
+                        <group>
+                            <field name="max_conversation_messages"/>
+                            <field name="conversation_timeout"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="System Prompts">
+                            <group>
+                                <field name="default_system_prompt" widget="text" placeholder="Enter the default system prompt..."/>
+                            </group>
+                            <group string="Module-Specific Prompts">
+                                <field name="sales_prompt" widget="text"/>
+                                <field name="crm_prompt" widget="text"/>
+                                <field name="accounting_prompt" widget="text"/>
+                                <field name="inventory_prompt" widget="text"/>
+                            </group>
+                        </page>
+                        <page string="Features">
+                            <group>
+                                <group string="Database Operations">
+                                    <field name="enable_database_search"/>
+                                    <field name="enable_record_creation"/>
+                                    <field name="enable_record_update"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Security Warning:</strong> Enabling record creation and updates allows the AI to modify your database.
+                                Only enable these features if you trust the AI and understand the implications.
+                            </div>
+                        </page>
+                        <page string="User Interface">
+                            <group>
+                                <field name="welcome_message" widget="text"/>
+                                <field name="show_in_systray"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_config_tree" model="ir.ui.view">
+        <field name="name">ai.config.tree</field>
+        <field name="model">ai.config</field>
+        <field name="arch" type="xml">
+            <tree string="AI Configurations">
+                <field name="name"/>
+                <field name="provider_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ai_config" model="ir.actions.act_window">
+        <field name="name">AI Configuration</field>
+        <field name="res_model">ai.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_ai_assistant_root"
+              name="AI Assistant"
+              sequence="100"
+              web_icon="ai_assistant,static/description/icon.png"/>
+
+    <!-- Conversations -->
+    <menuitem id="menu_ai_conversations"
+              name="Conversations"
+              parent="menu_ai_assistant_root"
+              action="action_ai_conversation"
+              sequence="10"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_ai_configuration"
+              name="Configuration"
+              parent="menu_ai_assistant_root"
+              groups="ai_assistant.group_ai_assistant_manager"
+              sequence="100"/>
+
+    <menuitem id="menu_ai_config"
+              name="Settings"
+              parent="menu_ai_configuration"
+              action="action_ai_config"
+              sequence="10"/>
+
+    <menuitem id="menu_ai_providers"
+              name="AI Providers"
+              parent="menu_ai_configuration"
+              action="action_ai_provider"
+              sequence="20"/>
+
+</odoo>
