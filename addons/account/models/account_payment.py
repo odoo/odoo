@@ -69,7 +69,7 @@ class AccountPayment(models.Model):
         compute='_compute_payment_method_line_fields')
     hide_payment_method_line = fields.Boolean(
         compute='_compute_payment_method_line_fields',
-        help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
+        help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'.")
     payment_method_id = fields.Many2one(
         related='payment_method_line_id.payment_method_id',
         string="Method",
