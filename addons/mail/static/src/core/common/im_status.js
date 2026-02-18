@@ -51,9 +51,9 @@ export class ImStatus extends Component {
 
     get class() {
         return attClassObjectToString({
-            [`o-mail-ImStatus d-flex ${this.icon} ${this.colorClass} ${this.props.className}`]: true,
+            [`o-mail-ImStatus d-flex ${this.colorClass} ${this.props.className}`]: true,
             "o-fs-small": this.persona?.im_status !== "bot",
-            "rounded-circle bg-transparent": !this.showTypingIndicator,
+            [`rounded-circle bg-transparent ${this.icon}`]: !this.showTypingIndicator,
             "rounded-pill": this.showTypingIndicator,
         });
     }

@@ -5,7 +5,7 @@
         <t t-slot="pre_icon"/>
         <t name="icon">
             <i t-if="(!props.member or !showTypingIndicator) and persona" t-att-class="class" t-att-style="props.style" t-att-title="title" role="img" t-att-aria-label="title"/>
-            <div t-if="showTypingIndicator" class="o-mail-ImStatus-typingContainer rounded-pill" t-att="attr">
+            <div t-if="showTypingIndicator" class="o-mail-ImStatus-typingContainer rounded-pill" t-att-class="class">
                 <div class="o-mail-ImStatus-typingBg bg-success rounded-pill">
                     <Typing member="props.member" size="['sm', 'smaller'].includes(props.size) ? 'sm' : 'md'" displayText="false" />
                 </div>
