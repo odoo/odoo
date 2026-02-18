@@ -681,9 +681,23 @@ class HTML_Editor(Controller):
             width, height = (str(size) for size in img.size)
         root = etree.fromstring(svg)
 
-        if root.attrib.get("data-forced-size"):
+        # When data-aspect-ratio-crop is set in the shape SVG, it means that we
+        # want to crop the image to fit the shape aspect ratio and fill the
+        # entire shape.
+        if root.attrib.get("data-aspect-ratio-crop") and \
+                (image_elem := root.find('.//svg:image', {'svg': 'http://www.w3.org/2000/svg'})) is not None:
+            # We set the image width and height to 100% to make it fill the
+            # entire shape, and use preserveAspectRatio to crop it if needed.
+            image_elem.attrib.update({
+                'width': '100%',
+                'height': '100%',
+                'preserveAspectRatio': 'xMidYMid slice',
+            })
+
+        if root.attrib.get("data-forced-size") or root.attrib.get("data-aspect-ratio-crop"):
             # Adjusts the SVG height to ensure the image fits properly within
-            # the SVG (e.g. for "devices" shapes).
+            # the SVG (e.g. for "devices" shapes and shapes that need to keep
+            # their aspect ratio).
             svgHeight = float(root.attrib.get("height"))
             svgWidth = float(root.attrib.get("width"))
             svgAspectRatio = svgWidth / svgHeight

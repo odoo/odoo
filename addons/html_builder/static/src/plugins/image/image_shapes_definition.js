@@ -187,6 +187,7 @@ export const imageShapeDefinitions = {
                     "html_builder/geometric_round/geo_round_pill": {
                         selectLabel: _t("Pill (R)"),
                         togglableRatio: true,
+                        aspectRatio: "1/2",
                     },
                     "html_builder/geometric_round/geo_round_gem": {
                         selectLabel: _t("Gem (R)"),
