@@ -1,11 +1,51 @@
 .control-buttons-modal {
-    grid-template-columns: repeat(3, 1fr);
-
-    @include media-breakpoint-down(lg) {
-        grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(var(--grid-columns, 1), 1fr);
+    
+    .control-button {
+        aspect-ratio: var(--btn-aspect-ratio, auto);
+        &:last-child {
+            --btn-aspect-ratio: auto;
+        }
+        .o_guests_number {
+            min-width: 3ch;
+            
+            @include media-breakpoint-down(md) {
+                font-size: map-get($font-sizes, 6);
+            }
+        }
     }
+    @include media-breakpoint-up(md) {
+        --oi-font-size: 2.5rem;
+        --btn-aspect-ratio: 1.1;
+        
+        @media (orientation: portrait) {
+            --grid-columns: 3;
+        }
 
-    @include media-breakpoint-down(sm) {
-        grid-template-columns: 1fr;
+        @media (orientation: landscape) {
+            --grid-columns: 4;  
+            @media (max-height: 940px) {
+                --btn-aspect-ratio: 1.5;
+            }
+        }
+        &:has(.control-button:nth-child(13)):not(:has(.control-button:nth-child(14))) {
+            .control-button:last-child {
+                --btn-aspect-ratio: auto;
+                --oi-font-size: 1.5rem;
+                grid-column: 1 / -1;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: map-get($spacers, 2);
+                height: 5rem;
+
+                span {
+                    display: inline-block !important;
+                    height: auto !important;
+                    padding: 0 !important; 
+                }
+            }
+        }
     }
 }

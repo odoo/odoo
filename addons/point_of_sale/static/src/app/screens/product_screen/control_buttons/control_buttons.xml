@@ -1,60 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.controlButton">
+        <button t-attf-class="control-button btn btn-lg {{btnClasses ? btnClasses : ''}} text-start text-md-center lh-lg"
+            t-on-click="onClick"
+            t-att-disabled="disabled ? 'disabled' : ''">
+            <span t-attf-class="d-md-flex flex-md-column justify-content-end {{iconClasses || pictogram? 'h-md-50' : ''}}">
+                <t t-if="pictogram" t-out="pictogram"/>
+                <i t-if="iconClasses" t-attf-class="{{iconClasses}} me-2 me-md-0 {{btnText == 'Cancel Order' ? '' : 'text-500' }}" role="img" aria-hidden="true"/>
+            </span>
+            <span t-attf-class="d-md-flex flex-md-column align-items-center {{iconClasses || pictogram ? 'h-md-50' : ''}} pt-md-2 lh-sm">
+                <t t-esc="btnText"/>
+                <t t-if="subText and !ui.isSmall" t-out="subText"/>
+            </span>
+        </button>
+    </t>
     <t t-name="point_of_sale.ControlButtons">
         <!-- All buttons always displayed -->
-        <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
-        <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
-            <InternalNoteButton label.translate="Note" class="buttonClass"/>
+        <t t-if="!props.showRemainingButtons">
+            <SelectPartnerButton partner="partner"/>
+            <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
+            <button t-if="pos.config.use_presets"
+                class="btn btn-secondary btn-lg flex-shrink-0 border-0 lh-lg"
+                t-attf-class="{{currentOrder.preset_id?.color and `o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
+                t-on-click="() => this.pos.selectPreset()">
+                <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
+                <span t-else="">Preset</span>
+            </button>
+            <button class="more-btn btn btn-secondary btn-lg flex-shrink-0 ms-auto lh-lg" t-if="!ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+                <i class="oi oi-fw oi-ellipsis-v" aria-hidden="true" />
+            </button>
         </t>
-        <button t-if="pos.config.use_presets and !props.showRemainingButtons"
-            class="btn btn-secondary btn-lg flex-shrink-0 border-0"
-            t-attf-class="{{currentOrder.preset_id?.color and `o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
-            t-on-click="() => this.pos.selectPreset()">
-            <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
-            <span t-else="">Preset</span>
-        </button>
-        <button class="btn btn-secondary btn-lg flex-shrink-0 ms-auto more-btn" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
-            <i class="oi oi-fw oi-ellipsis-v" aria-hidden="true" />
-        </button>
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="props.showRemainingButtons">
-            <div class="control-buttons control-buttons-modal d-grid gap-2 mt-2">
+            <div class="control-buttons control-buttons-modal d-grid grid-auto-flow-columns gap-2">
+                <t t-if="(ui.isSmall and props.showRemainingButtons)">
+                    <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
+                </t>
                 <NoteButton
                     label.translate="Customer Note"
-                    class="buttonClass"
+                    class="'btn-secondary '"
                     icon="'fa fa-sticky-note'"/>
-                <button t-if="pos.config.iface_printbill" t-att-class="buttonClass"
-                    t-att-disabled="!pos.getOrder()?.getOrderlines()?.length"
-                    t-on-click="clickPrintBill">
-                    <i class="fa fa-print me-1"></i>Bill
-                </button>
-                <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button" t-att-class="buttonClass" t-on-click="() => this.clickPricelist()">
-                    <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
-                    <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
-                    <t t-else="">Pricelist</t>
-                </button>
-                <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.clickRefund()">
-                    <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
-                    Refund
-                </button>
-                <button t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'minimal'"
-                    class="control-button o_fiscal_position_button"
-                    t-att-class="buttonClass"
-                    t-on-click="() => this.clickFiscalPosition()">
-                    <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
-                    title="Set fiscal position" />
-                    <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
-                    <t t-else="">Tax</t>
-                </button>
-                <button t-if="this.displayProductInfoBtn()" t-att-class="buttonClass" t-on-click="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id, currentOrder.getSelectedOrderline().product_id)">
-                    <i class="fa fa-info-circle me-1" role="img" aria-label="Product Info" title="Product Info" /> Info
-                </button>
-                <button t-if="this.pos.isSelectedLineCombo" class="break-combo-button" t-att-class="buttonClass" t-on-click="() => this.breakSelectedCombo()">
-                    <i class="fa fa-outdent" role="img" aria-label="Break combo" title="Brean combo" /> Break combo
-                </button>
-                <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
-                    <i class="fa fa-trash me-1" role="img" /> Cancel Order
-                </button>
+                    <!-- Bill Button -->
+                <t t-if="pos.config.iface_printbill"> 
+                    <t t-set="btnCount" t-value="btnCount + 1"/>
+                    <t t-call="point_of_sale.controlButton">
+                        <t t-set="iconClasses" t-value="'fa fa-print'"/>
+                        <t t-set="btnText">Bill</t>
+
+                        <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                        <t t-set="disabled" t-value="!pos.getOrder()?.getOrderlines()?.length"/>
+                        <t t-set="onClick" t-value="clickPrintBill"/>
+                    </t>
+                </t>
+                <!-- Pricelist Button -->
+                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton" name="o_pricelist_button">
+                    <t t-set="iconClasses" t-value="'fa fa-th-list'"/>
+                    <t t-set="btnText">Pricelist</t>
+
+                    <t t-set="btnClasses" t-value="'o_pricelist_button btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.clickPricelist()"/>
+                    <t t-set="subText">
+                        <t t-if="currentOrder?.pricelist_id">
+                            <br/>
+                            <small t-esc="currentOrder.pricelist_id.display_name" class="text-muted"/>  
+                        </t>
+                    </t>
+                </t>
+                <!-- Refund Button -->
+                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-undo'"/>
+                    <t t-set="btnText">Refund</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.clickRefund()"/>
+                </t>
+                <!-- Tax Button -->
+                <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-book'"/>
+                    <t t-set="btnText">
+                        <t t-if="ui.isSmall and currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name"/>
+                        <t t-else="">Tax</t>
+                    </t>
+
+                    <t t-set="btnClasses" t-value="'o_fiscal_position_button btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.clickFiscalPosition()"/>
+                    <t t-set="subText">
+                        <t t-if="currentOrder?.fiscal_position_id">
+                            <br/>
+                            <small t-esc="currentOrder.fiscal_position_id.display_name" class="text-muted"/>
+                        </t>
+                    </t>
+                </t>
+                <!-- Product Info Button -->
+                <t t-if="this.displayProductInfoBtn()" t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-info-circle'"/>
+                    <t t-set="btnText">Info</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id, currentOrder.getSelectedOrderline().product_id)"/>
+                </t>
+                <!-- Break Combo Button -->
+                <t t-if="this.pos.isSelectedLineCombo" t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-outdent'"/>
+                    <t t-set="btnText">Break Combo</t>
+                    <t t-set="btnClasses" t-value="'break-combo-button btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.breakSelectedCombo()"/>
+                </t>
+                <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-trash'"/>
+                    <t t-set="btnText">Cancel Order</t>
+                    <t t-set="btnClasses" t-value="'btn-danger '"/>
+                    <t t-set="onClick" t-value="() => this.pos.onDeleteOrder(this.pos.getOrder())"/>
+                </t>
             </div>
         </t>
     </t>

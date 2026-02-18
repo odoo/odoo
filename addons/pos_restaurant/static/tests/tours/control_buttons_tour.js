@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.addOrderline("Water", "8", "1", "8.0"),
 
             // Test GuestButton
-            ProductScreen.clickControlButton("Guests"),
+            ProductScreen.clickControlButton("Guest"),
             {
                 content: `click numpad button: 1`,
                 trigger: ".modal div.numpad button:text(1)",
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.guestNumberIs("15"),
             {
                 content: `click guests 15 button`,
-                trigger: `.modal .control-buttons button:contains(15Guests)`,
+                trigger: `.modal .control-buttons .o_guests_button:contains("15")`,
                 run: "click",
             },
             {

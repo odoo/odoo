@@ -126,14 +126,6 @@ export class ControlButtons extends Component {
         this.pos.openFinalizedOrders();
     }
 
-    get buttonClass() {
-        return this.props.showRemainingButtons
-            ? this.ui.isSmall
-                ? "btn bg-100 btn-md py-2 text-start"
-                : "btn btn-secondary btn-lg py-5"
-            : "btn btn-secondary btn-lg lh-lg";
-    }
-
     displayProductInfoBtn() {
         const selectedOrderLine = this.currentOrder?.getSelectedOrderline();
         return (

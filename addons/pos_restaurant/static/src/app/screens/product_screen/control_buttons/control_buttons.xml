@@ -4,36 +4,56 @@
        <xpath
             expr="//button[hasclass('more-btn')]"
             position="before">
-           <button class="course-btn" t-if="pos.config.module_pos_restaurant and !props.showRemainingButtons and !pos.getOrder()?.isRefund"
-                   t-att-class="buttonClass" t-on-click="()=>this.pos.addCourse()">
+           <button class="course-btn btn btn-lg btn-secondary lh-lg" t-if="pos.config.module_pos_restaurant and !props.showRemainingButtons and !pos.getOrder()?.isRefund" t-on-click="()=>this.pos.addCourse()">
                 <span>Course</span>
            </button>
        </xpath>
         <xpath
-            expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
+            expr="//t[@t-if='props.showRemainingButtons']/div/t[@name='o_pricelist_button']"
             position="before">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="pos.config.module_pos_restaurant">
-                <button t-att-class="buttonClass" t-on-click="clickTableGuests">
-                    <span t-esc="currentOrder?.getCustomerCount() || 0" t-attf-class="rounded-circle text-bg-dark fw-bolder small me-1 {{ui.isSmall ? 'px-1' : 'px-2 py-1'}}"/>
-                    <span>Guests</span>
-                </button>
-            </t>
-            <t t-if="pos.config.module_pos_restaurant">
-                <button t-att-class="buttonClass"
-                    t-att-disabled="pos.getOrder()?.getOrderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"
-                    t-on-click="openSplitPage">
-                    <i class="fa fa-files-o me-1"/>Split
-                </button>
-                <button t-att-class="buttonClass" t-on-click.stop="() => this.clickTransferOrder()">
-                    <i class="oi oi-arrow-right me-1" />Transfer / Merge
-                </button>
-                   <button t-att-disabled="!this.showTransferCourse()" t-att-class="buttonClass" t-on-click.stop="() => this.clickTransferCourse()">
-                    <i class="oi oi-arrow-down me-1" />Transfer course
-                </button>
-                <button t-if="!pos.getOrder()?.table_id" t-att-class="buttonClass" t-on-click="() => this.pos.editFloatingOrderName(this.pos.getOrder())">
-                    <i class="fa fa-pencil-square-o me-1" />Edit Order Name
-                </button>
+                <t t-call="point_of_sale.controlButton">
+                    <t t-set="pictogram">
+                        <span t-esc="currentOrder?.getCustomerCount() || 0" t-attf-class="o_guests_number rounded-5 text-bg-500 d-md-block me-2 m-md-auto my-md-1 px-1 px-md-2"/>
+                    </t>
+                    <t t-set="btnText">
+                        <t t-if="currentOrder?.getCustomerCount() === 1">Guest</t>
+                        <t t-else="">Guests</t>
+                    </t>
+                    <t t-set="btnClasses" t-value="'o_guests_button btn-secondary '"/>
+                    <t t-set="onClick" t-value="clickTableGuests"/>
+                </t>
+                <!-- Split Button -->
+                <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-files-o'"/>
+                    <t t-set="btnText">Split</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="openSplitPage"/>
+                    <t t-set="disabled" t-value="pos.getOrder()?.getOrderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"/>
+                </t>
+                <!-- Transfer / Merge Button -->
+                 <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'oi oi-arrow-right'"/>
+                    <t t-set="btnText">Transfer / Merge</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.clickTransferOrder()"/>
+                </t>
+                 <!-- Transfer Course Button -->
+                 <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'oi oi-arrow-down'"/>
+                    <t t-set="btnText">Transfer Course</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.clickTransferCourse()"/>
+                    <t t-set="disabled" t-value="!this.showTransferCourse()"/>
+                </t>
+                <!-- Edit Order Name Button -->
+                <t t-if="!pos.getOrder()?.table_id" t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-pencil-square-o'"/>
+                    <t t-set="btnText">Edit Order Name</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="() => this.pos.editFloatingOrderName(this.pos.getOrder())"/>
+                </t>
             </t>
         </xpath>
     </t>
