@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import groupby
+from collections import defaultdict
 
 
 class AccountMove(models.Model):
@@ -153,18 +154,29 @@ class AccountMove(models.Model):
         This function returns the sum of the totals of all those lines.
         Note that this amount may be bigger than `order.amount_total`.
         """
-        order_amount = 0
+        return self._get_sale_order_invoiced_amount_batch(order)[order]
+
+    def _get_sale_order_invoiced_amount_batch(self, orders):
+        map_order_to_price_total_per_invoice = defaultdict(lambda: defaultdict(int))
         for invoice in self:
-            prices = sum(invoice.line_ids.filtered(
-                lambda x: x.display_type not in ('line_note', 'line_section') and order in x.sale_line_ids.order_id
-            ).mapped('price_total'))
-            order_amount += invoice.currency_id._convert(
+            invoice_line_ids = invoice.line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+            for line in invoice_line_ids:
+                for order in line.sale_line_ids.order_id:
+                    map_order_to_price_total_per_invoice[order][invoice] += line.price_total
+
+        map_order_to_invoiced_amount = defaultdict(int)
+        for order in orders:
+            order_amount = 0
+            for invoice in self:
+                prices = map_order_to_price_total_per_invoice[order][invoice]
+                order_amount += invoice.currency_id._convert(
                 prices * -invoice.direction_sign,
                 order.currency_id,
                 invoice.company_id,
                 invoice.date,
             )
-        return order_amount
+            map_order_to_invoiced_amount[order] = order_amount
+        return map_order_to_invoiced_amount
 
     def _get_partner_credit_warning_exclude_amount(self):
         # EXTENDS module 'account'
@@ -175,8 +187,10 @@ class AccountMove(models.Model):
         # The computation should reflect the change of credit_to_invoice from 'res.partner'.
         # (see _compute_credit_to_invoice and _compute_amount_to_invoice from 'sale.order' )
         exclude_amount = super()._get_partner_credit_warning_exclude_amount()
-        for order in self.line_ids.sale_line_ids.order_id:
-            order_amount = min(self._get_sale_order_invoiced_amount(order), order.amount_to_invoice)
+        orders = self.line_ids.sale_line_ids.order_id
+        order_amounts = self._get_sale_order_invoiced_amount_batch(orders)
+        for order in orders:
+            order_amount = min(order_amounts[order], order.amount_to_invoice)
             order_amount_company = order.currency_id._convert(
                 max(order_amount, 0),
                 self.company_id.currency_id,

@@ -644,17 +644,16 @@ class SaleOrder(models.Model):
 
     @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
     def _compute_amount_to_invoice(self):
+        orders_amount = self.invoice_ids.filtered(lambda invoice: invoice.state == 'posted' or invoice.payment_state == 'invoicing_legacy')._get_sale_order_invoiced_amount_batch(self)
         for order in self:
             # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
             if order.invoice_status == 'invoiced':
                 order.amount_to_invoice = 0.0
                 continue
-
-            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted' or x.payment_state == 'invoicing_legacy')
             # Note: A negative amount can happen, since we can invoice more than the sales order amount.
             # Care has to be taken when summing amount_to_invoice of multiple orders.
             # E.g. consider one invoiced order with -100 and one uninvoiced order of 100: 100 + -100 = 0
-            order.amount_to_invoice = order.amount_total - invoices._get_sale_order_invoiced_amount(order)
+            order.amount_to_invoice = order.amount_total - orders_amount[order]
 
     @api.depends('amount_total', 'amount_to_invoice')
     def _compute_amount_invoiced(self):
