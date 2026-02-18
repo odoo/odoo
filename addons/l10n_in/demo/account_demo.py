@@ -69,6 +69,11 @@ class AccountChartTemplate(models.AbstractModel):
         inter_state_ref = 'base.state_in_ts'
         intra_state_ref = 'base.state_in_gj'
         default_partner_dict = {'country_id': 'base.in', 'is_company': True, 'company_id': company.id}
+        pan_entity = self.env['l10n_in.pan.entity'].create({
+            'name': 'AACCT6304M',
+            'msme_type': 'micro',
+            'msme_number': 'UDYAM-GJ-01-1232131',
+        })
         return{
             'res_partner_registered_customer': {
                 **default_partner_dict,
@@ -125,6 +130,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'state_id': 'base.state_in_tn',
                 'zip': '625218',
                 'vat': '33AACCT6304M1DB',
+                'l10n_in_pan_entity_id': pan_entity.id,
             },
             'res_partner_registered_supplier_2': {
                 **default_partner_dict,
@@ -137,6 +143,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'state_id': inter_state_ref,
                 'zip': '500014',
                 'vat': '36AACCT6304M1ZB',
+                'l10n_in_pan_entity_id': pan_entity.id,
             },
             'res_partner_overseas': {
                 'name': 'Supplier Overseas',
