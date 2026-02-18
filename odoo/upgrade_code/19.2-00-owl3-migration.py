@@ -333,7 +333,11 @@ def upgrade_this(file_manager, log_info, log_error):
     # Iteration 2: Update templates
     for fileno, file in enumerate(all_files, start=1):
         try:
-            if any(f"{t}/static/src/" in file.path._str for t in targets) or targets == []:
+            is_target = not targets or any(
+                f"{t}/" in file.path._str or f"{t}_" in file.path._str
+                for t in targets
+            )
+            if is_target or targets == []:
                 file.content = update_template(file.content, outside_vars, inside_vars, modules=False)
             else:
                 file.content = update_template(file.content, outside_vars, inside_vars, modules=targets)

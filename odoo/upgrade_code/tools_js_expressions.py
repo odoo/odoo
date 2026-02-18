@@ -389,10 +389,10 @@ class TemplateCompiler:
 
             if self.modules:  # If targetting specific modules
                 inherit_nodes = self._is_inside_inherit(node)
-                if not inherit_nodes:
+                if not inherit_nodes or node.tag != "xpath":
                     continue
                 inherit_module = inherit_nodes[0].get("t-inherit", "").split(".")[0]
-                if inherit_module not in self.modules:
+                if not any(inherit_module == m or inherit_module.startswith(f"{m}_") for m in self.modules):
                     continue
 
             node_vars = self._get_node_vars(node, bound_variables)
@@ -1476,7 +1476,7 @@ test_external_xpath = [
     {
         "name": "No replace on inherits targetting modules not in target modules",
         "inside_vars": defaultdict(set),
-        "modules": ["random_module"],
+        "modules": ["website"],
         "content": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
@@ -1495,7 +1495,7 @@ test_external_xpath = [
 </templates>""",
     },
     {
-        "name": "Replace inside x-path variables",
+        "name": "Replace x-path (only) if they target correct module",
         "inside_vars": defaultdict(set),
         "modules": ["web"],
         "content": """
@@ -1510,7 +1510,7 @@ test_external_xpath = [
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
         <xpath expr="//t[@t-component='this.props.Renderer']" position="replace">
-            <button t-if="this.showDelete"/>
+            <button t-if="showDelete"/>
         </xpath>
     </t>
 </templates>""",
@@ -1522,7 +1522,7 @@ test_external_xpath = [
         "content": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
-        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+        <xpath expr="//t[@t-component='showDelete']" position="replace">
             <t t-if="showDelete"> a </t>
             <t t-elif="other"> b </t>
         </xpath>
@@ -1531,20 +1531,20 @@ test_external_xpath = [
         "expected": """
 <templates id="template" xml:space="preserve">
     <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
-        <xpath expr="//t[@t-component='this.props.Renderer']" position="replace">
+        <xpath expr="//t[@t-component='showDelete']" position="replace">
             <t t-if="showDelete"> a </t>
-            <t t-elif="this.other"> b </t>
+            <t t-elif="other"> b </t>
         </xpath>
     </t>
 </templates>""",
     },
     {
-        "name": "x-path only replace",
+        "name": "Replace x-path (only) if they target bridge module",
         "inside_vars": defaultdict(set),
         "modules": ["web"],
         "content": """
 <templates id="template" xml:space="preserve">
-    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web_tour.ListView">
         <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
             <attribute name="class" add="o_move_line_list_view" separator=" "/>
         </xpath>
@@ -1564,7 +1564,7 @@ test_external_xpath = [
         """,
         "expected": """
 <templates id="template" xml:space="preserve">
-    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web.ListView">
+    <t t-name="account_accountant.AttachmentPreviewListView" t-inherit="web_tour.ListView">
         <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
             <attribute name="class" add="o_move_line_list_view" separator=" "/>
         </xpath>
