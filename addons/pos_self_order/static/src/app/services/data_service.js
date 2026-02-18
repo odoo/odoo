@@ -7,10 +7,14 @@ import { registerPythonTemplate } from "@point_of_sale/app/utils/convert_python_
 export const unpatchSelf = patch(PosData.prototype, {
     async loadInitialData() {
         const configId = session.data.config_id;
+        const localData = await this.getCachedServerDataFromIndexedDB();
+        const partners = localData?.["res.partner"] || [];
         await this.fetchReceiptTemplate();
-        return await rpc(`/pos-self/data/${parseInt(configId)}`, {
+        const data = await rpc(`/pos-self/data/${parseInt(configId)}`, {
             access_token: odoo.access_token,
         });
+        data["res.partner"] = partners;
+        return data;
     },
     async fetchReceiptTemplate() {
         const configId = session.data.config_id;

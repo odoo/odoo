@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import uuid
 from datetime import timedelta
 
 import odoo.tests
@@ -183,7 +184,9 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 'amount_paid': 0,
                 'amount_tax': 0,
                 'amount_return': 0,
+                'uuid': uuid.uuid4().hex,
                 'lines': [[0, 0, {
+                    'uuid': uuid.uuid4().hex,
                     'product_id': product.id,
                     'qty': qty,
                     'price_unit': price_unit,

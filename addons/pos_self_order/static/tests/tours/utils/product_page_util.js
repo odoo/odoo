@@ -1,5 +1,4 @@
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function clickProduct(productName) {
     return {
@@ -85,20 +84,17 @@ export function clickDiscard() {
 
 export function setupAttribute(attributes, addToCart = true) {
     const steps = [];
-    if (addToCart) {
-        steps.push({
-            content: `Click on 'Add to cart' button`,
-            trigger: `.btn.btn-primary`,
-            run: "click",
-        });
-    }
 
     for (const attr of attributes) {
-        steps.unshift({
+        steps.push({
             content: `Select value ${attr.value} for attribute ${attr.name}`,
             trigger: `h2:contains("${attr.name}") + div.row button:contains("${attr.value}")`,
             run: "click",
         });
+    }
+
+    if (addToCart) {
+        steps.push(Utils.clickBtn("Add to cart"));
     }
 
     return steps;
@@ -176,9 +172,8 @@ export function setupCombo(products, addToCart = true) {
         steps.push(clickComboProduct(product.product));
 
         if (product.attributes.length > 0) {
-            Utils.checkMissingRequiredsExists();
-            steps.push(...setupAttribute(product.attributes));
-            negateStep(Utils.checkMissingRequiredsExists());
+            steps.push(...setupAttribute(product.attributes, false));
+            steps.push(Utils.clickBtn("Next"));
         }
 
         if (product.extraSteps?.length) {

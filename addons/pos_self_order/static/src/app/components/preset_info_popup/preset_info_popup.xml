@@ -25,19 +25,19 @@
                     <input t-if="preset.needsName || preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
-                        placeholder="Name"
+                        t-att-placeholder="partnerIsSelected ? '*************' : 'Name'"
                         t-model="state.name"
                         t-att-disabled="partnerIsSelected" />
                     <input t-if="preset.needsEmail || preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
-                        placeholder="Email"
+                        t-att-placeholder="partnerIsSelected ? '*************' : 'Email'"
                         t-model="state.email"
                         t-att-disabled="partnerIsSelected" />
                     <t t-if="preset.needsName || preset.needsPartner">
                         <input type="text"
                             class="form-control form-control-lg"
-                            placeholder="Phone"
+                            t-att-placeholder="partnerIsSelected ? '*************' : 'Phone'"
                             t-model="state.phone"
                             t-att-disabled="partnerIsSelected"/>
                         <p t-if="!checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
@@ -45,7 +45,8 @@
                     <t t-if="preset.needsPartner">
                         <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
                             <option value="">
-                                Select a country
+                                <t t-if="partnerIsSelected">*************</t>
+                                <t t-else="">Select a country</t>
                             </option>
                             <t t-foreach="this.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id" t-esc="country.name" />
@@ -54,13 +55,13 @@
                         <div class="d-flex gap-3">
                             <input type="text"
                                 class="form-control form-control-lg w-75"
-                                placeholder="Street and Number"
+                                t-att-placeholder="partnerIsSelected ? '*************' : 'Street and Number'"
                                 t-model="state.street"
                                 t-att-disabled="partnerIsSelected"/>
                             <input
                                 type="text"
                                 class="form-control form-control-lg w-25"
-                                placeholder="Zip"
+                                t-att-placeholder="partnerIsSelected ? '*************' : 'Zip'"
                                 t-model="state.zip"
                                 t-att-disabled="partnerIsSelected"/>
                         </div>
@@ -68,7 +69,8 @@
                             <t t-set="availableState" t-value="this.states" />
                             <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-model="state.stateId" t-att-disabled="partnerIsSelected">
                                 <option value="">
-                                    Select a state
+                                    <t t-if="partnerIsSelected">*************</t>
+                                    <t t-else="">Select a state</t>
                                 </option>
                                 <t t-foreach="availableState" t-as="state" t-key="state.id">
                                     <option t-att-value="state.id" t-esc="state.name" />
@@ -76,7 +78,7 @@
                             </select>
                             <input type="text"
                                 class="form-control form-control-lg"
-                                placeholder="City"
+                                t-att-placeholder="partnerIsSelected ? '*************' : 'City'"
                                 t-model="state.city"
                                 t-att-disabled="partnerIsSelected"/>
                         </div>
