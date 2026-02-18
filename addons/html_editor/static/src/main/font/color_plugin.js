@@ -122,7 +122,10 @@ export class ColorPlugin extends Plugin {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
                     const nodes = new Set();
-                    for (const node of this.dependencies.selection.getTargetedNodes()) {
+                    const editableTargetedNodes = this.dependencies.selection
+                        .getTargetedNodes()
+                        .filter(this.dependencies.selection.isNodeEditable);
+                    for (const node of editableTargetedNodes) {
                         for (const getColorNode of colorNodeProviders) {
                             const colorNode = getColorNode(node);
                             if (colorNode) {

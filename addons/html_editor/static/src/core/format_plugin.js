@@ -21,6 +21,7 @@ import {
     isZwnbsp,
     isZWS,
     previousLeaf,
+    PROTECTED_QWEB_SELECTOR,
 } from "../utils/dom_info";
 import { isFakeLineBreak } from "../utils/dom_state";
 import {
@@ -205,10 +206,13 @@ export class FormatPlugin extends Plugin {
      * @param {Node[]} targetedNodes
      */
     removeFormats(formats, targetedNodes) {
+        const editableTargetedNodes = targetedNodes.filter(
+            this.dependencies.selection.isNodeEditable
+        );
         for (const format of formats) {
             if (
                 !formatsSpecs[format].removeStyle ||
-                !this.hasSelectionFormat(format, targetedNodes)
+                !this.hasSelectionFormat(format, editableTargetedNodes)
             ) {
                 continue;
             }
@@ -256,7 +260,11 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(isTextNode);
+        const targetedTextNodes = targetedNodes.filter(
+            (node) =>
+                node.matches?.(PROTECTED_QWEB_SELECTOR) ||
+                (isTextNode(node) && (isVisibleTextNode(node) || isZWS(node)))
+        );
         const isFormatted = formatsSpecs[format].isFormatted;
         return targetedTextNodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
@@ -291,15 +299,18 @@ export class FormatPlugin extends Plugin {
     }
 
     hasAnyFormat(targetedNodes) {
+        const editableTargetedNodes = targetedNodes.filter(
+            this.dependencies.selection.isNodeEditable
+        );
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
-                this.hasSelectionFormat(format, targetedNodes)
+                this.hasSelectionFormat(format, editableTargetedNodes)
             ) {
                 return true;
             }
         }
-        return targetedNodes.some(
+        return editableTargetedNodes.some(
             (node) => this.checkPredicates("has_format_predicates", node) ?? false
         );
     }
