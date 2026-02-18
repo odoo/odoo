@@ -109,7 +109,7 @@ class HrLeaveEmployeeReport(models.Model):
                     NULL::REAL as number_of_days,
                     NULL::REAL as number_of_hours,
                     NULL::TEXT as description,
-                    NULL::INTEGER as holiday_status_id,
+                    NULL::INTEGER as work_entry_type_id,
                     NULL::VARCHAR as state,
                     NULL::INTEGER as color
                 WHERE FALSE
