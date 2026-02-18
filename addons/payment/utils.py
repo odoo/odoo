@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from hashlib import sha1
+from werkzeug import urls
 
 from odoo import api, fields
 from odoo.http import request
@@ -243,3 +244,30 @@ def generate_idempotency_key(tx, scope=None):
     """
     database_uuid = tx.env['ir.config_parameter'].sudo().get_str('database.uuid')
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
+
+
+def extract_values_for_default_redirect_form(url, method):
+    """
+    Extract the checkout URL and its query parameters, returning them along with
+    the HTTP method to be used for the request.
+
+    The returned values are intended to be used for rendering the template
+    `payment.payment_default_redirect_form`, so that the checkout form or
+    redirection preserves all necessary parameters.
+
+    Passing the query parameters separately ensures they are preserved during
+    redirection, avoiding issues where query parameters could be stripped.
+
+    :param str url: The full checkout URL.
+    :param str method: The HTTP method to use for the checkout (e.g., 'GET' or 'POST').
+    :return: A dictionary containing the URL, decoded query parameters, and method.
+    :rtype: dict with keys 'api_url', 'url_params', 'api_method'
+    """
+    parsed = urls.url_parse(url)
+    params = urls.url_decode(parsed.query)
+
+    return {
+        'api_url': url,
+        'url_params': params,
+        'api_method': method,
+    }

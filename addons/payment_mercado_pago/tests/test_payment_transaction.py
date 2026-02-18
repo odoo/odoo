@@ -50,7 +50,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow='redirect')
         with patch(
             'odoo.addons.payment_mercado_pago.models.payment_transaction.PaymentTransaction'
-            '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com'}
+            '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com', 'api_method': 'get'}
         ):
             processing_values = tx._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
