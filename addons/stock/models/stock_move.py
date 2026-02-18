@@ -2109,13 +2109,22 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not cancel_backorder:
             moves_todo._create_backorder()
         moves_todo.mapped('move_line_ids').sorted()._action_done()
-        # Check the consistency of the result packages; there should be an unique location across
-        # the contained quants.
-        for result_package in moves_todo\
-                .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
-                .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
-            if len(result_package.quant_ids.filtered(lambda q: q.uom_id.compare(q.quantity, 0.0) > 0).mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+        # Check the consistency of the result packages; there should be a unique location across the contained quants.
+        result_packages = moves_todo.move_line_ids.filtered(lambda ml: ml.picked).result_package_id
+        inconsistent_packages = self.env["stock.quant"]._read_group(
+            [("package_id", "in", result_packages.ids), ("quantity", ">", 0)],
+            ["package_id"],
+            [],
+            having=[("location_id:count_distinct", ">", 1)],
+        )
+        if inconsistent_packages:
+            package_names = '\n'.join('\t' + package[0].name for package in inconsistent_packages)
+            raise UserError(_(
+                'A package cannot be moved multiple times within a single transfer'
+                ' or split across multiple locations.'
+                '\n\nConcerned package(s):\n%(package_names)s',
+                package_names=package_names
+            ))
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
