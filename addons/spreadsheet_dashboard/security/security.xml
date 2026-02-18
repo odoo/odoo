@@ -41,4 +41,18 @@
         <field name="groups" eval="[(4, ref('base.group_user'))]" />
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
+
+    <record id="spreadsheet_dashboard_favorite_filters_rule_manager" model="ir.rule">
+        <field name="name">Dashboard Favorite Filters: manager</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard_favorite_filters"/>
+        <field name="groups" eval="[Command.link(ref('spreadsheet_dashboard.group_dashboard_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="dashboard_fav_user_rule" model="ir.rule">
+        <field name="name">Dashboard Favorite Filters: user</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard_favorite_filters"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="domain_force">[('user_ids', 'in', [False,user.id])]</field>
+    </record>
 </odoo>

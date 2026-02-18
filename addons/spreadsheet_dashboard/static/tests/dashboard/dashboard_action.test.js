@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll, press, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData, Product } from "@spreadsheet/../tests/helpers/data";
@@ -7,7 +7,17 @@ import {
     defineSpreadsheetDashboardModels,
     getDashboardServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    editFavoriteName,
+    mockService,
+    onRpc,
+    patchWithCleanup,
+    saveAndEditFavorite,
+    saveFavorite,
+    toggleSaveFavorite,
+    toggleSearchBarMenu,
+} from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -730,5 +740,305 @@ describe("Quick search bar", () => {
 
         filterValue = model.getters.getGlobalFilterValue(productFilter.id);
         expect(filterValue).toEqual(undefined);
+    });
+});
+
+describe("Filter list behavior in search bar", () => {
+    async function setupDashboardWithFilter(globalFilter) {
+        const spreadsheetData = { globalFilters: [globalFilter] };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+        await toggleSearchBarMenu();
+        return { model };
+    }
+
+    test("Can set a text filter value", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+        });
+
+        await contains(".o-filter-values select").select("not ilike");
+        await contains(".o-filter-values .o-autocomplete input").edit("foo");
+        await press("Enter");
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
+
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual({
+            operator: "not ilike",
+            strings: ["foo"],
+        });
+    });
+
+    test("Can set a numeric filter value with basic operator", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "numeric",
+            label: "Numeric Filter",
+        });
+
+        await contains(".o-filter-values select").select(">");
+        await contains(".o-filter-values input").edit(1998);
+        await press("Enter");
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined, {
+            message: "value is not directly set",
+        });
+
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual(
+            { operator: ">", targetValue: 1998 },
+            { message: "value is set" }
+        );
+    });
+
+    test("Can set a numeric filter value with between operator", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "numeric",
+            label: "Numeric Filter",
+        });
+
+        await contains(".o-filter-values select").select("between");
+        const [minInput, maxInput] = document.querySelectorAll(".o-global-filter-numeric-value");
+        expect([minInput, maxInput]).toHaveLength(2);
+        await contains(minInput).edit(1);
+        await contains(maxInput).edit(99);
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual(
+            { operator: "between", minimumValue: 1, maximumValue: 99 },
+            { message: "value is set" }
+        );
+    });
+
+    test("Can set a relation filter value", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "relation",
+            modelName: "product",
+            label: "Relation Filter",
+        });
+
+        await contains(".o-filter-values select").select("not in");
+        await contains("input.o-autocomplete--input").click();
+        await contains(".o-autocomplete--dropdown-item:first").click();
+        expect(".o_tag").toHaveCount(1);
+
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual(
+            { operator: "not in", ids: [37] },
+            { message: "value is set" }
+        );
+
+        await toggleSearchBarMenu();
+        await contains(".o_tag .o_delete").click();
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
+    });
+
+    test("Can remove a default relation filter value", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "relation",
+            modelName: "product",
+            label: "Relation Filter",
+            defaultValue: { operator: "in", ids: [37] },
+        });
+        expect(".o_tag").toHaveCount(1);
+
+        await contains(".o_tag .o_delete").click();
+        expect(".o_tag").toHaveCount(0);
+
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
+    });
+
+    test("Can change a boolean filter value", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "boolean",
+            label: "Boolean Filter",
+        });
+        expect(".o-filter-values select").toHaveValue("");
+
+        await contains(".o-filter-values select").select("not set");
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual({ operator: "not set" });
+
+        await toggleSearchBarMenu();
+        await contains(".o-filter-values select").select("");
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
+    });
+
+    test("Can set a date filter value", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+        });
+
+        await contains(".o-date-filter-input").click();
+        await contains(".o-dropdown-item[data-id='last_7_days']").click();
+        expect(".o-date-filter-input").toHaveValue("Last 7 Days");
+
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual({
+            period: "last_7_days",
+            type: "relative",
+        });
+    });
+
+    test("Readonly user can update a filter value", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+        });
+        model.updateMode("readonly");
+
+        await contains(".o-filter-values .o-autocomplete input").edit("foo");
+        await press("Enter");
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42").strings).toEqual(["foo"], {
+            message: "value is set",
+        });
+    });
+
+    test("Can clear a filter value removing the values manually", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            defaultValue: { operator: "ilike", strings: ["foo"] },
+        });
+        expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(1);
+
+        await contains(".o-filter-values .o-filter-item .o_tag .o_delete").click();
+        expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined, {
+            message: "value is cleared",
+        });
+    });
+
+    test("Can clear a filter value with the clear button", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            defaultValue: { operator: "ilike", strings: ["foo"] },
+        });
+        expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(1);
+
+        expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(1);
+        await contains(".o-filter-values .o-filter-item .o-filter-clear button").click();
+        expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
+    });
+
+    test("clearing a filter value preserves the operator", async function () {
+        const { model } = await setupDashboardWithFilter({
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            defaultValue: { operator: "ilike", strings: ["foo"] },
+        });
+
+        await contains(".o-filter-values select").select("starts with");
+        await contains(".o-filter-values .o-filter-item .o_tag .o_delete").click();
+        expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
+        expect(".o-filter-values select").toHaveValue("starts with");
+
+        await contains(".o-filter-values .o-filter-item .o-autocomplete input").edit("foo");
+        await contains(".o-filter-values .o-filter-item .o-autocomplete input").press("Enter");
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(model.getters.getGlobalFilterValue("42")).toEqual({
+            operator: "starts with",
+            strings: ["foo"],
+        });
+    });
+});
+
+describe("Favorite filters in search bar", () => {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+
+    beforeEach(async () => {
+        await createSpreadsheetDashboard({ serverData });
+    });
+
+    test("simple favorite menu rendering", async function () {
+        await toggleSearchBarMenu();
+        await toggleSaveFavorite();
+        expect(`.o_add_favorite + .o_accordion_values input[type="text"]`).toHaveValue(
+            "Spreadsheet with Pivot"
+        );
+        expect(`.o_add_favorite + .o_accordion_values input[type="checkbox"]`).toHaveCount(1);
+        expect(`.o_add_favorite + .o_accordion_values .form-check label`).toHaveText(
+            "Default filter"
+        );
+    });
+
+    test("save favorite filters", async function () {
+        onRpc("create", ({ args, route }) => {
+            expect.step(route);
+            const favoriteFilter = args[0][0];
+            expect(favoriteFilter.name).toBe("aaa");
+            expect(favoriteFilter.dashboard_id).toBe(789);
+            expect(favoriteFilter.global_filters).toEqual({});
+            expect(favoriteFilter.is_default).toBe(false);
+            expect(favoriteFilter.user_ids).toEqual([7]);
+            return [7];
+        });
+
+        expect.verifySteps([]);
+        await toggleSaveFavorite();
+        await editFavoriteName("aaa");
+        await saveFavorite();
+        expect.verifySteps(["/web/dataset/call_kw/spreadsheet.dashboard.favorite.filters/create"]);
+    });
+
+    test("save and edit favorite filters", async function () {
+        onRpc("create", ({ args, route }) => {
+            expect.step(route);
+            const favoriteFilter = args[0][0];
+            expect(favoriteFilter.name).toBe("aaa");
+            return [7];
+        });
+        mockService("action", {
+            doAction(action) {
+                expect(action).toEqual({
+                    context: {
+                        form_view_ref:
+                            "spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_edit_form",
+                    },
+                    res_id: 7,
+                    res_model: "spreadsheet.dashboard.favorite.filters",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                });
+                expect.step("Edit favorite");
+            },
+        });
+
+        expect.verifySteps([]);
+        await toggleSaveFavorite();
+        await editFavoriteName("aaa");
+        await saveAndEditFavorite();
+        expect.verifySteps([
+            "/web/dataset/call_kw/spreadsheet.dashboard.favorite.filters/create",
+            "Edit favorite",
+        ]);
     });
 });

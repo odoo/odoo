@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_container_view_list" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.group.view.list</field>
+        <field name="model">spreadsheet.dashboard.group</field>
+        <field name="arch" type="xml">
+            <list string="Dashboards" editable="bottom">
+                <field name="sequence" widget="handle" groups="spreadsheet_dashboard.group_dashboard_manager"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_group_action_configuration_sections" model="ir.actions.act_window">
+        <field name="name">Sections</field>
+        <field name="res_model">spreadsheet.dashboard.group</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

@@ -11,7 +11,9 @@
         "security/security.xml",
         "security/ir.model.access.csv",
         "views/spreadsheet_dashboard_views.xml",
-        "views/menu_views.xml",
+        "views/spreadsheet_dashboard_favorite_filters_views.xml",
+        "views/spreadsheet_dashboard_group_views.xml",
+        "views/spreadsheet_dashboard_menus.xml",
         "data/dashboard.xml",
     ],
     "assets": {
