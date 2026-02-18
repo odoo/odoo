@@ -689,3 +689,15 @@ class TestHrVersion(TransactionCase):
         # attempt to reassign all versions
         with self.assertRaises(ValidationError):
             employee.version_ids.write({"employee_id": another_employee.id})
+
+    def test_unlink_version_except_one(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        version = employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        self.assertEqual(len(employee.version_ids), 2)
+        version.unlink()
+        self.assertEqual(len(employee.version_ids), 1)
