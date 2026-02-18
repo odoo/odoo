@@ -28,6 +28,7 @@
                                 <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
                                 <field class="oe_inline" name="delay_from"/>
                             </div>
+                            <field name="kpi_provider_visibility" groups="base.group_no_one"/>
                         </group>
                         <group name="activity_planning" string="Next Activity" invisible="category == 'upload_file' and not res_model">
                             <field name="suggested_next_type_id" string="Default Type" context="{'default_res_model': res_model}"
