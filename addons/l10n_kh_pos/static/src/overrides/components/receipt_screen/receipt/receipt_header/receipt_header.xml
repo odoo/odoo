@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_kh_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <!-- Company Name -->
+        <xpath expr="//div[@t-if='props.data.company.partner_id?.[1]']" position="before">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <t t-if="props.data.company.name_khmer">
+                    <div t-esc="props.data.company.name_khmer"></div>
+                </t>
+            </t>
+        </xpath>
+
+        <!-- Phone Number Label -->
+        <xpath expr="//t[@t-if='props.data.company.phone']" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <t t-if="props.data.company.phone">
+                    <div>
+                        លេខទូរសព្ទ៖ / Tel: <t t-esc="props.data.company.phone"/>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- VAT TIN -->
+        <xpath expr="//t[@t-if='props.data.company.vat']" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <t t-if="props.data.company.vat">
+                    <div>
+                        លេខ​សម្គាល់​ពន្ធនាការ​បន្ថែម​តម្លៃ៖ / VAT TIN: <t t-esc="props.data.company.vat" />
+                    </div>
+                </t>
+            </t>
+        </xpath>
+
+        <!-- Khmer and English Address -->
+        <xpath expr="//div[@t-if='props.data.cashier']" position="before">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <t t-if="props.data.company.address_khmer">
+                    <div>
+                        អាសយដ្ឋាន៖ <t t-esc="props.data.company.address_khmer"/>
+                    </div>
+                </t>
+                <t t-if="props.data.company.address_full">
+                    <div>
+                        Address: <t t-esc="props.data.company.address_full"/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+
+        <!-- Served By Label -->
+        <xpath expr="//t[@t-esc='props.data.cashier']/.." position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div>
+                    អ្នកចេញវិក្កយបត្រ / Served by <t t-esc="props.data.cashier" />
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Order Label -->
+        <xpath expr="//div[@t-if='props.data.trackingNumber and !props.data.bigTrackingNumber']" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div class="fw-bolder" t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
+                    kh_order / Order: <t t-esc="props.data.trackingNumber" />
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

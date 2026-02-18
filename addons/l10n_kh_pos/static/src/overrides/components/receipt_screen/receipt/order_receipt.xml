@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_kh_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <!-- Orderline  -->
+        <xpath expr="//OrderWidget" position="replace">
+            <t t-if="props.data.khmer_receipt">
+                <OrderTable lines="props.data.orderlines" t-slot-scope="scope">
+                    <t t-set="line" t-value="scope.line"/>
+                    <OrderTableLine line="scope.line"/>
+                </OrderTable>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Invoice Label and Invoice Number -->
+        <xpath expr="//OrderWidget" position="before">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <h5 class="pos-receipt-center-align">វិក័យប័ត្រ - INVOICE</h5>
+                <div class="">
+                    លេខវិក្កយបត្រ៖ / Invoice Number: <span class="pos-receipt-right-align" t-esc="props.data.invoice_name"/>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Total Label -->
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.amount_total)']/.." position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div class="pos-receipt-amount-kh">
+                    សរុប / TOTAL <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Rounding and To Pay Label -->
+        <xpath expr="//t[@t-if='props.data.rounding_applied']" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <t t-if="props.data.rounding_applied">
+                    <div class="pos-receipt-amount-kh">
+                        kh_rounding / Rounding <span t-esc='props.formatCurrency(props.data.rounding_applied)' class="pos-receipt-right-align"/>
+                    </div>
+                    <div class="pos-receipt-amount-kh">
+                        kh_to_pay / To Pay <span t-esc='props.formatCurrency(props.data.amount_total + props.data.rounding_applied)' class="pos-receipt-right-align"/>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Total in KHR and Exchange Rate -->
+        <xpath expr="//t[@t-if='props.data.rounding_applied']" position="after">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div class="pos-receipt-amount-kh">
+                    សរុបរៀល / Total in KHR
+                    <span t-esc='props.data.total_amount_khr' class="pos-receipt-right-align"/>
+                </div>
+                <div class="pos-receipt-amount-kh pos-receipt-right-align">
+                    <span t-esc='`(${props.formatCurrency(1)} = ${props.data.rate_to_khr})`'/>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Payment Lines Font Size-->
+        <xpath expr="//div[@class='paymentlines']" position="attributes">
+            <attribute name="t-att-class" add="props.data.khmer_receipt ? 'small-font-kh' : ''"/>
+        </xpath>
+
+        <!-- Change Label -->
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.change)']/.." position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div class="receipt-change mt-2 pos-receipt-amount-kh">
+                    លុយអាប់ / CHANGE
+                    <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Discount Label -->
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.total_discount)']/.." position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div class="small-font-kh">
+                    ថ្លៃឯកតា / Discounts <span t-esc="props.formatCurrency(props.data.total_discount)" class="pos-receipt-right-align"/>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Tax Font Size -->
+        <xpath expr="//div[@class='pos-receipt-taxes']" position="attributes">
+            <attribute name="t-att-class" add="props.data.khmer_receipt ? 'small-font-kh' : ''"/>
+        </xpath>
+
+        <!-- Tax Labels -->
+        <xpath expr="//span[text()='VAT%']" position="before">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <span>kh_vat%</span>
+                <span>kh_vat</span>
+                <span>kh_exvat</span>
+                <span>kh_total_tax</span>
+                <span />
+            </t>
+        </xpath>
+
+        <!-- QR Code Help Text -->
+        <xpath expr="//div[@t-if='props.data.pos_qr_code']/div" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div class="pos-receipt-order-data mb-2">
+                    kh_scan_text<br/>
+                    Scan me to request an invoice for your purchase.
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Ticket Code Help Text -->
+        <xpath expr="//div[@t-if='props.data.ticket_code']" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <div t-if="props.data.ticket_code">
+                    <br />
+                    <br />
+                    <div class="pos-receipt-order-data">
+                        kh_code <t t-out="props.data.base_url"/>/pos/ticket kh_code
+                    </div>
+                    <div class="pos-receipt-order-data">
+                        You can go to <t t-out="props.data.base_url"/>/pos/ticket and use the code below to request an invoice online
+                    </div>
+                    <div class="pos-receipt-order-data">
+                        kh_unique_code / Unique Code: <t t-out="props.data.ticket_code"/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Shipping Date -->
+        <xpath expr="//t[@t-if='props.shippingDate']" position="replace">
+            <t t-if="props.data.khmer_receipt" t-translation="off">
+                <t t-if="props.data.shippingDate">
+                    <div class="pos-receipt-order-data">
+                        kh_expected_delivery / Expected delivery: <t t-esc="props.data.shippingDate" />
+                    </div>
+                </t>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Order Name  -->
+        <!-- props.data.name has format "Order: %s" -->
+        <xpath expr="//div[@t-esc='props.data.name']" position="replace">
+            <t t-if="props.data.khmer_receipt"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
