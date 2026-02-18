@@ -823,6 +823,7 @@ test("rendering of inbox message", async () => {
 test("Can right-click on message to opens message actions dropdown", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     patchWithCleanup(Message.prototype, {
         onContextMenu() {
             expect.step("Message.onContextMenu");
@@ -845,6 +846,12 @@ test("Can right-click on message to opens message actions dropdown", async () =>
             model: "res.partner",
             needaction: true,
             res_id: partnerId,
+        },
+        {
+            body: "message-body-3",
+            model: "discuss.channel",
+            pinned_at: "2023-03-30 11:27:11",
+            res_id: channelId,
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -880,6 +887,15 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await click(".o-mail-Thread");
     await contains(".o-dropdown-item", { count: 0 });
     await rightClick(".o-mail-Message-body:eq(1) a");
+    await expect.waitForSteps(["Message.onContextMenu"]);
+    await animationFrame();
+    expect.verifySteps([]);
+    // Test Pinned Panel right-click doesn't show message actions
+    await click(".o-mail-DiscussSidebar-item:has(:text('General'))");
+    await contains(".o-mail-DiscussContent-threadName:value('General')");
+    await click("button[title='Pinned Messages']");
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
+    await rightClick(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
     expect.verifySteps([]);
