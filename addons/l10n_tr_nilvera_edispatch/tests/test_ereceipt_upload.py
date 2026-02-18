@@ -34,7 +34,7 @@ class TestTRNilveraEreceiptUpload(TestStockCommon):
     def test_ereceipt_xml_without_errors_upload(self):
         with file_open('l10n_tr_nilvera_edispatch/tests/test_files/test_ereceipt.xml', 'rb') as f:
             ereceipt_xml = self.env['ir.attachment'].create({
-                'name': 'E-Receipt Without Errors',
+                'name': 'test_ereceipt_upload.xml',
                 'type': 'binary',
                 'datas': base64.b64encode(f.read()),
             })
