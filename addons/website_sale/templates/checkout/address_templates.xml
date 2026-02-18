@@ -209,7 +209,7 @@
         <t t-call="portal.address_card" position="replace">
             <t t-set="contact" t-value="address"/>
             <t t-call="website_sale.address_card"
-                is_user_address="address == request.env.user.partner_id"
+                is_user_address="address == env.user.partner_id"
                 contact="contact"
                 can_be_edited="contact._can_be_edited_by_current_customer(order_sudo=order)"
                 selected="address == selected_address">

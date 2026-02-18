@@ -87,7 +87,7 @@
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
-        <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
+        <t t-if="not env.user._is_public()" t-set="nothing" t-value="html_data.update({
             'data-is-published': 'website_published' in main_object._fields and main_object.sudo().website_published,
             'data-publish-on': 'publish_on' in main_object._fields and (main_object.sudo().publish_on or ''),
             'data-can-optimize-seo': 'website_meta_description' in main_object._fields,
@@ -179,9 +179,9 @@
 
     <xpath expr="//head/script" position="before">
         <t t-if="website and website.cookies_bar and website.block_third_party_domains
-                 and not request.env['ir.http']._is_allowed_cookie('optional')
+                 and not env['ir.http']._is_allowed_cookie('optional')
                  and not editable and not translatable
-                 and not request.env.user.has_group('website.group_website_restricted_editor')">
+                 and not env.user.has_group('website.group_website_restricted_editor')">
             <script src="/website/static/src/js/content/cookie_watcher.js"/>
             <script>
                 watch3rdPartyScripts(<t t-out="json.dumps(website._get_blocked_third_party_domains_list())"/>);

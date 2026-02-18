@@ -12,7 +12,7 @@
                     <div class="col-12 col-lg-8">
                         <nav class="nav d-flex">
                             <t
-                                t-foreach="request.env['product.public.category'].search([
+                                t-foreach="env['product.public.category'].search([
                                     ('parent_id', '=', False), ('has_published_products', '=', True)
                                 ], limit=8)"
                                 t-as="category"

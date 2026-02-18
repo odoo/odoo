@@ -11,7 +11,7 @@
                 <div class="row ustify-content-center">
                     <t t-set="counter" t-value="0"/>
                     <t
-                        t-foreach="request.env['product.public.category'].search([
+                        t-foreach="env['product.public.category'].search([
                             ('parent_id', '=', False), ('has_published_products', '=', True),
                         ], limit=10)"
                         t-as="category"

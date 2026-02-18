@@ -171,7 +171,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                 <span class="s_website_form_label_content">Name</span>
                                 <span class="s_website_form_mark"> *</span>
                             </label>
-                            <div t-if="request.env['mailing.contact']._is_name_split_activated()" class="col-sm row">
+                            <div t-if="env['mailing.contact']._is_name_split_activated()" class="col-sm row">
                                 <div class="col-sm-6">
                                     <input id="mailing_sub1" type="text" class="form-control s_website_form_input"
                                            name="first_name" placeholder="First Name" required="1"/>
@@ -205,7 +205,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                             </label>
                             <div class="col-sm">
                                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="list_ids" data-display="horizontal">
-                                    <t t-foreach="request.env['mailing.list'].search([('is_public', '=', True)])" t-as="record">
+                                    <t t-foreach="env['mailing.list'].search([('is_public', '=', True)])" t-as="record">
                                         <div class="checkbox col-12 col-lg-4 col-md-6">
                                             <div class="form-check">
                                                 <input type="checkbox" class="s_website_form_input form-check-input" name="list_ids"

@@ -1305,7 +1305,7 @@
             <!-- Dynamic category display based on search -->
             <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
             <!-- Only show categories with published products to portal users preventing from access errors  -->
-            <t t-set="children" t-value="request.env.user._is_internal() and children or children.filtered('has_published_products')"/>
+            <t t-set="children" t-value="env.user._is_internal() and children or children.filtered('has_published_products')"/>
 
             <ul t-if="children" class="nav flex-column nav-hierarchy mt-1 ps-3">
                 <t t-foreach="children" t-as="c">
@@ -1397,7 +1397,7 @@
         <!-- Dynamic category display based on search -->
         <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
         <!-- Only show categories with published products to portal users preventing from access errors  -->
-        <t t-set="children" t-value="request.env.user._is_internal() and children or children.filtered('has_published_products')"/>
+        <t t-set="children" t-value="env.user._is_internal() and children or children.filtered('has_published_products')"/>
 
         <t t-if="children">
             <t t-set="isOpen" t-value="c.id in category.parents_and_self.ids"/>

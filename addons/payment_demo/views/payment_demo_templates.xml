@@ -85,7 +85,7 @@
             <div t-if="shipping_info_required"
                  t-attf-id="o_payment_demo_shipping_info_{{provider_id}}"
             >
-                <t t-set="customer" t-value="request.env.user.partner_id"/>
+                <t t-set="customer" t-value="env.user.partner_id"/>
                 <div class="row mt-0">
                     <div class="col mb-0">
                         <label for="o_payment_demo_shipping_name" class=" mt-0">

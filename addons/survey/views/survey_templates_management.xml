@@ -154,7 +154,7 @@
                             </div>
                             <div class="text-center mt32 p-2">
                                 <button groups="survey.group_survey_user" type="button" t-attf-class="o_survey_launch_session btn btn-primary {{'d-none' if error != 'survey_session_not_launched' else ''}}" t-att-data-survey-id="survey_id">Launch Session</button>
-                                <button type="submit" t-attf-class="btn btn-primary {{'d-none' if error == 'survey_session_not_launched' and request.env.user.has_group('survey.group_survey_user') else ''}}">Join Session</button>
+                                <button type="submit" t-attf-class="btn btn-primary {{'d-none' if error == 'survey_session_not_launched' and env.user.has_group('survey.group_survey_user') else ''}}">Join Session</button>
                             </div>
                         </div>
                     </div>

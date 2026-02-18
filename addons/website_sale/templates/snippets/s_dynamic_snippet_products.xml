@@ -5,7 +5,7 @@
     <template id="website_sale.s_dynamic_snippet_products" name="Products">
         <t
             t-set="default_design_classes"
-            t-value="request and request.env['website'].get_current_website().shop_opt_products_design_classes or ''"
+            t-value="request and env['website'].get_current_website().shop_opt_products_design_classes or ''"
         />
         <t
             t-if="'o_wsale_products_opt_layout_catalog' not in default_design_classes"

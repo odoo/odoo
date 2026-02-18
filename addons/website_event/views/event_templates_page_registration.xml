@@ -25,7 +25,7 @@
     <t t-set="opt_event_location_block" t-value="is_view_active('website_event.opt_event_location_block')"/>
     <t t-set="opt_event_organizer_block" t-value="is_view_active('website_event.opt_event_organizer_block')"/>
     <t t-set="opt_event_share_block" t-value="is_view_active('website_event.opt_event_share_block')"/>
-    <t t-set="edition_cover_only" t-value="opt_event_description_cover_hidden and request.env.user.has_group('event.group_event_manager')"/>
+    <t t-set="edition_cover_only" t-value="opt_event_description_cover_hidden and env.user.has_group('event.group_event_manager')"/>
 
     <t t-call="website_event.event_details">
         <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>

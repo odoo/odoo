@@ -262,7 +262,7 @@
                         class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
                     />
                 </button>
-                <a t-if="not request.env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
+                <a t-if="not env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
                     <t t-call="website_slides.slides_misc_user_image"
                         img_class.f="o_wslides_user_avatar rounded-circle"/>
                 </a>
