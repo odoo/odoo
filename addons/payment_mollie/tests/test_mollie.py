@@ -18,13 +18,13 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
 
         payload = tx._mollie_prepare_payment_request_payload()
         expected_billing_address = {
-            'givenName': 'Test',
-            'familyName': 'User',
-            'streetAndNumber': '',
-            'postalCode': False,
-            'city': False,
-            'country': False,
-            'email': 'test@example.com',
+            'givenName': 'Norbert',
+            'familyName': 'Buyer',
+            'streetAndNumber': 'Huge Street 2/543',
+            'postalCode': '1000',
+            'city': 'Sin City',
+            'country': 'BE',
+            'email': 'norbert.buyer@example.com',
         }
 
         self.assertDictEqual(payload['amount'], {'currency': 'EUR', 'value': '1111.11'})
@@ -51,41 +51,38 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         self.assertEqual(tx.state, 'done')
 
     def test_payload_preparation_in_payment_with_tokenize(self):
-        """Test that tokenization requests create a customer and set
-        a 'first' sequence without a mandate ID."""
-        self.tx.tokenize = True
-        with patch(
-            'odoo.addons.payment_mollie.models.payment_transaction.PaymentTransaction._mollie_create_customer',
+        """Test that tokenization requests create a customer and set a 'first' sequence without a
+        mandate ID."""
+        tx = self._create_transaction('redirect')
+        tx.tokenize = True
+        with patch.object(
+            self.env.registry['payment.transaction'], '_mollie_create_customer',
             return_value='cst_test987',
         ):
-            payload = self.tx._mollie_prepare_payment_request_payload()
+            payload = tx._mollie_prepare_payment_request_payload()
 
         self.assertEqual(payload.get('sequenceType'), 'first')
         self.assertEqual(payload.get('customerId'), 'cst_test987')
         self.assertNotIn('mandateId', payload)
 
     def test_payload_preparation_in_payment_with_token(self):
-        """Test that using a saved token produces a recurring payload
-        with customer and mandate IDs and no method."""
-        token = self.env['payment.token'].create({
-            'provider_id': self.provider.id,
-            'partner_id': self.partner.id,
-            'provider_ref': 'mdt_test987',
-            'payment_method_id': self.payment_method.id,
-            'mollie_customer_id': 'cst_test987',
-        })
-        self.tx.token_id = token
+        """Test that using a saved token produces a recurring payload with customer and mandate IDs
+        and no method."""
+        tx = self._create_transaction('redirect')
+        token = self._create_token()
+        token.mollie_customer_id = 'cst_test987'
+        tx.token_id = token
 
-        payload = self.tx._mollie_prepare_payment_request_payload()
+        payload = tx._mollie_prepare_payment_request_payload()
 
         self.assertEqual(payload.get('sequenceType'), 'recurring')
         self.assertEqual(payload.get('customerId'), 'cst_test987')
-        self.assertEqual(payload.get('mandateId'), 'mdt_test987')
+        self.assertEqual(payload.get('mandateId'), 'provider Ref (TEST)')
         self.assertNotIn('method', payload)
 
     def test_payload_preparation_in_oneoff_payment(self):
-        """Test that a payment without tokenization or token is
-        configured as a one-off sequence."""
-        payload = self.tx._mollie_prepare_payment_request_payload()
+        """Test that a payment without tokenization or token is configured as a one-off sequence."""
+        tx = self._create_transaction('redirect')
+        payload = tx._mollie_prepare_payment_request_payload()
 
         self.assertEqual(payload.get('sequenceType'), 'oneoff')

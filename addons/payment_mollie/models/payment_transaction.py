@@ -103,9 +103,6 @@ class PaymentTransaction(models.Model):
         else:
             payload['sequenceType'] = 'oneoff'
 
-        if self.state == 'error':
-            return {}
-
         return payload
 
     def _mollie_prepare_billing_address_payload(self):
@@ -136,7 +133,7 @@ class PaymentTransaction(models.Model):
         except ValidationError as error:
             self._set_error(str(error))
         else:
-            self.provider_reference = payment_data.get('id')
+            self.provider_reference = payment_data['id']
             self._process('mollie', payment_data)
 
     @api.model
@@ -211,8 +208,7 @@ class PaymentTransaction(models.Model):
             'mollie_customer_id': customer_id,
         }
 
-        details = payment_data.get('details', {})
-        if card_number := details.get('cardNumber'):
+        if card_number := payment_data.get('details', {}).get('cardNumber'):
             token_values['payment_details'] = card_number[-4:]
 
         return token_values

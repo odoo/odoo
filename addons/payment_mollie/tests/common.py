@@ -18,22 +18,4 @@ class MollieCommon(PaymentCommon):
         cls.payment_data = {
             'ref': cls.reference,
             'id': 'tr_ABCxyz0123',
-            'status': 'paid',
-            'mandateId': 'mdt_test123',
         }
-        cls.payment_method = cls.env['payment.method'].create({
-            'name': 'Mollie Credit Card',
-            'code': 'creditcard',
-        })
-        cls.partner = cls.env['res.partner'].create({
-            'name': 'Test User',
-            'email': 'test@example.com',
-        })
-        cls.tx = cls.env['payment.transaction'].create({
-            'reference': 'TEST123',
-            'amount': 10.0,
-            'currency_id': cls.env.ref('base.EUR').id,
-            'provider_id': cls.provider.id,
-            'partner_id': cls.partner.id,
-            'payment_method_id': cls.payment_method.id,
-        })
