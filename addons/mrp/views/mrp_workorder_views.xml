@@ -39,21 +39,6 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_mrp_workorder_production_specific">
-        <field name="name">Work Orders</field>
-        <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">list,form,calendar,pivot,graph</field>
-        <field name="domain">[('production_id', '=', active_id)]</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            No work orders to do!
-          </p><p>
-            Work orders are operations to do as part of a manufacturing order.
-            Operations are defined in the bill of materials or added in the manufacturing order directly.
-          </p>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="mrp_production_workorder_tree_editable_view">
         <field name="name">mrp.production.work.order.list.editable</field>
         <field name="model">mrp.workorder</field>
