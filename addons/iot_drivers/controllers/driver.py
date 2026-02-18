@@ -35,9 +35,47 @@ class DriverController(http.Controller):
 
         message_type = data.get('action', 'test_protocol') if device_identifier == IOT_IDENTIFIER else 'iot_action'
 
+<<<<<<< 3575815c2297510655df21b1b83cff72ff36ddba
         return communication.handle_message(
             message_type, 'lp', session_id=session_id, device_identifier=device_identifier, **data
         )
+||||||| dea5a1d28a1935c2b4d87c3c6e8c07cd874c7d6b
+        if not iot_device:
+            _logger.warning("IoT Device with identifier %s not found", device_identifier)
+            return False
+
+        data['session_id'] = session_id  # ensure session_id is in data as for websocket communication
+        _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+        iot_device.action(data)
+        return True
+
+    @route.iot_route('/iot_drivers/check_certificate', type='http', cors='*', csrf=False)
+    def check_certificate(self):
+        """
+        This route is called when we want to check if certificate is up-to-date
+        Used in iot-box cron.daily, deprecated since image 24_10 but needed for compatibility with the image 24_01
+        """
+        helpers.get_certificate_status()
+=======
+        if not iot_device:
+            _logger.warning("IoT Device with identifier %s not found", device_identifier)
+            return False
+
+        data['session_id'] = session_id  # ensure session_id is in data as for websocket communication
+        start_operation_time = time.perf_counter()
+        _logger.info("Longpolling: calling action %s for device %s", data.get('action', ''), device_identifier)
+        iot_device.action(data)
+        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
+        return True
+
+    @route.iot_route('/iot_drivers/check_certificate', type='http', cors='*', csrf=False)
+    def check_certificate(self):
+        """
+        This route is called when we want to check if certificate is up-to-date
+        Used in iot-box cron.daily, deprecated since image 24_10 but needed for compatibility with the image 24_01
+        """
+        helpers.get_certificate_status()
+>>>>>>> e2ec846fdb3c4eaddda4858d88ff21348cd216ce
 
     @helpers.toggleable
     @route.iot_route(['/iot_drivers/event', '/hw_drivers/event'], type='jsonrpc', cors='*', csrf=False)
