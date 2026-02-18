@@ -12,38 +12,12 @@ registry.category("web_tour.tours").add("time_off_request_calendar_view", {
         },
         {
             content: "Click on the first Thursday of the year",
-            trigger: ".fc-daygrid-day.fc-day-thu",
-            run: () => {
-                const el = document.querySelector(".fc-daygrid-day.fc-day-thu").firstChild;
-                el.scrollIntoView();
-
-                const fromPosition = el.getBoundingClientRect();
-                fromPosition.x += el.offsetWidth / 2;
-                fromPosition.y += el.offsetHeight / 2;
-
-                el.dispatchEvent(
-                    new MouseEvent("mousedown", {
-                        bubbles: true,
-                        which: 1,
-                        button: 0,
-                        clientX: fromPosition.x,
-                        clientY: fromPosition.y,
-                    })
-                );
-                el.dispatchEvent(
-                    new MouseEvent("mouseup", {
-                        bubbles: true,
-                        which: 1,
-                        button: 0,
-                        clientX: fromPosition.x,
-                        clientY: fromPosition.y,
-                    })
-                );
-            },
+            trigger: ".fc-daygrid-day.fc-day-thu .fc-daygrid-day-number",
+            run: "click",
         },
         {
             content: "Save the leave",
-            trigger: '.btn:contains("Submit Request")',
+            trigger: '.o_form_button_save',
             run: "click",
         },
     ],
