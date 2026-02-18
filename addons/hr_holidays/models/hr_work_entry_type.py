@@ -62,7 +62,7 @@ class HrWorkEntryType(models.Model):
                                  domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
     country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     leave_validation_type = fields.Selection([
-        ('no_validation', 'None needed'),
+        ('no_validation', 'None'),
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
@@ -71,7 +71,7 @@ class HrWorkEntryType(models.Model):
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
-        ('no_validation', 'None needed'),
+        ('no_validation', 'None'),
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Approval',
@@ -98,7 +98,7 @@ class HrWorkEntryType(models.Model):
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
         help="If checked, this time off type will be taken into account for accruals computation.")
     # negative time off
-    allows_negative = fields.Boolean(string='Allow Negative Cap',
+    allows_negative = fields.Boolean(string='Allow Negative',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
@@ -107,6 +107,7 @@ class HrWorkEntryType(models.Model):
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
         'The maximum excess amount should be greater than 0. If you want to set 0, disable the negative cap instead.'
     )
+    can_be_time_off = fields.Boolean(string="Selectable in Time Off")
 
     @api.model
     def _search_valid(self, operator, value):

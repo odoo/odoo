@@ -62,10 +62,14 @@
                     <group name="main_group">
                         <group name="identification" class="o_form_fw_labels">
                             <field name="active" invisible="1"/>
-                            <field name="code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
+                            <field name="code" string="Code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
+                            <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
                         </group>
                         <group>
                             <field name="country_id" options="{'no_create': True, 'no_open': True}" placeholder="Available Everywhere"/>
+                            <separator string="Display" />
+                            <field name="display_code" placeholder="e.g. ATT, PTO, STO, OT, RW, ..."/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
 
@@ -79,11 +83,6 @@
                                     </div>
                                     <field name="is_extra_hours"/>
                                     <field name="shortcut_behavior" widget="radio" options="{'horizontal': True}"/>
-                                    <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
-                                </group>
-                                <group string="Display">
-                                    <field name="display_code" placeholder="e.g. ATT, PTO, STO, OT, RW, ..."/>
-                                    <field name="color" widget="color_picker"/>
                                 </group>
                             </group>
 
