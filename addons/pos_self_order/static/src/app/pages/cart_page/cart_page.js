@@ -100,7 +100,22 @@ export class CartPage extends Component {
             return;
         }
 
-        if (!this.selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
+        const order = this.selfOrder.currentOrder;
+        const partner = order.partner_id || {};
+        const time = order.preset_time ? order.preset_time.toSQL() : null;
+        const isValidRequiredInfo = this.selfOrder.isValidSelection(time, {
+            id: parseInt(partner.id),
+            name: partner.name || order.floating_order_name,
+            email: partner.email || order.email,
+            phone: partner.phone || order.mobile,
+            street: partner.street,
+            city: partner.city,
+            country_id: partner.country_id,
+            state_id: partner.state_id,
+            zip: partner.zip,
+        });
+
+        if (!isValidRequiredInfo && orderingMode !== "table") {
             this.state.fillInformations = true;
             return;
         }
