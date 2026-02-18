@@ -7,7 +7,7 @@
             </div>
             <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': props.model.meta.canScheduleEvents and state.isDragging }">
                 <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="() => this.props.toggleSidePanel()">
-                    <i class="oi oi-panel-right fa-flip-horizontal"/>
+                    <i class="oi oi-panel-right"/>
                 </button>
                 <DatePicker t-if="showDatePicker" t-props="datePickerProps" />
                 <div class="o_calendar_sidepanel_content px-3">
@@ -25,7 +25,7 @@
         <div t-elif="!env.isSmall" class="o_calendar_sidebar flex-grow-0 flex-shrink-0 bg-view h-100 cursor-pointer d-print-none" t-on-click="() => this.props.toggleSidePanel()">
             <div class="d-flex">
                 <button class="btn btn-light btn-sm m-2 p-1 py-2">
-                    <i class="oi oi-panel-right fa-flip-horizontal"/>
+                    <i class="oi oi-panel-right"/>
                 </button>
                 <t t-foreach="filters" t-as="filter" t-key="filter_index">
                     <div class="m-2 mt-0 p-1" t-att-class="{ 'text-muted': !filter.active }">
