@@ -76,6 +76,10 @@ def _configure_stock_account_company_data(env):
         template_code = company.chart_template
         res_company_data = ChartTemplate._get_stock_account_res_company(template_code)
         account_account_data = ChartTemplate._get_stock_account_account(template_code)
+        account_templates = ChartTemplate._get_chart_template_model_data(template_code, 'account.account')
+        for xmlid, vals in account_account_data.items():
+            if not ChartTemplate.ref(xmlid, raise_if_not_found=False):
+                vals.update(account_templates.get(xmlid, {}))
         ChartTemplate._load_data({
             'res.company': res_company_data,
             'account.account': account_account_data,
