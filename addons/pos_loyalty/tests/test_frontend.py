@@ -2,6 +2,7 @@
 
 from datetime import date, timedelta
 from unittest.mock import patch
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import tagged
@@ -1590,12 +1591,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Create test partners
         partner_aaa = self.env['res.partner'].create({'name': 'AAAA'})
         #Create an eWallet for partner_aaa
-        self.env['loyalty.card'].create({
-            'partner_id': partner_aaa.id,
-            'program_id': ewallet_program.id,
-            'points': 50,
-            'expiration_date': date(2020, 1, 1),
-        })
+        with freeze_time('2020-1-1'):
+            self.env['loyalty.card'].create({
+                'partner_id': partner_aaa.id,
+                'program_id': ewallet_program.id,
+                'points': 50,
+                'expiration_date': date.today(),
+            })
         self.main_pos_config.open_ui()
         self.start_pos_tour("ExpiredEWalletProgramTour")
 
@@ -3257,12 +3259,13 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'issued': 60.0,
             })]
         })
-        gift_card_expired = self.env['loyalty.card'].create({
-            'program_id': gift_card_program.id,
-            'code': 'gift_card_expired',
-            'points': 60.0,
-            'expiration_date': date.today() - timedelta(days=1),
-        })
+        with freeze_time(date.today() - timedelta(days=1)):
+            gift_card_expired = self.env['loyalty.card'].create({
+                'program_id': gift_card_program.id,
+                'code': 'gift_card_expired',
+                'points': 60.0,
+                'expiration_date': date.today(),
+            })
         gift_card_sold = self.env['loyalty.card'].create({
             'program_id': gift_card_program.id,
             'source_pos_order_id': example_order_3.id,
