@@ -144,8 +144,9 @@ class LoyaltyCard(models.Model):
         """
         Sends the 'At Creation' communication plan if it exist for the given coupons.
         """
+        mail_ids = []
         if self.env.context.get('loyalty_no_mail', False) or self.env.context.get('action_no_send_mail', False):
-            return
+            return []
         # Ideally one per program, but multiple is supported
         create_comm_per_program = dict()
         for program in self.program_id:
@@ -160,12 +161,13 @@ class LoyaltyCard(models.Model):
                     # provide author_id & email_from values to ensure the email gets sent
                     author = coupon._get_mail_author()
                     email_values.update(author_id=author.id, email_from=author.email_formatted)
-                mail_template.send_mail(
+                mail_ids.append(mail_template.send_mail(
                     res_id=coupon.id,
                     force_send=force_send,
                     email_layout_xmlid='mail.mail_notification_light',
                     email_values=email_values,
-                )
+                ))
+        return mail_ids
 
     def _send_points_reach_communication(self, points_changes):
         """
