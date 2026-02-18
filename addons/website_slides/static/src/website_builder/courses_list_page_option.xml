@@ -2,9 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="website_slides.CoursesListPageOption">
-    <BuilderRow label.translate="New Content Badge">
-        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.course_card_information_badge']}"/>
-    </BuilderRow>
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: []}">Grid</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_slides.opt_list_view']}">List</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="New Content Badge">
+            <BuilderCheckbox actionParam="{views: ['website_slides.course_card_information_badge']}"/>
+        </BuilderRow>
+    </BuilderContext>
 </t>
 
 <t t-name="website_slides.CoursesListAsidePageOption">

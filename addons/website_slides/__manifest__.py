@@ -86,7 +86,6 @@ Featuring
             'website_slides/static/src/js/utils.js',
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/src/scss/website_slides_profile.scss',
-            'website_slides/static/src/scss/slides_slide_fullscreen.scss',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
             'website_slides/static/src/xml/slide_management.xml',
