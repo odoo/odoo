@@ -22,12 +22,12 @@ class TestPurchaseAlternativeSale(TransactionCase):
                 'price': 10.0,
                 'delay': 0,
             })],
-            'service_to_purchase': True,
+            'service_tracking': 'subcontract',
         })
 
     def test_01_purchase_requisition_services(self):
         """ Create an alternative RFQ for a RFQ automatically genrated from a sale order containing a service that
-            has the "service_to_purchase" activated.
+            has the "service_tracking" = subcontract.
         """
         # Create a Sale Order for the subcontracted service
         sale_order = self.env['sale.order'].create({
@@ -40,7 +40,7 @@ class TestPurchaseAlternativeSale(TransactionCase):
             ]
         })
         sale_order.action_confirm()
-        self.assertEqual(sale_order.purchase_order_count, 1, "A RFQ should be created, since `service_to_purchase` has been activated for this product")
+        self.assertEqual(sale_order.purchase_order_count, 1, "A RFQ should be created, since 'service_tracking` is set to 'subcontract' for this product")
         purchase_order = sale_order._get_purchase_orders()
         self.assertEqual(len(purchase_order), 1, "There should be only one Purchase Order linked to this Sale Order")
 

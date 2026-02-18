@@ -25,7 +25,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
         })
 
         # Create product
-        # When service_to_purchase is True add the supplier i.e 'seller_ids' on the product to void the Validation error at product creation time
+        # When service_tracking is set to subcontract add the supplier i.e 'seller_ids' on the product to void the Validation error at product creation time
         cls.service_purchase_1 = cls.env['product.product'].create({
             'name': "Out-sourced Service 1",
             'standard_price': 200.0,
@@ -38,7 +38,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'service_type': 'manual',
             'taxes_id': False,
             'categ_id': cls.product_category_purchase.id,
-            'service_to_purchase': True,
+            'service_tracking': 'subcontract',
             'seller_ids': [Command.create({
                 'uom_id': uom_unit.id,
                 'partner_id': cls.partner_vendor_service.id,
@@ -59,7 +59,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'service_type': 'manual',
             'taxes_id': False,
             'categ_id': cls.product_category_purchase.id,
-            'service_to_purchase': True,
+            'service_tracking': 'subcontract',
             'seller_ids': [Command.create({
                 'uom_id': uom_dozen.id,
                 'partner_id': cls.partner_vendor_service.id,
