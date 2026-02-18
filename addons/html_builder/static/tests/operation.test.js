@@ -2,13 +2,15 @@ import {
     addBuilderOption,
     addBuilderAction,
     setupHTMLBuilder,
+    getSnippetStructure,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Operation } from "@html_builder/core/operation";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -325,5 +327,349 @@ describe("Operation that will fail", () => {
         );
         // preview + commit
         expect.verifyErrors(["This action should crash", "This action should crash"]);
+    });
+
+    test("Error in apply() on outdated snippet shows warning notification", async () => {
+        expect.errors(1);
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("fail");
+                throw new Error("Error on apply");
+            }
+        }
+        addBuilderAction({
+            TestAction,
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".s_title";
+                static template = xml`<BuilderButton action="'testAction'"/>`;
+            }
+        );
+        await setupHTMLBuilder(
+            `<section class="s_title" data-snippet="s_title" data-name="Title">
+                <h1>Old</h1>
+            </section>
+            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <h1>New</h1>
+            </section>`,
+            {
+                snippets: {
+                    snippet_structure: [
+                        getSnippetStructure({
+                            name: "Title",
+                            groupName: "a",
+                            content: `
+                                <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                                    <h1>Title</h1>
+                                </section>`,
+                        }),
+                    ],
+                },
+            }
+        );
+
+        // Interacting with an outdated snippet. We test that only one
+        // notification is displayed (the one triggered by the hover), while the
+        // error triggered by the click does not result in a second notification
+        // because one is already open.
+        await contains(":iframe .s_title h1:contains('Old')").click();
+        await contains("[data-action-id='testAction']").hover();
+        await animationFrame();
+        await contains("[data-action-id='testAction']").click();
+        expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
+        expect(".o_notification_content").toHaveText(
+            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+        );
+        expect.verifyErrors([]);
+
+        // Close the notification and try to interact with an up-to-date snippet
+        await contains(`.o_notification_close`).click();
+        await contains(":iframe .s_title h1:contains('New')").click();
+        await contains("[data-action-id='testAction']").hover();
+        await animationFrame();
+        expect(".o_notification").toHaveCount(0);
+        expect.verifyErrors(["Error on apply"]);
+    });
+
+    test("Error in load() on outdated snippet shows warning notification", async () => {
+        expect.errors(1);
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            load() {
+                throw new Error("Error on load");
+            }
+            apply({ editingElement }) {
+                editingElement.classList.add("success");
+            }
+        }
+        addBuilderAction({
+            TestAction,
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".s_title";
+                static template = xml`<BuilderButton action="'testAction'"/>`;
+            }
+        );
+        await setupHTMLBuilder(
+            `<section class="s_title" data-snippet="s_title" data-name="Title">
+                <h1>Old</h1>
+            </section>
+            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <h1>New</h1>
+            </section>`,
+            {
+                snippets: {
+                    snippet_structure: [
+                        getSnippetStructure({
+                            name: "Title",
+                            groupName: "a",
+                            content: `
+                                <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                                    <h1>Title</h1>
+                                </section>`,
+                        }),
+                    ],
+                },
+            }
+        );
+
+        // Interacting with an outdated snippet. We test that only one
+        // notification is displayed (the one triggered by the hover), while the
+        // error triggered by the click does not result in a second notification
+        // because one is already open.
+        await contains(":iframe .s_title h1:contains('Old')").click();
+        await contains("[data-action-id='testAction']").hover();
+        await animationFrame();
+        await contains("[data-action-id='testAction']").click();
+        expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
+        expect(".o_notification_content").toHaveText(
+            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+        );
+        expect.verifyErrors([]);
+
+        // Close the notification and try to interact with an up-to-date snippet
+        await contains(`.o_notification_close`).click();
+        await contains(":iframe .s_title h1:contains('New')").click();
+        await contains("[data-action-id='testAction']").hover();
+        await animationFrame();
+        expect(".o_notification").toHaveCount(0);
+        expect.verifyErrors(["Error on load"]);
+    });
+
+    test("Error in clean() on outdated snippet shows warning notification", async () => {
+        expect.errors(1);
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            isApplied({ editingElement }) {
+                return editingElement.classList.contains("applied");
+            }
+            clean() {
+                throw new Error("Error on clean");
+            }
+            apply({ editingElement }) {
+                editingElement.classList.add("applied");
+            }
+        }
+        addBuilderAction({
+            TestAction,
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".s_title";
+                static template = xml`<BuilderButton action="'testAction'"/>`;
+            }
+        );
+        await setupHTMLBuilder(
+            `<section class="s_title applied" data-snippet="s_title" data-name="Title">
+                <h1>Old</h1>
+            </section>
+            <section class="s_title applied" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <h1>New</h1>
+            </section>`,
+            {
+                snippets: {
+                    snippet_structure: [
+                        getSnippetStructure({
+                            name: "Title",
+                            groupName: "a",
+                            content: `
+                                <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                                    <h1>Title</h1>
+                                </section>`,
+                        }),
+                    ],
+                },
+            }
+        );
+
+        // Interacting with an outdated snippet. We test that only one
+        // notification is displayed (the one triggered by the hover), while the
+        // error triggered by the click does not result in a second notification
+        // because one is already open.
+        await contains(":iframe .s_title h1:contains('Old')").click();
+        await contains("[data-action-id='testAction']").hover();
+        await animationFrame();
+        await contains("[data-action-id='testAction']").click();
+        expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
+        expect(".o_notification_content").toHaveText(
+            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+        );
+        expect.verifyErrors([]);
+
+        // Close the notification and try to interact with an up-to-date snippet
+        await contains(`.o_notification_close`).click();
+        await contains(":iframe .s_title h1:contains('New')").click();
+        await contains("[data-action-id='testAction']").hover();
+        await animationFrame();
+        expect(".o_notification").toHaveCount(0);
+        expect.verifyErrors(["Error on clean"]);
+    });
+
+    test("Error in getValue() on outdated snippet shows warning notification", async () => {
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            getValue({ editingElement }) {
+                throw new Error("getValue should crash");
+            }
+            apply({ editingElement, value }) {
+                editingElement.textContent = value;
+            }
+        }
+        addBuilderAction({
+            TestAction,
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".s_title";
+                static template = xml`<BuilderNumberInput action="'testAction'"/>`;
+            }
+        );
+
+        await setupHTMLBuilder(
+            `<section class="s_title" data-snippet="s_title" data-name="Title">
+                <h1>Title</h1>
+            </section>`,
+            {
+                snippets: {
+                    snippet_structure: [
+                        getSnippetStructure({
+                            name: "Title",
+                            groupName: "a",
+                            content: `
+            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <h1>Title</h1>
+            </section>`,
+                        }),
+                    ],
+                },
+            }
+        );
+
+        await contains(":iframe .s_title").click();
+        // A warning notification should be shown
+        expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
+        expect(".o_notification_content").toHaveText(
+            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+        );
+    });
+
+    test("Error in isApplied() on outdated snippet shows warning notification", async () => {
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            isApplied({ editingElement }) {
+                throw new Error("isApplied should crash");
+            }
+            apply({ editingElement }) {
+                editingElement.classList.add("applied");
+            }
+        }
+        addBuilderAction({
+            TestAction,
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".s_title";
+                static template = xml`<BuilderButton action="'testAction'"/>`;
+            }
+        );
+
+        await setupHTMLBuilder(
+            `<section class="s_title" data-snippet="s_title" data-name="Title">
+                <h1>Title</h1>
+            </section>`,
+            {
+                snippets: {
+                    snippet_structure: [
+                        getSnippetStructure({
+                            name: "Title",
+                            groupName: "a",
+                            content: `
+            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <h1>Title</h1>
+            </section>`,
+                        }),
+                    ],
+                },
+            }
+        );
+
+        await contains(":iframe .s_title").click();
+        expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
+        expect(".o_notification_content").toHaveText(
+            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+        );
+    });
+
+    test("Error in clean() via cleanSelectedItem on outdated snippet shows warning notification", async () => {
+        class TestAction extends ClassAction {
+            static id = "testAction";
+            clean({ editingElement }) {
+                throw new Error("Clean via cleanSelectedItem should crash");
+            }
+        }
+        addBuilderAction({
+            TestAction,
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".s_title";
+                static template = xml`
+                    <BuilderButtonGroup action="'testAction'">
+                        <BuilderButton actionParam="'class1'">1</BuilderButton>
+                        <BuilderButton actionParam="'class2'">2</BuilderButton>
+                    </BuilderButtonGroup>`;
+            }
+        );
+
+        await setupHTMLBuilder(
+            `<section class="s_title class1" data-snippet="s_title" data-name="Title">
+                <h1>Title</h1>
+            </section>`,
+            {
+                snippets: {
+                    snippet_structure: [
+                        getSnippetStructure({
+                            name: "Title",
+                            groupName: "a",
+                            content: `
+            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <h1>Title</h1>
+            </section>`,
+                        }),
+                    ],
+                },
+            }
+        );
+
+        await contains(":iframe .s_title").click();
+        await contains("[data-action-param='class2']").hover();
+        await animationFrame();
+        expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
+        expect(".o_notification_content").toHaveText(
+            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+        );
     });
 });

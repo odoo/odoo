@@ -666,6 +666,28 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
     return userInputValue;
 }
 
+/**
+ * Handles errors during builder actions.
+ * Currently it only checks if the error was triggered on an outdated snippet,
+ * and in that case it suppresses the error and shows a notification instead.
+ * This function can potentially be extended in the future to handle additional
+ * errors and recovery strategies.
+ *
+ * @param {Error} error - The caught error
+ * @param {Element} editingElement - The element being edited
+ * @param {Component} comp -  The component
+ * @throws {Error} If editingElement is not an outdated snippet
+ */
+function handleBuilderActionError(error, editingElement, comp) {
+    // Check if editingElement belongs to an outdated snippet, and displays a
+    // warning notification if yes.
+    const isOutdated =
+        comp.env.editor.shared.versionError.checkNotifyOutdatedSnippet(editingElement);
+    if (!isOutdated) {
+        throw error;
+    }
+}
+
 export function useInputBuilderComponent({
     id,
     defaultValue,
@@ -717,11 +739,16 @@ export function useInputBuilderComponent({
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        const actionValue =
-            getAction(actionId).getValue({ editingElement, params: actionParam }) || defaultValue;
-        return {
-            value: actionValue,
-        };
+        try {
+            const actionValue =
+                getAction(actionId).getValue({ editingElement, params: actionParam }) ||
+                defaultValue;
+            return {
+                value: actionValue,
+            };
+        } catch (error) {
+            handleBuilderActionError(error, editingElement, comp);
+        }
     }
 
     function commit(userInputValue) {
@@ -964,28 +991,45 @@ export function getAllActionsAndOperations(comp) {
         const isPreviewing = !!params.preview;
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
 
-        comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
-            load: async () =>
-                Promise.all(
-                    actionsSpecs.map(async (applySpec) => {
-                        if (!applySpec.action.has("load")) {
-                            return;
-                        }
-                        const hasClean = !!applySpec.action.has("clean");
-                        if (!applySpec.loadOnClean && _shouldClean(comp, hasClean, isApplied())) {
-                            // The element will be cleaned, do not load
-                            return;
-                        }
-                        const result = await applySpec.action.load({
-                            editingElement: applySpec.editingElement,
-                            params: applySpec.actionParam,
-                            value: applySpec.actionValue,
-                        });
-                        applySpec.loadResult = result;
-                    })
-                ),
-            ...params.operationParams,
-        });
+        comp.env.editor.shared.operation.next(
+            async () => {
+                try {
+                    await fn(actionsSpecs, isPreviewing);
+                } catch (error) {
+                    handleBuilderActionError(error, comp.env.getEditingElement(), comp);
+                }
+            },
+            {
+                load: async () => {
+                    try {
+                        return await Promise.all(
+                            actionsSpecs.map(async (applySpec) => {
+                                if (!applySpec.action.has("load")) {
+                                    return;
+                                }
+                                const hasClean = !!applySpec.action.has("clean");
+                                if (
+                                    !applySpec.loadOnClean &&
+                                    _shouldClean(comp, hasClean, isApplied())
+                                ) {
+                                    // The element will be cleaned, do not load
+                                    return;
+                                }
+                                const result = await applySpec.action.load({
+                                    editingElement: applySpec.editingElement,
+                                    params: applySpec.actionParam,
+                                    value: applySpec.actionValue,
+                                });
+                                applySpec.loadResult = result;
+                            })
+                        );
+                    } catch (error) {
+                        handleBuilderActionError(error, comp.env.getEditingElement(), comp);
+                    }
+                },
+                ...params.operationParams,
+            }
+        );
     }
     function isApplied() {
         const getAction = comp.env.editor.shared.builderActions.getAction;
@@ -1000,12 +1044,16 @@ export function getAllActionsAndOperations(comp) {
             if (!isConnectedElement(editingElement)) {
                 return false;
             }
-            const isApplied = getAction(actionId).isApplied?.({
-                editingElement,
-                params: actionParam,
-                value: actionValue,
-            });
-            return comp.props.inverseAction ? !isApplied : isApplied;
+            try {
+                const isApplied = getAction(actionId).isApplied?.({
+                    editingElement,
+                    params: actionParam,
+                    value: actionValue,
+                });
+                return comp.props.inverseAction ? !isApplied : isApplied;
+            } catch (error) {
+                handleBuilderActionError(error, editingElement, comp);
+            }
         });
         // If there is no `isApplied` method for the widget return false
         if (areActionsActiveTabs.every((el) => el === undefined)) {
