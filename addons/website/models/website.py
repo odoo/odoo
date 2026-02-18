@@ -1347,7 +1347,7 @@ class Website(models.CachedModel):
         current_website = self.get_current_website()
         page_model_name = 'Page'
 
-        def _handle_views_and_pages(views):
+        def _handle_views_and_pages(views, deleted_url):
             page_views = views.filtered('page_ids')
             views = views - page_views
             if page_views:
@@ -1357,6 +1357,7 @@ class Website(models.CachedModel):
                     'record_name': page.name,
                     'link': page.url,
                     'model_name': page_model_name,
+                    'url': deleted_url,
                 } for page in page_views.page_ids]
             return views
 
@@ -1384,7 +1385,7 @@ class Website(models.CachedModel):
             # sudo() to bypass the field level access rights. i.e: robots_txt
             dependency_records = Model.sudo().search(Domain.OR(domains))
             if model_name == 'ir.ui.view':
-                dependency_records = _handle_views_and_pages(dependency_records)
+                dependency_records = _handle_views_and_pages(dependency_records, url)
             if dependency_records:
                 model_name = self.env['ir.model']._display_name_for([model_name])[0]['display_name']
                 field_string = Model.fields_get()[field_name]['string']
@@ -1394,6 +1395,7 @@ class Website(models.CachedModel):
                     'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/odoo/{model_name}/{rec.id}',
                     'model_name': model_name,
+                    'url': url,
                 } for rec in dependency_records]
 
         return dependencies
