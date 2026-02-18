@@ -173,7 +173,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Close validation error popup",
-        trigger: ".modal-footer .btn-primary",
+        trigger: ".o_error_dialog .modal-footer .btn-primary",
         run: "click",
     },
     {
