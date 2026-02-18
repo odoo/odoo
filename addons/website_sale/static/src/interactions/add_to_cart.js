@@ -24,7 +24,7 @@ export class AddToCart extends Interaction {
             noVariantAttributeValues: this._getSelectedNoVariantPtavs(productEl),
         } : {};
 
-        const productContainer = productEl ?? button.closest('#products_grid');
+        const productContainer = productEl ?? this._getProductContainer(button);
         const optionalParams = productContainer ? this._getOptionalParams(productContainer) : {};
 
         const quantity = await this.waitFor(this.services['cart'].add({
@@ -74,6 +74,18 @@ export class AddToCart extends Interaction {
             'input.js_variant_change:not(.no_variant):checked, select.js_variant_change:not(.no_variant)'
         );
         return Array.from(selectedPtavElements).map(el => parseInt(el.value));
+    }
+
+    /**
+     * Method to easily override the product container element.
+     *
+     * @param {HTMLElement} el - The element containing the product.
+     *
+     * @returns {HTMLElement} - The closest element that contains both the product and the
+     *     additional info needed to add the product to the cart.
+     */
+    _getProductContainer(el) {
+        return el.closest('#products_grid');
     }
 
     /**
