@@ -72,9 +72,11 @@ class PaymentTransaction(models.Model):
         )
         return {
             'api_url': self.provider_id._redsys_get_api_url(),
-            'merchant_parameters': encoded_merchant_parameters,
-            'signature': signature,
-            'signature_version': 'HMAC_SHA256_V1',
+            'url_params': {
+                'Ds_MerchantParameters': encoded_merchant_parameters,
+                'Ds_Signature': signature,
+                'Ds_SignatureVersion': 'HMAC_SHA256_V1',
+            },
         }
 
     def _redsys_prepare_merchant_parameters(self):

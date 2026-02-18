@@ -26,7 +26,9 @@ class PaymentTransaction(models.Model):
 
         return {
             'api_url': CustomController._process_url,
-            'reference': self.reference,
+            'url_params': {
+                'reference': self.reference,
+            },
         }
 
     def _get_communication(self):

@@ -12,7 +12,7 @@
             name="payment_method_ids"
             eval="[Command.set([ref('delivery.payment_method_cash_on_delivery')])]"
         />
-        <field name="redirect_form_view_id" ref="payment_custom.redirect_form"/>
+        <field name="redirect_form_view_id" ref="payment.generic_redirect_form"/>
         <field name="state">enabled</field>
         <field name="pending_msg" type="html">
 <p>The delivery staff will collect payment upon delivery.</p>

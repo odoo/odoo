@@ -27,7 +27,9 @@ class TestPaymentTransaction(FlutterwaveCommon):
             return_value={'link': 'https://dummy.com'},
         ):
             rendering_values = tx._get_specific_rendering_values(None)
-        self.assertDictEqual(rendering_values, {'api_url': 'https://dummy.com'})
+        self.assertDictEqual(
+            rendering_values, {'api_url': 'https://dummy.com', 'http_method': 'get'}
+        )
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
@@ -35,7 +37,8 @@ class TestPaymentTransaction(FlutterwaveCommon):
         tx = self._create_transaction(flow='redirect')
         with patch(
             'odoo.addons.payment_flutterwave.models.payment_transaction.PaymentTransaction'
-            '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com'}
+            '._get_specific_rendering_values',
+            return_value={'api_url': 'https://dummy.com', 'http_method': 'get'},
         ):
             processing_values = tx._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])

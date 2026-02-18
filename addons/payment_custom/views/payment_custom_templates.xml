@@ -13,12 +13,6 @@
         </xpath>
     </template>
 
-    <template id="redirect_form">
-        <form t-att-action="api_url" method="post">
-            <input type="hidden" name="reference" t-att-value="reference"/>
-        </form>
-    </template>
-
     <template id="custom_state_header" inherit_id="payment.state_header">
 
         <xpath expr="//div[@name='o_payment_status_alert']" position="before">

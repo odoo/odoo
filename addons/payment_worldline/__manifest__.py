@@ -8,10 +8,8 @@
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'views/payment_provider_views.xml',
-        'views/payment_worldline_templates.xml',
-
         'data/payment_provider_data.xml',
+        'views/payment_provider_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [

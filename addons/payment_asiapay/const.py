@@ -129,11 +129,11 @@ PAYMENT_METHODS_MAPPING = {
 # The keys of the values to use in the calculation of the signature.
 SIGNATURE_KEYS = {
     'outgoing': [
-        'merchant_id',
-        'reference',
-        'currency_code',
+        'merchantId',
+        'orderRef',
+        'currCode',
         'amount',
-        'payment_type',
+        'payType',
     ],
     'incoming': [
         'src',

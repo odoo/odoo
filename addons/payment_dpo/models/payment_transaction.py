@@ -29,9 +29,12 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_rendering_values(processing_values)
 
         transaction_token = self._dpo_create_token()
-        api_url = f'https://secure.3gdirectpay.com/payv2.php?ID={transaction_token}'
-
-        return {'api_url': api_url}
+        return {
+            'api_url': 'https://secure.3gdirectpay.com/payv2.php',
+            'url_params': {
+                'ID': transaction_token,
+            },
+        }
 
     def _dpo_create_token(self):
         """ Create a transaction token and return the response data.

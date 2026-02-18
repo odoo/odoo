@@ -65,8 +65,9 @@ class TestPaymentTransaction(NuveiCommon):
         checksum = self.provider._nuvei_calculate_signature(
             expected_values['url_params'], incoming=False
         )
-        expected_values['checksum'] = checksum
+        expected_values['url_params']['checksum'] = checksum
 
+        self.maxDiff = None  # Allow comparing large dicts.
         with patch(
             'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
         ), patch('odoo.addons.payment_nuvei.models.payment_transaction.uuid4', make_uuid):

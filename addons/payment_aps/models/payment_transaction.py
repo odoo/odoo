@@ -52,7 +52,7 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         base_url = self.provider_id.get_base_url()
         payment_option = aps_utils.get_payment_option(self.payment_method_id.code)
-        rendering_values = {
+        url_params = {
             'command': 'PURCHASE',
             'access_code': self.provider_id.aps_access_code,
             'merchant_identifier': self.provider_id.aps_merchant_identifier,
@@ -64,14 +64,14 @@ class PaymentTransaction(models.Model):
             'return_url': urls.urljoin(base_url, APSController._return_url),
         }
         if payment_option:  # Not included if the payment method is 'card'.
-            rendering_values['payment_option'] = payment_option
-        rendering_values.update({
-            'signature': self.provider_id._aps_calculate_signature(
-                rendering_values, incoming=False
-            ),
+            url_params['payment_option'] = payment_option
+        url_params['signature'] = self.provider_id._aps_calculate_signature(
+            url_params, incoming=False
+        )
+        return {
             'api_url': self.provider_id._aps_get_api_url(),
-        })
-        return rendering_values
+            'url_params': url_params,
+        }
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

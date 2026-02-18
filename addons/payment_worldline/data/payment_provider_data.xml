@@ -3,7 +3,7 @@
 
     <record id="payment.payment_provider_worldline" model="payment.provider">
         <field name="code">worldline</field>
-        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="redirect_form_view_id" ref="payment.generic_redirect_form"/>
         <field name="allow_tokenization">True</field>
     </record>
 

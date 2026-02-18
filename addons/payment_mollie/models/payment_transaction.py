@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_decode, url_parse
-
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
@@ -40,14 +38,13 @@ class PaymentTransaction(models.Model):
         # The provider reference is set now to allow fetching the payment status after redirection
         self.provider_reference = payment_data.get('id')
 
-        # Extract the checkout URL from the payment data and add it with its query parameters to the
-        # rendering values. Passing the query parameters separately is necessary to prevent them
-        # from being stripped off when redirecting the user to the checkout URL, which can happen
-        # when only one payment method is enabled on Mollie and query parameters are provided.
         checkout_url = payment_data['_links']['checkout']['href']
-        parsed_url = url_parse(checkout_url)
-        url_params = url_decode(parsed_url.query)
-        return {'api_url': checkout_url, 'url_params': url_params}
+        return {
+            'api_url': checkout_url,
+            'http_method': 'get',
+            # The URL may include a query string when only one payment method is enabled on Mollie.
+            'url_params': payment_utils.extract_url_params(checkout_url),
+        }
 
     def _mollie_prepare_payment_request_payload(self):
         """ Create the payload for the payment request based on the transaction values.

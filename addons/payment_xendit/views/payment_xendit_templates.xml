@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="redirect_form">
-        <form t-att-action="api_url" method="get"/>
-    </template>
-
     <template id="inline_form">
         <div name="o_xendit_form" t-att-data-xendit-public-key="provider_sudo.xendit_public_key">
             <t t-if="pm_sudo.code == 'card'">

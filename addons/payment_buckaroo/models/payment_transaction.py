@@ -27,8 +27,7 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_rendering_values(processing_values)
 
         return_url = urls.urljoin(self.provider_id.get_base_url(), BuckarooController._return_url)
-        rendering_values = {
-            'api_url': self.provider_id._buckaroo_get_api_url(),
+        url_params = {
             'Brq_websitekey': self.provider_id.buckaroo_website_key,
             'Brq_amount': self.amount,
             'Brq_currency': self.currency_id.name,
@@ -40,11 +39,14 @@ class PaymentTransaction(models.Model):
             'Brq_returnreject': return_url,
         }
         if self.partner_lang:
-            rendering_values['Brq_culture'] = self.partner_lang.replace('_', '-')
-        rendering_values['Brq_signature'] = self.provider_id._buckaroo_generate_digital_sign(
-            rendering_values, incoming=False
+            url_params['Brq_culture'] = self.partner_lang.replace('_', '-')
+        url_params['Brq_signature'] = self.provider_id._buckaroo_generate_digital_sign(
+            url_params, incoming=False
         )
-        return rendering_values
+        return {
+            'api_url': self.provider_id._buckaroo_get_api_url(),
+            'url_params': url_params,
+        }
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

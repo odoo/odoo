@@ -2,8 +2,6 @@
 
 from urllib.parse import quote as url_quote
 
-from werkzeug.urls import url_decode, url_parse
-
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
@@ -44,15 +42,11 @@ class PaymentTransaction(models.Model):
         api_url = response_content[
             'init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point'
         ]
-
-        # Extract the payment link URL and params and embed them in the redirect form.
-        parsed_url = url_parse(api_url)
-        url_params = url_decode(parsed_url.query)
-        rendering_values = {
+        return {
             'api_url': api_url,
-            'url_params': url_params,  # Encore the params as inputs to preserve them.
+            'http_method': 'get',
+            'url_params': payment_utils.extract_url_params(api_url),
         }
-        return rendering_values
 
     def _mercado_pago_prepare_preference_request_payload(self):
         """Create the payload for the preference request based on the transaction values.

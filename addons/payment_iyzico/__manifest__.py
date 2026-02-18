@@ -8,10 +8,8 @@
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'views/payment_iyzico_templates.xml',
+        'data/payment_provider_data.xml',
         'views/payment_provider_views.xml',
-
-        'data/payment_provider_data.xml',  # Depends on views/payment_iyzico_templates.xml
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',

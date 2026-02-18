@@ -81,24 +81,27 @@ class PaymentTransaction(models.Model):
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
         lang = self.env.context.get('lang') or 'en_US'
-        rendering_values = {
-            'merchant_id': self.provider_id.asiapay_merchant_id,
+        return_url = urls.urljoin(base_url, AsiaPayController._return_url)
+        url_params = {
+            'merchantId': self.provider_id.asiapay_merchant_id,
             'amount': self.amount,
-            'reference': self.reference,
-            'currency_code': const.CURRENCY_MAPPING[self.provider_id.available_currency_ids[0].name],
-            'mps_mode': 'SCP',
-            'return_url': urls.urljoin(base_url, AsiaPayController._return_url),
-            'payment_type': 'N',
-            'language': get_language_code(lang),
-            'payment_method': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),
+            'orderRef': self.reference,
+            'currCode': const.CURRENCY_MAPPING[self.provider_id.available_currency_ids[0].name],
+            'mpsMode': 'SCP',
+            'successUrl': return_url,
+            'failUrl': return_url,
+            'cancelUrl':  return_url,
+            'payType': 'N',
+            'lang': get_language_code(lang),
+            'payMethod': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),
         }
-        rendering_values.update({
-            'secure_hash': self.provider_id._asiapay_calculate_signature(
-                rendering_values, incoming=False
-            ),
-            'api_url': self.provider_id._asiapay_get_api_url()
-        })
-        return rendering_values
+        url_params['secureHash'] = self.provider_id._asiapay_calculate_signature(
+            url_params, incoming=False
+        )
+        return {
+            'api_url': self.provider_id._asiapay_get_api_url(),
+            'url_params': url_params,
+        }
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

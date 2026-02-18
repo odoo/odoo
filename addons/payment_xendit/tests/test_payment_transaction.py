@@ -31,7 +31,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token),
         ):
             rendering_values = tx._get_specific_rendering_values(None)
-        self.assertDictEqual(rendering_values, {'api_url': url})
+        self.assertDictEqual(rendering_values, {'api_url': url, 'http_method': 'get'})
 
     def test_empty_rendering_values_if_direct(self):
         """ Test that if it's a card payment (like in direct flow), rendering_values should be empty
@@ -52,7 +52,8 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         tx = self._create_transaction('redirect')
         with patch(
             'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
-            '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com'}
+            '._get_specific_rendering_values',
+            return_value={'api_url': 'https://dummy.com', 'http_method': 'get'},
         ):
             processing_values = tx._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])

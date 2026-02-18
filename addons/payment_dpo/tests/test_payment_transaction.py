@@ -15,7 +15,10 @@ class TestPaymentTransaction(DPOCommon):
         tx = self._create_transaction(flow='redirect')
         transaction_token = "dummy_token"
         expected_values = {
-            'api_url': f'https://secure.3gdirectpay.com/payv2.php?ID={transaction_token}',
+            'api_url': 'https://secure.3gdirectpay.com/payv2.php',
+            'url_params': {
+                'ID': transaction_token,
+            },
         }
         with patch(
             'odoo.addons.payment_dpo.models.payment_transaction.PaymentTransaction'

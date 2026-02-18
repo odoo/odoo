@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from hashlib import sha1
+from urllib.parse import parse_qsl, urlparse
 
 from odoo import api, fields
 from odoo.http import request
@@ -47,7 +48,7 @@ def check_access_token(access_token, *values):
     return access_token and consteq(access_token, authentic_token)
 
 
-# Availability report.
+# Availability report
 
 def add_to_report(report, records, available=True, reason=''):
     """ Add records to the report with the provided values.
@@ -90,6 +91,24 @@ def add_to_report(report, records, available=True, reason=''):
                 (p, report['providers'][p]['available'])
                 for p in r.provider_ids if p in report['providers']
             ]
+
+
+# URL parsing
+
+def extract_url_params(url):
+    """Extract the query parameters from the provided URL.
+
+    This is useful for redirect payment flows where the parameters are already embedded in the API
+    URL as a query string: query parameters must be passed separately as inputs of the redirect
+    form, or they will be stripped off from the URL when submitting the form.
+
+    :param str url: The URL to extract the params from.
+    :return: The decoded query parameters
+    :rtype: dict
+    """
+    query_string = urlparse(url).query  # param1=value1&param2=value2
+    url_params = parse_qsl(query_string)  # [(param1, value1), (param2, value2)]
+    return dict(url_params)
 
 
 # Transaction values formatting

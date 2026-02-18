@@ -67,20 +67,25 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
             '._asiapay_calculate_signature', return_value='dummy_signature'
         ):
             rendering_values = tx._get_specific_rendering_values(None)
+            return_url = self._build_url('/payment/asiapay/return')
             self.assertDictEqual(
                 rendering_values,
                 {
-                    'amount': tx.amount,
                     'api_url': tx.provider_id._asiapay_get_api_url(),
-                    'currency_code': const.CURRENCY_MAPPING[tx.currency_id.name],
-                    'language': const.LANGUAGE_CODES_MAPPING['en'],
-                    'merchant_id': tx.provider_id.asiapay_merchant_id,
-                    'mps_mode': 'SCP',
-                    'payment_method': 'ALL',
-                    'payment_type': 'N',
-                    'reference': tx.reference,
-                    'return_url': self._build_url('/payment/asiapay/return'),
-                    'secure_hash': 'dummy_signature',
+                    'url_params': {
+                        'amount': tx.amount,
+                        'currCode': const.CURRENCY_MAPPING[tx.currency_id.name],
+                        'lang': const.LANGUAGE_CODES_MAPPING['en'],
+                        'merchantId': tx.provider_id.asiapay_merchant_id,
+                        'mpsMode': 'SCP',
+                        'payMethod': 'ALL',
+                        'payType': 'N',
+                        'orderRef': tx.reference,
+                        'successUrl': return_url,
+                        'failUrl': return_url,
+                        'cancelUrl': return_url,
+                        'secureHash': 'dummy_signature',
+                    },
                 }
             )
 
