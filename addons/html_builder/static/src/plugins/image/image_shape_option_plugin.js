@@ -73,6 +73,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         "isTechnicalShape",
         "isAnimableShape",
         "isTogglableRatioShape",
+        "aspectRatioShape",
         "getShapeLabel",
         "loadShape",
     ];
@@ -186,14 +187,19 @@ export class ImageShapeOptionPlugin extends Plugin {
             parseInt(svg.getAttribute("width")) / parseInt(svg.getAttribute("height"));
         const imgAspectRatio = svg.dataset.imgAspectRatio;
 
-        if (isNewShape && !("aspectRatio" in newDataset)) {
+        const isNewImage = "originalSrc" in newDataset;
+        if ((isNewImage || isNewShape) && !("aspectRatio" in newDataset)) {
             const data = getImageTransformationData({ ...img.dataset, ...newDataset });
 
-            // The togglable ratio is squared by default.
-            const shouldBeSquared =
-                this.imageShapes[shapeId].togglableRatio && !img.dataset.aspectRatio;
-            if (shouldBeSquared && !shouldPreventGifTransformation(data)) {
-                newDataset.aspectRatio = "1/1";
+            // We consider the aspect ratio as default if it has not been set or
+            // if it has the aspect ratio of the current shape set on the image.
+            const isDefaultAspectRatio =
+                !img.dataset.aspectRatio ||
+                img.dataset.aspectRatio === this.aspectRatioShape(img.dataset.shape);
+            if (isDefaultAspectRatio && !shouldPreventGifTransformation(data)) {
+                newDataset.aspectRatio = this.isTogglableRatioShape(shapeId)
+                    ? this.aspectRatioShape(shapeId)
+                    : undefined;
             }
         }
 
@@ -409,7 +415,13 @@ export class ImageShapeOptionPlugin extends Plugin {
         if (!shape) {
             return false;
         }
-        return this.imageShapes[shape].togglableRatio;
+        return this.imageShapes[shape].togglableRatio ?? false;
+    }
+    aspectRatioShape(shape) {
+        if (!shape || !this.isTogglableRatioShape(shape)) {
+            return undefined;
+        }
+        return this.imageShapes[shape].aspectRatio || "1/1";
     }
     getImageShapeGroups() {
         if (!this.imageShapeGroups) {
@@ -551,12 +563,17 @@ export class ToggleImageShapeRatioAction extends BuilderAction {
     static dependencies = ["imageShapeOption"];
 
     isApplied({ editingElement: img }) {
-        return img.dataset.aspectRatio !== "1/1";
+        return (
+            img.dataset.aspectRatio !==
+            this.dependencies.imageShapeOption.aspectRatioShape(img.dataset.shape)
+        );
     }
     async load({ editingElement: img }) {
-        const isStretched = img.dataset.aspectRatio !== "1/1";
+        const unstretchedAspectRatio = this.dependencies.imageShapeOption.aspectRatioShape(
+            img.dataset.shape
+        );
         return this.dependencies.imageShapeOption.loadShape(img, {
-            aspectRatio: isStretched ? "1/1" : "0/0",
+            aspectRatio: this.isApplied({ editingElement: img }) ? unstretchedAspectRatio : "0/0",
             x: undefined,
             y: undefined,
             width: undefined,

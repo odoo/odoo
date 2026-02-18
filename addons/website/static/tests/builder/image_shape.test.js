@@ -1,9 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { click, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { testImg } from "./image_test_helpers";
+import { onRpcReal, testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
 
@@ -496,11 +496,115 @@ test("Should reset crop when removing shape with ratio", async () => {
 
     await selectImageShape("html_builder/geometric/geo_shuriken");
     await waitSidebarUpdated();
-    expect(`:iframe .test-options-target img`).toHaveAttribute("data-aspect-ratio");
+    expect(`:iframe .test-options-target img`).toHaveAttribute("data-aspect-ratio", "1/1");
     // Remove the shape.
     await contains("[data-action-id='setImageShape']").click();
     await waitSidebarUpdated();
     expect(`:iframe .test-options-target img`).not.toHaveAttribute("data-aspect-ratio");
+});
+
+test("Should set the correct aspect ratio to the pill shape", async () => {
+    onRpcReal("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
+
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+
+    await selectImageShape("html_builder/geometric_round/geo_round_pill");
+    await waitSidebarUpdated();
+
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "1/2");
+
+    const stretchCheckbox = queryFirst(
+        "[data-action-id='toggleImageShapeRatio'] input[type='checkbox']"
+    );
+    expect(stretchCheckbox).not.toBeChecked();
+    await contains(stretchCheckbox).click();
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "0/0");
+});
+
+test("Should not keep the aspect ratio when changing shape", async () => {
+    onRpcReal("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
+    onRpcReal("/html_builder/static/image_shapes/panel/panel_trio_in_r.svg");
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+
+    await selectImageShape("html_builder/geometric_round/geo_round_pill");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "1/2");
+
+    await selectImageShape("html_builder/geometric/geo_shuriken");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "1/1");
+
+    await selectImageShape("html_builder/panel/panel_trio_in_r");
+    await waitSidebarUpdated();
+    // Aspect ratio should be removed when changing to a shape which has not
+    // togglable ratio if the current shape has togglable ratio and the default
+    // aspect ratio is applied
+    expect(":iframe .test-options-target img").not.toHaveAttribute("data-aspect-ratio");
+
+    await selectImageShape("html_builder/geometric/geo_shuriken");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "1/1");
+
+    const stretchCheckbox = queryFirst(
+        "[data-action-id='toggleImageShapeRatio'] input[type='checkbox']"
+    );
+    expect(stretchCheckbox).not.toBeChecked();
+    await contains(stretchCheckbox).click();
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "0/0");
+
+    await selectImageShape("html_builder/panel/panel_trio_in_r");
+    await waitSidebarUpdated();
+    // Since the default aspect ratio was not applied, the aspect ratio should
+    // stay unchanged.
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "0/0");
+});
+
+test("Should set default aspect ratio when changing image", async () => {
+    onRpcReal("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            name: "s_text_image_default_image.webp",
+            mimetype: "image/webp",
+            public: true,
+            access_token: false,
+            image_src: "/web/image/website.s_text_image_default_image",
+        },
+    ]);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+
+    await selectImageShape("html_builder/geometric_round/geo_round_pill");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "1/2");
+
+    await contains("button[data-action-id='replaceMedia']").click();
+    // We use "click" instead of contains.click because contains wait for the image to be visible.
+    // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
+    await click(".o_existing_attachment_cell .o_button_area");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-aspect-ratio", "1/2");
 });
 
 test("Should have the correct active shape in the image shape selector", async () => {

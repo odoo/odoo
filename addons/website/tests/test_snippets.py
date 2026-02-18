@@ -162,3 +162,13 @@ class TestSnippets(HttpCase):
 
     def test_shape_image_snippet(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_shape_image', login='admin')
+
+    def test_snippet_pill_shape(self):
+        res = self.url_open('/html_editor/image_shape/website.s_intro_pill_default_image/html_builder/geometric_round/geo_round_pill.svg')
+        svg = html.fromstring(res.text)
+        self.assertEqual(float(svg.attrib['width']), 439, "SVG should have the width of the original image")
+        self.assertEqual(float(svg.attrib['height']), 878, "SVG height should be double the width because the pill shape has a default aspect ratio of 1/2")
+        image_elem = svg.find('.//image')
+        self.assertEqual(image_elem.attrib['width'], '100%')
+        self.assertEqual(image_elem.attrib['height'], '100%')
+        self.assertEqual(image_elem.attrib['preserveaspectratio'], 'xMidYMid slice')
