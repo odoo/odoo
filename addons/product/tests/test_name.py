@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, TransactionCase
+from odoo.fields import Command
+from odoo.tests import TransactionCase, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -56,6 +57,7 @@ class TestName(TransactionCase):
         res_ids = [r[0] for r in res]
         self.assertIn(template_dyn.id, res_ids)
         self.assertIn(product.product_tmpl_id.id, res_ids)
+<<<<<<< 6f4c32f75ea4f116181e8ce2dd42139955c7a8be
 
     def test_product_product_search_name_is_case_insensitive(self):
         # case 1: in case of 2 different products with same name but different case in default_code
@@ -91,3 +93,30 @@ class TestName(TransactionCase):
         res_variants_ids = [r[0] for r in res_variants]
         self.assertIn(variant_1.id, res_variants_ids)
         self.assertIn(variant_2.id, res_variants_ids)
+||||||| 6937e255f491fb9369a21036080aa15ddaa30cee
+=======
+
+    def test_product_product_name_search(self):
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute',
+            'value_ids': [
+                Command.create({'name': f'value {i}'})
+                for i in range(3)
+            ]
+        })
+        template = self.env['product.template'].create({
+            'name': 'Whatever',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)]
+                })
+            ]
+        })
+        variant1, _variant2, _variant3 = template.product_variant_ids
+        variant1.default_code = 'HOHO'
+        product_search = self.env['product.product'].with_context(partner_id=33).search([
+            ('display_name', '=', 'HOHO'),
+        ])
+        self.assertEqual(variant1, product_search)
+>>>>>>> f8fe71fe9555243ec8b683d2d2b14e93c9fa0a3d
