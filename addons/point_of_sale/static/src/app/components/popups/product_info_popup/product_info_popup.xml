@@ -18,31 +18,42 @@
                 <t t-out="props.productTemplate.productDescriptionMarkup" />
             </div>
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.warehouses?.length > 0">
-                <h3 class="section-title">
-                    Inventory
-                    <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>
-                </h3>
-                <div class="section-inventory-body">
-                    <t t-foreach="props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
-                        <div class="d-flex flex-column flex-md-row gap-2">
-                            <div>
-                                <t t-esc="warehouse.name" class="table-name"/>
-                                :
-                            </div>
-                            <div>
-                                <span class="me-1 fw-bolder"><t t-esc="warehouse.free_qty" class="table-name"/></span>
-                                <t t-esc="warehouse.uom"/> available,
-                            </div>
-                            <div>
-                                <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
-                                forecasted
-                            </div>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex flex-column">
+                        <h3 class="section-title">
+                            Inventory
+                            <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>
+                        </h3>
+                        <div class="section-inventory-body">
+                            <t t-foreach="props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <div>
+                                        <t t-esc="warehouse.name" class="table-name"/>
+                                        :
+                                    </div>
+                                    <div>
+                                        <span class="me-1 fw-bolder"><t t-esc="warehouse.free_qty" class="table-name"/></span>
+                                        <t t-esc="warehouse.uom"/> available,
+                                    </div>
+                                    <div>
+                                        <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
+                                        forecasted
+                                    </div>
+                                </div>
+                                <div>
+                                    On hand: <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
+                                    <t t-out="warehouse.uom"/>
+                                </div>
+                            </t>
                         </div>
-                        <div>
-                            On hand: <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
-                            <t t-out="warehouse.uom"/>
-                        </div>
-                    </t>
+                    </div>
+                    <button class="btn btn-lg lh-lg ms-auto text-nowrap" t-on-click="openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
+                        <i class="fa fa-clock-o me-1" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
+                        <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
+                        <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
+                            <t t-esc="state.countdown" />
+                        </span>
+                    </button>
                 </div>
             </div>
             <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.suppliers?.length > 0">

@@ -1139,3 +1139,19 @@ export function clickBreakCombo() {
         },
     ];
 }
+export function productIsSnoozed(product_name) {
+    return [
+        {
+            trigger: `article.product.opacity-50:has(.product-name:contains('${product_name}'))`,
+            content: "Check that the product card is grayed out",
+        },
+    ];
+}
+export function productIsNotSnoozed(product_name) {
+    return [
+        {
+            trigger: `article.product:not(.opacity-50):has(.product-name:contains('${product_name}'))`,
+            content: "Check that the product card is not grayed out",
+        },
+    ];
+}

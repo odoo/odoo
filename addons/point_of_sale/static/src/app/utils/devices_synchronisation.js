@@ -62,7 +62,7 @@ export default class DevicesSynchronisation {
      * @param {Object} data.static_records - Records data that need to be synchronized.
      */
     async collect(data) {
-        const { static_records, session_id, device_identifier } = data;
+        const { static_records, deleted_record_ids, session_id, device_identifier } = data;
         const isSameDevice = isSamePosDevice(session_id, device_identifier, this.pos);
 
         logPosMessage(
@@ -78,6 +78,9 @@ export default class DevicesSynchronisation {
 
         if (Object.keys(static_records).length) {
             this.processStaticRecords(static_records);
+        }
+        if (deleted_record_ids && Object.keys(deleted_record_ids).length) {
+            this.processDeletedRecords(deleted_record_ids);
         }
 
         return await this.readDataFromServer();

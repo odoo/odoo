@@ -25,6 +25,7 @@ import {
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { GeneratePrinterData } from "@point_of_sale/app/utils/generate_printer_data";
+import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -70,6 +71,7 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
+        this.snoozedProductTracker = new SnoozedProductTracker();
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -79,6 +81,19 @@ export class SelfOrder extends Reactive {
         }
 
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
+        this.data.connectWebSocket("SNOOZE_CHANGED", async (payload) => {
+            const { deleted_ids, records } = payload;
+            if (deleted_ids) {
+                const snoozeModel = this.models["pos.product.template.snooze"];
+                snoozeModel.deleteMany(
+                    deleted_ids.map((id) => snoozeModel.get(id)).filter(Boolean)
+                );
+            }
+            if (records.length > 0) {
+                await this.models.connectNewData({ "pos.product.template.snooze": records });
+            }
+            this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
+        });
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
             const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
             const existingProductIds = this.models["product.template"].filter((tmpl) =>
@@ -494,6 +509,7 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
+        this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
         this.initProducts();
         this._initLanguages();
         this.initHardware();
@@ -510,6 +526,10 @@ export class SelfOrder extends Reactive {
             lg.display_name = lg.name.split("/").pop();
         });
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
+    }
+
+    isProductSnoozed(product) {
+        return this.snoozedProductTracker.isProductSnoozed(product);
     }
 
     createPrinter(printer) {

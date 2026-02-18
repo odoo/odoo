@@ -37,3 +37,42 @@ class PosSnooze(models.Model):
         ]
 
         return self.search_read(domain)
+
+    @api.model
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
+        params += ['id', 'product_template_id', 'pos_config_id', 'start_time', 'end_time']
+        return params
+
+    def _cron_clean_records(self):
+        now = Datetime.now()
+        expired_snoozes = self.search([('end_time', '!=', False), ('end_time', '<', now)])
+        expired_snoozes.unlink()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._notify_snooze_updated()
+        return records
+
+    @api.ondelete(at_uninstall=False)
+    def _notify_snooze_deleted(self):
+        self._notify_snooze_updated(is_deletion=True)
+
+    def _notify_snooze_updated(self, is_deletion=False):
+        snoozes_by_config = {}
+        for snooze in self:
+            snoozes_by_config.setdefault(snooze.pos_config_id, self.env['pos.product.template.snooze'])
+            snoozes_by_config[snooze.pos_config_id] |= snooze
+
+        for config, snoozes in snoozes_by_config.items():
+            updated_records = None if is_deletion else snoozes
+            deleted_ids = snoozes.ids if is_deletion else None
+            self._sync_snoozes(config, updated_records=updated_records, deleted_record_ids=deleted_ids)
+
+    @api.model
+    def _sync_snoozes(self, config, updated_records=None, deleted_record_ids=None):
+        config._notify_synchronisation(config.current_session_id.id,
+                                       device_identifier=self.env.context.get('device_identifier', False),
+                                       records={'pos.product.template.snooze': updated_records.ids} if updated_records else {},
+                                       deleted_record_ids={'pos.product.template.snooze': deleted_record_ids} if deleted_record_ids else {})
