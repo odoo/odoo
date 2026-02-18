@@ -651,6 +651,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'))
             .add(this.websiteService.pageDocument.querySelectorAll(`${this.oeRecordCoverSelector} [data-oe-field]:not([data-oe-field="arch"])`));
 
+        // Image inside grid image items and s_image_gallery can be replaced.
+        $extraEditableZones = $extraEditableZones.add([...$editableSavableZones.find(
+            ".o_grid_item_image > *, .o_grid_item_image > a > *, .s_image_gallery *"
+        )].filter(
+            (el) => isMediaElement(el) || el.tagName === "IMG"
+        ));
+
         return $editableSavableZones.add($extraEditableZones).toArray();
     }
     _getReadOnlyAreas() {
@@ -660,7 +667,48 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // over all further inactive tabs when using Chrome.
         // grep: .s_tabs
         const doc = this.websiteService.pageDocument;
-        return [...doc.querySelectorAll('.tab-pane > .oe_structure')].map(el => el.parentNode);
+        const tabEls = [...doc.querySelectorAll('.tab-pane > .oe_structure')].map(el => el.parentNode);
+
+        // No text should be added around grid image items nor inside s_image_gallery.
+        // Because databases might contain modified versions, we make it possible to fix
+        // previously broken ones by applying the read-only only to unchanged ones.
+        const hasMediaOnly = (imageContainerEl) => {
+            const mediaContainerEls = [];
+            let requiresSingleMedia = false;
+            if (imageContainerEl.matches(".s_image_gallery")) {
+                for (const mediaContainerEl of imageContainerEl.querySelectorAll(".row, .carousel-inner")) {
+                    mediaContainerEls.push(...mediaContainerEl.children);
+                }
+                if (imageContainerEl.matches(".o_grid, .o_nomode, .o_slideshow")) {
+                    requiresSingleMedia = true;
+                }
+            } else {
+                requiresSingleMedia = true;
+                mediaContainerEls.push(imageContainerEl);
+            }
+            for (const mediaContainerEl of mediaContainerEls) {
+                const nonEmptyContent = [...mediaContainerEl.childNodes].filter(
+                    (node) => node.tagName !== "BR" && (node.nodeType !== Node.TEXT_NODE || node.textContent.replaceAll(/\s+/g, ""))
+                );
+                if (requiresSingleMedia && nonEmptyContent.length !== 1) {
+                    return false;
+                }
+                return nonEmptyContent.every((singleEl) => {
+                    if (isMediaElement(singleEl) || singleEl.tagName === "IMG") {
+                        return true;
+                    }
+                    if (singleEl.tagName === "A") {
+                        return hasMediaOnly(singleEl);
+                    }
+                });
+            }
+            return false;
+        };
+        const imageContainerEls = [
+            ...doc.querySelectorAll(".o_grid_item_image, .s_image_gallery"),
+        ].filter(hasMediaOnly);
+
+        return [...tabEls, ...imageContainerEls];
     }
     _getUnremovableElements() {
         return [];
