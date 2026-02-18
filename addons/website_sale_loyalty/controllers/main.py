@@ -13,7 +13,8 @@ class WebsiteSale(main.WebsiteSale):
 
     @route()
     def pricelist(self, promo, reward_id=None, **post):
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_cart):
             return request.redirect('/shop')
         coupon_status = order_sudo._try_apply_code(promo)
         if coupon_status.get('not_found'):
@@ -44,7 +45,8 @@ class WebsiteSale(main.WebsiteSale):
         code = code.strip()
 
         request.session['pending_coupon_code'] = code
-        if order_sudo := request.cart:
+        website = self.env['website'].get_current_website()
+        if order_sudo := website.current_cart:
             result = order_sudo._try_pending_coupon()
             if isinstance(result, dict) and 'error' in result:
                 url_query['coupon_error'] = result['error']
@@ -59,7 +61,8 @@ class WebsiteSale(main.WebsiteSale):
     @route('/shop/claimreward', type='http', auth='public', website=True, sitemap=False)
     def claim_reward(self, reward_id, code=None, **post):
         redirect = post.get('r', '/shop/cart')
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_cart):
             return request.redirect(redirect)
 
         try:

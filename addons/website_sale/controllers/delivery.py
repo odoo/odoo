@@ -18,7 +18,8 @@ class Delivery(WebsiteSale):
         :return: The rendered delivery form.
         :rtype: str
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
         values = {
             'delivery_methods': order_sudo._get_delivery_methods(),
             'selected_dm_id': order_sudo.carrier_id.id,
@@ -42,7 +43,8 @@ class Delivery(WebsiteSale):
         :return: The order summary values, if any.
         :rtype: dict
         """
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_cart):
             return {}
 
         dm_id = int(dm_id)
@@ -98,7 +100,8 @@ class Delivery(WebsiteSale):
         :return: The delivery rate data.
         :rtype: dict
         """
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_cart):
             raise ValidationError(_("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
@@ -130,7 +133,8 @@ class Delivery(WebsiteSale):
         :return: The order summary values.
         :rtype: dict
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
         order_sudo._set_pickup_location(pickup_location_data)
         return self._order_summary_values(order_sudo)
 
@@ -141,7 +145,8 @@ class Delivery(WebsiteSale):
         :return: The close pickup locations data.
         :rtype: dict
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
         country = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(country=country, **kwargs)
 
@@ -157,7 +162,8 @@ class Delivery(WebsiteSale):
         :return: The available delivery methods, sorted by lowest price.
         :rtype: dict
         """
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_cart):
             return []
 
         self._include_country_and_state_in_address(partial_delivery_address)

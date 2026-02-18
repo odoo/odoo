@@ -50,7 +50,7 @@ class ProductTemplate(models.Model):
             # has no max quantity.
             max_quantities = [
                 max_quantity for combo in product_or_template.sudo().combo_ids
-                if (max_quantity := combo._get_max_quantity(website, request.cart)) is not None
+                if (max_quantity := combo._get_max_quantity(website, website.current_cart)) is not None
             ]
             if max_quantities:
                 # No uom conversion: combo are not supposed to be sold with other uoms.
@@ -85,7 +85,7 @@ class ProductTemplate(models.Model):
             cart_quantity = 0.0
             if not product_sudo.allow_out_of_stock_order:
                 cart_quantity = product_sudo.uom_id._compute_quantity(
-                    request.cart._get_cart_qty(product_sudo.id),
+                    website.current_cart._get_cart_qty(product_sudo.id),
                     to_unit=uom,
                 )
             digits = self.env['decimal.precision'].precision_get('Product Unit')
@@ -133,7 +133,7 @@ class ProductTemplate(models.Model):
         )
 
         if (website := ir_http.get_request_website()) and product_or_template.is_product_variant:
-            max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
+            max_quantity = product_or_template._get_max_quantity(website, website.current_cart, **kwargs)
             if max_quantity is not None:
                 if uom:
                     max_quantity = product_or_template.uom_id._compute_quantity(max_quantity, to_unit=uom)

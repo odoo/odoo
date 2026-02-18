@@ -28,11 +28,13 @@ class WebsiteEventSaleController(WebsiteEventController):
             for event_ticket in request.env['event.event.ticket'].sudo().browse(event_ticket_ids)
         }
 
-        if all(event_ticket.total_price == 0 for event_ticket in event_ticket_by_id.values()) and not request.cart.id:
+        website = self.env['website'].get_current_website()
+
+        if all(event_ticket.total_price == 0 for event_ticket in event_ticket_by_id.values()) and not website.current_cart.id:
             # all chosen tickets are free AND no existing SO -> skip SO and payment process
             return super()._create_attendees_from_registration_post(event, registration_data)
 
-        order_sudo = request.cart or request.website._create_cart()
+        order_sudo = website.current_cart or request.website._create_cart()
         tickets_data = defaultdict(int)
         for data in registration_data:
             event_slot_id = data.get('event_slot_id', False)
@@ -71,8 +73,9 @@ class WebsiteEventSaleController(WebsiteEventController):
     def registration_confirm(self, event, **post):
         res = super().registration_confirm(event, **post)
 
+        website = self.env['website'].get_current_website()
         registrations = self._process_attendees_form(event, post)
-        order_sudo = request.cart
+        order_sudo = website.current_cart
         if not any(line.event_ticket_id for line in order_sudo.order_line):
             # order does not contain any tickets, meaning we are confirming a free event
             return res

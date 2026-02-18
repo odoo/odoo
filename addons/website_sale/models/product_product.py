@@ -175,12 +175,12 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
 
-        product_price = request.pricelist._get_product_price(
+        product_price = website.current_pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
         )
         # Use sudo to access cross-company taxes.
         product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
-        taxes = request.fiscal_position.map_tax(product_taxes_sudo)
+        taxes = website.current_fiscal_position.map_tax(product_taxes_sudo)
         price = self.product_tmpl_id._apply_taxes_to_price(
             product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
         )

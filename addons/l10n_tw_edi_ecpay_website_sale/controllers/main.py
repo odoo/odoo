@@ -15,8 +15,9 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleL10nTW(WebsiteSale):
     def _l10n_tw_is_extra_info_needed(self):
-        order_sudo = request.cart
-        invoicing_step = request.website._get_checkout_step(
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
+        invoicing_step = website._get_checkout_step(
             '/shop/l10n_tw_invoicing_info'
         )
         invoicing_info_needed = invoicing_step.sudo().is_published = (
@@ -71,7 +72,8 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
     @route('/shop/l10n_tw_invoicing_info', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
     def l10n_tw_invoicing_info_get(self, **kw):
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
         default_vals = {
             'is_donate': "on" if order_sudo.l10n_tw_edi_love_code else False,
             'love_code': order_sudo.l10n_tw_edi_love_code,
@@ -80,12 +82,13 @@ class WebsiteSaleL10nTW(WebsiteSale):
             'carrier_number_2': order_sudo.l10n_tw_edi_carrier_number_2,
         }
         values = self._get_render_context(order_sudo, default_vals)
-        values.update(request.website._get_checkout_step_values())
+        values.update(website._get_checkout_step_values())
         return request.render('l10n_tw_edi_ecpay_website_sale.l10n_tw_edi_invoicing_info', values)
 
     @route('/shop/l10n_tw_invoicing_info/submit', type='http', auth='public', methods=['POST'], website=True, sitemap=False)
     def l10n_tw_invoicing_info_post(self, **kw):
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
         errors = {}
         default_vals = {
             'love_code': kw.get('l10n_tw_edi_love_code'),
@@ -176,7 +179,8 @@ class WebsiteSaleL10nTW(WebsiteSale):
             address_values, partner_sudo, address_type, *args, **kwargs
         )
 
-        if address_type == 'billing' and request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
+        website = self.env['website'].get_current_website()
+        if address_type == 'billing' and website.sudo().company_id.country_id.code == 'TW' and website.sudo().company_id._is_ecpay_enabled():
             phone = address_values.get('phone')
             if phone:
                 formatted_phone = request.env['account.move']._reformat_phone_number(phone)
@@ -186,7 +190,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
             if address_values.get('parent_name'):  # B2B customer
                 if not address_values.get('vat'):
                     missing_fields.add('vat')
-                if not self._is_valid_tax_id(address_values.get('vat'), request.cart):
+                if not self._is_valid_tax_id(address_values.get('vat'), website.current_cart):
                     invalid_fields.add('vat')
                     error_messages.append(request.env._("Please enter a valid Tax ID"))
 
@@ -195,8 +199,9 @@ class WebsiteSaleL10nTW(WebsiteSale):
     def _handle_extra_form_data(self, extra_form_data, address_values):
         super()._handle_extra_form_data(extra_form_data, address_values)
 
-        if request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
-            order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        if website.sudo().company_id.country_id.code == 'TW' and website.sudo().company_id._is_ecpay_enabled():
+            order_sudo = website.current_cart
             if address_values.get('parent_name'):
                 l10n_tw_edi_is_print = True
             else:

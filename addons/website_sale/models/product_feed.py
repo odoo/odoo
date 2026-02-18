@@ -163,7 +163,8 @@ class ProductFeed(models.Model):
         # Override the pricelist of the request to localize the currency and prices, otherwise, uses
         # the website default pricelist.
         if self.pricelist_id:
-            request.pricelist = self.pricelist_id
+            website = self.env['website'].get_current_website()
+            website.current_pricelist = self.pricelist_id
 
         homepage_url = self.website_id.homepage_url or '/'
         website_homepage = self.website_id._get_website_pages(

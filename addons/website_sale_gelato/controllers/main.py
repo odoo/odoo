@@ -15,7 +15,8 @@ class WebsiteSale(main.WebsiteSale):
         :rtype: bool
         """
         res = super()._check_delivery_address(partner_sudo)
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_cart
         if not res or not order_sudo:
             return res
 

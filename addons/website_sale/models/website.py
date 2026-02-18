@@ -311,6 +311,10 @@ class Website(models.Model):
         default=_default_confirmation_email_template,
     )
 
+    current_cart = fields.Many2many(string="Current Cart", compute="_compute_current_cart")
+    current_fiscal_position = fields.Many2many(string="Current Fiscal Position", compute="_compute_current_fiscal_position")
+    current_pricelist = fields.Many2many(string="Current Currency", compute="_compute_current_pricelist")
+
     #=== COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -321,11 +325,23 @@ class Website(models.Model):
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
+    def _compute_current_cart(self):
+        for website in self:
+            website.current_cart = website._get_and_cache_current_cart()
+
+    def _compute_current_fiscal_position(self):
+        for website in self:
+            website.current_fiscal_position = website._get_and_cache_current_fiscal_position()
+
+    def _compute_current_pricelist(self):
+        for website in self:
+            website.current_pricelist = website._get_and_cache_current_pricelist()
+
     @api.depends('company_id')
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = (
-                request and hasattr(request, 'pricelist') and request.pricelist.currency_id
+                request and hasattr(request, 'pricelist') and website.current_pricelist.currency_id
                 or website.company_id.sudo().currency_id
             )
 
@@ -719,7 +735,7 @@ class Website(models.Model):
 
         request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
         request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
-        request.cart = sale_order_sudo
+        self.current_cart = sale_order_sudo
 
         return sale_order_sudo
 
@@ -730,8 +746,8 @@ class Website(models.Model):
             'company_id': self.company_id.id,
             'partner_id': partner_sudo.id,
 
-            'fiscal_position_id': request.fiscal_position.id,
-            'pricelist_id': request.pricelist.id,
+            'fiscal_position_id': self.current_fiscal_position.id,
+            'pricelist_id': self.current_pricelist.id,
 
             'team_id': self.salesteam_id.id,
             'website_id': self.id,
@@ -762,7 +778,7 @@ class Website(models.Model):
             ):
                 return pricelist_sudo.sudo()
 
-        if cart_sudo := request.cart:
+        if cart_sudo := self.current_cart:
             if not request.env.cr.readonly:
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()

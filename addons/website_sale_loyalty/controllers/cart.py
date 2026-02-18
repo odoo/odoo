@@ -9,7 +9,8 @@ class Cart(WebsiteSaleCart):
 
     @route()
     def cart(self, **post):
-        if order_sudo := request.cart:
+        website = self.env['website'].get_current_website()
+        if order_sudo := website.current_cart:
             order_sudo._update_programs_and_rewards()
             order_sudo._auto_apply_rewards()
         return super().cart(**post)

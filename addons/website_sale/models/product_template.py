@@ -382,9 +382,9 @@ class ProductTemplate(models.Model):
         if not self:
             return {}
 
-        pricelist = request.pricelist.with_context(self.env.context)
+        pricelist = website.current_pricelist.with_context(self.env.context)
         currency = website.currency_id
-        fiscal_position_sudo = request.fiscal_position
+        fiscal_position_sudo = website.current_fiscal_position
         date = fields.Date.context_today(self)
 
         pricelist_prices = pricelist._compute_price_rule(self, 1.0)
@@ -581,7 +581,7 @@ class ProductTemplate(models.Model):
         :returns: additional product/template information
         :rtype: dict
         """
-        pricelist = request.pricelist.with_context(self.env.context)
+        pricelist = website.current_pricelist.with_context(self.env.context)
         currency = website.currency_id.with_context(self.env.context)
 
         # Pricelist price doesn't have to be converted
@@ -633,7 +633,7 @@ class ProductTemplate(models.Model):
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
         taxes = self.env['account.tax']
         if product_taxes:
-            taxes = request.fiscal_position.map_tax(product_taxes)
+            taxes = website.current_fiscal_position.map_tax(product_taxes)
             # We do not apply taxes on the compare_list_price value because it's meant to be
             # a strict value displayed as is.
             for price_key in ('price', 'list_price'):
@@ -981,7 +981,8 @@ class ProductTemplate(models.Model):
         """ Override to fallback on website current pricelist """
         pricelist = super()._get_contextual_pricelist()
         if request and request.is_frontend and not pricelist:
-            return request.pricelist
+            website = self.env['website'].get_current_website()
+            return website.current_pricelist
         return pricelist
 
     def _website_show_quick_add(self):
@@ -1019,7 +1020,7 @@ class ProductTemplate(models.Model):
                 self.env.company
             )
             if product_taxes:
-                taxes = request.fiscal_position.map_tax(product_taxes)
+                taxes = website.current_fiscal_position.map_tax(product_taxes)
                 return self._apply_taxes_to_price(
                     price, currency, product_taxes, taxes, product_or_template, website=website
                 ), pricelist_rule_id
