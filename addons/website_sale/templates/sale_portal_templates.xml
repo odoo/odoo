@@ -25,7 +25,7 @@
         name="Sale Order Order Again"
     >
         <div id="print_invoice_sidebar_button" position="after">
-            <t t-if="sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()">
+            <t t-if="sale_order.with_user(env.user).sudo()._is_reorder_allowed()">
                 <button
                     id="reorder_sidebar_button"
                     class="btn btn-secondary o_wsale_reorder_button oe_website_sale"

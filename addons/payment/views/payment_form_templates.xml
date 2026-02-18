@@ -402,18 +402,18 @@
             <div>
                 <strong>No payment method available</strong>
             </div>
-            <div t-if="request.env.is_system()" class="mt-2">
+            <div t-if="env.is_system()" class="mt-2">
                 <p t-if="providers_sudo">
                     None is configured for:
-                    <t t-out="request.env.company.country_id.name"/>,
-                    <t t-out="request.env.company.currency_id.name"/>.
+                    <t t-out="env.company.country_id.name"/>,
+                    <t t-out="env.company.currency_id.name"/>.
                 </p>
                 <p t-else="">
                     No payment providers are configured.
                 </p>
                 <t
                     t-set="onboarding_provider"
-                    t-value="request.env.company.onboarding_payment_module"
+                    t-value="env.company.onboarding_payment_module"
                 />
                 <a
                     t-if="onboarding_provider and not providers_sudo"
@@ -462,7 +462,7 @@
 
     <template id="payment.availability_report_button">
         <a
-            t-if="request.env.user._is_system() and availability_report"
+            t-if="env.user._is_system() and availability_report"
             role="button"
             data-bs-toggle="collapse"
             href="#payment_availability_report"
@@ -475,7 +475,7 @@
 
     <template id="payment.availability_report">
         <div
-            t-if="request.env.user._is_system() and availability_report"
+            t-if="env.user._is_system() and availability_report"
             id="payment_availability_report"
             class="collapse"
         >

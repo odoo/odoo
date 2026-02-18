@@ -79,7 +79,7 @@
                     can_be_edited="can_be_edited"
                     selected="selected"
                     show_removal="can_be_edited and not selected and not is_user_address">
-                    <t t-set="is_user_address" t-value="address == request.env.user.partner_id"/>
+                    <t t-set="is_user_address" t-value="address == env.user.partner_id"/>
                     <t t-if="is_user_address">
                         <!-- Edition of main address should go through dedicated page -->
                         <t t-set="address_update_url" t-valuef="/my/account?redirect=/my/addresses"/>

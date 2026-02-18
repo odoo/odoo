@@ -98,10 +98,10 @@
                 <div class="row">
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
-                        <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
+                        <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image: url(#{website.image_url(user, 'avatar_1024')});"/>
                             <a class="btn btn-primary d-inline-block d-md-none"
-                                t-if="request.env.user == user and user.karma != 0"
+                                t-if="env.user == user and user.karma != 0"
                                 data-bs-toggle="modal" data-bs-target="#o_wprofile_edit_profile_modal">
                                 <i class="fa fa-pencil me-1"/>EDIT
                             </a>
@@ -114,7 +114,7 @@
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
-                            <a class="btn o_wprofile_editor btn-primary d-none d-md-inline-block" t-if="(request.env.user == user and user.karma != 0) or request.env.user._is_admin()"
+                            <a class="btn o_wprofile_editor btn-primary d-none d-md-inline-block" t-if="(env.user == user and user.karma != 0) or env.user._is_admin()"
                                 t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None">
                                 <i class="fa fa-pencil me-2"/>EDIT PROFILE
                             </a>
@@ -194,7 +194,7 @@
                                 <t t-call="website_profile.user_badges"/>
                             </div>
                             <div t-if="user.partner_id.website_description" class="mb32">
-                                <t t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()">
+                                <t t-if="env.user == user and user.karma != 0 or env.user._is_admin()">
                                     <a href="#" class="o_wprofile_editor btn btn-link float-end"
                                         t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None" data-focus-website-description="true">
                                         <i class="fa fa-pencil me-1"/>Edit
@@ -287,7 +287,7 @@
                 </t>
             </t>
         </div>
-         <div class="mb-3" t-elif="request.env.user == user">
+         <div class="mb-3" t-elif="env.user == user">
             Badges are your collection of achievements. Wear them proudly! <br />
             <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"
             class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
@@ -297,7 +297,7 @@
         <div t-else="" class="mb-3 d-inline-block">
             <p class="text-muted">No badges yet!</p>
         </div>
-        <div t-if="request.env.user.id != user.id" class="text-end d-inline-block pull-right">
+        <div t-if="env.user.id != user.id" class="text-end d-inline-block pull-right">
             <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"
             class="btn-link btn-sm"><i class="oi oi-arrow-right"/> All Badges</a>
             <a t-else="" t-attf-href="/profile/ranks_badges"

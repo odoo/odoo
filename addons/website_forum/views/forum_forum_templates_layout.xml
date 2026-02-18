@@ -128,7 +128,7 @@
                         </a>
                         <div class="dropdown-divider"/>
                         <t t-if="_page_name == 'tags'">
-                            <a t-if="not request.env.user._is_public()"
+                            <a t-if="not env.user._is_public()"
                                 t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='followed') }"
                                 class="dropdown-item">Followed Tags
                             </a>

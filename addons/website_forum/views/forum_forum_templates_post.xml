@@ -341,7 +341,7 @@
                     <t t-set="_question_comment_collapse_uid" t-value="'comment_%s_%s' % (post_id._name.replace('.', '_'), post_id.id)"/>
                 </t>
                 <t t-set="can_interact_with_post"
-                   t-value="not request.env.user._is_public() and
+                   t-value="not env.user._is_public() and
                             (post_id.can_close or post_id.can_edit or post_id.can_unlink or post_id.can_moderate or post_id.can_flag)"/>
                 <div class="btn-toolbar align-items-center mt-3" role="toolbar">
                     <t t-if="post_id.state == 'active' and post_id.active != False" t-call="website_forum.vote"

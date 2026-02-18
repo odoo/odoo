@@ -292,7 +292,7 @@
 
             <t t-call="portal.portal_searchbar" title.translate="Opportunities">
 
-                <div t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
+                <div t-if="env.user.partner_id.grade_id or env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-primary" name='new_opp' data-bs-toggle="modal" data-bs-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
                         Create Opportunity
                     </button>

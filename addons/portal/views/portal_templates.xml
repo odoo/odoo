@@ -6,7 +6,7 @@
             <t t-set="body_classname" t-valuef="{{body_classname}}{{classname_from_template}}"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
-            <attribute name="t-attf-class" add="#{request.env['res.lang']._get_data(code=request.env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
+            <attribute name="t-attf-class" add="#{env['res.lang']._get_data(code=env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']/header" position="before">
@@ -40,7 +40,7 @@
             <t t-if="preview_object">
                 <!-- Remove seo_object to not define og and twitter tags twice when wesbite is installed -->
                 <t t-set="seo_object" t-value="False"/>
-                <t t-set="company" t-value="preview_object.company_id or request.env.company"/>
+                <t t-set="company" t-value="preview_object.company_id or env.company"/>
                 <t t-set="not_uses_default_logo" t-value="company and not company.uses_default_logo"/>
                 <meta property="og:title" t-att-content="preview_object.name"/>
                 <meta property="og:description" t-att-content="preview_object.description.striptags() if preview_object.description else ''"/>
@@ -527,7 +527,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="request.env.user.api_key_ids" t-as="key">
+                            <t t-foreach="env.user.api_key_ids" t-as="key">
                                 <tr>
                                     <td><span t-field="key.name"/></td>
                                     <td><span t-field="key.scope"/></td>

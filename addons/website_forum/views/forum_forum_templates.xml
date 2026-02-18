@@ -258,7 +258,7 @@
 
         <div class="row g-0 mt-3 mb-5" t-if="tags">
             <div class="col-3 pe-3 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
-                <span t-attf-class="#{ 'd-block' if request.env.user._is_public() else 'd-flex align-items-baseline'}">
+                <span t-attf-class="#{ 'd-block' if env.user._is_public() else 'd-flex align-items-baseline'}">
                     <t t-call="website_forum.follow"
                         email="user_id.email"
                         object="tag"

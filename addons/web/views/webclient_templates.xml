@@ -46,7 +46,7 @@
       </xpath>
       <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
         <script type="text/javascript">
-            odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+            odoo.__session_info__ = <t t-out="json.dumps(env['ir.http'].get_frontend_session_info())"/>;
             if (!/(^|;\s)tz=/.test(document.cookie)) {
                 const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 document.cookie = `tz=${userTZ}; path=/`;
@@ -221,7 +221,7 @@
         <t t-call="web.login_layout">
             <div class="oe_check_identity_form">
                 <div class="text-center">
-                    <img t-attf-src="/logo.png?company={{ request.env.company.id }}" style="padding: 0px; margin: 0px; height: auto; height: 48px;" t-att-alt="request.env.company.name"/>
+                    <img t-attf-src="/logo.png?company={{ env.company.id }}" style="padding: 0px; margin: 0px; height: auto; height: 48px;" t-att-alt="env.company.name"/>
                     <h3>Confirm access</h3>
                 </div>
                 <owl-component name="web.check_identity_form" t-att-props="json.dumps({'redirect': redirect})"/>

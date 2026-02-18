@@ -370,7 +370,7 @@
     />
     <t
         t-set="is_editor_user"
-        t-value="request.env.user.has_group('website.group_website_designer')"
+        t-value="env.user.has_group('website.group_website_designer')"
     />
 
     <t t-if="(show_only_in_editor_mode and is_editor_user) or not show_only_in_editor_mode">
