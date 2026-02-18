@@ -209,3 +209,30 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
     await click(".o_pager_next");
     await contains(".o-mail-AttachmentBox", { count: 0 });
 });
+
+test("removing the last attachment should close the attachment box", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "Blah.txt",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet></sheet>
+                <chatter open_attachments="True"/>
+            </form>`,
+    });
+    await contains(".o-mail-AttachmentBox");
+    await click("button[title='Remove']");
+    await contains(
+        ".modal-body:text('Are you sure you want to delete \"Blah.txt\"? This action cannot be undone.')"
+    );
+    // Confirm the deletion
+    await click(".modal-footer .btn-primary");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+});

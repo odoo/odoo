@@ -153,16 +153,12 @@ const chatterPatch = {
             () => [this.state.thread, this.state.thread?.isLoadingAttachments]
         );
         useEffect(
-            () => {
-                if (
-                    this.state.thread &&
-                    !["new", "loading"].includes(this.state.thread.status) &&
-                    this.attachments.length === 0
-                ) {
+            (status, attachmentsLength) => {
+                if (!["new", "loading"].includes(status) && attachmentsLength === 0) {
                     this.state.isAttachmentBoxOpened = false;
                 }
             },
-            () => [this.state.thread?.status, this.attachments]
+            () => [this.state.thread?.status, this.attachments.length]
         );
         useEffect(
             () => {
