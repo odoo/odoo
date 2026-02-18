@@ -268,16 +268,18 @@ img, .media_iframe_video, .o_image {
         text-decoration: none;
     }
 
-    #portal_alert_category .alert div.mb-1.fw-normal {
-        margin-bottom: 0 !important;
-    }
+    #portal_alert_category .alert {
+        div.mb-1.fw-normal {
+            align-items: center;
+            margin-bottom: 0 !important;
+        }
 
-    .o_portal_my_home .o_portal_docs > .o_portal_index_card {
-        padding-right: var(--gutter-x);
+        div.opacity-75:has(*) {
+            margin-top: map-get($spacers, 1);
+        }
 
-        & + .o_portal_index_card {
-            padding-left: 0; //padding-right - g-2
-            padding-right: calc(var(--gutter-x) + var(--gutter-x) * .5); //padding-right + g-2
+        p, h5 {
+            margin-bottom: 0 !important;
         }
     }
 
