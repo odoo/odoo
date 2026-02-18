@@ -254,6 +254,53 @@ class Survey(http.Controller):
 
         return request.redirect('/survey/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
 
+    def _get_survey_last_triggering_answers(
+        self, survey_sudo, answer_sudo, page_or_question, triggered_questions_by_answer
+    ):
+        """Get IDs of answers on a potentially final page that trigger conditional questions.
+
+        This logic is used to allow the frontend to dynamically update the submit button's label
+        from "Submit" to "Continue" if a selected answer unlocks a subsequent question.
+
+        This calculation is optimized to run only on pages that could be the last one, depending on the user's choices.
+        It does not trigger in the skipped questions flow, as conditionals aren't handled.
+        It triggers if there are no guaranteed, non-conditional pages that follow the current `page_or_question`.
+
+        Args:
+            survey_sudo (survey.survey): The survey being taken.
+            answer_sudo (survey.user_input): The user's current answer session.
+            page_or_question (survey.question): The current page or question being viewed.
+            triggered_questions_by_answer (dict): A pre-computed mapping of answers to the questions they trigger.
+
+        Returns:
+            list[int]: A list of 'survey.question.answer' IDs that trigger subsequent questions.
+            Returns an empty list if the logic does not apply.
+        """
+        # On the last survey page, get the suggested answers which are triggering questions on the following pages
+        # to dynamically update the survey button to "submit" or "continue" depending on the selected answers.
+        # NB: Not in the skipped questions flow as conditionals aren't handled.
+        if answer_sudo.survey_first_submitted or survey_sudo.questions_layout == "one_page":
+            return []
+
+        potentially_survey_last = survey_sudo.with_context(survey_exclude_all_conditionals=True)._is_last_page_or_question(
+            answer_sudo, page_or_question
+        )
+        if not potentially_survey_last:
+            return []
+
+        pages_or_questions = survey_sudo._get_pages_or_questions(answer_sudo)
+        following_questions = pages_or_questions.filtered(lambda p_or_q: p_or_q.sequence > page_or_question.sequence)
+        next_page_questions_suggested_answers = page_or_question.suggested_answer_ids
+        if survey_sudo.questions_layout == "page_per_section":
+            following_questions = following_questions.question_ids
+            next_page_questions_suggested_answers = page_or_question.question_ids.suggested_answer_ids
+        return [
+            answer.id
+            for answer in triggered_questions_by_answer
+            if answer in next_page_questions_suggested_answers
+            and any(q in following_questions for q in triggered_questions_by_answer[answer])
+        ]
+
     def _prepare_survey_data(self, survey_sudo, answer_sudo, **post):
         """ This method prepares all the data needed for template rendering, in function of the survey user input state.
             :param post:
@@ -272,8 +319,8 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
         if survey_sudo.questions_layout != 'page_per_question':
-            triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
                 'triggering_answers_by_question': {
                     question.id: triggering_answers.ids
@@ -306,6 +353,11 @@ class Survey(http.Controller):
                 'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id),
                 'can_go_back': survey_sudo._can_go_back(answer_sudo, page_or_question),
             })
+            survey_last_triggering_answers = self._get_survey_last_triggering_answers(
+                survey_sudo, answer_sudo, page_or_question, triggered_questions_by_answer
+            )
+            if survey_last_triggering_answers:
+                data['survey_last_triggering_answers'] = survey_last_triggering_answers
             return data
 
         if answer_sudo.state == 'in_progress':
@@ -329,6 +381,12 @@ class Survey(http.Controller):
                     else:
                         survey_last = survey_sudo._is_last_page_or_question(answer_sudo, next_page_or_question)
                     data.update({'survey_last': survey_last})
+
+                    survey_last_triggering_answers = self._get_survey_last_triggering_answers(
+                        survey_sudo, answer_sudo, next_page_or_question, triggered_questions_by_answer
+                    )
+                    if survey_last_triggering_answers:
+                        data['survey_last_triggering_answers'] = survey_last_triggering_answers
 
             if answer_sudo.is_session_answer and next_page_or_question.is_time_limited:
                 data.update({
@@ -388,13 +446,18 @@ class Survey(http.Controller):
         elif 'page' in survey_data:
             background_image_url = survey_data['page'].background_image_url
 
-        return {
+        data = {
             'has_skipped_questions': any(answer_sudo._get_skipped_questions()),
             'survey_content': survey_content,
             'survey_progress': survey_progress,
             'survey_navigation': request.env['ir.qweb']._render('survey.survey_navigation', survey_data),
             'background_image_url': background_image_url
         }
+
+        if 'survey_last_triggering_answers' in survey_data:
+            data['survey_last_triggering_answers'] = survey_data['survey_last_triggering_answers']
+
+        return data
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):

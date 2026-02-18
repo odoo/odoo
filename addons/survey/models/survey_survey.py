@@ -751,17 +751,24 @@ class Survey(models.Model):
         one of the following questions.
         For section, we check in each following section if there is an active question.
         If yes, the given page is not the last one.
+        Context: survey_exclude_all_conditionals (bool): If True, the page or question is considered the last
+        if it is the last non-conditional page/question, ignoring any conditional questions that might follow.
         """
+        exclude_all_conditionals = self.env.context.get('survey_exclude_all_conditionals')
         pages_or_questions = self._get_pages_or_questions(user_input)
         current_page_index = pages_or_questions.ids.index(page_or_question.id)
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
         if next_page_or_question_candidates:
-            inactive_questions = user_input._get_inactive_conditional_questions()
+            if exclude_all_conditionals:
+                triggering_answers_by_question, _ = self._get_conditional_maps()
+                questions_to_exclude = self.env['survey.question'].concat(*triggering_answers_by_question.keys())
+            else:
+                questions_to_exclude = user_input._get_inactive_conditional_questions()
             _, triggered_questions_by_answer, _ = user_input._get_conditional_values()
             if self.questions_layout == 'page_per_question':
-                next_active_question = any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                next_active_question = any(next_question not in questions_to_exclude for next_question in next_page_or_question_candidates)
                 is_triggering_question = any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in page_or_question.suggested_answer_ids)
-                return not(next_active_question or is_triggering_question)
+                return not (next_active_question or (is_triggering_question and not exclude_all_conditionals))
             elif self.questions_layout == 'page_per_section':
                 is_triggering_section = False
                 for question in page_or_question.question_ids:
@@ -771,10 +778,10 @@ class Survey(models.Model):
                         break
                 next_active_question = False
                 for section in next_page_or_question_candidates:
-                    next_active_question = any(next_question not in inactive_questions for next_question in section.question_ids)
+                    next_active_question = any(next_question not in questions_to_exclude for next_question in section.question_ids)
                     if next_active_question:
                         break
-                return not(next_active_question or is_triggering_section)
+                return not (next_active_question or (is_triggering_section and not exclude_all_conditionals))
 
         return True
 
