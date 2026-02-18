@@ -1,6 +1,7 @@
 import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onWillStart } from "@odoo/owl";
+import { formatCurrency } from "@web/core/currency";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { QuantityButtons } from "@point_of_sale/app/components/buttons/quantity_buttons/quantity_buttons";
@@ -162,7 +163,11 @@ export class ComboConfiguratorPopup extends Component {
             return "";
         }
         const priceSign = comboItem.extra_price > 0 ? "+" : "-";
-        return priceSign + " " + this.env.utils.formatCurrency(comboItem.extra_price);
+        return (
+            priceSign +
+            " " +
+            formatCurrency(comboItem.extra_price, this.pos.currency.id, { trailingZeros: false })
+        );
     }
 
     getSelectedComboItems() {
