@@ -2409,6 +2409,8 @@ class MrpProduction(models.Model):
             moves_to_unlink = self.move_raw_ids
             workorders_to_unlink = self.workorder_ids
             if self.bom_id == bom:
+                # Only remove manual lines (not coming from BoM)
+                workorders_to_unlink = workorders_to_unlink.filtered(lambda w: not w.operation_id)
                 # Empty the `bom_id` field so that, when the BoM is reassigned to this field, depending
                 # computes are re-triggered (it doesn't happen if the value of the field doesn't change).
                 self.bom_id = False
