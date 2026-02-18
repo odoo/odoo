@@ -355,7 +355,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
                     - C03, cost share 0% (Last line should round to reach 100%)
         Buy and receive 1 kit Giga Kit @ 1000
         """
-        components = component01, component02, component03, component04, component05 = self.env['product.product'].create([{
+        component01, component02, component03, component04, component05 = self.env['product.product'].create([{
             'name': 'Component %s' % name,
             'categ_id': self.avco_category.id,
         } for name in ('01', '02 ', '03', '04', '05')])
@@ -437,34 +437,19 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
         #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
         #   1.0 * 0.0 * 1.0 = 0.0 -> 0%
-        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 100.0)
-        self.assertRecordValues(purchase_order.order_line.move_ids.sorted(lambda m: m.product_id.id), [
-            {'product_id': component01.id, 'cost_share': 3.33},
-            {'product_id': component02.id, 'cost_share': 10.0},
-            {'product_id': component02.id, 'cost_share': 15.0},
-            {'product_id': component02.id, 'cost_share': 3.33},
-            {'product_id': component03.id, 'cost_share': 15.0},
-            {'product_id': component03.id, 'cost_share': 3.34},
-            {'product_id': component04.id, 'cost_share': 15.0},
-            {'product_id': component04.id, 'cost_share': 10.0},
-            {'product_id': component05.id, 'cost_share': 15.0},
-            {'product_id': component05.id, 'cost_share': 10.0},
-            {'product_id': component05.id, 'cost_share': 0.0},
-        ])
+        moves = purchase_order.order_line.move_ids.sorted('cost_share')
+        cost_share_values = moves.mapped('cost_share')
+        self.assertEqual(sum(cost_share_values), 100.0)
+        expected_values = [0.0, 3.3333333333333, 3.3333333333333, 3.3333333333333, 10.0, 10.0, 10.0, 15.0, 15.0, 15.0, 15.0]
+        for actual, expected in zip(cost_share_values, expected_values):
+            self.assertAlmostEqual(actual, expected)
         receipt = purchase_order.picking_ids
         receipt.button_validate()
-        self.assertRecordValues(components.stock_valuation_layer_ids.sorted(lambda l: l.product_id.id), [
-            {'product_id': component01.id, 'unit_cost':  33.3},
-            {'product_id': component02.id, 'unit_cost': 100.0},
-            {'product_id': component02.id, 'unit_cost': 150.0},
-            {'product_id': component02.id, 'unit_cost':  33.3},
-            {'product_id': component03.id, 'unit_cost': 150.0},
-            {'product_id': component03.id, 'unit_cost':  33.4},
-            {'product_id': component04.id, 'unit_cost': 150.0},
-            {'product_id': component04.id, 'unit_cost': 100.0},
-            {'product_id': component05.id, 'unit_cost': 150.0},
-            {'product_id': component05.id, 'unit_cost': 100.0},
-            {'product_id': component05.id, 'unit_cost': 0.0},
+
+        layers = receipt.move_ids.stock_valuation_layer_ids.sorted('value')
+        self.assertEqual(sum(layers.mapped('value')), 1000.0)
+        self.assertRecordValues(layers, [
+            {'value': val} for val in (0.0, 33.33, 33.33, 33.33, 100.0, 100.0, 100.01, 150.0, 150.0, 150.0, 150.0)
         ])
 
     def test_kit_bom_cost_share_constraint_with_variants(self):
@@ -661,4 +646,40 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
             # L attribute - Cost share 0% automatically splitted
             {'product_id': c4.id, 'unit_cost':  500.0},
             {'product_id': c5.id, 'unit_cost':  500.0},
+        ])
+
+    def test_kit_components_cost_distribution(self):
+        """
+        Test the cost share rounding when purchasing a kit with several lines without cost_share
+        """
+        kit, *components = self.env['product.product'].create([{
+            'name': 'Product %s' % i,
+            'is_storable': True,
+            'categ_id': self.avco_category.id,
+        } for i in range(7)])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                *[Command.create({'product_id': p.id}) for p in components],
+            ],
+        }])
+
+        kit_price = 1000
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_qty': 1,
+                'price_unit': kit_price,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+
+        layers = receipt.move_ids.stock_valuation_layer_ids.sorted('value')
+        self.assertAlmostEqual(sum(layers.mapped('value')), kit_price)
+        self.assertRecordValues(layers, [
+            {'value': val} for val in (166.66, 166.66, 166.67, 166.67, 166.67, 166.67)
         ])
