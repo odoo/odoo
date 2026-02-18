@@ -637,6 +637,7 @@ class TestHrVersion(TransactionCase):
             "work_location_type",
             "write_date",
             "write_uid",
+            "departure_description",
         }
 
         hr_version_model = self.env['hr.version']
