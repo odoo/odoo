@@ -842,12 +842,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if qty_factor == -1:
             logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
         role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
-        partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
-        # Need to set partner before to compute bank and lines properly
-        invoice.partner_id = partner.id
-        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
-        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
-        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
         # ==== partner_bank_id ====
         bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
         bank_details = [
@@ -855,6 +849,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for bank_detail_node in bank_detail_nodes
             if bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
         ]
+
+        partner_vals = self._import_retrieve_partner_vals(tree, role)
+        if bank_details and invoice.move_type in ('out_refund', 'in_invoice'):
+            partner_vals['bank_details'] = bank_details
+        partner, partner_logs = self._import_partner(invoice.company_id, **partner_vals)
+        # Need to set partner before to compute bank and lines properly
+        invoice.partner_id = partner.id
+        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
+        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
+
         if bank_details:
             self._import_partner_bank(invoice, bank_details)
 
