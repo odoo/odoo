@@ -125,8 +125,12 @@ export class AddSnippetDialog extends Component {
             ...editorPreviewAssetsBundles.map((assetsBundle) =>
                 loadCSSBundleFromEditor(assetsBundle, loadOptions)
             ),
-            loadBundle("html_builder.iframe_add_dialog", loadOptions),
+            ...this.getDefaultAssets().map((assetName) => loadBundle(assetName, loadOptions)),
         ]);
+    }
+
+    getDefaultAssets() {
+        return ["html_builder.iframe_add_dialog"];
     }
 
     get snippetGroups() {

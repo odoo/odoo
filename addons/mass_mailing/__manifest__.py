@@ -139,6 +139,7 @@
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [
+            ('include', 'html_builder.iframe_add_dialog'),
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
         'mass_mailing.mailing_assets': [

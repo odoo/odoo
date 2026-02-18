@@ -9,6 +9,10 @@ export class AddSnippetDialogSandboxed extends AddSnippetDialog {
         return isBrowserSafari();
     }
 
+    getDefaultAssets() {
+        return [];
+    }
+
     renderIframeHead() {
         const iframe = this.iframeRef.el;
         iframe.contentDocument.head.prepend(renderToFragment("mass_mailing.IframeHead"));
