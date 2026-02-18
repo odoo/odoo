@@ -1375,9 +1375,9 @@ export class TablePlugin extends Plugin {
      * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
      */
     processContentForClipboard(clonedContents, selection) {
-        if (clonedContents.firstChild.nodeName === "TR" || isTableCell(clonedContents.firstChild)) {
+        const table = closestElement(selection.commonAncestorContainer, "table.o_selected_table");
+        if (table) {
             // We enter this case only if selection is within single table.
-            const table = closestElement(selection.commonAncestorContainer, "table");
             const tableClone = table.cloneNode(true);
             // A table is considered fully selected if it is nested inside a
             // cell that is itself selected, or if all its own cells are
