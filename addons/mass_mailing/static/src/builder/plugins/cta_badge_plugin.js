@@ -17,4 +17,4 @@ export class CTABadgePlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(CTABadgePlugin.id, CTABadgePlugin);
+registry.category("mass_mailing-builder-plugins").add(CTABadgePlugin.id, CTABadgePlugin);

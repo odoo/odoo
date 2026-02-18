@@ -55,4 +55,4 @@ patch(CropImageAction.prototype, {
     },
 });
 
-registry.category("mass_mailing-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);

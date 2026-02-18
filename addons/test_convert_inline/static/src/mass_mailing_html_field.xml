@@ -1,0 +1,9 @@
+<templates>
+    <t t-name="test_convert_inline.HtmlField" t-inherit="mass_mailing.HtmlField" t-inherit-mode="extension">
+        <xpath expr="//MassMailingIframe" position="before">
+            <div t-if="!(state.showCodeView or state.showThemeSelector)" class="w-100">
+                <button class="w-100" t-on-click="() => this.debugConvertInline()">Debug Convert Inline</button>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -42,4 +42,4 @@ export class EmptyMailingPlugin extends Plugin {
     }
 }
 
-registry.category("mass_mailing-plugins").add(EmptyMailingPlugin.id, EmptyMailingPlugin);
+registry.category("mass_mailing-builder-plugins").add(EmptyMailingPlugin.id, EmptyMailingPlugin);

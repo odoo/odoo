@@ -9,10 +9,10 @@
         &lt;!DOCTYPE html&gt;
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
             <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta http-equiv="Content-Type" content="text/html, charset=UTF-8"/>
                 <meta name="format-detection" content="telephone=no"/>
-                <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
-                <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+                <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+                <meta name="x-apple-disable-message-reformatting"/>
 
                 <t t-out="mailing_style"/>
 
@@ -21,15 +21,17 @@
                     https://www.htmlemailcheck.com/knowledge-base/dpi-scaling-in-outlook-2007-2013/):
                 -->
                 <!--[if mso]>
-                    <xml>
-                        <o:OfficeDocumentSettings>
-                            <o:AllowPNG/>
-                            <o:PixelsPerInch>96</o:PixelsPerInch>
-                        </o:OfficeDocumentSettings>
-                    </xml>
+                    <noscript>
+                        <xml>
+                            <o:OfficeDocumentSettings>
+                                <o:AllowPNG/>
+                                <o:PixelsPerInch>96</o:PixelsPerInch>
+                            </o:OfficeDocumentSettings>
+                        </xml>
+                    </noscript>
                 <![endif]-->
             </head>
-            <body>
+            <body style="margin:0;padding:0;word-spacing:normal;word-wrap:normal;">
                 <t t-out="body"/>
             </body>
         </html>

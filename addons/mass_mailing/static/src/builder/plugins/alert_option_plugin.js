@@ -34,4 +34,4 @@ class AlertOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);

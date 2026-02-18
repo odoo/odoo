@@ -88,4 +88,4 @@ class DesignTabPlugin extends Plugin {
     }
 }
 
-registry.category("mass_mailing-plugins").add(DesignTabPlugin.id, DesignTabPlugin);
+registry.category("mass_mailing-builder-plugins").add(DesignTabPlugin.id, DesignTabPlugin);

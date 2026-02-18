@@ -1,4 +1,11 @@
 
+// TODO EGGMAIL: don't use a style tag for most of these if possible, as they
+// are not fully supported across mail clients
+// This file should ideally contain only media queries, as it is the only
+// place they can be. Evaluate if media queries need to be computed during
+// the convertInline process, if that's so, remove this file entirely and
+// move the style tag in the head in python
+
 .o_layout * {
     box-sizing: border-box !important;
 }
@@ -31,6 +38,8 @@ body:has(.o_layout) {
     }
 }
 
+// TODO EGGMAIL: media queries can be loaded in the editor iframe (for the reference element),
+// because the viewport size is 1320px, so rules are not applied (it was not the case before).
 @media screen and (max-width: 768px) {
     .o_mail_snippet_general .container {
         width: 100% !important;

@@ -25,7 +25,7 @@ export class BuilderActionsPlugin extends Plugin {
                 }
                 /** @type { BuilderAction } */
                 this.actions[Action.id] = new Action(
-                    this.__editor.getEditorContext(Action.dependencies)
+                    this.__editor.getPluginContext(Action.dependencies)
                 );
             }
         }

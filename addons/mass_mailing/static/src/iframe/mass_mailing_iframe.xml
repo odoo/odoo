@@ -33,7 +33,6 @@
     <t t-name="mass_mailing.IframeHead">
         <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
         <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </t>
     <t t-name="mass_mailing.IframeBody">
@@ -43,13 +42,5 @@
                 <t t-out="props.config.value"/>
             </t>
         </div>
-        <div class="o_mass_mailing_processing_container" style="
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-            visibility: hidden;
-            pointer-events: none;
-            min-width: 100%;
-            " aria-hidden="true"/>
-        </t>
+    </t>
 </templates>

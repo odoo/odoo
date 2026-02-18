@@ -18,4 +18,4 @@ export class ScheduleOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(ScheduleOptionPlugin.id, ScheduleOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(ScheduleOptionPlugin.id, ScheduleOptionPlugin);
