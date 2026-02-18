@@ -11,6 +11,7 @@ from . import test_slide_channel
 from . import test_slide_question
 from . import test_slide_resource
 from . import test_slide_slide
+from . import test_slide_views
 from . import test_statistics
 from . import test_ui_wslides
 from . import test_website_slides_technical_page
