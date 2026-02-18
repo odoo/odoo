@@ -5,7 +5,7 @@
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='picking_type_id']" position="after">
+            <xpath expr="//field[@name='ready_to_produce']" position="before">
                 <field name="project_id" groups="project.group_project_user"/>
             </xpath>
         </field>
