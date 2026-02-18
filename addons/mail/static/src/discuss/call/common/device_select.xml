@@ -3,41 +3,41 @@
 
     <t t-name="discuss.CallDeviceSelect">
         <Dropdown
-            disabled="!isPermissionGranted(props.kind)"
+            disabled="!this.isPermissionGranted(this.props.kind)"
             openOnMouseEnter="false"
         >
             <button
-                t-if="isPermissionGranted(props.kind)"
-                t-attf-class="o-mail-DeviceSelect-button btn btn-secondary o-dropdown-caret {{ env.inDialog ? 'w-50' : 'w-100' }}"
-                t-att-data-kind="props.kind"
+                t-if="this.isPermissionGranted(this.props.kind)"
+                t-attf-class="o-mail-DeviceSelect-button btn btn-secondary o-dropdown-caret {{ this.env.inDialog ? 'w-50' : 'w-100' }}"
+                t-att-data-kind="this.props.kind"
              >
-                <i t-if="props.icon" t-att-class="props.icon"/>
+                <i t-if="this.props.icon" t-att-class="this.props.icon"/>
                 <span
                     class="pe-2 text-start text-truncate"
-                    t-attf-class="{{ props.icon ? 'ps-2' : '' }}"
-                    t-esc="selectLabel || BROWSER_DEFAULT"/>
+                    t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"
+                    t-esc="this.selectLabel || this.BROWSER_DEFAULT"/>
             </button>
             <button
                 t-else=""
-                t-attf-class="o-mail-DeviceSelect-button btn btn-secondary {{ env.inDialog ? 'w-50' : 'w-100' }}"
-                t-att-data-kind="props.kind"
-                t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
-                t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+                t-attf-class="o-mail-DeviceSelect-button btn btn-secondary {{ this.env.inDialog ? 'w-50' : 'w-100' }}"
+                t-att-data-kind="this.props.kind"
+                t-on-pointerdown.prevent="() => this.showPermissionDialog(this.props.kind)"
+                t-on-keydown.prevent="() => this.showPermissionDialog(this.props.kind)"
             >
-                <i t-if="props.icon" t-att-class="props.icon"/>
+                <i t-if="this.props.icon" t-att-class="this.props.icon"/>
                 <span
                     class="text-start"
-                    t-attf-class="{{ props.icon ? 'ps-2' : '' }}"
+                    t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"
                 >
-                    <t t-esc="PERMISSION_NEEDED"/>
+                    <t t-esc="this.PERMISSION_NEEDED"/>
                 </span>
             </button>
             <t t-set-slot="content">
-                <DropdownItem t-if="!isBrowserChrome or props.kind === 'videoinput'" class="{ 'active': isSelected() }" onSelected="onSelectAudioDevice.bind(this)">
-                    <t t-esc="BROWSER_DEFAULT"/>
+                <DropdownItem t-if="!this.isBrowserChrome or this.props.kind === 'videoinput'" class="{ 'active': this.isSelected() }" onSelected="this.onSelectAudioDevice.bind(this)">
+                    <t t-esc="this.BROWSER_DEFAULT"/>
                 </DropdownItem>
-                <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                    <DropdownItem t-if="device.kind === props.kind" class="{ 'active': isSelected(device.deviceId) }" onSelected="onSelectAudioDevice.bind(this, device)">
+                <t t-foreach="this.state.userDevices" t-as="device" t-key="device_index">
+                    <DropdownItem t-if="device.kind === this.props.kind" class="{ 'active': this.isSelected(device.deviceId) }" onSelected="this.onSelectAudioDevice.bind(this, device)">
                         <t t-esc="device.label || 'device ' + device_index"/>
                     </DropdownItem>
                 </t>

@@ -2,25 +2,25 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainSelector">
-        <div class="o_domain_selector w-100" aria-atomic="true" t-att-class="props.className">
-            <t t-if="tree">
-                <TreeEditor resModel="props.resModel"
-                    tree="tree" 
-                    update.bind="update"
-                    readonly="props.readonly"
-                    isDebugMode="props.isDebugMode"
-                    defaultConnector="props.defaultConnector"
-                    getDefaultCondition.bind="getDefaultCondition"
-                    getOperatorEditorInfo.bind="getOperatorEditorInfo"
-                    getDefaultOperator.bind="getDefaultOperator"
-                    getPathEditorInfo.bind="getPathEditorInfo"
+        <div class="o_domain_selector w-100" aria-atomic="true" t-att-class="this.props.className">
+            <t t-if="this.tree">
+                <TreeEditor resModel="this.props.resModel"
+                    tree="this.tree" 
+                    update.bind="this.update"
+                    readonly="this.props.readonly"
+                    isDebugMode="this.props.isDebugMode"
+                    defaultConnector="this.props.defaultConnector"
+                    getDefaultCondition.bind="this.getDefaultCondition"
+                    getOperatorEditorInfo.bind="this.getOperatorEditorInfo"
+                    getDefaultOperator.bind="this.getDefaultOperator"
+                    getPathEditorInfo.bind="this.getPathEditorInfo"
                 >
                     <CheckBox
-                        t-if="showArchivedCheckbox"
-                        value="includeArchived"
-                        disabled="props.readonly"
+                        t-if="this.showArchivedCheckbox"
+                        value="this.includeArchived"
+                        disabled="this.props.readonly"
                         className="'form-switch'"
-                        onChange.bind="toggleIncludeArchived"
+                        onChange.bind="this.toggleIncludeArchived"
                     >
                         Include archived
                     </CheckBox>
@@ -29,15 +29,15 @@
             <t t-else="">
                 <div class="o_domain_selector_row d-flex align-items-center">
                     This domain is not supported.
-                    <t t-if="!props.readonly">
+                    <t t-if="!this.props.readonly">
                         <button class="btn btn-sm btn-primary ms-2" t-on-click="() => this.resetDomain()">Reset domain</button>
                     </t>
                 </div>
             </t>
-            <t t-if="props.isDebugMode and (!tree or !props.readonly)">
+            <t t-if="this.props.isDebugMode and (!this.tree or !this.props.readonly)">
                 <label class="o_domain_selector_debug_container d-block mt-3 border rounded p-3 bg-100 text-muted font-monospace">
                     <span class="small"># Code editor</span>
-                    <textarea class="pt-2 border-0 bg-transparent text-body" type="text" t-att-readonly="props.readonly" spellcheck="false" t-att-value="props.domain" t-on-input="(ev) => this.onDomainInput(ev.target.value)" t-on-change="(ev) => this.onDomainChange(ev.target.value)" />
+                    <textarea class="pt-2 border-0 bg-transparent text-body" type="text" t-att-readonly="this.props.readonly" spellcheck="false" t-att-value="this.props.domain" t-on-input="(ev) => this.onDomainInput(ev.target.value)" t-on-change="(ev) => this.onDomainChange(ev.target.value)" />
                 </label>
             </t>
         </div>

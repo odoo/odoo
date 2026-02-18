@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageSeenIndicator">
-        <span t-if="props.message.channel_id?.exists()" class="o-mail-MessageSeenIndicator position-relative opacity-25 cursor-pointer" t-att-class="{ 'o-hasEveryoneSeen opacity-75': props.message.hasEveryoneSeen }" t-att-title="summary" t-attf-class="{{ props.className }}" t-on-click="openDialog">
-            <i class="fa fa-check ps-1"/><i t-if="props.message.hasEveryoneSeen" class="o-second start-0 fa fa-check position-absolute"/>
+        <span t-if="this.props.message.channel_id?.exists()" class="o-mail-MessageSeenIndicator position-relative opacity-25 cursor-pointer" t-att-class="{ 'o-hasEveryoneSeen opacity-75': this.props.message.hasEveryoneSeen }" t-att-title="this.summary" t-attf-class="{{ this.props.className }}" t-on-click="this.openDialog">
+            <i class="fa fa-check ps-1"/><i t-if="this.props.message.hasEveryoneSeen" class="o-second start-0 fa fa-check position-absolute"/>
         </span>
     </t>
 
@@ -18,7 +18,7 @@
     <t t-name="mail.MessageSeenIndicatorDialog">
         <Dialog size="'sm'" title.translate="Seen by:" footer="false" withBodyPadding="false">
             <ul class="list-group list-group-flush list-unstyled py-1" t-ref="content">
-                <li class="list-group-item py-2" t-foreach="props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
+                <li class="list-group-item py-2" t-foreach="this.props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
                     <t t-call="mail.MessageSeenIndicatorPopover.card"/>
                 </li>
             </ul>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectStatusWithColorSelectionField" t-inherit="web.SelectionField" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='props.readonly']/span" position="replace">
+        <xpath expr="//t[@t-if='this.props.readonly']/span" position="replace">
             <div class="d-flex align-items-center">
                 <span t-attf-class="o_status {{ statusColor(currentValue) }} d-inline-block"/>
                 <div class="ps-2">

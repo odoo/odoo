@@ -282,8 +282,8 @@ test("search input is focused when being toggled", async () => {
     class Parent extends Component {
         static template = xml`
             <div>
-                <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
-                <SearchBar toggler="searchBarToggler"/>
+                <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
+                <SearchBar toggler="this.searchBarToggler"/>
             </div>
         `;
         static components = { SearchBar };

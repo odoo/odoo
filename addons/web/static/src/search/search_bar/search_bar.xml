@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SearchBar.Facets">
-        <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
+        <t t-foreach="this.env.searchModel.facets" t-as="facet" t-key="facet_index">
             <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover mw-100"
                 t-att-class="{o_facet_with_domain: facet.domain }"
                 role="listitem"
@@ -18,7 +18,7 @@
                     t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
                         'text-bg-action': facet.type == 'groupBy',
-                        'btn': facet.type == 'groupBy' and env.searchModel.canOrderByCount,
+                        'btn': facet.type == 'groupBy' and this.env.searchModel.canOrderByCount,
                         'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
                         'btn btn-favourite': facet.type == 'favorite'
                     }"
@@ -33,7 +33,7 @@
                         >
                         <i class="fa fa-fw fa-pencil"/>
                     </span>
-                    <span t-if="env.searchModel.canOrderByCount and facet.type === 'groupBy' and !env.searchModel.orderByCount"
+                    <span t-if="this.env.searchModel.canOrderByCount and facet.type === 'groupBy' and !this.env.searchModel.orderByCount"
                         class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >
@@ -58,7 +58,7 @@
     </t>
 
     <t t-name="web.SearchBar.QuickSearchItems">
-        <t t-foreach="items" t-as="item" t-key="item.id">
+        <t t-foreach="this.items" t-as="item" t-key="item.id">
             <DropdownItem
                 class="{ o_indent: item.isChild }"
                 attrs="{ id: item.id }"
@@ -86,16 +86,16 @@
     </t>
 
     <t t-name="web.SearchBar">
-        <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
+        <div t-if="this.visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
             <Dropdown
-                state="inputDropdownState"
+                state="this.inputDropdownState"
                 manual="true"
                 noClasses="true"
                 position="'bottom-fit'"
                 menuClass="'o_searchview_autocomplete'"
-                navigationOptions="inputDropdownNavOptions"
-                onStateChanged.bind="onInputDropdownChanged"
-                menuRef="menuRef"
+                navigationOptions="this.inputDropdownNavOptions"
+                onStateChanged.bind="this.onInputDropdownChanged"
+                menuRef="this.menuRef"
                 bottomSheet="false"
             >
                 <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
@@ -117,9 +117,9 @@
                             placeholder="Search..."
                             role="searchbox"
                             t-ref="autofocus"
-                            t-on-click="onSearchClick"
-                            t-on-input="onSearchInput"
-                            t-on-compositionend="onCompositionEnd"
+                            t-on-click="this.onSearchClick"
+                            t-on-input="this.onSearchInput"
+                            t-on-compositionend="this.onCompositionEnd"
                         />
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                     <t t-call="web.SearchBar.QuickSearchItems"/>
                 </t>
             </Dropdown>
-            <SearchBarMenu dropdownState="searchBarDropdownState">
+            <SearchBarMenu dropdownState="this.searchBarDropdownState">
                 <t t-slot="search-bar-additional-menu"/>
             </SearchBarMenu>
         </div>

@@ -4,13 +4,13 @@
         <input
             type="text"
             t-ref="start-date"
-            t-att-id="props.id"
+            t-att-id="this.props.id"
             class="o_datetime_input o_input cursor-pointer user-select-none"
-            t-att-class="props.class"
+            t-att-class="this.props.class"
             autocomplete="off"
             inputmode="none"
-            t-att-placeholder="props.placeholder"
-            t-att-disabled="props.disabled"
+            t-att-placeholder="this.props.placeholder"
+            t-att-disabled="this.props.disabled"
         />
     </t>
 </templates>

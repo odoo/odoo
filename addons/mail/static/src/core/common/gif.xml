@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Gif">
-       <img t-att-src="props.paused and state.snapshot ? state.snapshot : props.src" t-att-loading="props.loading" t-att-data-paused="props.paused" t-att-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-on-click="() => props.onClick?.()" t-on-load="onLoad"/>
+       <img t-att-src="this.props.paused and this.state.snapshot ? this.state.snapshot : this.props.src" t-att-loading="this.props.loading" t-att-data-paused="this.props.paused" t-att-alt="this.props.alt" t-att-class="this.props.class" t-att-style="this.props.style" t-on-click="() => this.props.onClick?.()" t-on-load="this.onLoad"/>
     </t>
 </templates>

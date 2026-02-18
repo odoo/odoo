@@ -22,7 +22,7 @@
                 </Dropdown>
             </t>
         </xpath>
-         <xpath expr="//t[@t-if='state.embeddedInfos.embeddedActions?.length and env.isSmall']" position="replace">
+         <xpath expr="//t[@t-if='this.state.embeddedInfos.embeddedActions?.length and this.env.isSmall']" position="replace">
             <t t-call="project.MobileCombinedActionsDropdown"/>
         </xpath>
     </t>

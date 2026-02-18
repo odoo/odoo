@@ -3,25 +3,25 @@
 
     <t t-name="web.RecordSelector" >
         <div class="o_input d-flex flex-wrap gap-1 o_record_selector">
-            <span t-if="hasAvatarImg" class="o_avatar o_m2o_avatar">
-                <img class="rounded" t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"/>
+            <span t-if="this.hasAvatarImg" class="o_avatar o_m2o_avatar">
+                <img class="rounded" t-attf-src="/web/image/{{this.props.resModel}}/{{this.props.resId}}/avatar_128"/>
             </span>
             <RecordAutocomplete
-                resModel="props.resModel"
-                value="displayName"
-                domain="props.domain"
-                context="props.context"
+                resModel="this.props.resModel"
+                value="this.displayName"
+                domain="this.props.domain"
+                context="this.props.context"
                 className="'h-100 flex-grow-1'"
-                fieldString="props.fieldString"
-                placeholder="props.placeholder"
+                fieldString="this.props.fieldString"
+                placeholder="this.props.placeholder"
                 multiSelect="false"
                 getIds="() => []"
-                update.bind="update"
-                buildQuickCreate="props.buildQuickCreate"
+                update.bind="this.update"
+                buildQuickCreate="this.props.buildQuickCreate"
             >
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                    <span t-if="isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-                        <img class="rounded me-1" t-attf-src="/web/image/{{props.resModel}}/{{autoCompleteItemScope.data.record.id}}/avatar_128"/>
+                    <span t-if="this.isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{this.props.resModel}}/{{autoCompleteItemScope.data.record.id}}/avatar_128"/>
                         <t t-esc="autoCompleteItemScope.label"/>
                     </span>
                     <t t-else="" t-esc="autoCompleteItemScope.label"/>

@@ -2,21 +2,21 @@
 <templates xml:space="preserve">
 
   <t t-name="web.ConfirmationDialog">
-    <Dialog size="props.size" title="props.title" modalRef="modalRef">
-      <p t-out="props.body" class="text-prewrap mb-0"/>
+    <Dialog size="this.props.size" title="this.props.title" modalRef="this.modalRef">
+      <p t-out="this.props.body" class="text-prewrap mb-0"/>
       <t t-set-slot="footer">
-        <button class="btn" t-att-class="props.confirmClass" t-on-click="_confirm" t-esc="props.confirmLabel" data-hotkey="q"/>
-        <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel" data-hotkey="x"/>
+        <button class="btn" t-att-class="this.props.confirmClass" t-on-click="this._confirm" t-esc="this.props.confirmLabel" data-hotkey="q"/>
+        <button t-if="this.props.cancel" class="btn btn-secondary" t-on-click="this._cancel" t-esc="this.props.cancelLabel" data-hotkey="x"/>
       </t>
     </Dialog>
   </t>
 
   <t t-name="web.AlertDialog">
-    <Dialog size="'sm'" title="props.title" contentClass="props.contentClass">
-      <p t-out="props.body" class="text-prewrap mb-0"/>
+    <Dialog size="'sm'" title="this.props.title" contentClass="this.props.contentClass">
+      <p t-out="this.props.body" class="text-prewrap mb-0"/>
       <t t-set-slot="footer">
-        <button class="btn" t-att-class="props.confirmClass" t-on-click="_confirm" t-esc="props.confirmLabel"/>
-        <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel"/>
+        <button class="btn" t-att-class="this.props.confirmClass" t-on-click="this._confirm" t-esc="this.props.confirmLabel"/>
+        <button t-if="this.props.cancel" class="btn btn-secondary" t-on-click="this._cancel" t-esc="this.props.cancelLabel"/>
       </t>
     </Dialog>
   </t>

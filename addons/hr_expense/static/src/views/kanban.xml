@@ -30,7 +30,7 @@
     </t>
 
     <t t-name="hr_expense.KanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
-        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="uploadDocument.bind">uploadDocument</attribute>
         </xpath>
     </t>

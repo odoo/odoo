@@ -3,11 +3,11 @@
     <t t-name="web.SettingsPage">
         <div class="o_setting_container">
             <div class="position-sticky top-0 flex-grow-0 z-1">
-                <div class="settings_tab h-100 border-end" t-if="!env.isSmall or state.search.value.length === 0" t-ref="settings_tab">
-                    <t t-foreach="props.modules" t-as="module" t-key="module.key">
+                <div class="settings_tab h-100 border-end" t-if="!this.env.isSmall or this.state.search.value.length === 0" t-ref="settings_tab">
+                    <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
                         <a class="tab" t-if="!module.isVisible"
                              t-att-class="{
-                                'selected': state.selectedTab === module.key and state.search.value.length === 0, 'text-bg-primary shadow-none': state.selectedTab === module.key and state.search.value.length === 0 and env.isSmall
+                                'selected': this.state.selectedTab === module.key and this.state.search.value.length === 0, 'text-bg-primary shadow-none': this.state.selectedTab === module.key and this.state.search.value.length === 0 and this.env.isSmall
                              }" t-att-data-key="module.key" role="tab" t-attf-href="#${ctx.module.key}" t-on-click="() => this.onSettingTabClick(module.key)">
                             <span class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="module.string"/></span>
                         </a>
@@ -15,15 +15,15 @@
                 </div>
             </div>
             <ActionSwiper
-                    onRightSwipe="hasRightSwipe() ? {
-                        action: onRightSwipe.bind(this),
+                    onRightSwipe="this.hasRightSwipe() ? {
+                        action: this.onRightSwipe.bind(this),
                     } : undefined"
-                    onLeftSwipe="hasLeftSwipe() ? {
-                        action: onLeftSwipe.bind(this),
+                    onLeftSwipe="this.hasLeftSwipe() ? {
+                        action: this.onLeftSwipe.bind(this),
                     } : undefined"
                     animationType="'forwards'">
                 <div class="settings" t-ref="settings">
-                    <t t-slot="NoContentHelper" t-if="props.slots['NoContentHelper'].isVisible"/>
+                    <t t-slot="NoContentHelper" t-if="this.props.slots['NoContentHelper'].isVisible"/>
                     <t t-slot="default" selectedTab="state.selectedTab"/>
                 </div>
             </ActionSwiper>

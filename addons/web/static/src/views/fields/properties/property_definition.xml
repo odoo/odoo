@@ -2,20 +2,20 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinition">
         <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="propertyDefinition">
-            <div t-if="env.isSmall" class="d-flex justify-content-between px-3 border-bottom">
+            <div t-if="this.env.isSmall" class="d-flex justify-content-between px-3 border-bottom">
                 <button class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
                 <button
-                    t-if="!props.readonly and props.canChangeDefinition"
+                    t-if="!this.props.readonly and this.props.canChangeDefinition"
                     class="btn pe-0 text-danger float-end o_field_property_definition_delete"
                     title="Remove Property"
-                    t-on-click="props.onDelete">
+                    t-on-click="this.props.onDelete">
                     <i class="fa fa-trash"/> Delete
                 </button>
             </div>
             <div class="o_modal_container p-3 o_inner_group grid">
                 <div class="d-contents mb-3 mb-sm-0">
                     <label class="o_form_label align-self-center text-900">Label</label>
-                    <h6 t-if="props.readonly" t-out="state.propertyDefinition.string"
+                    <h6 t-if="this.props.readonly" t-out="this.state.propertyDefinition.string"
                         class="text-truncate"/>
                     <input
                         class="o_input o_field_property_definition_header"
@@ -23,23 +23,23 @@
                         required=""
                         placeholder="Property Name"
                         autocomplete="off"
-                        t-model="state.propertyDefinition.string"
-                        t-on-change="onPropertyLabelChange"
-                        t-on-keypress="onPropertyLabelKeypress"
+                        t-model="this.state.propertyDefinition.string"
+                        t-on-change="this.onPropertyLabelChange"
+                        t-on-keypress="this.onPropertyLabelKeypress"
                     />
                 </div>
                 <div class="d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('type')"
+                    <label t-att-for="this.getUniqueDomID('type')"
                         class="o_form_label align-self-center text-900">
                         Field Type
                     </label>
                     <div class="o_field_property_definition_type">
                         <div
-                            t-if="props.readonly"
+                            t-if="this.props.readonly"
                             class="d-flex align-items-center mb-2">
                             <img class="me-3"
-                                t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"/>
-                            <span t-out="state.typeLabel"/>
+                                t-attf-src="/web/static/src/views/fields/properties/icons/{{this.state.propertyDefinition.type}}.png"/>
+                            <span t-out="this.state.typeLabel"/>
                         </div>
                         <t t-else="">
                             <div class="d-flex align-items-center">
@@ -57,63 +57,63 @@
                     </div>
                 </div>
                 <!-- Add / remove selection labels -->
-                <div t-if="state.propertyDefinition.type === 'selection'" class="d-contents mb-3 mb-sm-0">
+                <div t-if="this.state.propertyDefinition.type === 'selection'" class="d-contents mb-3 mb-sm-0">
                     <label class="o_form_label text-900">Values</label>
                     <PropertyDefinitionSelection
-                        readonly="props.readonly || !props.canChangeDefinition"
-                        canChangeDefinition="props.canChangeDefinition"
-                        default="state.propertyDefinition.default || ''"
-                        options="state.propertyDefinition.selection || []"
-                        onOptionsChange.bind="onSelectionOptionChange"
-                        onDefaultOptionChange.bind="onDefaultChange"
+                        readonly="this.props.readonly || !this.props.canChangeDefinition"
+                        canChangeDefinition="this.props.canChangeDefinition"
+                        default="this.state.propertyDefinition.default || ''"
+                        options="this.state.propertyDefinition.selection || []"
+                        onOptionsChange.bind="this.onSelectionOptionChange"
+                        onDefaultOptionChange.bind="this.onDefaultChange"
                     />
                 </div>
-                <div t-if="state.propertyDefinition.type === 'tags'" class="d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('tags')" class="o_form_label text-900">Tags</label>
+                <div t-if="this.state.propertyDefinition.type === 'tags'" class="d-contents mb-3 mb-sm-0">
+                    <label t-att-for="this.getUniqueDomID('tags')" class="o_form_label text-900">Tags</label>
                     <PropertyTags
-                        id="getUniqueDomID('tags')"
-                        selectedTags="propertyTagValues"
-                        tags="state.propertyDefinition.tags || []"
-                        readonly="props.readonly"
-                        canChangeTags="props.canChangeDefinition"
+                        id="this.getUniqueDomID('tags')"
+                        selectedTags="this.propertyTagValues"
+                        tags="this.state.propertyDefinition.tags || []"
+                        readonly="this.props.readonly"
+                        canChangeTags="this.props.canChangeDefinition"
                         deleteAction="'tags'"
-                        onTagsChange.bind="onTagsChange"/>
+                        onTagsChange.bind="this.onTagsChange"/>
                 </div>
-                <div t-if="state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many'" class="o_field_property_definition_model d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('model')" class="o_form_label align-self-center text-900">Model</label>
-                    <span t-if="props.readonly">
-                        <t t-if="state.resModelDescription" t-out="state.resModelDescription"/>
+                <div t-if="this.state.propertyDefinition.type === 'many2one' || this.state.propertyDefinition.type === 'many2many'" class="o_field_property_definition_model d-contents mb-3 mb-sm-0">
+                    <label t-att-for="this.getUniqueDomID('model')" class="o_form_label align-self-center text-900">Model</label>
+                    <span t-if="this.props.readonly">
+                        <t t-if="this.state.resModelDescription" t-out="this.state.resModelDescription"/>
                     </span>
                     <ModelSelector
                         t-else=""
-                        id="getUniqueDomID('model')"
-                        value="state.resModelDescription"
-                        onModelSelected.bind="onModelChange"
+                        id="this.getUniqueDomID('model')"
+                        value="this.state.resModelDescription"
+                        onModelSelected.bind="this.onModelChange"
                     />
                 </div>
-                <div t-if="(state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many')
-                    and state.propertyDefinition.comodel and state.propertyDefinition.comodel.length" class="o_field_property_definition_domain d-contents mb-3 mb-sm-0">
+                <div t-if="(this.state.propertyDefinition.type === 'many2one' || this.state.propertyDefinition.type === 'many2many')
+                    and this.state.propertyDefinition.comodel and this.state.propertyDefinition.comodel.length" class="o_field_property_definition_domain d-contents mb-3 mb-sm-0">
                     <label class="o_form_label text-900">Domain</label>
                     <div>
                         <DomainSelector
-                            resModel="state.propertyDefinition.comodel"
-                            domain="state.propertyDefinition.domain || '[]'"
-                            readonly="props.readonly"
-                            update.bind="onDomainChange"
-                            isDebugMode="!!env.debug"
+                            resModel="this.state.propertyDefinition.comodel"
+                            domain="this.state.propertyDefinition.domain || '[]'"
+                            readonly="this.props.readonly"
+                            update.bind="this.onDomainChange"
+                            isDebugMode="!!this.env.debug"
                             className="'d-inline-block me-2'"
                         />
-                        <div t-if="state.matchingRecordsCount !== undefined" class="d-inline-block">
+                        <div t-if="this.state.matchingRecordsCount !== undefined" class="d-inline-block">
                             <i class="oi oi-arrow-right" role="img" title="Domain"/>
                             <button class="btn btn-sm btn-secondary" type="button"
-                                t-on-click.stop="onButtonDomainClick">
-                                <t t-out="state.matchingRecordsCount"/> record(s)
+                                t-on-click.stop="this.onButtonDomainClick">
+                                <t t-out="this.state.matchingRecordsCount"/> record(s)
                             </button>
                         </div>
                     </div>
                 </div>
-                <div t-if="state.propertyDefinition.type === 'monetary'" class="o_field_property_definition_currency_field d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('currency_field')" class="o_form_label text-900">Currency field</label>
+                <div t-if="this.state.propertyDefinition.type === 'monetary'" class="o_field_property_definition_currency_field d-contents mb-3 mb-sm-0">
+                    <label t-att-for="this.getUniqueDomID('currency_field')" class="o_form_label text-900">Currency field</label>
                     <div>
                         <select class="o_input" t-att-value="this.state.propertyDefinition.currency_field" t-on-change="(ev) => this.onCurrencyFieldUpdate(ev.target.value)">
                             <t t-foreach="this.currencyFields" t-as="currencyField" t-key="currencyField.name">
@@ -122,30 +122,30 @@
                         </select>
                     </div>
                 </div>
-                <div t-if="!['tags', 'selection', 'separator', 'signature'].includes(state.propertyDefinition.type)
-                    and (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
-                    || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
+                <div t-if="!['tags', 'selection', 'separator', 'signature'].includes(this.state.propertyDefinition.type)
+                    and (!['many2one', 'many2many'].includes(this.state.propertyDefinition.type)
+                    || (this.state.propertyDefinition.comodel and this.state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('default')" class="o_form_label align-self-center text-900">
-                        <t t-if="state.propertyDefinition.type === 'boolean'">Default State</t>
+                    <label t-att-for="this.getUniqueDomID('default')" class="o_form_label align-self-center text-900">
+                        <t t-if="this.state.propertyDefinition.type === 'boolean'">Default State</t>
                         <t t-else="">Default Value</t>
                     </label>
                     <PropertyValue
-                        id="getUniqueDomID('default')"
-                        readonly="props.readonly"
-                        canChangeDefinition="props.canChangeDefinition"
-                        type="state.propertyDefinition.type"
-                        string="state.propertyDefinition.string"
-                        value="state.propertyDefinition.default"
-                        comodel="state.propertyDefinition.comodel || ''"
-                        currencyField="state.propertyDefinition.currency_field || ''"
-                        domain="state.propertyDefinition.domain || '[]'"
-                        context="props.context"
-                        onChange.bind="onDefaultChange"
-                        record="props.record"
+                        id="this.getUniqueDomID('default')"
+                        readonly="this.props.readonly"
+                        canChangeDefinition="this.props.canChangeDefinition"
+                        type="this.state.propertyDefinition.type"
+                        string="this.state.propertyDefinition.string"
+                        value="this.state.propertyDefinition.default"
+                        comodel="this.state.propertyDefinition.comodel || ''"
+                        currencyField="this.state.propertyDefinition.currency_field || ''"
+                        domain="this.state.propertyDefinition.domain || '[]'"
+                        context="this.props.context"
+                        onChange.bind="this.onDefaultChange"
+                        record="this.props.record"
                     />
                 </div>
-                <t t-if="!['separator', 'signature'].includes(state.propertyDefinition.type)">
+                <t t-if="!['separator', 'signature'].includes(this.state.propertyDefinition.type)">
                     <div class="o_field_property_definition_suffix d-contents mb-3 mb-sm-0">
                         <label class="o_form_label align-self-center text-900">Suffix</label>
                         <input
@@ -153,47 +153,47 @@
                             type="text"
                             placeholder=""
                             autocomplete="off"
-                            t-model="state.propertyDefinition.suffix"
-                            t-on-change="onSuffixChange"
+                            t-model="this.state.propertyDefinition.suffix"
+                            t-on-change="this.onSuffixChange"
                         />
                     </div>
                 </t>
-                <div t-if="!['separator', 'signature'].includes(state.propertyDefinition.type)"
+                <div t-if="!['separator', 'signature'].includes(this.state.propertyDefinition.type)"
                     class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
+                    <label t-att-for="this.getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
                         Display in Cards
                         <sup class="text-info" title="Whether or not this Property Field is displayed in the Calendar, Cards &amp; Kanban views">?</sup>
                     </label>
                     <CheckBox
-                        id="getUniqueDomID('kanban')"
-                        value="props.propertyDefinition.view_in_cards"
-                        disabled="props.readonly"
-                        onChange.bind="onViewInKanbanChange"
+                        id="this.getUniqueDomID('kanban')"
+                        value="this.props.propertyDefinition.view_in_cards"
+                        disabled="this.props.readonly"
+                        onChange.bind="this.onViewInKanbanChange"
                     />
                 </div>
-                <div t-elif="state.propertyDefinition.type === 'separator'" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
-                    <t t-set="separatorId" t-value="getUniqueDomID('separator')"/>
+                <div t-elif="this.state.propertyDefinition.type === 'separator'" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                    <t t-set="separatorId" t-value="this.getUniqueDomID('separator')"/>
                     <label t-att-for="separatorId" class="o_form_label align-self-center text-900">
                         Default State
                     </label>
                     <div class="o_field_property_definition_fold text-nowrap d-inline-flex w-100 align-items-baseline">
                         <label class="form-check o_radio_item p-0">
-                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_open" t-on-change="() => this.onFoldByDefaultChange(false)"/>
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!this.state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_open" t-on-change="() => this.onFoldByDefaultChange(false)"/>
                             <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_open">Open</label>
                         </label>
                         <label class="form-check o_radio_item">
-                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!!state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_fold" t-on-change="() => this.onFoldByDefaultChange(true)"/>
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!!this.state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_fold" t-on-change="() => this.onFoldByDefaultChange(true)"/>
                             <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_fold">Fold</label>
                         </label>
                     </div>
                 </div>
             </div>
-            <div class="d-flex px-3 pb-1 mt-auto" t-if="!env.isSmall">
+            <div class="d-flex px-3 pb-1 mt-auto" t-if="!this.env.isSmall">
                 <button
-                    t-if="!props.readonly and props.canChangeDefinition"
+                    t-if="!this.props.readonly and this.props.canChangeDefinition"
                     class="ms-auto btn btn-danger o_field_property_definition_delete"
                     title="Remove Property"
-                    t-on-click="props.onDelete">
+                    t-on-click="this.props.onDelete">
                     <i class="fa fa-trash"/> Delete
                 </button>
             </div>

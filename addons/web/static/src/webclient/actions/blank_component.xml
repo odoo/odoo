@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <templates>
 <t t-name="web.BlankComponent">
-    <ControlPanel t-if="props.withControlPanel and !env.isSmall">
+    <ControlPanel t-if="this.props.withControlPanel and !this.env.isSmall">
         <t t-set-slot="control-panel-buttons">
             <button class="btn btn-primary invisible"> empty </button>
         </t>

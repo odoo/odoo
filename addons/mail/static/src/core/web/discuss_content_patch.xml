@@ -14,13 +14,13 @@
     <t t-name="mail.DiscussContent.mobileTopbar">
         <div class="btn-group d-flex w-100 p-1">
             <t t-call="mail.MobileMailbox" >
-                <t t-set="mailbox" t-value="store.inbox"/>
+                <t t-set="mailbox" t-value="this.store.inbox"/>
             </t>
             <t t-call="mail.MobileMailbox">
-                <t t-set="mailbox" t-value="store.bookmarkBox"/>
+                <t t-set="mailbox" t-value="this.store.bookmarkBox"/>
             </t>
             <t t-call="mail.MobileMailbox">
-                <t t-set="mailbox" t-value="store.history"/>
+                <t t-set="mailbox" t-value="this.store.history"/>
             </t>
         </div>
     </t>

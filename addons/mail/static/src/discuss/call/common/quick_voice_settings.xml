@@ -13,11 +13,11 @@
             <button class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.use_push_to_talk = !this.store.settings.use_push_to_talk">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer">
                     <span class="text-truncate text-wrap me-2">Push-to-Talk</span>
-                    <span t-if="store.settings.push_to_talk_key" class="opacity-50" t-out="pttKeyDisplayText"/>
+                    <span t-if="this.store.settings.push_to_talk_key" class="opacity-50" t-out="this.pttKeyDisplayText"/>
                 </label>
                 <div class="flex-grow-1"/>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.use_push_to_talk ? 'checked' : ''"/>
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.settings.use_push_to_talk ? 'checked' : ''"/>
                 </div>
             </button>
             <label class="btn border-transparent d-flex flex-column align-items-baseline cursor-default">
@@ -27,16 +27,16 @@
                 <div class="flex-grow-1"/>
                 <DeviceSelect kind="'audiooutput'"/>
             </label>
-            <button t-if="store.rtc.selfSession" class="btn border-transparent d-flex" t-on-click="() => this.store.rtc.toggleDeafen()">
+            <button t-if="this.store.rtc.selfSession" class="btn border-transparent d-flex" t-on-click="() => this.store.rtc.toggleDeafen()">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer">
                     <span class="text-truncate text-wrap">Deafen</span>
                 </label>
                 <div class="flex-grow-1"/>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.rtc.selfSession?.is_deaf ? 'checked' : ''"/>
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.rtc.selfSession?.is_deaf ? 'checked' : ''"/>
                 </div>
             </button>
-            <button class="btn border-transparent d-flex align-items-center gap-2" t-on-click="onClickVoiceSettings">
+            <button class="btn border-transparent d-flex align-items-center gap-2" t-on-click="this.onClickVoiceSettings">
                 <i class="fa fa-fw fa-gear"/><span>Advanced Settings</span>
             </button>
         </div>

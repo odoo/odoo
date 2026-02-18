@@ -18,7 +18,7 @@ describe("useDomState", () => {
         addBuilderOption(
             class extends BaseOptionComponent {
                 static selector = ".test-options-target";
-                static template = xml`<div t-att-data-letter="getLetter()"/>`;
+                static template = xml`<div t-att-data-letter="this.getLetter()"/>`;
                 setup() {
                     super.setup(...arguments);
                     this.state = useDomState(async () => {
@@ -79,7 +79,7 @@ describe("waitSidebarUpdated", () => {
         class TestSubComponent extends BaseOptionComponent {
             static template = xml`
                 <div class="test-value-sub">
-                    <t t-out="state.value"/>
+                    <t t-out="this.state.value"/>
                 </div>
             `;
             setup() {
@@ -95,7 +95,7 @@ describe("waitSidebarUpdated", () => {
             static selector = "div.test";
             static template = xml`
                 <div class="test-value-parent">
-                    <t t-out="state.value"/>
+                    <t t-out="this.state.value"/>
                 </div>
                 <div class="test-button-1">
                     <BuilderButton action="'testAction'" actionValue="'b'">b</BuilderButton>
@@ -103,7 +103,7 @@ describe("waitSidebarUpdated", () => {
                 <div class="test-button-2">
                     <BuilderButton id="'button_2_opt'" action="'testAction'" actionValue="'c'">c</BuilderButton>
                 </div>
-                <t t-if="state.showOther and isActiveItem('button_2_opt')">
+                <t t-if="this.state.showOther and this.isActiveItem('button_2_opt')">
                     <TestSubComponent/>
                 </t>
             `;

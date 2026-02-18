@@ -2,20 +2,20 @@
 <templates>
     <t t-name="web.ModelSelector">
         <div class="o_model_selector" t-ref="autocomplete_container">
-            <input t-if="env.isSmall"
+            <input t-if="this.env.isSmall"
                 type="text"
                 class="o_input"
                 readonly=""
-                t-att-id="props.id"
-                t-att-value="props.value"
+                t-att-id="this.props.id"
+                t-att-value="this.props.value"
             />
             <AutoComplete t-else=""
-                id="props.id"
-                value="props.value || ''"
-                sources="sources"
+                id="this.props.id"
+                value="this.props.value || ''"
+                sources="this.sources"
                 placeholder="this.placeholder"
-                autoSelect="props.autoSelect"
-                autofocus="props.autofocus"
+                autoSelect="this.props.autoSelect"
+                autofocus="this.props.autofocus"
             />
             <span class="o_dropdown_button" />
         </div>

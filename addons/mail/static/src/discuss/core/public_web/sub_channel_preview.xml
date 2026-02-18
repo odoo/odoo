@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.SubChannelPreview">
-        <t t-set="message" t-value="props.channel.newestPersistentOfAllMessage ?? props.channel.from_message_id"/>
-        <div class="o-mail-SubChannelPreview btn btn-light-subtle d-flex border border-secondary mx-1 px-2 py-1 rounded-2 align-items-center" role="button" t-att-class="{'o-pe-1_5': env.inMessage}" t-attf-class="{{ props.class }}" t-on-click="onClick">
+        <t t-set="message" t-value="this.props.channel.newestPersistentOfAllMessage ?? this.props.channel.from_message_id"/>
+        <div class="o-mail-SubChannelPreview btn btn-light-subtle d-flex border border-secondary mx-1 px-2 py-1 rounded-2 align-items-center" role="button" t-att-class="{'o-pe-1_5': this.env.inMessage}" t-attf-class="{{ this.props.class }}" t-on-click="this.onClick">
             <div class="d-flex flex-column w-100 bg-inherit">
                 <div class="d-flex w-100 align-items-baseline">
-                    <span class="o-mail-SubChannelPreview-name o-fw-600 text-truncate small" t-esc="props.channel.displayName"/>
+                    <span class="o-mail-SubChannelPreview-name o-fw-600 text-truncate small" t-esc="this.props.channel.displayName"/>
                     <span class="flex-grow-1"/>
-                    <span class="flex-shrink-0 fw-normal text-muted smaller ms-1" t-att-class="{'o-me-0_5 o-xsmaller': env.inMessage}">
+                    <span class="flex-shrink-0 fw-normal text-muted smaller ms-1" t-att-class="{'o-me-0_5 o-xsmaller': this.env.inMessage}">
                         <t t-if="message" t-out="message.dateSimple"/>
-                        <t t-else="" t-out="props.channel.createDateSimple"/>
+                        <t t-else="" t-out="this.props.channel.createDateSimple"/>
                     </span>
                 </div>
                 <t t-if="message" t-call="mail.SubChannelPreview.message"/>
-                <t t-elif="props.channel" t-call="mail.SubChannelPreview.channel" />
+                <t t-elif="this.props.channel" t-call="mail.SubChannelPreview.channel" />
             </div>
         </div>
     </t>
     <t t-name="mail.SubChannelPreview.message">
         <div class="o-mail-SubChannelPreview-lastMessage text-muted fw-normal smaller overflow-hidden d-flex align-items-center bg-inherit">
-            <img class="rounded object-fit-cover" t-att-src="message.author.avatarUrl" t-att-title="message.authorName" alt="Avatar" style="width: 20px; height: 20px;"/>
+            <img class="rounded object-fit-cover" t-att-src="this.message.author.avatarUrl" t-att-title="this.message.authorName" alt="Avatar" style="width: 20px; height: 20px;"/>
             <span class="ms-1 fw-bold flex-shrink-0">
-                <t t-if="message.isSelfAuthored">You</t>
-                <t t-else="" t-esc="message.authorName"/>:
+                <t t-if="this.message.isSelfAuthored">You</t>
+                <t t-else="" t-esc="this.message.authorName"/>:
             </span>
-            <span class="text-truncate ms-1" t-out="message.bodyPreview"/>
+            <span class="text-truncate ms-1" t-out="this.message.bodyPreview"/>
             <span class="flex-grow-1"/>
-            <AvatarStack t-if="!env.inMessage" containerClass="'ms-1'" personas="props.channel.channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="props.channel.member_count"/>
-            <span t-elif="props.channel.message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
-                <t t-esc="messageCountText"/>
+            <AvatarStack t-if="!this.env.inMessage" containerClass="'ms-1'" personas="this.props.channel.channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="this.props.channel.member_count"/>
+            <span t-elif="this.props.channel.message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
+                <t t-esc="this.messageCountText"/>
                 <i class="o-xxsmaller o-ms-0_5 oi oi-chevron-right"/>
             </span>
         </div>
@@ -36,14 +36,14 @@
 
     <t t-name="mail.SubChannelPreview.channel">
         <div class="o-mail-SubChannelPreview-lastMessage text-muted fw-normal smaller overflow-hidden d-flex align-items-center bg-inherit">
-            <img class="rounded object-fit-cover" t-att-src="props.channel.create_uid.partner_id?.avatarUrl" t-att-title="props.channel.create_uid.name" alt="Avatar" style="width: 20px; height: 20px;"/>
+            <img class="rounded object-fit-cover" t-att-src="this.props.channel.create_uid.partner_id?.avatarUrl" t-att-title="this.props.channel.create_uid.name" alt="Avatar" style="width: 20px; height: 20px;"/>
             <span class="ms-1 fw-bold flex-shrink-0">
-                <span class="text-truncate ms-1" t-out="startedByText"/>
+                <span class="text-truncate ms-1" t-out="this.startedByText"/>
             </span>
             <span class="flex-grow-1"/>
-            <AvatarStack t-if="!env.inMessage" containerClass="'ms-1'" personas="props.channel.channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="props.channel.member_count"/>
-            <span t-elif="props.channel.message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
-                <t t-esc="messageCountText"/>
+            <AvatarStack t-if="!this.env.inMessage" containerClass="'ms-1'" personas="this.props.channel.channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="this.props.channel.member_count"/>
+            <span t-elif="this.props.channel.message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
+                <t t-esc="this.messageCountText"/>
                 <i class="o-xxsmaller o-ms-0_5 oi oi-chevron-right"/>
             </span>
         </div>

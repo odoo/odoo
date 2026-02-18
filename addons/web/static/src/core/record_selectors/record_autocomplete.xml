@@ -3,13 +3,13 @@
 
     <t t-name="web.RecordAutocomplete" >
         <AutoComplete
-            placeholder="props.placeholder"
-            value="props.value"
+            placeholder="this.props.placeholder"
+            value="this.props.value"
             autoSelect="true"
-            resetOnSelect="props.multiSelect"
-            class="props.className"
-            sources="sources"
-            onChange.bind="onChange"
+            resetOnSelect="this.props.multiSelect"
+            class="this.props.className"
+            sources="this.sources"
+            onChange.bind="this.onChange"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <t t-if="optionScope.data.record">

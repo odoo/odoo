@@ -2,29 +2,29 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BinaryField">
-        <t t-if="!props.readonly">
-            <t t-if="props.record.data[props.name]">
+        <t t-if="!this.props.readonly">
+            <t t-if="this.props.record.data[this.props.name]">
                 <div class="w-100 d-inline-flex gap-1">
                     <FileUploader
-                        acceptedFileExtensions="props.acceptedFileExtensions"
-                        allowedMIMETypes="props.allowedMIMETypes"
-                        onUploaded.bind="update"
+                        acceptedFileExtensions="this.props.acceptedFileExtensions"
+                        allowedMIMETypes="this.props.allowedMIMETypes"
+                        onUploaded.bind="this.update"
                     >
-                        <t name="download" t-if="props.record.resId and !props.record.dirty">
+                        <t name="download" t-if="this.props.record.resId and !this.props.record.dirty">
                             <button
                                 class="btn btn-link btn-sm lh-1 fa fa-download o_download_file_button"
                                 data-tooltip="Download"
                                 aria-label="Download"
-                                t-on-click="onFileDownload"
+                                t-on-click="this.onFileDownload"
                             >
                             </button>
                         </t>
                         <t t-set-slot="toggler">
-                            <span t-if="!fileName" class="btn btn-primary o_select_file_button py-0">
+                            <span t-if="!this.fileName" class="btn btn-primary o_select_file_button py-0">
                                 Replace current file
                             </span>
                             <t t-else="">
-                                <input  type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
+                                <input  type="text" class="o_input" t-att-value="this.fileName" readonly="readonly" />
                                 <button
                                     class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
                                     data-tooltip="Edit"
@@ -46,9 +46,9 @@
             <t t-else="">
                 <label class="o_select_file_button btn btn-primary">
                     <FileUploader
-                        acceptedFileExtensions="props.acceptedFileExtensions"
-                        allowedMIMETypes="props.allowedMIMETypes"
-                        onUploaded.bind="update"
+                        acceptedFileExtensions="this.props.acceptedFileExtensions"
+                        allowedMIMETypes="this.props.allowedMIMETypes"
+                        onUploaded.bind="this.update"
                     >
                         <t t-set-slot="toggler">
                             Upload your file
@@ -57,10 +57,10 @@
                 </label>
             </t>
         </t>
-        <t t-elif="props.record.resId and props.record.data[props.name]">
-            <a class="o_form_uri" href="#" t-on-click.prevent="onFileDownload">
+        <t t-elif="this.props.record.resId and this.props.record.data[this.props.name]">
+            <a class="o_form_uri" href="#" t-on-click.prevent="this.onFileDownload">
                 <span class="fa fa-download me-2" />
-                <t t-if="fileName" t-esc="fileName" />
+                <t t-if="this.fileName" t-esc="this.fileName" />
             </a>
         </t>
     </t>
@@ -69,8 +69,8 @@
         <xpath expr="//label[hasclass('o_select_file_button')]" position="replace">
             <label class="o_select_file_button btn btn-sm btn-link p-0">
                 <FileUploader
-                    acceptedFileExtensions="props.acceptedFileExtensions"
-                    onUploaded.bind="update"
+                    acceptedFileExtensions="this.props.acceptedFileExtensions"
+                    onUploaded.bind="this.update"
                 >
                     <t t-set-slot="toggler">
                         <i class="fa fa-upload fa-fw"/> Upload your file

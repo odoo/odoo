@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MeetingSideActions">
-        <t t-set="dummy" t-value="computeActions()"/>
+        <t t-set="dummy" t-value="this.computeActions()"/>
         <div class="o-mail-MeetingSideActions d-flex ms-auto">
             <div class="o-discuss-Call-layoutActions ms-auto">
-                <ActionList actions="layoutActions" inline="true"/>
+                <ActionList actions="this.layoutActions" inline="true"/>
             </div>
-            <ActionList actions="actions" inline="true"/>
+            <ActionList actions="this.actions" inline="true"/>
         </div>
     </t>
 </templates>

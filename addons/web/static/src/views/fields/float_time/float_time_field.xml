@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatTimeField">
-        <time t-if="props.readonly" t-esc="formattedValue" />
+        <time t-if="this.props.readonly" t-esc="this.formattedValue" />
         <input t-else="" 
-            t-att-id="props.id" 
-            t-att-type="props.inputType" 
+            t-att-id="this.props.id" 
+            t-att-type="this.props.inputType" 
             t-ref="numpadDecimal" 
             t-on-focus="() => this.openPopover()"
             t-on-focusout="() => this.closePopover()"
@@ -16,7 +16,7 @@
     
     <t t-name="web.DurationPopover">
         <div class="o_duration_popover p-1">
-            <time t-esc="props.state.formattedResult" />
+            <time t-esc="this.props.state.formattedResult" />
         </div>
     </t>
 

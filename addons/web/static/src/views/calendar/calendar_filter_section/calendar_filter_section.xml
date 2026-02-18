@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarFilterSection">
-        <div t-if="section.filters.length gt 0 or section.canAddFilter"
+        <div t-if="this.section.filters.length gt 0 or this.section.canAddFilter"
              class="o_calendar_filter d-flex flex-column gap-1 my-2"
-             t-att-data-name="section.fieldName"
+             t-att-data-name="this.section.fieldName"
         >
-            <t t-if="section.label">
+            <t t-if="this.section.label">
                 <div
                     class="o_calendar_filter_items_checkall o-checkbox form-check w-100"
                     data-value="section"
@@ -15,35 +15,36 @@
                         type="checkbox"
                         name="select-all"
                         class="form-check-input"
-                        t-attf-id="o_calendar_filter_{{nextFilterId}}"
-                        t-att-checked="isAllActive"
-                        t-att-disabled="section.filters.length === 0"
+                        t-attf-id="o_calendar_filter_{{this.nextFilterId}}"
+                        t-att-checked="this.isAllActive"
+                        t-att-disabled="this.section.filters.length === 0"
                         t-on-change="(ev) => this.onAllFilterInputChange(ev)"
                     />
                     <label
                         class="d-flex align-items-center"
                         type="button"
-                        t-on-click.stop.prevent="() => this.toggleSection(ev)"
+                        t-on-click.stop.prevent="() => this.toggleSection(this.ev)"
                     >
-                        <span class="o_cw_filter_label fw-bolder text-truncate flex-grow-1" t-esc="section.label"/>
+                        <span class="o_cw_filter_label fw-bolder text-truncate flex-grow-1" t-esc="this.section.label"/>
                         <i
                             class="o_cw_filter_collapse_icon fa ms-1"
-                            t-attf-class="fa-caret-{{ state.collapsed ? 'left' : 'down' }}"
+                            t-attf-class="fa-caret-{{ this.state.collapsed ? 'left' : 'down' }}"
                         />
                     </label>
                 </div>
             </t>
-            <t t-if="!state.collapsed">
+            <t t-if="!this.state.collapsed">
                 <div class="o_calendar_filter_items d-flex flex-column gap-1">
-                    <t t-foreach="getSortedFilters()" t-as="filter" t-key="filter.value">
-                        <t t-set="filterId" t-value="nextFilterId"/>
-                        <t t-call="{{ constructor.subTemplates.filter }}"/>
+                    <t t-foreach="this.getSortedFilters()" t-as="filter" t-key="filter.value">
+                        <!-- TODO DYNAMIC TCALL -->
+                        <t t-set="filterId" t-value="this.nextFilterId"/>
+                        <t t-call="{{ this.constructor.subTemplates.filter }}"/>
                     </t>
                 </div>
-                <AutoComplete t-if="section.canAddFilter" t-props="autoCompleteProps">
+                <AutoComplete t-if="this.section.canAddFilter" t-props="this.autoCompleteProps">
                     <t t-set-slot="option" t-slot-scope="optionScope">
-                        <t t-if="optionScope.data.id and section.avatar.field">
-                            <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ section.avatar.model }}/{{ optionScope.data.id }}/{{ section.avatar.field }}"/>
+                        <t t-if="optionScope.data.id and this.section.avatar.field">
+                            <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ this.section.avatar.model }}/{{ optionScope.data.id }}/{{ this.section.avatar.field }}"/>
                         </t>
                         <t t-esc="optionScope.label" />
                     </t>
@@ -55,7 +56,7 @@
     <t t-name="web.CalendarFilterSection.filter">
         <div
             class="o_calendar_filter_item o-checkbox form-check position-relative w-100 cursor-pointer"
-            t-att-class="getFilterColor(filter)"
+            t-att-class="this.getFilterColor(filter)"
             t-att-data-value="filter.value"
         >
             <input
@@ -63,18 +64,18 @@
                 name="selection"
                 class="o_cw_filter_input_bg form-check-input"
                 t-att-style="filter.colorIndex and typeof filter.colorIndex !== 'number' ? `border-color: ${filter.colorIndex}; background-color: ${filter.colorIndex};` : ''"
-                t-attf-id="o_calendar_filter_item_{{filterId}}"
+                t-attf-id="o_calendar_filter_item_{{this.filterId}}"
                 t-att-checked="filter.active"
                 t-on-change="(ev) => this.onFilterInputChange(filter, ev)"
             />
             <label
                 class="d-flex align-items-center gap-1"
-                t-attf-for="o_calendar_filter_item_{{filterId}}"
+                t-attf-for="o_calendar_filter_item_{{this.filterId}}"
             >
-                <t t-if="section.hasAvatar and filter.hasAvatar">
+                <t t-if="this.section.hasAvatar and filter.hasAvatar">
                     <img
                         class="o_cw_filter_avatar o_avatar rounded"
-                        t-attf-src="/web/image/{{ section.avatar.model }}/{{ filter.value }}/{{ section.avatar.field }}"
+                        t-attf-src="/web/image/{{ this.section.avatar.model }}/{{ filter.value }}/{{ this.section.avatar.field }}"
                         alt="Avatar"
                     />
                 </t>

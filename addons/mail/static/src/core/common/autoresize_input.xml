@@ -4,15 +4,15 @@
 <t t-name="mail.AutoresizeInput">
     <input
         class="o-mail-AutoresizeInput px-1 border-1 text-truncate rounded"
-        t-attf-class="{{ props.className }}"
-        t-att-class="{'o-focused': state.isFocused}"
-        t-att-placeholder="props.placeholder"
-        t-att-disabled="!props.enabled"
-        t-att-title="state.value"
-        t-model="state.value"
-        t-on-keydown="onKeydownInput"
+        t-attf-class="{{ this.props.className }}"
+        t-att-class="{'o-focused': this.state.isFocused}"
+        t-att-placeholder="this.props.placeholder"
+        t-att-disabled="!this.props.enabled"
+        t-att-title="this.state.value"
+        t-model="this.state.value"
+        t-on-keydown="this.onKeydownInput"
         t-on-focus="() => this.state.isFocused = true"
-        t-on-blur="onBlurInput"
+        t-on-blur="this.onBlurInput"
         t-ref="input"
         type="text"
     />

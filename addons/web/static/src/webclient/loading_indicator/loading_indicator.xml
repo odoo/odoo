@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.LoadingIndicator">
-        <Transition visible="state.show" name="'o_translate'" t-slot-scope="transition" leaveDuration="700">
+        <Transition visible="this.state.show" name="'o_translate'" t-slot-scope="transition" leaveDuration="700">
         <div t-attf-class="{{transition.className}} o_loading_indicator_wrap fixed-bottom p-2 opacity-100 opacity-25-hover transition-base">
             <span class="o_loading_indicator d-inline-flex align-items-center gap-1 rounded-pill border py-1 px-3 bg-view small shadow-lg">
                 <span class="spinner-border text-primary"/>

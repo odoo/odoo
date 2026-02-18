@@ -6,18 +6,18 @@
     </t>
 
     <t t-name="web.CalendarCommonRenderer.event">
-            <t t-if="!isTimeHidden">
-                <span class="d-none d-lg-inline fc-time" t-esc="startTime" />
+            <t t-if="!this.isTimeHidden">
+                <span class="d-none d-lg-inline fc-time" t-esc="this.startTime" />
                 <t> </t>
             </t>
             <div class="o_event_title">
-                <i area-hidden="true" t-if="titleIcon" t-attf-class="me-2 {{titleIcon}}"/>
-                <t t-out="title"/>
+                <i area-hidden="true" t-if="this.titleIcon" t-attf-class="me-2 {{this.titleIcon}}"/>
+                <t t-out="this.title"/>
             </div>
     </t>
 
     <t t-name="web.CalendarCommonRendererHeader">
-        <span class="o_cw_day_name" t-esc="scale == 'day' ? weekdayLong : weekdayShort "/> <span t-if="scale != 'month'" class="fc-day-number o_cw_day_number" t-esc="day"/>
+        <span class="o_cw_day_name" t-esc="this.scale == 'day' ? this.weekdayLong : this.weekdayShort "/> <span t-if="this.scale != 'month'" class="fc-day-number o_cw_day_number" t-esc="this.day"/>
     </t>
 
 </templates>

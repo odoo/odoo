@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.FieldSelectorField">
-        <t t-if="props.readonly">
-            <span t-esc="formattedValue" />
+        <t t-if="this.props.readonly">
+            <span t-esc="this.formattedValue" />
         </t>
         <t t-else="">
-            <ModelFieldSelector t-props="selectorProps" />
+            <ModelFieldSelector t-props="this.selectorProps" />
         </t>
     </t>
 </templates>

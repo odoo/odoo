@@ -2,22 +2,22 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageReactionMenu">
-        <Dialog size="'md'" header="false" footer="false" contentClass="contentClass">
-            <Tabs ref="tabsRef" initialTabId="props.initialReaction?.content"  direction="store.useMobileView ? 'h' : 'v'">
+        <Dialog size="'md'" header="false" footer="false" contentClass="this.contentClass">
+            <Tabs ref="this.tabsRef" initialTabId="this.props.initialReaction?.content"  direction="this.store.useMobileView ? 'h' : 'v'">
                 <t t-set-slot="headers">
-                    <TabHeader t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content" title="getEmojiShortcode(reaction)">
+                    <TabHeader t-foreach="this.props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content" title="this.getEmojiShortcode(reaction)">
                         <span class="mx-1 fs-2" t-esc="reaction.content"/>
                         <span class="mx-1" t-esc="reaction.count"/>
                     </TabHeader>
                 </t>
                 <t t-set-slot="panels">
-                    <TabPanel t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content">
-                        <div t-foreach="reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': ui.isSmall}">
+                    <TabPanel t-foreach="this.props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content">
+                        <div t-foreach="reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': this.ui.isSmall}">
                             <img class="rounded object-fit-cover o-mail-MessageReactionMenu-avatar" t-att-src="persona.avatarUrl"/>
                             <span class="d-flex flex-grow-1 align-items-center">
-                                <span class="mx-2 text-truncate fs-6" t-esc="props.message.getPersonaName(persona)"/>
+                                <span class="mx-2 text-truncate fs-6" t-esc="this.props.message.getPersonaName(persona)"/>
                                 <div class="flex-grow-1"/>
-                                <button t-if="props.message.effectiveSelf.eq(persona)" class="btn btn-light fa fa-trash rounded-pill bg-inherit border-0" title="Remove" t-on-click.stop="() => reaction.remove()"/>
+                                <button t-if="this.props.message.effectiveSelf.eq(persona)" class="btn btn-light fa fa-trash rounded-pill bg-inherit border-0" title="Remove" t-on-click.stop="() => reaction.remove()"/>
                             </span>
                         </div>
                     </TabPanel>

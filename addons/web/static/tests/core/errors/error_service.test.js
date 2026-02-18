@@ -198,7 +198,7 @@ test("originalError is the root cause of the error chain", async () => {
     });
 
     class ErrHandler extends Component {
-        static template = xml`<t t-component="props.comp"/>`;
+        static template = xml`<t t-component="this.props.comp"/>`;
         static props = ["*"];
         setup() {
             onError(async (err) => {

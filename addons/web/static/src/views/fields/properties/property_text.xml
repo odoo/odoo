@@ -2,7 +2,7 @@
 <templates>
     <t t-name="web.PropertyText">
         <div class="o_property_text">
-            <textarea class="o_input" t-ref="textarea" t-att-value="props.value" t-on-change="props.updateProperty"/>
+            <textarea class="o_input" t-ref="textarea" t-att-value="this.props.value" t-on-change="this.props.updateProperty"/>
         </div>
     </t>
 </templates>

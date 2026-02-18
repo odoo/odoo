@@ -7,7 +7,7 @@
                     <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
                 </button>
                 <t t-set-slot="content">
-                    <t t-foreach="configItems" t-as="item" t-key="item.key">
+                    <t t-foreach="this.configItems" t-as="item" t-key="item.key">
                         <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => item.method()">
                             <i t-if="item.icon" class="fa pe-2" t-att-class="item.icon"/>
                             <t t-esc="item.label"/>

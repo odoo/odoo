@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.HtmlField">
-        <t t-if="props.readonly">
-            <span t-out="props.record.data[props.name] or ''" />
+        <t t-if="this.props.readonly">
+            <span t-out="this.props.record.data[this.props.name] or ''" />
         </t>
         <t t-else="" t-call="web.TextField" />
     </t>

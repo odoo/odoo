@@ -39,7 +39,7 @@ class SimpleDropdown extends Component {
     static props = [];
     static template = xml`
         <div class="outside">outside</div>
-        <Dropdown t-props="dropdownProps">
+        <Dropdown t-props="this.dropdownProps">
             <button>Dropdown</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -55,15 +55,15 @@ class MultiLevelDropdown extends Component {
     static props = [];
     static template = xml`
         <div class="outside">outside</div>
-        <Dropdown t-props="dropdownProps">
+        <Dropdown t-props="this.dropdownProps">
             <button class="dropdown-a">A</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
-                <Dropdown t-props="dropdownProps">
+                <Dropdown t-props="this.dropdownProps">
                     <button class="dropdown-b">B</button>
                     <t t-set-slot="content">
                         <DropdownItem class="'item-b'">Item B</DropdownItem>
-                        <Dropdown t-props="dropdownProps">
+                        <Dropdown t-props="this.dropdownProps">
                             <button class="dropdown-c">C</button>
                             <t t-set-slot="content">
                                 <DropdownItem class="'item-c'">Item C</DropdownItem>
@@ -80,7 +80,7 @@ class NoBottomSheetDropdown extends Component {
     static components = { Dropdown, DropdownItem };
     static props = [];
     static template = xml`
-        <Dropdown t-props="dropdownProps" bottomSheet="false">
+        <Dropdown t-props="this.dropdownProps" bottomSheet="false">
             <button>Dropdown</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -243,7 +243,7 @@ test("hold position on hover", async () => {
             parentState = this.state;
         }
         static template = xml`
-            <div t-if="state.filler" class="filler" style="height: 100px;"/>
+            <div t-if="this.state.filler" class="filler" style="height: 100px;"/>
             <Dropdown holdOnHover="true">
                 <button>Hello</button>
                 <t t-set-slot="content">World</t>
@@ -324,9 +324,9 @@ test("dropdowns keynav", async () => {
                 <Dropdown>
                     <button data-hotkey="m">Toggle</button>
                     <t t-set-slot="content">
-                        <DropdownItem class="'item1'" onSelected="() => onItemSelected(1)">item1</DropdownItem>
-                        <DropdownItem class="'item2'" attrs="{'data-hotkey': '2'}" onSelected="() => onItemSelected(2)">item2</DropdownItem>
-                        <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
+                        <DropdownItem class="'item1'" onSelected="() => this.onItemSelected(1)">item1</DropdownItem>
+                        <DropdownItem class="'item2'" attrs="{'data-hotkey': '2'}" onSelected="() => this.onItemSelected(2)">item2</DropdownItem>
+                        <DropdownItem class="'item3'" onSelected="() => this.onItemSelected(3)">item3</DropdownItem>
                     </t>
                 </Dropdown>
             `;
@@ -412,7 +412,7 @@ test("dropdowns keynav is not impacted by bootstrap", async () => {
         static components = { Dropdown };
         static props = [];
         static template = xml`
-                <Dropdown state="dropdown">
+                <Dropdown state="this.dropdown">
                     <button>Open</button>
                     <t t-set-slot="content">
                         <select><option>foo</option></select>
@@ -693,10 +693,10 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
                     <button>Click to open</button>
                     <t t-set-slot="content">
                         <CheckboxItem
-                            class="{ selected: state.checked }"
-                            checked="state.checked"
+                            class="{ selected: this.state.checked }"
+                            checked="this.state.checked"
                             closingMode="'none'"
-                            onSelected.bind="onSelected">
+                            onSelected.bind="this.onSelected">
                             My checkbox item
                         </CheckboxItem>
                     </t>
@@ -752,7 +752,7 @@ test("don't close dropdown outside the active element", async () => {
                     <Dropdown>
                         <button class="parent-toggle">Dropdown</button>
                         <t t-set-slot="content">
-                            <button class="parent-item" t-on-click="clicked">Click me</button>
+                            <button class="parent-item" t-on-click="this.clicked">Click me</button>
                         </t>
                     </Dropdown>
                     <div class="outside-parent">Outside Parent</div>
@@ -808,7 +808,7 @@ test("t-if t-else as toggler", async () => {
         static props = [];
         static template = xml`
                 <Dropdown>
-                    <button t-if="state.foo === 'bar'">Coucou</button>
+                    <button t-if="this.state.foo === 'bar'">Coucou</button>
                     <a t-else="">ByeBye</a>
                     <t t-set-slot="content">
                         Hello
@@ -1141,22 +1141,22 @@ test("multi-level dropdown: keynav", async () => {
                 <Dropdown>
                     <button class="first" data-hotkey="1">First</button>
                     <t t-set-slot="content">
-                        <DropdownItem class="'first-first'" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
+                        <DropdownItem class="'first-first'" onSelected="() => this.onItemSelected('first-first')">O</DropdownItem>
                         <Dropdown>
                             <button class="second">Second</button>
                             <t t-set-slot="content">
-                                <DropdownItem class="'second-first'" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
+                                <DropdownItem class="'second-first'" onSelected="() => this.onItemSelected('second-first')">O</DropdownItem>
                                 <Dropdown>
                                     <button class="third">Third</button>
                                     <t t-set-slot="content">
-                                        <DropdownItem class="'third-first'" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
-                                        <DropdownItem class="'third-last'" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
+                                        <DropdownItem class="'third-first'" onSelected="() => this.onItemSelected('third-first')">O</DropdownItem>
+                                        <DropdownItem class="'third-last'" onSelected="() => this.onItemSelected('third-last')">O</DropdownItem>
                                     </t>
                                 </Dropdown>
-                                <DropdownItem class="'second-last'" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
+                                <DropdownItem class="'second-last'" onSelected="() => this.onItemSelected('second-last')">O</DropdownItem>
                             </t>
                         </Dropdown>
-                        <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
+                        <DropdownItem class="'first-last'" onSelected="() => this.onItemSelected('first-last')">O</DropdownItem>
                     </t>
                 </Dropdown>
             `;
@@ -1350,7 +1350,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                         <Dropdown>
                             <button class="two">two</button>
                             <t t-set-slot="content">
-                                <DropdownItem t-if="state.foo" class="three">three</DropdownItem>
+                                <DropdownItem t-if="this.state.foo" class="this.three">three</DropdownItem>
                             </t>
                         </Dropdown>
                     </t>

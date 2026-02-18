@@ -2,26 +2,26 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.Typing">
-        <t t-if="props.member ? props.member.isTyping : props.channel.hasOtherMembersTyping">
-            <div t-if="showTypingIcon" class="o-discuss-Typing-icon d-flex align-items-center bg-inherit" t-attf-class="{{ className }}" t-att-title="text">
+        <t t-if="this.props.member ? this.props.member.isTyping : this.props.channel.hasOtherMembersTyping">
+            <div t-if="this.showTypingIcon" class="o-discuss-Typing-icon d-flex align-items-center bg-inherit" t-attf-class="{{ this.className }}" t-att-title="this.text">
                 <span class="o-discuss-Typing-dot d-flex flex-shrink-0 rounded-pill" t-att-class="{
-                    'o-sizeMedium': ['medium', 'md'].includes(props.size),
-                    'o-sizeSmall': ['small', 'sm'].includes(props.size),
+                    'o-sizeMedium': ['medium', 'md'].includes(this.props.size),
+                    'o-sizeSmall': ['small', 'sm'].includes(this.props.size),
                 }"/>
                 <span class="flex-grow-1 flex-shrink-0"/>
                 <span class="o-discuss-Typing-dot o-discuss-Typing-dot2 d-flex flex-shrink-0 rounded-pill" t-att-class="{
-                    'o-sizeMedium': ['medium', 'md'].includes(props.size),
-                    'o-sizeSmall': ['small', 'sm'].includes(props.size),
+                    'o-sizeMedium': ['medium', 'md'].includes(this.props.size),
+                    'o-sizeSmall': ['small', 'sm'].includes(this.props.size),
                 }"/>
                 <span class="flex-grow-1 flex-shrink-0"/>
                 <span class="o-discuss-Typing-dot o-discuss-Typing-dot3 d-flex flex-shrink-0 rounded-pill" t-att-class="{
-                    'o-sizeMedium': ['medium', 'md'].includes(props.size),
-                    'o-sizeSmall': ['small', 'sm'].includes(props.size),
+                    'o-sizeMedium': ['medium', 'md'].includes(this.props.size),
+                    'o-sizeSmall': ['small', 'sm'].includes(this.props.size),
                 }"/>
             </div>
-            <t t-if="props.displayText">
+            <t t-if="this.props.displayText">
                 <span class="ms-1"/>
-                <span class="text-truncate smaller text-muted" t-out="text"/>
+                <span class="text-truncate smaller text-muted" t-out="this.text"/>
             </t>
         </t>
     </t>

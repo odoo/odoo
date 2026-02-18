@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColumnProgress">
-        <div class="o_column_progress progress bg-300 w-75" t-att-class="offlineService.offline ? 'opacity-50 pe-none': ''">
-            <t t-set="maxWidth" t-value="100 - Math.max(0, props.progressBar.bars.filter(x => x.count > 0).length - 1) * 5"/>
-            <t t-foreach="props.progressBar.bars" t-as="bar" t-key="bar.value">
-                <t t-set="progressWidth" t-value="Math.max(5, bar.count / (props.group.count or 1) * 100)"/>
+        <div class="o_column_progress progress bg-300 w-75" t-att-class="this.offlineService.offline ? 'opacity-50 pe-none': ''">
+            <t t-set="maxWidth" t-value="100 - Math.max(0, this.props.progressBar.bars.filter(x => x.count > 0).length - 1) * 5"/>
+            <t t-foreach="this.props.progressBar.bars" t-as="bar" t-key="bar.value">
+                <t t-set="progressWidth" t-value="Math.max(5, bar.count / (this.props.group.count or 1) * 100)"/>
                 <div t-if="bar.count > 0"
                     role="progressbar"
                     class="progress-bar o_bar_has_records cursor-pointer"
-                    t-att-class="{ 'progress-bar-animated progress-bar-striped': props.progressBar.activeBar === bar.value, 'border border-white': !props.group.isFolded and props.progressBar.activeBar }"
+                    t-att-class="{ 'progress-bar-animated progress-bar-striped': this.props.progressBar.activeBar === bar.value, 'border border-white': !this.props.group.isFolded and this.props.progressBar.activeBar }"
                     t-attf-class="bg-{{ bar.color }}"
                     t-attf-style="width: {{ Math.min(progressWidth, maxWidth) }}%;"
                     aria-valuemin="0"
-                    t-att-aria-valuemax="props.group.count"
+                    t-att-aria-valuemax="this.props.group.count"
                     t-att-aria-valuenow="bar.count"
                     aria-label="Progress bar"
                     t-attf-data-tooltip="{{ bar.count }} {{ bar.string }}"
@@ -22,13 +22,13 @@
                 />
             </t>
         </div>
-        <t t-if="props.progressBar.isReady">
+        <t t-if="this.props.progressBar.isReady">
             <AnimatedNumber
-                value="props.aggregate.value"
-                title="props.aggregate.title"
+                value="this.props.aggregate.value"
+                title="this.props.aggregate.title"
                 duration="1000"
-                currencies="props.aggregate.currencies"
-                animationClass="props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
+                currencies="this.props.aggregate.currencies"
+                animationClass="this.props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
             />
         </t>
     </t>

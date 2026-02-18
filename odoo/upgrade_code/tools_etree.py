@@ -25,13 +25,13 @@ FLAGS = re.X | re.DOTALL | re.IGNORECASE | re.MULTILINE
 
 NODE_REG = re.compile(r"""
     <(?P<tag_name>[\w:-]+)
-    (?P<attributes>(?:(?P<space>\s+)(?P<attribute>[\w:-]+(?:\.f|\.translate)?=\s*(["']).*?\5))*)
+    (?P<attributes>(?:(?P<space>\s+)(?P<attribute>[\w:.-]+(?:\.[\w]+)*)=\s*(["']).*?\5)*)
     (?P<end_space>\s*)
     (?P<close> (?:\/?>) | (?:>\s*<\/[\w:-]+\s*>)? )
 """, flags=FLAGS)
 ATTRIBUTES_SPACE_REG = re.compile(r"""
     (?P<space>\s+)
-    (?P<attribute>[\w:.-]+(?:\.f|\.translate)?)
+    (?P<attribute>[\w:.-]+(?:\.[\w]+)*)  # capture any dot suffix, e.g., .bind, .f, .translate
     =
     (?P<quote>["'])(?P<value>.*?)(?P=quote)
 """, flags=FLAGS)
@@ -128,6 +128,7 @@ def update_etree(origin: str, callback: Callable[[etree._ElementTree]]) -> str:
         new_arch[node_id] = arch_item
 
     new_template = etree.tostring(root, encoding='unicode')
+
 
     # unescape \n in attribute values
     indented_template = ATTRIBUTES_SPACE_REG.sub(_un_escape_newlines_in_attr, new_template)

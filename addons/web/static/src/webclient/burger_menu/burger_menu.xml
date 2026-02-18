@@ -7,17 +7,17 @@
   <button
     class="o_mobile_menu_toggle o_nav_entry o-no-caret d-md-none border-0 pe-3"
     title="Toggle menu" aria-label="Toggle menu"
-    t-on-click="_openBurger">
-    <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
+    t-on-click="this._openBurger">
+    <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + this.user.userId" alt="Menu"/>
   </button>
 
   <t t-portal="'body'">
-    <Transition name="'o-burger-slide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
-      <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
+    <Transition name="'o-burger-slide'" visible="this.state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
+      <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd">
         <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
             <small class="d-flex align-items-center justify-content-between ms-2">
-              <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
-              <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
+              <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + this.user.userId" alt="Menu"/>
+              <span class="o_burger_menu_username px-2"><t t-esc="this.user.name"/></span>
             </small>
             <div class="d-flex align-items-center h-100 bg-transparent">
                 <button t-if="this.router.shareUrl and this.isDisplayStandalone" class="o_sidebar_share fa fa-share-alt btn border-0 fs-5 text-reset" aria-label="Share URL" title="Share URL" t-on-click.stop="() => this._shareUrl()"/>
@@ -25,12 +25,12 @@
             </div>
         </div>
         <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
-          <MobileSwitchCompanyMenu t-if="user.allowedCompanies.length > 1" />
-          <BurgerUserMenu onMenuClicked.bind="_closeBurger"/>
+          <MobileSwitchCompanyMenu t-if="this.user.allowedCompanies.length > 1" />
+          <BurgerUserMenu onMenuClicked.bind="this._closeBurger"/>
         </nav>
       </div>
     </Transition>
-    <div t-if="state.isBurgerOpened" class="modal-backdrop show d-block d-md-none" t-on-click.stop="_closeBurger" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd" />
+    <div t-if="this.state.isBurgerOpened" class="modal-backdrop show d-block d-md-none" t-on-click.stop="this._closeBurger" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd" />
   </t>
 </t>
 

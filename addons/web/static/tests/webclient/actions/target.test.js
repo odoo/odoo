@@ -397,7 +397,7 @@ describe("new", () => {
 
         class ClientAction extends Component {
             static template = xml`
-                <div class="my_action" t-on-click="onClick">
+                <div class="my_action" t-on-click="this.onClick">
                     My Action
                 </div>`;
             static props = ["*"];

@@ -635,7 +635,7 @@ test("dragged element is removed from the DOM while being dragged", async () => 
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="state.items" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="this.state.items" t-as="i" t-key="i" t-esc="i" class="item" />
                 </ul>
             </div>`;
         setup() {

@@ -205,7 +205,7 @@ test("html field in readonly updated by onchange", async () => {
 test("html field in readonly with embedded components", async () => {
     patchWithCleanup(Counter, {
         template: xml`
-            <span t-ref="root" class="counter" t-on-click="increment"><t t-esc="props.name || ''"/>:<t t-esc="state.value"/></span>`,
+            <span t-ref="root" class="counter" t-on-click="this.increment"><t t-esc="this.props.name || ''"/>:<t t-esc="this.state.value"/></span>`,
     });
     const unpatch = patch(Counter.prototype, {
         setup() {
