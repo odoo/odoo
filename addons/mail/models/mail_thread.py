@@ -377,7 +377,7 @@ class MailThread(models.AbstractModel):
 
         # post track template if a tracked field changed
         threads._track_discard()
-        if not self.env.context.get('mail_notrack'):
+        if not self._track_disabled():
             fnames = self._track_get_fields()
             for thread in threads:
                 create_values = create_values_list[thread.id]
@@ -394,7 +394,7 @@ class MailThread(models.AbstractModel):
         if self.env.context.get('tracking_disable'):
             return super().write(vals)
 
-        if not self.env.context.get('mail_notrack'):
+        if not self._track_disabled():
             self._track_prepare(self._fields)
 
         # Perform write
@@ -488,7 +488,7 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def _compute_field_value(self, field):
-        if not self.env.context.get('tracking_disable') and not self.env.context.get('mail_notrack'):
+        if not self._track_disabled():
             self._track_prepare(f.name for f in self.pool.field_computed[field] if f.store)
 
         return super()._compute_field_value(field)
@@ -532,6 +532,9 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # TRACKING / LOG
     # ------------------------------------------------------
+
+    def _track_disabled(self):
+        return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
 
     def _track_prepare(self, fields_iter):
         """ Prepare the tracking of ``fields_iter`` for ``self``.

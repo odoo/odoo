@@ -1862,7 +1862,7 @@ class AccountMoveLine(models.Model):
 
         lines._check_tax_lock_date()
 
-        if not self.env.context.get('tracking_disable'):
+        if not self.env['mail.thread']._track_disabled():
             # Log changes to move lines on each move
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
@@ -1963,7 +1963,7 @@ class AccountMoveLine(models.Model):
             if not self:
                 return True
             # Tracking stuff can be skipped for perfs using tracking_disable context key
-            if not self.env.context.get('tracking_disable', False):
+            if not self.env['mail.thread']._track_disabled():
                 # Get all tracked fields (without related fields because these fields must be manage on their own model)
                 tracking_fields = []
                 for value in vals:
@@ -1991,7 +1991,7 @@ class AccountMoveLine(models.Model):
             # double check modified lines in case a tax field was changed on a line that didn't previously affect tax
             self.browse(tax_lock_check_ids)._check_tax_lock_date()
 
-            if not self.env.context.get('tracking_disable', False):
+            if not self.env['mail.thread']._track_disabled():
                 # Log changes to move lines on each move
                 for move_id, modified_lines in move_initial_values.items():
                     for line in self.filtered(lambda l: l.move_id.id == move_id):
@@ -2064,7 +2064,7 @@ class AccountMoveLine(models.Model):
         # Check the tax lock date.
         self._check_tax_lock_date()
 
-        if not self.env.context.get('tracking_disable'):
+        if not self.env['mail.thread']._track_disabled():
             # Log changes to move lines on each move
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
