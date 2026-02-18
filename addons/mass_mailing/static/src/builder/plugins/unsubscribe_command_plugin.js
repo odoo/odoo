@@ -14,7 +14,7 @@ export class UnsubscribeCommandPlugin extends Plugin {
                 description: _t("Insert an unsubscribe link"),
                 icon: "fa-chain-broken",
                 run: this.insertUnsubscribeLink.bind(this),
-                isAvailable: (selection) => isHtmlContentSupported(selection),
+                isAvailable: this.insertUnsubscribeLinkAvailable.bind(this),
             },
         ],
         powerbox_items: [
@@ -25,6 +25,13 @@ export class UnsubscribeCommandPlugin extends Plugin {
         ],
         on_mailing_model_updated_handlers: this.onMailingModelUpdated.bind(this),
     };
+
+    insertUnsubscribeLinkAvailable(selection) {
+        return (
+            isHtmlContentSupported(selection) &&
+            this.config.getRecordInfo?.().data.mailing_model_real != "hr.employee"
+        );
+    }
 
     insertUnsubscribeLink() {
         const snippet = this.config.snippetModel.getSnippetByName("snippet_content", "s_unsubscribe_link");
@@ -38,16 +45,16 @@ export class UnsubscribeCommandPlugin extends Plugin {
     }
 
     /**
-     * Hide unsubscribe links if the mailing targets employees
+     * Highlight unsubscribe links if the mailing targets employees
      */
     onMailingModelUpdated() {
-        const unsubEls = this.editable.querySelectorAll(".o_layout a[href='/unsubscribe_from_list']");
+        const unsubEls = this.editable.querySelectorAll("a[href='/unsubscribe_from_list']");
 
         for (const el of unsubEls) {
             if (this.config.getRecordInfo?.().data.mailing_model_real == "hr.employee") {
-                el.style.display = "none";
-            } else if (el.style.display == "none") {
-                el.style.display = null;
+                el.classList.add("unsubscribe_link_warning");
+            } else {
+                el.classList.remove("unsubscribe_link_warning");
             }
         }
     }
