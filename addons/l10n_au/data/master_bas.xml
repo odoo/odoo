@@ -6,6 +6,7 @@
         <field name="country_id" ref="base.au"/>
         <field name="filter_multi_company">tax_units</field>
         <field name="allow_foreign_vat" eval="True"/>
+        <field name="active" eval="False"/>  <!-- was wrongly kept when we added the new reports -->
         <field name="default_opening_date_filter">previous_return_period</field>
         <field name="only_tax_exigible" eval="True"/>
         <field name="column_ids">
