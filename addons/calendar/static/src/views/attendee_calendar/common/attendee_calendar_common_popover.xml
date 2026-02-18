@@ -9,18 +9,18 @@
         </xpath>
         <xpath expr="//div[hasclass('flex-grow-1')]" position="after">
             <t t-if="fieldInfo.options.shouldOpenRecord">
-                <a href="#" t-on-click="onClickOpenRecord">
+                <button class="btn btn-link p-0 fw-normal" t-on-click="onClickOpenRecord">
                     <t t-out="props.record.rawRecord.res_model_name"/>
-                </a>
+                </button>
         </t>
         </xpath>
     </t>
 
     <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='isEventDeletable']" position="after">
-            <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary" t-on-click="onClickArchive">
+            <button t-if="isEventArchivable and isEventDetailsVisible" class="btn btn-secondary" t-on-click="onClickArchive">
                 <i class="fa fa-trash"/>
-            </a>
+            </button>
         </xpath>
         <xpath expr="//t[@t-if='isEventDeletable']" position="before">
             <t t-if="displayAttendeeAnswerChoice">

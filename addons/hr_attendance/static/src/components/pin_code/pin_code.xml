@@ -24,9 +24,9 @@
                                 </div>
                                 <div class="row g-2">
                                     <div class="col-4" t-foreach="padButtons" t-as="btn" t-key="btn[0]">
-                                        <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1">
+                                        <button t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1 w-100">
                                             <t t-esc="btn[0]"/>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
