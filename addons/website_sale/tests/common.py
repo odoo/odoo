@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from PIL import Image
 
 from odoo.fields import Command
-from odoo.tools import BinaryBytes, lazy
+from odoo.tools import BinaryBytes
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.http_routing.tests.common import MockRequest as websiteMockRequest
@@ -21,27 +21,30 @@ from odoo.addons.website_sale.models.website import (
 @contextmanager
 def MockRequest(
     *args,
+    website=None,
     sale_order_id=None,
     website_sale_current_pl=None,
     fiscal_position_id=None,
     website_sale_selected_pl_id=None,
     **kwargs,
 ):
-    with websiteMockRequest(*args, **kwargs) as request:
+    with websiteMockRequest(*args, website=website, **kwargs) as request:
+        if website:
+            # MockRequest simulates another transaction; the cache must be invalidated
+            # because some information come from the session
+            website.invalidate_recordset()
+
         if sale_order_id is not None:
             request.session[CART_SESSION_CACHE_KEY] = sale_order_id
-        request.cart = lazy(request.website._get_and_cache_current_cart)
 
         if website_sale_current_pl is not None:
             request.session[PRICELIST_SESSION_CACHE_KEY] = website_sale_current_pl
-        request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
 
         if website_sale_selected_pl_id is not None:
             request.session[PRICELIST_SELECTED_SESSION_CACHE_KEY] = website_sale_selected_pl_id
 
         if fiscal_position_id is not None:
             request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fiscal_position_id
-        request.fiscal_position = lazy(request.website._get_and_cache_current_fiscal_position)
 
         yield request
 

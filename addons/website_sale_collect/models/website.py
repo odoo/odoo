@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.http import request
 
 
 class Website(models.Model):
@@ -33,7 +32,8 @@ class Website(models.Model):
          """
         free_qty = super()._get_product_available_qty(product, **kwargs)
         if self.warehouse_id and self.sudo().in_store_dm_id:  # If warehouse is set on website.
-            order = request and request.cart
+            website = self.env['website'].get_current_website()
+            order = website.current_session_sale_order_id.sudo()
             if not order or not order.carrier_id:
                 # Check free quantities in the in-store warehouses.
                 free_qty = max(free_qty, self._get_max_in_store_product_available_qty(product))

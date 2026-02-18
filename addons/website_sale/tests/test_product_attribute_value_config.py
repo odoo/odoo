@@ -153,6 +153,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Htt
 
         # Try same flow with tax included for apply tax
         tax0.write({'name': "Test tax 5", 'amount': 5, 'price_include_override': 'tax_included'})
+        website.invalidate_recordset()
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 456.52, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")

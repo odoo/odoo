@@ -1413,13 +1413,12 @@ class Website(models.CachedModel):
         - empty browse record
         """
         is_frontend_request = request and getattr(request, 'is_frontend', False)
-        if request and request.session.get('force_website_id'):
-            website_id = self.browse(request.session['force_website_id']).exists()
-            if not website_id:
+        if request and (website_id := request.session.get('force_website_id')):
+            if website_id in self._cached_data()['id']:
+                return self.browse(website_id)
+            else:
                 # Don't crash is session website got deleted
                 request.session.pop('force_website_id')
-            else:
-                return website_id
 
         website_id = self.env.context.get('website_id')
         if website_id:

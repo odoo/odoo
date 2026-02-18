@@ -319,6 +319,25 @@ class Website(models.Model):
         default=_default_confirmation_email_template,
     )
 
+    current_session_sale_order_id = fields.Many2many(
+        string="Current User Cart",
+        comodel_name='sale.order',
+        compute="_compute_current_session_sale_order_id",
+        compute_sudo=True,
+    )
+    current_session_fiscal_position_id = fields.Many2many(
+        string="Current Fiscal Position",
+        comodel_name='account.fiscal.position',
+        compute="_compute_current_session_fiscal_position_id",
+        compute_sudo=True,
+    )
+    current_session_pricelist_id = fields.Many2many(
+        string="Current Currency",
+        comodel_name='product.pricelist',
+        compute="_compute_current_session_pricelist_id",
+        compute_sudo=True,
+    )
+
     #=== COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -329,11 +348,33 @@ class Website(models.Model):
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
+    @api.depends_context('uid')
+    def _compute_current_session_sale_order_id(self):
+        if not self:
+            return
+        self.current_session_sale_order_id = self._get_and_cache_current_session_sale_order_id()
+
+    @api.depends_context('uid')
+    def _compute_current_session_fiscal_position_id(self):
+        if not self:
+            return
+        self.current_session_fiscal_position_id = self._get_and_cache_current_session_fiscal_position_id()
+
+    @api.depends_context('uid', 'pricelist_id')
+    @api.depends('current_session_sale_order_id')
+    def _compute_current_session_pricelist_id(self):
+        if not self:
+            return
+        if pricelist_id := self.env.context.get('pricelist_id'):
+            self.current_session_pricelist_id = self.env['product.pricelist'].browse(pricelist_id)
+        else:
+            self.current_session_pricelist_id = self._get_and_cache_current_session_pricelist_id()
+
     @api.depends('company_id')
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = (
-                request and hasattr(request, 'pricelist') and request.pricelist.currency_id
+                request and website.current_session_pricelist_id.sudo().currency_id
                 or website.company_id.sudo().currency_id
             )
 
@@ -727,7 +768,7 @@ class Website(models.Model):
 
         request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
         request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
-        request.cart = sale_order_sudo
+        self.invalidate_model(['current_session_sale_order_id'])
 
         return sale_order_sudo
 
@@ -738,28 +779,24 @@ class Website(models.Model):
             'company_id': self.company_id.id,
             'partner_id': partner_sudo.id,
 
-            'fiscal_position_id': request.fiscal_position.id,
-            'pricelist_id': request.pricelist.id,
+            'fiscal_position_id': self.current_session_fiscal_position_id.id,
+            'pricelist_id': self.current_session_pricelist_id.id,
 
             'team_id': self.salesteam_id.id,
             'website_id': self.id,
         }
 
-    def _get_and_cache_current_pricelist(self):
+    def _get_and_cache_current_session_pricelist_id(self):
         """Retrieve and cache the current pricelist for the session.
-
-        Note: self.ensure_one()
 
         :return: The determined pricelist, which could be empty, as a sudoed record.
         :rtype: product.pricelist
         """
-        self.ensure_one()
-
         ProductPricelistSudo = self.env['product.pricelist'].sudo()
         if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
             return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
-        if PRICELIST_SESSION_CACHE_KEY in request.session:
+        if request and PRICELIST_SESSION_CACHE_KEY in request.session:
             pricelist_sudo = ProductPricelistSudo.browse(
                 request.session[PRICELIST_SESSION_CACHE_KEY]
             )
@@ -770,7 +807,7 @@ class Website(models.Model):
             ):
                 return pricelist_sudo.sudo()
 
-        if cart_sudo := request.cart:
+        if cart_sudo := self.current_session_sale_order_id:
             if not request.env.cr.readonly:
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()
@@ -785,20 +822,16 @@ class Website(models.Model):
 
         return pricelist_sudo
 
-    def _get_and_cache_current_fiscal_position(self):
+    def _get_and_cache_current_session_fiscal_position_id(self):
         """Retrieve and cache the current fiscal position for the session.
-
-        Note: self.ensure_one()
 
         :return: A sudoed fiscal position record.
         :rtype: account.fiscal.position
         """
-        self.ensure_one()
-
         AccountFiscalPositionSudo = self.env['account.fiscal.position'].sudo()
         fpos_sudo = AccountFiscalPositionSudo
 
-        if FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
+        if request and FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
             fpos_sudo = AccountFiscalPositionSudo.browse(
                 request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
             )
@@ -824,20 +857,16 @@ class Website(models.Model):
 
         return fpos_sudo
 
-    def _get_and_cache_current_cart(self):
+    def _get_and_cache_current_session_sale_order_id(self):
         """ Retrieves and caches the current cart for the session.
-
-        Note: self.ensure_one()
 
         :return: A sudoed Sales order record.
         :rtype: sale.order
         """
-        self.ensure_one()
-
         SaleOrderSudo = self.env['sale.order'].sudo()
 
         sale_order_sudo = SaleOrderSudo
-        if CART_SESSION_CACHE_KEY in request.session:
+        if request and CART_SESSION_CACHE_KEY in request.session:
             sale_order_sudo = SaleOrderSudo.browse(request.session[CART_SESSION_CACHE_KEY])
 
             try:
@@ -884,7 +913,7 @@ class Website(models.Model):
                 ('state', '=', 'draft'),
             ], limit=1)
             if abandonned_cart_sudo:
-                if not request.env.cr.readonly:
+                if not self.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
                     # an abandonned cart
                     abandonned_cart_sudo._update_address(partner_sudo.id, ['partner_id'])
@@ -893,6 +922,7 @@ class Website(models.Model):
 
         if (
             (sale_order_sudo or not self.env.user._is_public())
+            and request
             and sale_order_sudo.id != request.session.get(CART_SESSION_CACHE_KEY)
         ):
             # Store the id of the cart if there is one, or False if the user is logged in, to avoid

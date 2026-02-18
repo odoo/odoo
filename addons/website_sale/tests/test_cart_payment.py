@@ -35,8 +35,10 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         for unpaid_order_tx_state in ('draft', 'cancel', 'error'):
             self.tx.state = unpaid_order_tx_state
             with self.mock_request(sale_order_id=self.cart.id) as request:
+                website = request.env['website'].get_current_website()
+                order = website.current_session_sale_order_id.sudo()
                 self.assertEqual(
-                    request.cart,
+                    order,
                     self.cart,
                     msg=f"The transaction state '{unpaid_order_tx_state}' should not prevent "
                         f"retrieving the linked order.",
@@ -50,8 +52,10 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         for paid_order_tx_state in ('pending', 'authorized', 'done'):
             self.tx.state = paid_order_tx_state
             with self.mock_request(sale_order_id=self.cart.id) as request:
+                website = request.env['website'].get_current_website()
+                order = website.current_session_sale_order_id.sudo()
                 self.assertFalse(
-                    request.cart,
+                    order,
                     msg=f"The transaction state '{paid_order_tx_state}' should prevent retrieving "
                         f"the linked order.",
                 )

@@ -95,7 +95,8 @@ class TestWebsiteSaleStockProductWarehouse(
         })
 
         with self.mock_request(sale_order_id=so.id) as req:
-            website_so = req.cart
+            website = req.env['website'].get_current_website()
+            website_so = website.current_session_sale_order_id.sudo()
             self.assertEqual(website_so, so)
             self.assertEqual(
                 website_so.order_line.product_id.virtual_available,

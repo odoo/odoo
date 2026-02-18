@@ -3,7 +3,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.http import request
 
 from odoo.addons.website_sale_collect import utils
 
@@ -90,7 +89,8 @@ class DeliveryCarrier(models.Model):
 
         pickup_locations = []
         location_countries = set()
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_session_sale_order_id.sudo()
         for wh in self.warehouse_ids:
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.

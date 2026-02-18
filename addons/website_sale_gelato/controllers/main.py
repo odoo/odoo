@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import ValidationError
-from odoo.http import request
 
 from odoo.addons.website_sale.controllers import main
 
@@ -15,7 +14,8 @@ class WebsiteSale(main.WebsiteSale):
         :rtype: bool
         """
         res = super()._check_delivery_address(partner_sudo)
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_session_sale_order_id.sudo()
         if not res or not order_sudo:
             return res
 

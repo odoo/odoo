@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, MissingError
 from odoo.http import request, route
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 
 
 class Delivery(WebsiteSale):
@@ -18,7 +19,8 @@ class Delivery(WebsiteSale):
         :return: The rendered delivery form.
         :rtype: str
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_session_sale_order_id.sudo()
         values = {
             'delivery_methods': order_sudo._get_delivery_methods(),
             'selected_dm_id': order_sudo.carrier_id.id,
@@ -42,17 +44,24 @@ class Delivery(WebsiteSale):
         :return: The order summary values, if any.
         :rtype: dict
         """
-        if not (order_sudo := request.cart):
+        order_sudo = self.env['sale.order'].sudo()
+        if CART_SESSION_CACHE_KEY in request.session:
+            order_sudo = order_sudo.browse(request.session[CART_SESSION_CACHE_KEY])
+            try:
+                # read a field to check if the order exists and prefetch data
+                order_sudo.state
+            except MissingError:
+                order_sudo = None
+        if not order_sudo:
             return {}
 
         dm_id = int(dm_id)
         if dm_id in order_sudo._get_delivery_methods().ids and dm_id != order_sudo.carrier_id.id:
-            for tx_sudo in order_sudo.transaction_ids:
-                if tx_sudo.state not in ('draft', 'cancel', 'error'):
-                    raise UserError(_(
-                        "It seems that there is already a transaction for your order; you can't"
-                        " change the delivery method anymore."
-                    ))
+            if order_sudo.state != 'draft' or any(tx_sudo.state not in ('draft', 'cancel', 'error') for tx_sudo in order_sudo.transaction_ids):
+                raise UserError(_(
+                    "It seems that there is already a transaction for your order; you can't"
+                    " change the delivery method anymore."
+                ))
 
             delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(dm_id).exists()
             order_sudo._set_delivery_method(delivery_method_sudo)
@@ -98,7 +107,8 @@ class Delivery(WebsiteSale):
         :return: The delivery rate data.
         :rtype: dict
         """
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_session_sale_order_id.sudo()):
             raise ValidationError(_("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
@@ -130,7 +140,8 @@ class Delivery(WebsiteSale):
         :return: The order summary values.
         :rtype: dict
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_session_sale_order_id.sudo()
         order_sudo._set_pickup_location(pickup_location_data)
         return self._order_summary_values(order_sudo)
 
@@ -141,7 +152,8 @@ class Delivery(WebsiteSale):
         :return: The close pickup locations data.
         :rtype: dict
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_session_sale_order_id.sudo()
         country = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(country=country, **kwargs)
 
@@ -157,7 +169,8 @@ class Delivery(WebsiteSale):
         :return: The available delivery methods, sorted by lowest price.
         :rtype: dict
         """
-        if not (order_sudo := request.cart):
+        website = self.env['website'].get_current_website()
+        if not (order_sudo := website.current_session_sale_order_id.sudo()):
             return []
 
         self._include_country_and_state_in_address(partial_delivery_address)
@@ -305,5 +318,6 @@ class Delivery(WebsiteSale):
         :param str delivery_date: The selected delivery date.
         :return: None
         """
-        order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        order_sudo = website.current_session_sale_order_id.sudo()
         order_sudo.commitment_date = delivery_date

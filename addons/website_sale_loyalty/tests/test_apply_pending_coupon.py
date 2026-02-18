@@ -57,7 +57,9 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 product_id=self.largeCabinet.id,
                 quantity=2,
             )
-            order = request.cart
+            website = request.env['website'].get_current_website()
+            order = website.current_session_sale_order_id.sudo()
+
             self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
             self.assertEqual(
                 order.amount_total,
@@ -96,7 +98,10 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 product_id=self.largeCabinet.id,
                 quantity=1,
             )
-            order = request.cart
+
+            website = request.env['website'].get_current_website()
+            order = website.current_session_sale_order_id.sudo()
+
             self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
             self.assertEqual(self.largeCabinet.lst_price, 320)
             cabinet_sol = order.order_line.filtered(lambda sol: sol.product_id == self.largeCabinet)

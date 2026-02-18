@@ -313,7 +313,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         self.assertEqual(product_template.standard_price, 5)
         with self.mock_request(website_sale_current_pl=pricelist.id) as request:
-            self.assertEqual(request.pricelist, pricelist)
+            website = request.env['website'].get_current_website()
+            self.assertEqual(website.current_session_pricelist_id.sudo(), pricelist)
             price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
             msg = "Template has no variants, the price should be computed based on the template's cost."
             self.assertEqual(price, 4.5, msg)
@@ -369,7 +370,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             })],
         })
         with self.mock_request(website_sale_current_pl=self.pricelist.id) as request:
-            self.assertEqual(request.pricelist, self.pricelist)
+            website = request.env['website'].get_current_website()
+            pricelist = website.current_session_pricelist_id.sudo()
+            self.assertEqual(pricelist, self.pricelist)
             res = product_tmpl._get_sales_prices(self.website)
             self.assertEqual(res[product_tmpl.id]['base_price'], 75)
 
