@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_data_cleaning_unified_list" model="ir.ui.view">
+            <field name="name">Data Cleaning Unified List</field>
+            <field name="model">data_cleaning.unified</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="res_model_id"/>
+                    <field name="cleaning_mode"/>
+                    <field name="recycle_ids" string="Recycle Rules"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_data_cleaning_unified_form" model="ir.ui.view">
+            <field name="name">Data Cleaning Unified Form</field>
+            <field name="model">data_cleaning.unified</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="res_model_id" options="{'no_create': True, 'no_open': True}" />
+                                <field name="res_model_name" invisible="1" />
+                                <field name="active" widget="boolean_toggle" />
+                            </group>
+                            <group>
+                                <field name="cleaning_mode" widget="radio" options="{'horizontal': true}" />
+
+                                <label for="notify_user_ids" invisible="cleaning_mode == 'automatic'" />
+                                <div invisible="cleaning_mode == 'automatic'">
+                                    <field name="notify_user_ids" widget="many2many_tags"  options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]" />
+                                    <div class="d-flex w-50" invisible="not notify_user_ids">
+                                        <span class="me-1">Every</span>
+                                        <field name="notify_frequency" required="notify_user_ids" />
+                                        <field name="notify_frequency_period" required="notify_user_ids" />
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Recycle Rules" name="recycle_rules">
+                                <field name="recycle_ids">
+                                    <list decoration-muted="not active">
+                                        <field name="time_field_id" />
+                                        <field name="time_field_delta" />
+                                        <field name="time_field_delta_unit" />
+                                        <field name="records_to_recycle_count" readonly="1" string="To Recycle" />
+                                        <button name="open_records" type="object" string="View" class="btn-link text-primary padding-0" />                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_data_cleaning_unified" model="ir.actions.act_window">
+            <field name="name">Model Rules</field>
+            <field name="res_model">data_cleaning.unified</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new Rule
+              </p>
+            </field>
+        </record>
+    </data>
+</odoo>
