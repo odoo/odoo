@@ -12,4 +12,15 @@
         </xpath>
     </template>
 
+    <record model="ir.ui.view" id="view_picking_form">
+        <field name="name">purchase.stock.view.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+                <attribute name="invisible" separator="and" add="not purchase_id"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
