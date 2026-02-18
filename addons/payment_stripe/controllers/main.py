@@ -3,7 +3,7 @@
 import hashlib
 import hmac
 import pprint
-from datetime import datetime
+from datetime import datetime, UTC
 
 from werkzeug.exceptions import Forbidden
 
@@ -89,7 +89,9 @@ class StripeController(http.Controller):
                 if not tx_sudo:
                     return request.make_json_response('')
 
-                self._verify_signature(tx_sudo)
+                notification_payload = request.httprequest.data.decode('utf-8')
+                signature_header = request.httprequest.headers.get('Stripe-Signature')
+                self._verify_signature(notification_payload, signature_header, tx_sudo)
 
                 if event['type'].startswith('payment_intent'):  # Payment operation.
                     if tx_sudo.tokenize:
@@ -181,11 +183,14 @@ class StripeController(http.Controller):
         )
         return source_tx_sudo._create_child_transaction(converted_amount, is_refund=True)
 
-    def _verify_signature(self, tx_sudo):
+    @staticmethod
+    def _verify_signature(payload, signature_header, tx_sudo):
         """Check that the received signature matches the expected one.
 
         See https://stripe.com/docs/webhooks/signatures#verify-manually.
 
+        :param str payload: The raw HTTP request body decoded as a utf-8 string.
+        :param str signature_header: The 'Stripe-Signature' header value from the HTTP request.
         :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
         :return: None
         :raise Forbidden: If the timestamp is too old or if the signatures don't match.
@@ -195,8 +200,7 @@ class StripeController(http.Controller):
             _logger.warning("ignored webhook event due to undefined webhook secret")
             return
 
-        notification_payload = request.httprequest.data.decode('utf-8')
-        signature_entries = request.httprequest.headers['Stripe-Signature'].split(',')
+        signature_entries = signature_header.split(',')
         signature_data = {k: v for k, v in [entry.split('=') for entry in signature_entries]}
 
         # Retrieve the timestamp from the data
@@ -206,24 +210,16 @@ class StripeController(http.Controller):
             raise Forbidden()
 
         # Check if the timestamp is not too old
-        if datetime.utcnow().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
+        if datetime.now(UTC).timestamp() - event_timestamp > StripeController.WEBHOOK_AGE_TOLERANCE:
             _logger.warning("Received payment data with outdated timestamp: %s", event_timestamp)
             raise Forbidden()
 
-        # Retrieve the received signature from the data
         received_signature = signature_data.get('v1')
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature computed from the data
-        signed_payload = f'{event_timestamp}.{notification_payload}'
+        signed_payload = f'{event_timestamp}.{payload}'
         expected_signature = hmac.new(
             webhook_secret.encode('utf-8'), signed_payload.encode('utf-8'), hashlib.sha256
         ).hexdigest()
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature")
-            raise Forbidden()
+        payment_utils.verify_signature(received_signature, expected_signature)
 
     @http.route(_apple_pay_domain_association_url, type='http', auth='public', csrf=False)
     def stripe_apple_pay_get_domain_association_file(self):

@@ -1,15 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
 import json
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 
@@ -71,21 +69,13 @@ class FlutterwaveController(http.Controller):
     def _verify_signature(received_signature, tx_sudo):
         """Check that the received signature matches the expected one.
 
-        :param dict received_signature: The signature received with the payment data.
+        :param str|bytes received_signature: The signature received with the payment data.
         :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
         :return: None
         :raise Forbidden: If the signatures don't match.
         """
-        # Check for the received signature.
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature.
         expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+        payment_utils.verify_signature(received_signature, expected_signature)
 
     @staticmethod
     def _verify_and_process(data):

@@ -23,8 +23,6 @@ class PaymobCommon(PaymentCommon):
         cls.currency = cls._enable_currency('EGP')
         cls.hmac_signature = '51860052ecc6d9f08ac30a549359019e2eee837913b5673094c242c817ddf57c055ba5e3e9c0894b1171e62c2d37cd55ff98a46a0e28e1ccf2e4a907e6683aa5'
 
-        cls.order_id = '123DUMMY456'
-
         cls.redirection_data = {
             'amount_cents': '111111',
             'created_at': '2025-04-01T17:29:16.967925',
@@ -48,7 +46,7 @@ class PaymobCommon(PaymentCommon):
             'success': 'true',
             'data.message': 'Approved',
             'hmac': cls.hmac_signature,
-            'merchant_order_id': cls.order_id,
+            'merchant_order_id': cls.reference,
         }
         cls.webhook_data = {
             'amount_cents': 111111,
@@ -67,7 +65,7 @@ class PaymobCommon(PaymentCommon):
             'is_voided': False,
             'order': {
                 'id': 123,
-                'merchant_order_id': cls.order_id,
+                'merchant_order_id': cls.reference,
             },
             'owner': 12,
             'pending': False,

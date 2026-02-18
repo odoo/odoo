@@ -49,14 +49,14 @@ class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
             Forbidden, AsiaPayController._verify_signature, self.webhook_payment_data, tx
         )
 
-    @mute_logger('odoo.addons.payment_asiapay.controllers.main')
+    @mute_logger('odoo.addons.payment_asiapay.controllers.main', 'odoo.addons.payment.utils')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
         tx = self._create_transaction('redirect')
         payload = dict(self.webhook_payment_data, secureHash='dummy')
         self.assertRaises(Forbidden, AsiaPayController._verify_signature, payload, tx)
 
-    @mute_logger('odoo.addons.payment_asiapay.controllers.main')
+    @mute_logger('odoo.addons.payment_asiapay.controllers.main', 'odoo.addons.payment.utils')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
         tx = self._create_transaction('redirect')

@@ -218,7 +218,7 @@ class PaymentProvider(models.Model):
 
         See https://razorpay.com/docs/webhooks/validate-test#validate-webhooks.
 
-        :param bytes data: The data to sign.
+        :param dict|bytes data: The data to sign.
         :param bool is_redirect: Whether the data should be treated as redirect data or as coming
                                  from a webhook notification.
         :return: The calculated signature.
@@ -226,7 +226,15 @@ class PaymentProvider(models.Model):
         """
         if is_redirect:
             secret = self.razorpay_key_secret
-            signing_string = f'{data["razorpay_order_id"]}|{data["razorpay_payment_id"]}'
+            order_id = data.get('razorpay_order_id')
+            payment_id = data.get('razorpay_payment_id')
+            if not order_id:
+                _logger.warning("Missing order id; aborting signature calculation.")
+                return None
+            if not payment_id:
+                _logger.warning("Missing payment id; aborting signature calculation.")
+                return None
+            signing_string = f'{order_id}|{payment_id}'
             return hmac.new(
                 secret.encode(), msg=signing_string.encode(), digestmod=hashlib.sha256
             ).hexdigest()

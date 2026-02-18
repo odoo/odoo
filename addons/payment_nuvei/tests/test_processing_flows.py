@@ -75,14 +75,14 @@ class TestProcessingFlows(NuveiCommon):
             Forbidden, NuveiController._verify_signature, tx, self.payment_data
         )
 
-    @mute_logger('odoo.addons.payment_nuvei.controllers.main')
+    @mute_logger('odoo.addons.payment_nuvei.controllers.main', 'odoo.addons.payment.utils')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
         tx = self._create_transaction('redirect')
         payload = dict(self.payment_data, advanceResponseChecksum=None)
         self.assertRaises(Forbidden, NuveiController._verify_signature, tx, payload)
 
-    @mute_logger('odoo.addons.payment_nuvei.controllers.main')
+    @mute_logger('odoo.addons.payment_nuvei.controllers.main', 'odoo.addons.payment.utils')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
         tx = self._create_transaction('redirect')

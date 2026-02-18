@@ -11,6 +11,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 
@@ -83,16 +84,8 @@ class WorldlineController(http.Controller):
         :return: None
         :raise Forbidden: If the signatures don't match.
         """
-        # Retrieve the received signature from the payload.
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature computed from the payload.
         webhook_secret = tx_sudo.provider_id.worldline_webhook_secret
         expected_signature = b64encode(
             hmac.new(webhook_secret.encode(), request_data, hashlib.sha256).digest()
         )
-        if not hmac.compare_digest(received_signature.encode(), expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+        payment_utils.verify_signature(received_signature, expected_signature)
