@@ -17,6 +17,13 @@
                 </t>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow label.translate="Tags" preview="false" t-if="!isSingleMode">
+            <BuilderMany2Many id="'blog_post_tag_opt'" model="'blog.tag'" limit="10"
+                dataAttributeAction="'filterByTagIds'"
+                fields="['category_id']"
+                domain="[['color', 'not in', [0, false]]]"
+            />
+        </BuilderRow>
     </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
         <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
