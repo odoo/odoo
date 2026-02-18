@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -77,11 +78,12 @@ class MrpBom(models.Model):
         'Manufacturing Lead Time', default=0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.")
     days_to_prepare_mo = fields.Integer(
-        string="Days to prepare Manufacturing Order", default=0,
+        string="Days to prepare", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.")
     show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
     batch_size = fields.Float('Batch Size', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
     enable_batch_size = fields.Boolean(default=False)
+    json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
 
     note = fields.Html(string="Additional Notes", help="Add this note on the manufacturing order to share any additional information")
 
@@ -325,21 +327,30 @@ class MrpBom(models.Model):
                 break
             bom.show_copy_operations_button = False
 
-    def action_compute_bom_days(self):
-        company_id = self.env.context.get('default_company_id', self.env.company.id)
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
-        for bom in self:
-            bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
-            bom.days_to_prepare_mo = self.env['report.mrp.report_bom_structure']._get_max_component_delay(bom_data['components'])
-            if bom_data.get('availability_state') == 'unavailable' and not bom_data.get('components_available', True):
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('Cannot compute days to prepare due to missing route info for at least 1 component or for the final product.'),
-                        'sticky': False,
-                    }
-                }
+    @api.depends('type', 'produce_delay', 'days_to_prepare_mo')
+    def _compute_json_popover(self):
+        warehouse = self.env.user._get_default_warehouse_id()
+        self.json_popover = False
+        for bom in self.filtered(lambda bom: bom.type != 'phantom' and bom._origin):
+            bom_data = bom.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
+            component_info = max([c for c in bom_data.get('components', []) if c.get('is_storable')], key=lambda component: component.get('lead_time', 0) or component.get('availability_delay', 0) or component.get('manufacture_delay', 0), default=None)
+            popover_data = {'final_product_name': bom_data.get('name')}
+            if not component_info:
+                popover_data['delay'] = self.env._("0 Days")
+            elif any(c.get('is_storable') and not c.get('route_detail') for c in bom_data.get('components')):
+                popover_data['bom_id'] = bom._origin.id
+            else:
+                max_delay = max([component_info.get('lead_time', 0), component_info.get('availability_delay', 0), component_info.get('manufacture_delay', 0)], default=0)
+                popover_data.update({
+                    'component': component_info.get('name'),
+                    'component_id': component_info.get('product').id if component_info.get('product') else False,
+                    'route_name': component_info.get('route_name'),
+                    'route_detail': component_info.get('route_detail'),
+                    'route_type': component_info.get('route_type'),
+                    'route_id': component_info.get('bom_id'),
+                    'delay': self.env._("%s Days", int(max_delay)),
+                })
+            bom.json_popover = json.dumps(popover_data)
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')
     def check_kit_has_not_orderpoint(self):

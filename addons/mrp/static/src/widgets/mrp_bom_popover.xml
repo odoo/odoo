@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mrp.MrpBomPopoverField" t-inherit="stock.popoverButton">
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-att-title">"Days to prepare estimation"</attribute>
+        </xpath>
+    </t>
+    <div t-name="mrp.bomPopover">
+        <table class="table table-sm table-borderless mb-0">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="border-bottom">
+                        <div class="d-flex flex-wrap" style="max-width: 375px;">
+                            <span class="me-1">Days to prepare estimation for </span>
+                            <span t-out="props.final_product_name"/>
+                        </div>
+                    </td>
+                </tr>
+                <t t-if="props.component">
+                    <tr>
+                        <td class="fw-bolder">Component</td>
+                        <td><a href="#" t-on-click.prevent="() => this.goToAction(props.component_id, 'product.product')"><t t-out="props.component"/></a></td>
+                    </tr>
+                    <tr t-if="props.route_name and props.route_detail">
+                        <td class="fw-bolder">Route</td>
+                        <td>
+                            <t t-out="props.route_name"/>:
+                            <t t-if="props.route_type === 'manufacture'">
+                                <a href="#" t-on-click.prevent="() => this.goToAction(props.route_id, 'mrp.bom')">
+                                    <t t-out="props.route_detail"/>
+                                </a>
+                            </t>
+                            <t t-else="">
+                                <t t-out="props.route_detail"/>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+                <t t-if="props.delay">
+                    <tr>
+                        <td class="fw-bolder">Lead Time</td>
+                        <td>
+                            <t t-out="props.delay"/>
+                        </td>
+                    </tr>
+                </t>
+                <t t-else="">
+                    <tr>
+                        <td>
+                            <strong class="fw-bolder">Not Available:</strong> Missing route info for components.
+                        </td>
+                    </tr>
+                    <tr><td><a href="#" t-on-click.prevent="_openBomOverview">Check BoM Overview</a></td></tr>
+                </t>
+            </tbody>
+        </table>
+    </div>
+</templates>

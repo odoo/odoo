@@ -652,54 +652,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             [('product_id', '=', product.id)])
         self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
 
-    def test_compute_bom_days_00(self):
-        """ Check Days to prepare Manufacturing Order are correctly computed when Days to Purchase is set. """
-        purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
-        manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
-        vendor = self.env['res.partner'].create({'name': 'super vendor'})
-
-        company_1 = self.kit_parent.bom_ids.company_id
-        company_2 = self.env['res.company'].create({
-            'name': 'TestCompany2',
-        })
-
-        company_1.days_to_purchase = 0
-        company_2.days_to_purchase = 0
-
-        components = self.component_a | self.component_b | self.component_c | self.component_d | self.component_e | self.component_f | self.component_g
-        kits = self.kit_parent | self.kit_1 | self.kit_2 | self.kit_3
-        kits.route_ids = [(6, 0, manufacture_route.ids)]
-        components.write({
-            'route_ids': [(6, 0, purchase_route.ids)],
-            'seller_ids': [(0, 0, {
-                'partner_id': vendor.id,
-                'min_qty': 1,
-                'price': 1,
-                'delay': 1,
-            })],
-        })
-
-        bom_kit_parent = self.kit_parent.bom_ids
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
-
-        # set "Days to Purchase"
-        company_1.days_to_purchase = 10
-        company_2.days_to_purchase = 20
-
-        # check "Days to Purchase" will also be included if bom has company_id
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 10 + 1)
-
-        self.kit_1.bom_ids.company_id = company_2
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 20 + 1)
-
-        # check "Days to Purchase" won't be included if bom doesn't have company_id
-        kits.bom_ids.company_id = False
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
-
     # TODO: manufacturing_lead doesn't exist anymore, remove?
     def test_orderpoint_with_manufacture_security_lead_time(self):
         """

@@ -2422,17 +2422,6 @@ class TestBoM(TestMrpCommon):
         # the filter is applied because there are attachements on the product.template and on the product.product
         self.assertTrue(action['context']['search_default_context_variant'])
 
-    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
-        """
-        Checks that a notification is sent when at least one component can not be resupplied.
-        """
-        bom = self.bom_1
-        product = bom.product_id
-        product.route_ids = [Command.set([self.route_manufacture.id])]
-        notification = bom.action_compute_bom_days()
-        self.assertEqual(bom.days_to_prepare_mo, 0.0)
-        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
-
     def test_bom_never_attribute(self):
         # We create 4 bom lines, 4 operations and 4 byproducts, each with:
         # one without any attribute values, two with one value and one with two values
