@@ -15,7 +15,7 @@
                 </button>
             </div>
             <Dropdown t-if="env.inChatter">
-                <button class="btn btn-outline-secondary ms-3" aria-label="Filter Messages" title="Filter Messages">
+                <button class="btn btn-outline-secondary ms-2" aria-label="Filter Messages" title="Filter Messages">
                     <i class="fa fa-filter" role="img"/>
                 </button>
                 <t t-set-slot="content">
@@ -27,7 +27,7 @@
                     </t>
                 </t>
             </Dropdown>
-            <button t-if="env.inChatter" class="btn btn-outline-secondary ms-3" t-on-click="() => this.clear()" aria-label="Close button">
+            <button t-if="env.inChatter" class="btn btn-outline-secondary ms-2" t-on-click="() => this.clear()" aria-label="Close button">
                 <i class="o_searchview_icon oi oi-close cursor-pointer" role="img" aria-label="Close search" title="Close"/>
             </button>
         </div>
