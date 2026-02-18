@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_vn_edi_pos" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_vn_edi_pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='sinvoice_setting']" position="inside">
+                <div class="row" title="Used for all POS invoices unless a specific symbol is defined in each POS.">
+                    <label for="l10n_vn_edi_pos_default_symbol" class="col-3 col-lg-3 o_light_label"/>
+                    <field name="l10n_vn_edi_pos_default_symbol" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_inherit_l10n_vn_edi_pos" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_vn_edi_pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_accounting_section']" position="inside">
+                <setting help="Invoices for each order will be sent to SInvoice in real time" invisible="country_code != 'VN'">
+                    <field name="pos_l10n_vn_auto_send_to_sinvoice"/>
+                    <div class="content-group mt16" invisible="not pos_l10n_vn_auto_send_to_sinvoice">
+                        <div class="col mt16">
+                            <div class="content-group row" title="Used for only this POS. Leave it blank to use global default POS symbol">
+                                <label string="Symbol" for="pos_l10n_vn_pos_symbol" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="pos_l10n_vn_pos_symbol"/>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
