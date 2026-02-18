@@ -44,23 +44,34 @@
                     </div>
                 </button>
             </div>
+            <group name="identification" class="o_form_fw_labels" position="inside">
+                <field name="can_be_time_off"/>
+            </group>
+            <xpath expr="//field[@name='count_as']" position="after">
+                <field name="unit_of_measure" widget="radio" options="{'horizontal': True}"/>
+                <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
+            </xpath>
             <notebook position="inside">
-                <page string="Time Off">
-                    <group>
-                        <group>
-                                <field name="unit_of_measure" widget="radio" options="{'horizontal': True}"/>
-                                <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
-                        </group>
-                    </group>
+                <page string="Time Off" invisible="not can_be_time_off">
                     <group>
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="active" invisible="1"/>
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
                         </group>
-                        <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
-                            <field name="requires_allocation" widget="checkbox"/>
+                        <group name="allocation_validation" id="allocation_requests" string="Allocation">
+                            <field name="requires_allocation" widget="checkbox" string="Limited Days"/>
+                            <label for="allows_negative" class="me-4" readonly="0" invisible="not requires_allocation"/>
+                            <div class="o_row o_cell o_wrap_label text-break text-900" invisible="not requires_allocation">
+                                <field name="allows_negative" nolabel="1"/>
+                                <div invisible="not allows_negative">
+                                    <span class="mx-2">up to</span>
+                                    <field name="max_allowed_negative" class="oe_inline"/>
+                                    <span class="mx-2" invisible="unit_of_measure == 'hour'">days</span>
+                                    <span class="mx-2" invisible="unit_of_measure != 'hour'">hours</span>
+                                </div>
+                            </div>
                             <field name="employee_requests" widget="checkbox" invisible="not requires_allocation"/>
-                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation or not employee_requests"/>
                         </group>
                     </group>
                     <group style="justify-content: unset;">
@@ -82,24 +93,6 @@
                                 </div>
                             </div>
                         </group>
-                        <group>
-                            <group name="negative_cap" id="negative_cap" string="Negative Cap"
-                                invisible="not requires_allocation" colspan="2">
-                                <div class="o_row o_cell o_wrap_label text-break text-900" colspan="2">
-                                    <label for="allows_negative" class="me-4" readonly="0"/>
-                                    <field name="allows_negative" nolabel="1"/>
-                                    <div invisible="not allows_negative">
-                                        <span class="mx-2">up to</span>
-                                        <field name="max_allowed_negative" class="oe_inline"/>
-                                        <span class="mx-2" invisible="unit_of_measure == 'hour'">days</span>
-                                        <span class="mx-2" invisible="unit_of_measure != 'hour'">hours</span>
-                                    </div>
-                                </div>
-                            </group>
-                        </group>
-                    </group>
-                    <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
-                        <field name="color" widget="color_picker" />
                     </group>
                 </page>
             </notebook>
