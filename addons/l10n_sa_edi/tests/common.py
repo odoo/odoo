@@ -276,6 +276,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'company_id': (company_id or self.company).id,
             'partner_id': partner_id.id,
             'invoice_date': invoice_date,
+            'invoice_payment_term_id': False,  # Need to set False in order to use the invoice due date
             'invoice_date_due': invoice_date_due,
             'currency_id': (currency_id or self.company.currency_id).id,
             'invoice_line_ids': [

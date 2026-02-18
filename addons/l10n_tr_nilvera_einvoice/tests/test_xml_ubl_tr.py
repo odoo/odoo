@@ -119,7 +119,7 @@ class TestUBLTR(TestUBLTRCommon):
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
 
     def test_xml_invoice_export_ipac_einvoice(self):
-        with freeze_time('2026-01-20'):
+        with freeze_time('2025-03-03'):
             generated_xml = self._generate_invoice_xml(
                 self.einvoice_partner,
                 l10n_tr_exemption_code_id=self.reason_702.id,

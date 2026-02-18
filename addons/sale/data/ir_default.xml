@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Set default payment term for sale orders to 'Immediate Payment' -->
+        <function
+            model="ir.default"
+            name="set"
+            eval="('sale.order', 'payment_term_id', obj().env.ref('account.account_payment_term_immediate').id)"
+        />
+    </data>
+</odoo>

@@ -614,6 +614,10 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertTrue(so.payment_term_id, "A payment term should still be set on the sale order")
 
             so.website_id = False
+            # Temporarily set `False` to default payment term too
+            default_term_id = self.env['ir.default']._get(model_name='sale.order', field_name='payment_term_id')
+            if default_term_id:
+                self.env['ir.default'].set(model_name='sale.order', field_name='payment_term_id', value=False)
             so._compute_payment_term_id()
             self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")
 
