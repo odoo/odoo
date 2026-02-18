@@ -496,7 +496,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 100.0)
         receipt = purchase_order.picking_ids
         receipt.button_validate()
-        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), [
+        expected_values = [
             {'product_id': component01.id, 'cost_share': 3.33, 'value': 33.3},
             {'product_id': component02.id, 'cost_share': 3.33, 'value': 33.3},
             {'product_id': component02.id, 'cost_share': 10.0, 'value': 100.0},
@@ -508,7 +508,16 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'product_id': component05.id, 'cost_share': 0.0, 'value': 0.0},
             {'product_id': component05.id, 'cost_share': 10.0, 'value': 100.0},
             {'product_id': component05.id, 'cost_share': 15.0, 'value': 150.0},
-        ])
+        ]
+        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), expected_values)
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = purchase_order.partner_id
+        move_form.purchase_id = purchase_order
+        move_form.invoice_date = Date.today()
+        move = move_form.save()
+        move.action_post()
+        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), expected_values)
 
     def test_kit_bom_cost_share_constraint_with_variants(self):
         """
