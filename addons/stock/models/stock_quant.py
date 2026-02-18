@@ -2,6 +2,7 @@
 import heapq
 import logging
 from collections import namedtuple
+import operator as py_operator
 
 from ast import literal_eval
 from collections import defaultdict
@@ -14,6 +15,15 @@ from odoo.fields import Domain
 from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
+
+PY_OPERATORS = {
+    '>': py_operator.gt,
+    '<': py_operator.lt,
+    '>=': py_operator.ge,
+    '<=': py_operator.le,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+}
 
 
 class StockQuant(models.Model):
@@ -109,7 +119,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
+    last_count_date = fields.Date(compute='_compute_last_count_date', search='_search_last_count_date', help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
@@ -175,6 +185,44 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _search_last_count_date(self, operator, value):
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        domain = Domain([('state', '=', 'done'), ('is_inventory', '=', True)])
+        groups = self.env['stock.move.line']._read_group(
+            domain=domain,
+            groupby=['product_id', 'lot_id', 'package_id', 'owner_id', 'result_package_id', 'location_id', 'location_dest_id'],
+            aggregates=['date:max'],
+        )
+
+        def date_compare(max_dt, operator, value):
+            max_date = max_dt.date()
+            return PY_OPERATORS[operator](max_date, value)
+
+        product_ids = self.env['product.product']
+        lot_ids = self.env['stock.lot']
+        owner_ids = self.env['res.partner']
+        location_ids = self.env['stock.location']
+        package_ids = self.env['stock.package']
+        for product, lot, package, owner, result_package, location, location_dest, max_date in groups:
+            if not date_compare(max_date, operator, value):
+                continue
+            product_ids |= product
+            lot_ids |= lot
+            owner_ids |= owner
+            location_ids |= location | location_dest
+            package_ids |= package | result_package
+
+        quant_domain = Domain.AND([
+            Domain('product_id', 'in', product_ids.ids),
+            Domain('lot_id', 'in', lot_ids.ids + [False]),
+            Domain('owner_id', 'in', owner_ids.ids + [False]),
+            Domain('location_id', 'in', location_ids.ids),
+            Domain('package_id', 'in', package_ids.ids + [False]),
+        ])
+        return quant_domain
 
     def _search(self, domain, *args, **kwargs):
         domain = Domain(domain).map_conditions(
