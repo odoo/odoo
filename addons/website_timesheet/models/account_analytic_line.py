@@ -9,5 +9,6 @@ class AccountAnalyticLine(models.Model):
         """
         Determine if we show timesheet information in the portal.
         """
-        domain = [("key", "=", "hr_timesheet.portal_my_home_timesheet")]
-        return self.env["ir.ui.view"].sudo().with_context(active_test=False).search(domain).filter_duplicate().active
+        # remove this after pr #241832 merge
+        entry = self.env.ref("hr_timesheet.portal_timesheets", raise_if_not_found=False)
+        return bool(entry and entry.show_in_portal)
