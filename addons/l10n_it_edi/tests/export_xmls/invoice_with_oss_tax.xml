@@ -6,7 +6,7 @@
         <IdPaese>IT</IdPaese>
         <IdCodice>01234560157</IdCodice>
       </IdTrasmittente>
-      <ProgressivoInvio>V202400001</ProgressivoInvio>
+      <ProgressivoInvio>V202200001</ProgressivoInvio>
       <FormatoTrasmissione>FPR12</FormatoTrasmissione>
       <CodiceDestinatario>XXXXXXX</CodiceDestinatario>
       <ContattiTrasmittente>
@@ -27,27 +27,26 @@
         <RegimeFiscale>RF01</RegimeFiscale>
       </DatiAnagrafici>
       <Sede>
-        <Indirizzo>1234 Test Street</Indirizzo>
-        <CAP>12345</CAP>
-        <Comune>Prova</Comune>
-        <Nazione>IT</Nazione>
+          <Indirizzo>1234 Test Street</Indirizzo>
+          <CAP>12345</CAP>
+          <Comune>Prova</Comune>
+          <Nazione>IT</Nazione>
       </Sede>
     </CedentePrestatore>
     <CessionarioCommittente>
       <DatiAnagrafici>
         <IdFiscaleIVA>
-          <IdPaese>US</IdPaese>
-          <IdCodice>OO99999999999</IdCodice>
+          <IdPaese>BE</IdPaese>
+          <IdCodice>0477472701</IdCodice>
         </IdFiscaleIVA>
         <Anagrafica>
-          <Denominazione>US Partner</Denominazione>
+          <Denominazione>Alessi</Denominazione>
         </Anagrafica>
       </DatiAnagrafici>
       <Sede>
-        <Indirizzo>123 Rainbow Road</Indirizzo>
+        <Indirizzo></Indirizzo>
         <CAP>00000</CAP>
-        <Comune>Test city</Comune>
-        <Nazione>US</Nazione>
+        <Nazione>BE</Nazione>
       </Sede>
     </CessionarioCommittente>
   </FatturaElettronicaHeader>
@@ -56,51 +55,54 @@
       <DatiGeneraliDocumento>
         <TipoDocumento>TD01</TipoDocumento>
         <Divisa>EUR</Divisa>
-        <Data>2024-08-07</Data>
-        <Numero>INV/2024/00001</Numero>
-        <ImportoTotaleDocumento>841.50</ImportoTotaleDocumento>
+        <Data>2022-03-24</Data>
+        <Numero>INV/2022/00001</Numero>
+        <ImportoTotaleDocumento>120.00</ImportoTotaleDocumento>
       </DatiGeneraliDocumento>
     </DatiGenerali>
     <DatiBeniServizi>
       <DettaglioLinee>
         <NumeroLinea>1</NumeroLinea>
-        <Descrizione>A productive product</Descrizione>
+        <Descrizione>Product A</Descrizione>
         <Quantita>1.00</Quantita>
-        <PrezzoUnitario>990.000000</PrezzoUnitario>
-        <ScontoMaggiorazione>
-          <Tipo>SC</Tipo>
-          <Percentuale>15.00</Percentuale>
-        </ScontoMaggiorazione>
-        <PrezzoTotale>841.50</PrezzoTotale>
+        <PrezzoUnitario>100.000000</PrezzoUnitario>
+        <PrezzoTotale>100.00</PrezzoTotale>
         <AliquotaIVA>0.00</AliquotaIVA>
-        <Natura>N3.1</Natura>
-        <AltriDatiGestionali>
-          <TipoDato>DIVISA</TipoDato>
-          <RiferimentoTesto>USD</RiferimentoTesto>
-          <RiferimentoNumero>907.890000</RiferimentoNumero>
-        </AltriDatiGestionali>
-        <AltriDatiGestionali>
-          <TipoDato>CAMBIO</TipoDato>
-          <RiferimentoNumero>1.07889</RiferimentoNumero>
-          <RiferimentoData>2024-08-07</RiferimentoData>
-        </AltriDatiGestionali>
+        <Natura>N7</Natura>
+      </DettaglioLinee>
+      <DettaglioLinee>
+        <NumeroLinea>2</NumeroLinea>
+        <Descrizione>VAT IT 20.0 collected via OSS</Descrizione>
+        <Quantita>1.00</Quantita>
+        <PrezzoUnitario>20.000000</PrezzoUnitario>
+        <PrezzoTotale>20.00</PrezzoTotale>
+        <AliquotaIVA>0.00</AliquotaIVA>
+        <Natura>N2.2</Natura>
       </DettaglioLinee>
       <DatiRiepilogo>
         <AliquotaIVA>0.00</AliquotaIVA>
-        <Natura>N3.1</Natura>
-        <ImponibileImporto>841.50</ImponibileImporto>
+        <Natura>N7</Natura>
+        <ImponibileImporto>100.00</ImponibileImporto>
         <Imposta>0.00</Imposta>
         <EsigibilitaIVA>I</EsigibilitaIVA>
-        <RiferimentoNormativo>Art. 8, c.1, lett.a - D.P.R. 633/1972</RiferimentoNormativo>
+        <RiferimentoNormativo>Art. 74-sexies DPR 633/1972</RiferimentoNormativo>
+      </DatiRiepilogo>
+      <DatiRiepilogo>
+        <AliquotaIVA>0.00</AliquotaIVA>
+        <Natura>N2.2</Natura>
+        <ImponibileImporto>20.00</ImponibileImporto>
+        <Imposta>0.00</Imposta>
+        <EsigibilitaIVA>I</EsigibilitaIVA>
+        <RiferimentoNormativo>Art. 74-sexies DPR 633/1972</RiferimentoNormativo>
       </DatiRiepilogo>
     </DatiBeniServizi>
     <DatiPagamento>
       <CondizioniPagamento>TP02</CondizioniPagamento>
       <DettaglioPagamento>
         <ModalitaPagamento>MP05</ModalitaPagamento>
-        <DataScadenzaPagamento>2024-08-07</DataScadenzaPagamento>
-        <ImportoPagamento>907.89</ImportoPagamento>
-        <CodicePagamento>INV/2024/00001</CodicePagamento>
+        <DataScadenzaPagamento>2022-03-24</DataScadenzaPagamento>
+        <ImportoPagamento>120.00</ImportoPagamento>
+        <CodicePagamento>INV/2022/00001</CodicePagamento>
       </DettaglioPagamento>
     </DatiPagamento>
   </FatturaElettronicaBody>

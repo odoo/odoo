@@ -160,7 +160,7 @@ class AccountEdiProxyClientUser(models.Model):
                     *self.env['account.journal']._check_company_domain(company),
                     ('type', '=', 'purchase')
                 ], limit=1)
-
+            journal = journal.with_company(company)
             need_retrigger = need_retrigger or len(message_uuids) > job_count
             message_uuids = message_uuids[:job_count]
             proxy_acks = []
