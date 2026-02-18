@@ -367,7 +367,10 @@ class ProjectTask(models.Model):
         self.env.remove_to_compute(self._fields['display_in_project'], self)
         for task in self:
             if not task.display_in_project and task.parent_id and task.parent_id.project_id != task.project_id:
-                task.project_id = task.parent_id.project_id
+                if not task.parent_id.project_id and not task.is_template:
+                    continue
+                else:
+                    task.project_id = task.parent_id.project_id
 
     @api.depends('project_id', 'parent_id')
     def _compute_display_in_project(self):

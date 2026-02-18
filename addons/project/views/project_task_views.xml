@@ -1257,47 +1257,4 @@
             <field name="binding_view_types">list,kanban</field>
         </record>
 
-        <record id="project_milestone_action_view_tasks" model="ir.actions.act_window">
-            <field name="name">Tasks.test</field>
-            <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('has_template_ancestor', '=', False)]</field>
-            <field name="context">{'default_project_id': active_id}</field>
-        </record>
-
-        <record id="project_milestone_action_view_tasks_kanban" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="project.project_task_kanban_view_project_milestone"/>
-        </record>
-
-        <record id="project_milestone_action_view_tasks_list" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">list</field>
-            <field name="view_id" ref="project_task_tree_view_project_milestone"/>
-        </record>
-
-        <record id="project_milestone_action_view_tasks_calendar" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="30"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="project.view_task_calendar"/>
-        </record>
-
-        <record id="project_milestone_action_view_pivot" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="60"/>
-            <field name="view_mode">pivot</field>
-            <field name="view_id" ref="project_task_pivot_view_project_milestone"/>
-        </record>
-
-        <record id="project_milestone_action_view_graph" model="ir.actions.act_window.view">
-            <field name="act_window_id" ref="project_milestone_action_view_tasks"/>
-            <field name="sequence" eval="70"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="project_task_graph_view_project_milestone"/>
-        </record>
-
 </odoo>

@@ -16,10 +16,10 @@ export class ProjectMany2OneField extends Component {
         if (!record.data.project_id && !record._isRequired("project_id")) {
             if (!record.data.is_template) {
                 props.placeholder = _t("Private");
+                props.cssClass += " private_placeholder";
             } else {
                 props.placeholder = _t("All Projects");
             }
-            props.cssClass += " private_placeholder";
         }
         return props;
     }
