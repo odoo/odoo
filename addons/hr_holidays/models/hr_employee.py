@@ -172,7 +172,7 @@ class HrEmployee(models.Model):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id
             manager = employee.parent_id.user_id
-            if manager and employee.leave_manager_id == previous_manager or not employee.leave_manager_id:
+            if manager and employee.leave_manager_id and employee.leave_manager_id == previous_manager:
                 employee.leave_manager_id = manager
             elif not employee.leave_manager_id:
                 employee.leave_manager_id = False
@@ -225,7 +225,7 @@ class HrEmployee(models.Model):
         if 'parent_id' in values:
             manager = self.env['hr.employee'].browse(values['parent_id']).user_id
             if manager:
-                to_change = self.filtered(lambda e: e.leave_manager_id == e.parent_id.user_id or not e.leave_manager_id)
+                to_change = self.filtered(lambda e: e.leave_manager_id and e.leave_manager_id == e.parent_id.user_id)
                 to_change.write({'leave_manager_id': values.get('leave_manager_id', manager.id)})
 
         old_managers = self.env['res.users']

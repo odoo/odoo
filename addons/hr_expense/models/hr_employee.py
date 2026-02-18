@@ -55,7 +55,7 @@ class HrEmployee(models.Model):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id
             new_manager = employee.parent_id.user_id
-            if new_manager and (employee.expense_manager_id == previous_manager or not employee.expense_manager_id):
+            if new_manager and employee.expense_manager_id and employee.expense_manager_id == previous_manager:
                 employee.expense_manager_id = new_manager
             elif not employee.expense_manager_id:
                 employee.expense_manager_id = False

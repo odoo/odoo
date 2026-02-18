@@ -14,6 +14,7 @@ class HrEmployee(models.Model):
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
         string="Attendance Approver",
+        compute='_compute_attendance_manager',
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
@@ -81,6 +82,16 @@ class HrEmployee(models.Model):
         old_officers.sudo()._clean_attendance_officers()
 
         return res
+
+    @api.depends('parent_id')
+    def _compute_attendance_manager(self):
+        for employee in self:
+            previous_manager = employee._origin.parent_id.user_id
+            new_manager = employee.parent_id.user_id
+            if new_manager and employee.attendance_manager_id and employee.attendance_manager_id == previous_manager:
+                employee.attendance_manager_id = new_manager
+            elif not employee.attendance_manager_id:
+                employee.attendance_manager_id = False
 
     @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
