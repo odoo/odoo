@@ -104,35 +104,6 @@ class BlogBlog(models.Model):
 
         return tag_by_blog
 
-    @api.model
-    def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        search_fields = ['name']
-        fetch_fields = ['id', 'name']
-        mapping = {
-            'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
-        }
-        if with_description:
-            search_fields.append('subtitle')
-            fetch_fields.append('subtitle')
-            mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
-        return {
-            'model': 'blog.blog',
-            'base_domain': [website.website_domain()],
-            'search_fields': search_fields,
-            'fetch_fields': fetch_fields,
-            'mapping': mapping,
-            'icon': 'fa-rss-square',
-            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
-        }
-
-    def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
-        for data in results_data:
-            data['url'] = '/blog/%s' % data['id']
-        return results_data
-
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -308,8 +279,6 @@ class BlogPost(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        with_date = options['displayDetail']
         blog = options.get('blog')
         tags = options.get('tag')
         date_begin = options.get('date_begin')
@@ -333,20 +302,16 @@ class BlogPost(models.Model):
                 domain.append([("publish_on", "!=", False)])
         else:
             domain.append([("website_published", "=", True)])
-        search_fields = ['name', 'author_name', 'tag_ids.name']
-        fetch_fields = ['name', 'website_url', 'tag_ids']
+        search_fields = ['name', 'author_name', 'tag_ids.name', 'content']
+        fetch_fields = ['name', 'website_url', 'author_name', 'content']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'author_name', 'type': 'text', 'match': True},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'content', 'type': 'text', 'html': True, 'match': True},
         }
-        if with_description:
-            search_fields.append('content')
-            fetch_fields.append('content')
-            mapping['description'] = {'name': 'content', 'type': 'text', 'html': True, 'match': True}
-        if with_date:
-            fetch_fields.append('published_date')
-            mapping['detail'] = {'name': 'published_date', 'type': 'date'}
         return {
             'model': 'blog.post',
             'base_domain': domain,
@@ -354,10 +319,13 @@ class BlogPost(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-rss',
+            'group_name': self.env._("Blogs Articles"),
+            'sequence': 60,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for post, data in zip(self, results_data):
             data['tag_ids'] = post.tag_ids.read(['name'])
+            data['image_url'] = post._get_image_url()
         return results_data

@@ -352,16 +352,25 @@ export function payWithTransfer({
     }
 }
 
-export function searchProduct(productName, { select = false } = {}) {
+export function searchProduct(productName, { select = false, willOpenModel = false } = {}) {
+    const searchInputTrigger = willOpenModel
+        ? ".modal_shown form input[name='search']"
+        : "form input[name='search']";
+
     const steps = [
         {
+            content: "Click the Search bar",
+            trigger: "form input[name='search']",
+            run: "click",
+        },
+        {
             content: "Search for the product",
-            trigger: 'form input[name="search"]',
+            trigger: searchInputTrigger,
             run: `edit ${productName}`,
         },
         {
             content: `Search ${productName}`,
-            trigger: `form:has(input[name="search"]) .oe_search_button`,
+            trigger: `${searchInputTrigger.replace(" input[name='search']", "")} .oe_search_button`,
             run: "click",
             expectUnloadPage: true,
         },

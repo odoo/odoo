@@ -30,9 +30,7 @@ class TestAutoComplete(TransactionCase):
 
     def _autocomplete_page(self, term, expected_count, expected_fuzzy_term):
         self._autocomplete(term, expected_count, expected_fuzzy_term, search_type="pages", options={
-            'displayDescription': False, 'displayDetail': False,
-            'displayExtraDetail': False, 'displayExtraLink': False,
-            'displayImage': False, 'allowFuzzy': True
+            'allowFuzzy': True
         })
 
     def test_01_many_records(self):
@@ -97,10 +95,8 @@ class TestAutoComplete(TransactionCase):
             # Indeed, `name` is a field of `website.page` record but only at the
             # ORM level, not in SQL, due to how `inherits` works.
             self.env['website'].browse(1)._search_with_fuzzy(
-                'pages', 'test', limit=5, order='name asc, website_id desc, id', options={
-                    'displayDescription': False, 'displayDetail': False,
-                    'displayExtraDetail': False, 'displayExtraLink': False,
-                    'displayImage': False, 'allowFuzzy': True
+                'pages', 'test', limit=5, offset=0, order='name asc, website_id desc, id', options={
+                    'allowFuzzy': True
                 }
             )
 
@@ -182,14 +178,14 @@ class TestAutoComplete(TransactionCase):
         self.assertFalse(skip, "Expected field to not be skipped")
         self.assertEqual(field_type, 'html', "Expected field_type to switch to 'html' after highlighting")
         self.assertIn(
-            '<span class="fw-bold text-primary-emphasis">Market</span><span>ing</span>',
+            '<span class="o_search_matching_text text-body-emphasis position-relative">Market</span><span>ing</span>',
             str(result),
             "Expected matching term to be highlighted in the output"
         )
-        self.assertIn(
+        self.assertNotIn(
             '<span>Finance</span>',
             str(result),
-            "Expected non-matching tags to be present without highlighting"
+            "Expected non-matching tags to be not present in the output"
         )
 
     def test_tags_highlight_handler_no_match(self):

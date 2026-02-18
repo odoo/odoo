@@ -20,7 +20,10 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_tax_incl
             content: "check the price of 1 website_sale_cart_notification_product_1",
             trigger: '.toast-body div:contains("$ 1,150.00")',
         },
-        ...tourUtils.searchProduct("website_sale_cart_notification_product_2", { select: true }),
+        ...tourUtils.searchProduct("website_sale_cart_notification_product_2", {
+            select: true,
+            willOpenModel: true,
+        }),
         {
             trigger: "#product_detail",
         },
@@ -83,7 +86,10 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_tax_excl
             content: "check the price of 1 website_sale_cart_notification_product_1",
             trigger: '.toast-body div:contains("$ 1,000.00")',
         },
-        ...tourUtils.searchProduct("website_sale_cart_notification_product_2", { select: true }),
+        ...tourUtils.searchProduct("website_sale_cart_notification_product_2", {
+            select: true,
+            willOpenModel: true,
+        }),
         {
             trigger: "#product_detail",
         },

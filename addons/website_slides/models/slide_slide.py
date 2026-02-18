@@ -1280,20 +1280,16 @@ class SlideSlide(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['id', 'name', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'description']
+        fetch_fields = ['id', 'name', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
             'extra_link': {'name': 'course', 'type': 'text'},
             'extra_link_url': {'name': 'course_url', 'type': 'text', 'truncate': False},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'description', 'type': 'text', 'html': True, 'match': True},
         }
-        if with_description:
-            search_fields.append('description')
-            fetch_fields.append('description')
-            mapping['description'] = {'name': 'description', 'type': 'text', 'html': True, 'match': True}
         return {
             'model': 'slide.slide',
             'base_domain': [website.website_domain()],
@@ -1302,6 +1298,8 @@ class SlideSlide(models.Model):
             'mapping': mapping,
             'icon': 'fa-shopping-cart',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+            'group_name': self.env._("Course Slides"),
+            'sequence': 80,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):

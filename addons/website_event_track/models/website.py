@@ -60,6 +60,6 @@ class Website(models.Model):
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
-        if search_type in ['track', 'all'] and options.get('event'):
+        if search_type == 'track':
             result.append(self.env['event.track']._search_get_detail(self, order, options))
         return result

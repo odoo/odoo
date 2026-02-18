@@ -31,27 +31,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  *          },
  *      };
  */
-/**
- * @typedef {{
- *      label: LazyTranslatedString;
- *      dataAttribute: string;
- *      dependency: string;
- * }[]} searchbar_option_display_items
- *
- * Register display options for the website searchbar.
- * `dataAttribute` is the attribute which will be used to display the data.
- * `dependency` takes an id of another builder option.
- *
- * Example:
- *
- *      resources: {
- *          searchbar_option_display_items: {
- *              label: _t("Description"),
- *              dataAttribute: "displayDescription",
- *              dependency: "search_all_opt",
- *          },
- *      };
- */
 
 class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
@@ -62,12 +41,6 @@ class SearchbarOptionPlugin extends Plugin {
             SetSearchTypeAction,
             SetOrderByAction,
             SetSearchbarStyleAction,
-            // This resets the data attribute to an empty string on clean.
-            // TODO: modify the Python `_search_get_detail()` (grep
-            // `with_description = options['displayDescription']`) so we can use
-            // the default `dataAttributeAction`. The python should not need a
-            // value if it doesn't exist.
-            SetNonEmptyDataAttributeAction,
         },
         so_content_addition_selector: [".s_searchbar_input"],
         searchbar_option_order_by_items: {
@@ -75,33 +48,6 @@ class SearchbarOptionPlugin extends Plugin {
             orderBy: "name asc",
             id: "order_name_asc_opt",
         },
-        searchbar_option_display_items: [
-            {
-                label: _t("Description"),
-                dataAttribute: "displayDescription",
-                dependency: "search_all_opt",
-            },
-            {
-                label: _t("Content"),
-                dataAttribute: "displayDescription",
-                dependency: "search_pages_opt",
-            },
-            {
-                label: _t("Extra Link"),
-                dataAttribute: "displayExtraLink",
-                dependency: "search_all_opt",
-            },
-            {
-                label: _t("Detail"),
-                dataAttribute: "displayDetail",
-                dependency: "search_all_opt",
-            },
-            {
-                label: _t("Image"),
-                dataAttribute: "displayImage",
-                dependency: "search_all_opt",
-            },
-        ],
         // input group should not be contenteditable, while all other children
         // beside the input are contenteditable
         content_not_editable_selectors: [".input-group:has( > input)"],
@@ -144,21 +90,6 @@ export class SetSearchTypeAction extends BaseSearchBarAction {
             editingElement.dataset.orderBy = this.defaultSearchType;
             searchOrderByInputEl.value = this.defaultSearchType;
         }
-
-        // Reset display options. Has to be done in 2 steps, because
-        // the same option may be on 2 dependencies, and we don't
-        // want the 1st to add it and the 2nd to delete it.
-        const displayDataAttributes = new Set();
-        for (const item of this.getResource("searchbar_option_display_items")) {
-            if (isDependencyActive(item.dependency)) {
-                displayDataAttributes.add(item.dataAttribute);
-            } else {
-                delete editingElement.dataset[item.dataAttribute];
-            }
-        }
-        for (const dataAttribute of displayDataAttributes) {
-            editingElement.dataset[dataAttribute] = "true";
-        }
     }
 }
 export class SetOrderByAction extends BaseSearchBarAction {
@@ -188,30 +119,6 @@ export class SetSearchbarStyleAction extends BaseSearchBarAction {
         editingElement.classList.toggle("bg-light", isLight);
         searchButtonEl?.classList.toggle("btn-light", isLight);
         searchButtonEl?.classList.toggle("btn-primary", !isLight);
-    }
-}
-// This resets the data attribute to an empty string on clean.
-// TODO: modify the Python `_search_get_detail()` (grep
-// `with_description = options['displayDescription']`) so we can use
-// the default `dataAttributeAction`. The python should not need a
-// value if it doesn't exist.
-export class SetNonEmptyDataAttributeAction extends BuilderAction {
-    static id = "setNonEmptyDataAttribute";
-    getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
-        return editingElement.dataset[attributeName];
-    }
-    isApplied({ editingElement, params: { mainParam: attributeName } = {}, value = "" }) {
-        return editingElement.dataset[attributeName] === value;
-    }
-    apply({ editingElement, params: { mainParam: attributeName } = {}, value }) {
-        if (value) {
-            editingElement.dataset[attributeName] = value;
-        } else {
-            delete editingElement.dataset[attributeName];
-        }
-    }
-    clean({ editingElement, params: { mainParam: attributeName } = {} }) {
-        editingElement.dataset[attributeName] = "";
     }
 }
 

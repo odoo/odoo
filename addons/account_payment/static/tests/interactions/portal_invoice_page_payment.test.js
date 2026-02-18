@@ -160,7 +160,7 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                         <div class="modal-content mt-5">
                             <form method="get" class="o_searchbar_form s_searchbar_input" action="/website/search" data-snippet="s_searchbar_input">
                                 <div role="search" class="input-group input-group-lg">
-                                    <input type="search" name="search" data-oe-model="ir.ui.view" data-oe-id="1019" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/t[1]/div[1]/input[1]" class="search-query form-control oe_search_box border border-end-0 p-3 border-0 bg-light" placeholder="Search..." data-search-type="all" data-limit="5" data-display-image="true" data-display-description="true" data-display-extra-link="true" data-display-detail="true" data-order-by="name asc" autocomplete="off">
+                                    <input type="search" name="search" data-oe-model="ir.ui.view" data-oe-id="1019" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/t[1]/div[1]/input[1]" class="search-query form-control oe_search_box border border-end-0 p-3 border-0 bg-light" placeholder="Search..." data-search-type="all" data-limit="5" data-order-by="name asc" autocomplete="off">
                                     <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
                                     <i class="oi oi-search" data-oe-model="ir.ui.view" data-oe-id="1019" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/t[1]/div[1]/button[1]/i[1]"></i>
                                     </button>

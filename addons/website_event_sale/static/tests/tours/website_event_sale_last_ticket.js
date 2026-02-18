@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
     },
     {
         content: "Edit 2 units of `VIP` ticket type",
-        trigger: ".modal input:eq(1)",
+        trigger: ".modal .o_wevent_input_nb_tickets",
         run: "edit 2",
     },
     {

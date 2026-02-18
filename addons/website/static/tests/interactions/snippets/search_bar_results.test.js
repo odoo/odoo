@@ -11,10 +11,6 @@ const searchTemplate = `
             <input type="search" name="search" class="search-query form-control oe_search_box" placeholder="Search..."
                     data-search-type="test"
                     data-limit="3"
-                    data-display-image="false"
-                    data-display-description="false"
-                    data-display-extra-link="true"
-                    data-display-detail="false"
                     data-order-by="name asc"
                     autocomplete="off"
             />

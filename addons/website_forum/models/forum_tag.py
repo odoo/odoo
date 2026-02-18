@@ -70,4 +70,5 @@ class ForumTag(models.Model):
             'mapping': mapping,
             'icon': 'fa-tag',
             'order': ','.join(filter(lambda f: 'is_published' not in f, order.split(','))),
+            'group_name': self.env._("Forum Tags"),
         }

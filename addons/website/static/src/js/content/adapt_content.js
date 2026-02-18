@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 'transform: translate' (when it's fixed), the modal, which is positioned
     // absolutely, takes the dimensions of the header instead of those of the
     // 'body'.
-    const searchModalEl = document.querySelector("header#top .modal#o_search_modal");
+    const searchModalEl = document.querySelector("header#top .modal[id^='o_search_modal']");
     if (searchModalEl) {
         const mainEl = document.querySelector("main");
         const searchDivEl = document.createElement("div");

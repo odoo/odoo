@@ -264,22 +264,6 @@ $line-height-truncate: 1.5em;
     @include o-position-absolute(0,0,auto,0);
     border-width: 1px 0;
 
-    &, .o_wslides_course_nav_search {
-        background-color: rgba(white, 0.05);
-        border-color: rgba(white, 0.1);
-        border-style: solid;
-    }
-
-    .o_wslides_course_nav_search {
-        border-width: 0 1px;
-
-        button, button:hover, input, input::placeholder {
-            // Resolves into the color chosen for slide channel description through cover customization
-            color: inherit;
-            opacity: 0.8;
-        }
-    }
-
     .breadcrumb-item {
         --max-lines: 2;
         position: relative;

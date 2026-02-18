@@ -307,7 +307,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
     @users('user_portal')
     def test_check_search_in_address(self):
         ret = self.env['event.event']._search_get_detail(
-            self.website, order=None, options={'displayDescription':'', 'displayDetail':''}
+            self.website, order=None, options={}
         )
         result = ret['search_extra'](self.env, 'Turlock')[0][-1].get_result_ids()
         self.assertEqual(*result, self.events[0].id, 'Event should exist for the searched term')

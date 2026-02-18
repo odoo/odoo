@@ -18,18 +18,6 @@ class EventSearchbarOptionPlugin extends Plugin {
                 dependency: "search_events_opt",
             },
         ],
-        searchbar_option_display_items: [
-            {
-                label: _t("Description"),
-                dataAttribute: "displayDescription",
-                dependency: "search_events_opt",
-            },
-            {
-                label: _t("Event Date"),
-                dataAttribute: "displayDetail",
-                dependency: "search_events_opt",
-            },
-        ],
     };
 }
 

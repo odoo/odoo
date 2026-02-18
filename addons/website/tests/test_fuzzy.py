@@ -112,13 +112,11 @@ class TestAutoComplete(TransactionCase):
         super().setUpClass()
         cls.website = cls.env['website'].browse(1)
         cls.WebsiteController = Website()
-        cls.options = {
-            'displayDescription': True,
-        }
+        cls.options = {}
         cls.expectedParts = {
             'name': True,
-            'description': True,
             'website_url': True,
+            'description': True,
         }
         texts = [
             "This page only matches few",
@@ -152,10 +150,10 @@ class TestAutoComplete(TransactionCase):
             if suggestions['results_count']:
                 self.assertDictEqual(self.expectedParts, suggestions['parts'],
                                      f"Parts should contain {self.expectedParts.keys()}")
-            for result in suggestions['results']:
+            for result in suggestions['results'].get("website_page", {}).get('data', []):
                 self.assertEqual("fa-file-o", result['_fa'], "Expect an fa icon")
                 for field in suggestions['parts'].keys():
-                    value = result[field]
+                    value = result.get(field)
                     if value:
                         self.assertTrue(
                             isinstance(value, Markup),
@@ -165,7 +163,7 @@ class TestAutoComplete(TransactionCase):
 
     def _check_highlight(self, term, value):
         """ Verifies if a term is highlighted in a value """
-        self.assertTrue(f'<span class="text-primary-emphasis">{term}</span>' in value.lower(),
+        self.assertTrue(f'<span class="o_search_matching_text text-body-emphasis position-relative">{term}</span>' in value.lower(),
                         "Term must be highlighted")
 
     def test_shorten_around_match(self):
@@ -218,59 +216,61 @@ class TestAutoComplete(TransactionCase):
     def test_01_few_results(self):
         """ Tests an autocomplete with exact match and less than the maximum number of results """
         suggestions = self._autocomplete("few")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
         self.assertEqual(2, suggestions['results_count'], "Text data contains two pages with 'few'")
-        self.assertEqual(2, len(suggestions['results']), "All results must be present")
+        self.assertEqual(2, len(results), "All results must be present")
         self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
-        for result in suggestions['results']:
+        for result in results:
             self._check_highlight("few", result['name'])
-            self._check_highlight("few", result['description'])
 
     def test_02_many_results(self):
         """ Tests an autocomplete with exact match and more than the maximum number of results """
         suggestions = self._autocomplete("many")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
         self.assertEqual(6, suggestions['results_count'], "Test data contains six pages with 'many'")
-        self.assertEqual(5, len(suggestions['results']), "Results must be limited to 5")
+        self.assertEqual(6, len(results), "Results must be limited to 6")
         self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
-        for result in suggestions['results']:
+        for result in results:
             self._check_highlight("many", result['name'])
-            self._check_highlight("many", result['description'])
 
     def test_03_no_result(self):
         """ Tests an autocomplete without matching results """
         suggestions = self._autocomplete("nothing")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
         self.assertEqual(0, suggestions['results_count'], "Text data contains no page with 'nothing'")
-        self.assertEqual(0, len(suggestions['results']), "No result must be present")
+        self.assertEqual(0, len(results), "No result must be present")
 
     def test_04_fuzzy_results(self):
         """ Tests an autocomplete with fuzzy matching results """
         suggestions = self._autocomplete("appoximtly")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
         self.assertEqual("approximately", suggestions['fuzzy_search'], "")
         self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'approximately'")
-        self.assertEqual(1, len(suggestions['results']), "Single result must be present")
-        for result in suggestions['results']:
+        self.assertEqual(1, len(results), "Single result must be present")
+        for result in results:
             self._check_highlight("approximately", result['name'])
-            self._check_highlight("approximately", result['description'])
 
     def test_05_long_url(self):
         """ Ensures that long URL do not get truncated """
         url = "/this-url-is-so-long-it-would-be-truncated-without-the-fix"
         self._create_page("Too long", "Way too long URL", url)
         suggestions = self._autocomplete("long url")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
         self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'long url'")
-        self.assertEqual(1, len(suggestions['results']), "Single result must be present")
-        self.assertEqual(url, suggestions['results'][0]['website_url'], 'URL must not be truncated')
+        self.assertEqual(1, len(results), "Single result must be present")
+        self.assertEqual(url, results[0]['website_url'], 'URL must not be truncated')
 
     def test_06_case_insensitive_results(self):
         """ Tests an autocomplete with exact match and more than the maximum
         number of results.
         """
         suggestions = self._autocomplete("Many")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
         self.assertEqual(6, suggestions['results_count'], "Test data contains six pages with 'Many'")
-        self.assertEqual(5, len(suggestions['results']), "Results must be limited to 5")
+        self.assertEqual(6, len(results), "Results must be limited to 6")
         self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
-        for result in suggestions['results']:
+        for result in results:
             self._check_highlight("many", result['name'])
-            self._check_highlight("many", result['description'])
 
     def test_07_no_fuzzy_for_mostly_number(self):
         """ Ensures exact match is used when search contains mostly numbers. """
@@ -301,7 +301,8 @@ class TestAutoComplete(TransactionCase):
         self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'weekend'")
         self.assertEqual('week-end', suggestions['fuzzy_search'], "Expects a fuzzy match")
         suggestions = self._autocomplete("week-end")
-        self.assertEqual(1, len(suggestions['results']), "All results must be present")
+        results = suggestions['results'].get("website_page", {}).get('data', [])
+        self.assertEqual(1, len(results), "All results must be present")
         self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
 
     def test_10_multiple_word_search(self):
