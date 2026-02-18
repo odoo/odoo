@@ -179,6 +179,12 @@ export class Counter {
     }
 }
 
+export function isValidPhone(string) {
+    const phone = string.replace(/[\s.\-()]/g, "");
+    const pattern = /^\+\d{8,18}$/;
+    return pattern.test(phone);
+}
+
 export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
