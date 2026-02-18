@@ -309,16 +309,23 @@ class TestAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(sm.account_move_ids.company_id, self.env.company)
 
     def test_cogs_analytic_accounting(self):
-        """Check analytic distribution is correctly propagated to COGS lines"""
+        """Check analytic distribution is correctly computed on the COGS expense line"""
         self.env.company.anglo_saxon_accounting = True
         default_plan = self.env['account.analytic.plan'].create({
             'name': 'Default',
         })
-        analytic_account = self.env['account.analytic.account'].create({
-            'name': 'Account 1',
-            'plan_id': default_plan.id,
-            'company_id': False,
-        })
+        analytic_account_a, analytic_account_b = self.env['account.analytic.account'].create([
+            {
+                'name': 'Account 1',
+                'plan_id': default_plan.id,
+                'company_id': False,
+            },
+            {
+                'name': 'Account 2',
+                'plan_id': default_plan.id,
+                'company_id': False,
+            }
+        ])
 
         move = self.env['account.move'].create({
             'move_type': 'out_refund',
@@ -328,7 +335,7 @@ class TestAccountMove(TestAccountMoveStockCommon):
                 Command.create({
                     'product_id': self.product_A.id,
                     'analytic_distribution': {
-                        analytic_account.id: 100,
+                        analytic_account_a.id: 100,
                     },
                 }),
             ]
@@ -336,7 +343,19 @@ class TestAccountMove(TestAccountMoveStockCommon):
         move.action_post()
 
         cogs_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
-        self.assertEqual(cogs_line.analytic_distribution, {str(analytic_account.id): 100})
+        self.assertEqual(cogs_line.analytic_distribution, False)
+
+        self.env['account.analytic.distribution.model'].create({
+            'partner_id': self.partner_a.id,
+            'analytic_distribution': {analytic_account_b.id: 100},
+            'company_id': False,
+            'account_prefix': self.product_A.property_account_expense_id.code,
+        })
+
+        move.button_draft()
+        move.action_post()
+        cogs_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
+        self.assertEqual(cogs_line.analytic_distribution, {str(analytic_account_b.id): 100})
 
     def test_cogs_account_branch_company(self):
         """Check branch company accounts are selected"""

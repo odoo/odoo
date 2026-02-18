@@ -1072,7 +1072,7 @@ class AccountMoveLine(models.Model):
     def _compute_analytic_distribution(self):
         cache = {}
         for line in self:
-            if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
+            if line.display_type in ('product', 'cogs') or not line.move_id.is_invoice(include_receipts=True):
                 related_distribution = line._related_analytic_distribution()
                 root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in related_distribution for account_id in ids.split(',') if account_id.strip()})
@@ -3519,6 +3519,11 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
         return self.move_id.state == 'posted'
+
+    def _force_analytic_distribution(self):
+        """ Helper used to know if we need to force the value of analytic distribution or leave it to the compute method """
+        self.ensure_one()
+        return False
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
