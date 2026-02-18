@@ -127,10 +127,10 @@
                                 </div>
 
                                 <!-- Remaining Hours -->
-                                <div class="row align-items-center mb-2" invisible="allocated_hours == 0.0">
+                                <div id="remaining_hours_div" class="row align-items-center mb-2" invisible="allocated_hours == 0.0">
                                     <div class="col-8">
-                                        <label class="fw-bold" for="remaining_hours" invisible="remaining_hours >= 0">Remaining Hours</label>
-                                        <label class="fw-bold text-danger" for="remaining_hours" invisible="remaining_hours &lt; 0">Overrun Hours</label>
+                                        <label class="fw-bold" for="remaining_hours" invisible="remaining_hours &lt; 0">Remaining Hours</label>
+                                        <label class="fw-bold text-danger" for="remaining_hours" invisible="remaining_hours &gt;= 0">Overrun Hours</label>
                                     </div>
                                     <div class="col-4">
                                         <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1" decoration-danger="remaining_hours &lt; 0" />
