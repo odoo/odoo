@@ -13,6 +13,7 @@ export class PercentageField extends Component {
     static props = {
         ...standardFieldProps,
         digits: { type: Array, optional: true },
+        noSymbol: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -32,6 +33,7 @@ export class PercentageField extends Component {
     get formattedValue() {
         return formatPercentage(this.props.record.data[this.props.name], {
             digits: this.props.digits,
+            noSymbol: this.props.noSymbol,
             field: this.props.record.fields[this.props.name],
         });
     }
@@ -51,8 +53,11 @@ export const percentageField = {
             digits = options.digits;
         }
 
+        const noSymbol = options.no_symbol || false;
+
         return {
             digits,
+            noSymbol,
         };
     },
 };

@@ -449,7 +449,10 @@ export function formatPercentage(value, options = {}) {
     const formatted = formatFloatNumber(value * 100, options);
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 }
-formatPercentage.extractOptions = formatFloat.extractOptions;
+formatPercentage.extractOptions = ({ attrs, options }) => ({
+    ...formatFloat.extractOptions({ attrs, options }),
+    noSymbol: options.no_symbol,
+});
 
 /**
  * Returns a string representing the value of the python properties field
