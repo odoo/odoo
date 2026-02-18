@@ -8,9 +8,11 @@ from __future__ import annotations
 
 import base64
 import binascii
+import collections
 import concurrent.futures
 import contextlib
 import difflib
+import hashlib
 import importlib
 import inspect
 import itertools
@@ -20,6 +22,9 @@ import os
 import pathlib
 import platform
 import pprint
+import sqlite3
+from abc import ABC, abstractmethod
+
 import psutil
 import re
 import shutil
@@ -1279,10 +1284,11 @@ class ChromeBrowser:
             raise unittest.SkipTest("websocket-client module is not installed")
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
 
+        self.processors: list[Processor] = []
+        if 'css-usage' in odoo.tools.config['dev_mode']:
+            self.processors.append(StyleTracker(self))
         if scs := odoo.tools.config['screencasts']:
-            self.screencaster = Screencaster(self, scs)
-        else:
-            self.screencaster = NoScreencast()
+            self.processors.append(Screencaster(self, scs))
 
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
@@ -1312,7 +1318,6 @@ class ChromeBrowser:
             'Runtime.consoleAPICalled': self._handle_console,
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
-            'Page.screencastFrame': self.screencaster,
         }
         self._receiver = threading.Thread(
             target=self._receive,
@@ -1349,7 +1354,8 @@ class ChromeBrowser:
         # method may be called during `_open_websocket`
         if hasattr(self, 'ws'):
             try:
-                self.screencaster.stop()
+                for processor in reversed(self.processors):
+                    processor.stop()
 
                 self._websocket_request('Page.stopLoading')
                 self._websocket_request('Runtime.evaluate', params={'expression': """
@@ -1860,18 +1866,22 @@ which leads to stray network requests and inconsistencies."""
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                for processor in self.processors:
+                    processor.on_success()
                 return
         except CancelledError:
             # regular-ish shutdown
             return
         except ChromeBrowserException:
-            self.screencaster.save()
+            for processor in self.processors:
+                processor.on_error()
             raise
         except Exception as e:
             err = e
 
         self.take_screenshot()
-        self.screencaster.save()
+        for processor in self.processors:
+            processor.on_error()
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
@@ -1963,21 +1973,24 @@ which leads to stray network requests and inconsistencies."""
             return m[0]
         return replacer
 
-class NoScreencast:
+
+class Processor(ABC):
+    @abstractmethod
     def start(self):
         pass
 
+    @abstractmethod
     def stop(self):
         pass
 
-    def save(self):
+    def on_success(self):
         pass
 
-    def __call__(self, sessionId, data, metadata):
+    def on_error(self):
         pass
 
 
-class Screencaster:
+class Screencaster(Processor):
     def __init__(self, browser: ChromeBrowser, directory: str):
         self.stopped = False
         self.browser: ChromeBrowser = browser
@@ -1990,6 +2003,7 @@ class Screencaster:
 
     def start(self):
         self._logger.info('Starting screencast')
+        self.browser._handlers['Page.screencastFrame'] = self
         self.browser._websocket_send('Page.startScreencast')
 
     def __call__(self, sessionId, data, metadata):
@@ -2013,7 +2027,7 @@ class Screencaster:
         if self.frames_dir.is_dir():
             shutil.rmtree(self.frames_dir, ignore_errors=True)
 
-    def save(self):
+    def on_error(self):
         if self.stopped:
             return
         self.browser._websocket_send('Page.stopScreencast')
@@ -2062,6 +2076,141 @@ class Screencaster:
             shutil.rmtree(self.frames_dir, ignore_errors=True)
             self._logger.runbot('Screencast in: %s', outfile)
 
+
+class StyleTracker(Processor):
+    def __init__(self, browser: ChromeBrowser):
+        self.browser = browser
+        self.stylesheet_info = {}
+        self.dbpath = SQLITE_PATH
+        if not self.dbpath.is_file():
+            self.dbpath.parent.mkdir(parents=True, exist_ok=True)
+            # NOTE: doesn't use browser._logger because this is not linked to a
+            #       specific test
+            self._create_db()
+            _logger.getChild("css-tracker").runbot("CSSUsage in: %s", self.dbpath)
+
+    def start(self):
+        @run
+        def _enable_tracker():
+            yield self.browser._websocket_send("DOM.enable", with_future=True)
+            yield self.browser._websocket_send("CSS.enable", with_future=True)
+            self.browser._websocket_send("CSS.startRuleUsageTracking")
+            self.browser._handlers["CSS.styleSheetAdded"] = self
+
+    def __call__(self, header):
+        # Despite the docs' assertion <style> stylesheets apparently are not
+        # tagged inline (at least not if created via `createElement` but there
+        # are also templated ones which end up unflagged).
+        #
+        # They can end up at 0 bytes if they're created empty and filled
+        # dynamically afterwards, which apparently occurs a fair bit.
+        self.stylesheet_info[header['styleSheetId']] = {
+            'url': header['sourceURL'],
+            # keep track of original length in case we want to report on the
+            # dynamic changes on dump?
+            'length': header['length'],
+        }
+
+    def stop(self):
+        spans = collections.defaultdict(list)
+        for rule in self.browser._websocket_request("CSS.stopRuleUsageTracking")['ruleUsage']:
+            assert rule['used']
+            id = rule.get('styleSheetId')
+            if not id:
+                # browser or user stylesheet
+                continue
+            spans[id].append((rule['startOffset'], rule['endOffset']))
+        with self.open_db() as db:
+            test = self.browser.test_case
+            test_name = "%s.%s.%s" % (
+                test.__class__.__module__,
+                test.__class__.__qualname__,
+                test._testMethodName,
+            )
+            # multiple tours can get run in the same test, so this needs to skip reinsert
+            db.execute("INSERT INTO tests (name) VALUES (?) ON CONFLICT DO NOTHING", [test_name])
+            for stylesheet, offsets in spans.items():
+                stylesheet_text = self.browser._websocket_request(
+                    'CSS.getStyleSheetText',
+                    params={'styleSheetId': stylesheet},
+                )['text']
+                if not stylesheet_text:
+                    continue
+                # TODO: sometimes we apparently get usage tracking for a stylesheet we never got `added` event for?
+                stylesheet_info = self.stylesheet_info.get(stylesheet)
+                if not (stylesheet_info and stylesheet_info['url']):
+                    # ignore empty external stylesheets: they were likely blocked by
+                    # `Fetch.requestPaused` and them being unused is misleading
+                    continue
+
+                h = hashlib.sha1(stylesheet_text.encode()).hexdigest()
+                offsets.sort()
+                # try to merge the offsets we get from `stopRuleUsageTracking` into longer spans
+                spans = [(0, 0)]
+                for start, end in offsets:
+                    inter = stylesheet_text[spans[-1][1]:start]
+                    if not inter or inter.isspace():
+                        spans.append((spans.pop()[0], end))
+                    else:
+                        spans.append((start, end))
+                if spans[:1] == [(0, 0)]:
+                    spans.pop(0)
+
+                db.execute(
+                    "INSERT INTO assets (checksum, text, length) "
+                    "VALUES (?, ?, ?) ON CONFLICT DO NOTHING",
+                    [h, stylesheet_text, len(stylesheet_text)],
+                )
+                db.execute(
+                    "INSERT INTO stylesheets (asset, id, url, original_length) "
+                    "VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING",
+                    [h, stylesheet, stylesheet_info['url'], stylesheet_info['length']],
+                )
+                for a, b in spans:
+                    db.execute(
+                        'INSERT INTO spans (asset, "from", "to") '
+                        'VALUES (?, ?, ?) ON CONFLICT DO NOTHING',
+                        [h, a, b],
+                    )
+
+    def open_db(self):
+        cn = sqlite3.connect(os.fspath(self.dbpath))
+        assert (uv := cn.execute('PRAGMA user_version').fetchone()) == (1,),\
+            f"Incorrect schema version, expected 1 found {uv[0]}"
+        return cn
+    def _create_db(self):
+        with sqlite3.connect(os.fspath(self.dbpath)) as cn:
+            assert (uv := cn.execute('PRAGMA user_version').fetchone()) == (0,),\
+                f"Incorrect schema version, expected 0 found {uv[0]}"
+            cn.executescript("""
+            CREATE TABLE tests ( name text primary key ) STRICT;
+            CREATE TABLE assets (
+                checksum text primary key,
+                text text not null,
+                length integer not null
+            ) STRICT;
+            CREATE TABLE stylesheets (
+                asset text references assets (checksum),
+                id text not null,
+                url text,
+                original_length integer not null
+            ) STRICT;
+            CREATE TABLE tests_assets (
+                name text REFERENCES tests (name),
+                checksum text REFERENCES assets (checksum)
+            ) STRICT;
+            CREATE INDEX tests_assets_name ON tests_assets (name);
+            CREATE INDEX tests_assets_checksum ON tests_assets (checksum);
+            CREATE TABLE spans (
+                asset text references assets (checksum),
+                "from" integer not null,
+                "to" integer not null,
+                PRIMARY KEY (asset, "from", "to")
+            ) STRICT;
+            PRAGMA user_version = 1;
+            """)
+SQLITE_PATH = pathlib.Path(odoo.tools.config['screenshots'], get_db_name(), 'styles.sqlite')
+SQLITE_PATH.unlink(missing_ok=True)
 
 @lru_cache(1)
 def _find_executable():
@@ -2458,7 +2607,8 @@ class HttpCase(TransactionCase):
                 url = urlunsplit(parsed._replace(query=urlencode(qs)))
             self._logger.info('Open "%s" in browser', url)
 
-            browser.screencaster.start()
+            for processor in browser.processors:
+                processor.start()
             if cookies:
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
