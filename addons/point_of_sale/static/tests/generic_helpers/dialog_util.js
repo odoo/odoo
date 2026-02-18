@@ -1,7 +1,20 @@
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
+function buildTrigger({ title, body } = {}) {
+    let selector = `.modal:not(.o_inactive_modal)`;
+
+    if (title) {
+        selector += `:has(.modal-title:contains("${title}"))`;
+    }
+
+    if (body) {
+        selector += `:has(.modal-body:contains("${body}"))`;
+    }
+    return selector;
+}
+
 export function confirm(confirmationText, button = ".btn-primary") {
-    let trigger = `.modal:not(.o_inactive_modal) .modal-footer ${button}`;
+    let trigger = `${buildTrigger()} .modal-footer ${button}`;
     if (confirmationText) {
         trigger += `:contains("${confirmationText}")`;
     }
@@ -11,29 +24,35 @@ export function confirm(confirmationText, button = ".btn-primary") {
         run: "click",
     };
 }
-export function cancel({ title } = {}) {
+
+export function proceed({ title, body, button, buttonClass = ".btn-primary" } = {}) {
+    let trigger = `${buildTrigger({ title, body })} .modal-footer ${buttonClass}`;
+    if (button) {
+        trigger += `:contains("${button}")`;
+    }
+    return {
+        content: "proceed click action on dialog",
+        trigger,
+        run: "click",
+    };
+}
+
+export function cancel({ title, body } = {}) {
     return {
         content: "cancel dialog",
-        trigger: `.modal .modal-header${
-            title ? `:contains(${title})` : ""
-        } button[aria-label="Close"]`,
+        trigger: `${buildTrigger({ title, body })} .modal-header button[aria-label="Close"]`,
         run: "click",
     };
 }
-export function discard({ title } = {}) {
+export function discard({ title, body } = {}) {
     return {
         content: "discard dialog",
-        trigger: `.modal${
-            title ? `:has(.modal-title:contains(${title}))` : ``
-        } .modal-footer button:contains("Discard")`,
+        trigger: `${buildTrigger({ title, body })} .modal-footer button:contains("Discard")`,
         run: "click",
     };
 }
-export function is({ title } = {}) {
-    let trigger = ".modal .modal-content";
-    if (title) {
-        trigger += ` .modal-header:contains("${title}")`;
-    }
+export function is({ title, body } = {}) {
+    const trigger = buildTrigger({ title, body });
     return {
         content: "dialog is open",
         trigger,
