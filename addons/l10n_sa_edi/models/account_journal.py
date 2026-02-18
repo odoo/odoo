@@ -90,17 +90,6 @@ class AccountJournal(models.Model):
     l10n_sa_latest_submission_hash = fields.Char("Latest Submission Hash", copy=False,
                                                  help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)")
 
-    def _l10n_sa_reset_chain_head_error(self):
-        """
-            Reset the chain head error from the journal's stuck invoices
-        """
-        stuck_invoices = self.env['account.move'].search([
-            ('l10n_sa_edi_chain_head_id', '!=', False),
-            ('journal_id', 'in', self.ids),
-        ])
-        # We only need to remove blocking errors, so webservices do not need to be triggered
-        stuck_invoices._retry_edi_documents_error()
-
     # ====== Utility Functions =======
 
     def _l10n_sa_ready_to_submit_einvoices(self):
@@ -114,10 +103,12 @@ class AccountJournal(models.Model):
     def _l10n_sa_api_onboard_sanity_checks(self):
         """
             Perform a sanity check to validate that the journal is ready to be onboarded
+
+            Re-onboarding resets the chain index sequence. Therefore, it must not be
+            allowed while there are invoices with an assigned chain index whose
+            submission outcome is still unknown (e.g. due to a timeout).
         """
 
-        # If the invoice wasn't sent to ZATCA because of a timeout, it will retain its existing chain index
-        # Make sure there are no opened invoices with the journal's existing sequence
         move_ids = self.env['account.move'].search(
             [
                 ('journal_id', '=', self.id),
