@@ -24,7 +24,7 @@ export class AddToCart extends Interaction {
             noVariantAttributeValues: this._getSelectedNoVariantPtavs(productEl),
         } : {};
 
-        const productContainer = productEl ?? button.closest('#products_grid');
+        const productContainer = productEl ?? this._getProductContainer(button);
         const optionalParams = productContainer ? this._getOptionalParams(productContainer) : {};
 
         const quantity = await this.waitFor(this.services['cart'].add({
@@ -74,6 +74,17 @@ export class AddToCart extends Interaction {
             'input.js_variant_change:not(.no_variant):checked, select.js_variant_change:not(.no_variant)'
         );
         return Array.from(selectedPtavElements).map(el => parseInt(el.value));
+    }
+
+    /**
+     * Function to easily extend and customize the product details element.
+     *
+     * @param {HTMLElement} el
+     *
+     * @returns {HTMLElement} -- The element containing the product details.
+     */
+    _getProductContainer(el) {
+        return el.closest('#products_grid');
     }
 
     /**
