@@ -4,6 +4,7 @@ from . import common
 from . import test_account_move_document_type
 from . import test_account_move_payment_method
 from . import test_account_move_send
+from . import test_download_docs
 from . import test_edi_address
 from . import test_edi_export
 from . import test_edi_import
