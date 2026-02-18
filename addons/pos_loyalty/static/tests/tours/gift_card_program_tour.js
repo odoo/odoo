@@ -58,7 +58,6 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
 });
 
 registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -66,7 +65,7 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
             // Use gift card
             ProductScreen.addOrderline("Magnetic Board", "1", "1.98", "1.98"),
             PosLoyalty.enterCode("043123456"),
-            Dialog.confirm(),
+            Dialog.proceed({ title: "unpaid gift card" }),
             ProductScreen.clickOrderline("Gift Card"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1", "-1.00"),
             PosLoyalty.orderTotalIs("0.98"),
@@ -74,7 +73,6 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -110,7 +108,6 @@ registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
 });
 
 registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -134,7 +131,6 @@ registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
 });
 
 registry.category("web_tour.tours").add("MultiplePhysicalGiftCardProgramSaleTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -223,7 +219,6 @@ registry.category("web_tour.tours").add("EmptyProductScreenTour", {
 });
 
 registry.category("web_tour.tours").add("test_physical_gift_card", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -239,13 +234,17 @@ registry.category("web_tour.tours").add("test_physical_gift_card", {
 
             // Use gift_card_generated_but_not_sold - Warning is triggered
             PosLoyalty.enterCode("gift_card_generated_but_not_sold"),
-            Dialog.cancel(),
+            Dialog.cancel({ title: "unpaid gift card" }),
 
             // Sell the unsold gift card
             PosLoyalty.useExistingLoyaltyCard("gift_card_generated_but_not_sold", true),
             ProductScreen.selectedOrderlineHas("Gift Card", "1", "60.00"),
             ProductScreen.clickNumpad("2"), // Cannot edit a physical gift card
-            Dialog.confirm(), // Warning is triggered
+            Dialog.proceed({
+                title: "gift card",
+                body: "you cannot change the quantity or the price of a physical gift card.",
+                button: "ok",
+            }), // Warning is triggered
             PosLoyalty.orderTotalIs("60.00"),
             PosLoyalty.finalizeOrder("Cash", "60"),
 

@@ -4,7 +4,6 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
 export function selectRewardLine(rewardName) {
@@ -173,20 +172,19 @@ export function useExistingLoyaltyCard(code, valid = true) {
         },
         {
             content: "Not loading",
-            trigger: negate(".gift-card-loading"),
+            trigger: `.modal:not(:has(.gift-card-loading))`,
         },
     ];
 
     if (!valid) {
-        steps.push(Dialog.confirm("Ok"));
-        steps.push(Dialog.cancel());
+        steps.push(Dialog.proceed({ title: "invalid gift card code", button: "Ok" }));
+        steps.push(Dialog.cancel({ title: "sell/manage physical gift card" }));
         steps.push({
             trigger: `a:contains("Sell physical gift card?")`,
-            run: () => {},
         });
     } else {
         steps.push(...Chrome.waitRequest());
-        steps.push(Dialog.confirm());
+        steps.push(Dialog.proceed({ button: "add existing gift card" }));
     }
 
     return steps;
@@ -202,6 +200,13 @@ export function createManualGiftCard(code, amount, date = false) {
             content: `Input code '${code}'`,
             trigger: `input[id="code"]`,
             run: `edit ${code}`,
+        },
+        {
+            content: "Editing the code involves verifications",
+            trigger: `.modal:has(.gift-card-loading)`,
+        },
+        {
+            trigger: `.modal input[id="code"]:value(${code})`,
         },
         {
             content: `Input amount '${amount}'`,
