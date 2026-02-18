@@ -50,9 +50,16 @@ patch(BuilderUrlPicker.prototype, {
 
     onSelect(value) {
         this.commit(value);
+        // Forces the input to update its value even if the value of the
+        // element in the DOM has not changed.
+        this.state.value = null;
+        this.state.value = value;
     },
 
-    onChange({ inputValue }) {
+    onChange({ inputValue, isOptionSelected }) {
+        if (isOptionSelected) {
+            return;
+        }
         this.commit(inputValue);
     },
 

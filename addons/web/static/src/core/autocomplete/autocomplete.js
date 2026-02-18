@@ -360,6 +360,7 @@ export class AutoComplete extends Component {
         }
         this.props.onChange({
             inputValue: this.inputRef.el.value,
+            isOptionSelected: this.ignoreBlur,
         });
     }
     async onInput() {
