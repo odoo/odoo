@@ -255,6 +255,20 @@ class PosConfig(models.Model):
             })
         return encoded_images
 
+    @api.model
+    def _load_pos_self_data_fields(self, pos_config_id):
+        return ['id', 'name', 'company_id', 'journal_id', 'payment_method_ids', 'limit_categories',
+            'iface_available_categ_ids', 'iface_splitbill', 'module_pos_restaurant', 'self_ordering_mode',
+            'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
+            'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
+            'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'printer_ids', 'has_paper',
+            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
+            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
+            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
+            'payment_method_ids', 'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
+            'takeaway_fp_id', 'takeaway',
+        ]
+
     def _load_self_data_models(self):
         return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.product', 'product.combo', 'product.combo.item',
             'res.company', 'account.tax', 'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',

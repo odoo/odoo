@@ -66,3 +66,9 @@ class PosOrder(models.Model):
             # flow is cancelled, and the default flow is self order if it is configured.
             self.use_self_order_online_payment = tools.float_is_zero(next_online_payment_amount, precision_rounding=self.currency_id.rounding) and self.config_id.self_order_online_payment_method_id
         return res
+
+    @api.model
+    def _check_pos_order(self, pos_config, order):
+        data = super()._check_pos_order(pos_config, order)
+        data['use_self_order_online_payment'] = order.get('use_self_order_online_payment')
+        return data
