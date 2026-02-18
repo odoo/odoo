@@ -128,6 +128,59 @@ class TestProjectSharing(TestProjectSharingCommon):
             'access_mode': 'edit',
         })
 
+    def test_project_share_open_missing_email_wizards(self):
+        """ Sharing a project with a partner without an email should trigger
+            the missing email wizard and handle email input correctly.
+
+            Test Cases:
+            ============
+            1) Create a partner without an email address.
+            2) Add this partner as a collaborator with 'send invitation' enabled.
+            3) Trigger the share action and verify that the missing email wizard is opened.
+            4) Confirm that the wizard lists the partner without an email.
+            5) Fill in the missing email through the form view.
+            6) Submit the form and verify that a success notification is returned.
+            7) Ensure the wizard closes after successful submission.
+        """
+        ProjectSharewizard = self.env['project.share.wizard'].with_context(
+            active_model='project.project', active_id=self.project_no_collabo.id,
+        )
+
+        partner = self.env['res.partner'].create({'name': 'Test'})
+
+        project_share_form = Form(ProjectSharewizard)
+        with project_share_form.collaborator_ids.new() as collaborator_form:
+            collaborator_form.partner_id = partner
+            collaborator_form.send_invitation = True
+        project_share_wizard = project_share_form.save()
+
+        action = project_share_wizard.action_share_record()
+
+        no_email_wizard = self.env.ref('project.partner_no_email_list_wizard').id
+
+        self.assertEqual(
+            action['views'][0][0],
+            no_email_wizard,
+            "Expected to open the 'Partners with no Email' wizard form view."
+        )
+        self.assertTrue(project_share_wizard.partners_no_email,
+            "Expected the wizard to list at least one partner without an email address.")
+
+        email_wizard_form = Form(
+            self.env['project.share.wizard'].browse(action['res_id']),
+            view=no_email_wizard
+        )
+        for partner in email_wizard_form.partners_no_email:
+            partner.email = 'test@example.com'
+        email_wizard = email_wizard_form.save()
+
+        notification_action = email_wizard.action_check_emails()
+
+        self.assertEqual(notification_action['params']['type'], 'success',
+            "Expected the action to be a success notification.")
+        self.assertEqual(notification_action['params']['next']['type'],
+            'ir.actions.act_window_close', "Expected the wizard to close after successful submission.")
+
     def test_project_share_wizard_add_collaborator_with_limited_access(self):
         ProjectShare = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id)
         self.project_portal.write({
