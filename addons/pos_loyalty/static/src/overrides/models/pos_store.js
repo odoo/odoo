@@ -909,4 +909,14 @@ patch(PosStore.prototype, {
             return payload;
         }
     },
+    async _add_next_order_coupon_data(order) {
+        const data = await this.data.call("pos.order", "get_next_order_coupon_data", [order.id]);
+        order.new_coupon_info = data.new_coupons;
+    },
+    async printReceipt({ order = this.get_order() } = {}) {
+        if (!order.new_coupon_info) {
+            await this._add_next_order_coupon_data(order);
+        }
+        return super.printReceipt(...arguments);
+    },
 });
