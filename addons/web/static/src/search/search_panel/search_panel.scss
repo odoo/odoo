@@ -1,19 +1,13 @@
 // ------- View with SearchPanel -------
 
 .o_component_with_search_panel {
-    display: flex;
-    align-items: flex-start;
+    @include media-breakpoint-up(md) {
+        display: flex;
 
-    .o_renderer {
-        flex: 1 1 100%;
-        overflow: auto; // make the renderer and search panel scroll individually
-        max-height: 100%;
-        position: relative;
-        height: 100%;
-
-        @include media-breakpoint-down(md) {
-            overflow: visible;
-        }    
+        .o_renderer {
+            overflow: auto;
+            width: 100%;
+        }
     }
 }
 
