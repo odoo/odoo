@@ -321,7 +321,7 @@ def process_dynamic_string(node, bound_variables, attr="t-attf-class"):
 
 T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")
 COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
-SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
+SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot", "call"}  # attributes to skip
 
 
 def iter_elements(root):
@@ -352,9 +352,13 @@ class TemplateCompiler:
     """ Traverses XML templates, adding `this.` to variables coming from the component.
         It relies on a precompiled dictionary of variables assigned to each template (eg.
         a <t-call="web.xyz"> <t t-set="var" t-value="a"/> </t.).
+
+        @param allVars:
+        @param t_call_vars
+        @param x_path_only
     """
 
-    def __init__(self, t_call_vars, all_vars):
+    def __init__(self, t_call_vars, all_vars, xpath_only):
         self.allVars = all_vars
         self.t_call_vars = t_call_vars
 
@@ -619,9 +623,12 @@ class VariableAggregator:
 
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
+    def callback(tree):
+        aggregator.aggregate_call_vars(tree, vars)
+        aggregator.aggregate_inside_vars(tree, inside_vars)
+
     aggregator = VariableAggregator()
-    aggregator.aggregate_call_vars(etree.fromstring(content), vars)
-    aggregator.aggregate_inside_vars(etree.fromstring(content), inside_vars)
+    update_etree(content, callback)
 
     for template, variables in aggregator.tCallVars.items():
         if template not in vars:
