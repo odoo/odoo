@@ -44,13 +44,11 @@ class PaymentTransaction(models.Model):
 
         # Extract the payment link URL and params and embed them in the redirect form.
         api_url = payment_link_data['paymentPageUrl']
-        parsed_url = urls.url_parse(api_url)
-        url_params = urls.url_decode(parsed_url.query)
-
-        return {
-            'api_url': api_url,
-            'url_params': url_params,  # Encore the params as inputs to preserve them.
-        }
+        rendering_values = payment_utils.extract_values_for_default_redirect_form(
+            api_url,
+            'get'
+        )
+        return rendering_values
 
     def _iyzico_prepare_cf_initialize_payload(self):
         """Create the payload for the CF-initialize request based on the transaction values.

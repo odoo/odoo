@@ -21,11 +21,11 @@ class TestPaymentProvider(AsiaPayCommon):
         """ Test that the calculated signature matches the expected signature for outgoing data. """
         calculated_signature = self.asiapay._asiapay_calculate_signature(
             {
-                'merchant_id': self.asiapay.asiapay_merchant_id,
+                'merchantId': self.asiapay.asiapay_merchant_id,
                 'amount': self.amount,
-                'reference': self.reference,
-                'currency_code': const.CURRENCY_MAPPING[self.currency.name],
-                'payment_type': 'N',
+                'orderRef': self.reference,
+                'currCode': const.CURRENCY_MAPPING[self.currency.name],
+                'payType': 'N',
             },
             incoming=False
         )

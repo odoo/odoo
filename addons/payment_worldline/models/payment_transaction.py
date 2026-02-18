@@ -83,7 +83,11 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_rendering_values(processing_values)
 
         checkout_session_data = self._worldline_create_checkout_session()
-        return {'api_url': checkout_session_data['redirectUrl']}
+        api_url = checkout_session_data['redirectUrl']
+        return payment_utils.extract_values_for_default_redirect_form(
+            api_url,
+            'post'
+        )
 
     def _worldline_create_checkout_session(self):
         """ Create a hosted checkout session and return the response data.

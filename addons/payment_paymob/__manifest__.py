@@ -8,7 +8,6 @@
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'views/payment_paymob_templates.xml',
         'views/payment_provider_views.xml',
 
         'data/payment_provider_data.xml',
