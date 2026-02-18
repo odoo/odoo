@@ -131,6 +131,7 @@ class ResConfigSettings(models.TransientModel):
     pos_use_fast_payment = fields.Boolean(related='pos_config_id.use_fast_payment', readonly=False)
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
     pos_iface_printbill = fields.Boolean(related='pos_config_id.iface_printbill', readonly=False)
+    pos_use_download_invoice = fields.Boolean(related='pos_config_id.use_download_invoice', readonly=False)
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)

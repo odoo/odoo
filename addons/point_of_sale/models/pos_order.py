@@ -124,8 +124,6 @@ class PosOrder(models.Model):
             self.action_pos_order_paid()
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
-
-        self._generate_order_invoice()
         return self.id
 
     def _update_lines(self, order, pos_order, fields=[]):
@@ -140,9 +138,17 @@ class PosOrder(models.Model):
                     _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
                 order[field] = []
 
-    def _generate_order_invoice(self):
+    def generate_order_invoice(self):
         if self.to_invoice and self.state == 'paid' and self.config_id.invoice_journal_id:
-            self._generate_pos_order_invoice()
+            cron = self.env.ref('point_of_sale.ir_cron_generate_pos_order_invoice', raise_if_not_found=False)
+            if not cron or tools.config['test_enable']:
+                # Run invoicing synchronously if the cron is missing or tests are enabled.
+                # This keeps test execution deterministic and avoids async asynchronous cron execution.
+                self._generate_pos_order_invoice()
+                self.config_id._notify('ORDER_INVOICE_NOTIFICATION', {'order_id': self.id})
+            else:
+                # In normal runtime, trigger the cron to process invoicing asynchronously.
+                cron._trigger()
         elif not self.config_id.invoice_journal_id:
             _logger.warning('Trying to create an invoice without any journal configured')
             raise UserError(_('No invoice journal configured for this POS session.'))
@@ -169,7 +175,7 @@ class PosOrder(models.Model):
         if order.get('payment_ids'):
             self._update_lines(order, existing_order, ['lines', 'payment_ids'])
             self._process_payment_lines(order, existing_order, existing_order.session_id, False)
-        existing_order._generate_order_invoice()
+        existing_order.generate_order_invoice()
 
     def _clean_payment_lines(self):
         self.ensure_one()
@@ -381,6 +387,22 @@ class PosOrder(models.Model):
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
 
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
+
+    def _trigger_pos_order_invoice_cron(self):
+        """ Generate invoices for eligible paid POS orders and notify devices."""
+        orders = self.search([
+            ('to_invoice', '=', True),
+            ('state', '=', 'paid'),
+            ('account_move', '=', False),
+        ])
+        for order in orders:
+            notification_data = {'order_id': order.id}
+            try:
+                order._generate_pos_order_invoice()
+            except UserError as err:
+                _logger.warning('POS Order invoice could not be generated for order %s: %s', order.id, err)
+                notification_data['error'] = str(err)
+            order.config_id._notify('ORDER_INVOICE_NOTIFICATION', notification_data)
 
     def ask_for_ticket_printing(self):
         self.config_id._notify("TICKET_PRINTING_REQUESTED", self.ids)

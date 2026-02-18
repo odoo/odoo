@@ -888,6 +888,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         result = {}
         order_data = [self.create_ui_order_data(**params) for params in order_data_params]
         order_ids = [order['id'] for order in self.env['pos.order'].sync_from_ui(order_data)['pos.order']]
+        self.env['pos.order']._trigger_pos_order_invoice_cron()
         for order_id in self.env["pos.order"].browse(order_ids):
             result[order_id.uuid] = order_id
         return result

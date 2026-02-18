@@ -216,8 +216,8 @@ class PosConfig(models.Model):
         store=True, help="These payment methods will be available for fast payment", readonly=False)
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
     iface_printbill = fields.Boolean(string='Bill Printing', help="Allows to print the Bill before payment.")
-
     pos_snooze_ids = fields.One2many('pos.product.template.snooze', 'pos_config_id', string='Snoozed Products')
+    use_download_invoice = fields.Boolean(string='Download Invoice', help="Automatically download the invoice PDF on the POS device when an order is invoiced. To avoid blocking the ui, invoice generation process will be done through cron in background.")
 
     @api.onchange('receipt_printer_ids')
     def _onchange_receipt_printer_ids(self):

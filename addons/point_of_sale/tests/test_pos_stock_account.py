@@ -258,6 +258,7 @@ class TestPoSStock(TestPoSCommon):
         orders = []
         orders.append(self.create_ui_order_data([(self.product4, 1)]))
         order = self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order']._trigger_pos_order_invoice_cron()
 
         refund_action = self.env['pos.order'].browse(order['pos.order'][0]['id']).refund()
         refund = self.env['pos.order'].browse(refund_action['res_id'])

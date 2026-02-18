@@ -17,6 +17,7 @@
         'data/point_of_sale_tour.xml',
         'data/mail_template_data.xml',
         'data/ir_config_parameter_data.xml',
+        'data/ir_cron.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',

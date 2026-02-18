@@ -200,7 +200,6 @@ patch(OrderPaymentValidation.prototype, {
         // order is paid with an online payment and the server saves the order as paid.
         // Without that update, the payment lines printed on the receipt ticket would
         // be invalid.
-        const isInvoiceRequested = this.order.isToInvoice();
         if (!orderJSON[0] || this.order.id !== orderJSON[0].id) {
             this.pos.dialog.add(AlertDialog, {
                 title: _t("Order saving issue"),
@@ -218,18 +217,6 @@ patch(OrderPaymentValidation.prototype, {
             this.pos.config.iface_cashdrawer
         ) {
             this.pos.openCashbox();
-        }
-
-        if (isInvoiceRequested) {
-            if (!orderJSON[0].account_move) {
-                this.pos.dialog.add(AlertDialog, {
-                    title: _t("Invoice could not be generated"),
-                    body: _t("The invoice could not be generated."),
-                    showReloadButton: true,
-                });
-            } else {
-                await this.pos.env.services.account_move.downloadPdf(orderJSON[0].account_move);
-            }
         }
 
         await this.postPushOrderResolve([this.order.id]);

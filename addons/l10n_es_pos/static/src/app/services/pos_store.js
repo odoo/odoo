@@ -2,6 +2,11 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 
 patch(PosStore.prototype, {
+    shouldDownloadInvoice(order) {
+        return this.config.is_spanish
+            ? !order.is_l10n_es_simplified_invoice
+            : super.shouldDownloadInvoice(order);
+    },
     _getCreateOrderContext(orders, options) {
         let context = super._getCreateOrderContext(...arguments);
         if (this.config.is_spanish) {

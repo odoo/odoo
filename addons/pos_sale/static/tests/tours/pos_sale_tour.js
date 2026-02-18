@@ -201,6 +201,8 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder2", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -293,6 +295,7 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -320,6 +323,8 @@ registry.category("web_tour.tours").add("PoSApplyDownpaymentInvoice", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -333,6 +338,8 @@ registry.category("web_tour.tours").add("PoSApplyDownpaymentInvoice2", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 

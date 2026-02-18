@@ -524,6 +524,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             }
 
         self.env['pos.order'].sync_from_ui([pos_order])
+        self.env['pos.order']._trigger_pos_order_invoice_cron()
         self.assertEqual(sale_order.order_line[0].untaxed_amount_invoiced, 10, "Untaxed invoiced amount should be 10")
         self.assertEqual(sale_order.order_line[1].untaxed_amount_invoiced, 0, "Untaxed invoiced amount should be 0")
 
@@ -1413,6 +1414,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         }
         self.assertEqual(sale_order.amount_to_invoice, 100.0, "Amount to invoice should be 100.0")
         self.env['pos.order'].sync_from_ui([order_data])
+        self.env['pos.order']._trigger_pos_order_invoice_cron()
         self.assertEqual(sale_order.amount_to_invoice, 0.0, "Amount to invoice should be 0.0")
 
     def test_payment_terms_with_early_discount(self):
@@ -1486,6 +1488,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         pos_order_id = self.env['pos.order'].sync_from_ui([pos_order])['pos.order'][0]['id']
         pos_order = self.env['pos.order'].browse(pos_order_id)
+        self.env['pos.order']._trigger_pos_order_invoice_cron()
         self.assertFalse(pos_order.account_move.invoice_payment_term_id)
 
     def test_sale_order_fp_different_from_partner_one(self):

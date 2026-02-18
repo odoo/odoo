@@ -4,11 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 patch(OrderPaymentValidation.prototype, {
-    shouldDownloadInvoice() {
-        return this.pos.config.is_spanish
-            ? !this.order.is_l10n_es_simplified_invoice
-            : super.shouldDownloadInvoice();
-    },
     async beforePostPushOrderResolve(order, order_server_ids) {
         if (this.pos.config.is_spanish) {
             const invoiceName = await this.pos.data.call("pos.order", "get_invoice_name", [
