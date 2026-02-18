@@ -12,7 +12,7 @@
                     <t t-set="isGroupProcessing" t-value="isProcessing(group.id)" />
                     <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group, isGroupProcessing)"
-                        t-attf-class="{{ !env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
+                        t-attf-class="{{ !this.ui.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
                         t-att-data-id="group.id"
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
@@ -61,7 +61,7 @@
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
                         </t>
-                        <t t-elif="env.isSmall">
+                        <t t-elif="this.ui.isSmall">
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>

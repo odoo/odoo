@@ -285,50 +285,51 @@
 
     // Kanban Grouped Layout - Column Folded
     .o_kanban_group.o_column_folded {
+        --KanbanGroup-padding-h: 0;
+
+        min-width: 3.25rem;
 
         // don't fill the width of record for a folded column
         .o_kanban_record.o_draggable {
             display: none !important;
         }
-        // don't visually fold on smaller screens (aka. mobile)
-        @include media-breakpoint-up(md) {
-            --KanbanGroup-padding-h: 0;
 
+        @include media-breakpoint-up(md) {
             &, .o_column_unfold {
                 cursor: col-resize;
             }
+        }
 
-            & + .o_kanban_group.o_column_folded {
-                margin-left: 1px;
+        & + .o_kanban_group.o_column_folded {
+            margin-left: 1px;
+        }
+
+        .o_kanban_header {
+            padding: 0 floor($o-kanban-group-padding * 0.7);
+        }
+
+        button.o_column_unfold {
+            padding: 0 .15rem;
+            height: map-get($font-sizes, 4) * $line-height-lg;
+
+            .fa-caret-left {
+                margin-right: 0.2rem;
             }
+        }
 
-            .o_kanban_header {
-                padding: 0 floor($o-kanban-group-padding * 0.7);
+        &:hover button.o_column_unfold {
+            padding: 0;
+
+            .fa-caret-left {
+                margin-right: 0.5rem;
             }
+        }
 
-            button.o_column_unfold {
-                padding: 0 .15rem;
-                height: map-get($font-sizes, 4) * $line-height-lg;
-
-                .fa-caret-left {
-                    margin-right: 0.2rem;
-                }
-            }
-
-            &:hover button.o_column_unfold {
-                padding: 0;
-
-                .fa-caret-left {
-                    margin-right: 0.5rem;
-                }
-            }
-
-            .o_column_title {
-                @include o-position-absolute(map-get($spacers, 3));
-                transform-origin: left bottom 0;
-                transform: rotate(90deg);
-                overflow: visible;
-            }
+        .o_column_title {
+            @include o-position-absolute(map-get($spacers, 3));
+            transform-origin: left bottom 0;
+            transform: rotate(90deg);
+            overflow: visible;
         }
     }
 

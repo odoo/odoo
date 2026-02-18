@@ -36,6 +36,7 @@ export class KanbanHeader extends Component {
     };
 
     setup() {
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.rootRef = useRef("root");
