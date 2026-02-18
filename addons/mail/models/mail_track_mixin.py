@@ -4,7 +4,7 @@ import typing
 
 from datetime import datetime
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import MissingError
 from odoo.tools import clean_context, ormcache
 
@@ -12,6 +12,7 @@ if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
     from odoo.models import BaseModel
     from collections.abc import Iterable
+    from markupsafe import Markup
 
 
 class MailTrackMixin(models.AbstractModel):
@@ -36,6 +37,23 @@ class MailTrackMixin(models.AbstractModel):
     # track data storage / manipulation
     # ------------------------------------------------------
 
+    def _track_add_data_values(
+        self,
+        data_values: dict[int, ValuesType],
+        update_values: dict[int, ValuesType],
+        skip_prevented: bool = False,
+    ):
+        for record in self:
+            current_record_values = data_values.setdefault(record.id, {})
+            if current_record_values is None:
+                if skip_prevented:
+                    continue
+                current_record_values = {}
+                data_values[record.id] = current_record_values  # replace None -> forced tacking
+            update_record_values = update_values.get(record.id)
+            for fname, fvalue in (update_record_values or {}).items():
+                current_record_values.setdefault(fname, record._track_convert_value(fname, fvalue))
+
     def _track_disabled(self):
         return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
 
@@ -51,6 +69,7 @@ class MailTrackMixin(models.AbstractModel):
         if not self or not tracked_fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
+
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
         for record in self.sudo().filtered(lambda r: r.id):  # be sure to compute initial values whatever current user ACLs
             record_values = initial_values.setdefault(record.id, {})
@@ -64,6 +83,10 @@ class MailTrackMixin(models.AbstractModel):
     def _track_clear(self):
         """ Clear tracking data, without preventing further other tracking. """
         self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', None)
+        self.env.cr.precommit.data.pop(f'mail.tracking.end_values.{self._name}', None)
+        self.env.cr.precommit.data.pop(f'mail.tracking.fields_info.{self._name}', None)
+        self.env.cr.precommit.data.pop(f'mail.tracking.target.{self._name}', None)
+        self.env.cr.precommit.data.pop(f'mail.tracking.target.fnames.{self._name}', None)
 
     def _track_discard(self):
         """ Prevent any tracking of fields on `self`. """
@@ -76,8 +99,10 @@ class MailTrackMixin(models.AbstractModel):
             initial_values[id_] = None
 
     def _track_execute(
-        self, track_init_values: dict[int, ValuesType],
-        trackings: dict[int, tuple[set[str], list[ValuesType]]]
+        self,
+        track_init_values: dict[int, ValuesType],
+        trackings: dict[int, tuple[set[str], list[ValuesType]]],
+        track_records: BaseModel | None = None,
     ):
         """ Perform model specific code based on trackings.
 
@@ -102,7 +127,9 @@ class MailTrackMixin(models.AbstractModel):
         if not ids:
             return
 
-        fnames = self._track_get_fields()
+        # tracked fields to check are those at model level as well as those
+        # manually put in initial values
+        fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
         if not fnames:
             return
 
@@ -115,7 +142,7 @@ class MailTrackMixin(models.AbstractModel):
         # sudo: # be sure to compute end values whatever current user ACLs
         records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
 
-        tracked_fields_get = records_su.fields_get(fnames, attributes=('string', 'type', 'selection', 'currency_field'))
+        tracked_fields_get = records_su._track_get_fields_info(fnames)
         trackings = dict()
         for record_su in records_su:
             try:
@@ -126,6 +153,35 @@ class MailTrackMixin(models.AbstractModel):
         # launch business flow to manage tracking values
         records_su._track_execute(initial_values, trackings)
 
+        # find additional targets for tracking execution
+        parents_all = self.env.cr.precommit.data.get(f'mail.tracking.target.{self._name}', {})
+        parents_fnames_all = self.env.cr.precommit.data.get(f'mail.tracking.target.fnames.{self._name}', {})
+
+        # execute on parents records, if requested
+        for record in records_su:
+            changes, record_trackings = trackings.get(record.id, (None, None))
+            if not changes:
+                continue
+            required_fnames = parents_fnames_all.get(record.id, [])
+            if required_fnames:
+                filtered_changes = [fname for fname in changes if fname in required_fnames]
+                filtered_trackings = [
+                    vals for vals in record_trackings if (not required_fnames or (
+                        vals.get('field_name') in required_fnames
+                    )
+                )]
+            else:
+                filtered_changes = changes
+                filtered_trackings = record_trackings
+            for _model, parents in parents_all.get(record.id, {}).items():
+                fnames = parents_fnames_all.get(record.id, [])
+                parents._track_execute(
+                    {parent.id: initial_values[record.id] for parent in parents},
+                    {parent.id: (filtered_changes, filtered_trackings) for parent in parents},
+                    track_records=record
+                )
+
+        # cleanup precommit data
         self._track_clear()
         return records_su, initial_values, trackings
 
@@ -146,6 +202,113 @@ class MailTrackMixin(models.AbstractModel):
         }
 
         return model_fields and set(self.fields_get(model_fields, attributes=()))
+
+    def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
+        tracked_fields_get = self.fields_get(
+            tracked_fields,
+            attributes=('string', 'type', 'selection', 'currency_field')
+        )
+        if set(tracked_fields_get.keys()) < set(tracked_fields):
+            current_fields_info = self.env.cr.precommit.data.get(f'mail.tracking.fields_info.{self._name}', {})
+            tracked_fields_get.update(current_fields_info)
+
+        return tracked_fields_get
+
+    # track API
+    # ------------------------------------------------------
+
+    def _track_add(
+            self,
+            initial_values: dict[int, ValuesType],
+            end_values: dict[int, ValuesType] | None = None,
+            fields_info: dict[str, ValuesType] | None = None,
+            author: BaseModel | None = None,
+            body: str | Markup | None = None,
+        ):
+        """ Insert manual tracking. This allows notably to track arbitrary
+        values that are not linked to fields of 'self'.
+
+        :param end_values: optional force end values of tracking. If not given
+            values are computed based on record, considering tracked field names
+            given in initial_values can be accessed as fields.
+        :param fields_info: optional fields-like data decorating fields found
+            in initial values. To be given when values are not linked to
+            fields.
+        :param author: optional author of logs generated based on trackings;
+        :param body: optional body replacing default one generated based on
+            trackings;
+        """
+        valid = self.filtered(lambda r: r.id)
+        if not valid:
+            return
+        self.env.cr.precommit.add(valid._track_finalize)
+
+        # store field information, in case not reachable by fields_get
+        current_fields_info = self.env.cr.precommit.data.setdefault(f'mail.tracking.fields_info.{self._name}', {})
+        for fname, fvalues in (fields_info or {}).items():
+            current_fields_info.setdefault(fname, {}).update(**fvalues)
+
+        # store initial values, required to detect and log changes
+        current_initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
+        valid._track_add_data_values(current_initial_values, initial_values)
+        # store potential end values, used in place of current record value (manual tracking)
+        if end_values:
+            current_end_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.end_values.{self._name}', {})
+            valid._track_add_data_values(current_end_values, end_values)
+
+        # set log author and message if given
+        if author:
+            valid._track_set_log_author(author)
+        if body:
+            valid._track_set_log_message(body)
+
+    def _track_record(
+            self,
+            records: BaseModel,
+            track_fnames: Iterable[str],
+            initial_values: dict[int, ValuesType] | None = None,
+            end_values: dict[int, ValuesType] | None = None,
+            author: BaseModel | None = None,
+            body: str | Markup | None = None,
+        ):
+        """ Log on 'self' changes performed by tracking 'track_fnames' on 'records'.
+        This allows to centralize trackings. Use case: line model (e.g. move line,
+        esg factor line) which reports their changes on a parent model (e.g. move,
+        esg factor).
+
+        :param records: records on which changes are tracked;
+        :param track_fnames: field names to track;
+        :param initial_values: optional initial values. If not given values
+            are computed based on record, considering tracked field names
+            can be accessed as fields.
+        :param end_values: optional force end values of tracking. If not given
+            values are computed based on record, considering tracked field names
+            can be accessed as fields.
+        :param author: optional author of logs generated based on trackings;
+        :param body: optional body replacing default one generated based on
+            trackings;
+        """
+        self.ensure_one()
+        if initial_values:
+            self.env.cr.precommit.add(records._track_finalize)
+            current_initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{records._name}', {})
+            records._track_add_data_values(current_initial_values, initial_values)
+        else:
+            records._track_prepare(track_fnames)
+        # store potential end values, used in place of current record value (manual tracking)
+        if end_values:
+            current_end_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.end_values.{records._name}', {})
+            records._track_add_data_values(current_end_values, end_values)
+
+        target_data = self.env.cr.precommit.data.setdefault(f'mail.tracking.target.{records._name}', {})
+        target_fnames_data = self.env.cr.precommit.data.setdefault(f'mail.tracking.target.fnames.{records._name}', {})
+        for record in records:
+            existing_parents = target_data.setdefault(record.id, {}).setdefault(self._name, self.browse())
+            existing_parents |= self
+            target_data[record.id][self._name] = existing_parents
+
+            existing_fnames = target_fnames_data.setdefault(record.id, [])
+            existing_fnames += [f for f in track_fnames if f not in existing_fnames]
 
     # track values generation
     # ------------------------------------------------------
@@ -171,6 +334,7 @@ class MailTrackMixin(models.AbstractModel):
         if len(self) > 1:
             raise ValueError(f"Expected empty or single record: {self}")
         updated = set()
+        end_values = self.env.cr.precommit.data.get(f'mail.tracking.end_values.{self._name}', {})
         tracking_values = []
 
         fields_track_info = self._mail_track_order_fields(tracked_fields_get)
@@ -178,11 +342,18 @@ class MailTrackMixin(models.AbstractModel):
             if col_name not in initial_values:
                 continue
             initial_value = initial_values[col_name]
-            new_value = self._track_convert_value(col_name, self[col_name])
+            if col_name in end_values.get(self.id, {}):
+                new_value = end_values[self.id][col_name]
+            elif col_name in self:
+                new_value = self._track_convert_value(col_name, self[col_name])
+            else:
+                raise ValueError(
+                    _('Impossible to find end value when tracking %(col_name)s', col_name=col_name)
+                )
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
-            if self._fields[col_name].type == "properties":
+            if col_name in self and self._fields[col_name].type == "properties":
                 definition_record_field = self._fields[col_name].definition_record
                 if self[definition_record_field] == initial_values[definition_record_field]:
                     # track the change only if the parent changed
@@ -232,7 +403,7 @@ class MailTrackMixin(models.AbstractModel):
         # (not just the dict with the value)
         if len(self) > 1:
             raise ValueError(f"Expected empty or single record: {self}")
-        if (field := self._fields[fname]).type == 'properties':
+        if fname in self and (field := self._fields[fname]).type == 'properties':
             return field.convert_to_read(value, self)
         return value
 
@@ -265,7 +436,8 @@ class MailTrackMixin(models.AbstractModel):
             col_name: str, col_info: ValuesType,
         ) -> ValuesType:
         """ Prepare values to create a mail.tracking.value. It prepares old and
-        new value according to the field type.
+        new value according to the field type. Note that tracking may not match
+        existing fields as we may track custom values for logging purpose.
 
         :param Any initial_value: field value before the change. Relational
             fields should contain RecordSets;
@@ -276,9 +448,10 @@ class MailTrackMixin(models.AbstractModel):
 
         :return: a dict of values valid for `mail.tracking.value` creation;
         """
-        field = self.env['ir.model.fields']._get(self._name, col_name)
-        if not field:
-            raise ValueError(f'Unknown field {col_name} on model {self._name}')
+        if field_id := col_info.get('field_id'):
+            field = self.env['ir.model.fields'].sudo().browse(field_id)
+        else:
+            field = self.env['ir.model.fields']._get(self._name, col_name)
 
         # field information (to be popped, kept for post processing)
         values = {
@@ -288,6 +461,12 @@ class MailTrackMixin(models.AbstractModel):
             'old_value': initial_value,
             'new_value': new_value,
         }
+        if not field:
+            values['field_info'] = {
+                'desc': col_info['string'],
+                'name': col_name,
+                'type': col_info['type'],
+            }
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
@@ -295,8 +474,11 @@ class MailTrackMixin(models.AbstractModel):
                 f'new_value_{col_info["type"]}': new_value
             })
         elif col_info['type'] == 'monetary':
+            currency_id = col_info.get('currency_id')
+            if not currency_id:
+                currency_id = self[col_info['currency_field']].id
             values.update({
-                'currency_id': self[col_info['currency_field']].id,
+                'currency_id': currency_id,
                 'old_value_float': initial_value,
                 'new_value_float': new_value
             })

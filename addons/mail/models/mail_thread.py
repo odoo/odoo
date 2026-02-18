@@ -548,18 +548,22 @@ class MailThread(models.AbstractModel):
 
     def _track_execute(
         self, track_init_values: dict[int, ValuesType],
-        trackings: dict[int, tuple[set[str], list[ValuesType]]]
+        trackings: dict[int, tuple[set[str], list[ValuesType]]],
+        track_records: BaseModel | None = None,
     ):
         # override to generate tracking messages
         super()._track_execute(track_init_values, trackings)
 
         # log tracking on records
-        self._track_log(track_init_values, trackings)
+        self._track_log(track_init_values, trackings, track_records=track_records)
 
         # fire template-based message generation
         for record_su in self:
             tracked_fields, _tracking_value_ids = trackings.get(record_su.id, (None, None))
             record_su._track_post_template(tracked_fields)
+
+        # if track_records:
+        #     self.env.cr.precommit.data.pop(f'mail.tracking.target.message.{track_records._name}', None)
 
     def _track_set_log_author(self, author: BaseModel):
         """ Set the author (res.partner) of the tracking message for `self`. """
@@ -575,12 +579,55 @@ class MailThread(models.AbstractModel):
         for id_ in self.ids:
             body_values[id_] = message
 
+    def _track_set_log_message_for_target(self, message: str | Markup, track_records: BaseModel):
+        """ Link tracking to a message logged as body, in addition to subtype
+        description (if set) and tracking values that make the core content of
+        tracking message. """
+        body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.target.message.{track_records._name}', {})
+        for id_ in track_records.ids:
+            for parent in self:
+                body_values.setdefault(id_, {}).setdefault(self._name, {})[parent.id] = message
+
     # track posting
     # ------------------------------------------------------
 
+    def _track_add(
+            self,
+            initial_values: dict[int, ValuesType],
+            end_values: dict[int, ValuesType] | None = None,
+            fields_info: dict[str, ValuesType] | None = None,
+            author: BaseModel | None = None,
+            body: str | Markup | None = None,
+        ):
+        # override to add log info
+        super()._track_add(initial_values, end_values=end_values, fields_info=fields_info, author=author, body=body)
+        # set log author and message if given
+        if author:
+            self._track_set_log_author(author)
+        if body:
+            self._track_set_log_message(body)
+
+    def _track_record(
+            self,
+            records: BaseModel,
+            track_fnames: Iterable[str],
+            initial_values: dict[int, ValuesType] | None = None,
+            end_values: dict[int, ValuesType] | None = None,
+            author: BaseModel | None = None,
+            body: str | Markup | None = None,
+        ):
+        # override to add log info
+        super()._track_record(records, track_fnames, initial_values=initial_values, end_values=end_values, author=author, body=body)
+        # set log author and message for tracking target
+        if author:
+            self._track_set_log_author(author)
+        if body:
+            self._track_set_log_message_for_target(body, records)
+
     def _track_log(
             self, track_init_values: dict[int, ValuesType],
-            trackings: dict[int, tuple[set[str], list[ValuesType]]]
+            trackings: dict[int, tuple[set[str], list[ValuesType]]],
+            track_records: BaseModel | None = None,
         ):
         """ Generate message for each record, based on generated trackings. It
         contains the tracked updated values. This message can be linked to a
@@ -593,8 +640,14 @@ class MailThread(models.AbstractModel):
             each existing record, changes and generate tracking values
         """
         # find content to log as body
-        bodies = self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
-        authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
+        if track_records:
+            target_bodies = self.env.cr.precommit.data.get(f'mail.tracking.target.message.{track_records._name}', {})
+            bodies = target_bodies.get(track_records[0].id, {}).get(self._name, {})
+            # bodies = {record.id: target_bodies[track_records[0].id] for record in self} if track_records[0].id in target_bodies else {}
+            authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
+        else:
+            bodies = self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
+            authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
 
         for record in self:
             changes, tracking_values = trackings.get(record.id, (None, None))
