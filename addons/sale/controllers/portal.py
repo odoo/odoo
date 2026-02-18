@@ -331,7 +331,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if not order_sudo._has_to_be_paid():
             order_sudo._validate_order()
 
-        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
+        pdf = request.env['ir.actions.report'].sudo().with_context(sale_include_signature=True)._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
         order_sudo.message_post(
             attachments=[('%s.pdf' % order_sudo.name, pdf)],

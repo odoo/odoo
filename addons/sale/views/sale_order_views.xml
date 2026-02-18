@@ -988,13 +988,6 @@
                             </group>
                         </group>
                     </page>
-                    <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
-                        <group>
-                            <field name="signed_by" readonly="signature"/>
-                            <field name="signed_on" readonly="signature"/>
-                            <field name="signature" widget="image"/>
-                        </group>
-                    </page>
                 </notebook>
             </sheet>
             <chatter/>
