@@ -369,10 +369,10 @@ const chatterPatch = {
     },
 
     onCloseFullComposerCallback(isDiscard) {
-        this.toggleComposer();
         super.onCloseFullComposerCallback();
         if (!isDiscard) {
             this.reloadParentView();
+            this.toggleComposer();
         }
     },
 

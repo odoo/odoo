@@ -1,5 +1,4 @@
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
-import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
@@ -13,10 +12,6 @@ export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
         super.setup();
         if (this.env.fullComposerBus) {
-            useBus(this.env.fullComposerBus, "ACCIDENTAL_DISCARD", (ev) => {
-                const elContent = this.getNoSignatureElContent();
-                ev.detail.onAccidentalDiscard(isEmpty(elContent));
-            });
             useBus(this.env.fullComposerBus, "SAVE_CONTENT", (ev) => {
                 const emailAddSignature = Boolean(
                     this.editor.editable.querySelector(".o-signature-container")

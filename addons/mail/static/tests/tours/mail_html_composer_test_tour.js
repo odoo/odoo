@@ -88,9 +88,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
             run: "click",
         },
         {
-            content: "Click on Send Message",
-            trigger: "button:not(.active):contains(Send message)",
-            run: "click",
+            content: "Wait for content to be restored before checking formatting",
+            trigger: ".o-mail-Composer-html.odoo-editor-editable:contains(Hello)",
         },
         {
             content: "The italicized text is in the composer",
