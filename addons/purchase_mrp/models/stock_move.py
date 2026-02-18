@@ -17,6 +17,18 @@ class StockMove(models.Model):
                 return (self.cost_share / 100) * quantity / uom_quantity
         return super()._get_cost_ratio(quantity)
 
+    def _get_value_from_bill(self, aml):
+        value = super()._get_value_from_bill(aml)
+        if self.bom_line_id.bom_id.type == "phantom":
+            value *= (self.cost_share / 100)
+        return value
+
+    def _get_quantity_from_bill(self, aml, quantity):
+        self.ensure_one()
+        if self.bom_line_id.bom_id.type == "phantom":
+            return aml.product_uom_id._compute_quantity(quantity, self.product_id.uom_id)
+        return super()._get_quantity_from_bill(aml, quantity)
+
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         vals = super()._prepare_phantom_move_values(bom_line, product_qty, quantity_done)
         if self.purchase_line_id:
