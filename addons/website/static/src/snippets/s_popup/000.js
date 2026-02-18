@@ -448,7 +448,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @param ev
      */
     _onAcceptClick(ev) {
-        const isFullConsent = ev.target.id === "cookies-consent-all";
+        const isFullConsent = ev.currentTarget.id === "cookies-consent-all";
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}}`;
         if (isFullConsent) {
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
