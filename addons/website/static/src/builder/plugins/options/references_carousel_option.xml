@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ReferencesCarouselOption">
+    <BuilderRow label.translate="Speed">
+        <BuilderRange
+            id="'references_carousel_speed'"
+            styleAction="'--speed'"
+            min="1"
+            max="10"
+            unit="'s'"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.ReferencesCarouselHeaderMiddleButtons">
+    <button class="btn btn-success ms-0 py-0 px-1 me-1" aria-label="Add Reference" t-on-click="addItem">
+        <span class="oi fa-fw oi-plus"/>
+    </button>
+    <button class="btn btn-danger py-0 px-1" t-att-disabled="state.disableRemoveButton"
+            aria-label="Remove Reference" t-on-click="removeItem">
+        <span class="oi fa-fw oi-minus"/>
+    </button>
+</t>
+
+</templates>

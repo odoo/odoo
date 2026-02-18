@@ -1,0 +1,17 @@
+// Edit mode
+// =========
+
+.s_references_carousel_slider.snippet-selected {
+    height: fit-content;
+    min-width: unset;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    .s_references_carousel_item {
+        animation-play-state: paused;
+        // Position items in a flex layout to prevent overlapping
+        position: relative;
+        left: unset !important;
+    }
+}

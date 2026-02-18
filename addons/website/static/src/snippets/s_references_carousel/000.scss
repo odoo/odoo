@@ -1,0 +1,52 @@
+.s_references_carousel {
+    .s_references_carousel_slider_wrapper {
+        overflow-x: clip;
+    }
+
+    .s_references_carousel_slider {
+        --speed: 5s;
+        --height: 150px;
+        --width: var(--height);
+        --quantity: 7;
+
+        height: var(--height);
+        min-width: calc(var(--width) * var(--quantity));
+        mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
+        position: relative;
+    }
+
+    .s_references_carousel_item {
+        width: var(--width);
+        height: var(--height);
+        object-fit: contain;
+        position: absolute;
+        left: 100%;
+        animation: autoRun calc(40s - var(--speed) * 3) linear infinite;
+        animation-delay: calc(((40s - var(--speed) * 3) / var(--quantity)) * (var(--position) - 1) - (40s - var(--speed) * 3));
+
+        @keyframes autoRun {
+            from {
+                left: 100%;
+            }
+            to {
+                left: calc(var(--width) * -1);
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .s_references_carousel_slider {
+            height: fit-content;
+            min-width: unset;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .s_references_carousel_item {
+            animation: none !important;
+            position: relative;
+            left: unset !important;
+        }
+    }
+}
