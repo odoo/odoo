@@ -27,7 +27,7 @@ class MrpBom(models.Model):
     def _round_last_line_done(self, lines_done):
         result = super()._round_last_line_done(lines_done)
         if result:
-            result[-1][1]['line_cost_share'] = float_round(100.0 - sum(vals.get('line_cost_share', 0.0) for _, vals in result[:-1]), precision_digits=2)
+            result[-1][1]['line_cost_share'] = 100 - sum(vals.get('line_cost_share', 0.0) for _, vals in result[:-1])
         return result
 
 
@@ -35,7 +35,7 @@ class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
 
     cost_share = fields.Float(
-        "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
+        "Cost Share (%)", digits=0,
         help="The percentage of the component repartition cost when purchasing a kit."
              "The total of all components' cost have to be equal to 100.")
 
@@ -54,7 +54,7 @@ class MrpBomLine(models.Model):
 
     def _prepare_line_done_values(self, quantity, product, original_quantity, parent_line, boms_done):
         result = super()._prepare_line_done_values(quantity, product, original_quantity, parent_line, boms_done)
-        result['line_cost_share'] = float_round(self._get_line_cost_share(product, boms_done), precision_digits=2)
+        result['line_cost_share'] = self._get_line_cost_share(product, boms_done)
         return result
 
     def _get_line_cost_share(self, product, boms_done):

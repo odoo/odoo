@@ -748,3 +748,51 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'product_id': c5.id, 'value': 500.0},
             {'product_id': c6.id, 'value': 0.0},
         ])
+
+    def test_kit_components_cost_distribution(self):
+        """
+        Test that the cost of a kit without set cost_share is equidistributed among component moves
+        and that the associated rounding error introduced by this process is handled at closing.
+        """
+        kit, *components = self.env['product.product'].create([{
+            'name': 'Product %s' % i,
+            'is_storable': True,
+            'categ_id': self.category_avco_auto.id,
+        } for i in range(7)])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                *[Command.create({'product_id': p.id}) for p in components],
+            ],
+        }])
+
+        kit_price = 100
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_qty': 1,
+                'price_unit': kit_price,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        # Check that the monetary value of each component move is set to 16.67 ~ 100/6
+        # Even if the total value is therefore of 100.02 rather than 100
+        self.assertRecordValues(receipt.move_ids, [
+            {'value': val} for val in (16.67, 16.67, 16.67, 16.67, 16.67, 16.67)
+        ])
+
+        # Upload the associated bill and process the valuation closing
+        self._create_bill(kit, 1, 100)
+        correction_data = receipt.move_ids.company_id.action_close_stock_valuation()
+        # Check that correction data's counter balance the move values rounding issue
+        closing_move = self.env['account.move'].browse(correction_data['res_id'])
+        valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+        variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
+        self.assertRecordValues(valuation_aml | variation_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.02, 'credit': 0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 0.02},
+        ])
