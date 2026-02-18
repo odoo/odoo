@@ -2519,7 +2519,7 @@ class Image(Binary):
         if self.readonly and (
             (not self.max_width and not self.max_height)
             or (
-                self.related_field
+                isinstance(self.related_field, Image)
                 and self.max_width == self.related_field.max_width
                 and self.max_height == self.related_field.max_height
             )
