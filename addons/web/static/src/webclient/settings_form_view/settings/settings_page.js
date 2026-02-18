@@ -55,6 +55,18 @@ export class SettingsPage extends Component {
         );
     }
 
+    get invalidApps() {
+        const invalidApps = [];
+        for (const anchor of this.props.anchors) {
+            if (
+                anchor.fieldNames.some((fieldName) => this.env.model.root.isFieldInvalid(fieldName))
+            ) {
+                invalidApps.push(anchor.app);
+            }
+        }
+        return invalidApps;
+    }
+
     getCurrentIndex() {
         return this.props.modules.findIndex((object) => object.key === this.state.selectedTab);
     }
