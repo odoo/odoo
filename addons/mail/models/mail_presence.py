@@ -101,7 +101,7 @@ class MailPresence(models.Model):
                 "bus.bus/im_status_updated",
                 {
                     "presence_status": im_status or presence.status,
-                    "im_status": target.im_status,
+                    "im_status": presence.guest_id.im_status or presence.user_id.partner_id.im_status,
                     "guest_id": presence.guest_id.id,
                     "partner_id": presence.user_id.partner_id.id,
                 },
