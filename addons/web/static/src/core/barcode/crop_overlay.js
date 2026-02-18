@@ -116,6 +116,9 @@ export class CropOverlay extends Component {
     }
 
     pointerDown(event) {
+        if (event.target.matches("input")) {
+            return;
+        }
         event.preventDefault();
         if (event.target.matches(".o_crop_icon")) {
             this.computeOverlayPosition();
