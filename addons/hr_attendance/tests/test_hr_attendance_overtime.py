@@ -3,6 +3,7 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
 
@@ -1042,6 +1043,60 @@ class TestHrAttendanceOvertime(HttpCase):
     def test_overtime_rule_combined(self):
         # TODO
         pass
+
+    @freeze_time("2025-02-01 23:00:00")
+    def test_single_checkin_system(self):
+        # ==========================================================================================================
+        # Once an employee has checked in, they should not be able to check in or check out again.
+        # The auto-checkout feature will automatically check out the employee when it runs.
+        # Case: Employee already checked in and trying to checkin/checkout -> shouldn't be allowed
+        # ==========================================================================================================
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+            'single_check_in': True,
+        })
+        attendance_pending = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 2, 1, 14, 0),
+        })
+
+        # Case 1 checkout not by systray
+        self.employee._attendance_action_change()
+        self.assertEqual(attendance_pending.check_out, False)
+
+        # Case 1 checkout by systray
+        with self.assertRaises(UserError):
+            self.employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change()
+        self.assertEqual(attendance_pending.check_out, False)
+
+        # auto checkout ran, checkout time should have value.
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertNotEqual(attendance_pending.check_out, False)
+
+        # employee checkin next day, should be able to checkin
+        with freeze_time('2025-02-02'):
+            self.assertEqual(self.employee.attendance_state, 'checked_out')
+            self.employee._attendance_action_change()
+            self.assertEqual(self.employee.attendance_state, 'checked_in')
+
+    @freeze_time("2025-02-01 23:00:00")
+    def test_single_checkin_system_flexible_resource(self):
+        # ==========================================================================================================
+        # Flexible working employee should not be affected by single_checkin_feature
+        # ==========================================================================================================
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+            'single_check_in': True,
+        })
+        flexible_employee_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2025, 2, 1, 14, 0),
+        })
+
+        self.flexible_employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change()
+        self.assertNotEqual(flexible_employee_attendance.check_out, False)
 
     def test_overtime_rule_timing_type_not_set(self):
         ruleset = self.env['hr.attendance.overtime.ruleset'].create({

@@ -202,6 +202,10 @@ class HrEmployee(models.Model):
             return res
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
+            if not self.version_id.is_flexible and self.company_id.single_check_in:
+                if self.env.context.get('is_from_systray_check_in_out', False):  # throw user error if user tries to checkout from systray.
+                    raise exceptions.UserError(self.env._("You’ve already checked in for the day.\nThank you."))
+                return attendance  # no need to checkout the user if single checkin enabled.
             if geo_information:
                 attendance.write({
                     'check_out': action_date,

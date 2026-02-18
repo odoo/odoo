@@ -40,7 +40,10 @@
                                         class="alert alert-info text-center p-3"
                                         t-if="this.hoursToday != '00:00'"
                                         role="status">
-                                        <t t-if="attendance.check_out">
+                                        <t t-if="this.isEmployeeSingleCheckIn and !attendance.check_out">
+                                            You’ve already checked in for the day.
+                                        </t>
+                                        <t t-elif="attendance.check_out">
                                             Hours Today: <strong><t t-esc="this.hoursToday"/></strong>
                                         </t>
                                         <t t-else="">

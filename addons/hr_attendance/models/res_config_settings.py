@@ -21,6 +21,7 @@ class ResConfigSettings(models.TransientModel):
     attendance_from_systray = fields.Boolean(related="company_id.attendance_from_systray", readonly=False)
     attendance_overtime_validation = fields.Selection(related="company_id.attendance_overtime_validation", readonly=False)
     auto_check_out = fields.Boolean(related="company_id.auto_check_out", readonly=False)
+    single_check_in = fields.Boolean(related="company_id.single_check_in", readonly=False)
     auto_check_out_tolerance = fields.Float(related="company_id.auto_check_out_tolerance", readonly=False)
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
@@ -47,6 +48,12 @@ class ResConfigSettings(models.TransientModel):
         ]
         if any(self[field] != company[field] for field in fields_to_check):
             company.write({field: self[field] for field in fields_to_check})
+
+        # synchronize auto_check_out and single_check_in feature.
+        if not company.auto_check_out and company.single_check_in:
+            company.single_check_in = False
+        elif company.single_check_in and not company.auto_check_out:
+            company.auto_check_out = True
 
     def regenerate_kiosk_key(self):
         if self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
