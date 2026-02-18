@@ -19,26 +19,32 @@ class PosOrder(models.Model):
 
     def read_pos_data(self, data, config_id):
         results = super().read_pos_data(data, config_id)
-        paid_orders = self.filtered_domain([('state', 'in', ['paid', 'done', 'invoiced'])])
-
-        if not paid_orders:
+        if not self:
             return results
 
-        lines_with_event = paid_orders.mapped('lines').filtered(lambda line: line.event_ticket_id)
-        event_event_fields = self.env['event.event']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_ticket_fields = self.env['event.event.ticket']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_registrations_fields = self.env['event.registration']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_registrations_answer_fields = self.env['event.registration.answer']._load_pos_data_fields(paid_orders[0].config_id.id)
+        lines_with_event = self.mapped('lines').filtered(lambda line: line.event_ticket_id)
+        event_event_fields = self.env['event.event']._load_pos_data_fields(self[0].config_id.id)
+        event_ticket_fields = self.env['event.event.ticket']._load_pos_data_fields(self[0].config_id.id)
+        event_registrations_fields = self.env['event.registration']._load_pos_data_fields(self[0].config_id.id)
+        event_registrations_answer_fields = self.env['event.registration.answer']._load_pos_data_fields(self[0].config_id.id)
         results['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
         results['event.event'] = lines_with_event.event_registration_ids.mapped('event_id').read(event_event_fields, load=False)
         results['event.event.ticket'] = lines_with_event.event_registration_ids.mapped('event_ticket_id').read(event_ticket_fields, load=False)
         results['event.registration.answer'] = lines_with_event.event_registration_ids.mapped('registration_answer_ids').read(event_registrations_answer_fields, load=False)
 
+        return results
+
+    def action_pos_order_paid(self):
+        res = super().action_pos_order_paid()
+        paid_orders = self.filtered_domain([('state', 'in', ['paid', 'done', 'invoiced'])])
+        lines_with_event = paid_orders.mapped('lines').filtered(lambda line: line.event_ticket_id)
+        self.send_paid_order_mail(lines_with_event)
+        return res
+
+    def send_paid_order_mail(self, lines_with_event):
         for registration in lines_with_event.event_registration_ids:
             if registration.email:
                 registration.action_send_badge_email()
-
-        return results
 
     @api.model
     def _process_order(self, order, existing_order):
