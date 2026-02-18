@@ -357,6 +357,7 @@ import fnmatch
 import io
 import logging
 import math
+import os
 import pprint
 import re
 import textwrap
@@ -375,6 +376,7 @@ from copy import deepcopy
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
+from os.path import join as opj
 from pathlib import Path
 from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
@@ -2979,6 +2981,8 @@ class IrQweb(models.AbstractModel):
 
         js_bundles, css_bundles = self._get_bundles_to_pregenarate()
 
+        print("BUNDLES:", js_bundles, css_bundles)
+
         links = []
         start = time.time()
         for bundle in sorted(js_bundles):
@@ -3007,6 +3011,19 @@ class IrQweb(models.AbstractModel):
                     js_bundles.add(asset)
                 if css:
                     css_bundles.add(asset)
+        modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+        modules_roots = [m.path for name in modules if (m := Manifest.for_addon(name))]
+        lazy_bundle_regex = re.compile(r'loadBundle\([\"\'](.+)[\"\']\)')
+        for modroot in modules_roots:
+            for root, _, fnames in os.walk(modroot):
+                fnames = [opj(root, n) for n in fnames]
+                fnames = fnmatch.filter(fnames, '**/static/**/*.js')
+                for fname in fnames:
+                    fcontent = file_open(fname).read()
+                    if match := lazy_bundle_regex.search(fcontent):
+                        bundle_name, = match.groups()
+                        js_bundles.add(bundle_name)
+                        css_bundles.add(bundle_name)
         return (js_bundles, css_bundles)
 
 def render(template_name, values, load, **options):
