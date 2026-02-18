@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CashInput" t-inherit="point_of_sale.input" t-inherit-mode="primary">
+        <xpath expr="//input[@class='o_input border-0 mx-2 text-body']" position="before">
+            <span t-if="props.currencyPosition === 'before'" class="mx-2" t-esc="props.currencySymbol"/>
+        </xpath>
+        <xpath expr="//input[@class='o_input border-0 mx-2 text-body']" position="after">
+            <span t-if="props.currencyPosition === 'after'" class="mx-2" t-esc="props.currencySymbol"/>
+        </xpath>
+    </t>
+</templates>

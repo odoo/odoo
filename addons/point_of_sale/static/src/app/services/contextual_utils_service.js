@@ -45,12 +45,20 @@ export const contextualUtilsService = {
         const parseValidFloat = (inputValue) =>
             isValidFloat(inputValue) ? parseFloat(inputValue) : 0;
 
+        const parseAndFormatCurrency = (inputValue, hasSymbol = false) => {
+            if (!isValidFloat(inputValue)) {
+                return inputValue;
+            }
+            return formatCurrency(parseFloat(inputValue), hasSymbol);
+        };
+
         env.utils = {
             formatCurrency,
             roundCurrency,
             formatProductQty,
             isValidFloat,
             parseValidFloat,
+            parseAndFormatCurrency,
         };
     },
 };
