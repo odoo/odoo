@@ -5,7 +5,7 @@ export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends 
     _processSearchDomain(domain) {
         const { my_tasks, subtask_action, activity_action } = this.env.searchModel.globalContext;
         const showSubtasks = my_tasks || subtask_action || activity_action || JSON.parse(browser.localStorage.getItem("showSubtasks"));
-        if (!showSubtasks) {
+        if (['project.task', 'report.project.task.user'].includes(this.env.searchModel.resModel) && !showSubtasks) {
             domain = Domain.and([
                 domain,
                 [['display_in_project', '=', true]],
