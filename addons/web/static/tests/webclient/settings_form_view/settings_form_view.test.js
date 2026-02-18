@@ -493,6 +493,43 @@ test("edit header field", async () => {
     expect("[name='foo_text'] input").toHaveValue("Hello again");
 });
 
+test("Warn when unset required field", async () => {
+    ResConfigSettings._fields.woof = fields.Char();
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="Some App" name="someApp">
+                    <setting id="setting_id">
+                        <field name="woof" required="1"/>
+                    </setting>
+                </app>
+                <app string="Some Other App" name="someOtherApp">
+                    <setting id="setting_id"/>
+                </app>
+            </form>
+        `,
+    });
+    expect(".o_field_char[name=woof]").toHaveCount(1);
+    expect(".settings_tab a").toHaveCount(2);
+
+    // Change page
+    await contains(".settings_tab a:eq(1)").click();
+    await animationFrame();
+    expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
+
+    // Save
+    await clickSave();
+    await animationFrame();
+    expect(".settings_tab a:eq(0)").toHaveClass("o_page_invalid");
+
+    // Discard
+    await click(".o_form_button_cancel");
+    await animationFrame();
+    expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
+});
+
 test("don't show noContentHelper if no search is done", async () => {
     await mountView({
         type: "form",
@@ -1861,7 +1898,7 @@ test("standalone field labels with string inside a settings page", async () => {
 
     expect("label.highhopes").toHaveText(`My" little ' Label`);
     const expectedCompiled = /* xml */ `
-            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;}]">
+            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;,&quot;fieldName&quot;:[&quot;display_name&quot;]}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab">
                     <SearchableSetting info="\`\`" title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
