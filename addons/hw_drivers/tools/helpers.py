@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import certifi
 import configparser
 import contextlib
 import datetime
@@ -503,7 +504,7 @@ def download_iot_handlers(auto=True):
     server = get_odoo_server_url()
     if server:
         urllib3.disable_warnings()
-        pm = urllib3.PoolManager()
+        pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         server = server + '/iot/get_handlers'
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
