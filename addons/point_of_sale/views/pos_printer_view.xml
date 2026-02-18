@@ -51,6 +51,50 @@
             </list>
         </field>
     </record>
+    <record model="ir.ui.view" id="view_pos_printer_kanban">
+        <field name="name">pos.printer.kanban</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="1" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_card p-2">
+                            <div class="d-flex align-items-center mb-3">
+                                <field name="name" class="fw-bold fs-4"/>
+                                <field name="printer_ip" invisible="1"/>
+                                <widget name="point_of_sale_test_epos" class="ms-auto"/>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4 fw-semibold text-dark">
+                                    Use Type:
+                                </div>
+                                <div class="col-8 text-muted">
+                                    <field name="use_type"/>
+                                </div>
+                                <div class="col-4 fw-semibold text-dark" invisible="printer_type != 'epson_epos'">
+                                    Use LNA:
+                                </div>
+                                <div class="col-8 text-muted" invisible="printer_type != 'epson_epos'">
+                                    <field name="use_lna"/>
+                                </div>
+                                <div class="col-4 fw-semibold text-dark" invisible="use_type != 'preparation'">
+                                    Categories:
+                                </div>
+                                <div class="col-8" invisible="use_type != 'preparation'">
+                                    <t t-if="record.product_categories_ids.raw_value.length">
+                                        <field name="product_categories_ids" widget="many2many_tags" class="text-muted"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">No Categories</span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     <menuitem
         name="Printers"

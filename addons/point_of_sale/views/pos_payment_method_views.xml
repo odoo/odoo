@@ -97,6 +97,55 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_pos_payment_method_kanban">
+        <field name="name">pos.payment.method.kanban</field>
+        <field name="model">pos.payment.method</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="1" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_card p-2">
+                            <div class="d-flex align-items-center mb-3">
+                                <field name="name" class="fw-bold fs-4"/>
+                                <field name="image" widget="image" class="ms-auto border rounded oe_avatar" options="{'size': [55, 55]}"/>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4 fw-semibold text-dark">
+                                    Journal:
+                                </div>
+                                <div class="col-8 text-muted">
+                                    <t t-if="record.journal_id.raw_value">
+                                        <field name="journal_id"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">No Journal</span>
+                                    </t>
+                                </div>
+                                <div class="col-4 fw-semibold text-dark" groups="base.group_multi_company">
+                                    Company:
+                                </div>
+                                <div class="col-8 text-muted" groups="base.group_multi_company">
+                                    <field name="company_id"/>
+                                </div>
+                                <div class="col-4 fw-semibold text-dark">
+                                    Point of Sale:
+                                </div>
+                                <div class="col-8">
+                                    <t t-if="record.config_ids.raw_value.length">
+                                        <field name="config_ids" widget="many2many_tags" class="text-muted"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">No Point of Sale</span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <menuitem id="menu_pos_payment_method" parent="menu_point_config_product" action="action_pos_payment_method_form" sequence="3" groups="group_pos_manager,group_pos_user"/>
 
     <record id="action_payment_methods_tree" model="ir.actions.act_window">
