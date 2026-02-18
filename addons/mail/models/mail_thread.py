@@ -1341,7 +1341,8 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _message_route_process(self, message, message_dict, routes):
-        self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
+        self = self.with_context(attachments_mime_plainxml=True)  # noqa: PLW0642
+        # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         original_partner_ids = message_dict.pop('partner_ids', [])
         thread = self.browse()
@@ -1413,7 +1414,7 @@ class MailThread(models.AbstractModel):
             for x in ('from', 'recipients',
                       'cc', 'to',  # use cc_filtered, to_filtered
                       'references', 'in_reply_to', 'x_odoo_message_id',
-                      'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
+                      'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner', 'forwarded_sender'):
                 post_params.pop(x, None)
             new_msg = False
             if thread_root._name == 'mail.thread':  # message with parent_id not linked to record
@@ -1582,7 +1583,7 @@ class MailThread(models.AbstractModel):
 
         :param string message: an email.message instance
         """
-        body, attachments = payload_dict['body'], payload_dict['attachments']
+        body, attachments, forwarded_sender = payload_dict['body'], payload_dict['attachments'], payload_dict['forwarded_sender']
         if not body.strip():
             return {'body': body, 'attachments': attachments}
         try:
@@ -1610,13 +1611,14 @@ class MailThread(models.AbstractModel):
             node.getparent().remove(node)
         if postprocessed:
             body = Markup(etree.tostring(root, pretty_print=False, encoding='unicode'))
-        return {'body': body, 'attachments': attachments}
+        return {'body': body, 'attachments': attachments, 'forwarded_sender': forwarded_sender}
 
     def _message_parse_extract_payload(self, message: EmailMessage, message_dict: dict, save_original: bool = False):
         """Extract body as HTML and attachments from the mail message
         """
         attachments = []
         body = ''
+        forwarded_sender = None
         if save_original:
             attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
 
@@ -1681,6 +1683,18 @@ class MailThread(models.AbstractModel):
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and not (alternative and body):
+
+                    #######################################
+                    # Detecting forwarded emails:
+                    # There is no standardized header that reliably indicates an email is forwarded.
+                    # We heuristically check for nested From/To/Subject headers in the email payload,
+                    # but this is error-prone since email providers may translate or alter these headers.
+
+                    if ("\r\nFrom: " in content and "\r\nTo: " and "\r\nSubject: "):
+                        for line in content.split("\r\n"):
+                            if "From: " in line:
+                                forwarded_sender = line.replace("From: ", "")
+                                break
                     body = append_content_to_html(body, content, preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
@@ -1698,7 +1712,7 @@ class MailThread(models.AbstractModel):
                 else:
                     attachments.append(self._Attachment(filename or 'attachment', content, info))
 
-        return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
+        return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments, 'forwarded_sender': forwarded_sender})
 
     def _message_parse_extract_bounce(self, email_message, message_dict):
         """ Parse email and extract bounce information to be used in future
@@ -2430,7 +2444,7 @@ class MailThread(models.AbstractModel):
 
         # Handle attachments parameter, that is a dictionary of attachments
         return_values = {}
-        if attachments: # generate
+        if attachments:  # generate
             body_cids, body_filenames = set(), set()
             if body:
                 root = lxml.html.fromstring(body)
