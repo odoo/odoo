@@ -20,6 +20,7 @@ export class ClickAndCollectAvailability extends Component {
         countryCode: { type: String, optional: true },
         deliveryMethodId: Number,
         deliveryMethodType: String,
+        deliveryMethodName: String,
     }
     static defaultProps = {
         active: true,
