@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="web.UserMenu" t-inherit-mode="extension">
         <xpath expr="//img[hasclass('o_user_avatar')]" position="replace">
-            <DiscussAvatar persona="store.self" size="26"/>
+            <DiscussAvatar persona="this.store.self" size="26"/>
         </xpath>
     </t>
 </templates>

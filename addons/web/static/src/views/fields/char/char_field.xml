@@ -2,35 +2,35 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CharField">
-        <t t-if="props.readonly">
-            <span t-esc="formattedValue" />
+        <t t-if="this.props.readonly">
+            <span t-esc="this.formattedValue" />
         </t>
         <t t-else="">
             <input
                 class="o_input"
                 t-att-class="{
-                    'o_field_translate': isTranslatable,
-                    'o_field_placeholder': hasDynamicPlaceholder
+                    'o_field_translate': this.isTranslatable,
+                    'o_field_placeholder': this.hasDynamicPlaceholder
                 }"
-                t-att-id="props.id"
-                t-att-type="props.isPassword ? 'password' : 'text'"
-                t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
-                t-att-maxlength="maxLength > 0 and maxLength"
-                t-att-placeholder="props.placeholder"
-                t-on-blur="onBlur"
+                t-att-id="this.props.id"
+                t-att-type="this.props.isPassword ? 'password' : 'text'"
+                t-att-autocomplete="this.props.autocomplete or (this.props.isPassword ? 'new-password' : 'off')"
+                t-att-maxlength="this.maxLength > 0 and this.maxLength"
+                t-att-placeholder="this.props.placeholder"
+                t-on-blur="this.onBlur"
                 t-ref="input"
             />
             <div class="o_field_input_buttons">
-                <t t-if="isTranslatable">
+                <t t-if="this.isTranslatable">
                     <TranslationButton
-                        fieldName="props.name"
-                        record="props.record"
+                        fieldName="this.props.name"
+                        record="this.props.record"
                     />
                 </t>
-                <button t-if="hasDynamicPlaceholder"
+                <button t-if="this.hasDynamicPlaceholder"
                     class="btn m-0 py-0 px-2 fa fa-magic"
                     title="Insert Field"
-                    t-on-click="onDynamicPlaceholderOpen"
+                    t-on-click="this.onDynamicPlaceholderOpen"
                 />
             </div>
         </t>

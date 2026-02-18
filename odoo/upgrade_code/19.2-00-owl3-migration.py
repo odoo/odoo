@@ -368,7 +368,7 @@ def upgrade_this_in_tests(file_manager, log_info, log_error):
 
                 wrapped_xml = f"<t t-name='xyz'>{raw_xml}</t>"
 
-                processed_wrapped = update_template(wrapped_xml, {}, {})
+                processed_wrapped = update_template(wrapped_xml, {}, {}, False)
 
                 inner_xml = re.sub(r'^<[^>]+>', '', processed_wrapped)
                 inner_xml = re.sub(r'</[^>]+>$', '', inner_xml)

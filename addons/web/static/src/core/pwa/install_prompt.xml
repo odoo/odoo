@@ -5,7 +5,7 @@
             <t t-set-slot="header">
                 <div class="d-flex w-100">
                     <h4>How to get the application</h4>
-                    <div t-on-click="onClose" type="button" class="btn-close" aria-label="Close"/>
+                    <div t-on-click="this.onClose" type="button" class="btn-close" aria-label="Close"/>
                 </div>
             </t>
             <p>Install the app on your device to access it easily. Here are the steps to follow:</p>
@@ -13,7 +13,7 @@
         </Dialog>
     </t>
     <t t-name="web.InstallStepsSafari">
-        <t t-if="isMobileSafari">
+        <t t-if="this.isMobileSafari">
             <ul class="mb-0">
                 <li>
                     Tap on the share icon

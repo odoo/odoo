@@ -445,7 +445,7 @@ test("allowDisconnected option", async () => {
     class List extends Component {
         static template = xml`
             <div t-ref="root" class="root">
-                <button class="handle" t-if="state.hasHandle">Handle</button>
+                <button class="handle" t-if="this.state.hasHandle">Handle</button>
                 <ul class="list list-unstyled m-0 d-flex flex-column">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50 h-100" />
                 </ul>
@@ -481,7 +481,7 @@ test("draggable in iframe", async () => {
     class List extends Component {
         static template = xml`
         <div t-ref="root" class="root">
-            <iframe class="mydroppable" t-att-srcdoc="srcdoc" />
+            <iframe class="mydroppable" t-att-srcdoc="this.srcdoc" />
         </div>`;
         static props = ["*"];
         setup() {
@@ -548,7 +548,7 @@ test("dragging element in iframe offset", async () => {
             <div style="width: 50px;height:500px;"/>
             <div class="d-flex flex-row">
                 <div style="width: 500px;height:50px;"/>
-                <iframe class="mydroppable" t-att-srcdoc="srcdoc"/>
+                <iframe class="mydroppable" t-att-srcdoc="this.srcdoc"/>
             </div>
         </div>`;
         static props = ["*"];

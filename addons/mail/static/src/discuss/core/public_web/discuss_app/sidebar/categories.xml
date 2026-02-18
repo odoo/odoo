@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
-        <t t-foreach="store.discuss.allCategories" t-as="category" t-key="category.localId">
+        <t t-foreach="this.store.discuss.allCategories" t-as="category" t-key="category.localId">
             <DiscussSidebarCategory t-if="category.isVisible" category="category"/>
         </t>
     </t>

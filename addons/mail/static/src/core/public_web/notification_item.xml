@@ -2,49 +2,49 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.NotificationItem">
-    <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-on-click="onClick" t-ref="root" t-att-class="{
-            'o-important': props.important,
-            'o-interest': props.muted === 0,
-            'border-secondary': props.muted === 1,
-            'opacity-50 border-secondary': props.muted === 2,
-            'px-3 py-2 gap-1 o-small': ui.isSmall,
-            'border-top-0': props.first,
-            'o-px-2_5 o-py-1_5 gap-2': !ui.isSmall,
-            'o-active': props.isActive,
+    <ActionSwiper onLeftSwipe="this.props.onSwipeLeft ? this.props.onSwipeLeft : undefined" onRightSwipe="this.props.onSwipeRight ? this.props.onSwipeRight : undefined">
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-on-click="this.onClick" t-ref="root" t-att-class="{
+            'o-important': this.props.important,
+            'o-interest': this.props.muted === 0,
+            'border-secondary': this.props.muted === 1,
+            'opacity-50 border-secondary': this.props.muted === 2,
+            'px-3 py-2 gap-1 o-small': this.ui.isSmall,
+            'border-top-0': this.props.first,
+            'o-px-2_5 o-py-1_5 gap-2': !this.ui.isSmall,
+            'o-active': this.props.isActive,
         }">
-            <div class="o-mail-NotificationItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': ui.isSmall }">
-                <DiscussAvatar t-if="props.thread or props.persona" thread="props.thread" persona="props.persona" size="ui.isSmall ? 52 : undefined"/>
-                <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': ui.isSmall, 'rounded': !ui.isSmall }" alt="Notification Item Image" t-att-src="props.iconSrc"/>
-                <t t-if="props.slots and props.slots.icon" t-slot="icon"/>
+            <div class="o-mail-NotificationItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
+                <DiscussAvatar t-if="this.props.thread or this.props.persona" thread="this.props.thread" persona="this.props.persona" size="this.ui.isSmall ? 52 : undefined"/>
+                <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
+                <t t-if="this.props.slots and this.props.slots.icon" t-slot="icon"/>
             </div>
-            <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': ui.isSmall, 'ps-1': !ui.isSmall }">
+            <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': this.ui.isSmall, 'ps-1': !this.ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': ui.isSmall }" t-att-style="props.nameMaxLine !== undefined ? webkitLineClamp(props.nameMaxLine) : ''">
+                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': this.ui.isSmall }" t-att-style="this.props.nameMaxLine !== undefined ? this.webkitLineClamp(this.props.nameMaxLine) : ''">
                         <t t-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
-                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': props.muted, 'o-fw-600': !props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
-                        <t t-esc="dateText"/>
+                    <small t-if="this.props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': this.props.muted, 'o-fw-600': !this.props.muted }" t-att-title="this.props.datetime?.toLocaleString(this.DateTime.DATETIME_SHORT) ?? ''">
+                        <t t-esc="this.dateText"/>
                     </small>
-                    <t t-if="props.slots and props.slots.sideContent">
+                    <t t-if="this.props.slots and this.props.slots.sideContent">
                         <t t-slot="sideContent"/>
                     </t>
                 </div>
                 <div class="d-flex o-mail-NotificationItem-line">
-                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate, 'small': !ui.isSmall, 'o-muted': props.muted }" t-att-style="props.textMaxLine !== undefined ? webkitLineClamp(props.textMaxLine) : ''">
+                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': this.props.textTruncate, 'text-start': !this.props.textTruncate, 'small': !this.ui.isSmall, 'o-muted': this.props.muted }" t-att-style="this.props.textMaxLine !== undefined ? this.webkitLineClamp(this.props.textMaxLine) : ''">
                         <t t-slot="body-icon"/>
-                        <MessageSeenIndicator t-if="message?.showSeenIndicator(props.thread)" message="message"/>
-                        <t t-if="props.slots?.body" name="notificationBody" t-slot="body"/>
+                        <MessageSeenIndicator t-if="this.message?.showSeenIndicator(this.props.thread)" message="this.message"/>
+                        <t t-if="this.props.slots?.body" name="notificationBody" t-slot="body"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-start position-relative">
-                        <span class="position-absolute" t-if="props.hasMarkAsReadButton">
-                            <span t-if="rootHover.isHover" class="ms-1 bg-view">
+                        <span class="position-absolute" t-if="this.props.hasMarkAsReadButton">
+                            <span t-if="this.rootHover.isHover" class="ms-1 bg-view">
                                 <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-ref="markAsRead"><i class="fa fa-check text-success"/></span>
                             </span>
                         </span>
-                        <span t-if="!props.muted" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{ props.counter > 0 and props.muted === 2 ? 'o-muted' : '' }} {{ props.important ? 'o-important' : '' }} {{ props.counter === 0 ? 'o-empty me-1' : '' }} d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm"><t t-if="props.counter" t-esc="props.counter"/></span>
+                        <span t-if="!this.props.muted" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{ this.props.counter > 0 and this.props.muted === 2 ? 'o-muted' : '' }} {{ this.props.important ? 'o-important' : '' }} {{ this.props.counter === 0 ? 'o-empty me-1' : '' }} d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm"><t t-if="this.props.counter" t-esc="this.props.counter"/></span>
                     </div>
                 </div>
             </div>

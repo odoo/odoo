@@ -24,7 +24,7 @@
     </t>
 
     <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
-        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="uploadDocument.bind">uploadDocument</attribute>
         </xpath>
     </t>

@@ -63,7 +63,7 @@ async function makeExpressionEditor(params = {}) {
     const props = { ...params };
     class Parent extends Component {
         static components = { ExpressionEditor };
-        static template = xml`<ExpressionEditor t-props="expressionEditorProps"/>`;
+        static template = xml`<ExpressionEditor t-props="this.expressionEditorProps"/>`;
         static props = ["*"];
         setup() {
             this.expressionEditorProps = {

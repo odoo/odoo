@@ -29,7 +29,7 @@ class TestComponent extends Component {
 
 class Parent extends Component {
     static template = xml`
-      <t t-component="props.componentInfo.Component" t-if="props.componentInfo.Component" />
+      <t t-component="this.props.componentInfo.Component" t-if="this.props.componentInfo.Component" />
     `;
     static props = ["*"];
 }
@@ -355,7 +355,7 @@ test("data-hotkey added to command palette", async () => {
         static components = { TestComponent };
         static template = xml`
             <div>
-                <button title="Aria Stark" data-hotkey="a" t-on-click="onClick">visible</button>
+                <button title="Aria Stark" data-hotkey="a" t-on-click="this.onClick">visible</button>
                 <input title="Bran Stark" type="text" data-hotkey="b" />
                 <button title="Sansa Stark" data-hotkey="c" style="display: none;" />
                 <TestComponent />
@@ -403,8 +403,8 @@ test("access to hotkeys from the command palette", async () => {
         static components = { TestComponent };
         static template = xml`
             <div>
-                <button title="B" data-hotkey="b" t-on-click="onClickB">visible</button>
-                <button title="C" data-hotkey="c" t-on-click="onClickC">visible</button>
+                <button title="B" data-hotkey="b" t-on-click="this.onClickB">visible</button>
+                <button title="C" data-hotkey="c" t-on-click="this.onClickC">visible</button>
                 <TestComponent />
             </div>
         `;

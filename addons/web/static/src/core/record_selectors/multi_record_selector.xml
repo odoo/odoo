@@ -12,20 +12,20 @@
                 </t>
             </t>
             <RecordAutocomplete
-                resModel="props.resModel"
+                resModel="this.props.resModel"
                 value="''"
-                domain="props.domain"
-                context="props.context"
+                domain="this.props.domain"
+                context="this.props.context"
                 className="'o_record_autocomplete_with_caret flex-grow-1'"
-                fieldString="props.fieldString"
-                placeholder="placeholder"
+                fieldString="this.props.fieldString"
+                placeholder="this.placeholder"
                 multiSelect="true"
-                getIds.bind="getIds"
-                update.bind="update"
+                getIds.bind="this.getIds"
+                update.bind="this.update"
             >
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                    <span t-if="isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-                        <img class="rounded me-1" t-attf-src="/web/image/{{props.resModel}}/{{autoCompleteItemScope.data.record.id}}/avatar_128"/>
+                    <span t-if="this.isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{this.props.resModel}}/{{autoCompleteItemScope.data.record.id}}/avatar_128"/>
                         <t t-esc="autoCompleteItemScope.label"/>
                     </span>
                     <t t-else="" t-esc="autoCompleteItemScope.label"/>

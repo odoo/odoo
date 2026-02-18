@@ -418,7 +418,7 @@ describe("throttleForAnimationScrollEvent", () => {
 describe("useDebounced", () => {
     test("cancels on component destroy", async () => {
         class TestComponent extends Component {
-            static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+            static template = xml`<button class="c" t-on-click="this.debounced">C</button>`;
             static props = ["*"];
             setup() {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000);
@@ -475,7 +475,7 @@ describe("useDebounced", () => {
 
     test("execBeforeUnmount option (callback resolved before component destroy)", async () => {
         class TestComponent extends Component {
-            static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+            static template = xml`<button class="c" t-on-click="this.debounced">C</button>`;
             static props = ["*"];
             setup() {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000, {
@@ -503,7 +503,7 @@ describe("useDebounced", () => {
 describe("useThrottleForAnimation", () => {
     test("cancels on component destroy", async () => {
         class TestComponent extends Component {
-            static template = xml`<button class="c" t-on-click="throttled">C</button>`;
+            static template = xml`<button class="c" t-on-click="this.throttled">C</button>`;
             static props = ["*"];
             setup() {
                 this.throttled = useThrottleForAnimation(() => expect.step("throttled"), 1000);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="point_of_sale.PosKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
-        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="initialPosState">initialPosState</attribute>
         </xpath>
     </t>

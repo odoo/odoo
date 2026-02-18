@@ -14,7 +14,7 @@ describe.current.tags("headless");
 defineSpreadsheetModels();
 
 class DashboardSearchBarMenuWrapper extends Component {
-    static template = xml`<DashboardSearchBarMenu t-props="props" />`;
+    static template = xml`<DashboardSearchBarMenu t-props="this.props" />`;
     static components = { DashboardSearchBarMenu };
     static props = {
         ...DashboardSearchBarMenu.props,

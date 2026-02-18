@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.ActionSwiper">
-        <t t-if="localizedProps">
-            <div class="o_actionswiper" t-on-touchstart="_onTouchStartSwipe" t-ref="root">
+        <t t-if="this.localizedProps">
+            <div class="o_actionswiper" t-on-touchstart="this._onTouchStartSwipe" t-ref="root">
                 <div class="o_actionswiper_overflow_container position-relative overflow-hidden">
                     <div class="o_actionswiper_target_container" t-ref="targetContainer">
                         <t t-slot="default"/>
-                        <t t-if="localizedProps.onRightSwipe">
+                        <t t-if="this.localizedProps.onRightSwipe">
                             <div t-ref="leftPanel" class="o_actionswiper_right_swipe_area position-absolute overflow-hidden w-100 h-100">
                                 <t t-if="this.props.animationType === 'forwards'">
-                                    <t t-if="localizedProps.onRightSwipe.slot" t-component="localizedProps.onRightSwipe.slot.component" t-props="localizedProps.onRightSwipe.slot.props" />
+                                    <t t-if="this.localizedProps.onRightSwipe.slot" t-component="this.localizedProps.onRightSwipe.slot.component" t-props="this.localizedProps.onRightSwipe.slot.props" />
                                 </t>
-                                <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center rounded-end" t-att-class="localizedProps.onRightSwipe.bgColor">
-                                    <i class="fa fa-2x" t-att-class="localizedProps.onRightSwipe.icon"/>
+                                <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center rounded-end" t-att-class="this.localizedProps.onRightSwipe.bgColor">
+                                    <i class="fa fa-2x" t-att-class="this.localizedProps.onRightSwipe.icon"/>
                                 </div>
                             </div>
                         </t>
-                        <t t-if="localizedProps.onLeftSwipe">
+                        <t t-if="this.localizedProps.onLeftSwipe">
                             <div t-ref="rightPanel" class="o_actionswiper_left_swipe_area position-absolute overflow-hidden w-100 h-100">
                                 <t t-if="this.props.animationType === 'forwards'">
-                                    <t t-if="localizedProps.onLeftSwipe.slot" t-component="localizedProps.onLeftSwipe.slot.component" t-props="localizedProps.onLeftSwipe.slot.props" />
+                                    <t t-if="this.localizedProps.onLeftSwipe.slot" t-component="this.localizedProps.onLeftSwipe.slot.component" t-props="this.localizedProps.onLeftSwipe.slot.props" />
                                 </t>
-                                <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center rounded-start" t-att-class="localizedProps.onLeftSwipe.bgColor">
-                                    <i class="fa fa-2x" t-att-class="localizedProps.onLeftSwipe.icon"/>
+                                <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center rounded-start" t-att-class="this.localizedProps.onLeftSwipe.bgColor">
+                                    <i class="fa fa-2x" t-att-class="this.localizedProps.onLeftSwipe.icon"/>
                                 </div>
                             </div>
                         </t>

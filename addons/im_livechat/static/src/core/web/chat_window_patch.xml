@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow.headerContent" t-inherit-mode="extension">
         <xpath expr="//*[@name='threadAvatar']" position="before">
-            <t t-if="channel" t-call="im_livechat.LivechatStatusLabelOfThread">
-                <t t-set="templateParams" t-value="{ livechatThread: channel.thread }"/>
+            <t t-if="this.channel" t-call="im_livechat.LivechatStatusLabelOfThread">
+                <t t-set="templateParams" t-value="{ livechatThread: this.channel.thread }"/>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('o-mail-ChatWindow-displayName')]" position="after">
-            <span t-if="channel.livechat_lang_id" class="text-uppercase o-ms-0_5 fs-5 fw-normal" t-out="channel.livechat_lang_id.baseCode" t-att-title="channel.livechat_lang_id.name"/>
+            <span t-if="this.channel.livechat_lang_id" class="text-uppercase o-ms-0_5 fs-5 fw-normal" t-out="this.channel.livechat_lang_id.baseCode" t-att-title="this.channel.livechat_lang_id.name"/>
         </xpath>
     </t>
 </templates>

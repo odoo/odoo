@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Layout">
-        <t t-if="env.inDialog" t-portal="'#' + env.dialogId + ' .modal-footer'">
+        <t t-if="this.env.inDialog" t-portal="'#' + env.dialogId + ' .modal-footer'">
             <t t-slot="control-panel-buttons"/>
         </t>
-        <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="props.display.controlPanel" display="props.display.controlPanel"/>
-        <main t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel': props.display.searchPanel }">
-            <t t-component="components.SearchPanel" t-if="props.display.searchPanel"/>
+        <t t-component="this.components.ControlPanel" slots="this.controlPanelSlots" t-if="this.props.display.controlPanel" display="this.props.display.controlPanel"/>
+        <main t-ref="content" class="o_content" t-attf-class="{{this.props.className}}" t-att-class="{ 'o_component_with_search_panel': this.props.display.searchPanel }">
+            <t t-component="this.components.SearchPanel" t-if="this.props.display.searchPanel"/>
             <t t-slot="default" contentRef="contentRef" />
         </main>
     </t>

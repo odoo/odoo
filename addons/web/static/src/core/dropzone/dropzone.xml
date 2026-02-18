@@ -3,11 +3,11 @@
 
 <t t-name="web.Dropzone">
     <div class="o-Dropzone position-fixed align-items-center justify-content-center d-flex border-primary bg-100 text-primary opacity-75"
-        t-att-class="{ 'o-dragging-inside': state.isDraggingInside }"
-        t-attf-class="{{ props.extraClass }}"
-        t-on-dragenter="() => state.isDraggingInside = true"
-        t-on-dragleave="() => state.isDraggingInside = false"
-        t-on-drop="props.onDrop"
+        t-att-class="{ 'o-dragging-inside': this.state.isDraggingInside }"
+        t-attf-class="{{ this.props.extraClass }}"
+        t-on-dragenter="() => this.state.isDraggingInside = true"
+        t-on-dragleave="() => this.state.isDraggingInside = false"
+        t-on-drop="this.props.onDrop"
         t-ref="root"
     >
         <t t-slot="default">

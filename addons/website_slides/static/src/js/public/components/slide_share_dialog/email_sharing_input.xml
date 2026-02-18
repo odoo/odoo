@@ -6,8 +6,8 @@
             <div t-if="!this.state.isDone and !this.isWebsiteUser" class="input-group">
                 <input t-ref="input" type="text" placeholder="friend1@email.com, friend2@email.com"
                        class="form-control" t-att-class="{'is-invalid': this.state.isInvalid}"
-                       t-on-keypress="onKeyPress"/>
-                <button type="button" class="btn btn-primary" t-on-click.stop="onShareByEmailClick">
+                       t-on-keypress="this.onKeyPress"/>
+                <button type="button" class="btn btn-primary" t-on-click.stop="this.onShareByEmailClick">
                     <i class="fa fa-envelope-o mx-1"/>Send Email
                 </button>
             </div>

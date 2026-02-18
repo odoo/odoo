@@ -29,7 +29,7 @@ defineModels([Partner]);
 async function mountRecordSelector(props) {
     class Parent extends Component {
         static components = { RecordSelector };
-        static template = xml`<RecordSelector t-props="recordProps" />`;
+        static template = xml`<RecordSelector t-props="this.recordProps" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ resId: props.resId });

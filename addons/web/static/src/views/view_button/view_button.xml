@@ -2,24 +2,24 @@
 <templates xml:space="preserve">
 
   <t t-name="web.views.ViewButton">
-    <t t-tag="props.tag"
+    <t t-tag="this.props.tag"
         t-att="props.attrs"
-        t-att-id="props.id"
-        t-att-class="getClassName()"
-        t-att-disabled="disabled"
-        t-att-name="props.clickParams.name"
-        t-att-special="props.clickParams.special"
-        t-att-href="props.tag === 'a' and '#'"
-        t-att-style="props.style"
-        t-att-type="clickParams.type"
-        t-att-data-tooltip-template="hasBigTooltip ? 'views.ViewButtonTooltip' : false"
-        t-att-data-tooltip-info="hasBigTooltip ? tooltip : false"
-        t-att-data-tooltip="hasSmallToolTip ? props.title : false"
-        t-att-tabindex="props.tabindex"
+        t-att-id="this.props.id"
+        t-att-class="this.getClassName()"
+        t-att-disabled="this.disabled"
+        t-att-name="this.props.clickParams.name"
+        t-att-special="this.props.clickParams.special"
+        t-att-href="this.props.tag === 'a' and '#'"
+        t-att-style="this.props.style"
+        t-att-type="this.clickParams.type"
+        t-att-data-tooltip-template="this.hasBigTooltip ? 'views.ViewButtonTooltip' : false"
+        t-att-data-tooltip-info="this.hasBigTooltip ? this.tooltip : false"
+        t-att-data-tooltip="this.hasSmallToolTip ? this.props.title : false"
+        t-att-tabindex="this.props.tabindex"
         t-custom-click.stop="onClick"
     >
-      <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class + (buttonLabel ? ' me-1' : '')" t-att-src="icon.src"/>
-      <t t-slot="contents"><span t-if="buttonLabel" t-esc="buttonLabel"/></t>
+      <t t-if="this.icon" t-tag="this.icon.tag" t-att-class="this.icon.class + (this.buttonLabel ? ' me-1' : '')" t-att-src="this.icon.src"/>
+      <t t-slot="contents"><span t-if="this.buttonLabel" t-esc="this.buttonLabel"/></t>
     </t>
   </t>
 
@@ -46,7 +46,7 @@
             </li>
             <li t-if="button.context" data-item="context">
                 <span class="o-tooltip--technical--title">Context:</span>
-                <t t-esc="button.context || context"/>
+                <t t-esc="button.context || this.context"/>
             </li>
             <li t-if="'invisible' in button" data-item="invisible">
                 <span class="o-tooltip--technical--title">Invisible:</span>

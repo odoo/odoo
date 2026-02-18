@@ -82,8 +82,8 @@ class AppStore extends WithLazyGetterTrap {
 class WithStore extends Component {
     static props = {};
     static template = xml`
-        <span t-att-class="property">
-            <t t-esc="constructor.name" />: <t t-esc="this.store[property]" />
+        <span t-att-class="this.property">
+            <t t-esc="this.constructor.name" />: <t t-esc="this.store[this.property]" />
         </span>
     `;
 
@@ -133,8 +133,8 @@ class Root extends Component {
     static components = { A, B, C, D, AB, ABC, BC, CD };
     static props = {};
     static template = xml`
-        <t t-foreach="constructor.components" t-as="key" t-key="key">
-            <t t-component="constructor.components[key]" />
+        <t t-foreach="this.constructor.components" t-as="key" t-key="key">
+            <t t-component="this.constructor.components[key]" />
         </t>
     `;
 }

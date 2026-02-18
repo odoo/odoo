@@ -221,7 +221,7 @@ test("insert item before current", async () => {
         static props = [];
         static template = xml`
             <div class="container" t-ref="containerRef">
-                <t t-foreach="state.items" t-as="item" t-key="item">
+                <t t-foreach="this.state.items" t-as="item" t-key="item">
                     <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" t-esc="item"/>
                 </t>
             </div>
@@ -288,7 +288,7 @@ test("non-navigable dom update does NOT cause re-focus", async () => {
             <button class="outside" t-ref="outsideRef">outside target</button>
             <div class="container" t-ref="containerRef">
                 <button class="o-navigable one" t-on-click="() => this.onClick(1)">target one</button>
-                <div class="test-non-navigable" t-if="state.show">
+                <div class="test-non-navigable" t-if="this.state.show">
                 </div>
             </div>
         `;

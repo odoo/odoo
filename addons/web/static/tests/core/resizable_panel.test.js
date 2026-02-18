@@ -130,7 +130,7 @@ test("minWidth props can be updated", async () => {
         static components = { ResizablePanel };
         static template = xml`
             <div class="d-flex">
-                <ResizablePanel minWidth="props.state.minWidth">
+                <ResizablePanel minWidth="this.props.state.minWidth">
                     <div style="width: 10px;" class="text-break">
                         A cool paragraph
                     </div>

@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Notebook">
-        <div t-attf-class="o_notebook d-flex w-100 {{ props.orientation === 'horizontal' ? 'horizontal flex-column' : 'vertical flex-row' }} {{ props.className }}" t-if="state.currentPage">
-            <div class="o_notebook_headers" t-att-class="{ 'm-0': props.orientation === 'vertical' }">
-                <ul t-attf-class="nav nav-tabs {{ props.orientation === 'horizontal' ? 'flex-row flex-nowrap' : 'flex-column p-0' }}">
-                    <li t-foreach="navItems" t-as="navItem" t-key="navItem[0]" class="nav-item flex-nowrap" t-if="navItem[1].isVisible" t-attf-class="{{ navItem[1].isDisabled ? 'disabled' : '' }}">
-                        <button class="nav-link" t-att-class="{'active position-relative cursor-default z-1': navItem[0] === state.currentPage, 'p-3 rounded-0': props.orientation === 'vertical', 'o_page_invalid': invalidPages.has(navItem[0])}" t-attf-class="{{ navItem[1].className || '' }}" t-att-name="navItem[1].name" t-on-click="() => this.activatePage(navItem[0])" role="tab" tabindex="0">
-                            <i t-if="props.icons and props.icons[navItem[0]]" t-attf-class="fa {{ props.icons[navItem[0]] }} me-2" />
+        <div t-attf-class="o_notebook d-flex w-100 {{ this.props.orientation === 'horizontal' ? 'horizontal flex-column' : 'vertical flex-row' }} {{ this.props.className }}" t-if="this.state.currentPage">
+            <div class="o_notebook_headers" t-att-class="{ 'm-0': this.props.orientation === 'vertical' }">
+                <ul t-attf-class="nav nav-tabs {{ this.props.orientation === 'horizontal' ? 'flex-row flex-nowrap' : 'flex-column p-0' }}">
+                    <li t-foreach="this.navItems" t-as="navItem" t-key="navItem[0]" class="nav-item flex-nowrap" t-if="navItem[1].isVisible" t-attf-class="{{ navItem[1].isDisabled ? 'disabled' : '' }}">
+                        <button class="nav-link" t-att-class="{'active position-relative cursor-default z-1': navItem[0] === this.state.currentPage, 'p-3 rounded-0': this.props.orientation === 'vertical', 'o_page_invalid': this.invalidPages.has(navItem[0])}" t-attf-class="{{ navItem[1].className || '' }}" t-att-name="navItem[1].name" t-on-click="() => this.activatePage(navItem[0])" role="tab" tabindex="0">
+                            <i t-if="this.props.icons and this.props.icons[navItem[0]]" t-attf-class="fa {{ this.props.icons[navItem[0]] }} me-2" />
                             <t t-esc="navItem[1].title" />
                         </button>
                     </li>
@@ -15,8 +15,8 @@
             </div>
             <div class="o_notebook_content tab-content">
                 <div class="tab-pane active fade" t-ref="activePane">
-                    <t t-if="page" t-component="page.Component" t-key="state.currentPage" t-props="page.props" />
-                    <t t-else="" t-slot="{{ state.currentPage }}" />
+                    <t t-if="this.page" t-component="this.page.Component" t-key="this.state.currentPage" t-props="this.page.props" />
+                    <t t-else="" t-slot="{{ this.state.currentPage }}" />
                 </div>
             </div>
         </div>

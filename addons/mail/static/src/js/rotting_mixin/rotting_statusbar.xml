@@ -3,15 +3,15 @@
         <xpath expr="//*[hasclass('btn btn-secondary o_arrow_button')]" position="attributes">
             <attribute name="class" add="d-flex align-items-baseline" separator=" "/>
         </xpath>
-        <xpath expr="//span[@t-att-title='item.fullTimeInStage']" position="attributes">
+        <xpath expr="//span[@t-att-title='this.item.fullTimeInStage']" position="attributes">
             <attribute name="t-if" add="(!props.record.data.is_rotting || !item.isSelected)" separator=" and "/>
         </xpath>
                 
-        <xpath expr="//span[@t-att-title='item.fullTimeInStage']" position="after">
-            <t t-if="props.record.data.is_rotting and item.isSelected">
+        <xpath expr="//span[@t-att-title='this.item.fullTimeInStage']" position="after">
+            <t t-if="this.props.record.data.is_rotting and this.item.isSelected">
                 <span class="badge rounded-pill small text-bg-danger ms-2"
-                    t-att-title="title" style="pointer-events: all;">
-                    <t t-out="props.record.data.rotting_days"/>d
+                    t-att-title="this.title" style="pointer-events: all;">
+                    <t t-out="this.props.record.data.rotting_days"/>d
                 </span>
             </t>
         </xpath> 

@@ -5631,7 +5631,7 @@ test("resequence a record twice", async () => {
 
 test("basic support for widgets (being Owl Components)", async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-att-class="props.class" t-esc="value"/>`;
+        static template = xml`<div t-att-class="this.props.class" t-esc="this.value"/>`;
         static props = ["*"];
         get value() {
             return JSON.stringify(this.props.record.data);
@@ -5662,7 +5662,7 @@ test("basic support for widgets (being Owl Components)", async () => {
 
 test("kanban card: record value should be updated", async () => {
     class MyComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick">CLick</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick">CLick</button></div>`;
         static props = ["*"];
         onClick() {
             this.props.record.update({ foo: "yolo" });
@@ -6519,7 +6519,7 @@ test("kanban view with monetary and currency fields without widget", async () =>
 
 test("kanban widget can extract props from attrs", async () => {
     class TestWidget extends Component {
-        static template = xml`<div class="o-test-widget-option" t-esc="props.title"/>`;
+        static template = xml`<div class="o-test-widget-option" t-esc="this.props.title"/>`;
         static props = ["*"];
     }
     const testWidget = {
@@ -7108,7 +7108,7 @@ test("no leak of TransactionInProgress (not grouped case)", async () => {
 test("fieldDependencies support for fields", async () => {
     const customField = {
         component: class CustomField extends Component {
-            static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            static template = xml`<span t-esc="this.props.record.data.int_field"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
@@ -7135,7 +7135,7 @@ test("fieldDependencies support for fields", async () => {
 test("fieldDependencies support for fields: dependence on a relational field", async () => {
     const customField = {
         component: class CustomField extends Component {
-            static template = xml`<span t-esc="props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-esc="this.props.record.data.product_id.display_name"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],

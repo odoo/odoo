@@ -4,13 +4,13 @@
     <t t-name="web.AccordionItem">
         <div class="o_accordion position-relative">
             <button class="o_menu_item o_accordion_toggle dropdown-item o-navigable" tabindex="0"
-                    t-att-class="{'selected': props.selected, 'open': state.open}"
-                    t-attf-class="{{ props.class }}"
-                    t-att-aria-expanded="state.open ? 'true' : 'false'"
-                    t-esc="props.description"
-                    t-on-click="() => state.open = !state.open"
+                    t-att-class="{'selected': this.props.selected, 'open': this.state.open}"
+                    t-attf-class="{{ this.props.class }}"
+                    t-att-aria-expanded="this.state.open ? 'true' : 'false'"
+                    t-esc="this.props.description"
+                    t-on-click="() => this.state.open = !this.state.open"
             />
-            <t t-if="state.open">
+            <t t-if="this.state.open">
                 <div class="o_accordion_values ms-4 border-start">
                     <t t-slot="default"/>
                 </div>

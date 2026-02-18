@@ -3,11 +3,11 @@
 
     <t t-name="web.FormErrorDialog">
         <Dialog size="'sm'" title.translate="'Oh snap!'" contentClass="'o_error_dialog o_form_error_dialog'">
-            <p t-esc="message" class="text-prewrap"/>
+            <p t-esc="this.message" class="text-prewrap"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="stay">Stay here</button>
-                <button class="btn btn-secondary" t-if="redirectAction" t-on-click="onRedirectBtnClicked"><t t-esc="redirectBtnLabel"/></button>
-                <button class="btn btn-secondary" t-on-click="discard">Discard changes</button>
+                <button class="btn btn-primary" t-on-click="this.stay">Stay here</button>
+                <button class="btn btn-secondary" t-if="this.redirectAction" t-on-click="this.onRedirectBtnClicked"><t t-esc="this.redirectBtnLabel"/></button>
+                <button class="btn btn-secondary" t-on-click="this.discard">Discard changes</button>
             </t>
         </Dialog>
     </t>

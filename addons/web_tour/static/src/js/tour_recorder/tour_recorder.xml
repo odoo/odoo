@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_tour.TourRecorder">
-    <div t-ref="tour_recorder" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_recorder" t-attf-style="left: {{state.position.x}}px; bottom: {{state.position.y}}px;">
+    <div t-ref="tour_recorder" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_recorder" t-attf-style="left: {{this.state.position.x}}px; bottom: {{this.state.position.y}}px;">
         <div class="d-flex align-items-center">
             <div class="bg-primary text-secondary o_tour_recorder_handler px-1" style="cursor: grab;">
                 <span class="oi oi-draggable"/>
             </div>
-            <button class="o_button_record btn btn-primary " t-on-click.prevent.stop="toggleRecording">
-                <span class="px-2 me-1 rounded-circle" t-att-class="state.recording ? 'bg-danger': 'bg-white'" role="status" aria-hidden="true"></span>
+            <button class="o_button_record btn btn-primary " t-on-click.prevent.stop="this.toggleRecording">
+                <span class="px-2 me-1 rounded-circle" t-att-class="this.state.recording ? 'bg-danger': 'bg-white'" role="status" aria-hidden="true"></span>
                 Record
-                <span class="fst-italic fw-lighter" t-if="state.editedElement"> (recording keyboard)</span>
+                <span class="fst-italic fw-lighter" t-if="this.state.editedElement"> (recording keyboard)</span>
             </button>
-            <Dropdown position="'bottom-end'" menuClass="'p-0'" state="dropdownState">
-                <button class="o_button_steps btn btn-primary mx-1" t-att-disabled="!state.steps.length">
-                    Steps <span class="bg-danger rounded py-1 px-2"><t t-esc="state.steps.length"/></span>
+            <Dropdown position="'bottom-end'" menuClass="'p-0'" state="this.dropdownState">
+                <button class="o_button_steps btn btn-primary mx-1" t-att-disabled="!this.state.steps.length">
+                    Steps <span class="bg-danger rounded py-1 px-2"><t t-esc="this.state.steps.length"/></span>
                 </button>
                 <t t-set-slot="content">
                     <div class="o_tour_recorder" style="height: 400px; width: 500px">
@@ -22,11 +22,11 @@
                                 <tr>
                                     <td>#</td>
                                     <td style="width: 25rem">Trigger</td>
-                                    <td><button class="btn btn-link py-0" t-on-click="openResetStepsDialog">Clear</button></td>
+                                    <td><button class="btn btn-link py-0" t-on-click="this.openResetStepsDialog">Clear</button></td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="state.steps" t-as="step" t-key="step_index">
+                                <t t-foreach="this.state.steps" t-as="step" t-key="step_index">
                                     <tr class="o_tour_step" t-att-class="step.triggerNotUnique ? 'text-danger' : ''">
                                         <td><t t-esc="step_index + 1"/>.</td>
                                         <td class="o_tour_step_trigger">
@@ -41,20 +41,20 @@
                     </div>
                 </t>
             </Dropdown>
-            <Dropdown t-if="state.steps.length" position="'top-end'">
+            <Dropdown t-if="this.state.steps.length" position="'top-end'">
                 <button class="o_button_save btn btn-primary px-2 rounded-0" data-tooltip="Save">
                     <i class="fa fa-cloud-upload"></i>
                 </button>
                 <t t-set-slot="content">
                     <div class="o_tour_recorder p-1" style="width: 400px;">
-                        <form t-on-submit.prevent="saveTour">
+                        <form t-on-submit.prevent="this.saveTour">
                             <div class="container">
                                 <div class="row pt-1">
                                     <div class="col-4">
                                         <label for="tour_name" class="o_form_label fw-bold me-2">Name</label>
                                     </div>
                                     <div class="col-8 o_field_widget">
-                                        <input t-att-value="state.tourName" t-on-change="(ev) => state.tourName = ev.target.value" class="o_input" type="text" id="tour_name"/>
+                                        <input t-att-value="this.state.tourName" t-on-change="(ev) => this.state.tourName = ev.target.value" class="o_input" type="text" id="tour_name"/>
                                     </div>
                                 </div>  
                                 <div class="row pt-3">
@@ -62,7 +62,7 @@
                                         <label for="url" class="o_form_label fw-bold">Starting URL</label>
                                     </div>
                                     <div class="col-8 o_field_widget">
-                                        <input t-att-value="state.url" t-on-change="(ev) => state.url = ev.target.value" class="o_input" type="text" id="url"/>
+                                        <input t-att-value="this.state.url" t-on-change="(ev) => this.state.url = ev.target.value" class="o_input" type="text" id="url"/>
                                     </div>
                                 </div>   
                                 <div class="row pt-2">
@@ -75,7 +75,7 @@
                     </div>
                 </t>
             </Dropdown>
-            <button class="btn btn-primary o_tour_recorder_close_button" t-on-click.prevent.stop="openCloseRecorderDialog" data-tooltip="Close"><i class="fa fa-close"></i></button>
+            <button class="btn btn-primary o_tour_recorder_close_button" t-on-click.prevent.stop="this.openCloseRecorderDialog" data-tooltip="Close"><i class="fa fa-close"></i></button>
         </div>
     </div>
 </t>
