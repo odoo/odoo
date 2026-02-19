@@ -26,22 +26,8 @@ export class hsnCodeDialog extends Component {
     async redirect() {
         // Close dialog first
         this.props.close();
-
-        const isProductUser = await user.hasGroup("product.group_product_manager");
-        if (!isProductUser) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Access Denied"),
-                body: _t(
-                    "You don’t have permission to manage products. Please reach out to your administrator for assistance."
-                ),
-            });
-            return false;
-        }
-
-        const action = await this.pos.data.call("product.template", "l10n_in_get_hsn_code_action", [
-            this.props.productIds,
-        ]);
-
-        await this.action.doAction(action);
+        const url = "/odoo/customer-products";
+        // We could define another action here which shows by default the products available in pos without hsn if it is available (and otherwise they have to update)
+        window.open(url, '_blank');
     }
 }
