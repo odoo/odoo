@@ -2,6 +2,7 @@
 import pytz
 from datetime import datetime
 
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -103,3 +104,34 @@ class TestResourceCalendar(TransactionCase):
             '2019-05-31': False,
         }
         self.assertEqual(days, expected_res)
+
+    def test_duration_based_average_hours(self):
+        """Checks that the average hours for days and weeks are correctly computed when the option Define Amount of
+        Hours per Day has been checked."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based Calendar',
+            'attendance_ids': False,
+            'duration_based': True,
+        })
+        with Form(calendar) as form:
+            with form.attendance_ids.new() as monday_attendance:
+                monday_attendance.name = 'Mon'
+                monday_attendance.dayofweek = '0'
+                monday_attendance.day_period = 'full_day'
+                monday_attendance.duration_hours = 4.0
+
+            with form.attendance_ids.new() as tuesday_attendance:
+                tuesday_attendance.name = 'Tue'
+                tuesday_attendance.dayofweek = '1'
+                tuesday_attendance.day_period = 'full_day'
+                tuesday_attendance.duration_hours = 4.0
+
+            with form.attendance_ids.new() as wednesday_attendance:
+                wednesday_attendance.name = 'Wed'
+                wednesday_attendance.dayofweek = '2'
+                wednesday_attendance.day_period = 'full_day'
+                wednesday_attendance.duration_hours = 4.0
+            self.assertEqual(
+                (form.hours_per_week, form.hours_per_day),
+                (12, 4),
+            )
