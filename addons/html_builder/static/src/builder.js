@@ -158,7 +158,7 @@ export class Builder extends Component {
                     },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
-                        if (!currentOptionsContainers.length) {
+                        if (!currentOptionsContainers.length && !this.displayOnlyCustomizeTab) {
                             // If there is no option, fallback on the current
                             // fallback tab.
                             this.setTab(this.noSelectionTab);
