@@ -4,9 +4,12 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+import pytz
+
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.tests.common import users
 
 class TestTrackData(TestEventOnlineCommon):
@@ -207,3 +210,29 @@ class TestTrackSuggestions(TestEventOnlineCommon):
             self.assertTrue(
                 track_suggestion in [track_2, track_3, track_4, track_5, track_6],
                 "Returned track should the a random one (but not the one we're trying to get suggestion for)")
+
+    def test_split_track_by_days(self):
+        """Tracks crossing midnight should split at 00:00 local time."""
+        local_tz = pytz.timezone('Europe/Brussels')
+
+        # 20:00 UTC = 22:00 Europe/Brussels (DST), duration 3h
+        # => 22:00-00:00 = 8 slots, 00:00-01:00 = 4 slots
+        track = self.env['event.track'].create({
+            'name': 'Midnight Track',
+            'event_id': self.event_0.id,
+            'date': datetime(2020, 7, 6, 20, 0, 0),
+            'duration': 3.0,
+        })
+        buckets = list(EventTrackController()._split_track_by_days(track, local_tz).items())
+        self.assertEqual(len(buckets), 2, "Track crossing midnight should split into two buckets")
+        self.assertEqual(buckets[0][1], 8, "22:00-00:00 = 8 quarter-hour slots")
+        self.assertEqual(buckets[1][0].hour, 0, "Second bucket should start at midnight")
+        self.assertEqual(buckets[1][1], 4, "00:00-01:00 = 4 quarter-hour slots")
+
+        # 50h from 22:00 spans 3 days
+        track.duration = 50.0
+        buckets = list(EventTrackController()._split_track_by_days(track, local_tz).items())
+        self.assertEqual(len(buckets), 3, "50h from 22:00 fills exactly 3 buckets")
+        self.assertEqual(buckets[0][1], 8, "22:00-00:00 = 8 slots")
+        self.assertEqual(buckets[1][1], 96, "Day 2: 00:00-00:00 = 96 slots")
+        self.assertEqual(buckets[2][1], 96, "Day 3: 00:00-00:00 = 96 slots")
