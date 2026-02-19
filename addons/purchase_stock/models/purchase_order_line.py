@@ -167,7 +167,7 @@ class PurchaseOrderLine(models.Model):
 
     def _create_or_update_picking(self):
         for line in self:
-            if line.product_id and line.product_id.type == 'consu':
+            if line.product_id and line.product_id.type == 'consu' and not all(m.state == 'done' for m in line.move_ids):
                 rounding = line.product_uom_id.rounding
                 if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
