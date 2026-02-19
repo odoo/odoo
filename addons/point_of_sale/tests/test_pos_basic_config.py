@@ -5,12 +5,12 @@ import odoo
 
 from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
-from pprint import pformat
 import unittest.mock
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSBasicConfig(TestPoSCommon):
@@ -1473,3 +1473,14 @@ class TestPoSBasicConfig(TestPoSCommon):
         test_payment_method.journal_id = False
         test_journal.action_archive()
         self.assertFalse(test_journal.active, "Journal should be archived when not linked to a POS payment method.")
+
+    def test_archive_delete_special_product(self):
+        special_product = self.env.ref('point_of_sale.product_product_tip')
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.action_archive()
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.product_variant_ids[0].action_archive()
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.unlink()
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.product_variant_ids[0].unlink()
