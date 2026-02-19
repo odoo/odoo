@@ -863,3 +863,26 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'debit': 0.0,
             },
         ])
+
+    def test_additional_products_and_backorder(self):
+        '''
+        Test receiving part of the purchase's products + an additional product.
+        Expected behaviour:
+            - new picking for the backorder
+            - new POL for the added product
+        '''
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+        reception = po.picking_ids
+        reception.move_ids = [Command.create({
+            'product_id': self.product_a.id,
+            'quantity': 2,
+        })]
+        self.assertEqual(len(reception.move_ids), 3)
+        reception.move_ids[0].move_line_ids.qty_done = 5
+        reception.move_ids[2].move_line_ids.qty_done = 2
+        self.assertEqual(reception.move_ids.mapped('picked'), [True, False, True])
+        res_dict = reception.button_validate()
+        self.env[res_dict['res_model']].with_context(res_dict['context']).process()
+        self.assertEqual(len(po.picking_ids), 2)
+        self.assertEqual(len(po.order_line), 3)
