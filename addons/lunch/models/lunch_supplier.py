@@ -307,7 +307,8 @@ class LunchSupplier(models.Model):
         self.ensure_one()
 
         fieldname = WEEKDAY_TO_NAME[date.weekday()]
-        return not (self.recurrency_end_date and date.date() >= self.recurrency_end_date) and self[fieldname]
+        date_only = date.date() if isinstance(date, datetime) else date
+        return not (self.recurrency_end_date and date_only >= self.recurrency_end_date) and self[fieldname]
 
     @api.depends('available_today', 'automatic_email_time', 'send_by')
     def _compute_order_deadline_passed(self):
