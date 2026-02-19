@@ -9,7 +9,7 @@
         >
             <button
                 t-if="isPermissionGranted(props.kind)"
-                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret overflow-hidden"
+                class="o-mail-DeviceSelect-button btn btn-secondary cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret overflow-hidden text-reset"
                 t-att-data-kind="props.kind"
                 t-attf-class="{{ props.roundedType === 'pill' ? 'rounded-pill' : 'rounded' }}"
              >
@@ -22,7 +22,7 @@
             </button>
             <button
                 t-else=""
-                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret"
+                class="o-mail-DeviceSelect-button btn btn-secondary cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret text-reset"
                 t-att-data-kind="props.kind"
                 t-attf-class="{{ props.roundedType === 'pill' ? 'rounded-pill' : 'rounded' }}"
                 t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
