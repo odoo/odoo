@@ -26,6 +26,7 @@ class TestAuditTrailDE(AccountTestInvoicingCommon):
         self.env['account.move.send'].with_context(
             active_model='account.move',
             active_ids=invoice.ids,
+            force_report_rendering=True,
         ).create({
             'checkbox_download': False,
             'checkbox_send_mail': False,
