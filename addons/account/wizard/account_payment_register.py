@@ -456,7 +456,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.can_edit_wizard = True
             else:
                 # == Multiple batches: The wizard is not editable  ==
-                lines = self.env['account.move.line'].union(*(batch_result['lines'] for batch_result in batches))
+                lines = self.env['account.move.line'].union(batch_result['lines'] for batch_result in batches)
                 company = min(lines.company_id, key=lambda c: len(c.parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
                 wizard.update({
                     'company_id': company.id,
@@ -1336,7 +1336,7 @@ class AccountPaymentRegister(models.TransientModel):
                     'batch': batch_result,
                 } for batch_result in batches)
 
-        lines = self.env['account.move.line'].union(*(batch_result['lines'] for batch_result in batches))
+        lines = self.env['account.move.line'].union(batch_result['lines'] for batch_result in batches)
         from_sibling_companies = self._from_sibling_companies(lines)
         if from_sibling_companies and lines.company_id.root_id not in self.env.companies:
             # Payment made for sibling companies, we don't want to redirect to the payments

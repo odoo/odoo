@@ -1943,9 +1943,9 @@ class AccountMove(models.Model):
         self.fetch(['fiscal_position_id', 'company_id'])
         foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
         for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
-            self.env['account.move'].concat(*record_group).tax_country_id = fiscal_position_id.country_id
+            self.env['account.move'].concat(record_group).tax_country_id = fiscal_position_id.country_id
         for company_id, record_group in groupby((self-foreign_vat_records), key=lambda r: r.company_id):
-            self.env['account.move'].concat(*record_group).tax_country_id = company_id.account_fiscal_country_id
+            self.env['account.move'].concat(record_group).tax_country_id = company_id.account_fiscal_country_id
 
     @api.depends('tax_country_id')
     def _compute_tax_country_code(self):

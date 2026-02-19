@@ -238,7 +238,7 @@ class ProjectProject(models.Model):
                 ['id:recordset'],
             )
         }
-        milestones = self.env['project.milestone'].concat(*milestones_per_project_id.values())
+        milestones = self.env['project.milestone'].concat(milestones_per_project_id.values())
         task_read_group = self.env['project.task']._read_group(
             [('milestone_id', 'in', milestones.ids)],
             ['milestone_id', 'state'],

@@ -780,7 +780,7 @@ class SurveyQuestion(models.Model):
         right_answers = self.suggested_answer_ids.filtered(lambda label: label.is_correct)
         if self.question_type == 'multiple_choice':
             for user_input, lines in tools.groupby(user_input_lines, operator.itemgetter('user_input_id')):
-                user_input_answers = self.env['survey.user_input.line'].concat(*lines).filtered(lambda l: l.answer_is_correct).mapped('suggested_answer_id')
+                user_input_answers = self.env['survey.user_input.line'].concat(lines).filtered(lambda l: l.answer_is_correct).mapped('suggested_answer_id')
                 if user_input_answers and user_input_answers < right_answers:
                     partial_inputs += user_input
                 elif user_input_answers:

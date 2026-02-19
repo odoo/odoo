@@ -72,7 +72,7 @@ class IrAsset(models.Model):
                 # specific asset for this asset (based on the same `key` attribute)
                 most_specific_assets.append(asset)
 
-        return self.browse().union(*most_specific_assets)
+        return self.union(most_specific_assets)
 
     def write(self, vals):
         """COW for ir.asset. This way editing websites does not impact other

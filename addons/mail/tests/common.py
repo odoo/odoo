@@ -1516,7 +1516,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         :param mail_unlink_sent: mock parameter, tells if mails are unlinked
           and therefore we are able to check outgoing emails;
         """
-        partners = self.env['res.partner'].sudo().concat(*list(p['partner'] for i in recipients_info for p in i['notif'] if p.get('partner')))
+        partners = self.env['res.partner'].sudo().concat(p['partner'] for i in recipients_info for p in i['notif'] if p.get('partner'))
         email_addrs = [email for i in recipients_info for p in i['notif'] for email in p.get('email_to', []) if not p.get('partner')]
         base_domain = ['|', ('res_partner_id', 'in', partners.ids), ('mail_email_address', 'in', email_addrs)]
         if messages is not None:

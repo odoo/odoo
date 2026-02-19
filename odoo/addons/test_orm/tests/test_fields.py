@@ -4042,8 +4042,10 @@ class TestParentStore(TransactionCaseWithUserDemo):
         cat7 = Cat.create({'name': '7', 'parent': cat6.id})
         cat8 = Cat.create({'name': '8', 'parent': cat6.id})
         cat9 = Cat.create({'name': '9', 'parent': cat6.id})
-        cls._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
-                               cat5, cat6, cat7, cat8, cat9)
+        cls._cats = Cat.concat((
+            cat0, cat1, cat2, cat3, cat4,
+            cat5, cat6, cat7, cat8, cat9,
+        ))
 
     def cats(self, *indexes):
         """ Return the given categories. """

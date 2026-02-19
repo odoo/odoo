@@ -752,7 +752,7 @@ class StockWarehouseOrderpoint(models.Model):
                         for procurement, error_msg in errors.procurement_exceptions:
                             orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
                         all_orderpoints_exceptions += orderpoints_exceptions
-                        failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
+                        failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(o[0] for o in orderpoints_exceptions)
                         if not failed_orderpoints:
                             _logger.error('Unable to process orderpoints')
                             break

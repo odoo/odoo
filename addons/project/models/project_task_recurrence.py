@@ -89,7 +89,7 @@ class ProjectTaskRecurrence(models.Model):
 
     @api.model
     def _create_next_occurrences_values(self, recurrence_by_task):
-        tasks = self.env['project.task'].concat(*recurrence_by_task.keys())
+        tasks = self.env['project.task'].concat(recurrence_by_task.keys())
         list_create_values = []
         list_copy_data = tasks.with_context(copy_project=True, active_test=False).sudo().copy_data()
         list_fields_to_copy = tasks._read_format(self._get_recurring_fields_to_copy())

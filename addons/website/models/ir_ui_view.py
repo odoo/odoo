@@ -311,7 +311,7 @@ class IrUiView(models.Model):
             elif not view.website_id and view.key not in specific_views_keys:
                 most_specific_views.append(view)
 
-        return self.browse().union(*most_specific_views)
+        return self.union(most_specific_views)
 
     @api.model
     def _view_get_inherited_children(self, view):

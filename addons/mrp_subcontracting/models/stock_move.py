@@ -167,7 +167,7 @@ class StockMove(models.Model):
             picking._subcontracted_produce(subcontract_details)
 
         if subcontract_details_per_picking:
-            self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
+            self.env['stock.picking'].concat(subcontract_details_per_picking).action_assign()
         return res
 
     def _get_subcontract_bom(self):

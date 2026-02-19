@@ -430,7 +430,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
             if groupby != 'none':
                 if groupby == 'milestone_id':
-                    grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(groupby))]
+                    grouped_tasks = [Task_sudo.concat(g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(groupby))]
 
                     if not grouped_tasks:
                         if tasks_no_milestone:
@@ -442,7 +442,7 @@ class ProjectCustomerPortal(CustomerPortal):
                             grouped_tasks[len(grouped_tasks) - 1] |= tasks_no_milestone
 
                 else:
-                    grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(groupby))]
+                    grouped_tasks = [Task_sudo.concat(g) for k, g in groupbyelem(tasks, itemgetter(groupby))]
             else:
                 grouped_tasks = [tasks] if tasks else []
 

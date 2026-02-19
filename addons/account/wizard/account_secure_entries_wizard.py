@@ -68,8 +68,8 @@ class AccountSecureEntriesWizard(models.TransientModel):
         for wizard in self:
             chains_to_hash = wizard.with_context(chain_info_warnings=False)._get_chains_to_hash(wizard.company_id, today)
             moves = self.env['account.move'].concat(
-                *[chain['moves'] for chain in chains_to_hash],
-                *[chain['not_hashable_unlocked_moves'] for chain in chains_to_hash],
+                [chain['moves'] for chain in chains_to_hash]
+                + [chain['not_hashable_unlocked_moves'] for chain in chains_to_hash]
             )
             if moves:
                 min_date = self.env.execute_query(

@@ -844,7 +844,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ) or ptal.product_template_value_ids.filtered('ptav_active')[:1]
             )
             combination_info = product._get_combination_info(
-                combination=request.env['product.template.attribute.value'].concat(combination)
+                combination=combination
             )
         else:
             combination_info = product._get_combination_info()

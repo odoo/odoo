@@ -243,4 +243,4 @@ class AccountMove(models.Model):
 
     def _get_active_myinvois_document(self, including_in_progress=False):
         """ Shortcut to get the active document of all invoice in self. """
-        return self.env['myinvois.document'].union(*[invoice.l10n_my_edi_document_ids._get_active_myinvois_document(including_in_progress) for invoice in self])
+        return self.env['myinvois.document'].union(invoice.l10n_my_edi_document_ids._get_active_myinvois_document(including_in_progress) for invoice in self)

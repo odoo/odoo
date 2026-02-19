@@ -497,7 +497,7 @@ class TestTraceability(TestMrpCommon):
         pickingA_out._action_done()
 
         # Use concat so that delivery_ids is computed in batch.
-        for lot in lot_subcomponentA.concat(lot_componentA, lot_endProductA):
+        for lot in lot_subcomponentA.concat((lot_subcomponentA, lot_componentA, lot_endProductA)):
             self.assertEqual(lot.delivery_ids.ids, pickingA_out.ids)
 
     def test_unbuild_scrap_and_unscrap_tracked_component(self):

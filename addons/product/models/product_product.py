@@ -656,7 +656,7 @@ class ProductProduct(models.Model):
             ptal = template_attribute_to_ptal.get((template_id, attribute_id))
             if ptal:
                 # add the new value ids
-                ptal.value_ids = ptal.value_ids.union(*pavs)
+                ptal.value_ids |= ptal.value_ids.union(pavs)
             else:
                 ptals_to_create.append({
                     'product_tmpl_id': template_id,
@@ -825,7 +825,7 @@ class ProductProduct(models.Model):
 
         # Use tmp recordset in case we copy several variants from the same template
         templates = [product.product_tmpl_id for product in self]
-        templates_to_copy = self.env['product.template'].concat(*templates)
+        templates_to_copy = self.env['product.template'].concat(templates)
         new_templates = templates_to_copy.copy(default=default)
         new_products = self.env['product.product']
         for new_template in new_templates:

@@ -221,7 +221,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(len(composer_form.attachment_ids), 4)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
         self.assertEqual(len(report_attachments), 2)
-        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
+        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(report_attachments)
         self.assertEqual(tpl_attachments, template_1_attachments)
 
         # change template: 0 static (attachment_ids) and 1 dynamic (report)
@@ -229,7 +229,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(len(composer_form.attachment_ids), 1)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
         self.assertEqual(len(report_attachments), 1)
-        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
+        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(report_attachments)
         self.assertFalse(tpl_attachments)
 
         # change back to template 1
@@ -237,7 +237,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(len(composer_form.attachment_ids), 4)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
         self.assertEqual(len(report_attachments), 2)
-        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
+        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(report_attachments)
         self.assertEqual(tpl_attachments, template_1_attachments)
 
         # reset template

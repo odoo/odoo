@@ -423,11 +423,11 @@ class StockPackage(models.Model):
 
         grouped_quants = {}
         for k, g in groupby(self.contained_quant_ids, key=_keys_groupby):
-            grouped_quants[k] = sum(self.env['stock.quant'].concat(*g).mapped('quantity'))
+            grouped_quants[k] = sum(self.env['stock.quant'].concat(g).mapped('quantity'))
 
         grouped_ops = {}
         for k, g in groupby(move_lines, key=_keys_groupby):
-            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*g).mapped('quantity_product_uom'))
+            grouped_ops[k] = sum(self.env['stock.move.line'].concat(g).mapped('quantity_product_uom'))
 
         return all(float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
            and all(float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops)

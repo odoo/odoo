@@ -1162,7 +1162,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             move.move_dest_ids = [Command.unlink(m_id) for m_id in move_to_propagate_ids]
             new_move.move_dest_ids = [Command.link(m_id) for m_id in move_to_propagate_ids]
 
-        new_moves = self.env['stock.move'].concat(*new_moves)
+        new_moves = self.env['stock.move'].concat(new_moves)
         new_moves = new_moves.sudo()._action_confirm()
 
         return new_moves
@@ -1242,7 +1242,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         else:
             candidate_moves_set.add(merge_into | self)
 
-        distinct_fields = (self | self.env['stock.move'].concat(*candidate_moves_set))._prepare_merge_moves_distinct_fields()
+        distinct_fields = (self | self.env['stock.move'].concat(candidate_moves_set))._prepare_merge_moves_distinct_fields()
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
@@ -1264,7 +1264,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             # First step find move to merge.
             candidate_moves = candidate_moves.filtered(lambda m: m.state not in ('done', 'cancel', 'draft')) - neg_qty_moves
             for __, g in groupby(candidate_moves, key=self._merge_move_itemgetter(distinct_fields)):
-                moves = self.env['stock.move'].concat(*g)
+                moves = self.env['stock.move'].concat(g)
                 # Merge all positive moves together
                 if len(moves) > 1:
                     # link all move lines to record 0 (the one we will keep).
@@ -1409,7 +1409,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         Picking = self.env['stock.picking']
         grouped_moves = groupby(self, key=lambda m: m._key_assign_picking())
         for _group, moves in grouped_moves:
-            moves = self.env['stock.move'].concat(*moves)
+            moves = self.env['stock.move'].concat(moves)
             new_picking = False
             # Could pass the arguments contained in group but they are the same
             # for each move that why moves[0] is acceptable
@@ -1878,7 +1878,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 quantity += ml.uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
             grouped_move_lines_out[k] = quantity
         for k, g in groupby(move_lines_out_reserved, key=_keys_out_groupby):
-            grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('quantity_product_uom'))
+            grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(g).mapped('quantity_product_uom'))
 
         return grouped_move_lines_out
 

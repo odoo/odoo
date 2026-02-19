@@ -643,7 +643,7 @@ class SurveySurvey(models.Model):
                 questions |= page.question_ids
             else:
                 if 0 < page.random_questions_count < len(page.question_ids):
-                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
+                    questions += questions.concat(random.sample(page.question_ids, page.random_questions_count))
                 else:
                     questions |= page.question_ids
 

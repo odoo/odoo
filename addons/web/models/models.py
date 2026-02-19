@@ -439,7 +439,7 @@ class Base(models.AbstractModel):
                 for sub_search in records_opening_info
             ]
 
-            all_records = self.browse().union(*recordset_groups)
+            all_records = self.union(recordset_groups)
             record_mapped = dict(zip(
                 all_records._ids,
                 all_records.web_read(unfold_read_specification or {}),

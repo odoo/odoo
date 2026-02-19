@@ -21,7 +21,7 @@
 """
 from __future__ import annotations
 
-import collections
+import collections.abc
 import contextlib
 import functools
 import inspect
@@ -781,7 +781,7 @@ class BaseModel(metaclass=MetaModel):
                         if property_type not in ('many2one', 'many2many') or not property_cache:
                             continue
                         model = next(iter(property_cache.values())).browse()
-                        subrecords = model.union(*[property_cache[rec_id] for rec_id in records.ids if rec_id in property_cache])
+                        subrecords = model.union(property_cache[rec_id] for rec_id in records.ids if rec_id in property_cache)
                     else:  # Normal field
                         field = records._fields[fname]
                         if not field.relational:
@@ -2689,7 +2689,7 @@ class BaseModel(metaclass=MetaModel):
                 allowed_groups_msg = _("custom field access rules")
             else:
                 groups_list = [self.env.ref(g) for g in field.groups.split(',')]
-                groups = self.env['res.groups'].union(*groups_list).sorted('id')
+                groups = self.env['res.groups'].union(groups_list).sorted('id')
                 allowed_groups_msg = _(
                     "allowed for groups %s",
                     ', '.join(repr(g.display_name) for g in groups),
@@ -4146,7 +4146,7 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # create new records for the vals that must be completed
-        records = self.browse().concat(*(self.new(vals) for vals in vals_list_todo))
+        records = self.concat(self.new(vals) for vals in vals_list_todo)
 
         for record, vals in zip(records, vals_list_todo):
             vals['__precomputed__'] = precomputed = set()
@@ -4529,7 +4529,7 @@ class BaseModel(metaclass=MetaModel):
         # create or update XMLIDs
         imd._update_xmlids(imd_data_list, update)
 
-        return original_self.concat(*(data['record'] for data in data_list))
+        return original_self.concat(data['record'] for data in data_list)
 
     def _check_qorder(self, word: str) -> None:
         if not regex_order.match(word):
@@ -5477,7 +5477,7 @@ class BaseModel(metaclass=MetaModel):
         if self:
             vals = [func(rec) for rec in self]
             if isinstance(vals[0], BaseModel):
-                return vals[0].union(*vals)
+                return vals[0].union(vals)
             return vals
         else:
             # we want to follow-up the comodel from the function
@@ -5852,25 +5852,29 @@ class BaseModel(metaclass=MetaModel):
 
     def __add__(self, other) -> Self:
         """ Return the concatenation of two recordsets. """
-        return self.concat(other)
+        return self.concat((self, other))
 
     @api.private
-    def concat(self, *args: Self) -> Self:
-        """ Return the concatenation of ``self`` with all the arguments (in
+    @api.model
+    def concat(self, args: Iterable[Self]) -> Self:
+        """ Return the concatenation of records in the arguments (in
             linear time complexity).
         """
-        ids = list(self._ids)
-        prefetch_ids_list = [self._prefetch_ids]
+        ids = []
+        prefetch_ids_list = []
         for arg in args:
             try:
                 if arg._name != self._name:
                     raise TypeError(f"inconsistent models in: {self} + {arg}")
+                if not arg._ids:
+                    continue
                 ids.extend(arg._ids)
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
         ids = tuple(ids)
-        return self.__class__(self.env, ids, Prefetch.union(ids, *prefetch_ids_list))
+        prefetch_ids = Prefetch.union(ids, *prefetch_ids_list) if len(prefetch_ids_list) > 1 else prefetch_ids_list[0] if prefetch_ids_list else ids
+        return self.__class__(self.env, ids, prefetch_ids)
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -5902,25 +5906,29 @@ class BaseModel(metaclass=MetaModel):
         """ Return the union of two recordsets.
             Note that first occurrence order is preserved.
         """
-        return self.union(other)
+        return self.union((self, other))
 
     @api.private
-    def union(self, *args: Self) -> Self:
-        """ Return the union of ``self`` with all the arguments (in linear time
+    @api.model
+    def union(self, args: Iterable[Self]) -> Self:
+        """ Return the union of records in the arguments (in linear time
             complexity, with first occurrence order preserved).
         """
-        ids = list(self._ids)
-        prefetch_ids_list = [self._prefetch_ids]
+        ids = []
+        prefetch_ids_list = []
         for arg in args:
             try:
                 if arg._name != self._name:
                     raise TypeError(f"inconsistent models in: {self} | {arg}")
+                if not arg._ids:
+                    continue
                 ids.extend(arg._ids)
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
         ids = tuple(dict.fromkeys(ids))
-        return self.__class__(self.env, ids, Prefetch.union(ids, *prefetch_ids_list))
+        prefetch_ids = Prefetch.union(ids, *prefetch_ids_list) if len(prefetch_ids_list) > 1 else prefetch_ids_list[0] if prefetch_ids_list else ids
+        return self.__class__(self.env, ids, prefetch_ids)
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
@@ -6328,6 +6336,7 @@ class BaseModel(metaclass=MetaModel):
         return False
 
 
+# not exactly true as BaseModel doesn't have isdisjoint, __xor__
 collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
 collections.abc.Sequence.register(BaseModel)

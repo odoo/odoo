@@ -130,7 +130,7 @@ class StockRule(models.Model):
             po_lines_by_product = {}
             grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type), key=lambda l: l.product_id.id)
             for product, po_lines in grouped_po_lines:
-                po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
+                po_lines_by_product[product] = self.env['purchase.order.line'].concat(po_lines)
             po_line_values = []
             for procurement in procurements:
                 po_lines = po_lines_by_product.get(procurement.product_id.id, self.env['purchase.order.line'])

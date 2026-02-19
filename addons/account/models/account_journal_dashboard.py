@@ -1163,7 +1163,7 @@ class AccountJournal(models.Model):
     def show_unhashed_entries(self):
         self.ensure_one()
         chains_to_hash = self._get_moves_to_hash(include_pre_last_hash=True, early_stop=False)
-        moves = self.env['account.move'].concat(*[chain_moves['moves'] for chain_moves in chains_to_hash])
+        moves = self.env['account.move'].concat(chain_moves['moves'] for chain_moves in chains_to_hash)
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Journal Entries to Hash'),

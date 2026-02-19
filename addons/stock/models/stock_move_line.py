@@ -259,7 +259,7 @@ class StockMoveLine(models.Model):
             return
         self = self.with_context(do_not_unreserve=True)
         for (package), smls in groupby(self, lambda sml: (sml.result_package_id.outermost_package_id)):
-            smls = self.env['stock.move.line'].concat(*smls)
+            smls = self.env['stock.move.line'].concat(smls)
             locations = smls.move_id.location_dest_id.child_internal_location_ids
             excluded_smls = set(smls.ids)
             if package.package_type_id:

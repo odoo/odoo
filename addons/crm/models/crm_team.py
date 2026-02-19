@@ -551,8 +551,7 @@ class CrmTeam(models.Model):
 
         # assign team to direct assign (leads_assigned) + dups keys (to ensure their team
         # if they are elected master of merge process)
-        dups_to_assign = [lead for lead in leads_dups_dict]
-        leads_assigned.union(*dups_to_assign)._handle_salesmen_assignment(user_ids=None, team_id=self.id)
+        leads_assigned.union([leads_assigned, *leads_dups_dict])._handle_salesmen_assignment(user_ids=None, team_id=self.id)
 
         for lead in leads.filtered(lambda lead: lead in leads_dups_dict):
             lead_duplicates = leads_dups_dict[lead]
@@ -663,7 +662,7 @@ class CrmTeam(models.Model):
                     ])
                 ) for member in members_to_assign_wpref
             }
-            preferred_leads = self.env['crm.lead'].concat(*[lead for lead in preferred_leads_per_member.values()])
+            preferred_leads = self.env['crm.lead'].concat(lead for lead in preferred_leads_per_member.values())
             assigned_preferred_leads = self.env['crm.lead']
 
             # first assign loop: preferred leads, always priority

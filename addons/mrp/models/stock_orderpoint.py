@@ -156,7 +156,7 @@ class StockWarehouseOrderpoint(models.Model):
             for orderpoint in self
             if orderpoint.product_id in bom_kits
         }
-        orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(*bom_kit_orderpoints.keys())
+        orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(bom_kit_orderpoints.keys())
         res = super(StockWarehouseOrderpoint, orderpoints_without_kit)._quantity_in_progress()
         for orderpoint in bom_kit_orderpoints:
             dummy, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
@@ -182,7 +182,7 @@ class StockWarehouseOrderpoint(models.Model):
             res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
 
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
-        bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
+        bom_manufacture = self.env['mrp.bom'].concat(bom_manufacture.values())
         # add quantities coming from draft MOs
         productions_group = self.env['mrp.production']._read_group(
             [

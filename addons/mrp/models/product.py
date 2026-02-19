@@ -378,10 +378,10 @@ class ProductProduct(models.Model):
 
     def action_open_quants(self):
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
-        components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
+        components = self - self.env['product.product'].concat(bom_kits)
         for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
-            components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
+            _boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            components |= self.env['product.product'].concat(l[0].product_id for l in bom_sub_lines)
         res = super(ProductProduct, components).action_open_quants()
         if bom_kits:
             res['context'].pop('default_product_tmpl_id', None)

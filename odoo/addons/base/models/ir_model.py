@@ -954,10 +954,10 @@ class IrModelFields(models.Model):
                     field=field, other_field=dep,
                 ))
             else:
-                self = self.union(*[
+                self |= self.union(
                     self._get(dep.model_name, dep.name)
                     for field, dep in failed_dependencies
-                ])
+                )
 
         records = self.filtered(lambda record: record.state == 'manual')
         if not records:

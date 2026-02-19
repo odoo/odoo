@@ -79,7 +79,7 @@ class StockQuant(models.Model):
 
     def _apply_inventory(self, date=None):
         for accounting_date, inventory_ids in groupby(self, key=lambda q: q.accounting_date):
-            inventories = self.env['stock.quant'].concat(*inventory_ids)
+            inventories = self.env['stock.quant'].concat(inventory_ids)
             if accounting_date:
                 super(StockQuant, inventories.with_context(force_period_date=accounting_date))._apply_inventory(date)
                 inventories.accounting_date = False
