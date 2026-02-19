@@ -4,6 +4,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test, describe } from "@odoo/hoot";
 import { onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -381,4 +382,55 @@ test("can add item with string and integer ids", async () => {
         await contains(".o_select_menu_menu .o-dropdown-item").click();
     }
     expect(".we-bg-options-container .o-hb-selectMany2X-toggle").toHaveProperty("disabled");
+});
+
+test("drops blank textual entries", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static template = xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                addItemTitle="'Add'"
+                itemShape="{ display_name: 'text' }"
+                default="{ display_name: 'default' }"/>`;
+            static components = { BuilderList };
+            static props = ["*"];
+            static selector = ".test-options-target-a";
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static template = xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                addItemTitle="'Add'"
+                itemShape="{ display_name: 'text' }"
+                default="{ display_name: 'default' }"
+                forbidLastItemRemoval="true"/>`;
+            static components = { BuilderList };
+            static props = ["*"];
+            static selector = ".test-options-target-b";
+        }
+    );
+    await setupHTMLBuilder(`
+        <div class="test-options-target-a">a</div>
+        <div class="test-options-target-b">b</div>`);
+
+    // forbidLastItemRemoval="false"
+    await contains(":iframe .test-options-target-a").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    expect(".we-bg-options-container input").toHaveCount(1);
+
+    await contains(".we-bg-options-container input").clear();
+    await press("enter");
+    expect(".we-bg-options-container input").toHaveCount(0);
+
+    // forbidLastItemRemoval="true"
+    await contains(":iframe .test-options-target-b").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    expect(".we-bg-options-container input").toHaveCount(1);
+
+    await contains(".we-bg-options-container input").clear();
+    await press("enter");
+    expect(".we-bg-options-container input").toHaveCount(1);
 });

@@ -1437,7 +1437,7 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
         const fields = [];
         const field = getActiveField(fieldEl, { fields });
         if (
-            field.records.length &&
+            field.records.length > 1 &&
             field.records[0].display_name === "" &&
             field.records[0].selected === true
         ) {
