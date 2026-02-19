@@ -8,7 +8,6 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SellingEventInPos", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -17,20 +16,24 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
-            Dialog.confirm(),
-            Dialog.confirm(),
+            Dialog.is({ title: "Tickets" }),
+            Dialog.confirm("Confirm"),
+            Dialog.is({ title: "Oh snap !" }),
+            Dialog.confirm("Ok"),
 
             // Buy a VIP Ticket
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
-            Dialog.confirm(),
+            Dialog.is({ title: "Tickets" }),
+            Dialog.confirm("Confirm"),
             EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
             EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
-            Dialog.confirm(),
+            Dialog.confirm("Confirm"),
             Dialog.is({ title: "Oh snap !" }),
             Dialog.confirm("Ok"),
             EventTourUtils.answerGlobalSelectQuestion("Question3", "Q3-Answer1"),
-            Dialog.confirm(),
+            Dialog.is({ title: "Tickets" }),
+            Dialog.confirm("Confirm"),
             ProductScreen.totalAmountIs("200.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),

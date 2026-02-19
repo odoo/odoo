@@ -9,7 +9,6 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -18,29 +17,38 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             // Confirm popup - Not enough tickets available for this choice
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             SlotSelectionScreen.clickDisplayedSlot("08:00"),
-            Dialog.confirm(),
+            Dialog.is({ title: "Select a slot for" }),
+            Dialog.confirm("Confirm"),
             EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
-            Dialog.confirm(),
-            Dialog.confirm(),
+            Dialog.is({ title: "Select tickets for" }),
+            Dialog.confirm("Confirm"),
+            Dialog.is({ title: "Oh snap !" }),
+            Dialog.confirm("ok"),
 
             // Confirm popup - Not enough tickets available for this ticket
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             SlotSelectionScreen.clickDisplayedSlot("10:00"),
-            Dialog.confirm(),
+            Dialog.is({ title: "Select a slot for" }),
+            Dialog.confirm("Confirm"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
-            Dialog.confirm(),
-            Dialog.confirm(),
+            Dialog.is({ title: "Select tickets for" }),
+            Dialog.confirm("Confirm"),
+            Dialog.is({ title: "Oh snap !" }),
+            Dialog.confirm("ok"),
 
             // Confirm popup - Enough availability
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             SlotSelectionScreen.clickDisplayedSlot("08:00"),
-            Dialog.confirm(),
+            Dialog.is({ title: "Select a slot for" }),
+            Dialog.confirm("Confirm"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
-            Dialog.confirm(),
+            Dialog.is({ title: "Select tickets for" }),
+            Dialog.confirm("Confirm"),
+            Dialog.is({ title: "Tickets" }),
             EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
             EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
-            Dialog.confirm(),
+            Dialog.confirm("Confirm"),
             ProductScreen.totalAmountIs("200.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
