@@ -83,7 +83,7 @@ class AccountPayment(models.Model):
               JOIN account_journal journal ON journal.id = move.journal_id,
                    account_payment other_payment
               JOIN account_move other_move ON other_move.id = other_payment.move_id
-             WHERE payment.check_number::BIGINT = other_payment.check_number::BIGINT
+             WHERE payment.check_number = other_payment.check_number
                AND move.journal_id = other_move.journal_id
                AND payment.id != other_payment.id
                AND payment.id IN %(ids)s
