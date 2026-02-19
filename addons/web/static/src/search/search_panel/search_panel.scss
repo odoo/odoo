@@ -20,9 +20,6 @@
 // ------- SearchPanel -------
 
 .o_search_panel {
-    --treeEntry-padding-h: #{map-get($spacers, 3)};
-    --treeEntry-padding-v: calc(#{map-get($spacers, 2)} + #{map-get($spacers, 1)});
-
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
 
@@ -67,8 +64,6 @@
 .o_mobile_search_content {
     --SearchPanel-width: 100%;
     --SearchPanel-fontSize: 1.1em;
-
-    --treeEntry-padding-v: #{$list-group-item-padding-y * 2};
 }
 
 @include media-breakpoint-down(md) {
