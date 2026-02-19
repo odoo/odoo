@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -392,7 +388,7 @@ export class TablePlugin extends Plugin {
             .forEach((td) => td.remove());
         // not sure we should move the cursor?
         siblingCell
-            ? this.dependencies.selection.setCursorStart(siblingCell)
+            ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingCell))
             : this.deleteTable(table);
     }
     /**
@@ -402,9 +398,8 @@ export class TablePlugin extends Plugin {
         const table = closestElement(row, "table");
         const siblingRow = row.previousElementSibling || row.nextElementSibling;
         row.remove();
-        // not sure we should move the cursor?
         siblingRow
-            ? this.dependencies.selection.setCursorStart(siblingRow.querySelector("td, th"))
+            ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingRow.cells[0]))
             : this.deleteTable(table);
     }
     /**
