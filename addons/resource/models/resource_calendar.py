@@ -12,7 +12,7 @@ from dateutil.rrule import DAILY, rrule
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare, ormcache
+from odoo.tools import float_compare, ormcache, format_list
 from odoo.tools.date_utils import end_of, float_to_time, localized, to_timezone, start_of
 from odoo.tools.float_utils import float_round
 from odoo.tools.intervals import Intervals
@@ -101,6 +101,22 @@ class ResourceCalendar(models.Model):
                 res_calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
             else:
                 res_calendar._check_overlap(attendance_ids)
+
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        for calendar, resources in self.env['resource.resource']._read_group(
+            domain=[('calendar_id', 'in', self.ids)],
+            groupby=['calendar_id'],
+            aggregates=['id:recordset'],
+        ):
+            if not resources:
+                continue
+            raise ValidationError(self.env._(
+                "You cannot change the company for calendar %(calendar_name)s as it's still linked to employee.\n"
+                "Duplicate the calendar or unlink the resource %(resource_names)s from the calendar first.",
+                calendar_name=calendar.name,
+                resource_names=format_list(self.env, resources.mapped('name')),
+            ))
 
     # --------------------------------------------------
     # Compute Methods

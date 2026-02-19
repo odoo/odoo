@@ -49,6 +49,7 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
+        compute='_compute_calendar_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id)]",
         help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.")
     hours_per_week = fields.Float(string="Hours per Week", compute='_compute_hours_per_week', store=True, readonly=False)
@@ -116,10 +117,14 @@ class ResourceResource(models.Model):
             if not resource.hours_per_week:
                 resource.hours_per_week = resource.hours_per_day * 7
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            self.calendar_id = self.company_id.resource_calendar_id.id
+    @api.depends('company_id')
+    def _compute_calendar_id(self):
+        for resource in self:
+            if resource.company_id and resource.company_id != resource.calendar_id.company_id:
+                if resource.resource_type == 'material':
+                    resource.calendar_id = False
+                else:
+                    resource.calendar_id = resource.company_id.resource_calendar_id
 
     @api.onchange('user_id')
     def _onchange_user_id(self):
