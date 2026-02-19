@@ -549,7 +549,7 @@ class ProductProduct(models.Model):
     def _run_avco(self, at_date=None, lot=None, method="realtime"):
         self.ensure_one()
         price_unit, value = self._run_average_batch(at_date=at_date, lot=lot, force_recompute=True)
-        return price_unit[self.id], value[self.id]
+        return price_unit.get(self.id, 0), value.get(self.id, 0)
 
     def _get_value_from_lots(self):
         return 0
