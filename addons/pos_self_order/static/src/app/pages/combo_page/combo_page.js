@@ -163,13 +163,30 @@ export class ComboPage extends Component {
             this.selfOrder.editedLine.delete();
         }
 
+        // START FIX: Include implicit fixed choices
+        const implicitCombos = this.props.product.combo_ids
+            .filter(
+                (c) =>
+                    c.combo_item_ids.length === 1 &&
+                    c.combo_item_ids[0].product_id.attribute_line_ids.length === 0
+            )
+            .map((c) => ({
+                combo_item_id: c.combo_item_ids[0],
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            }));
+        // END FIX
+
         this.selfOrder.addToCart(
             this.props.product,
             this.state.qty,
             "",
             {},
             {},
-            this.state.selectedCombos
+            [...this.state.selectedCombos, ...implicitCombos] // Merge here
         );
         this.router.back();
     }
