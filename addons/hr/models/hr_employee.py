@@ -1486,18 +1486,49 @@ class HrEmployee(models.Model):
         # the result is expected from this table, so we should link tables
         return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
 
+    @api.model
+    def is_onboarding(self, company_ids):
+        """ Called from the js view to know wether the user is on onboarding or not
+            :param company_ids: The companies to be displayed from the `hr.employee` view
+        """
+        main_company = self.env.ref("base.main_company").id
+        return (
+            len(company_ids) == 1 and
+            main_company == company_ids[0] and
+            self.env['hr.employee'].search_count(Domain('company_id', '=', main_company)) == 0 and
+            not self.has_demo_data()
+        )
+
+    @api.model
+    def has_employee_create_access(self):
+        return self.has_access('create')
+
+    @api.model
+    def has_demo_data(self):
+        # In hr_scenario.xml
+        if self.env.ref("hr.dep_rd", raise_if_not_found=False):
+            return True
+        # In hr_skills_scenario.xml
+        if self.env.ref("hr.hr_skill_type_it", raise_if_not_found=False):
+            return True
+        return bool(self.env['ir.module.module'].search_count(
+                Domain.AND((
+                    Domain('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
+                    Domain('demo', '=', True),
+            ))))
+
     def _load_demo_data(self):
-        dep_rd = self.env.ref('hr.dep_rd', raise_if_not_found=False)
-        action_reload = {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
-        if dep_rd:
-            return action_reload
+        if not self.has_access('create'):
+            raise UserError(_("You do not have the rights to load the Employees sample data."))
+        if self.has_demo_data():
+            return None
         convert.convert_file(env=self.sudo().env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init')
         if 'resume_line_ids' in self:
             convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init')
-        return action_reload
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """

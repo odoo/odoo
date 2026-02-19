@@ -24,6 +24,14 @@ class Employee extends models.Model {
         return false;
     }
 
+    is_onboarding() {
+        return false;
+    }
+
+    has_employee_create_access() {
+        return true;
+    }
+
     _views = {
         hierarchy: `
             <hierarchy js_class="hr_employee_hierarchy">

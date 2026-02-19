@@ -63,7 +63,7 @@
         <field name="model">hr.employee</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <kanban create="false">
+            <kanban create="false" sample="0">
                 <field name="attendance_state"/>
                 <templates>
                     <t t-name="card" class="flex-row">
@@ -97,14 +97,6 @@
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="hr_employees_view_kanban"/>
         <field name="target">fullscreen</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new employee
-            </p><p>
-                Add a few employees to be able to select an employee here and perform his check in / check out.
-                To create employees go to the Employees menu.
-            </p>
-        </field>
     </record>
 
     <record id="view_employee_tree_inherit_leave" model="ir.ui.view">

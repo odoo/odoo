@@ -36,13 +36,6 @@
             <field name="domain">[]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create an employee.
-                </p><p>
-                    Find all the information on employees.
-                </p>
-            </field>
         </record>
 
         <record id="hr_employee_public_view_form" model="ir.ui.view">
@@ -160,7 +153,7 @@
             <field name="model">hr.employee.public</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" sample="1">
+                <kanban class="o_hr_employee_kanban" sample="0" js_class="hr_employee_kanban">
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <templates>
@@ -244,104 +237,6 @@
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="hr_employee_public_view_search"/>
-            <field name="help" type="html">
-                <div>
-                    <div class="o_nocontent_help">
-                        <div>
-                            <p class="text-center fs-1">
-                                Ready to start your experience?
-                            </p>
-                            <hr class="my-4"/>
-                        </div>
-                        <div>
-                            <div class="container">
-                                <div class="row text-center">
-                                    <div class="col-12 col-sm-4">
-                                        <p class="fs-2 mb-0">Hiring</p>
-                                    </div>
-                                    <div class="col-12 col-sm-4">
-                                        <p class="fs-2 mb-0">Experience</p>
-                                    </div>
-                                    <div class="col-12 col-sm-4">
-                                        <p class="fs-2 mb-0">Development</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="container mt-4 d-none d-md-block">
-                                <div class="row text-center">
-                                    <div class="col-md-4 d-flex flex-column align-items-center gap-4 mb-4">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/hr_recruitment/static/description/icon.png" width="60"/>
-                                            <small>Hiring</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/sign/static/description/icon.png" width="60"/>
-                                            <small>Sign</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/hr_referral/static/description/icon.png" width="60"/>
-                                            <small>Referral</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 d-flex flex-wrap justify-content-center gap-4 mb-4">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/ai/static/description/icon.png" width="60"/>
-                                            <small>AI</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/hr_payroll/static/description/icon.png" width="60"/>
-                                            <small>Payroll</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/planning/static/description/icon.png" width="60"/>
-                                            <small>Planning</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/hr_holidays/static/description/icon.png" width="60"/>
-                                            <small>Leaves</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/fleet/static/description/icon.png" width="60"/>
-                                            <small>Fleet</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/lunch/static/description/icon.png" width="60"/>
-                                            <small>Lunch</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 d-flex flex-wrap justify-content-center gap-4 mb-4">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/hr_appraisal/static/description/icon.png" width="60"/>
-                                            <small>Performance</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/hr_skills/static/description/icon.png" width="60"/>
-                                            <small>Talent</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/website_slides/static/description/icon.png" width="60"/>
-                                            <small>eLearning</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/event/static/description/icon.png" width="60"/>
-                                            <small>Trainings</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/documents/static/description/icon.png" width="60"/>
-                                            <small>Documents</small>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="/board/static/description/icon.png" width="60"/>
-                                            <small>Dashboard</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </field>
         </record>
 
         <record id="act_hr_employee_public_kanban_view" model="ir.actions.act_window.view">

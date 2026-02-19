@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeAdminOnboardingHelper">
+        <div class="d-flex h-100 w-100 flex-column align-items-center">
+            <p class="text-center fs-1 mt-auto">
+                Ready to start your experience?
+            </p>
+
+            <!-- "mobile" : Put "Load Sample Data" and "Create an employee" buttons in a column layout -->
+            <div class="d-flex d-md-none flex-column pb-5 mb-auto">
+                <div class="d-flex align-self-center">
+                    <a class="btn btn-primary text-nowrap text-overflow-ellipsis px-3"
+                        t-on-click="loadDemoData" id="loadSampleDataBtn">
+                        Load sample data
+                    </a>
+                </div>
+                <div class="d-flex">
+                    <div class="p-0 m-0 align-self-center">
+                        <hr class="o_hr_employee_helper_choice_separator" />
+                    </div>
+                    <p class="fst-italic align-self-center m-0 py-0 px-3">
+                        or
+                    </p>
+                    <div class="p-0 m-0 align-self-center">
+                        <hr class="o_hr_employee_helper_choice_separator" />
+                    </div>
+                </div>
+                <div class="d-flex align-self-center mb-auto">
+                    <a class="btn btn-secondary text-nowrap text-overflow-ellipsis px-3"
+                        t-on-click="loadNewEmployeeForm">Create an employee</a>
+                </div>
+            </div>
+
+            <!-- "desktop" : Put "Load Sample Data" and "Create an employee" buttons in a row layout-->
+            <div class="d-none d-md-flex flex-column align-self-center justify-content-center mb-auto">
+                <div class="d-flex justify-content-center gap-4">
+                    <div class="d-flex align-self-center">
+                        <a class="btn btn-primary text-nowrap text-overflow-ellipsis px-3"
+                            t-on-click="loadDemoData" id="loadSampleDataBtn">
+                            Load sample data
+                        </a>
+                    </div>
+                    <div class="d-flex align-self-center">
+                        <a class="btn btn-secondary text-nowrap text-overflow-ellipsis px-3"
+                            t-on-click="loadNewEmployeeForm">Create an employee</a>
+                    </div>
+                </div>
+                <div class="my-4 py-1">
+                    <hr class="o_hr_employee_helper_separator" />
+                </div>
+                <OnboardingHelperBlocks />
+            </div>
+        </div>
+    </t>
+</odoo>
