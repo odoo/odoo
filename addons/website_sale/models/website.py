@@ -315,16 +315,19 @@ class Website(models.Model):
         string="Current User Cart",
         comodel_name='sale.order',
         compute="_compute_current_session_sale_order_id",
+        compute_sudo=True,
     )
     current_session_fiscal_position_id = fields.Many2many(
         string="Current Fiscal Position",
         comodel_name='account.fiscal.position',
         compute="_compute_current_session_fiscal_position_id",
+        compute_sudo=True,
     )
     current_session_pricelist_id = fields.Many2many(
         string="Current Currency",
         comodel_name='product.pricelist',
         compute="_compute_current_session_pricelist_id",
+        compute_sudo=True,
     )
 
     #=== COMPUTE METHODS ===#
