@@ -122,6 +122,18 @@ class Partner(models.Model):
     contract_antivirus = fields.Boolean(string="Antivirus", default=False)
     contract_office365 = fields.Boolean(string="Office 365", default=False)
     contract_incidents_cobro = fields.Boolean(string="Incidencias cobro", default=False)
+    contract_extra_option_ids = fields.Many2many(
+        'crm.contract.option',
+        'res_partner_crm_contract_option_rel',
+        'partner_id',
+        'option_id',
+        string="Contratos extra (interno)",
+    )
+    contract_extra_line_ids = fields.One2many(
+        'crm.contract.option.line',
+        'partner_id',
+        string="Contratos extra",
+    )
 
     street_number = fields.Char(
         string="Número",
@@ -181,6 +193,18 @@ class Partner(models.Model):
         string="Ubicaciones",
         help="Ubicaciones/sedes añadidas manualmente para esta cuenta",
     )
+    available_location_ids = fields.Many2many(
+        'crm.partner.location',
+        compute='_compute_available_location_ids',
+        string="Ubicaciones disponibles",
+        help="Ubicaciones disponibles de la empresa principal",
+    )
+    location_id = fields.Many2one(
+        'crm.partner.location',
+        string="Ubicación",
+        domain="[('id', 'in', available_location_ids)]",
+        help="Ubicación/sede seleccionada para esta cuenta o contacto",
+    )
     associated_company_ids = fields.One2many(
         'res.partner',
         'parent_id',
@@ -208,6 +232,34 @@ class Partner(models.Model):
             first = (partner.first_name or '').strip()
             last = (partner.last_name or '').strip()
             partner.name = ' '.join(p for p in [first, last] if p)
+
+    @api.depends(
+        'is_company',
+        'parent_id',
+        'parent_id.is_company',
+        'parent_id.parent_id',
+        'location_ids',
+        'parent_id.location_ids',
+    )
+    def _compute_available_location_ids(self):
+        for partner in self:
+            main_company = partner._get_main_company_for_locations()
+            if main_company:
+                partner.available_location_ids = main_company.location_ids
+            else:
+                partner.available_location_ids = partner.location_ids
+
+    def _get_main_company_for_locations(self):
+        self.ensure_one()
+
+        company = self if self.is_company else self.parent_id
+        if not company:
+            return False
+
+        while company.parent_id and company.parent_id.is_company:
+            company = company.parent_id
+
+        return company if company.is_company else False
 
     @api.depends('latitude', 'longitude')
     def _compute_map_html(self):
@@ -282,6 +334,45 @@ class Partner(models.Model):
             partner.country_id = partner.parent_id.country_id
             partner.latitude = partner.parent_id.latitude
             partner.longitude = partner.parent_id.longitude
+
+    @api.onchange('parent_id', 'is_company')
+    def _onchange_parent_locations_domain(self):
+        main_company = self._get_main_company_for_locations()
+        available = main_company.location_ids if main_company else self.location_ids
+
+        if self.location_id and self.location_id not in available:
+            self.location_id = False
+
+        return {'domain': {'location_id': [('id', 'in', available.ids)]}}
+
+    @api.onchange('location_id')
+    def _onchange_location_id_fill_address(self):
+        for partner in self:
+            location = partner.location_id
+            if not location:
+                continue
+
+            partner.street = location.street or location.name
+            partner.street_number = location.street_number
+            partner.street2 = location.street2
+            partner.city = location.city
+            partner.zip = location.zip
+            partner.state_id = location.state_id
+            partner.country_id = location.country_id
+
+    @api.constrains('location_id', 'parent_id', 'is_company')
+    def _check_location_belongs_to_main_company(self):
+        for partner in self:
+            if not partner.location_id:
+                continue
+
+            main_company = partner._get_main_company_for_locations()
+            available = main_company.location_ids if main_company else partner.location_ids
+
+            if partner.location_id not in available:
+                raise ValidationError(
+                    _("La ubicación seleccionada no pertenece a la empresa principal.")
+                )
 
     @api.depends(
         'location_search',
@@ -366,18 +457,56 @@ class Partner(models.Model):
 
     def action_geocode_address(self):
         for partner in self:
-            address = partner._build_full_address()
+            location = partner.location_id
+
+            street_name = partner.street or (location.street if location else False) or (location.name if location else False)
+            street_number = partner.street_number or (location.street_number if location else False)
+
+            street_parts = []
+            if street_name:
+                street_parts.append(street_name)
+            if street_number:
+                street_parts.append(street_number)
+            if partner.city:
+                street_parts.append(partner.city)
+            if partner.state_id:
+                street_parts.append(partner.state_id.name)
+            if partner.country_id:
+                street_parts.append(partner.country_id.name)
+
+            primary_address = ', '.join([part for part in street_parts if part])
+            fallback_address = partner._build_full_address()
+            address = primary_address or fallback_address
+
             if not address or (partner.geocode_address == address and partner.latitude):
                 continue
 
             time.sleep(1)
 
             params = {
-                'q': address,
                 'format': 'json',
                 'limit': 1,
                 'addressdetails': 1,
             }
+
+            # Búsqueda estructurada para mayor precisión (evita calles iguales en otras ciudades)
+            street_query = ' '.join([part for part in [street_name, street_number] if part]).strip()
+            if street_query:
+                params['street'] = street_query
+            if partner.city:
+                params['city'] = partner.city
+            if partner.zip:
+                params['postalcode'] = partner.zip
+            if partner.state_id:
+                params['state'] = partner.state_id.name
+            if partner.country_id:
+                params['country'] = partner.country_id.name
+                if partner.country_id.code:
+                    params['countrycodes'] = partner.country_id.code.lower()
+
+            # Si faltan datos mínimos para búsqueda estructurada, usar texto libre
+            if not params.get('street'):
+                params['q'] = address
             headers = {'User-Agent': 'Odoo/CRM Geocode'}
 
             try:
@@ -388,6 +517,44 @@ class Partner(models.Model):
                     timeout=10,
                 )
                 data = resp.json() if resp.ok else []
+
+                # Reintento con búsqueda libre si la estructurada no devuelve resultados
+                if not data and 'q' not in params and fallback_address:
+                    free_params = {
+                        'q': fallback_address,
+                        'format': 'json',
+                        'limit': 1,
+                        'addressdetails': 1,
+                    }
+                    if partner.country_id and partner.country_id.code:
+                        free_params['countrycodes'] = partner.country_id.code.lower()
+                    resp = requests.get(
+                        'https://nominatim.openstreetmap.org/search',
+                        params=free_params,
+                        headers=headers,
+                        timeout=10,
+                    )
+                    data = resp.json() if resp.ok else []
+                    if data:
+                        address = fallback_address
+
+                if not data and fallback_address and fallback_address != address:
+                    fallback_params = {
+                        'q': fallback_address,
+                        'format': 'json',
+                        'limit': 1,
+                        'addressdetails': 1,
+                    }
+                    resp = requests.get(
+                        'https://nominatim.openstreetmap.org/search',
+                        params=fallback_params,
+                        headers=headers,
+                        timeout=10,
+                    )
+                    data = resp.json() if resp.ok else []
+                    if data:
+                        address = fallback_address
+
                 if data:
                     lat = float(data[0]['lat'])
                     lon = float(data[0]['lon'])
@@ -545,11 +712,11 @@ class Partner(models.Model):
             'context': {'create': False},
         }
 
-    @api.depends('child_ids', 'child_ids.type')
+    @api.depends('child_ids', 'child_ids.type', 'child_ids.is_company')
     def _compute_contact_count(self):
         for partner in self:
             if partner.is_company:
-                partner.contact_count = len(partner.child_ids.filtered(lambda c: c.type == 'contact'))
+                partner.contact_count = len(partner.child_ids.filtered(lambda c: not c.is_company and c.type == 'contact'))
             else:
                 partner.contact_count = 0
 
@@ -560,7 +727,7 @@ class Partner(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'res.partner',
             'view_mode': 'list,form',
-            'domain': [('parent_id', '=', self.id), ('type', '=', 'contact')],
+            'domain': [('parent_id', '=', self.id), ('type', '=', 'contact'), ('is_company', '=', False)],
             'context': {
                 'default_parent_id': self.id,
                 'default_type': 'contact',
@@ -587,14 +754,18 @@ class Partner(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals['type'] = 'contact'
             is_company = vals.get('is_company', False)
             if not is_company:
+                vals.setdefault('type', 'contact')
                 first = (vals.get('first_name') or '').strip()
                 last = (vals.get('last_name') or '').strip()
                 if first or last:
                     vals['name'] = ' '.join(p for p in [first, last] if p)
-        return super().create(vals_list)
+            else:
+                vals.setdefault('type', 'other')
+        partners = super().create(vals_list)
+        partners.filtered(lambda partner: partner.is_company)._ensure_contract_option_lines()
+        return partners
 
     def write(self, vals):
         if 'is_company' in vals:
@@ -610,7 +781,36 @@ class Partner(models.Model):
                 super(Partner, partner).write(partner_vals)
             return True
 
-        return super().write(vals)
+        result = super().write(vals)
+        self.filtered(lambda partner: partner.is_company)._ensure_contract_option_lines()
+        return result
+
+    def _ensure_contract_option_lines(self):
+        companies = self.filtered(lambda partner: partner.is_company)
+        if not companies:
+            return
+
+        options = self.env['crm.contract.option'].search([('active', '=', True)])
+        if not options:
+            return
+
+        line_model = self.env['crm.contract.option.line']
+        lines_to_create = []
+
+        for company in companies:
+            existing_option_ids = set(company.contract_extra_line_ids.mapped('option_id').ids)
+            selected_option_ids = set(company.contract_extra_option_ids.ids)
+            missing_options = options.filtered(lambda option: option.id not in existing_option_ids)
+
+            for option in missing_options:
+                lines_to_create.append({
+                    'partner_id': company.id,
+                    'option_id': option.id,
+                    'enabled': option.id in selected_option_ids,
+                })
+
+        if lines_to_create:
+            line_model.create(lines_to_create)
 
     @api.onchange('is_company')
     def _onchange_is_company(self):
@@ -666,14 +866,54 @@ class PartnerLocation(models.Model):
     country_id = fields.Many2one('res.country', string='País')
     active = fields.Boolean(default=True)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('street') and vals.get('name'):
+                vals['street'] = vals['name'].strip()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if not vals.get('street') and vals.get('name'):
+            vals = dict(vals)
+            vals['street'] = vals['name'].strip()
+        return super().write(vals)
+
+    def name_get(self):
+        result = []
+        for location in self:
+            label_parts = []
+            if location.name:
+                label_parts.append(location.name)
+
+            street_parts = []
+            if location.street:
+                street = location.street
+                if location.street_number:
+                    street = f"{street} {location.street_number}".strip()
+                street_parts.append(street)
+            elif location.street_number:
+                street_parts.append(location.street_number)
+
+            if location.city:
+                street_parts.append(location.city)
+
+            if street_parts:
+                label_parts.append(" - ".join([street_parts[0], ", ".join(street_parts[1:])]).strip(" -"))
+
+            label = " | ".join([part for part in label_parts if part]) or _("Sin ubicación")
+            result.append((location.id, label))
+        return result
+
     def _build_full_address(self):
         self.ensure_one()
         parts = []
 
-        if self.street:
-            street_part = self.street
+        street_value = self.street or self.name
+        if street_value:
+            street_part = street_value
             if self.street_number:
-                street_part = f"{self.street}, {self.street_number}"
+                street_part = f"{street_value}, {self.street_number}"
             parts.append(street_part)
 
         if self.street2:
@@ -688,6 +928,54 @@ class PartnerLocation(models.Model):
             parts.append(self.country_id.name)
 
         return ', '.join(parts)
+
+
+class CrmContractOption(models.Model):
+    _name = 'crm.contract.option'
+    _description = 'Contrato adicional de cuenta'
+    _order = 'sequence, name, id'
+
+    sequence = fields.Integer(default=10)
+    name = fields.Char(string='Contrato', required=True)
+    active = fields.Boolean(default=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        options = super().create(vals_list)
+        companies = self.env['res.partner'].search([('is_company', '=', True)])
+        if not companies:
+            return options
+
+        line_model = self.env['crm.contract.option.line']
+        lines_to_create = []
+        for company in companies:
+            existing_option_ids = set(company.contract_extra_line_ids.mapped('option_id').ids)
+            for option in options:
+                if option.id not in existing_option_ids:
+                    lines_to_create.append({
+                        'partner_id': company.id,
+                        'option_id': option.id,
+                        'enabled': False,
+                    })
+
+        if lines_to_create:
+            line_model.create(lines_to_create)
+
+        return options
+
+
+class CrmContractOptionLine(models.Model):
+    _name = 'crm.contract.option.line'
+    _description = 'Contrato adicional por cuenta'
+    _order = 'option_id'
+
+    partner_id = fields.Many2one('res.partner', string='Cuenta', required=True, ondelete='cascade')
+    option_id = fields.Many2one('crm.contract.option', string='Contrato', required=True, ondelete='cascade')
+    enabled = fields.Boolean(string='Activo', default=False)
+
+    _sql_constraints = [
+        ('crm_contract_option_line_unique', 'unique(partner_id, option_id)', 'El contrato ya existe en esta cuenta.'),
+    ]
 
 
 class IrAttachment(models.Model):

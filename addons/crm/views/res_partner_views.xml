@@ -30,6 +30,8 @@
 
                     <group string="DIRECCIÓN" col="2">
                         <group>
+                            <field name="available_location_ids" invisible="1"/>
+                            <field name="location_id" string="Ubicación" domain="[('id', 'in', available_location_ids)]" options="{'no_create': True}" placeholder="Selecciona una ubicación"/>
                             <field name="street"
                                 string="Calle"/>
                             <field name="street_number" string="Número"/>
@@ -72,11 +74,15 @@
                                     <label for="website" string="Sitio web"/>
                                     <div class="o_row">
                                         <field name="website" nolabel="1"/>
-                                        <button name="action_open_website"
-                                                type="object"
-                                                class="btn-secondary"
-                                                string="Abrir web"
-                                                icon="fa-external-link"/>
+                                        <xpath expr="//button[@name='action_open_website']" position="replace">
+                                            <button name="action_open_website"
+                                                    type="object"
+                                                    icon="fa-globe"
+                                                    string=""
+                                                    class="btn btn-link"
+                                                    title="Ir al sitio web"
+                                                    invisible="not website"/>
+                                        </xpath>
                                     </div>
                                 </group>
                                 <group>
@@ -112,6 +118,8 @@
 
                             <group string="DIRECCIÓN" col="2">
                                 <group>
+                                    <field name="available_location_ids" invisible="1"/>
+                                    <field name="location_id" string="Ubicación" domain="[('id', 'in', available_location_ids)]" options="{'no_create': True}" placeholder="Selecciona una ubicación"/>
                                     <field name="street"
                                         string="Calle"
                                         placeholder="Ej: C/ Asturias"/>
@@ -133,7 +141,7 @@
                             </group>
 
                             <group string="CONTACTOS">
-                                <field name="child_ids" mode="list,form" context="{'default_parent_id': id, 'default_type': 'contact', 'default_is_company': False, 'form_view_ref': 'crm.view_partner_form_crm_person'}">
+                                <field name="child_ids" mode="list,form" domain="[('is_company', '=', False), ('type', '=', 'contact')]" context="{'default_parent_id': id, 'default_type': 'contact', 'default_is_company': False, 'form_view_ref': 'crm.view_partner_form_crm_person'}">
                                     <list>
                                         <field name="name" string="Nombre completo"/>
                                         <field name="email" string="Correo electrónico"/>
@@ -151,11 +159,9 @@
                                     <field name="billing_payment_method"/>
                                     <field name="billing_invoice_email"/>
                                     <field name="billing_sepa_signed" widget="boolean_toggle"/>
-                                    <field name="billing_irpf_retention"/>
                                 </group>
                                 <group>
                                     <field name="billing_incidents_cobro"/>
-                                    <field name="billing_default_product"/>
                                     <field name="billing_default_pricelist"/>
                                 </group>
                             </group>
@@ -196,6 +202,24 @@
                                     <field name="contract_acronis" widget="boolean_toggle"/>
                                     <field name="contract_antivirus" widget="boolean_toggle"/>
                                     <field name="contract_office365" widget="boolean_toggle"/>
+                                    <field name="contract_extra_line_ids" nolabel="1" class="o_contract_extra_inline" context="{'default_partner_id': id}">
+                                        <kanban create="false" delete="false" class="o_contract_extra_inline_kanban">
+                                            <field name="option_id"/>
+                                            <field name="enabled"/>
+                                            <templates>
+                                                <t t-name="card">
+                                                    <div class="o_contract_extra_inline_row">
+                                                        <div class="o_contract_extra_inline_label">
+                                                            <field name="option_id"/>
+                                                        </div>
+                                                        <div class="o_contract_extra_inline_toggle">
+                                                            <field name="enabled" widget="boolean_toggle"/>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
                                 </group>
                                 <group string="Incidencias">
                                     <field name="contract_incidents_cobro" widget="boolean_toggle"/>
@@ -218,7 +242,7 @@
                             <group string="Añadir ubicación nueva">
                                 <field name="location_ids" nolabel="1" context="{'default_partner_id': id}">
                                     <list editable="bottom">
-                                        <field name="name" string="Ubicación"/>
+                                        <field name="name" string="Nombre ubicación"/>
                                         <field name="street" string="Calle"/>
                                         <field name="street_number" string="Nº"/>
                                         <field name="city" string="Ciudad"/>
@@ -249,6 +273,8 @@
                         <group>
                             <field name="name"/>
                             <field name="parent_id" domain="[('is_company', '=', True), ('id', '!=', id)]"/>
+                            <field name="available_location_ids" invisible="1"/>
+                            <field name="location_id" string="Ubicación" domain="[('id', 'in', available_location_ids)]" options="{'no_create': True}"/>
                             <field name="street"/>
                             <field name="street_number"/>
                             <field name="street2"/>
@@ -385,6 +411,47 @@
         parent="contacts.menu_contacts"
         action="action_partner_customer_all_persons"
         sequence="3"/>
+
+    <record id="view_crm_contract_option_tree" model="ir.ui.view">
+        <field name="name">crm.contract.option.tree</field>
+        <field name="model">crm.contract.option</field>
+        <field name="arch" type="xml">
+            <list string="Contratos" editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_crm_contract_option_form" model="ir.ui.view">
+        <field name="name">crm.contract.option.form</field>
+        <field name="model">crm.contract.option</field>
+        <field name="arch" type="xml">
+            <form string="Contrato">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crm_contract_options" model="ir.actions.act_window">
+        <field name="name">Contratos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.contract.option</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_crm_contract_option_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_crm_contract_option_form')})]"/>
+        <field name="context">{'default_active': True}</field>
+    </record>
+
+    <menuitem id="menu_crm_contract_options"
+        name="Contratos"
+        parent="contacts.menu_contacts"
+        action="action_crm_contract_options"
+        sequence="4"/>
 
     <record id="view_attachment_form_lopd_import" model="ir.ui.view">
         <field name="name">ir.attachment.form.lopd.import</field>
