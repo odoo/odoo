@@ -63,31 +63,14 @@ class HrLeave(models.Model):
         self._check_overtime_deductible(self)
         return res
 
-    def action_refuse(self):
-        res = super().action_refuse()
-        return res
-
-    def _validate_leave_request(self):
-        super()._validate_leave_request()
-        self._update_leaves_overtime()
-
-    def _remove_resource_leave(self):
-        res = super()._remove_resource_leave()
-        self._update_leaves_overtime()
-        return res
-
-    def _update_leaves_overtime(self):
-        Attendance = self.env['hr.attendance']
-        dates = [
-            Attendance._attendance_date(leave.date_from, leave.employee_id)
-            for leave in self.filtered(lambda leave: leave.state == 'confirmed')
-        ]
-        if dates:
-            Attendance.search([
-                ('date', '>=', min(dates)),
-                ('date', '<=', max(dates)),
+    def _update_leaves_overtime(self):  # TODO: Remove in master, since its no longer used.
+        date_from, date_to = self.mapped('date_from'), self.mapped('date_to')
+        if date_from and date_to:
+            self.env['hr.attendance'].sudo().search([
+                ('check_in', '<=', max(date_to)),
+                ('check_out', '>=', min(date_from)),
                 ('employee_id', 'in', self.employee_id.ids),
-            ])._update_overtimes()
+            ])._update_overtime()
 
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)
