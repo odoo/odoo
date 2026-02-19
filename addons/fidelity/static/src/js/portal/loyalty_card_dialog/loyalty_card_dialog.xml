@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="loyalty.portal_loyalty_card_dialog">
+        <Dialog size="'md'" header="false" footer="false" t-on-click="props.close">
+            <div class="d-flex align-items-center" t-on-click.stop="">
+                <div class="d-flex justify-content-between w-100 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <img
+                            class="img-fluid"
+                            t-att-src="props.img_path"
+                            width="40"
+                        />
+                        <div class="fs-5"><t t-out="props.program.program_name"/></div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end">
+                        <span class="fs-5" t-out="props.card.points_display"/>
+                        <i class="text-secondary fs-6" t-if="props.card.expiration_date">
+                            Valid until <t t-out="props.card.expiration_date"/>
+                        </i>
+                    </div>
+                </div>
+                <div
+                    type="button"
+                    class="d-sm-block btn-close p-0 p-md-2"
+                    t-on-click="props.close"
+                />
+            </div>
+            <hr/>
+            <div class="mt-0 pt-0" t-on-click.stop="">
+                <div name="history_lines">
+                    <t t-if="props.history_lines.length">
+                        <strong>Last Transactions</strong>
+                        <div
+                            t-foreach="props.history_lines"
+                            t-as="line"
+                            t-key="line_index"
+                            class="row px-2"
+                        >
+                            <div class="col-7 text-truncate">
+                                <t t-if="line.order_id and line.order_portal_url">
+                                    <a t-att-href="line.order_portal_url">
+                                        <t t-out="line.description"/>
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <t t-out="line.description"/>
+                                </t>
+                            </div>
+                            <div t-out="line.points" class="text-end col-5"/>
+                        </div>
+                        <div class="mt-1 mb-1">
+                            <a t-attf-href="/my/loyalty_card/{{props.card.id}}/history/">
+                                -> View History
+                            </a>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <p class="alert alert-warning">
+                            There are currently no transaction lines for this card.
+                        </p>
+                    </t>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

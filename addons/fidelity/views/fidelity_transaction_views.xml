@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_transaction_view_list" model="ir.ui.view">
+        <field name="name">fidelity.transaction.view.list</field>
+        <field name="model">fidelity.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Cards" edit="false" delete="false">
+                <field name="issued" />
+                <field name="used" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+</odoo>
