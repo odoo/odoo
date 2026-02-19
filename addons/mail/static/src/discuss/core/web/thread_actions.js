@@ -41,7 +41,7 @@ registerThreadAction("expand-discuss", {
     sequenceGroup: 5,
 });
 registerThreadAction("advanced-settings", {
-    condition: ({ channel, owner }) => channel && owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, owner }) => channel?.channel_type == "channel" && owner.isDiscussSidebarChannelActions,
     onSelected: ({ channel, store }) => {
         store.env.services.action.doAction({
             type: "ir.actions.act_window",
