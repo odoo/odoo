@@ -1,30 +1,34 @@
 // @ts-check
 
-import { helpers } from "@odoo/o-spreadsheet";
 
-const { getFunctionsFromTokens } = helpers;
+/**
+ * @typedef {import("@odoo/o-spreadsheet").CompiledFormula} CompiledFormula
+ * @typedef {import("@odoo/o-spreadsheet").CoreGetters} CoreGetters
+ * @typedef  {import("../helpers/odoo_functions_helpers").OdooFunctionDescription} OdooFunctionDescription
+ * */
 
-/** @typedef {import("@odoo/o-spreadsheet").Token} Token */
+const ALL_LIST_FUNCTIONS = ["ODOO.LIST", "ODOO.LIST.HEADER"];
 
 /**
  * Parse a spreadsheet formula and detect the number of LIST functions that are
  * present in the given formula.
  *
- * @param {Token[]} tokens
+ * @param {CompiledFormula} compiledFormula
  *
- * @returns {number}
+ * @returns {boolean}
  */
-export function getNumberOfListFormulas(tokens) {
-    return getFunctionsFromTokens(tokens, ["ODOO.LIST", "ODOO.LIST.HEADER"]).length;
+export function hasListFormula(compiledFormula) {
+    return ALL_LIST_FUNCTIONS.some(funcName => compiledFormula.usesSymbol(funcName));
 }
 
 /**
  * Get the first List function description of the given formula.
  *
- * @param {Token[]} tokens
+ * @param {CompiledFormula} compiledFormula
+ * @param {CoreGetters} getters
  *
- * @returns {import("../helpers/odoo_functions_helpers").OdooFunctionDescription|undefined}
+ * @returns {OdooFunctionDescription|undefined}
  */
-export function getFirstListFunction(tokens) {
-    return getFunctionsFromTokens(tokens, ["ODOO.LIST", "ODOO.LIST.HEADER"])[0];
+export function getFirstListFunction(compiledFormula, getters) {
+    return compiledFormula.getFunctionsFromTokens( ALL_LIST_FUNCTIONS, getters)[0];
 }

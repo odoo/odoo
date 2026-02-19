@@ -81,5 +81,5 @@ export function containsReferences(cell) {
     if (!cell.isFormula) {
         return false;
     }
-    return cell.compiledFormula.tokens.some((token) => token.type === "REFERENCE");
+    return cell.compiledFormula.hasDependencies;
 }
