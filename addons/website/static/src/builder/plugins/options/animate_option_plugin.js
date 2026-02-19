@@ -65,12 +65,16 @@ export class AnimateOptionPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
+        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
     };
 
     setup() {
         this.scrollingElement = getScrollingElement(this.document);
     }
 
+    canHaveHoverEffect(el) {
+        return !el.querySelector("input, textarea");
+    }
     getEffectsItems(isActiveItem) {
         const isOnAppearance = () => isActiveItem("animation_on_appearance_opt");
         return [
@@ -344,6 +348,20 @@ export class AnimateOptionPlugin extends Plugin {
     cleanForSave({ root }) {
         for (const el of root.querySelectorAll(".o_animate_preview")) {
             el.classList.remove("o_animate_preview");
+        }
+        for (const el of root.querySelectorAll(".o_anim_on_hover")) {
+            if (!el.classList.contains("o_anim_hover_overlay")) {
+                el.style.removeProperty("--anim-color");
+            }
+            if (!el.classList.contains("o_anim_hover_translate")) {
+                el.style.removeProperty("--anim-shift");
+            }
+            if (
+                !el.classList.contains("o_anim_hover_zoom_in_opt") &&
+                !el.classList.contains("o_anim_hover_zoom_out_opt")
+            ) {
+                el.style.removeProperty("--anim-intensity");
+            }
         }
     }
 }

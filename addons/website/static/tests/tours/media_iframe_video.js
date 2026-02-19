@@ -26,7 +26,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Enter the url",
-            trigger: "input[placeholder='www.example.com']",
+            trigger: "input[placeholder='e.g. /page or URL']",
             run: "edit odoo.com",
         },
         {

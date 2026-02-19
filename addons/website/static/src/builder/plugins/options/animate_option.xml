@@ -8,7 +8,37 @@
     </BuilderButtonGroup>
 </t>
 
+<t t-name="website.animateOnHoverBlock">
+    <BuilderRow label.translate="Effect" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'o_anim_hover_translate'" id="'o_anim_hover_translate_opt'">Translate</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_anim_hover_overlay'" id="'o_anim_hover_overlay_opt'">Overlay</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_anim_hover_zoom_in'" id="'o_anim_hover_zoom_in_opt'">Zoom In</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_anim_hover_zoom_out'" id="'o_anim_hover_zoom_out_opt'">Zoom Out</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Direction" level="2" t-if="isActiveItem('o_anim_hover_translate_opt')">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Top</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_anim_hover_translate_left'">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_anim_hover_translate_right'">Right</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_anim_hover_translate_bottom'">Bottom</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Color" level="2" t-if="isActiveItem('o_anim_hover_overlay_opt')">
+        <BuilderColorPicker styleAction="'--anim-color'" enabledTabs="['custom']"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Shift" level="2" t-if="isActiveItem('o_anim_hover_translate_opt')">
+        <BuilderRange styleAction="'--anim-shift'" min="5" max="25" unit="'px'" displayRangeValue="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the hover effect is" level="2" t-if="isActiveItem('o_anim_hover_zoom_in_opt') || isActiveItem('o_anim_hover_zoom_out_opt')">
+        <BuilderRange styleAction="'--anim-intensity'" min="1" max="25" unit="'%'" applyWithUnit="false" displayRangeValue="true"/>
+    </BuilderRow>
+</t>
+
 <t t-name="website.AnimateOption">
+    <t t-set="hoverEffectApplyTo" t-if="state.isCardParent">.s_card</t>
+    <t t-set="hoverEffectApplyTo" t-if="state.isBlockquoteParent">.s_blockquote</t>
     <t t-if="this.state.isOptionActive">
         <BuilderRow label.translate="Animation">
             <BuilderSelect t-if="!this.isActiveItem('transform_image')" preview="false" dropdownClass="props.dropdownClass">
@@ -28,7 +58,16 @@
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onHover'"
                             classAction="'o_animate_on_hover'"
                             id="'animation_on_hover_opt'"
-                            t-if="state.canHover">On Hover</BuilderSelectItem>
+                            t-if="state.canHover and state.isImage">On Hover</BuilderSelectItem>
+                <BuilderSelectItem
+                            applyTo="hoverEffectApplyTo"
+                            classAction="'o_anim_on_hover'"
+                            id="'animation_on_hover_parent_opt'"
+                            t-if="state.canHover and (state.isCardParent or state.isBlockquoteParent)">On Hover</BuilderSelectItem>
+                <BuilderSelectItem
+                            classAction="'o_anim_on_hover'"
+                            id="'animation_on_hover_block_opt'"
+                            t-if="state.canHover and state.isBlock">On Hover</BuilderSelectItem>
             </BuilderSelect>
             <t t-if="!!props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
             <t t-else="" t-call="website.animateOnScrollInOut"/> 
@@ -119,6 +158,10 @@
                     step="1" min="1" unit="'px'" preview="false"/>
             </BuilderRow>
         </t>
+        <BuilderContext applyTo="hoverEffectApplyTo">
+            <t t-if="isActiveItem('animation_on_hover_parent_opt')" t-call="website.animateOnHoverBlock"/>
+        </BuilderContext>
+        <t t-if="this.isActiveItem('animation_on_hover_block_opt')" t-call="website.animateOnHoverBlock"/>
     </t>
 </t>
 
