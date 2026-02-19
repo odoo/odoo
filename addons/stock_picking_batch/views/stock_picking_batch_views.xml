@@ -77,11 +77,11 @@
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
-                        invisible="state != 'in_progress' or show_check_availability"/>
+                        invisible="not picking_ids or state != 'in_progress' or show_check_availability"/>
                     <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
                         invisible="state != 'in_progress' or not show_check_availability"/>
                     <button name="action_done" string="Validate" type="object"
-                        invisible="state != 'in_progress' or not show_check_availability"/>
+                        invisible="not picking_ids or state != 'in_progress' or not show_check_availability"/>
                     <button name="action_assign" string="Check Availability" type="object"
                         invisible="state != 'draft' or not show_check_availability"/>
                     <button name="action_print" invisible="state not in ('in_progress', 'done')" string="Print" type="object"/>
