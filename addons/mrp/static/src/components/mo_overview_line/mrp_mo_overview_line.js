@@ -147,7 +147,7 @@ export class MoOverviewLine extends Component {
 
     get formattedQuantity() {
         if (this.data.model === "mrp.workorder" || !this.data.model) {
-            return this.formatDuration(this.data.quantity, { unit: "minutes" });
+            return this.formatDuration(this.data.quantity, { unit: this.data.state ? "minutes" : "hours" });
         }
         return this.formatFloat(this.data.quantity);
     }

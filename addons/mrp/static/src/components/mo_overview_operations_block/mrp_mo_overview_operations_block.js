@@ -87,7 +87,7 @@ export class MoOverviewOperationsBlock extends Component {
     get totalQuantity() {
         // Float for Hours when displaying done productions, FloatTime for Minutes otherwise.
         return this.props.summary?.done ?
-            formatFloat(this.props.summary.quantity, { digits: [false, this.props.operations[0].uom_precision || undefined] }) :
+            formatDuration(this.props.summary.quantity, { unit: "hours" }) :
             formatDuration(this.props.summary.quantity, { unit: "minutes" })
     }
 }
