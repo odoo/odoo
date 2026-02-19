@@ -750,7 +750,9 @@ class MrpBomLine(models.Model):
 
     def action_add_from_catalog(self):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
-        return bom.with_context(child_field='bom_line_ids').action_add_from_catalog()
+        ctx = dict(self.env.context)
+        ctx.pop("form_view_ref", None)
+        return bom.with_context(ctx, child_field='bom_line_ids').action_add_from_catalog()
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:
@@ -833,7 +835,9 @@ class MrpByProduct(models.Model):
 
     def action_add_from_catalog(self):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
-        return bom.with_context(child_field='byproduct_ids').action_add_from_catalog()
+        ctx = dict(self.env.context)
+        ctx.pop("form_view_ref", None)
+        return bom.with_context(ctx, child_field='byproduct_ids').action_add_from_catalog()
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:

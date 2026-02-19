@@ -591,11 +591,15 @@ class StockMove(models.Model):
 
     def action_add_from_catalog_raw(self):
         mo = self.env['mrp.production'].browse(self.env.context.get('order_id'))
-        return mo.with_context(child_field='move_raw_ids').action_add_from_catalog()
+        ctx = dict(self.env.context)
+        ctx.pop("form_view_ref", None)
+        return mo.with_context(ctx, child_field='move_raw_ids').action_add_from_catalog()
 
     def action_add_from_catalog_byproduct(self):
         mo = self.env['mrp.production'].browse(self.env.context.get('order_id'))
-        return mo.with_context(child_field='move_byproduct_ids').action_add_from_catalog()
+        ctx = dict(self.env.context)
+        ctx.pop("form_view_ref", None)
+        return mo.with_context(ctx, child_field='move_byproduct_ids').action_add_from_catalog()
 
     def _action_cancel(self):
         res = super(StockMove, self)._action_cancel()
