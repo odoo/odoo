@@ -169,7 +169,7 @@ export class FloorScreen extends Component {
                     }
                     const potentialParentElem = findIntersectingTableElem(element);
                     if (!potentialParentElem) {
-                        this.alert.add("Link Table");
+                        this.alert.add(_t("Link Table"));
                         return;
                     }
                     this.state.potentialLink = {
@@ -178,7 +178,10 @@ export class FloorScreen extends Component {
                         time: Date.now(),
                     };
                     this.alert.add(
-                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
+                        _t("Link Table %(sourceTable)s with %(destinationTable)s", {
+                            sourceTable: table.table_number,
+                            destinationTable: this.state.potentialLink.parent.table_number,
+                        })
                     );
                     return;
                 }
