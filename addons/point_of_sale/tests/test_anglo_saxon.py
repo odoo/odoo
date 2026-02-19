@@ -587,3 +587,85 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             {'product_id': self.product.id, 'credit': 20.0},
             {'product_id': product2.id, 'credit': 100.0},
         ])
+
+    def test_kit_valuation_different_uom(self):
+        """
+        Ensure that valuation is computed correctly when using a different UoM
+        on the product than the POS order (accomplished with kits)
+        """
+        if self.env['ir.module.module']._get('mrp').state != 'installed':
+            self.skipTest("Skipping test: the 'mrp' module is not installed.")
+
+        uom_units = self.env.ref('uom.product_uom_unit')
+        uom_units_500 = self.env['uom.uom'].create({
+            'name': '500 Units',
+            'relative_factor': 500,
+            'relative_uom_id': uom_units.id,
+        })
+
+        self.company.inventory_valuation = 'real_time'
+
+        comp = self.env['product.product'].create({
+            'name': 'Component',
+            'categ_id': self.category.id,
+            'standard_price': 1000,
+            'list_price': 1,
+            'uom_id': uom_units_500.id,
+            'available_in_pos': False,
+            'is_storable': True,
+        })
+        kit = self.env['product.product'].create({
+            'name': 'Kit',
+            'categ_id': self.category.id,
+            'standard_price': 0,
+            'list_price': 0,
+            'available_in_pos': True,
+            'is_storable': True,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': comp.id, 'product_qty': 200.0, 'product_uom_id': uom_units.id}),
+            ],
+        })
+
+        self.pos_config.open_ui()
+
+        # create order
+        pos_order_values = {
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [Command.create({
+                'product_id': kit.id,
+                'price_unit': 1,
+                'discount': 0.0,
+                'qty': 1.0,
+                'price_subtotal': 1,
+                'price_subtotal_incl': 1,
+            })],
+            'amount_total': 1,
+            'amount_tax': 0,
+            'amount_paid': 1,
+            'amount_return': 0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+            'payment_ids': [Command.create({
+                'amount': 1,
+                'payment_method_id': self.cash_payment_method.id
+            })],
+            'state': 'paid'
+        }
+
+        self.env['pos.order'].sync_from_ui([pos_order_values])
+
+        order = self.pos_config.current_session_id.order_ids
+
+        self.pos_config.current_session_id.close_session_from_ui()
+
+        valuation_account = self.category.property_stock_valuation_account_id
+        valuation_lines = order.session_move_id.line_ids.filtered(lambda line: line.account_id == valuation_account)
+        self.assertEqual(valuation_lines.balance, -400)
