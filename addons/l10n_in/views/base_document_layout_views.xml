@@ -7,10 +7,10 @@
         <field name="mode">extension</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='qr_code']" position="attributes">
-                <attribute name="invisible" separator="or" add="country_code == 'IN'"/>
+                <attribute name="invisible" separator="or" add="fiscal_country_code == 'IN'"/>
             </xpath>
             <xpath expr="//field[@name='account_number']" position="attributes">
-                <attribute name="required" separator="and" add="country_code != 'IN'"/>
+                <attribute name="required" separator="and" add="fiscal_country_code != 'IN'"/>
             </xpath>
         </field>
     </record>
