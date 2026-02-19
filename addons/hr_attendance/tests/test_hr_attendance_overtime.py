@@ -644,6 +644,7 @@ class TestHrAttendanceOvertime(HttpCase):
             'auto_check_out': True,
             'auto_check_out_tolerance': 0
         })
+        # TODO ZIRAH: Make a recurrency
         self.employee.resource_calendar_id.write({
             'schedule_type': 'variable',
             'attendance_ids': [(5, 0, 0),

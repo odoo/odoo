@@ -113,6 +113,7 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             if calendar.schedule_type == "variable":
                 calendar.attendance_ids = calendar._origin.attendance_ids
+            # TODO ZIRAH: Ruff.
             elif not (calendar.attendance_ids.filtered(lambda a: not a.date)
                       or calendar._origin.company_id == calendar.company_id
                       and calendar._origin.schedule_type == calendar.schedule_type):
@@ -128,6 +129,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('attendance_ids.date', 'attendance_ids.dayofweek', 'schedule_type')
     def _compute_days_per_week(self):
+        # TODO ZIRAH: Add recurrency support
         for calendar in self:
             attendances = calendar._get_working_attendances()
             days = len(set(attendances.mapped('date' if calendar.schedule_type == 'variable' else 'dayofweek')))
@@ -136,6 +138,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('attendance_ids.date', 'attendance_ids.dayofweek', 'attendance_ids.duration_hours', 'schedule_type')
     def _compute_hours_per_day(self):
+        # TODO ZIRAH: Add recurrency support
         """ Compute the average hours per day.
             Cannot directly depend on hours_per_week because of rounding issues. """
         for calendar in self:
@@ -146,6 +149,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('attendance_ids.date', 'attendance_ids.duration_hours', 'schedule_type')
     def _compute_hours_per_week(self):
+        # TODO ZIRAH: Add recurrency support
         """ Compute the average hours per week """
         for calendar in self:
             attendances = calendar._get_working_attendances()
@@ -769,8 +773,7 @@ class ResourceCalendar(models.Model):
     def _get_duration_based_work_hours_on_date(self, date):
         return sum(self.attendance_ids._filter_by_date(date).mapped('duration_hours'))
 
-    # TODO ZIRAH: Rename to _get_attendances_by_date
-    # Should we still filter by get_global_attendances here?
+    # TODO ZIRAH: Should we still filter by get_global_attendances here?
     def _get_attendances_by_date(self, date_from, date_to, domain=None):
         """
         Get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
@@ -784,7 +787,7 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
         result = defaultdict(lambda: self.env['resource.calendar.attendance'])
 
-        attendances = (self.attendance_ids.filtered_domain(domain) if domain else self._get_working_attendances()).with_prefetch()
+        attendances = (self.attendance_ids.filtered_domain(domain) if domain else self.attendance_ids).with_prefetch()
         for day in rrule(DAILY, date_from, until=date_to):
             result[day.date()] = attendances._filter_by_date(day.date())
         return result
@@ -793,7 +796,8 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
         date_from = fields.Date.from_string(date_from)
         date_to = fields.Date.from_string(date_to)
-        assert self.schedule_type == 'variable'
+        if self.schedule_type != 'variable':
+            raise UserError(self.env._("You can only copy attendances on a variable schedule calendar."))
         week_start = int(self.env["res.lang"]._lang_get(self.env.user.lang).week_start) - 1
 
         source_start = date_from - timedelta(days=(date_from.weekday() - week_start) % 7)

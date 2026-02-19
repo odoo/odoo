@@ -83,6 +83,7 @@ class HrLeave(models.Model):
         # the employee calendar as otherwise days worked on by the company
         # calendar before the actual start of the leave would be taken into
         # account.
+        # TODO ZIRAH: Optimize this.
         while not self.resource_calendar_id._works_on_date(date_start):
             date_start += relativedelta(days=1)
         while not self.resource_calendar_id._works_on_date(date_target + relativedelta(days=1)):

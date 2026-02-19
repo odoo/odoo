@@ -203,7 +203,6 @@ class ResourceCalendarAttendance(models.Model):
             'sequence': self.sequence,
         }
 
-    # TODO ZIRAH: We know they are attendances, maybe rename to _get_on_date(date)
     def _filter_by_date(self, date_obj: date):
         """
         Get the attendances for a specific date. For variable schedule, it will return the attendances with the same date or with a recurrency rule matching the date. For fixed schedule, it will return the attendances with the same day of week as the date.
