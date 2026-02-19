@@ -271,9 +271,7 @@ export class ColorPlugin extends Plugin {
                     node &&
                     mode === "color" &&
                     !isGradientColor &&
-                    (node.matches?.(paragraphRelatedElementsSelector) || node.nodeName === "LI") &&
-                    isBlock(node) &&
-                    this.dependencies.selection.areNodeContentsFullySelected(node)
+                    (node.matches?.(paragraphRelatedElementsSelector) || node.nodeName === "LI")
                 ) {
                     font = [node];
                 } else if (
