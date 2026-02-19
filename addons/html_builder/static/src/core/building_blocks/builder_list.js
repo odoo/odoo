@@ -6,7 +6,7 @@ import {
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onWillUpdateProps, useRef, useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -39,6 +39,7 @@ export class BuilderList extends Component {
         columnWidth: { optional: true },
         forbidLastItemRemoval: { type: Boolean, optional: true },
         isEditable: { type: Boolean, optional: true },
+        showDataLimit: { type: Number, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -50,6 +51,7 @@ export class BuilderList extends Component {
         columnWidth: {},
         forbidLastItemRemoval: false,
         isEditable: true,
+        showDataLimit: 20,
     };
     static components = { BuilderComponent, SelectMenu };
 
@@ -69,6 +71,44 @@ export class BuilderList extends Component {
         this.commit = commit;
         this.preview = preview;
         this.allRecords = this.formatRawValue(this.props.records);
+        this.state.showDataLimit = this.props.showDataLimit;
+        this.state.isLoadingMore = false;
+        this.tableRef = useRef("table");
+        useEffect(
+            () => {
+                if (!this.tableRef.el?.lastElementChild) {
+                    return;
+                }
+
+                this.observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (
+                                entry.isIntersecting &&
+                                !this.state.isLoadingMore &&
+                                this.visibleItems.length < this.getIncludedRecords().length
+                            ) {
+                                this.debouncedLoadMore();
+                            }
+                        });
+                    },
+                    {
+                        threshold: 1.0,
+                        rootMargin: "100px",
+                    }
+                );
+
+                this.observer.observe(this.tableRef.el.lastElementChild);
+
+                return () => {
+                    if (this.observer) {
+                        this.observer.disconnect();
+                        this.observer = null;
+                    }
+                };
+            },
+            () => [this.state.value]
+        );
 
         onWillUpdateProps((props) => {
             this.allRecords = this.formatRawValue(props.records);
@@ -77,7 +117,7 @@ export class BuilderList extends Component {
         if (this.props.sortable) {
             useSortable({
                 enable: () => this.props.sortable,
-                ref: useRef("table"),
+                ref: this.tableRef,
                 elements: ".o_row_draggable",
                 handle: ".o_handle_cell",
                 cursor: "grabbing",
@@ -90,6 +130,28 @@ export class BuilderList extends Component {
         }
     }
 
+    debouncedLoadMore() {
+        if (this._loadMoreTimeout) {
+            return;
+        }
+
+        this.state.isLoadingMore = true;
+        this._loadMoreTimeout = setTimeout(() => {
+            this.loadMoreItems();
+            this.state.isLoadingMore = false;
+            this._loadMoreTimeout = null;
+        }, 250);
+    }
+
+    clampShowDataLimit() {
+        const totalLength = this.getIncludedRecords().length;
+        if (this.state.showDataLimit >= totalLength) {
+            this.state.showDataLimit =
+                Math.ceil((totalLength | this.state.showDataLimit) / this.props.showDataLimit) *
+                this.props.showDataLimit;
+        }
+    }
+
     validateProps() {
         // keys match
         const itemShapeKeys = Object.keys(this.props.itemShape);
@@ -98,6 +160,10 @@ export class BuilderList extends Component {
         if (allKeys.size !== itemShapeKeys.length) {
             throw new Error("default properties don't match itemShape");
         }
+    }
+
+    get visibleItems() {
+        return this.getIncludedRecords().slice(0, this.state.showDataLimit);
     }
 
     getIncludedRecords() {
@@ -113,7 +179,10 @@ export class BuilderList extends Component {
         this.dialog.add(BuilderListDialog, {
             excludedRecords: this.getExcludedRecords(),
             includedRecords: this.getIncludedRecords(),
-            save: this.commit,
+            save: (records) => {
+                this.commit(records);
+                this.clampShowDataLimit();
+            },
         });
     }
 
@@ -137,6 +206,7 @@ export class BuilderList extends Component {
         const items = this.getIncludedRecords();
         items.push(record ?? this.makeDefaultItem());
         this.commit(items);
+        this.clampShowDataLimit();
     }
 
     updateRecords() {
@@ -149,15 +219,18 @@ export class BuilderList extends Component {
             .map((record) => selectedRecordsMap.get(record.id) || record)
             .sort((a, b) => (a.display_name || "").localeCompare(b.display_name || ""));
         this.commit(newRecords);
+        this.clampShowDataLimit();
     }
 
     removeAllItems() {
         this.commit([]);
+        this.state.showDataLimit = this.props.showDataLimit;
     }
 
     deleteItem(itemId) {
         const items = this.getIncludedRecords();
         this.commit(items.filter((item) => item._id !== itemId));
+        this.clampShowDataLimit();
     }
 
     reorderItem(itemId, previousId) {
@@ -222,5 +295,9 @@ export class BuilderList extends Component {
         } else {
             this.preview(items);
         }
+    }
+
+    loadMoreItems() {
+        this.state.showDataLimit += this.props.showDataLimit;
     }
 }
