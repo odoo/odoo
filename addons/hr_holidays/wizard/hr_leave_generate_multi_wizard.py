@@ -78,6 +78,9 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             ('employee_id', 'in', employees.ids)])
 
         if conflicting_leaves:
+            self.env['resource.calendar.leaves'].search([
+                ('holiday_id', 'in', conflicting_leaves.ids)
+            ]).unlink()
             # YTI: More complex use cases could be managed later
             invalid_time_off = conflicting_leaves.filtered(lambda l: l.leave_type_request_unit == 'hour')
             if invalid_time_off:
