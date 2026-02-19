@@ -1,6 +1,19 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-import { PairSet, patchDynamicContent } from "@web/public/utils";
+import {
+    advanceTime,
+    afterEach,
+    animationFrame,
+    describe,
+    expect,
+    getFixture,
+    test,
+} from "@odoo/hoot";
+import {
+    DEBOUNCE,
+    makeAsyncHandler,
+    makeButtonHandler,
+    PairSet,
+    patchDynamicContent,
+} from "@web/public/utils";
 
 describe.current.tags("headless");
 
@@ -49,6 +62,39 @@ describe("PairSet", () => {
         expect(pairSet.map.size).toBe(1);
         pairSet.add(a, b);
         expect(pairSet.map.size).toBe(1);
+    });
+});
+
+describe("make handlers", () => {
+    let rejectPromise;
+    afterEach(async () => {
+        rejectPromise(new Error("reject"));
+        await animationFrame();
+        expect.verifyErrors(["reject"], {
+            message: "There should be only one unhandledrejection error.",
+        });
+    });
+
+    test("makeAsyncHandler does not retrigger the same error", async () => {
+        expect.errors(1);
+        const asyncHandler = makeAsyncHandler(
+            () => new Promise((_, reject) => (rejectPromise = reject))
+        );
+        asyncHandler();
+    });
+
+    test("makeButtonHandler does not retrigger the same error", async () => {
+        expect.errors(1);
+
+        const fixture = getFixture();
+        const button = document.createElement("button");
+        fixture.appendChild(button);
+
+        const buttonHandler = makeButtonHandler(
+            () => new Promise((_, reject) => (rejectPromise = reject))
+        );
+        buttonHandler({ target: button });
+        await advanceTime(DEBOUNCE + 1);
     });
 });
 
