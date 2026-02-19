@@ -1605,8 +1605,8 @@ class ProjectTask(models.Model):
             return self.env.ref(mail_message_subtype_per_state[self.state])
         return super()._track_subtype(init_values)
 
-    def _mail_get_message_subtypes(self):
-        res = super()._mail_get_message_subtypes()
+    def _mail_get_message_subtypes(self, is_internal=False):
+        res = super()._mail_get_message_subtypes(is_internal)
         if not self.stage_id.rating_active:
             res -= self.env.ref('project.mt_task_rating')
         if len(self) == 1:

@@ -738,16 +738,29 @@ async function read_subscription_data(request) {
     const MailFollowers = this.env["mail.followers"];
     /** @type {import("mock_models").MailMessageSubtype} */
     const MailMessageSubtype = this.env["mail.message.subtype"];
+    /** @type {import("mock_models").ResUsers} */
+    const ResUsers = this.env["res.users"];
 
     const { follower_id } = await parseRequestParams(request);
     const [follower] = MailFollowers.browse(follower_id);
-    const subtypes = MailMessageSubtype.search([
+    const linkedUsers = ResUsers.search([["partner_id", "=", follower.partner_id]]);
+    const is_internal = linkedUsers.length > 0;
+    let domain = [
         "&",
         ["hidden", "=", false],
         "|",
         ["res_model", "=", follower.res_model],
         ["res_model", "=", false],
-    ]);
+    ];
+    if (!is_internal) {
+        domain = [
+            "&",
+            ["internal", "=", false],
+            ...domain
+        ];
+    }
+    
+    const subtypes = MailMessageSubtype.search(domain);
     return {
         store_data: new mailDataHelpers.Store(
             MailMessageSubtype.browse(subtypes),

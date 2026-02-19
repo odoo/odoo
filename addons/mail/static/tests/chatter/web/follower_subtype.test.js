@@ -135,3 +135,39 @@ test("follower subtype apply", async () => {
         ".o_notification:text('The subscription preferences were successfully applied.')"
     );
 });
+
+test("external follower only sees non-internal subtypes", async () => {
+    const pyEnv = await startServer();
+    const subtypeInternal = pyEnv["mail.message.subtype"].search([
+        ["internal", "=", true]
+    ])[0];
+    const subtypeExternal = pyEnv["mail.message.subtype"].search([
+        ["internal", "=", false]  
+    ])[0];
+    const externalPartner = pyEnv["res.partner"].create({
+        name: "Guest User",
+        email: "guest@example.com",
+    });
+    const fakeId = pyEnv["res.fake"].create({
+        email_cc: "guest@example.com",
+        partner_ids: [externalPartner],
+    });
+    pyEnv["mail.followers"].create({
+        display_name: "Guest User",
+        partner_id: externalPartner,
+        res_model: "res.fake",
+        res_id: fakeId,
+        subtype_ids: [subtypeExternal],
+    });
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click(".o-mail-Followers-button");
+    await click("[title='Edit subscription']");
+    await contains(
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeInternal}']`,
+        { count: 0 }
+    );
+    await contains(
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeExternal}'] label`,
+    );
+});

@@ -883,8 +883,8 @@ class ProjectProject(models.Model):
             return self.env.ref('project.mt_project_stage_change')
         return super()._track_subtype(init_values)
 
-    def _mail_get_message_subtypes(self):
-        res = super()._mail_get_message_subtypes()
+    def _mail_get_message_subtypes(self, is_internal=False):
+        res = super()._mail_get_message_subtypes(is_internal)
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_project_task_waiting')
             if not self.allow_task_dependencies and waiting_subtype in res:
