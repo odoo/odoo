@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from itertools import groupby
 
 from odoo import api, fields, models
 from odoo.tools import format_amount
@@ -72,8 +69,7 @@ class SaleOrderLine(models.Model):
         if not self.env.context.get('with_price_unit'):
             return name_per_id
 
-        sols_list = [list(sols) for dummy, sols in groupby(self, lambda sol: (sol.order_id, sol.product_id))]
-        for sols in sols_list:
+        for sols in self.grouped(lambda sol: (sol.order_id, sol.product_id)).values():
             if len(sols) <= 1 or not all(sol.is_service for sol in sols):
                 continue
             for line in sols:

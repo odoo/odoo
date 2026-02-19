@@ -3,8 +3,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
 from odoo.tools import SQL, is_html_empty
-from itertools import groupby
-from operator import itemgetter
 from datetime import date
 from odoo.fields import Domain
 
@@ -385,9 +383,8 @@ class ProductTemplate(models.Model):
             )
 
         # Suppliers
-        key = itemgetter('partner_id')
         supplier_list = []
-        for _key, group in groupby(sorted(self.seller_ids, key=key), key=key):
+        for group in self.seller_ids.grouped('partner_id').values():
             for s in group:
                 if not ((s.date_start and s.date_start > date.today()) or (s.date_end and s.date_end < date.today()) or (s.min_qty > quantity)):
                     supplier_list.append({

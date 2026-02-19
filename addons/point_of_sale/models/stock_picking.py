@@ -1,12 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero
-
-from itertools import groupby
-from collections import defaultdict
 
 
 class StockPicking(models.Model):
@@ -93,11 +88,10 @@ class StockPicking(models.Model):
         def get_grouping_key(line):
             return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
 
-        lines_by_product_and_attrs = groupby(sorted(lines, key=get_grouping_key), key=get_grouping_key)
-        move_vals = []
-        for _product, olines in lines_by_product_and_attrs:
-            order_lines = self.env['pos.order.line'].concat(*olines)
-            move_vals.append(self._prepare_stock_move_vals(order_lines[0], order_lines))
+        move_vals = [
+            self._prepare_stock_move_vals(order_lines[0], order_lines)
+            for order_lines in lines.grouped(get_grouping_key).values()
+        ]
         moves = self.env['stock.move'].create(move_vals)
         confirmed_moves = moves._action_confirm()
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
@@ -171,10 +165,10 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_lines_data_dict(self, order_lines):
-        lines_data = defaultdict(dict)
-        for product_id, olines in groupby(sorted(order_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id):
-            lines_data[product_id].update({'order_lines': self.env['pos.order.line'].concat(*olines)})
-        return lines_data
+        return {
+            product.id: {'order_lines': lines}
+            for product, lines in order_lines.grouped('product_id').items()
+        }
 
     def _create_production_lots_for_pos_order(self, lines):
         ''' Search for existing lots and create missing ones.
