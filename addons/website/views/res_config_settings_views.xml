@@ -143,7 +143,11 @@
                         </setting>
                         <setting id="social_default_image_setting" string="Default Social Share Image" help="If set, replaces the website logo as the default social share image.">
                             <field name="has_default_share_image"/>
-                            <field name="social_default_image" widget="image" class="w-25 mt-2" invisible="not has_default_share_image"/>
+                            <field name="social_default_image" widget="image" class="w-25 mt-2" invisible="not has_default_share_image" options="{'accepted_file_extensions': '.png,.jpg,.jpeg,.gif'}"/>
+                            <p class="text-muted small mt-2 mb-0" invisible="not has_default_share_image">
+                                <i class="fa fa-info-circle me-1"/>
+                                SVG images are not supported for social share images.
+                            </p>
                         </setting>
                         <setting id="google_console_setting" help="Monitor Google Search results data">
                             <field name="has_google_search_console"/>

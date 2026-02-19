@@ -19,6 +19,9 @@
                     <div class="o_meta_img_upload m-1" title="Click to choose more images" t-on-click="openMediaDialog">
                         <i class="fa fa-upload"/>
                     </div>
+                    <p t-if="state.svgError" class="text-danger small ms-1 mt-1">
+                        SVG images are not supported. Please select a PNG, JPG, or GIF.
+                    </p>
                 </div>
                 <div class="col-lg-6">
                     <div class="card p-0 mb16">

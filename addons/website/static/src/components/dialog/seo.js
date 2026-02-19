@@ -5,6 +5,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
+import { isSvgImage } from '@website/js/utils';
 import { Component, useState, reactive, onMounted, onWillStart, useEffect } from "@odoo/owl";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
@@ -49,6 +50,7 @@ class ImageSelector extends Component {
                     };
                 }),
             ],
+            svgError: false,
         });
 
         if (this.seoContext.metaImage && !this.state.images.map(({src}) => this.getImagePathname(src)).includes(this.getImagePathname(this.seoContext.metaImage))) {
@@ -86,6 +88,7 @@ class ImageSelector extends Component {
     }
 
     selectImage(src) {
+        this.state.svgError = false;
         this.state.images = this.state.images.map(img => {
             img.active = img.src === src;
             return img;
@@ -95,12 +98,17 @@ class ImageSelector extends Component {
 
     openMediaDialog() {
         this.dialogs.add(MediaDialog, {
-            // onlyImages: true,
+            onlyImages: true,
             resModel: 'ir.ui.view',
             useMediaLibrary: true,
             save: image => {
-                let existingImage;
                 const src = image.getAttribute('src');
+                if (isSvgImage(src)) {
+                    this.state.svgError = true;
+                    return;
+                }
+                this.state.svgError = false;
+                let existingImage;
                 this.state.images = this.state.images.map(img => {
                     img.active = false;
                     if (img.src === src) {
@@ -110,11 +118,7 @@ class ImageSelector extends Component {
                     return img;
                 });
                 if (!existingImage) {
-                    this.state.images.push({
-                        src: src,
-                        active: true,
-                        custom: true,
-                    });
+                    this.state.images.push({ src, active: true, custom: true });
                 }
                 this.seoContext.metaImage = src;
             },
@@ -428,8 +432,8 @@ export class OptimizeSEODialog extends Component {
     getImages() {
         const imageEls = this.pageDocumentElement.querySelectorAll('#wrap img');
         return [...new Set(Array.from(imageEls)
-                .filter(img => img.naturalHeight > 200 && img.naturalWidth > 200)
-                .map(({src}) => (src))
+                .filter(img => img.naturalHeight > 200 && img.naturalWidth > 200 && !isSvgImage(img.getAttribute('src')))
+                .map(({src}) => src)
             )];
     }
 

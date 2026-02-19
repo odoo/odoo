@@ -289,6 +289,23 @@ export async function webpToPNG(src) {
 }
 
 /**
+ * Checks if an image source is an SVG.
+ *
+ * @param {string} src - an URL to an image or a data URI
+ * @returns {boolean}
+ */
+export function isSvgImage(src) {
+    if (!src) {
+        return false;
+    }
+    // data URIs don't have a pathname ending in ".svg", so check the MIME type directly.
+    if (src.startsWith("data:image/svg+xml")) {
+        return true;
+    }
+    return new URL(src, window.location.origin).pathname.toLowerCase().endsWith(".svg");
+}
+
+/**
  * Converts a formatted base64 image into a base64 PNG.
  *
  * @private
@@ -471,6 +488,7 @@ export default {
     isHTTPSorNakedDomainRedirection: isHTTPSorNakedDomainRedirection,
     svgToPNG: svgToPNG,
     webpToPNG: webpToPNG,
+    isSvgImage,
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,
     isMobile: isMobile,
