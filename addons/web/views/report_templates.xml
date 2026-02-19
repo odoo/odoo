@@ -709,8 +709,8 @@
             </table>
         </div>
         <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
-            <h2 class="text-center" t-out="layout_document_title"/>
-            <t t-call="web.address_layout" custom_layout_address="True" information_block="False"/>
+            <h2 t-attf-class="text-center {{'mb-4' if information_block else ''}}" t-out="layout_document_title"/>
+            <t t-call="web.address_layout" custom_layout_address="True"/>
             <t t-out="0"/>
         </t>
         <div t-attf-class="o_company_#{company.id}_layout footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
