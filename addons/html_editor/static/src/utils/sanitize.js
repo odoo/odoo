@@ -1,5 +1,4 @@
 import { containsAnyInline, selfClosingHtmlTags } from "./dom_info";
-import { wrapInlinesInBlocks } from "./dom";
 import { markup } from "@odoo/owl";
 import { htmlReplace } from "@web/core/utils/html";
 
@@ -12,7 +11,7 @@ export function initElementForEdition(element, options = {}) {
         // No matter the inline content, it will be wrapped in a DIV to try
         // and match the current style of the content as much as possible.
         // (P has a margin-bottom, DIV does not).
-        wrapInlinesInBlocks(element, {
+        options.wrapInlinesInBlocks(element, {
             baseContainerNodeName: "DIV",
         });
     }

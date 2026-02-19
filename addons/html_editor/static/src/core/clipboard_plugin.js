@@ -6,7 +6,7 @@ import {
 } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
+import { unwrapContents, splitTextNode, fillEmpty } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
@@ -408,7 +408,7 @@ export class ClipboardPlugin extends Plugin {
         // particular case in all of those functions. In fact, this case cannot
         // happen on a new document created using this editor, but will happen
         // instantly when editing a document that was created from Etherpad.
-        wrapInlinesInBlocks(container, {
+        this.dependencies.dom.wrapInlinesInBlocks(container, {
             baseContainerNodeName:
                 closestBaseContainer?.nodeName ||
                 this.dependencies.baseContainer.getDefaultNodeName(),

@@ -1,10 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
-import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { registry } from "@web/core/registry";
 
 export class IconSnippetOptionPlugin extends Plugin {
     static id = "iconSnippetOption";
-    static dependencies = ["media"];
+    static dependencies = ["media", "dom"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -25,7 +24,7 @@ export class IconSnippetOptionPlugin extends Plugin {
                 dragState.replacedSnippetEl = selectedIconEl;
                 // ensure the icon is wrapped in a block("P") element to allow
                 // line breaks
-                wrapInlinesInBlocks(selectedIconEl.parentElement);
+                this.dependencies.dom.wrapInlinesInBlocks(selectedIconEl.parentElement);
             },
         });
         return !iconInserted;

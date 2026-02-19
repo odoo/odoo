@@ -8,7 +8,6 @@ import {
     removeClass,
     removeStyle,
     unwrapContents,
-    wrapInlinesInBlocks,
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
@@ -27,6 +26,7 @@ import {
     listElementSelector,
     isEditorTab,
     isPhrasingContent,
+    isVisible,
     getDeepestEditablePosition,
 } from "../utils/dom_info";
 import {
@@ -39,8 +39,11 @@ import {
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { childNodeIndex, nodeSize, rightPos } from "../utils/position";
-import { normalizeCursorPosition } from "@html_editor/utils/selection";
-import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { normalizeCursorPosition, callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import {
+    baseContainerGlobalSelector,
+    createBaseContainer,
+} from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 /**
@@ -93,6 +96,7 @@ export class DomPlugin extends Plugin {
         "setBlock",
         "setTagName",
         "removeSystemProperties",
+        "wrapInlinesInBlocks",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -128,6 +132,87 @@ export class DomPlugin extends Plugin {
     }
 
     // Shared
+
+    /**
+     * Wrap inline children nodes in Blocks, optionally updating cursors for
+     * later selection restore. A paragraph is used for phrasing node, and a div
+     * is used otherwise.
+     *
+     * @param {HTMLElement} element - block element
+     * @param {Cursors} [cursors]
+     */
+    wrapInlinesInBlocks(
+        element,
+        { baseContainerNodeName = "P", cursors = { update: () => {} } } = {}
+    ) {
+        // Helpers to manipulate preserving selection.
+        const wrapInBlock = (node, cursors) => {
+            const block = isPhrasingContent(node)
+                ? createBaseContainer(baseContainerNodeName, node.ownerDocument)
+                : node.ownerDocument.createElement("DIV");
+            cursors.update(callbacksForCursorUpdate.append(block, node));
+            cursors.update(callbacksForCursorUpdate.before(node, block));
+            if (node.nextSibling) {
+                const sibling = node.nextSibling;
+                node.remove();
+                sibling.before(block);
+            } else {
+                const parent = node.parentElement;
+                node.remove();
+                parent.append(block);
+            }
+            block.append(node);
+            return block;
+        };
+        const appendToCurrentBlock = (currentBlock, node, cursors) => {
+            if (currentBlock.matches(baseContainerGlobalSelector) && !isPhrasingContent(node)) {
+                const block = currentBlock.ownerDocument.createElement("DIV");
+                cursors.update(callbacksForCursorUpdate.before(currentBlock, block));
+                currentBlock.before(block);
+                for (const child of childNodes(currentBlock)) {
+                    cursors.update(callbacksForCursorUpdate.append(block, child));
+                    block.append(child);
+                }
+                cursors.update(callbacksForCursorUpdate.remove(currentBlock));
+                currentBlock.remove();
+                currentBlock = block;
+            }
+            cursors.update(callbacksForCursorUpdate.append(currentBlock, node));
+            currentBlock.append(node);
+            return currentBlock;
+        };
+        const removeNode = (node, cursors) => {
+            cursors.update(callbacksForCursorUpdate.remove(node));
+            node.remove();
+        };
+
+        const children = childNodes(element);
+        const visibleNodes = new Set(children.filter(isVisible));
+
+        let currentBlock;
+        let shouldBreakLine = true;
+        for (const node of children) {
+            if (isBlock(node)) {
+                shouldBreakLine = true;
+            } else if (!visibleNodes.has(node)) {
+                removeNode(node, cursors);
+            } else if (node.nodeName === "BR") {
+                if (shouldBreakLine) {
+                    wrapInBlock(node, cursors);
+                } else {
+                    // BR preceded by inline content: discard it and make sure
+                    // next inline goes in a new Block
+                    removeNode(node, cursors);
+                    shouldBreakLine = true;
+                }
+            } else if (shouldBreakLine) {
+                currentBlock = wrapInBlock(node, cursors);
+                shouldBreakLine = false;
+            } else {
+                currentBlock = appendToCurrentBlock(currentBlock, node, cursors);
+            }
+        }
+    }
 
     /**
      * @param {string | DocumentFragment | Element | null} content
@@ -431,7 +516,7 @@ export class DomPlugin extends Plugin {
                 allowsParagraphRelatedElements(parent)
             ) {
                 // Ensure that edition boundaries do not have inline content.
-                wrapInlinesInBlocks(parent, {
+                this.wrapInlinesInBlocks(parent, {
                     baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
                 });
             }

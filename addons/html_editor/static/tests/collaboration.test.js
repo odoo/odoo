@@ -40,7 +40,6 @@ import {
     undo,
 } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
-import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 
 /**
  * @param {Editor} editor
@@ -263,7 +262,7 @@ test("wrapInlinesInBlocks should not create impossible mutations in a collaborat
     const e2 = peerInfos.c2.editor;
     const div1 = e1.editable.querySelector("div");
     const cursors1 = e1.shared.selection.preserveSelection();
-    wrapInlinesInBlocks(div1, cursors1);
+    e1.shared.dom.wrapInlinesInBlocks(div1, cursors1);
     cursors1.restore();
     e1.shared.history.addStep();
     mergePeersSteps(peerInfos);
