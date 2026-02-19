@@ -199,8 +199,14 @@ class PaymentTransaction(models.Model):
                 if self.operation == 'validation':
                     self._void()  # In last step because it processes the response.
             elif status_type == 'void':
-                if self.operation == 'validation':  # Validation txs are authorized and then voided
-                    self._set_done()  # If the refund went through, the validation tx is confirmed
+                # - If operation is refund, we are in a child transaction created in _refund(),
+                #   and having the void status means the payment was voided instead of refunded,
+                #   because the payment was not settled yet. In this case, we should mark the
+                #   refund transaction as done, since we are in the child transaction.
+                # - For validation transactions, they are authorized and then voided:
+                #   If the void went through, the validation transaction is confirmed.
+                if self.operation in ['validation', 'refund']:
+                    self._set_done()
                 else:
                     self._set_canceled(extra_allowed_states=('done',))
             elif status_type == 'refund' and self.operation == 'refund':
