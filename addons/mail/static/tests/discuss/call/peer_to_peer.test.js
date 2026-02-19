@@ -55,8 +55,8 @@ onlineTest("basic peer to peer connection", async () => {
         }
     });
 
-    user2.p2p.connect(user2.id, channelId);
-    user1.p2p.connect(user1.id, channelId);
+    user2.p2p.connect(user2.id, channelId, { iceServers: [] });
+    user1.p2p.connect(user1.id, channelId, { iceServers: [] });
     await user1.p2p.addPeer(user2.id);
     await expect.waitForSteps(["connected"]);
     network.close();
@@ -70,7 +70,7 @@ onlineTest("mesh peer to peer connections", async () => {
     const users = range(userCount).map((i) => network.register(i));
     const promises = [];
     for (const user of users) {
-        user.p2p.connect(user.id, channelId);
+        user.p2p.connect(user.id, channelId, { iceServers: [] });
         for (let i = 0; i < user.id; i++) {
             promises.push(user.p2p.addPeer(i));
         }
@@ -103,11 +103,11 @@ onlineTest("connection recovery", async () => {
         }
     });
 
-    user1.p2p.connect(user1.id, channelId);
+    user1.p2p.connect(user1.id, channelId, { iceServers: [] });
     user1.p2p.addPeer(user2.id);
     // only connecting user2 after user1 has called addPeer so that user2 ignores notifications
     // from user1, which simulates a connection drop that should be recovered.
-    user2.p2p.connect(user2.id, channelId);
+    user2.p2p.connect(user2.id, channelId, { iceServers: [] });
     const openPromise = new Promise((resolve) => {
         user1.p2p.peers.get(2).dataChannel.onopen = resolve;
     });
@@ -139,8 +139,8 @@ onlineTest("can broadcast a stream and control download", async () => {
         });
     });
 
-    user2.p2p.connect(user2.id, channelId);
-    user1.p2p.connect(user1.id, channelId);
+    user2.p2p.connect(user2.id, channelId, { iceServers: [] });
+    user1.p2p.connect(user1.id, channelId, { iceServers: [] });
     await user1.p2p.addPeer(user2.id);
     const videoStream = await browser.navigator.mediaDevices.getUserMedia({
         video: true,
@@ -164,8 +164,8 @@ onlineTest("can broadcast arbitrary messages (dataChannel)", async () => {
     const network = new Network();
     const user1 = network.register(1);
     const user2 = network.register(2);
-    user2.p2p.connect(user2.id, channelId);
-    user1.p2p.connect(user1.id, channelId);
+    user2.p2p.connect(user2.id, channelId, { iceServers: [] });
+    user1.p2p.connect(user1.id, channelId, { iceServers: [] });
     await user1.p2p.addPeer(user2.id);
     user1.inbox = [];
     const pongPromise = new Promise((resolve) => {
@@ -198,8 +198,8 @@ onlineTest("can reject arbitrary offers", async () => {
     const network = new Network();
     const user1 = network.register(1);
     const user2 = network.register(2);
-    user2.p2p.connect(user2.id, channelId);
-    user1.p2p.connect(user1.id, channelId);
+    user2.p2p.connect(user2.id, channelId, { iceServers: [] });
+    user1.p2p.connect(user1.id, channelId, { iceServers: [] });
     user2.p2p._emitLog = (id, message) => {
         if (message === "offer rejected") {
             expect.step("offer rejected");
