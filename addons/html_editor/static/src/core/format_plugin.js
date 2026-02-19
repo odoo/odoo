@@ -6,7 +6,9 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { cleanTextNode, fillEmpty, removeClass, splitTextNode, unwrapContents } from "../utils/dom";
 import {
-    areSimilarElements,
+    hasPseudoElementContent,
+    hasSameClasses,
+    hasSameStyleAttributes,
     hasVisibleContent,
     isContentEditable,
     isElement,
@@ -35,6 +37,7 @@ import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../u
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
+const NOT_A_NUMBER = /[^\d]/g;
 
 function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
@@ -54,9 +57,17 @@ function isFormatted(formatPlugin, format) {
  *      applyStyle: boolean,
  * }) => void | boolean)[]} format_selection_handlers
  * @typedef {(() => void)[]} remove_all_formats_handlers
+ * @typedef {((root: Node) => void)[]} merge_adjacent_siblings_handlers
  *
  * @typedef {((className: string) => boolean)[]} format_class_predicates
  * @typedef {((node: Node) => boolean)[]} has_format_predicates
+ *
+ * @typedef {(({
+ *      node: Node,
+ *      nodeStyle: CSSStyleProperties,
+ *      node2: Node,
+ *      node2Style: CSSStyleProperties,
+ * }) => void | true)[]} are_similar_elements_overrides
  */
 
 export class FormatPlugin extends Plugin {
@@ -64,6 +75,7 @@ export class FormatPlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
+        "areSimilarElements",
         "isSelectionFormat",
         "insertAndSelectZws",
         "mergeAdjacentInlines",
@@ -665,20 +677,13 @@ export class FormatPlugin extends Plugin {
      * @param {boolean} [options.preserveSelection=true]
      */
     mergeAdjacentInlines(root, { preserveSelection = true } = {}) {
+        this.dispatchTo("merge_adjacent_siblings_handlers", root);
         let selectionToRestore = null;
         for (const node of [root, ...descendants(root)].filter(isElement)) {
             if (this.shouldBeMergedWithPreviousSibling(node)) {
                 if (preserveSelection) {
                     selectionToRestore ??= this.dependencies.selection.preserveSelection();
                     selectionToRestore.update(callbacksForCursorUpdate.merge(node));
-                }
-                if (node.matches("code.o_inline_code")) {
-                    while (
-                        node.previousSibling?.nodeType === Node.TEXT_NODE &&
-                        /^\uFEFF*$/.test(node.previousSibling.nodeValue)
-                    ) {
-                        node.previousSibling.remove();
-                    }
                 }
                 node.previousSibling.append(...childNodes(node));
                 node.remove();
@@ -691,19 +696,57 @@ export class FormatPlugin extends Plugin {
         const isMergeable = (node) =>
             FORMATTABLE_TAGS.includes(node.nodeName) &&
             !this.getResource("unsplittable_node_predicates").some((predicate) => predicate(node));
-        let previousSibling = node.previousSibling;
-        if (node.matches("code.o_inline_code")) {
-            while (
-                previousSibling?.nodeType === Node.TEXT_NODE &&
-                /^\uFEFF*$/.test(previousSibling.nodeValue)
-            ) {
-                previousSibling = previousSibling.previousSibling;
+        const previousSibling = node.previousSibling;
+        return (
+            !isSelfClosingElement(node) &&
+            this.areSimilarElements(node, previousSibling) &&
+            isMergeable(node)
+        );
+    }
+
+    areSimilarElements(node, node2) {
+        if (![node, node2].every((n) => n?.nodeType === Node.ELEMENT_NODE)) {
+            return false; // The nodes don't both exist or aren't both elements.
+        }
+        if (node.nodeName !== node2.nodeName) {
+            return false; // The nodes aren't the same type of element.
+        }
+        for (const name of new Set([...node.getAttributeNames(), ...node2.getAttributeNames()])) {
+            if (name === "style") {
+                if (!hasSameStyleAttributes(node, node2)) {
+                    return false;
+                }
+            } else if (name === "class") {
+                if (!hasSameClasses(node, node2)) {
+                    return false; // The nodes don't have the same classes.
+                }
+            } else if (node.getAttribute(name) !== node2.getAttribute(name)) {
+                return false; // The nodes don't have the same attributes.
+            }
+        }
+        if (
+            [node, node2].some(
+                (n) => hasPseudoElementContent(n, ":before") || hasPseudoElementContent(n, ":after")
+            )
+        ) {
+            return false; // The nodes have pseudo elements with content.
+        }
+        if (isBlock(node)) {
+            return false;
+        }
+        const nodeStyle = getComputedStyle(node);
+        const node2Style = getComputedStyle(node2);
+        for (const override of this.getResource("are_similar_elements_overrides")) {
+            const overrideResult = override({ node, nodeStyle, node2, node2Style });
+            if (overrideResult !== undefined) {
+                return overrideResult;
             }
         }
         return (
-            !isSelfClosingElement(node) &&
-            areSimilarElements(node, previousSibling) &&
-            isMergeable(node)
+            !+nodeStyle.padding.replace(NOT_A_NUMBER, "") &&
+            !+node2Style.padding.replace(NOT_A_NUMBER, "") &&
+            !+nodeStyle.margin.replace(NOT_A_NUMBER, "") &&
+            !+node2Style.margin.replace(NOT_A_NUMBER, "")
         );
     }
 
