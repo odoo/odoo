@@ -998,6 +998,102 @@ class TestExpenses(TestExpenseCommon):
         vendor_bill_view = self.analytic_account_1.action_view_vendor_bill()
         self.assertTrue(expense.account_move_id.id in vendor_bill_view['domain'][0][2])
 
+    def test_expense_paid_company_no_link_existing_bill(self):
+        """ Test the flow where the payment created from the expense is not linked to any bill and "serves as the bill itself". """
+        with Form(self.env['hr.expense']) as expense_form:
+            expense_form.employee_id = self.expense_employee
+            expense_form.payment_mode = 'company_account'
+            expense_form.product_id = self.product_c
+            expense_form.name = 'Expense for John Smith'
+            expense_form.total_amount_currency = 100.0
+            expense_form.save()
+            expense_form.is_paid_by_company_match_bill = False
+
+        expense = self.env['hr.expense'].search([('name', '=', 'Expense for John Smith')], limit=1)
+        self.assertRecordValues(expense, [{
+            'payment_mode': 'company_account',
+            'product_id': self.product_c.id,
+            'total_amount_currency': 100.0,
+            'tax_ids': (self.tax_purchase_a + self.tax_purchase_b).ids,
+            'is_paid_by_company_match_bill': False,
+        }])
+        expense.action_submit()
+        expense.action_approve()
+        expense.action_post()
+        self.assertRecordValues(expense, [
+            {'payment_mode': 'company_account', 'state': 'paid'},
+        ])
+        self.assertRecordValues(expense.account_move_id, [
+            {'move_type': 'entry', 'amount_total': 100.0}
+        ])
+        self.assertRecordValues(expense.account_move_id.origin_payment_id, [
+            {'payment_type': 'outbound', 'amount': 100.0, 'state': 'paid'},
+        ])
+        self.assertRecordValues(expense.account_move_id.line_ids.sorted('balance DESC'), [
+            {'debit': 76.92, 'credit': 0.0, 'account_id': self.product_c.property_account_expense_id.id},
+            {'debit': 11.54, 'credit': 0.0, 'account_id': self.company_data['default_account_tax_purchase'].id},
+            {'debit': 11.54, 'credit': 0.0, 'account_id': self.company_data['default_account_tax_purchase'].id},
+            {'debit': 0.0, 'credit': 100.0, 'account_id': self.outbound_payment_method_line.payment_account_id.id},
+
+        ])
+
+    def test_expense_paid_company_link_existing_bill(self):
+        """ Test the flow where the payment created from the expense is linked to an existing bill. Special case usually happening due to
+        a vendor sending the bill through an edi after the expense has been created or about card expenses.
+        """
+        vendor = self.env['res.partner'].create({'name': 'Vendor X'})
+        if not vendor.property_account_payable_id:
+            vendor.property_account_payable_id = self.company_data['default_account_payable'].copy()
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': vendor.id,
+            'company_id': self.company_data['company'].id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'invoice_line_ids': [Command.create({
+                'name': 'XXX Gravel or stuff',
+                'quantity': 1,
+                'price_unit': 100.0 / 1.15,  # We want the same total amount
+                'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+            })],
+        })
+        self.assertEqual(bill.amount_total, 100.0)
+
+        with Form(self.env['hr.expense']) as expense_form:
+            expense_form.employee_id = self.expense_employee
+            expense_form.payment_mode = 'company_account'
+            expense_form.product_id = self.product_c
+            expense_form.name = 'Expense for John Smith'
+            expense_form.total_amount_currency = 100.0
+            expense_form.vendor_id = vendor
+            expense_form.tax_ids = self.tax_purchase_a
+            expense_form.save()
+            expense_form.is_paid_by_company_match_bill = True
+            self.assertFalse(expense_form.tax_ids)
+            self.assertEqual(0, expense_form.tax_amount)
+            self.assertEqual(100.0, expense_form.total_amount_currency)
+
+        expense = self.env['hr.expense'].search([('name', '=', 'Expense for John Smith')], limit=1)
+        expense.action_submit()
+        expense.action_approve()
+        expense.action_post()
+        self.assertRecordValues(expense, [
+            {'payment_mode': 'company_account', 'state': 'paid'},
+        ])
+        self.assertRecordValues(expense.account_move_id, [
+            {'move_type': 'entry', 'amount_total': 100.0}
+        ])
+        self.assertRecordValues(expense.account_move_id.origin_payment_id, [
+            {'payment_type': 'outbound', 'amount': 100.0, 'state': 'paid'},
+        ])
+        payable_bill_line = bill.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_payable'])
+        self.assertRecordValues(expense.account_move_id.line_ids.sorted('balance DESC'), [
+            {'debit': 100.0, 'credit': 0.0, 'account_id': self.company_data['default_account_payable'].id},
+            {'debit': 0.0, 'credit': 100.0, 'account_id': self.outbound_payment_method_line.payment_account_id.id},
+        ])
+        payable_expense_line = expense.account_move_id.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_payable'])
+        (payable_bill_line | payable_expense_line).reconcile()
+        self.assertEqual(bill.payment_state, self.env['account.move']._get_invoice_in_payment_state())
+
     def test_expense_paid_company_no_autobalancing_line(self):
         """
         Test that when creating the move associated with an expense paid by company, no autobalancing line
