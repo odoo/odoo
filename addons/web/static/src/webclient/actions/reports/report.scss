@@ -108,11 +108,15 @@ li.oe-nested {
 }
 
 .o_company_logo {
-    max-height: 6rem;
-    max-width: 12rem;
+    // Ugly CSS fix due to `account_pdf_export_templates` overriding the
+    // o_company_logo class. To be removed in master.
+
+    max-height: 6rem !important;
+    max-width: 12rem !important;
 
     &_small {
-        max-height: 4rem;
+        max-height: 4rem !important;
+        max-width: 11rem !important;
     }
 
     &_big {

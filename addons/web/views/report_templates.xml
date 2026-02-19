@@ -728,7 +728,7 @@
                             </span>
                         </td>
                         <td class="p-0 text-end">
-                            <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <img t-if="company.logo" class="o_company_logo o_company_logo_small mb-1" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                             <div name="company_address">
                                 <ul class="list-unstyled" name="company_address_list">
                                     <li t-if="company.is_company_details_empty">
