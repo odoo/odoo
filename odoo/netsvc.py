@@ -218,6 +218,9 @@ def init_logger():
     # This warning is triggered library only during the python precompilation which does not occur on readonly filesystem
     warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
     warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
+    # for docutils 0.17 (only when pyc are recomputed, discovered when using faketime)
+    warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*docutils.utils.smartquotes")
+    warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*docutils.utils.smartquotes")
 
     # jammy's pdfminer has a broken version (the distribution returns
     # `-VERSION-`, the code has a version of `__VERSION__`), which triggers
