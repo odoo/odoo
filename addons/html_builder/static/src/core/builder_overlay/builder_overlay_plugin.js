@@ -150,9 +150,11 @@ export class BuilderOverlayPlugin extends Plugin {
 
     removeHoverOverlay() {
         if (this.hoverOverlay) {
+            if (!this.overlays.find((o) => o.overlayTarget === this.hoverOverlay.overlayTarget)) {
+                this.resizeObserver.unobserve(this.hoverOverlay.overlayTarget);
+            }
             this.hoverOverlay.destroy();
             this.hoverOverlay.overlayElement.remove();
-            this.resizeObserver.unobserve(this.hoverOverlay.overlayTarget);
             this.hoverOverlay = null;
         }
     }
