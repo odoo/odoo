@@ -338,4 +338,46 @@ describe("pos.order - loyalty", () => {
         expect(loyaltyStats2[0].points.total).toBe(1);
         expect(loyaltyStats2[0].points.balance).toBe(3);
     });
+
+    test("_getRewardLineValuesDiscount - gift card payment uses tax-aware amount", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const product = models["product.product"].get(1);
+        await addProductLineToOrder(store, order, { productId: product.id, price_unit: 50 });
+
+        const reward = models["loyalty.reward"].get(4);
+        const discountProduct = models["product.product"].get(200);
+        const taxIncl = models["account.tax"].create({
+            name: "Incl 15%",
+            amount: 15,
+            amount_type: "percent",
+            price_include: true,
+        });
+        discountProduct.taxes_id = [taxIncl];
+        reward.discount_line_product_id = discountProduct;
+
+        const lines = order._getRewardLineValuesDiscount({ reward, coupon_id: 1 });
+
+        expect(lines).toHaveLength(1);
+        const [line] = lines;
+        expect(line.price_unit).toBe(-50);
+        expect(line.tax_ids).toHaveLength(1);
+        expect(line.tax_ids[0].price_include).toBe(true);
+
+        const taxExcl = models["account.tax"].create({
+            name: "Excl 15%",
+            amount: 15,
+            amount_type: "percent",
+            price_include: false,
+        });
+        discountProduct.taxes_id = [taxExcl];
+        const lines2 = order._getRewardLineValuesDiscount({ reward, coupon_id: 1 });
+        expect(lines2).toHaveLength(1);
+        const [line2] = lines2;
+        expect(line2.price_unit).toBe(-43.48);
+        expect(line2.tax_ids).toHaveLength(1);
+        expect(line2.tax_ids[0].price_include).toBe(false);
+    });
 });

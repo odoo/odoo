@@ -96,6 +96,28 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_uom_id: false,
             reward_product_domain: "[]",
         },
+        {
+            id: 4,
+            description: "Gift card payment reward",
+            program_id: 3,
+            reward_type: "discount",
+            required_points: 0,
+            clear_wallet: false,
+            currency_id: 1,
+            discount: 50,
+            discount_mode: "per_order",
+            discount_applicability: "order",
+            all_discount_product_ids: [],
+            is_global_discount: false,
+            discount_max_amount: 0,
+            discount_line_product_id: 200,
+            reward_product_id: false,
+            multi_product: false,
+            reward_product_ids: [],
+            reward_product_qty: 1,
+            reward_product_uom_id: false,
+            reward_product_domain: "[]",
+        },
     ];
 }
 
