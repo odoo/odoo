@@ -118,3 +118,11 @@ class TestPoSSetup(TestPoSCommon):
         )
         with self.assertRaises(ValidationError):
             journal.action_archive()
+
+    def test_card_payment_method_initialization(self):
+        """Test that the 'Card' payment method created by default has an outstanding account."""
+        card_pm = self.env['pos.payment.method'].search([
+            ('name', '=', 'Card'), ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        self.assertTrue(card_pm)
+        self.assertTrue(card_pm.outstanding_account_id)
