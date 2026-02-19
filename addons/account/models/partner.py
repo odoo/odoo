@@ -1050,11 +1050,11 @@ class ResPartner(models.Model):
     @api.depends('country_id')
     def _compute_partner_vat_placeholder(self):
         for partner in self:
-            placeholder = _("/ if not applicable")
+            placeholder = _("e.g. /")
             if partner.country_id:
                 expected_vat = _ref_vat.get(partner.country_id.code.lower())
                 if expected_vat:
-                    placeholder = _("%s, or / if not applicable", expected_vat)
+                    placeholder = _("e.g. %s, or /", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
 
