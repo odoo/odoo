@@ -203,9 +203,11 @@ export class BuilderList extends Component {
         const id = targetInputEl.dataset.id;
         const propertyName = targetInputEl.name;
         const isCheckbox = targetInputEl.type === "checkbox";
+        const isText = targetInputEl.type === "text";
         const value = isCheckbox ? targetInputEl.checked : targetInputEl.value;
 
-        const items = this.formatRawValue(this.state.value);
+        let items = this.formatRawValue(this.state.value);
+
         if (value === true && this.props.itemShape[propertyName] === "exclusive_boolean") {
             for (const item of items) {
                 item[propertyName] = false;
@@ -215,6 +217,14 @@ export class BuilderList extends Component {
         item[propertyName] = value;
         if (!isCheckbox) {
             item.id = isSmallInteger(value) ? parseInt(value) : value;
+        }
+
+        // Empty text inputs are not allowed, so we remove them, unless removing
+        // them would violate `props.forbidLastItemRemoval`.
+        const inputIsEmptyText = isText && value === "";
+        const canDeleteItem = items.length > 1 || !this.props.forbidLastItemRemoval;
+        if (inputIsEmptyText && canDeleteItem) {
+            items = items.filter((item) => item._id !== id);
         }
 
         if (commitToHistory) {
