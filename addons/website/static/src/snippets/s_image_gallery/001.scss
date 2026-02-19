@@ -78,7 +78,16 @@
                 padding-bottom: 64px;
             }
             ul.carousel-indicators li {
+                position: relative;
                 border: 1px solid #aaa;
+
+                // Play icon for video thumnail indicators.
+                i.o_video_thumbnail {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
             }
             .media_iframe_video {
                 // 70% because the carousel controls are each 15% and the user

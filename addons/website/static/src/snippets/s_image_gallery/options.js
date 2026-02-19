@@ -32,12 +32,44 @@ options.registry.gallery = options.Class.extend({
             return layoutPromise.then(this._super.apply(this, arguments));
         }
 
-        // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed.gallery', 'img', function (ev) {
-            var $img = $(ev.currentTarget);
-            var index = self.$target.find('.carousel-item.active').index();
-            self.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
-                .css('background-image', 'url(' + $img.attr('src') + ')');
+        // Manage the media replacement. Make sure the data-index attribute and
+        // the media previews are updated if medias are changed.
+        // TODO init_media_dialog is not triggered anymore
+        this.$target.on("init_media_dialog.gallery", async (_, data) => {
+            // Prevent registering the replace media step. It will be registered
+            // manually once everything is updated, to have only one big step.
+            this.options.wysiwyg.odooEditor.historyPauseSteps();
+
+            // Save the media data-index to set it on the new one afterwards.
+            this.savedIndex = data.mediaEl.dataset.index;
+            // Only allow images and videos in the media dialog.
+            data.options.noIcons = true;
+            data.options.noDocuments = true;
+            // Make sure the steps are unpaused when closing the dialog.
+            data.options.onClose = () => this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+        });
+        // TODO replace_target is not triggered anymore
+        this.$target.on("replace_target.gallery", "img, .media_iframe_video", async (_, mediaEl) => {
+            // Set the data-index attribute.
+            mediaEl.dataset.index = this.savedIndex;
+            // Update the previews.
+            const indicatorEl = this.$target[0].querySelector(`[data-slide-to="${this.savedIndex}"]`);
+            if (indicatorEl) {
+                indicatorEl.replaceChildren();
+                indicatorEl.classList.remove("o_not_editable");
+                if (mediaEl.tagName === "IMG") {
+                    indicatorEl.style.backgroundImage = `url(${mediaEl.getAttribute("src")})`;
+                } else if (mediaEl.classList.contains("media_iframe_video")) {
+                    // Update the carousel indicator with the video thumbnail.
+                    const src = await this._getVideoThumbnailSrc(mediaEl.dataset.oeExpression)
+                        || "/web/static/img/placeholder.png";
+                    indicatorEl.style.backgroundImage = `url(${src})`;
+                    this._addVideoPlayIcon(indicatorEl);
+                }
+            }
+            // Register the replace media step.
+            this.options.wysiwyg.odooEditor.historyStep();
+            this.trigger_up("activate_snippet", {$snippet: $(mediaEl), ifInactiveOptions: true});
         });
 
         // When the snippet is empty, an edition button is the default content
@@ -57,6 +89,18 @@ options.registry.gallery = options.Class.extend({
                 });
             }
         });
+
+        // If some medias do not have the `data-index` attribute, reset the mode
+        // so everything is consistent. (Needed for already dropped snippets
+        // whose images have been previously replaced by other media types).
+        const mediaEls = this._getImages();
+        const indexedMediaEls = this.$target[0].querySelectorAll("[data-index]");
+        if (mediaEls.length !== indexedMediaEls.length) {
+            this.options.wysiwyg.odooEditor.observerUnactive("resetMode");
+            return this.mode("reset", this.getMode()).then(() => {
+                this.options.wysiwyg.odooEditor.observerActive("resetMode");
+            }).then(this._super.apply(this, arguments));
+        }
 
         return this._super.apply(this, arguments).then(() => {
             // Call specific mode's start if defined (e.g. _slideshowStart)
@@ -110,8 +154,9 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        const lastImage = _.last(this._getImages());
-        let index = lastImage ? this._getIndex(lastImage) : -1;
+        const mediaEls = this._getImages();
+        const lastMediaEl = mediaEls[mediaEls.length - 1];
+        let index = lastMediaEl ? this._getIndex(lastMediaEl) : -1;
         const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
             multiImages: true,
             onlyImages: true,
@@ -170,32 +215,36 @@ options.registry.gallery = options.Class.extend({
         return mode;
     },
     /**
-     * Displays the images with the "grid" layout.
+     * Displays the medias with the "grid" layout.
      */
     grid: function () {
-        const imgs = this._getImgHolderEls();
+        const mediaEls = this._getImages();
+        const mediaHolderEls = this._getImgHolderEls();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
-        _.each(imgs, function (img, index) {
-            const $img = $(img.cloneNode(true));
+        mediaHolderEls.forEach((mediaHolderEl, index) => {
+            const $mediaHolder = $(mediaHolderEl);
             var $col = $('<div/>', {class: colClass});
-            $col.append($img).appendTo($row);
+            $col.append($mediaHolder).appendTo($row);
             if ((index + 1) % columns === 0) {
                 $row = $('<div/>', {class: 'row s_nb_column_fixed'});
                 $row.appendTo($container);
             }
+            // Set the data-index (to always have the right order).
+            mediaEls[index].setAttribute("data-index", index);
         });
         this.$target.css('height', '');
     },
     /**
-     * Displays the images with the "masonry" layout.
+     * Displays the medias with the "masonry" layout.
      */
     masonry: function () {
         var self = this;
-        const imgs = this._getImgHolderEls();
+        const mediaEls = this._getImages();
+        const mediaHolderEls = this._getImgHolderEls();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
@@ -210,24 +259,27 @@ options.registry.gallery = options.Class.extend({
             cols.push($col[0]);
         }
 
-        // Dispatch images in columns by always putting the next one in the
+        // Dispatch medias in columns by always putting the next one in the
         // smallest-height column
         if (this._masonryAwaitImages) {
             // TODO In master return promise.
             this._masonryAwaitImagesPromise = new Promise(async resolve => {
-                for (const imgEl of imgs) {
+                let index = 0;
+                for (const mediaHolderEl of mediaHolderEls) {
                     let min = Infinity;
                     let smallestColEl;
                     for (const colEl of cols) {
-                        const imgEls = colEl.querySelectorAll("img");
-                        const lastImgRect = imgEls.length && imgEls[imgEls.length - 1].getBoundingClientRect();
-                        const height = lastImgRect ? Math.round(lastImgRect.top + lastImgRect.height) : 0;
+                        const colMediaEls = this._getAllMediaEls(colEl);
+                        const lastMediaRect = colMediaEls.length && colMediaEls[colMediaEls.length - 1].getBoundingClientRect();
+                        const height = lastMediaRect ? Math.round(lastMediaRect.top + lastMediaRect.height) : 0;
                         if (height < min) {
                             min = height;
                             smallestColEl = colEl;
                         }
                     }
-                    smallestColEl.append(imgEl.cloneNode(true));
+                    smallestColEl.append(mediaHolderEl);
+                    // Set the data-index (to always have the right order).
+                    mediaEls[index].setAttribute("data-index", index++);
                     await wUtils.onceAllImagesLoaded(this.$target);
                 }
                 resolve();
@@ -236,12 +288,18 @@ options.registry.gallery = options.Class.extend({
         }
         // TODO Remove in master.
         // Order might be wrong if images were not loaded yet.
-        while (imgs.length) {
+        let index = 0;
+        while (mediaHolderEls.length) {
             var min = Infinity;
             var $lowest;
             _.each(cols, function (col) {
                 var $col = $(col);
-                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
+                const colMediaEls = self._getAllMediaEls(col);
+                let height = 0;
+                if (colMediaEls.length) {
+                    const lastMediaRect = colMediaEls[colMediaEls.length - 1].getBoundingClientRect();
+                    height = lastMediaRect.top + lastMediaRect.height - self.$target[0].getBoundingClientRect().top;
+                }
                 // Neutralize invisible sub-pixel height differences.
                 height = Math.round(height);
                 if (height < min) {
@@ -249,18 +307,17 @@ options.registry.gallery = options.Class.extend({
                     $lowest = $col;
                 }
             });
-            // Only on Chrome: appended images are sometimes invisible and not
-            // correctly loaded from cache, we use a clone of the image to force
-            // the loading.
-            $lowest.append(imgs.shift().cloneNode(true));
+            $lowest.append(mediaHolderEls.shift());
+            // Set the data-index (to always have the right order).
+            mediaEls[index].setAttribute("data-index", index++);
         }
     },
     /**
-     * Allows to change the images layout. @see grid, masonry, nomode, slideshow
+     * Allows to change the medias layout. @see grid, masonry, nomode, slideshow
      *
      * @see this.selectClass for parameters
      */
-    mode: function (previewMode, widgetValue, params) {
+    mode: async function (previewMode, widgetValue, params) {
         widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
         this.$target
@@ -273,26 +330,31 @@ options.registry.gallery = options.Class.extend({
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
-        this[widgetValue]();
+        // The slideshow is async because of the rpc calls to get the video
+        // thumbnails.
+        await this[widgetValue]();
         this.trigger_up('cover_update');
         this._refreshPublicWidgets();
     },
     /**
-     * Displays the images with the standard layout: floating images.
+     * Displays the medias with the standard layout: floating medias.
      */
     nomode: function () {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-        var imgs = this._getImages();
-        const imgHolderEls = this._getImgHolderEls();
+        const mediaEls = this._getImages();
+        const mediaHolderEls = this._getImgHolderEls();
 
         this._replaceContent($row);
 
-        _.each(imgs, function (img, index) {
+        mediaEls.forEach((mediaEl, index) => {
             var wrapClass = 'col-lg-3';
-            if (img.width >= img.height * 2 || img.width > 600) {
+            if (mediaEl.width >= mediaEl.height * 2 || mediaEl.width > 600
+                    || mediaEl.classList.contains("media_iframe_video")) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
+            // Set the data-index (to always have the right order).
+            mediaEl.setAttribute("data-index", index);
+            const $wrap = $('<div/>', {class: wrapClass}).append(mediaHolderEls[index]);
             $row.append($wrap);
         });
     },
@@ -317,20 +379,23 @@ options.registry.gallery = options.Class.extend({
         this._replaceContent($addImg.append($icon).append($text));
     },
     /**
-     * Displays the images with a "slideshow" layout.
+     * Displays the medias with a "slideshow" layout.
      */
-    slideshow: function () {
-        const imageEls = this._getImages();
-        const imgHolderEls = this._getImgHolderEls();
-        const images = _.map(imageEls, img => ({
-            // Use getAttribute to get the attribute value otherwise .src
-            // returns the absolute url.
-            src: img.getAttribute('src'),
-            // TODO: remove me in master. This is not needed anymore as the
-            // images of the rendered `website.gallery.slideshow` are replaced
-            // by the elements of `imgHolderEls`.
-            alt: img.getAttribute('alt'),
-        }));
+    slideshow: async function () {
+        const imageEls = this.$target[0].querySelectorAll("img");
+        const mediaEls = this._getImages();
+        const mediaHolderEls = this._getImgHolderEls();
+        const mediaSrc = await this._getMediaSrc(mediaEls);
+        const images = mediaEls.map((mediaEl, i) => {
+            const src = mediaSrc[i];
+            return {
+                src: src,
+                // TODO: remove me in master. This is not needed anymore as the
+                // images of the rendered `website.gallery.slideshow` are replaced
+                // by the elements of `imgHolderEls`.
+                alt: mediaEl.tagName === "IMG" && mediaEl.getAttribute("alt") || "",
+            };
+        });
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
         var params = {
             images: images,
@@ -352,12 +417,18 @@ options.registry.gallery = options.Class.extend({
             // order to keep the characteristics of the image such as the
             // filter, the width, the quality, the link on which the users are
             // redirected once they click on the image etc...
-            imgSlideshowEl.after(imgHolderEls[index]);
+            imgSlideshowEl.after(mediaHolderEls[index]);
             imgSlideshowEl.remove();
         });
         this._replaceContent($slideshow);
-        _.each(this.$('img'), function (img, index) {
-            $(img).attr({contenteditable: true, 'data-index': index});
+        const indicatorEls = [...this.$target[0].querySelectorAll("[data-slide-to]")];
+        mediaEls.forEach((mediaEl, index) => {
+            mediaEl.setAttribute("contenteditable", true);
+            mediaEl.setAttribute("data-index", index);
+            // For videos, add a "play" icon in their carousel indicators.
+            if (mediaEl.classList.contains("media_iframe_video")) {
+                this._addVideoPlayIcon(indicatorEls[index]);
+            }
         });
         this.$target.css('height', Math.round(window.innerHeight * 0.7));
 
@@ -388,39 +459,46 @@ options.registry.gallery = options.Class.extend({
         // TODO In master: nest in a snippet_edition_request to await mode.
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
+            const mediaEls = this._getImages();
+            if (!mediaEls.length) {
+                // If the gallery is empty, display the "Add Images" message.
+                this.removeAllImages();
+                data.onSuccess();
+                return;
+            }
             // TODO In master: use async mode.
             this.trigger_up('snippet_edition_request', {exec: () => {
-                return this._modeWithImageWait('reset', this.getMode());
+                return this._modeWithImageWait('reset', this.getMode()).then(() => data.onSuccess());
             }});
         } else if (name === 'image_index_request') {
-            var imgs = this._getImages();
-            var position = _.indexOf(imgs, data.$image[0]);
+            const mediaEls = this._getImages();
+            let position = mediaEls.indexOf(data.$image[0]);
             if (position === 0 && data.position === "prev") {
                 data.position = "last";
-            } else if (position === imgs.length - 1 && data.position === "next") {
+            } else if (position === mediaEls.length - 1 && data.position === "next") {
                 data.position = "first";
             }
-            imgs.splice(position, 1);
+            mediaEls.splice(position, 1);
             switch (data.position) {
                 case 'first':
-                    imgs.unshift(data.$image[0]);
+                    mediaEls.unshift(data.$image[0]);
                     break;
                 case 'prev':
-                    imgs.splice(position - 1, 0, data.$image[0]);
+                    mediaEls.splice(position - 1, 0, data.$image[0]);
                     break;
                 case 'next':
-                    imgs.splice(position + 1, 0, data.$image[0]);
+                    mediaEls.splice(position + 1, 0, data.$image[0]);
                     break;
                 case 'last':
-                    imgs.push(data.$image[0]);
+                    mediaEls.push(data.$image[0]);
                     break;
             }
-            position = imgs.indexOf(data.$image[0]);
-            _.each(imgs, function (img, index) {
+            position = mediaEls.indexOf(data.$image[0]);
+            mediaEls.forEach((mediaEl, index) => {
                 // Note: there might be more efficient ways to do that but it is
                 // more simple this way and allows compatibility with 10.0 where
                 // indexes were not the same as positions.
-                $(img).attr('data-index', index);
+                mediaEl.setAttribute("data-index", index);
             });
             const currentMode = this.getMode();
             // TODO In master: use async mode.
@@ -432,8 +510,10 @@ options.registry.gallery = options.Class.extend({
                         $carousel.carousel(position);
                         this.$target.find('.carousel-indicators li').removeClass('active');
                         this.$target.find('.carousel-indicators li[data-bs-slide-to="' + position + '"]').addClass('active');
+                        const activeSlideEl = this.$target[0].querySelector(".carousel-item.active");
+                        const activeMediaEl = this._getAllMediaEls(activeSlideEl)[0];
                         this.trigger_up('activate_snippet', {
-                            $snippet: this.$target.find('.carousel-item.active img'),
+                            $snippet: $(activeMediaEl),
                             ifInactiveOptions: true,
                         });
                         $carousel.addClass('slide');
@@ -444,6 +524,7 @@ options.registry.gallery = options.Class.extend({
                             ifInactiveOptions: true,
                         });
                     }
+                    data.onSuccess();
                 });
             }});
         }
@@ -500,39 +581,98 @@ options.registry.gallery = options.Class.extend({
         return this._super(...arguments);
     },
     /**
-     * Returns the images, sorted by index.
+     * Returns the medias, sorted by index.
+     * TODO in master: rename the function to `getMedias`.
      *
      * @private
      * @returns {DOMElement[]}
      */
     _getImages: function () {
-        var imgs = this.$('img').get();
-        var self = this;
-        imgs.sort(function (a, b) {
-            return self._getIndex(a) - self._getIndex(b);
-        });
-        return imgs;
+        let mediaEls = this._getAllMediaEls(this.$target[0]);
+        mediaEls.sort((a, b) => this._getIndex(a) - this._getIndex(b));
+        return mediaEls;
     },
     /**
-     * Returns the images, or the images holder if this holder is an anchor,
+     * Returns the medias, or the media holders if this holder is an anchor,
      * sorted by index.
+     * TODO in master: rename the function to `getMediaHolderEls`.
      *
      * @private
-     * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
+     * @returns {Array.<HTMLElement|HTMLAnchorElement>}
      */
     _getImgHolderEls: function () {
-        const imgEls = this._getImages();
-        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
+        const mediaEls = this._getImages();
+        return mediaEls.map(mediaEl => mediaEl.closest("a") || mediaEl);
     },
     /**
-     * Returns the index associated to a given image.
+     * Returns all the media (i.e. images and videos) contained in the given element.
+     *
+     * @param {HTMLElement} element the ancestor containing the media elements.
+     * @returns {Array}
+     */
+    _getAllMediaEls(element) {
+        const mediaEls = [...element.querySelectorAll("img, .media_iframe_video")];
+        return mediaEls;
+    },
+    /**
+     * Returns the links to the medias images:
+     *   - for an image: its src,
+     *   - for a video: the link to its thumbnail,
+     *   - otherwise: a placeholder image link.
+     *
+     * @param {Array} mediaEls the media elements
+     * @returns {Array}
+     */
+    async _getMediaSrc(mediaEls) {
+        const sources = [];
+        for (const mediaEl of mediaEls) {
+            let src = "/web/static/img/placeholder.png";
+            if (mediaEl.tagName === "IMG") {
+                // Use `getAttribute` instead of `.src` to not return the
+                // absolute url.
+                src = mediaEl.getAttribute("src");
+            } else if (mediaEl.classList.contains("media_iframe_video")) {
+                // For videos, get the thumbnail image link.
+                src = await this._getVideoThumbnailSrc(mediaEl.dataset.oeExpression) || src;
+            }
+            sources.push(src);
+        }
+        return sources;
+    },
+    /**
+     * Gets the video thumbnail link.
+     *
+     * @param {String} videoUrl the video link
+     * @returns {String}
+     */
+    async _getVideoThumbnailSrc(videoUrl) {
+        const videoThumbnailUrl = await this._rpc({
+            route: "/website/get_video_thumbnail_url",
+            params: {video_url: videoUrl},
+        });
+        return videoThumbnailUrl[1];
+    },
+    /**
+     * Adds a play icon in the given carousel indicator element, in order to
+     * show that its corresponding slide contains a video.
+     *
+     * @param {HTMLElement} indicatorEl the carousel indicator
+     */
+    _addVideoPlayIcon(indicatorEl) {
+        const playIconEl = document.createElement("i");
+        playIconEl.className = "fa fa-2x fa-play-circle text-white o_video_thumbnail";
+        indicatorEl.append(playIconEl);
+        indicatorEl.classList.add("o_not_editable"); // So the icon is not editable.
+    },
+    /**
+     * Returns the index associated to a given media.
      *
      * @private
-     * @param {DOMElement} img
+     * @param {DOMElement} mediaEl
      * @returns {integer}
      */
-    _getIndex: function (img) {
-        return img.dataset.index || 0;
+    _getIndex: function (mediaEl) {
+        return mediaEl.dataset.index || 0;
     },
     /**
      * Returns the currently selected column option.
@@ -556,7 +696,7 @@ options.registry.gallery = options.Class.extend({
         return $container;
     },
     /**
-     * Sets up listeners on slideshow to activate selected image.
+     * Sets up listeners on slideshow to activate selected media.
      */
     _slideshowStart() {
         const $carousel = this.$bsTarget.is(".carousel") ? this.$bsTarget : this.$bsTarget.find(".carousel");
@@ -571,9 +711,10 @@ options.registry.gallery = options.Class.extend({
         let lastSlideTimeStamp;
         $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
             lastSlideTimeStamp = ev.timeStamp;
-            const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+            const activeSlideEl = this.$target[0].querySelector(".carousel-item.active");
+            const activeMediaEl = this._getAllMediaEls(activeSlideEl)[0];
             for (const editor of this.options.wysiwyg.snippetsMenu.snippetEditors) {
-                if (editor.isShown() && editor.$target[0] === activeImageEl) {
+                if (editor.isShown() && editor.$target[0] === activeMediaEl) {
                     _previousEditor = editor;
                     editor.toggleOverlay(false);
                 }
@@ -591,9 +732,10 @@ options.registry.gallery = options.Class.extend({
             // should be enough...
             const _slideDuration = new Date().getTime() - lastSlideTimeStamp;
             setTimeout(() => {
-                const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+                const activeSlideEl = this.$target[0].querySelector(".carousel-item.active");
+                const activeMediaEl = this._getAllMediaEls(activeSlideEl)[0];
                 this.trigger_up("activate_snippet", {
-                    $snippet: $(activeImageEl),
+                    $snippet: $(activeMediaEl),
                     ifInactiveOptions: true,
                 });
             }, 0.2 * _slideDuration);
@@ -605,12 +747,12 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      * @returns {Promise}
      */
-    _modeWithImageWait(previewMode, widgetValue, params) {
+    async _modeWithImageWait(previewMode, widgetValue, params) {
         // TODO Remove in master.
         let promise;
         this._masonryAwaitImages = true;
         try {
-            this.mode(previewMode, widgetValue, params);
+            await this.mode(previewMode, widgetValue, params);
             promise = this._masonryAwaitImagesPromise;
         } finally {
             this._masonryAwaitImages = false;
@@ -622,17 +764,20 @@ options.registry.gallery = options.Class.extend({
 
 options.registry.gallery_img = options.Class.extend({
     /**
-     * Rebuilds the whole gallery when one image is removed.
+     * Rebuilds the whole gallery when one media is removed.
      *
      * @override
      */
     onRemove: function () {
-        this.trigger_up('option_update', {
-            optionName: 'gallery',
-            name: 'image_removed',
-            data: {
-                $image: this.$target,
-            },
+        return new Promise(resolve => {
+            this.trigger_up('option_update', {
+                optionName: 'gallery',
+                name: 'image_removed',
+                data: {
+                    $image: this.$target, // TODO in master: rename $image as $media.
+                    onSuccess: () => resolve(),
+                },
+            });
         });
     },
 
@@ -641,18 +786,21 @@ options.registry.gallery_img = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Allows to change the position of an image (its order in the image set).
+     * Allows to change the position of a media (its order in the media set).
      *
      * @see this.selectClass for parameters
      */
     position: function (previewMode, widgetValue, params) {
-        this.trigger_up('option_update', {
-            optionName: 'gallery',
-            name: 'image_index_request',
-            data: {
-                $image: this.$target,
-                position: widgetValue,
-            },
+        return new Promise(resolve => {
+            this.trigger_up('option_update', {
+                optionName: 'gallery',
+                name: 'image_index_request',
+                data: {
+                    $image: this.$target, // TODO in master: rename $image as $media.
+                    position: widgetValue,
+                    onSuccess: () => resolve(),
+                },
+            });
         });
     },
 });
