@@ -3,7 +3,6 @@
 from uuid import uuid4
 from datetime import UTC
 from markupsafe import Markup
-from itertools import groupby
 
 from odoo import api, Command, fields, models, _
 from odoo.tools import float_is_zero
@@ -299,10 +298,10 @@ class PosOrderLine(models.Model):
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
                 tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking in ['lot', 'serial'])
-                lines_by_tracked_product = groupby(sorted(tracked_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+                lines_by_tracked_product = tracked_lines.grouped('product_id')
                 pickings_to_confirm.action_confirm()
-                for product_id, lines in lines_by_tracked_product:
-                    lines = self.env['pos.order.line'].concat(*lines)
+                for product, lines in lines_by_tracked_product.items():
+                    product_id = product.id
                     moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
                     moves.move_line_ids.unlink()
                     moves._add_mls_related_to_order(lines, are_qties_done=False)
