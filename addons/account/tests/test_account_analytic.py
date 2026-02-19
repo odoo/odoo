@@ -648,7 +648,6 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             'name': 'Discount Expense',
             'code': 'DIS',
             'account_type': 'expense',
-            'reconcile': False,
         })
 
         # Create invoice with 2 lines: each has a discount and analytic distribution

@@ -632,7 +632,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -899,7 +898,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         taxes should see their tax lines use the final tax account, not the transition account.
         """
         tax_account = self.company_data['default_account_tax_sale']
-        tax_account.reconcile = True
 
         caba_tax = self.env['account.tax'].create({
             'name': "CABA",

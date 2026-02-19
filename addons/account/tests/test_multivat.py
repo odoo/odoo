@@ -54,14 +54,12 @@ def data_method_provider(chart_template_name, country_code):
                     'name': f'{external_id_prefix}tax recoverable',
                     'code': '411000',
                     'account_type': 'asset_receivable',
-                    'reconcile': True,
                     'non_trade': True,
                 },
                 f'{external_id_prefix}test_account_tax_receivable_template': {
                     'name': f'{external_id_prefix}tax receivable',
                     'code': '411200',
                     'account_type': 'asset_receivable',
-                    'reconcile': True,
                     'non_trade': True,
                 },
                 f'{external_id_prefix}test_account_advance_payment_tax_template': {
@@ -73,7 +71,6 @@ def data_method_provider(chart_template_name, country_code):
                     'name': f'{external_id_prefix}tax payable',
                     'code': '451200',
                     'account_type': 'liability_payable',
-                    'reconcile': True,
                     'non_trade': True,
                 },
                 f'{external_id_prefix}test_account_cash_basis_transition_account_id': {

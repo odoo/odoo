@@ -105,9 +105,9 @@ class AccountAccount(models.Model):
         compute_sql='_compute_sql_internal_group',
         compute_sudo=True,
     )
-    reconcile = fields.Boolean(string='Allow Reconciliation', tracking=True,
+    reconcile = fields.Boolean(string='Payment Reconciliation', tracking=True,
         compute='_compute_reconcile', store=True, readonly=False, precompute=True,
-        help="Check this box if this account allows invoices & payments matching of journal items.")
+        help="This account is used in bank reconciliation. Currency rate difference entries will be automatically created if needed.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
         check_company=True,
@@ -985,50 +985,6 @@ class AccountAccount(models.Model):
 
         self.env.flush_all()
 
-    def _toggle_reconcile_to_true(self):
-        '''Toggle the `reconcile´ boolean from False -> True
-
-        Note that: lines with debit = credit = amount_currency = 0 are set to `reconciled´ = True
-        '''
-        if not self.ids:
-            return None
-        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
-        query = """
-            UPDATE account_move_line SET
-                reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
-                    THEN true ELSE false END,
-                amount_residual = (debit-credit),
-                amount_residual_currency = amount_currency
-            WHERE full_reconcile_id IS NULL and account_id IN %s
-        """
-        self.env.cr.execute(query, [tuple(self.ids)])
-
-    def _toggle_reconcile_to_false(self):
-        '''Toggle the `reconcile´ boolean from True -> False
-
-        Note that it is disallowed if some lines are partially reconciled.
-        '''
-        if not self.ids:
-            return None
-        partial_lines_count = self.env['account.move.line'].search_count([
-            ('account_id', 'in', self.ids),
-            ('full_reconcile_id', '=', False),
-            ('|'),
-            ('matched_debit_ids', '!=', False),
-            ('matched_credit_ids', '!=', False),
-        ])
-        if partial_lines_count > 0:
-            raise UserError(_('You cannot switch an account to prevent the reconciliation '
-                              'if some partial reconciliations are still pending.'))
-
-        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency'])
-        query = """
-            UPDATE account_move_line
-                SET amount_residual = 0, amount_residual_currency = 0
-            WHERE full_reconcile_id IS NULL AND account_id IN %s
-        """
-        self.env.cr.execute(query, [tuple(self.ids)])
-
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
         """
@@ -1112,12 +1068,6 @@ class AccountAccount(models.Model):
         return records
 
     def write(self, vals):
-        if 'reconcile' in vals:
-            if vals['reconcile']:
-                self.filtered(lambda r: not r.reconcile)._toggle_reconcile_to_true()
-            else:
-                self.filtered(lambda r: r.reconcile)._toggle_reconcile_to_false()
-
         if vals.get('currency_id'):
             for account in self:
                 if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):

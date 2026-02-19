@@ -1944,13 +1944,11 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -2015,7 +2013,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -2138,7 +2135,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',

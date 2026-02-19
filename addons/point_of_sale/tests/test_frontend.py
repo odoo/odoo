@@ -73,7 +73,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
                                                  'account_type': 'asset_receivable',
-                                                 'reconcile': True})
+                                                })
         env.company.account_default_pos_receivable_account_id = cls.account_receivable
         env['ir.default'].set('res.partner', 'property_account_receivable_id', cls.account_receivable.id, company_id=main_company.id)
         # Pricelists are set below, do not take demo data into account

@@ -390,7 +390,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.company.account_default_pos_receivable_account_id = cls.env['account.account'].create({
             'code': 'X1012.POS',
             'name': 'Debtors - (POS)',
-            'reconcile': True,
             'account_type': 'asset_receivable',
         })
         cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id
@@ -403,7 +402,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'code': 'RCV00',
             'account_type': 'asset_receivable',
             'internal_group': 'asset',
-            'reconcile': True,
         })
 
         # company_currency can be different from `base.USD` depending on the localization installed

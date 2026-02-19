@@ -20,7 +20,6 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             "name": "Downpayment account",
             "account_type": "liability_current",
             "code": "TestDownpayment",
-            "reconcile": True,
         })
 
     # -------------------------------------------------------------------------

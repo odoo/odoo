@@ -682,7 +682,6 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
             'code': '209.01.01',
             'name': 'Bank Account',
             'account_type': 'asset_cash',
-            'reconcile': False,
         })
         self.company_data['default_journal_bank'].outbound_payment_method_line_ids.payment_account_id = unreconciliable_account
         invoice = self.init_invoice(move_type='out_invoice', amounts=[10], post=True)

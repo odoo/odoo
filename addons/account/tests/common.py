@@ -471,7 +471,6 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
         type_tax_use = kwargs.get('type_tax_use', 'sale')
         cash_basis_transition_account = company_data['default_account_tax_sale'] and company_data['default_account_tax_sale'].copy()
-        cash_basis_transition_account.reconcile = True
         return cls.env['account.tax'].create({
             'name': '%s (group)' % tax_name,
             'amount_type': 'group',

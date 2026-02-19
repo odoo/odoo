@@ -2748,13 +2748,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -2886,13 +2884,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -3048,13 +3044,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -3413,7 +3407,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -3536,7 +3529,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -3678,7 +3670,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         caba_tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
@@ -3687,7 +3678,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_payment',
             'cash_basis_transition_account_id': tax_waiting_account.id,
         })
-        caba_tax.invoice_repartition_line_ids.account_id.reconcile = True
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,

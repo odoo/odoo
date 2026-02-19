@@ -418,7 +418,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == self._get_lock_safe_date(move.date))
 
-            if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
+            if accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
                 destination_move_offset += 2
                 accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
@@ -474,11 +474,10 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
         # Reconcile
         for (partner, currency, account), lines in grouped_lines.items():
-            if account.reconcile:
-                to_reconcile = lines + new_move.line_ids.filtered(lambda x: x.account_id == account and x.partner_id == partner and x.currency_id == currency)
-                to_reconcile.reconcile()
+            to_reconcile = lines + new_move.line_ids.filtered(lambda x: x.account_id == account and x.partner_id == partner and x.currency_id == currency)
+            to_reconcile.reconcile()
 
-            if destination_lines and self.destination_account_id.reconcile:
+            if destination_lines:
                 to_reconcile = destination_lines + new_move.line_ids.filtered(lambda x: x.account_id == self.destination_account_id and x.partner_id == partner and x.currency_id == currency)
                 to_reconcile.reconcile()
 

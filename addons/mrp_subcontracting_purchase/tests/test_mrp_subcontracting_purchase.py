@@ -307,7 +307,6 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
             'code': 'STOCKDIFF',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         self.finished.categ_id.property_price_difference_account_id = stock_price_diff_acc_id
@@ -364,7 +363,6 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
             'code': 'STOCKDIFF',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         product_category_all.property_price_difference_account_id = stock_price_diff_acc_id

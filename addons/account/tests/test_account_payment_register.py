@@ -1163,7 +1163,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
-            'reconcile': True,
         })
         default_tax.tax_exigibility = 'on_payment'
 

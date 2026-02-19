@@ -979,8 +979,7 @@ class AccountMoveLine(models.Model):
 
     @api.depends_context('recon_limit')
     def _compute_residual_at_date(self):
-        need_residual_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
-        query = self._search([('id', 'in', need_residual_lines.ids)])
+        query = self._search([('id', 'in', self.ids)])
         residuals_at_date = {
             line_id: (residual_at_date, residual_currency_at_date)
             for line_id, residual_at_date, residual_currency_at_date in self.env.execute_query(query.select(
@@ -998,14 +997,13 @@ class AccountMoveLine(models.Model):
                  'matched_debit_ids', 'matched_credit_ids')
     def _compute_amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
-            This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
+            This amount will be 0 for fully reconciled lines, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
-        need_residual_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
         # Run the residual amount computation on all lines stored in the db. By
         # using _origin, new records (with a NewId) are excluded and the
         # computation works automagically for virtual onchange records as well.
-        stored_lines = need_residual_lines._origin
+        stored_lines = self._origin
 
         if stored_lines:
             self.env['account.partial.reconcile'].flush_model()
@@ -1040,13 +1038,7 @@ class AccountMoveLine(models.Model):
         else:
             amounts_map = {}
 
-        # Lines that can't be reconciled with anything since the account doesn't allow that.
-        for line in self - need_residual_lines:
-            line.amount_residual = 0.0
-            line.amount_residual_currency = 0.0
-            line.reconciled = False
-
-        for line in need_residual_lines:
+        for line in self:
             # Since this part could be call on 'new' records, 'company_currency_id'/'currency_id' could be not set.
             comp_curr = line.company_currency_id or self.env.company.currency_id
             foreign_curr = line.currency_id or comp_curr
@@ -1637,7 +1629,7 @@ class AccountMoveLine(models.Model):
     def _inverse_reconciled_lines_ids(self):
         self._reconcile_plan([
             line + line.reconciled_lines_ids
-            for line in self
+            for line in self.filtered('reconciled_lines_ids')
         ])
 
     # -------------------------------------------------------------------------
@@ -2806,12 +2798,6 @@ class AccountMoveLine(models.Model):
                 "Entries don't belong to the same company: %s",
                 ", ".join(self.company_id.mapped('display_name')),
             ))
-        if not accounts.reconcile and accounts.account_type not in ('asset_cash', 'liability_credit_card'):
-            raise UserError(_(
-                "Account %s does not allow reconciliation. First change the configuration of this account "
-                "to allow it.",
-                accounts.display_name,
-            ))
 
     @api.model
     def _optimize_reconciliation_plan(self, reconciliation_plan, shadowed_aml_values=None):
@@ -3110,9 +3096,6 @@ class AccountMoveLine(models.Model):
             caba_lines_to_reconcile = full_batch['caba_lines_to_reconcile']
             exchange_move = full_batch['exchange_move']
             for (_dummy, account, repartition_line), amls_to_reconcile in caba_lines_to_reconcile.items():
-                if not account.reconcile:
-                    continue
-
                 exchange_line = exchange_move.line_ids.filtered(
                     lambda l: l.account_id == account and l.tax_repartition_line_id == repartition_line
                 )
@@ -3290,7 +3273,9 @@ class AccountMoveLine(models.Model):
 
     def remove_move_reconcile(self):
         """ Undo a reconciliation """
-        (self.matched_debit_ids + self.matched_credit_ids).unlink()
+        all_moves = (self + self.reconciled_lines_ids).move_id.filtered(lambda m: not m.statement_line_id)
+        all_partials = self.matched_debit_ids + self.matched_credit_ids + self.env['account.partial.reconcile'].search([('credit_move_id.move_id', 'in', all_moves.ids), ('debit_move_id.move_id', 'in', all_moves.ids)])
+        all_partials.unlink()
 
     def action_unreconcile_match_entries(self):
         """ This method will do the unreconcile action in the list view of the moves """
@@ -3317,9 +3302,6 @@ class AccountMoveLine(models.Model):
                 aggregates=['id:recordset'],
             ):
                 if all(move.state == 'posted' for move in lines.move_id):
-                    if not account.reconcile:
-                        _logger.info("%s has reconciled lines, changing the config", account.display_name)
-                        account.reconcile = True
                     lines.with_context(no_exchange_difference=True, no_cash_basis=True).reconcile()
 
     def _get_matched_move_ids(self):

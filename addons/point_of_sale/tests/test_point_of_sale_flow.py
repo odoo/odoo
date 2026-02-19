@@ -1018,13 +1018,11 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.account1 = self.env['account.account'].create({
             'name': 'Account 1',
             'code': 'AC1',
-            'reconcile': True,
             'account_type': 'expense',
         })
         self.account2 = self.env['account.account'].create({
             'name': 'Account 2',
             'code': 'AC2',
-            'reconcile': True,
             'account_type': 'expense',
         })
         self.ten_dollars_with_15_incl.write({

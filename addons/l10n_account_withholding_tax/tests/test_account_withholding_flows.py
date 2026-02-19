@@ -19,7 +19,6 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         cls.company_data['company'].withholding_tax_base_account_id = cls.env['account.account'].create({
             'code': 'WITHB',
             'name': 'Withholding Tax Base Account',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         # We create a sequence for the same reason, so that we can forget about it.
@@ -33,7 +32,6 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         cls.outstanding_account = cls.env['account.account'].create({
             'name': "Outstanding Payments",
             'code': 'OSTP420',
-            'reconcile': False,  # On purpose for testing.
             'account_type': 'asset_current'
         })
 
@@ -786,7 +784,6 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({'withholding_outstanding_account_id': self.outstanding_account.id})
         payment_register._create_payments()
-        self.assertRecordValues(self.outstanding_account, [{'reconcile': True}])
 
     @freeze_time('2024-01-01')
     def test_payment_synchronize_to_moves(self):

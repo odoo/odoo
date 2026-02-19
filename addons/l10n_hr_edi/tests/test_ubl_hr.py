@@ -107,7 +107,6 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
         self.setup_partner_as_hr_alt(self.partner_a)
         tax = self.env['account.chart.template'].ref('VAT_S_IN_ROC_25')
         tax.cash_basis_transition_account_id = self.safe_copy(self.company_data['default_account_tax_sale'])
-        tax.cash_basis_transition_account_id.reconcile = True
         tax.tax_exigibility = 'on_payment'
 
         invoice = self.env['account.move'].create({

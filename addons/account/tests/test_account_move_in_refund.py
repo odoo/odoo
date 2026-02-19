@@ -985,7 +985,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -1108,7 +1107,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',

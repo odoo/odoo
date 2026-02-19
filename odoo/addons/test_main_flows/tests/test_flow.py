@@ -43,14 +43,12 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',
-            'reconcile': True,
             'account_type': 'asset_receivable',
         })
         a_pay = self.env['account.account'].create({
             'code': 'X1111',
             'name': 'Creditors - (test)',
             'account_type': 'liability_payable',
-            'reconcile': True,
         })
         a_sale = self.env['account.account'].create({
             'code': 'X2020',

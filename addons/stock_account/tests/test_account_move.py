@@ -208,7 +208,6 @@ class TestAccountMove(TestStockValuationCommon):
         test_account = self.env['account.account'].with_company(branch.id).create({
             'name': 'STCK Test Account',
             'code': '100119',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         self.category_standard_auto.with_company(branch.id).property_valuation = "real_time"

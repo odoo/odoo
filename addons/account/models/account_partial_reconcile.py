@@ -636,9 +636,8 @@ class AccountPartialReconcile(models.Model):
                         counterpart_line_vals = self._prepare_cash_basis_counterpart_tax_line_vals(tax_line, line_vals)
                         counterpart_line_vals['sequence'] = sequence + 1
 
-                        if tax_line.account_id.reconcile:
-                            move_index = len(moves_to_create_and_post) + len(moves_to_create_in_draft)
-                            to_reconcile_after.append((tax_line, move_index, counterpart_line_vals['sequence']))
+                        move_index = len(moves_to_create_and_post) + len(moves_to_create_in_draft)
+                        to_reconcile_after.append((tax_line, move_index, counterpart_line_vals['sequence']))
 
                     else:
                         # Base line.

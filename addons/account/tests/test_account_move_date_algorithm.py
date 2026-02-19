@@ -185,7 +185,6 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
@@ -242,7 +241,6 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',

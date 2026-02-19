@@ -16,7 +16,6 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         cls.company_data['company'].withholding_tax_base_account_id = cls.env['account.account'].create({
             'code': 'WITHB',
             'name': 'Withholding Tax Base Account',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         # We create a sequence for the same reason, so that we can forget about it.
@@ -29,7 +28,6 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         cls.outstanding_account = cls.env['account.account'].create({
             'name': "Outstanding Payments",
             'code': 'OSTP420',
-            'reconcile': False,  # On purpose for testing.
             'account_type': 'asset_current'
         })
         cls.company_data['company'].tax_calculation_rounding_method = 'round_per_line'

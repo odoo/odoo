@@ -527,8 +527,6 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
     def test_zero_amount_statement_line(self):
         ''' Ensure the statement line is directly marked as reconciled when having an amount of zero. '''
-        self.company_data['company'].account_journal_suspense_account_id.reconcile = False
-
         statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
             'name': 'test_statement',
             'line_ids': [

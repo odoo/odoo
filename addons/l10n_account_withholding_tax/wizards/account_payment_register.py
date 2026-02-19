@@ -208,8 +208,6 @@ class AccountPaymentRegister(models.TransientModel):
         withholding_account = self.withholding_outstanding_account_id
         if withholding_account:
             payment_vals['outstanding_account_id'] = withholding_account.id
-            if not withholding_account.reconcile and withholding_account.account_type not in ('asset_cash', 'liability_credit_card', 'off_balance'):
-                withholding_account.reconcile = True
         payment_vals['should_withhold_tax'] = self.should_withhold_tax
         payment_vals['withholding_line_ids'] = []
         for withholding_line_values in self.withholding_line_ids.with_context(active_test=False).copy_data():

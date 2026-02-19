@@ -286,7 +286,6 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
             'code': 'STOCKDIFF',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         product_category = self.env['product.category'].create({
@@ -380,7 +379,6 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
             'code': 'STOCKDIFF',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         product_category = self.env['product.category'].create({

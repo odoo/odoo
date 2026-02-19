@@ -60,7 +60,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             'code': 'X1012.POSOP',
             'name': 'Debtors - (POSOP)',
             'account_type': 'asset_receivable',
-            'reconcile': True,
         })
         cls.company.account_default_pos_receivable_account_id = cls.account_default_pos_receivable_account_id
         cls.receivable_cash_account = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS OP Test Receivable Cash'})
