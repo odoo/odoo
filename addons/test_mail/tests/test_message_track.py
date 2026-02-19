@@ -88,7 +88,7 @@ class TestTrackingAPI(TestTrackingCommon):
         # no specific recipients except those following notes, no email
         self.assertNotSentEmail()
 
-        # change container_id field, linked to a subtype through _track_subtype override
+        # change container_id field, linked to a subtype through _track_log_get_default_subtype override
         container = self.env['mail.test.container'].create({'name': 'Container'})
         with self.mock_mail_gateway(), self.mock_mail_app():
             test_record.write({
@@ -129,7 +129,7 @@ class TestTrackingAPI(TestTrackingCommon):
     def test_tracking_tweak_author(self):
         record = self.test_tracking_records.with_env(self.env)[0]
         with self.mock_mail_gateway(), self.mock_mail_app():
-            record._track_set_author(self.partner_admin)
+            record._track_set_log_author(self.partner_admin)
             record.write({
                 'many2one_field_id': self.partner_employee.id,
             })
@@ -147,7 +147,7 @@ class TestTrackingAPI(TestTrackingCommon):
     @users('employee')
     def test_tracking_tweak_default_message(self):
         """Check that the default tracking log message defined on the model is used
-        and that setting a log message overrides it. See `_track_get_default_log_message`"""
+        and that setting a log message overrides it. See `_track_log_get_default_body`"""
         record = self.env['mail.test.track'].create({
             'name': 'Test',
             'track_enable_default_log': True,
@@ -163,7 +163,7 @@ class TestTrackingAPI(TestTrackingCommon):
         self.assertMessageFields(
             track_msg, {
                 'author_id': self.partner_employee,
-                # default message (`_track_get_default_log_message`) should be used
+                # default message (`_track_log_get_default_body`) should be used
                 'body': '<p>There was a change on Test for fields "user_id"</p>',
                 'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
             }
@@ -461,12 +461,12 @@ class TestTrackingTemplate(TestTrackingCommon):
             'body_html': "<div>A nice body</div>",
         })
 
-        def patched_message_track_post_template(*args, **kwargs):
+        def patched_track_post_template(*args, **kwargs):
             if args[0]._name == "mail.test.track":
                 args[0].message_post_with_source(template)
             return True
 
-        with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
+        with patch('odoo.addons.mail.models.mail_thread.MailThread._track_post_template', patched_track_post_template):
             self.env['mail.test.track'].create({
                 'email_from': email_new_partner,
                 'company_id': self.company_2.id,
@@ -497,13 +497,13 @@ class TestTrackingTemplate(TestTrackingCommon):
             'use_default_to': True,
         } for n in range(2)])
 
-        def _track_subtype(self, track_init_values):
+        def _track_log_get_default_subtype(self, track_init_values):
             if 'container_id' in track_init_values and self.container_id:
                 return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
             return self.env.ref('mail.mt_note')
-        self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
+        self.patch(self.registry['mail.test.ticket'], '_track_log_get_default_subtype', _track_log_get_default_subtype)
 
-        def _track_template(self, tracked_fields):
+        def _track_template_parameters(self, tracked_fields):
             if 'email_from' in tracked_fields:
                 return {'email_from': (mail_templates[0], {})}
             elif 'container_id' in tracked_fields:
@@ -514,7 +514,7 @@ class TestTrackingTemplate(TestTrackingCommon):
                     }
                 )}
             return {}
-        self.patch(self.registry['mail.test.ticket'], '_track_template', _track_template)
+        self.patch(self.registry['mail.test.ticket'], '_track_template_parameters', _track_template_parameters)
 
         container = self.env['mail.test.container'].create({'name': 'Container'})
 
@@ -532,7 +532,7 @@ class TestTrackingTemplate(TestTrackingCommon):
             }
         )
 
-        # auto_comment can be overriden by _track_template
+        # auto_comment can be overriden by _track_template_parameters
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             test_record.container_id = container
             self.flush_tracking()
@@ -540,9 +540,9 @@ class TestTrackingTemplate(TestTrackingCommon):
         track_msg, tpl_msg = self._new_msgs
         self.assertMessageFields(
             tpl_msg, {
-                'message_type': 'notification',  # defined in _track_template override
+                'message_type': 'notification',  # defined in _track_template_parameters override
                 'subject': 'Template 1',
-                'subtype_id': self.env.ref('mail.mt_comment'),  # defined in _track_template override
+                'subtype_id': self.env.ref('mail.mt_comment'),  # defined in _track_template_parameters override
             }
         )
         self.assertMessageFields(
@@ -967,7 +967,7 @@ class TestTrackingInternals(TestTrackingCommon):
         track_records = self.test_tracking_records.with_env(self.env)
         track_records._track_discard()
         track_records._track_set_log_message('Forced until finalize')
-        track_records._track_set_author(self.partner_admin)
+        track_records._track_set_log_author(self.partner_admin)
 
         with self.mock_mail_gateway(), self.mock_mail_app():
             track_records.write({
@@ -1011,7 +1011,7 @@ class TestTrackingInternals(TestTrackingCommon):
         # manual precommit manipulation
         track_records._track_prepare(('char_field', 'integer_field'))
         track_records._track_set_log_message('Forced <b>again</b> until finalize')
-        track_records._track_set_author(self.partner_admin)
+        track_records._track_set_log_author(self.partner_admin)
         # mail_notrack skips tracking precommit changes but does not erase them
         with self.mock_mail_gateway(), self.mock_mail_app():
             track_records.with_context(mail_notrack=True).write({

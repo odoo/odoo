@@ -2162,13 +2162,13 @@ class SaleOrder(models.Model):
         fallback on partner-based computation using ``_mail_get_partner_fields``."""
         return []
 
-    def _track_subtype(self, track_init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if "state" in track_init_values and self.state == "sale":
             return self.env.ref("sale.mt_order_confirmed")
         if "state" in track_init_values and self.state == "sent":
             return self.env.ref("sale.mt_order_sent")
-        return super()._track_subtype(track_init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     # PAYMENT #
 

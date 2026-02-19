@@ -1530,8 +1530,8 @@ class ProjectTask(models.Model):
                 pass
         return new_followers
 
-    def _track_template(self, tracked_fields):
-        res = super()._track_template(tracked_fields)
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
         test_task = self[0]
         if 'stage_id' in tracked_fields and test_task.stage_id.mail_template_id and not test_task.is_template:
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
@@ -1550,7 +1550,7 @@ class ProjectTask(models.Model):
                      project_name=self.project_id.display_name)
         return _('This new task is not part of any project.')
 
-    def _track_subtype(self, track_init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         mail_message_subtype_per_state = {
             '1_done': 'project.mt_task_done',
@@ -1565,7 +1565,7 @@ class ProjectTask(models.Model):
             return self.env.ref('project.mt_task_stage')
         elif 'state' in track_init_values and self.state in mail_message_subtype_per_state:
             return self.env.ref(mail_message_subtype_per_state[self.state])
-        return super()._track_subtype(track_init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()

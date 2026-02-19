@@ -991,10 +991,10 @@ class HrExpense(models.Model):
             }
         return ""
 
-    def _track_subtype(self, track_init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'state' not in track_init_values:
-            return super()._track_subtype(track_init_values)
+            return super()._track_log_get_default_subtype(track_init_values)
 
         match self.state:
             case 'draft':
@@ -1009,7 +1009,7 @@ class HrExpense(models.Model):
                     return self.env.ref(subtype)
                 return self.env.ref('hr_expense.mt_expense_approved')
             case _:
-                return super()._track_subtype(track_init_values)
+                return super()._track_log_get_default_subtype(track_init_values)
 
     def update_activities_and_mails(self):
         """ Update the "Review this expense" activity with the new state of the expense, also sends mail to approver to ask them to act """

@@ -7248,7 +7248,7 @@ class AccountMove(models.Model):
         else:
             return super()._creation_subtype()
 
-    def _track_subtype(self, track_init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         # EXTENDS mail mail.thread
         self.ensure_one()
 
@@ -7256,7 +7256,7 @@ class AccountMove(models.Model):
             return self.env.ref('account.mt_invoice_paid')
         elif 'state' in track_init_values and self.state == 'posted' and self.is_invoice(include_receipts=True) and self.is_sale_document(include_receipts=True):
             return self.env.ref('account.mt_invoice_validated')
-        return super()._track_subtype(track_init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def _creation_message(self):
         # EXTENDS mail mail.thread

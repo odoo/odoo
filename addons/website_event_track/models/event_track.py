@@ -559,8 +559,8 @@ class EventTrack(models.Model):
                 ]).write({'partner_id': new_partner[0].id})
         return super()._message_post_after_hook(message, msg_vals)
 
-    def _track_template(self, tracked_fields):
-        res = super()._track_template(tracked_fields)
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
         track = self[0]
         if 'stage_id' in tracked_fields and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
@@ -570,13 +570,13 @@ class EventTrack(models.Model):
             })
         return res
 
-    def _track_subtype(self, track_init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'kanban_state' in track_init_values and self.kanban_state == 'blocked':
             return self.env.ref('website_event_track.mt_track_blocked')
         elif 'kanban_state' in track_init_values and self.kanban_state == 'done':
             return self.env.ref('website_event_track.mt_track_ready')
-        return super()._track_subtype(track_init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     # ------------------------------------------------------------
     # ACTION
