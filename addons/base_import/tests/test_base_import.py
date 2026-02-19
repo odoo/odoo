@@ -511,6 +511,64 @@ class test_convert_import_data(TransactionCase):
         # if results empty, no errors
         self.assertItemsEqual(results['messages'], [])
 
+    def test_date_fields_with_slash_ymd(self):
+        import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
+            'res_model': 'res.partner',
+            'file': 'name,ref,date,create_date\n'
+                    '"foo","255/2025","2023/01/01","2023.01.01 15:15:15"\n',
+            'file_type': 'text/csv',
+        })
+
+        opts = {
+            'date_format': '',
+            'datetime_format': '',
+            'quoting': '"',
+            'separator': ',',
+            'float_decimal_separator': '.',
+            'float_thousand_separator': ',',
+            'has_headers': True
+        }
+        result_parse = import_wizard.parse_preview({**opts})
+
+        opts = result_parse['options']
+        results = import_wizard.execute_import(
+            ['name', 'ref', 'date', 'create_date'],
+            [],
+            {**opts}
+        )
+
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
+
+    def test_date_fields_with_slash_dmy(self):
+        import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
+            'res_model': 'res.partner',
+            'file': 'name,ref,date,create_date\n'
+                    '"foo","255/2025","01/01/2023","2023.01.01 15:15:15"\n',
+            'file_type': 'text/csv',
+        })
+
+        opts = {
+            'date_format': '',
+            'datetime_format': '',
+            'quoting': '"',
+            'separator': ',',
+            'float_decimal_separator': '.',
+            'float_thousand_separator': ',',
+            'has_headers': True
+        }
+        result_parse = import_wizard.parse_preview({**opts})
+
+        opts = result_parse['options']
+        results = import_wizard.execute_import(
+            ['name', 'ref', 'date', 'create_date'],
+            [],
+            {**opts}
+        )
+
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
+
     def test_parse_relational_fields(self):
         """ Ensure that relational fields float and date are correctly
         parsed during the import call.
