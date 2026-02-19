@@ -20,6 +20,7 @@ from . import pos_order_line
 from . import pos_session
 from . import pos_snooze
 from . import product_pricelist
+from . import product_pricelist_item
 from . import product_attribute
 from . import product_category
 from . import product_product

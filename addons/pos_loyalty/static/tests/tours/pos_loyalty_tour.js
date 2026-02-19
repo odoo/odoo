@@ -11,6 +11,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
     steps: () =>
@@ -338,6 +339,45 @@ registry.category("web_tour.tours").add("PosLoyaltyTour10", {
             PosLoyalty.hasRewardLine("Free Product B", "-1.00"),
             ProductScreen.totalAmountIs("1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("pos_categ_based_next_coupon_tour1", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
+            ProductScreen.addOrderline("Desk Pad", "60"),
+            ProductScreen.totalAmountIs("118.80"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+            PosLoyalty.finalizeOrder("Cash", "118.8"),
+        ].flat(),
+});
+registry.category("web_tour.tours").add("pos_categ_based_next_coupon_tour2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.totalAmountIs("50.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+            PosLoyalty.enterCode("101010"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            {
+                trigger: ".product-screen",
+                async run() {
+                    await delay(1500);
+                },
+            },
+            PosLoyalty.claimReward("Free Product"),
+            PosLoyalty.hasRewardLine("Free Product", "-60.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+            ProductScreen.totalAmountIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
 

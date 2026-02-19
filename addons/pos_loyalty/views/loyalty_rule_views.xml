@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_rule_view_form_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.rule.view.form.inherit.pos.loyalty</field>
+        <field name="model">loyalty.rule</field>
+        <field name="inherit_id" ref="loyalty.loyalty_rule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_category_id']" position="after">
+                <field name="pos_categ_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loyalty_rule_view_kanban_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.rule.view.kanban.inherit.pos.loyalty</field>
+        <field name="model">loyalty.rule</field>
+        <field name="inherit_id" ref="loyalty.loyalty_rule_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_loyalty_kanban_card_left')]//t[@t-name='applicable_on']" position="attributes">
+                <attribute name="t-if" add="record.pos_categ_id.raw_value" separator="or"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_loyalty_kanban_card_left')]//div[@t-if='record.product_category_id.raw_value']" position="after">
+                <div t-if="record.pos_categ_id.raw_value" class="d-flex">
+                    <i class="fa fa-shopping-basket fa-fw" title="POS Categories"/><field name="pos_categ_id"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_loyalty_kanban_card_left')]//div[hasclass('all_products')]" position="attributes">
+                <attribute name="t-if" add="!record.pos_categ_id.raw_value" separator="and"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

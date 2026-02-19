@@ -227,6 +227,46 @@ registry.category("web_tour.tours").add("FeedbackScreenDiscountWithPricelistTour
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("POSCategoryBasedDiscountPricelists", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            // Discounted price should apply on Test product 1 (pos_category: Category 1) => 10 - 0.1 (10% of 10) = 9.00
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "9.00" })),
+            // No discount applied on Test product 2 (pos_category: Category 2)
+            ProductScreen.addOrderline("Test Product 2", "1"),
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "20.00" })),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("POSCategoryBasedFixedPricelists", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            // Fixed price should apply on Test product 1 (pos_category: Category 1) => 15
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "15.00" })),
+            // Fixed price should apply on Test product 2 (pos_category: Category 2) => 17
+            ProductScreen.addOrderline("Test Product 2", "1"),
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "17.00" })),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("POSCategoryBasedFormulaPricelists", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            // Formula price should apply on Test product 1 (pos_category: Category 1) => 10(list_price) * 0.9 + 2.00 = 11.00
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "11.00" })),
+            // Fixed price should apply on Test product 2 (pos_category: Category 2) => 17 as per pricelist item 2
+            ProductScreen.addOrderline("Test Product 2", "1"),
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "17.00" })),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("OrderPaidInCash", {
     steps: () =>
         [

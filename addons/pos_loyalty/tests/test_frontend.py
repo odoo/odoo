@@ -434,8 +434,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
         self.start_pos_tour("test_loyalty_free_product_rewards_2")
-
-        self.assertEqual(free_product.pos_order_count, 1)
+        free_product.rule_ids[0].write({
+            'product_ids': [(6, 0, [])],
+            'pos_categ_id': self.pos_cat_desk_test.id,
+        })
+        self.start_pos_tour("test_loyalty_free_product_rewards_based_on_pos_categ")
+        self.assertEqual(free_product.pos_order_count, 2)
 
     def test_pos_loyalty_tour_max_amount(self):
         """Test the loyalty program with a maximum amount and product with different taxe."""
@@ -1706,6 +1710,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyaltyTour11.2")
         self.assertEqual(coupon.points, 0, "Coupon not used")
+        # POS category based rules
+        loyalty_program.rule_ids[0].write({'pos_categ_id': self.pos_cat_desk_test.id})
+        # Now try with a product with correct POS category
+        self.start_pos_tour("pos_categ_based_next_coupon_tour1")
+        loyalty_program.coupon_ids[1].write({"code": "101010"})
+        self.start_pos_tour("pos_categ_based_next_coupon_tour2")
 
     def test_loyalty_program_with_tagged_buy_x_get_y(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -3631,3 +3641,36 @@ class TestUi(TestPointOfSaleHttpCommon):
             })
 
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_race_conditions_update_program', login="pos_user")
+
+    def test_loyalty_program_among_pos_categ(self):
+        """This test ensures that loyalty programs applying on specific POS categories are correctly applied."""
+        self.env['product.template'].create({
+            'name': 'Test Chair',
+            'available_in_pos': True,
+            'list_price': 1.5,
+            'pos_categ_ids': [(4, self.pos_cat_chair_test.id)],
+        })
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': '10% Discount on chepeast from chair category',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 1,
+                'reward_point_mode': 'money',
+                'minimum_qty': 1,
+                'pos_categ_id': self.pos_cat_desk_test.id,  # only applicable to Desks
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'discount_pos_category_id': self.pos_cat_chair_test.id,  # Only take rewards on Chairs
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_loyalty_program_among_pos_categ", login="pos_user")

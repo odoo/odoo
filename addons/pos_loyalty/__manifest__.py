@@ -12,6 +12,8 @@
         'data/default_barcode_patterns.xml',
         'data/gift_card_data.xml',
         'views/loyalty_card_views.xml',
+        'views/loyalty_rule_views.xml',
+        'views/loyalty_reward_views.xml',
         'views/loyalty_mail_views.xml',
         'views/pos_loyalty_menu_views.xml',
         'views/res_config_settings_view.xml',
