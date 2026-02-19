@@ -364,11 +364,15 @@ export class ColorPlugin extends Plugin {
                     }
                 });
             }
+            const closestColoredElement = closestElement(
+                font,
+                (node) => isBlock(node) || node.classList.contains("o_default_color")
+            );
             if (
                 !color &&
                 !isBlock(font) &&
-                hasColor(closestBlock(font), "color") &&
-                mode === "color"
+                mode === "color" &&
+                hasColor(closestColoredElement, "color")
             ) {
                 color = "o_default_color";
             }
