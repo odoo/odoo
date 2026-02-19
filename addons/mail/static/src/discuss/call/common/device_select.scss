@@ -1,0 +1,33 @@
+<<<<<<< HEAD
+||||||| MERGE BASE
+=======
+.o-mail-DeviceSelect-button {
+  --box-shadow-sm: none;
+
+  // Ugly hack to override border-secondary utility
+  --o-mail-DeviceSelect-button-border-color: var(--btn-border-color);
+
+  border-color: var(--o-mail-DeviceSelect-button-border-color) !important;
+
+  &:hover,
+  &:focus-visible {
+    --o-mail-DeviceSelect-button-border-color: var(--btn-hover-border-color);
+  }
+
+  &:focus-visible {
+    --box-shadow-sm: var(--btn-focus-box-shadow);
+  }
+
+  &:active,
+  &.active,
+  &.show {
+    --o-mail-DeviceSelect-button-border-color: var(--btn-active-border-color);
+  }
+
+  &:disabled,
+  &.disabled {
+    --o-mail-DeviceSelect-button-border-color: var(--btn-disabled-border-color);
+  }
+}
+
+>>>>>>> FORWARD PORTED

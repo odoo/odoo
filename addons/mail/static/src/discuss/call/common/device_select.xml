@@ -8,7 +8,13 @@
         >
             <button
                 t-if="isPermissionGranted(props.kind)"
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
                 t-attf-class="o-mail-DeviceSelect-button btn btn-secondary o-dropdown-caret {{ env.inDialog ? 'w-50' : 'w-100' }}"
+||||||| c63bc2441d51b4f5c4cca53f73076d9b4f7a1e74
+                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret overflow-hidden"
+=======
+                class="o-mail-DeviceSelect-button btn btn-secondary cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret overflow-hidden text-reset"
+>>>>>>> a8a543153feb617f7ddca82105c7fd98e934bc10
                 t-att-data-kind="props.kind"
              >
                 <i t-if="props.icon" t-att-class="props.icon"/>
@@ -19,7 +25,13 @@
             </button>
             <button
                 t-else=""
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
                 t-attf-class="o-mail-DeviceSelect-button btn btn-secondary {{ env.inDialog ? 'w-50' : 'w-100' }}"
+||||||| c63bc2441d51b4f5c4cca53f73076d9b4f7a1e74
+                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret"
+=======
+                class="o-mail-DeviceSelect-button btn btn-secondary cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret text-reset"
+>>>>>>> a8a543153feb617f7ddca82105c7fd98e934bc10
                 t-att-data-kind="props.kind"
                 t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
                 t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
