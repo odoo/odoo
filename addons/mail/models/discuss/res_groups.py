@@ -9,5 +9,9 @@ class ResGroups(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if vals.get("user_ids"):
-            self.env["discuss.channel"].search([("group_ids", "in", self.all_implied_ids._ids)])._subscribe_users_automatically()
+            self.env["discuss.channel"].search([
+                ("auto_join", "=", True),
+                "|", ("group_ids", "in", self.all_implied_ids._ids),
+                ("group_public_id", "in", self.all_implied_ids._ids),
+            ])._subscribe_users_automatically()
         return res

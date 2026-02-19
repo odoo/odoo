@@ -92,12 +92,20 @@
                         </group>
                         <notebook>
                             <page string="Privacy" name="privacy">
-                                <group class="o_label_nowrap">
-                                    <field name="group_public_id"
+                                <group string="Channel Visibility">
+                                    <field name="group_public_id" placeholder="Public - anyone with the link can access"
                                         invisible="channel_type != 'channel' or parent_channel_id" readonly="not is_editable"/>
-                                    <field name="group_ids" widget="many2many_tags"
-                                        invisible="channel_type != 'channel'"
-                                        string="Auto Subscribe Groups" readonly="not is_editable"/>
+                                </group>
+                                <group string="Auto-Join Rules" invisible="channel_type != 'channel'">
+                                    <group>
+                                        <field name="auto_join" string="Auto-Join channel"/>
+                                    </group>
+                                    <group invisible="not auto_join">
+                                        <field name="company_ids" widget="many2many_tags" placeholder="All companies"
+                                                string="Companies" readonly="not is_editable"/>
+                                        <field name="group_ids" widget="many2many_tags" placeholder="All groups"
+                                                string="Groups" readonly="not is_editable" domain="[('all_implied_ids', 'in', group_public_id)]"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Members" name="members">

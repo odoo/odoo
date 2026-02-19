@@ -25,6 +25,7 @@ class TestChannel(TestHrCommon):
         self.assertEqual(self.channel.channel_partner_ids, self.env['res.partner'])
 
         self.channel.write({
+            'auto_join': True,
             'subscription_department_ids': [(4, self.department.id)]
         })
 

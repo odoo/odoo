@@ -334,6 +334,18 @@ class ResUsers(models.Model):
 
         return res
 
+    def _get_auto_subscribe_domain(self):
+        domain = super()._get_auto_subscribe_domain()
+        domain.pop()
+        domain += [
+            "|", "|",
+            ("group_ids", "in", self.group_ids.all_implied_ids.ids),
+            # sudo: hr.employee - can access all employees across companies
+            ("subscription_department_ids", "in", self.sudo().employee_ids.department_id.ids),
+            "&", ("group_ids", "=", False), ("subscription_department_ids", "=", False),
+        ]
+        return domain
+
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
         if res.is_for_internal_users():
