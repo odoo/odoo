@@ -12,6 +12,12 @@
 
             min-width: 200px;
             max-width: 250px;
+
+            .list-group-item:focus-visible {
+                box-shadow: inset 0 0 0 2px $o-we-handles-accent-color;
+                border-color: $o-we-handles-accent-color;
+                outline: none;
+            }
         }
     }
 
@@ -69,6 +75,7 @@
             opacity: 0;
             outline: $border-width * 2 solid $o-we-handles-accent-color;
             outline-offset: $border-width * -1;
+            box-shadow: none;
         }
 
         &:empty {
@@ -97,5 +104,9 @@
                 }
             }
         }
+    }
+
+    .o_website_page_templates_pane .row.flex-row-reverse .o_page_template .o_page_template_preview iframe {
+        transform-origin: 100% 0;
     }
 }

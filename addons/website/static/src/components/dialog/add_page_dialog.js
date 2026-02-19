@@ -1,5 +1,7 @@
+import { handleMatrixKeyNavigation } from "@html_builder/utils/backend_utils";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { localization } from "@web/core/l10n/localization";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -71,6 +73,13 @@ class AddPageTemplateBlank extends Component {
 
     select() {
         this.env.addPage();
+    }
+
+    onPreviewKeydown(ev) {
+        handleMatrixKeyNavigation(ev, {
+            focusedSiblingEl: ev.currentTarget.closest(".o_page_template"),
+            focusElSelector: ".o_button_area",
+        });
     }
 }
 
@@ -279,6 +288,13 @@ class AddPageTemplatePreview extends Component {
             templateId
         );
     }
+
+    onPreviewKeydown(ev) {
+        handleMatrixKeyNavigation(ev, {
+            focusedSiblingEl: ev.currentTarget.closest(".o_page_template"),
+            focusElSelector: ".o_button_area",
+        });
+    }
 }
 
 class AddPageTemplatePreviews extends Component {
@@ -300,6 +316,12 @@ class AddPageTemplatePreviews extends Component {
 
     setup() {
         super.setup();
+        this.backendDirection = localization.direction;
+        this.frontendDirection = document
+            .querySelector("iframe:not(.o_ignore_in_tour)")
+            .contentDocument.querySelector(".o_rtl")
+            ? "rtl"
+            : "ltr";
     }
 
     get columns() {
@@ -347,6 +369,12 @@ class AddPageTemplates extends Component {
             activePageId: "basic",
         });
         this.pages = undefined;
+
+        this.frontendDirection = document
+            .querySelector("iframe:not(.o_ignore_in_tour)")
+            .contentDocument.querySelector(".o_rtl")
+            ? "rtl"
+            : "ltr";
 
         onWillStart(() => {
             this.preparePages().then((pages) => {

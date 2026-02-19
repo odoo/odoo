@@ -21,6 +21,9 @@
         'web._assets_primary_variables': [
             'html_builder/static/src/**/*.variables.scss',
         ],
+        'web.assets_backend': [
+            'html_builder/static/src/utils/backend_utils.js',
+        ],
         # this bundle is lazy loaded when the editor is ready
         'html_builder.assets': [
             ('include', 'web._assets_helpers'),
