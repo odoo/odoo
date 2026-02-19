@@ -422,7 +422,7 @@ export class Editor {
      *
      * Example:
      * ```js
-     * const isTrue = this.checkPredicates("my_predicates", arg1, arg2) ?? true;
+     * const isTrue = this.checkPredicates("is_it_true_predicates", arg1, arg2) ?? true;
      * ```
      *
      * @param {string} resourceId

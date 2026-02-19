@@ -129,7 +129,7 @@ class FooterOptionPlugin extends Plugin {
             WebsiteConfigFooterAction,
         },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
-        removable_node_predicates: (node) => {
+        is_node_removable_predicates: (node) => {
             if (node.id === "o_footer_scrolltop") {
                 return false;
             }

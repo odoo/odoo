@@ -42,7 +42,7 @@ class ProductCatalogOptionPlugin extends Plugin {
         is_movable_selector: { selector: ".s_product_catalog_dish", direction: "vertical" },
         // Protect pricelist item, price, and description blocks from being
         // split/merged by the delete plugin.
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             if (isElement(node) &&
                 node.matches(
                     ".s_product_catalog_dish, .s_product_catalog_dish_price, .s_product_catalog_dish_description"

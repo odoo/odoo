@@ -40,7 +40,7 @@ export class CollaborationPlugin extends Plugin {
         set_attribute_overrides: this.setAttribute.bind(this),
 
         history_step_processors: this.processHistoryStep.bind(this),
-        reversible_step_predicates: (step) => {
+        is_step_reversible_predicates: (step) => {
             if (step.peerId !== this.peerId) {
                 return false;
             }

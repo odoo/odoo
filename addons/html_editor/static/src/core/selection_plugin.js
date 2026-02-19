@@ -169,8 +169,8 @@ function scrollToSelection(selection) {
  * @typedef {((ev: PointerEvent) => void | true)[]} triple_click_overrides
  * @typedef {((selection: EditorSelection) => boolean)[]} fix_selection_on_editable_root_overrides
  *
- * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean | undefined)[]} fully_selected_node_predicates
- * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} tangible_char_for_keyboard_navigation_predicates
+ * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean | undefined)[]} is_node_fully_selected_predicates
+ * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} is_char_tangible_for_keyboard_navigation_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_node_editable_predicates
  *
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
@@ -794,7 +794,7 @@ export class SelectionPlugin extends Plugin {
         const lastLeafNode = lastLeaf(node);
         return (
             // Custom rules
-            (this.checkPredicates("fully_selected_node_predicates", node, selection, range) ??
+            (this.checkPredicates("is_node_fully_selected_predicates", node, selection, range) ??
                 false) ||
             // Default rule
             (range.isPointInRange(firstLeafNode, 0) &&
@@ -1043,7 +1043,7 @@ export class SelectionPlugin extends Plugin {
             // Whether the character next to the cursor should be skipped.
             let shouldSkip = !(
                 this.checkPredicates(
-                    "tangible_char_for_keyboard_navigation_predicates",
+                    "is_char_tangible_for_keyboard_navigation_predicates",
                     ev,
                     adjacentCharacter
                 ) ?? true
@@ -1067,7 +1067,7 @@ export class SelectionPlugin extends Plugin {
                     hasSelectionChanged &&
                     !(
                         this.checkPredicates(
-                            "tangible_char_for_keyboard_navigation_predicates",
+                            "is_char_tangible_for_keyboard_navigation_predicates",
                             ev,
                             adjacentCharacter,
                             lastSkippedChar

@@ -144,8 +144,8 @@ async function fetchAttachmentMetaData(url, ormService) {
 
 /**
  * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_link_editable_predicates
- * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} legit_empty_link_predicates
- * @typedef {(() => boolean | undefined)[]} link_compatible_selection_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_empty_link_legit_predicates
+ * @typedef {(() => boolean | undefined)[]} is_link_allowed_on_selection_predicates
  * @typedef {CSSSelector[]} immutable_link_selectors
  * @typedef {{
  *      PopoverClass: Component;
@@ -291,7 +291,7 @@ export class LinkPlugin extends Plugin {
             ":has(>[data-oe-model])",
             ".o_prevent_link_editor a",
         ],
-        legit_empty_link_predicates: (linkEl) => {
+        is_empty_link_legit_predicates: (linkEl) => {
             if (linkEl.hasAttribute("data-mimetype")) {
                 return true;
             }
@@ -463,7 +463,7 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkAllowedOnSelection() {
-        if (this.checkPredicates("link_compatible_selection_predicates") ?? false) {
+        if (this.checkPredicates("is_link_allowed_on_selection_predicates") ?? false) {
             return true;
         }
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
@@ -1049,7 +1049,7 @@ export class LinkPlugin extends Plugin {
                 [...link.childNodes].some(isVisible) ||
                 !link.parentElement.isContentEditable ||
                 this.dependencies.delete.isUnremovable(link) ||
-                (this.checkPredicates("legit_empty_link_predicates", link) ?? false)
+                (this.checkPredicates("is_empty_link_legit_predicates", link) ?? false)
             ) {
                 continue;
             }

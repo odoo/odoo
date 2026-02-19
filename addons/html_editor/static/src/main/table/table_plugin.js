@@ -139,27 +139,27 @@ export class TablePlugin extends Plugin {
         color_apply_overrides: this.applyTableColor.bind(this),
 
         /** Predicates */
-        removable_node_predicates: (node, root) => {
+        is_node_removable_predicates: (node, root) => {
             if (isUnremovableTableComponent(node, root)) {
                 return false;
             }
         },
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
                 return false;
             }
         },
-        fully_selected_node_predicates: (node) => {
+        is_node_fully_selected_predicates: (node) => {
             if (closestElement(node, ".o_selected_td")) {
                 return true;
             }
         },
-        selection_blocker_predicates: (node) => {
+        is_selection_blocker_predicates: (node) => {
             if (node.nodeName === "TABLE") {
                 return true;
             }
         },
-        selection_placeholder_container_predicates: (container) => {
+        can_contain_selection_placeholder_predicates: (container) => {
             if (container.nodeName === "TABLE") {
                 return false;
             } else if (["TD", "TH"].includes(container.nodeName)) {

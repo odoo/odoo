@@ -11,7 +11,7 @@ class SpacingOptionPlugin extends Plugin {
         builder_actions: {
             SetGridSpacingAction,
         },
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
     };

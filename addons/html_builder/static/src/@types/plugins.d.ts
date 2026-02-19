@@ -1,18 +1,18 @@
 declare module "plugins" {
     import { AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
     import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, on_current_options_containers_changed_handlers, clone_disabled_reason_processors, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_processors } from "@html_builder/core/builder_options_plugin";
+    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, on_current_options_containers_changed_handlers, clone_disabled_reason_processors, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_processors } from "@html_builder/core/builder_options_plugin";
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
     import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
-    import { dropzone_selector, DropZoneShared, valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
+    import { dropzone_selector, DropZoneShared, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { on_replicated_handlers } from "@html_builder/core/field_change_replication_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
-    import { get_overlay_buttons, OverlayButtonsShared, show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
-    import { empty_node_predicates, is_unremovable_selector, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
+    import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
+    import { is_node_empty_predicates, is_unremovable_selector, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
     import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, pre_save_handlers, on_will_save_element_handlers, save_elements_overrides, on_will_reset_history_after_saving_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
@@ -107,11 +107,11 @@ declare module "plugins" {
         save_elements_overrides: save_elements_overrides;
 
         // Predicates
-        empty_node_predicates: empty_node_predicates;
-        valid_for_sibling_dropzone_predicates: valid_for_sibling_dropzone_predicates;
+        is_node_empty_predicates: is_node_empty_predicates;
+        is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
         is_draggable_predicates: is_draggable_predicates;
-        keep_overlay_options_predicates: keep_overlay_options_predicates;
-        show_overlay_buttons_of_ancestor_predicates: show_overlay_buttons_of_ancestor_predicates;
+        should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
+        should_show_overlay_buttons_of_ancestor_predicates: should_show_overlay_buttons_of_ancestor_predicates;
 
         // Processors
         remove_disabled_reason_processors: remove_disabled_reason_processors;

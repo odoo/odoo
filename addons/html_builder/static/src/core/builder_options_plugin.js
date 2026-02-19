@@ -88,7 +88,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  *      editableOnly?: boolean;
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} keep_overlay_options_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} should_keep_overlay_options_predicates
  */
 /**
  * @typedef {((
@@ -428,7 +428,7 @@ export class BuilderOptionsPlugin extends Plugin {
         const parentEl = el.parentElement;
         const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
-        const keepOptions = this.checkPredicates("keep_overlay_options_predicates", el) ?? false;
+        const keepOptions = this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
         if (isInnerSnippet && isAloneInColumn && !keepOptions) {
             return false;
         }

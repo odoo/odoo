@@ -17,7 +17,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @typedef {{
  *      getButtons: (target: HTMLElement) => BuilderButtonDescriptor;
  * }[]} get_overlay_buttons
- * @typedef {((target: HTMLElement) => bool | undefined)[]} show_overlay_buttons_of_ancestor_predicates
+ * @typedef {((target: HTMLElement) => bool | undefined)[]} should_show_overlay_buttons_of_ancestor_predicates
  */
 
 export class OverlayButtonsPlugin extends Plugin {
@@ -176,7 +176,7 @@ export class OverlayButtonsPlugin extends Plugin {
                 option.hasOverlayOptions &&
                 !(
                     this.checkPredicates(
-                        "show_overlay_buttons_of_ancestor_predicates",
+                        "should_show_overlay_buttons_of_ancestor_predicates",
                         option.element
                     ) ?? false
                 )

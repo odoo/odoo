@@ -56,7 +56,7 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
  *
  * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | true)[]} split_element_block_overrides
  *
- * @typedef {((node: Node) => boolean | undefined)[]} splittable_node_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_node_splittable_predicates
  */
 
 export class SplitPlugin extends Plugin {
@@ -76,7 +76,7 @@ export class SplitPlugin extends Plugin {
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
 
-        splittable_node_predicates: [
+        is_node_splittable_predicates: [
             // An unremovable element is also unmergeable (as merging two
             // elements results in removing one of them).
             // An unmergeable element is unsplittable and vice-versa (as
@@ -119,7 +119,7 @@ export class SplitPlugin extends Plugin {
                 }
             },
         ],
-        selection_blocker_predicates: (blocker) => {
+        is_selection_blocker_predicates: (blocker) => {
             if (this.isUnsplittable(blocker)) {
                 return true;
             }
@@ -220,7 +220,7 @@ export class SplitPlugin extends Plugin {
      * @returns {boolean}
      */
     isUnsplittable(node) {
-        return !(this.checkPredicates("splittable_node_predicates", node) ?? true);
+        return !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
     }
 
     /**

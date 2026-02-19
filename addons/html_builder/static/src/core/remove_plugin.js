@@ -22,7 +22,7 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
  * }) => void)[]} on_removed_handlers
  * @typedef {((toRemoveEl: HTMLElement) => void)[]} on_will_remove_handlers
  *
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} empty_node_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_node_empty_predicates
  *
  * @typedef {CSSSelector[]} is_unremovable_selector
  */
@@ -59,7 +59,7 @@ export class RemovePlugin extends Plugin {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        empty_node_predicates: (el) => {
+        is_node_empty_predicates: (el) => {
             const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
             if (
                 el.textContent.trim() === "" &&
@@ -110,7 +110,7 @@ export class RemovePlugin extends Plugin {
 
     isEmptyAndRemovable(el, optionsTargetEls) {
         return (
-            (this.checkPredicates("empty_node_predicates", el) ?? false) &&
+            (this.checkPredicates("is_node_empty_predicates", el) ?? false) &&
             !el.classList.contains("oe_structure") &&
             !el.parentElement.classList.contains("carousel-item") &&
             (!optionsTargetEls.includes(el) ||

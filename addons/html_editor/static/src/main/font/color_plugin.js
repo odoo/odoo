@@ -75,7 +75,7 @@ export class ColorPlugin extends Plugin {
                 return true;
             }
         },
-        format_class_predicates: (className) => {
+        is_format_class_predicates: (className) => {
             if (TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className)) {
                 return true;
             }

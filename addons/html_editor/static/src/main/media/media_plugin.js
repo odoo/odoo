@@ -94,14 +94,14 @@ export class MediaPlugin extends Plugin {
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
 
         /** Predicates */
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             // avoid merge
             if (isIconElement(node)) {
                 return false;
             }
         },
         is_node_editable_predicates: this.isEditableMediaElement.bind(this),
-        functional_empty_node_predicates: (node) => {
+        is_functional_empty_node_predicates: (node) => {
             if (isMediaElement(node)) {
                 return true;
             }

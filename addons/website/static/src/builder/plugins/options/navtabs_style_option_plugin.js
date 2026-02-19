@@ -44,7 +44,7 @@ class NavTabsStyleOptionPlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         is_unremovable_selector: ".nav-item",
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             if (this.isUnsplittable(node)) {
                 return false;
             }

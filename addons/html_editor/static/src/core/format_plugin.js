@@ -55,7 +55,7 @@ function isFormatted(formatPlugin, format) {
  * }) => void | boolean)[]} on_will_format_selection_handlers
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
  *
- * @typedef {((className: string) => boolean | undefined)[]} format_class_predicates
+ * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
  */
 
@@ -193,7 +193,7 @@ export class FormatPlugin extends Plugin {
         normalize_processors: this.normalize.bind(this),
 
         /** Predicates */
-        tangible_char_for_keyboard_navigation_predicates: (_, char) => {
+        is_char_tangible_for_keyboard_navigation_predicates: (_, char) => {
             if (char === "\u200b") {
                 return false;
             }
@@ -371,7 +371,7 @@ export class FormatPlugin extends Plugin {
             const isClassListSplittable = (classList) =>
                 [...classList].every(
                     (className) =>
-                        this.checkPredicates("format_class_predicates", className) ?? false
+                        this.checkPredicates("is_format_class_predicates", className) ?? false
                 );
 
             while (
@@ -575,7 +575,7 @@ export class FormatPlugin extends Plugin {
         }
         if (
             ![...element.classList].every(
-                (c) => this.checkPredicates("format_class_predicates", c) ?? false
+                (c) => this.checkPredicates("is_format_class_predicates", c) ?? false
             )
         ) {
             // Original comment from web_editor:
@@ -698,7 +698,7 @@ export class FormatPlugin extends Plugin {
     shouldBeMergedWithPreviousSibling(node) {
         const isMergeable = (node) =>
             FORMATTABLE_TAGS.includes(node.nodeName) &&
-            (this.checkPredicates("splittable_node_predicates", node) ?? true);
+            (this.checkPredicates("is_node_splittable_predicates", node) ?? true);
         let previousSibling = node.previousSibling;
         if (node.matches("code.o_inline_code")) {
             while (
