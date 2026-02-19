@@ -147,7 +147,6 @@
                     <field name="working_hours_close" widget="float_time"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
-                    <field name="stage_id_color" invisible="1"/>
                     <field name="rating_last_value" string="Rating (/5)"/>
                 </graph>
             </field>
@@ -178,7 +177,6 @@
                     <field name="project_id" type="row"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
-                    <field name="stage_id_color" invisible="1"/>
                     <field name="allocated_hours" widget="float_time"/>
                     <field name="working_hours_close" widget="float_time"/>
                     <field name="working_hours_open" widget="float_time"/>
@@ -790,7 +788,6 @@
                     <field name="create_date" optional="hide"/>
                     <field name="date_last_stage_update" optional="hide" column_invisible="context.get('template_project')"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" options="{'is_toggle_mode': false}"/>
-                    <field name="stage_id_color" column_invisible="1"/>
                     <field name="is_rotting" column_invisible="True"/>
                     <field name="rotting_days" column_invisible="True"/>
                     <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show" widget="rotting" options="{'no_open': True}"/>
@@ -852,8 +849,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_deadline" string="Tasks" mode="month"
-                          color="stage_id_color" event_limit="5" hide_time="true"
+                <calendar date_start="date_deadline" string="Tasks" mode="month" event_limit="5" hide_time="true"
                           event_open_popup="true" quick_create="0" show_unusual_days="True"
                           js_class="project_task_calendar" schedule="1"
                           scales="day,week,month,year">
@@ -866,7 +862,6 @@
                     <field name="partner_id" invisible="not partner_id"/>
                     <field name="priority" widget="priority" readonly="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" invisible="not tag_ids"/>
-                    <field name="stage_id_color" invisible="1"/>
                     <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection" filters="1"/>
                     <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="project_id or not personal_stage_id"/>
                     <field name="task_properties" invisible="not task_properties"/>

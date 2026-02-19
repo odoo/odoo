@@ -14,7 +14,7 @@
         />
     </template>
     <template id="portal_my_tasks_badge_widget_template" name="badge Widget Template">
-        <span t-attf-class="badge rounded-pill o_tag o_badge_color_#{task.stage_id_color}"
+        <span class="badge rounded-pill o_tag}"
             t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"
         />
     </template>
