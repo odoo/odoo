@@ -158,7 +158,8 @@ formatFloat.extractOptions = ({ attrs, options }) => {
     const humanReadable = !!options.human_readable;
     const decimals = options.decimals || 0;
     const trailingZeros = !options.hide_trailing_zeros;
-    return { decimals, digits, minDigits, humanReadable, trailingZeros };
+    const noSymbol = options.no_symbol;
+    return { decimals, digits, minDigits, humanReadable, trailingZeros, noSymbol };
 };
 
 /**

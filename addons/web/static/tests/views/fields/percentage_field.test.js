@@ -59,3 +59,30 @@ test("PercentageField in form view without rounding error", async () => {
 
     expect("[name='float_field'] input").toHaveValue("28");
 });
+
+test("PercentageField with no_symbol option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="float_field" widget="percentage" options="{'no_symbol': true}"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=float_field] input").toHaveValue("44.4");
+    expect(".o_field_widget[name=float_field] span").toHaveCount(0, {
+        message: "The percentage symbol should not be displayed when no_symbol is true.",
+    });
+});
+
+test("PercentageField without no_symbol option shows percentage symbol", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="float_field" widget="percentage"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=float_field] input").toHaveValue("44.4");
+    expect(".o_field_widget[name=float_field] span").toHaveCount(1);
+    expect(".o_field_widget[name=float_field] span").toHaveText("%");
+});
