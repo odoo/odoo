@@ -1,16 +1,19 @@
 from unittest.mock import patch
 
 from odoo.exceptions import UserError
-from odoo.tests.common import HttpCase, tagged, freeze_time
+from odoo.tests.common import HttpCase, freeze_time, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.account_peppol.tests.common import PeppolConnectorCommon
+from odoo.addons.account_peppol.tests.common import mock_can_connect, mock_connect, mock_lookup_not_found
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
 
 @freeze_time('2026-01-01')
 @tagged('-at_install', 'post_install')
-class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
+class TestPeppolKYC(HttpCase):
+    def setUp(self):
+        super().setUp()
+        self.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
 
     def _mock_can_connect_method(self, with_auth=False):
         auth_vals = {'available_auths': {'itsme': {'authorization_url': 'test_authorization_url'}}} if with_auth else {}
@@ -28,10 +31,7 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
         company = self.env.company
         eas, endpoint = '0208', '0239843188'
         peppol_identifier = f'{eas}:{endpoint}'
-        with self._mock_requests([
-            self._mock_lookup_participant(),
-            self._mock_can_connect(with_auth=False), self._mock_connect(),
-        ]):
+        with mock_lookup_not_found(peppol_identifier), mock_can_connect(with_auth=False), mock_connect():
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': eas,
                 'peppol_endpoint': endpoint,
@@ -55,9 +55,7 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
         self.authenticate('admin', 'admin')
         eas, endpoint = '0208', '0239843188'
         with (
-            self._mock_requests([
-                self._mock_lookup_participant(),
-            ]),
+            mock_lookup_not_found(f'{eas}:{endpoint}'),
             self._mock_can_connect_method(with_auth=True) as mocked_can_connect,
         ):
             wizard = self.env['peppol.registration'].create({
@@ -107,10 +105,7 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
         authentication first when it is necessary, the route raises an error.
         """
         company = self.env.company
-        with self._mock_requests([
-            self._mock_lookup_participant(),
-            self._mock_can_connect(with_auth=True),
-        ]):
+        with mock_lookup_not_found('0208:0239843188'), mock_can_connect(with_auth=True):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0239843188',
@@ -135,24 +130,27 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
     def test_connect_with_itsme_failed_auth_case_2(self):
         company = self.env.company
         self.authenticate('admin', 'admin')
-        with self._mock_can_connect_method(with_auth=True) as mocked_can_connect:
-            wizard = self.env['peppol.registration'].create({
-                'peppol_eas': '0208',
-                'peppol_endpoint': '0239843188',
-                'phone_number': '+32483123456',
-                'contact_email': 'yourcompany@example.com',
-            })
+        wizard = self.env['peppol.registration'].create({
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0239843188',
+            'phone_number': '+32483123456',
+            'contact_email': 'yourcompany@example.com',
+        })
+        with mock_lookup_not_found('0208:0239843188'):
             self.assertTrue(wizard.smp_registration)
+
+        with self._mock_can_connect_method(with_auth=True) as mocked_can_connect:
             self.assertEqual(wizard.peppol_can_connect_data, {
                 'auth_required': True,
                 'available_auths': {
                     'itsme': {'authorization_url': 'test_authorization_url'},
                 },
             })
-            self.assertTrue(wizard.display_itsme_login)
-            self.assertFalse(wizard.display_no_auth_buttons)
-            result = wizard.button_register_peppol_participant(selected_auth='itsme')
-            connect_token = mocked_can_connect.call_args.kwargs['connect_token']
+        connect_token = mocked_can_connect.call_args.kwargs['connect_token']
+        self.assertTrue(wizard.display_itsme_login)
+        self.assertFalse(wizard.display_no_auth_buttons)
+
+        result = wizard.button_register_peppol_participant(selected_auth='itsme')
 
         self.assertEqual(result, {'type': 'ir.actions.act_url', 'url': 'test_authorization_url', 'target': 'new'})
         self.assertEqual(company.account_peppol_proxy_state, 'not_registered')
