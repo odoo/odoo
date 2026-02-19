@@ -28,6 +28,15 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            inLeftSide([
+                ...ProductScreen.clickControlButtonMore(),
+                // check that cancel order button is disabled if there is no orderline in the order
+                {
+                    content: "Check that cancel order button is disabled",
+                    trigger: ".control-buttons button:contains('Cancel Order'):disabled",
+                },
+                Dialog.cancel(),
+            ]),
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             // Make sure we don't have any scroll bar on the product list
             {
