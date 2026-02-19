@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ADDRESS -->
+    <template id="cii_france_cius_address" 
+                inherit_id="account_edi_ubl_cii.account_invoice_address_facturx_export_22"
+                primary="True"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+
+        <!-- BT-162, BT-163, BT-164, BT-165 -->
+        <xpath expr="//*[local-name()='LineTwo']" position="after">
+            <ram:LineThree t-out="partner_additional_info.get('street3')"/>
+        </xpath>
+
+        <!-- BT-39, BT-54, BT-68, BT-79 -->
+        <xpath expr="//*[local-name()='CountryID']" position="after">
+            <ram:CountrySubDivisionName t-out="partner_additional_info.get('country_subdivision_name')"/>
+        </xpath>
+
+    </template>
+
+    <!-- PARTNER -->
+    <template id="cii_france_cius_partner" 
+                inherit_id="account_edi_ubl_cii.account_invoice_partner_facturx_export_22"
+                primary="True"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+
+        <xpath expr="//t[@t-call='account_edi_ubl_cii.account_invoice_address_facturx_export_22']" 
+                position="replace">
+            <t t-call="l10n_fr_pdp.cii_france_cius_address"/>
+        </xpath>
+
+        <!-- BT-33-->
+        <xpath expr="//*[local-name()='Name']" position="after">
+            <ram:Description t-out="partner_additional_info.get('description')"/>
+        </xpath>
+
+        <!-- BT-28, BT-45 -->
+        <xpath expr="//*[local-name()='SpecifiedLegalOrganization']" position="inside">
+            <ram:TradingBusinessName t-out="specified_legal_organization_val.get('trading_business_name')"/>
+        </xpath>
+
+        <!-- BT-41-0, BT-56-0 -->
+        <xpath expr="//*[local-name()='DefinedTradeContact']" position="inside">
+            <ram:DepartmentName t-out="partner_additional_info.get('department_name')"/>
+        </xpath>
+
+    </template>
+
+    <!-- LINE -->
+    <template id="cii_france_cius_line" 
+                inherit_id="account_edi_ubl_cii.account_invoice_line_facturx_export_22"
+                primary="True"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100">
+
+        <!-- BT-127-00, BT-127 -->
+        <xpath expr="//*[local-name()='AssociatedDocumentLineDocument']/*[local-name()='LineID']" position="after">
+            <ram:IncludedNote t-foreach="line_vals.get('included_notes')" t-as="note_vals">
+                <ram:Content t-out="note_vals.get('content')"/>
+            </ram:IncludedNote>
+        </xpath>
+
+        <!-- BT-156 -->
+        <xpath expr="//*[local-name()='SpecifiedTradeProduct']/*[local-name()='Name']" position="before">
+            <ram:BuyerAssignedID t-out="line_vals.get('buyer_assigned_id')"/>
+        </xpath>
+
+        <!-- BG-32, BT-160, BT-161 -->
+        <xpath expr="//*[local-name()='SpecifiedTradeProduct']" position="inside">
+            <ram:ApplicableProductCharacteristic t-foreach="line_vals.get('product_characteristics')" t-as="char_vals">
+                <ram:Description t-out="char_vals.get('description')"/>
+                <ram:Value t-out="char_vals.get('value')"/>
+            </ram:ApplicableProductCharacteristic>
+        </xpath>
+
+        <!-- BT-158-00, BT-158, BT-158-1, BT-158-2 -->
+        <xpath expr="//*[local-name()='SpecifiedTradeProduct']" position="inside">
+            <ram:DesignatedProductClassification t-foreach="line_vals.get('product_classifications')" t-as="class_vals">
+                <ram:ClassCode t-att-listID="class_vals.get('list_id')" t-att-listVersionID="class_vals.get('list_version_id')" t-out="class_vals.get('class_code')"/>
+            </ram:DesignatedProductClassification>
+        </xpath>
+
+        <!-- BT-159-00, BT-159 -->
+        <xpath expr="//*[local-name()='SpecifiedTradeProduct']" position="inside">
+            <ram:OriginTradeCountry t-if="line_vals.get('origin_country')">
+                <ram:ID t-out="line_vals.get('origin_country')"/>
+            </ram:OriginTradeCountry>
+        </xpath>
+
+        <!-- BT-132-00, BT-132 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeAgreement']/*[local-name()='GrossPriceProductTradePrice']" position="before">
+            <ram:BuyerOrderReferencedDocument t-if="line_vals.get('buyer_order_line_reference')">
+                <ram:LineID t-out="line_vals.get('buyer_order_line_reference')"/>
+            </ram:BuyerOrderReferencedDocument>
+        </xpath>
+
+        <!-- BT-149-1, BT-150-1 -->
+        <xpath expr="//*[local-name()='GrossPriceProductTradePrice']" position="inside">
+            <ram:BasisQuantity t-att-unitCode="line_vals.get('gross_price_base_quantity_unit_code')" t-out="line_vals.get('gross_price_base_quantity')"/>
+        </xpath>
+
+        <!-- BT-149, BT-150 -->
+        <xpath expr="//*[local-name()='NetPriceProductTradePrice']/*[local-name()='ChargeAmount']" position="after">
+            <ram:BasisQuantity t-att-unitCode="line_vals.get('net_price_base_quantity_unit_code')" t-out="line_vals.get('net_price_base_quantity')"/>
+        </xpath>
+
+        <!-- BT-138, BT-137, BT-143, BT-142 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeSettlement']" position="inside">
+            <ram:SpecifiedTradeAllowanceCharge t-foreach="line_vals.get('trade_allowance_charges')" t-as="allowance_charge_vals">
+                <ram:ChargeIndicator>
+                    <udt:Indicator t-out="allowance_charge_vals.get('charge_indicator')"/>
+                </ram:ChargeIndicator>
+                <ram:CalculationPercent t-out="allowance_charge_vals.get('calculation_percent')"/>
+                <ram:BasisAmount t-out="allowance_charge_vals.get('basis_amount')"/>
+                <ram:ActualAmount t-out="allowance_charge_vals.get('actual_amount')"/>
+            </ram:SpecifiedTradeAllowanceCharge>
+        </xpath>
+
+        <!-- BT-128-00, BT-128, BT-128-0, BT-128-1 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeSettlement']" position="inside">
+            <ram:AdditionalReferencedDocument t-foreach="line_vals.get('additional_referenced_documents')" t-as="doc_vals">
+                <ram:IssuerAssignedID t-out="doc_vals.get('issuer_assigned_id')"/>
+                <ram:TypeCode t-out="doc_vals.get('type_code')"/>
+                <ram:ReferenceTypeCode t-out="doc_vals.get('reference_type_code')"/>
+            </ram:AdditionalReferencedDocument>
+        </xpath>
+
+        <!-- BT-133-00, BT-133 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeSettlement']" position="inside">
+            <ram:ReceivableSpecifiedTradeAccountingAccount t-if="line_vals.get('buyer_accounting_reference')">
+                <ram:ID t-out="line_vals.get('buyer_accounting_reference')"/>
+            </ram:ReceivableSpecifiedTradeAccountingAccount>
+        </xpath>
+
+    </template>
+
+    <!-- MAIN INVOICE -->
+    <template id="cii_france_cius_invoice" 
+                inherit_id="account_edi_ubl_cii.account_invoice_facturx_export_22"
+                primary="True"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100">
+
+        <!-- Replace t-calls -->
+        <xpath expr="//*[local-name()='SellerTradeParty']//t[@t-call='account_edi_ubl_cii.account_invoice_partner_facturx_export_22']" position="replace">
+            <t t-call="l10n_fr_pdp.cii_france_cius_partner">
+                <t t-set="partner" t-value="record.company_id.partner_id"/>
+                <t t-set="partner_additional_info" t-value="partner_additional_info or {}"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[local-name()='BuyerTradeParty']//t[@t-call='account_edi_ubl_cii.account_invoice_partner_facturx_export_22']" position="replace">
+            <t t-call="l10n_fr_pdp.cii_france_cius_partner">
+                <t t-set="partner" t-value="record.partner_id"/>
+                <t t-set="partner_additional_info" t-value="partner_additional_info or {}"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[local-name()='ShipToTradeParty']//t[@t-call='account_edi_ubl_cii.account_invoice_partner_facturx_export_22']" position="replace">
+            <t t-call="l10n_fr_pdp.cii_france_cius_partner">
+                <t t-set="partner" t-value="ship_to_trade_party"/>
+                <t t-set="partner_additional_info" t-value="partner_additional_info or {}"/>
+                <t t-set="hide_dtc" t-value="document_context_id == 'urn:cen.eu:en16931:2017'"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@t-call='account_edi_ubl_cii.account_invoice_line_facturx_export_22']" position="replace">
+            <t t-call="l10n_fr_pdp.cii_france_cius_line"/>
+        </xpath>
+
+        <!-- Document Context ID -->
+        <xpath expr="//*[local-name()='GuidelineSpecifiedDocumentContextParameter']/*[local-name()='ID']" position="replace">
+            <ram:ID t-out="document_context_id"/>
+        </xpath>
+
+        <!-- BT-21 -->
+        <xpath expr="//*[local-name()='ExchangedDocument']/*[local-name()='IncludedNote']/*[local-name()='Content']" position="after">
+            <ram:SubjectCode t-out="ExchangedDocument_vals.get('subject_code')"/>
+        </xpath>
+
+        <!-- BT-29, BT-29-0, BT-29-1 -->
+        <xpath expr="//*[local-name()='SellerTradeParty']" position="inside">
+            <t t-set="seller_trade_party_vals" t-value="seller_trade_party_vals or {}"/>
+            <ram:ID t-foreach="seller_trade_party_vals.get('ids')" t-as="id_vals" t-out="id_vals.get('id')"/>
+            <ram:GlobalID t-foreach="seller_trade_party_vals.get('global_ids')" t-as="global_id_vals" t-att-schemeID="global_id_vals.get('scheme_id')" t-out="global_id_vals.get('id')"/>
+        </xpath>
+
+        <!-- BT-34-00, BT-34, BT-34-1 -->
+        <xpath expr="//*[local-name()='SellerTradeParty']/*[local-name()='SpecifiedTaxRegistration']" position="before">
+            <t t-set="seller_legal_organization_vals" t-value="seller_legal_organization_vals or {}"/>
+            <ram:URIUniversalCommunication t-if="seller_legal_organization_vals.get('uri_id')">
+                <ram:URIID t-att-schemeID="seller_legal_organization_vals.get('uri_scheme_id')" t-out="seller_legal_organization_vals.get('uri_id')"/>
+            </ram:URIUniversalCommunication>
+        </xpath>
+
+        <!-- BT-46, BT-46-0, BT-46-1 -->
+        <xpath expr="//*[local-name()='BuyerTradeParty']" position="inside">
+            <t t-set="buyer_trade_party_vals" t-value="buyer_trade_party_vals or {}"/>
+            <ram:ID t-foreach="buyer_trade_party_vals.get('ids')" t-as="id_vals" t-out="id_vals.get('id')"/>
+            <ram:GlobalID t-foreach="buyer_trade_party_vals.get('global_ids')" t-as="global_id_vals" t-att-schemeID="global_id_vals.get('scheme_id')" t-out="global_id_vals.get('id')"/>
+        </xpath>
+
+        <!-- BT-49-00, BT-49, BT-49-1 -->
+        <xpath expr="//*[local-name()='BuyerTradeParty']/*[local-name()='SpecifiedTaxRegistration']" position="before">
+            <t t-set="buyer_legal_organization_vals" t-value="buyer_legal_organization_vals or {}"/>
+            <ram:URIUniversalCommunication t-if="buyer_legal_organization_vals.get('uri_id')">
+                <ram:URIID t-att-schemeID="buyer_legal_organization_vals.get('uri_scheme_id')" t-out="buyer_legal_organization_vals.get('uri_id')"/>
+            </ram:URIUniversalCommunication>
+        </xpath>
+
+        <!-- BG-11, BT-62 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeAgreement']" position="inside">
+            <t t-set="tax_representative_vals" t-value="tax_representative_vals or {}"/>
+            <ram:SellerTaxRepresentativeTradeParty t-if="tax_representative_vals">
+                <ram:Name t-out="tax_representative_vals.get('name')"/>
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="tax_representative_vals"/>
+                </t>
+                <ram:SpecifiedTaxRegistration>
+                    <ram:ID schemeID="VA" t-out="tax_representative_vals.get('vat')"/>
+                </ram:SpecifiedTaxRegistration>
+            </ram:SellerTaxRepresentativeTradeParty>
+        </xpath>
+
+        <!-- BT-14-00, BT-14 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeAgreement']" position="inside">
+            <t t-set="seller_order_vals" t-value="seller_order_vals or {}"/>
+            <ram:SellerOrderReferencedDocument t-if="seller_order_vals">
+                <ram:IssuerAssignedID t-out="seller_order_vals.get('issuer_assigned_id')"/>
+            </ram:SellerOrderReferencedDocument>
+        </xpath>
+
+        <!-- BG-24, BT-122, BT-124, BT-122-0, BT-123, BT-125, BT-125-1, BT-125-2 -->
+        <!-- BT-17-00, BT-17, BT-17-0, BT-18-00, BT-18, BT-18-0, BT-18-1 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeAgreement']" position="inside">
+            <t t-set="additional_referenced_documents" t-value="additional_referenced_documents or []"/>
+            <ram:AdditionalReferencedDocument t-foreach="additional_referenced_documents" t-as="doc_vals">
+                <ram:IssuerAssignedID t-out="doc_vals.get('issuer_assigned_id')"/>
+                <ram:URIID t-out="doc_vals.get('uri_id')"/>
+                <ram:TypeCode t-out="doc_vals.get('type_code')"/>
+                <ram:Name t-out="doc_vals.get('name')"/>
+                <ram:AttachmentBinaryObject t-att-mimeCode="doc_vals.get('mime_code')" t-att-filename="doc_vals.get('filename')" t-out="doc_vals.get('binary_object')"/>
+                <ram:ReferenceTypeCode t-out="doc_vals.get('reference_type_code')"/>
+            </ram:AdditionalReferencedDocument>
+        </xpath>
+
+        <!-- BT-11-00, BT-11, BT-11-0 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeAgreement']" position="inside">
+            <t t-set="procuring_project_vals" t-value="procuring_project_vals or {}"/>
+            <ram:SpecifiedProcuringProject t-if="procuring_project_vals">
+                <ram:ID t-out="procuring_project_vals.get('id')"/>
+                <ram:Name t-out="procuring_project_vals.get('name')"/>
+            </ram:SpecifiedProcuringProject>
+        </xpath>
+
+        <!-- BT-71, BT-71-0, BT-71-1 -->
+        <xpath expr="//*[local-name()='ShipToTradeParty']" position="inside">
+            <t t-set="ship_to_trade_party_vals" t-value="ship_to_trade_party_vals or {}"/>
+            <ram:ID t-out="ship_to_trade_party_vals.get('id')"/>
+            <ram:GlobalID t-foreach="ship_to_trade_party_vals.get('global_ids')" t-as="global_id_vals" t-att-schemeID="global_id_vals.get('scheme_id')" t-out="global_id_vals.get('id')"/>
+        </xpath>
+
+        <!-- BT-16-00, BT-16 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeDelivery']" position="inside">
+            <t t-set="despatch_advice_vals" t-value="despatch_advice_vals or {}"/>
+            <ram:DespatchAdviceReferencedDocument t-if="despatch_advice_vals">
+                <ram:IssuerAssignedID t-out="despatch_advice_vals.get('issuer_assigned_id')"/>
+            </ram:DespatchAdviceReferencedDocument>
+        </xpath>
+
+        <!-- BT-15-00, BT-15 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeDelivery']" position="inside">
+            <t t-set="receiving_advice_vals" t-value="receiving_advice_vals or {}"/>
+            <ram:ReceivingAdviceReferencedDocument t-if="receiving_advice_vals">
+                <ram:IssuerAssignedID t-out="receiving_advice_vals.get('issuer_assigned_id')"/>
+            </ram:ReceivingAdviceReferencedDocument>
+        </xpath>
+
+        <!-- BT-90, BT-6, BG-10, BT-60, BT-60-0, BT-60-1, BT-59, BT-61-00, BT-61, BT-61-1 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside">
+            <t t-set="header_settlement_vals" t-value="header_settlement_vals or {}"/>
+            <t t-set="payee_trade_party_vals" t-value="payee_trade_party_vals or {}"/>
+            <ram:CreditorReferenceID t-out="header_settlement_vals.get('creditor_reference_id')"/>
+            <ram:TaxCurrencyCode t-out="header_settlement_vals.get('tax_currency_code')"/>
+            <ram:PayeeTradeParty t-if="payee_trade_party_vals">
+                <ram:ID t-out="payee_trade_party_vals.get('id')"/>
+                <ram:GlobalID t-foreach="payee_trade_party_vals.get('global_ids')" t-as="global_id_vals" t-att-schemeID="global_id_vals.get('scheme_id')" t-out="global_id_vals.get('id')"/>
+                <ram:Name t-out="payee_trade_party_vals.get('name')"/>
+                <ram:SpecifiedLegalOrganization t-if="payee_trade_party_vals.get('legal_organization')">
+                    <ram:ID t-att-schemeID="payee_trade_party_vals.get('legal_org_scheme')" t-out="payee_trade_party_vals.get('legal_org_id')"/>
+                </ram:SpecifiedLegalOrganization>
+            </ram:PayeeTradeParty>
+        </xpath>
+
+        <!-- BT-82, BG-18, BT-87, BT-88, BG-18, BT-87, BT-88  -->
+        <xpath expr="//*[local-name()='SpecifiedTradeSettlementPaymentMeans']" position="inside">
+            <t t-set="payment_means_vals" t-value="payment_means_vals or {}"/>
+            <t t-set="financial_card_vals" t-value="financial_card_vals or {}"/>
+            <t t-set="payer_financial_account_vals" t-value="payer_financial_account_vals or {}"/>
+            <ram:Information t-out="payment_means_vals.get('information')"/>
+            <ram:ApplicableTradeSettlementFinancialCard t-if="financial_card_vals">
+                <ram:ID t-out="financial_card_vals.get('id')"/>
+                <ram:CardholderName t-out="financial_card_vals.get('cardholder_name')"/>
+            </ram:ApplicableTradeSettlementFinancialCard>
+            <ram:PayerPartyDebtorFinancialAccount t-if="payer_financial_account_vals">
+                <ram:IBANID t-out="payer_financial_account_vals.get('iban_id')"/>
+            </ram:PayerPartyDebtorFinancialAccount>
+        </xpath>
+
+        <!-- BT-85 -->
+        <xpath expr="//*[local-name()='PayeePartyCreditorFinancialAccount']" position="inside">
+            <t t-set="creditor_financial_account_vals" t-value="creditor_financial_account_vals or {}"/>
+            <ram:AccountName t-out="creditor_financial_account_vals.get('account_name')"/>
+        </xpath>
+
+        <!-- BT-86-00, BT-86 -->
+        <xpath expr="//*[local-name()='SpecifiedTradeSettlementPaymentMeans']" position="inside">
+            <t t-set="creditor_financial_institution_vals" t-value="creditor_financial_institution_vals or {}"/>
+            <ram:PayeeSpecifiedCreditorFinancialInstitution t-if="creditor_financial_institution_vals">
+                <ram:BICID t-out="creditor_financial_institution_vals.get('bic_id')"/>
+            </ram:PayeeSpecifiedCreditorFinancialInstitution>
+        </xpath>
+
+        <!-- BT-7, BT-7-0 -->
+        <xpath expr="//*[local-name()='ApplicableTradeTax']" position="inside">
+            <t t-set="tax_vals" t-value="tax_vals or {}"/>
+            <ram:TaxPointDate t-if="tax_vals.get('tax_point_date')">
+                <udt:DateString format="102" t-out="tax_vals.get('tax_point_date')"/>
+            </ram:TaxPointDate>
+        </xpath>
+
+        <!-- 
+            BG-20, BG-20-0, BG-20-1, BT-94, BT-93, BT-92, BT-98, BT-97, BT-95-00, BT-95-0, BT-95, BT-96
+            BG-21, BG-21-0, BG-21-1, BT-101, BT-100, BT-99, BT-105, BT-104, BT-102-00, BT-102-0, BT-102, BT-103 
+        -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside">
+            <t t-set="document_allowances" t-value="document_allowances or []"/>
+            <ram:SpecifiedTradeAllowanceCharge t-foreach="document_allowances" t-as="allowance_vals">
+                <ram:ChargeIndicator>
+                    <udt:Indicator t-out="allowance_vals.get('indicator')"/>
+                </ram:ChargeIndicator>
+                <ram:CalculationPercent t-out="allowance_vals.get('calculation_percent')"/>
+                <ram:BasisAmount t-out="allowance_vals.get('basis_amount')"/>
+                <ram:ActualAmount t-out="allowance_vals.get('actual_amount')"/>
+                <ram:ReasonCode t-out="allowance_vals.get('reason_code')"/>
+                <ram:Reason t-out="allowance_vals.get('reason')"/>
+                <ram:CategoryTradeTax>
+                    <ram:TypeCode t-out="allowance_vals.get('tax_type_code')"/>
+                    <ram:CategoryCode t-out="allowance_vals.get('tax_category_code')"/>
+                    <ram:RateApplicablePercent t-out="allowance_vals.get('tax_rate_percent')"/>
+                </ram:CategoryTradeTax>
+            </ram:SpecifiedTradeAllowanceCharge>
+        </xpath>
+
+        <!-- BT-89 -->
+        <xpath expr="//*[local-name()='SpecifiedTradePaymentTerms']" position="inside">
+            <t t-set="payment_terms_vals" t-value="payment_terms_vals or {}"/>
+            <ram:DirectDebitMandateID t-out="payment_terms_vals.get('direct_debit_mandate_id')"/>
+        </xpath>
+
+        <!-- BT-108, BT-107, BT-114 -->
+        <xpath expr="//*[local-name()='SpecifiedTradeSettlementHeaderMonetarySummation']" position="inside">
+            <t t-set="monetary_summation_vals" t-value="monetary_summation_vals or {}"/>
+            <ram:ChargeTotalAmount t-out="monetary_summation_vals.get('charge_total_amount')"/>
+            <ram:AllowanceTotalAmount t-out="monetary_summation_vals.get('allowance_total_amount')"/>
+            <ram:RoundingAmount t-out="monetary_summation_vals.get('rounding_amount')"/>
+        </xpath>
+
+        <!-- BG-3, BT-25, BT-26-00, BT-26, BT-26-0, BT-19-00, BT-19 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside">
+            <t t-set="invoice_references" t-value="invoice_references or []"/>
+            <t t-set="accounting_accounts" t-value="accounting_accounts or []"/>
+            <ram:InvoiceReferencedDocument t-foreach="invoice_references" t-as="invoice_ref_vals">
+                <ram:IssuerAssignedID t-out="invoice_ref_vals.get('issuer_assigned_id')"/>
+                <ram:FormattedIssueDateTime t-if="invoice_ref_vals.get('issue_date')">
+                    <qdt:DateTimeString format="102" t-out="invoice_ref_vals.get('issue_date')"/>
+                </ram:FormattedIssueDateTime>
+            </ram:InvoiceReferencedDocument>
+            <ram:ReceivableSpecifiedTradeAccountingAccount t-foreach="accounting_accounts" t-as="account_vals">
+                <ram:ID t-out="account_vals.get('id')"/>
+            </ram:ReceivableSpecifiedTradeAccountingAccount>
+        </xpath>
+    </template>
+</odoo>
