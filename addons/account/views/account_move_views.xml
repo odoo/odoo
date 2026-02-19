@@ -328,7 +328,7 @@
                     <field name="invoice_date"/>
                     <field name="date"/>
                     <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', raw_value), ('debit', '=', raw_value)]"/>
-                    <field name="account_id"/>
+                    <field name="account_id" context="{'active_test': False}"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="journal_group_id"/>
