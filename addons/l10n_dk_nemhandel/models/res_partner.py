@@ -96,6 +96,15 @@ class ResPartner(models.Model):
         if self.filtered(lambda partner: partner.invoice_edi_format != 'oioubl_21' and partner.invoice_sending_method == 'nemhandel'):
             raise ValidationError(_('On Nemhandel, only OIOUBL 2.1 is supported.'))
 
+    @api.constrains('nemhandel_identifier_type', 'nemhandel_identifier_value')
+    def _check_nemhandel_identifier_value(self):
+        for partner in self:
+            if (
+                partner.nemhandel_identifier_type == '0184' and
+                partner.nemhandel_identifier_value and
+                partner.nemhandel_identifier_value.upper().startswith('DK')
+            ):
+                raise ValidationError(_('The Nemhandel Identifier Value should not include the country code prefix "DK" when the Identifier Type is CVR.'))
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS
     # -------------------------------------------------------------------------
