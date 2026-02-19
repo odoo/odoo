@@ -166,6 +166,78 @@ class TestLoyalty(TestSaleCouponCommon):
         order._action_cancel()
         self.assertFalse(order.coupon_point_ids)
 
+    def test_prevent_using_same_points_on_batch_confirmation(self):
+        """
+        Check that confirming multiple quotations at once raises a ValidationError
+        when they each claim the same reward but the loyalty card doesn't have enough points.
+        """
+        # disable the generic ewallet program created in setUpClass so it doesn't interfere
+        if hasattr(self, 'ewallet_program'):
+            self.ewallet_program.active = False
+
+        program = self.env['loyalty.program'].create({
+            'name': '10% discount for 100 pts',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({
+                'reward_point_amount': 1,
+                'reward_point_mode': 'money',
+                'minimum_amount': 200,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10.0,
+                'discount_applicability': 'order',
+                'required_points': 100,
+            })],
+        })
+        card = self.env['loyalty.card'].create({
+            'program_id': program.id,
+            'partner_id': self.partner.id,
+            'points': 100,
+        })
+        # Two draft quotations and claim the reward on each quotation
+        order_1, order_2 = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_B.id,
+                        'product_uom_qty': 1,
+                    }),
+                ],
+            },
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_B.id,
+                        'product_uom_qty': 2,
+                    }),
+                ],
+            },
+        ])
+        order_1._update_programs_and_rewards()
+        self.assertTrue(
+            self._claim_reward(order_1, program, coupon=card),
+            'Reward must be claimable on the quotation',
+        )
+        order_2._update_programs_and_rewards()
+        self.assertTrue(
+            self._claim_reward(order_2, program, coupon=card),
+            'Reward must be claimable on the quotation',
+        )
+
+        # Confirming both quotations at once (mimics "Confirm Orders" smart button) raises an error
+        orders = order_1 | order_2
+        with self.assertRaises(ValidationError):
+            orders.action_confirm()
+
+        # Confirmation should fail and the loyalty card balance must remain unchanged
+        self.assertEqual(card.points, 100)
+
     def test_distribution_amount_payment_programs(self):
         """
         Check how the amount of a payment reward is distributed.
