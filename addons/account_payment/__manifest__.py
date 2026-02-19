@@ -30,7 +30,6 @@
     ],
     'assets': {
         'web.assets_unit_tests': [
-            'web/static/src/legacy/js/public/minimal_dom.js',
             'account_payment/static/src/interactions/**/*',
             'account_payment/static/tests/interactions/**/*',
         ],

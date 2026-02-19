@@ -41,8 +41,10 @@ export const BUTTON_HANDLER_SELECTOR =
  *      The function which is to be used as a handler. If a promise
  *      is returned, it is used to determine when the handler's action is
  *      finished. Otherwise, the return is used as jQuery uses it.
+ * @param {boolean} fromLazyLoader
+ *      set to true if the handler is used in the lazy loader context
  */
-export function makeAsyncHandler(fct) {
+export function makeAsyncHandler(fct, fromLazyLoader = false) {
     let pending = false;
     function _isLocked() {
         return pending;
@@ -53,7 +55,12 @@ export function makeAsyncHandler(fct) {
     function _unlock() {
         pending = false;
     }
-    return function () {
+    return function (ev) {
+        if (fromLazyLoader) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            ev.stopImmediatePropagation();
+        }
         if (_isLocked()) {
             // If a previous call to this handler is still pending, ignore
             // the new call.
@@ -80,12 +87,14 @@ export function makeAsyncHandler(fct) {
  *      The function which is to be used as a button click handler. If a
  *      promise is returned, it is used to determine when the button can be
  *      re-enabled. Otherwise, the return is used as jQuery uses it.
+ * @param {boolean} fromLazyLoader
+ *      set to true if the handler is used in the lazy loader context
  */
-export function makeButtonHandler(fct) {
+export function makeButtonHandler(fct, fromLazyLoader = false) {
     // Fallback: if the final handler is not bound to a button, at least
     // make it an async handler (also handles the case where some events
     // might ignore the disabled state of the button).
-    fct = makeAsyncHandler(fct);
+    fct = makeAsyncHandler(fct, fromLazyLoader);
 
     return function (ev) {
         const result = fct.apply(this, arguments);

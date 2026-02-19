@@ -1,8 +1,4 @@
-import {
-    BUTTON_HANDLER_SELECTOR,
-    makeAsyncHandler,
-    makeButtonHandler,
-} from '@web/legacy/js/public/minimal_dom';
+import { BUTTON_HANDLER_SELECTOR, makeAsyncHandler, makeButtonHandler } from "@web/public/utils";
 
 // Track when all JS files have been lazy loaded. Will allow to unblock the
 // related DOM sections when the whole JS have been loaded and executed.
@@ -102,8 +98,8 @@ function waitLazy() {
     for (const buttonEl of loadingEffectButtonEls) {
         for (const eventType of loadingEffectEventTypes) {
             const loadingEffectHandler = eventType === 'click'
-                ? makeButtonHandler(waitForLazyAndRetrigger, true, true, true)
-                : makeAsyncHandler(waitForLazyAndRetrigger, true, true, true);
+                    ? makeButtonHandler(waitForLazyAndRetrigger, true)
+                    : makeAsyncHandler(waitForLazyAndRetrigger, true);
             registerLoadingEffectHandler(buttonEl, eventType, loadingEffectHandler);
         }
     }

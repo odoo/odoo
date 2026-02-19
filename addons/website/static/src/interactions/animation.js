@@ -4,6 +4,18 @@ import { registry } from "@web/core/registry";
 import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
 import { isVisible } from "@web/core/utils/ui";
 
+// FIXME temporary hack: during edit mode, the carousel crashes sometimes when
+// we hover option during a carousel cycle. This patches Bootstrap to prevent
+// the crash.
+const baseSelectorEngineFind = window.SelectorEngine.find;
+window.SelectorEngine.find = function (...args) {
+    try {
+        return baseSelectorEngineFind.call(this, ...args);
+    } catch {
+        return [document.createElement("div")];
+    }
+};
+
 export class Animation extends Interaction {
     static selector = ".o_animate";
     dynamicSelectors = {
