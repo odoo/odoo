@@ -76,9 +76,16 @@ export class PartnerList extends Component {
         }
     }
     async editPartner(p = false) {
-        const partner = await this.pos.editPartner(p);
-        if (partner) {
-            this.clickPartner(partner);
+        if (this.state.query) {
+            this.pos.partnerSearchContext = this.state.query;
+        }
+        try {
+            const partner = await this.pos.editPartner(p);
+            if (partner) {
+                this.clickPartner(partner);
+            }
+        } finally {
+            delete this.pos.partnerSearchContext;
         }
     }
     async onEnter() {
@@ -156,6 +163,8 @@ export class PartnerList extends Component {
     }
     clickPartner(partner) {
         this.props.getPayload(partner);
+        this.state.query = "";
+        delete this.pos.partnerSearchContext;
         this.props.close();
     }
     async searchPartner() {

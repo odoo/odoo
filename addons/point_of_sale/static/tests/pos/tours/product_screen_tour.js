@@ -19,6 +19,7 @@ import { checkPreparationTicketData } from "@point_of_sale/../tests/pos/tours/ut
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     steps: () =>
@@ -1272,5 +1273,38 @@ registry.category("web_tour.tours").add("test_orderline_merge_with_higher_price_
             ProductScreen.clickDisplayedProduct("High Precision Product"),
             ProductScreen.selectedOrderlineHas("High Precision Product", "2.0", "16.49"), // 8.245 * 2 = 16.49
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_customer_search_prefilled_on_create", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.searchCustomer("test customer"),
+            {
+                content: "Wait",
+                trigger: "body",
+                async run() {
+                    await delay(100); //Search input debounce 100
+                },
+            },
+            PartnerList.clickPartnerCreateBtn(),
+
+            PartnerList.checkInputForm("name", "test customer"),
+            PartnerList.selectFormDiscard(),
+
+            PartnerList.searchCustomer("+(123) 45.67-89"),
+            {
+                content: "Wait",
+                trigger: "body",
+                async run() {
+                    await delay(100); //Search input debounce 100
+                },
+            },
+            PartnerList.clickPartnerCreateBtn(),
+            PartnerList.checkInputForm("phone", "+(123) 45.67-89"),
+            PartnerList.selectFormDiscard(),
         ].flat(),
 });
