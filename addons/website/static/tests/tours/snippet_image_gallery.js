@@ -134,7 +134,53 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='2']",
 },
     wTourUtils.assertCssVariable("height", "400px", "iframe .s_image_gallery"),
-]);
+{
+    content: "Click on replace button in the selected image options",
+    trigger: ".snippet-option-ReplaceMedia we-button",
+}, {
+    content: "Go to the the 'Videos' tab",
+    trigger: "a:contains('Videos')",
+}, {
+    content: "Enter a video link",
+    trigger: "#o_video_text",
+    run: "text https://youtu.be/nbso3NVz3p8",
+}, {
+    content: "Check that the video is previewed",
+    trigger: ".o_video_dialog_iframe",
+    run: () => {}, // This is a check.
+}, {
+    content: "Click on 'add' button",
+    trigger: ".modal-footer button:contains('Add')",
+}, {
+    content: "Check if the video thumbnail is added to the indicator.",
+    trigger: "iframe .s_image_gallery li.active",
+    run: function () {
+        const indicatorEl = this.$anchor[0];
+        // The background image must contain the video unique ID.
+        if (!indicatorEl.style.backgroundImage.includes("nbso3NVz3p8")) {
+            console.error("There is a problem with the video thumbnail.");
+        }
+    },
+}, {
+    content: "Slide back to the previous image.",
+    trigger: "iframe .s_image_gallery .carousel-control-prev",
+}, {
+    content: "Click on the image.",
+    trigger: "iframe .s_image_gallery img",
+}, {
+    content: "Use the 'Re-order' option to move the slide to the next position.",
+    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+}, {
+    content: "Verify that the video slide and its indicator thumbnail are both retained in the image gallery.",
+    trigger: "iframe .s_image_gallery",
+    run: function () {
+        const mediaEl = this.$anchor[0].querySelector(".carousel-inner .media_iframe_video");
+        const indicatorEl = this.$anchor[0].querySelector(".carousel-indicators .o_video_thumbnail");
+        if (!mediaEl || !indicatorEl) {
+            console.error("The video slide or its indicator thumbnail is missing from the image gallery.");
+        }
+    },
+}]);
 
 wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     test: true,

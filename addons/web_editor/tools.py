@@ -134,28 +134,43 @@ def get_video_embed_code(video_url):
     return Markup('<iframe class="embed-responsive-item" src="%s" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="true" frameborder="0"></iframe>') % data['embed_url']
 
 
-def get_video_thumbnail(video_url):
-    """ Computes the valid thumbnail image from given URL
+def get_video_thumbnail_url(video_url):
+    """ Computes the valid thumbnail image URL from given URL
         (or None in case of invalid URL).
     """
     source = get_video_source_data(video_url)
     if source is None:
         return None
 
-    response = None
+    thumbnail_url = None
     platform, video_id = source[:2]
+    if platform == 'youtube':
+        thumbnail_url = f'https://img.youtube.com/vi/{video_id}/0.jpg'
+    elif platform == 'vimeo':
+        video_details_url = f'http://vimeo.com/api/oembed.json?url={video_url}'
+        res = requests.get(video_details_url, timeout=10)
+        if res.ok:
+            data = res.json()
+            thumbnail_url = data['thumbnail_url']
+    elif platform == 'dailymotion':
+        thumbnail_url = f'https://www.dailymotion.com/thumbnail/video/{video_id}'
+    elif platform == 'instagram':
+        thumbnail_url = f'https://www.instagram.com/p/{video_id}/media/?size=t'
+
+    return platform, thumbnail_url
+
+
+def get_video_thumbnail(video_url):
+    """ Computes the valid thumbnail image from given URL
+        (or None in case of invalid URL).
+    """
+    platform, thumbnail_url = get_video_thumbnail_url(video_url)
+    if platform is None or thumbnail_url is None:
+        return None
+
+    response = None
     with contextlib.suppress(requests.exceptions.RequestException):
-        if platform == 'youtube':
-            response = requests.get(f'https://img.youtube.com/vi/{video_id}/0.jpg', timeout=10)
-        elif platform == 'vimeo':
-            res = requests.get(f'http://vimeo.com/api/oembed.json?url={video_url}', timeout=10)
-            if res.ok:
-                data = res.json()
-                response = requests.get(data['thumbnail_url'], timeout=10)
-        elif platform == 'dailymotion':
-            response = requests.get(f'https://www.dailymotion.com/thumbnail/video/{video_id}', timeout=10)
-        elif platform == 'instagram':
-            response = requests.get(f'https://www.instagram.com/p/{video_id}/media/?size=t', timeout=10)
+        response = requests.get(thumbnail_url, timeout=10)
 
     if response and response.ok:
         return image_process(response.content)
