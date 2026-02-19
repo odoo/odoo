@@ -1020,7 +1020,7 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls._signal_changes_patcher)
 
         cls.attrs_before = {
-            model: {
+            model._name: {
                 *vars(model),
                 # __annotations__ pops up during testing on *some* models
                 '__annotations__',
@@ -1115,7 +1115,7 @@ class TransactionCase(BaseCase):
         }
         with self._outcome.testPartExecutor(self, isTest=False):
             # need defaults for custom models created during the test
-            default_attrs = self.attrs_before[self.registry['base']] | {'_rec_name', '_active_name'}
+            default_attrs = self.attrs_before['base'] | {'_rec_name', '_active_name'}
             # TODO: maybe retrieve all abstractmodels and either create a big
             #       set of mixin attributes to always remove or have a mapping
             #       of mixin: attributes to remove on a per-model basis?
@@ -1130,7 +1130,7 @@ class TransactionCase(BaseCase):
                     # registry in place, adding fields on leaf classes
                     if not (f.startswith('x_') and f in model._fields)
                     if (model, f) not in modelClassPatches
-                }.difference(self.attrs_before.get(model, default_attrs))
+                }.difference(self.attrs_before.get(model._name, default_attrs))
                 if extras:
                     sets = "\n\n".join(
                         f"======== {k} ========\n{v}:\n{tb}\n"
