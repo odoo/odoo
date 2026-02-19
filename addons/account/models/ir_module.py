@@ -67,6 +67,7 @@ class IrModuleModule(models.Model):
         if (
             not was_installed and is_installed
             and not self.env.company.chart_template
+            and self.env.company.country_id
             and self.account_templates
             and (guessed := next((
                 tname
