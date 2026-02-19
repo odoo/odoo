@@ -707,6 +707,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # not already marked as "to be applied".
                 with cr.savepoint(flush=False):
                     func(cr)
+            else:
+                self._constraint_queue[key] = func
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)
