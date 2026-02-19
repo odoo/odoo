@@ -8,10 +8,14 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <tree string="Employee attendances" editable="bottom" sample="1">
-                <field name="employee_id"/>
-                <field name="check_in"/>
-                <field name="check_out"/>
-                <field name="worked_hours" string="Work Hours" widget="float_time"/>
+                <field name="employee_id" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                <field name="employee_id" groups="hr_attendance.group_hr_attendance_user"/>
+                <field name="check_in" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                <field name="check_in" groups="hr_attendance.group_hr_attendance_user"/>
+                <field name="check_out" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                <field name="check_out" groups="hr_attendance.group_hr_attendance_user"/>
+                <field name="worked_hours" string="Work Hours" widget="float_time" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                <field name="worked_hours" string="Work Hours" widget="float_time" groups="hr_attendance.group_hr_attendance_user"/>
             </tree>
         </field>
     </record>
@@ -53,9 +57,12 @@
             <form string="Employee attendances">
                 <sheet>
                     <group>
-                        <field name="employee_id"/>
-                        <field name="check_in"/>
-                        <field name="check_out"/>
+                        <field name="employee_id" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                        <field name="employee_id" groups="hr_attendance.group_hr_attendance_user"/>
+                        <field name="check_in" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                        <field name="check_in" groups="hr_attendance.group_hr_attendance_user"/>
+                        <field name="check_out" readonly="1" groups="!hr_attendance.group_hr_attendance_user"/>
+                        <field name="check_out" groups="hr_attendance.group_hr_attendance_user"/>
                     </group>
                 </sheet>
             </form>
