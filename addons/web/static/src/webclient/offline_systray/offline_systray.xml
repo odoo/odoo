@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.OfflineSystray">
+        <div t-if="this.offlineService.offline and !offlineService.hasScheduledCalls" t-on-click="() => this.offlineService.checkConnection()">
+            <i t-if="env.isSmall"
+                class="fa fa-chain-broken o_nav_entry text-danger offline_systray"
+                role="img"
+                aria-label="Working offline"
+                data-tooltip="Working offline"/>
+            <button t-else=""
+                class="o_nav_entry px-2 o_tag text-bg-danger offline_systray"
+                data-available-offline=""
+                data-tooltip="Click to check connection">
+                <i class="fa fa-chain-broken me-1"></i> Working offline
+            </button>
+        </div>
+        <Dropdown t-if="offlineService.hasScheduledCalls">
+            <div t-on-click="() => this.offlineService.checkConnection()">
+                <i t-if="env.isSmall"
+                    t-attf-class="fa {{ inError? 'fa-exclamation' : 'fa-chain-broken' }} o_nav_entry text-danger offline_systray"
+                    role="img"
+                    t-attf-aria-label="{{ inError ? 'Sync Issues' : 'Working offline' }}"
+                    t-attf-data-tooltip="{{ inError ? 'Sync Issues' : 'Working offline'"/>
+                <button t-else=""
+                    class="o_nav_entry px-2 o_tag text-bg-danger offline_systray"
+                    data-available-offline=""
+                    data-tooltip="Click to check connection and Sync">
+                    <i t-attf-class="fa {{ inError ? 'fa-exclamation' : 'fa-chain-broken'}} me-1"/><t t-esc="labelText"></t><i class="fa fa-caret-down ms-2"/>
+                </button>
+            </div>
+            <t t-set-slot="content">
+                <table class="table table-sm ps-4">
+                    <t t-foreach="groupEntries" t-as="entry" t-key="entry[0]">
+                        <span t-esc="entry[0]"/> 
+                        <t t-foreach="entry[1]" t-as="element" t-key="element.id">
+                            <tr 
+                                t-on-click="() => element.clickable and this.openView(element.id)"
+                                t-attf-class="{{ element.clickable ? 'cursor-pointer' : '' }}"
+                                t-att-data-tooltip-template="'web.OfflineSystrayTooltip'"
+                                t-att-data-tooltip-info="element.tooltip">
+                                <td>
+                                    <i t-if="element.error" class="o_button_icon fa fa-fw fa-exclamation-circle text-danger me-1"/>
+                                    <span                                             
+                                        t-attf-class="{{ element.clickable ? '' : 'text-muted'}} {{element.error ? 'text-danger': ''}}"
+                                        t-esc="element.displayName"
+                                    />
+                                </td>
+                                <td>
+                                    <span t-attf-class="o_tag o_badge badge rounded-pill {{ 'o_tag_color_' + element.statusColor }}">
+                                        <div class="o_tag_badge_text o_badge_text">
+                                            <t t-esc="element.status"/>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    <button
+                                        class="btn"
+                                        title="Discard offline changes"
+                                        data-available-offline=""
+                                        t-on-click.stop="() => this.offlineService.removeScheduledORM(element.id)">
+                                        <i class="o_button_icon fa fa-fw fa-trash me-1"/>
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="web.OfflineSystrayTooltip">
+        <div>
+            <t t-esc="status"/> on <t t-esc="timeStamp"/>
+        </div>
+        <t t-foreach="changes" t-as="entry" t-key="entry[0]">
+            <div>
+               - <t t-esc="entry[0]"/>: <t t-esc="entry[1]"/>
+            </div>
+        </t>
+    </t>
+</templates>

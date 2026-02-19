@@ -114,7 +114,7 @@ rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
 });
 
 export class RelationalModel extends Model {
-    static services = ["action", "dialog", "notification", "orm", "offline"];
+    static services = ["action", "dialog", "notification", "orm", "offline", "menu"];
     static Record = RelationalRecord;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -130,11 +130,12 @@ export class RelationalModel extends Model {
      * @param {RelationalModelParams} params
      * @param {Services} services
      */
-    setup(params, { action, dialog, notification, offline }) {
+    setup(params, { action, dialog, notification, offline, menu }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
         this.offline = offline;
+        this.menu = menu;
 
         this.bus = new EventBus();
 
@@ -636,7 +637,12 @@ export class RelationalModel extends Model {
                     groups.splice(
                         index,
                         0,
-                        Object.assign({}, group, { count: 0, length: 0, records: [], aggregates })
+                        Object.assign({}, group, {
+                            count: 0,
+                            length: 0,
+                            records: [],
+                            aggregates,
+                        })
                     );
                 }
             });
@@ -715,9 +721,7 @@ export class RelationalModel extends Model {
     _setAvailableOffline(config, result) {
         const { actionId, viewType } = this.env.config;
         let markAsAvailableOffline = actionId;
-        if (config.isMonoRecord) {
-            markAsAvailableOffline = markAsAvailableOffline && config.resId;
-        } else {
+        if (!config.isMonoRecord) {
             const hasRecords = config.groupBy.length
                 ? result.groups.some((group) => group.__count > 0)
                 : result.length > 0;
@@ -746,7 +750,9 @@ export class RelationalModel extends Model {
             const fieldContext = config.activeFields[fieldNames[0]].context;
             context = makeContext([context, fieldContext], evalContext);
         }
-        const spec = getFieldsSpec(activeFields, fields, evalContext, { withInvisible: true });
+        const spec = getFieldsSpec(activeFields, fields, evalContext, {
+            withInvisible: true,
+        });
         const args = [resId ? [resId] : [], changes, fieldNames, spec];
         let response;
         try {
@@ -826,7 +832,9 @@ export class RelationalModel extends Model {
      */
     async _updateCount(config) {
         const count = await this.keepLast.add(
-            this.orm.searchCount(config.resModel, config.domain, { context: config.context })
+            this.orm.searchCount(config.resModel, config.domain, {
+                context: config.context,
+            })
         );
         config.countLimit = Number.MAX_SAFE_INTEGER;
         return count;

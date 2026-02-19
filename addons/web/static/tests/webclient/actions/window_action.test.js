@@ -2829,11 +2829,11 @@ test("[Offline] navigate through window actions", async () => {
     await contains(".o_data_row:eq(0) .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_pager").toHaveText("1 / 3"); // only 3 records are available offline
-    expect(".o_field_widget[name=foo]").toHaveText("yop");
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
     await contains(".o_pager_next").click();
-    expect(".o_field_widget[name=foo]").toHaveText("gnap");
+    expect(".o_field_widget[name=foo] input").toHaveValue("gnap");
     await contains(".o_pager_next").click();
-    expect(".o_field_widget[name=foo]").toHaveText("plop");
+    expect(".o_field_widget[name=foo] input").toHaveValue("plop");
 
     expect.verifyErrors([
         `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,

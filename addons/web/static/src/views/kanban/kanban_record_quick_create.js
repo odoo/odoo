@@ -82,6 +82,7 @@ export class KanbanQuickCreateController extends Component {
         super.setup();
 
         this.uiService = useService("ui");
+        this.offlineService = useService("offline");
         this.rootRef = useRef("root");
         this.state = useState({ disabled: false });
         this.addDialog = useOwnedDialogs();
@@ -226,6 +227,9 @@ export class KanbanQuickCreateController extends Component {
             this.state.disabled = false;
             return true;
         } else {
+            if (this.offlineService.offline) {
+                this.props.quickCreateState.closeQuickCreate();
+            }
             this.state.disabled = false;
             return false;
         }
@@ -315,7 +319,13 @@ export class KanbanRecordQuickCreate extends Component {
             });
         });
         useSubEnv({
-            config: getDefaultConfig(),
+            config: {
+                ...getDefaultConfig(),
+                actionId: this.env.config.actionId,
+                actionName: this.env.config.actionName,
+                viewType: "form:kanbanQC",
+                resId: false,
+            },
         });
     }
 

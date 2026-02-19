@@ -12,6 +12,7 @@ import {
     getFieldsSpec,
     parseServerValue,
 } from "./utils";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Redefine default 'Record' type
@@ -141,9 +142,6 @@ export class Record extends DataPoint {
     }
 
     get isInEdition() {
-        if (this.model.offline.offline) {
-            return false;
-        }
         if (this.config.mode === "readonly") {
             return false;
         } else {
@@ -166,6 +164,10 @@ export class Record extends DataPoint {
 
     get resIds() {
         return this.config.resIds;
+    }
+
+    get offlineId() {
+        return this._offlineId;
     }
 
     // -------------------------------------------------------------------------
@@ -322,6 +324,12 @@ export class Record extends DataPoint {
         const succeeded = await this._save({ reload: false });
         this.model._urgentSave = false;
         return succeeded;
+    }
+
+    setOfflineChanges(offlineId) {
+        this._offlineId = offlineId;
+        this._offlineChanges = this.model.offline.scheduledORM[offlineId].value.extras.changes;
+        return this.update(this._offlineChanges);
     }
 
     // -------------------------------------------------------------------------
@@ -1119,6 +1127,18 @@ export class Record extends DataPoint {
             this.model.useSendBeaconToSaveUrgently &&
             !this.model.env.inDialog
         ) {
+            // We are trying to sa ve urgently because the user is closing the page when offline.
+            // Unfortunately, we can't save on IndexedDB before unload.
+            if (this.model.offline.offline) {
+                this.model._closeUrgentSaveNotification = this.model.notification.add(
+                    _t(
+                        `Heads up! Your recent changes cannot be saved automatically while you are offline. Please click the %(uploadIcon)s button now to ensure your work is saved before you exit this tab.`,
+                        { uploadIcon: markup`<i class="fa fa-cloud-upload fa-fw"></i>` }
+                    ),
+                    { sticky: true }
+                );
+                return false;
+            }
             // We are trying to save urgently because the user is closing the page. To
             // ensure that the save succeeds, we can't do a classic rpc, as these requests
             // can be cancelled (payload too heavy, network too slow, computer too fast...).
@@ -1141,8 +1161,8 @@ export class Record extends DataPoint {
             } else {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
                     _t(
-                        `Heads up! Your recent changes are too large to save automatically. Please click the %(upload_icon)s button now to ensure your work is saved before you exit this tab.`,
-                        { upload_icon: markup`<i class="fa fa-cloud-upload fa-fw"></i>` }
+                        `Heads up! Your recent changes are too large to save automatically. Please click the %(uploadIcon)s button now to ensure your work is saved before you exit this tab.`,
+                        { uploadIcon: markup`<i class="fa fa-cloud-upload fa-fw"></i>` }
                     ),
                     { sticky: true }
                 );
@@ -1185,6 +1205,9 @@ export class Record extends DataPoint {
                 kwargs
             );
         } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                return this._offlineSave();
+            }
             if (onError) {
                 return onError(e, {
                     discard: () => this._discard(),
@@ -1217,23 +1240,58 @@ export class Record extends DataPoint {
             }
             this._setData(records[0], { orderBys });
         } else {
-            this._values = markRaw({ ...this._values, ...this._changes });
-            if ("id" in this.activeFields) {
-                this._values.id = records[0].id;
-            }
-            for (const fieldName in this.activeFields) {
-                const field = this.fields[fieldName];
-                if (["one2many", "many2many"].includes(field.type) && !field.relatedPropertyField) {
-                    this._changes[fieldName]?._clearCommands();
-                }
-            }
-            this._changes = markRaw({});
-            this.data = { ...this._values };
-            this.dirty = false;
+            this._commitSave(records);
         }
         return true;
     }
 
+    _commitSave(records) {
+        this._values = markRaw({ ...this._values, ...this._changes });
+        if ("id" in this.activeFields) {
+            this._values.id = records[0].id;
+        }
+        for (const fieldName in this.activeFields) {
+            const field = this.fields[fieldName];
+            if (["one2many", "many2many"].includes(field.type) && !field.relatedPropertyField) {
+                this._changes[fieldName]?._clearCommands();
+            }
+        }
+        this._changes = markRaw({});
+        this.data = { ...this._values };
+        this.dirty = false;
+    }
+
+    async _offlineSave() {
+        this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
+        const offlineChanges = this._getChanges(this._offlineChanges);
+        delete offlineChanges.id; // id never changes, and should not be written
+
+        this._offlineId = this.model.offline.scheduleORM(
+            this.resModel,
+            "web_save",
+            [this.resId ? [this.resId] : [], offlineChanges],
+            { context: this.context, specification: {} }, //Here for the kwargs we don't need the specification or the next_id
+            {
+                if: this._offlineId,
+                extras: {
+                    actionId: this.model.env.config.actionId,
+                    actionName: this.model.env.config.actionName,
+                    menuId: this.model.menu.getCurrentApp()?.id,
+                    viewType: this.model.env.config.viewType,
+                    changes: this._offlineChanges,
+                    displayName:
+                        this.data.display_name ||
+                        this.data.complete_name ||
+                        this.data.name ||
+                        _t("record"),
+                    timeStamp: Date.now(),
+                },
+            }
+        );
+
+        this._commitSave([]); // Not sure about this ...
+        return true;
+    }
     /**
      * For owl reactivity, it's better to only update the keys inside the evalContext
      * instead of replacing the evalContext itself, because a lot of components are
@@ -1348,6 +1406,9 @@ export class Record extends DataPoint {
             fieldNames: onChangeFields,
             evalContext: toRaw(this.evalContext),
             onError: (e) => {
+                if (e instanceof ConnectionLostError) {
+                    return false;
+                }
                 // We apply changes and revert them after to force a render of the Field components
                 const undoChanges = this._applyChanges(changes);
                 undoChanges();

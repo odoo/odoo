@@ -10,7 +10,7 @@
         <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
             <t t-if="env.isSmall">
                 <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.at(-1)"/>
-                <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected">
+                <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected" data-available-offline="">
                     <i class="oi oi-fw oi-arrow-left"/>
                 </button>
             </t>

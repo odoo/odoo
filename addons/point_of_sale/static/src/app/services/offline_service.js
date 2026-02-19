@@ -21,6 +21,7 @@ patch(offlineService, {
             return {
                 status: {},
                 _checkConnection: () => Promise.resolve(),
+                isAvailableOffline: () => false,
             };
         }
         return super.start(...arguments);
