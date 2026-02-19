@@ -6,22 +6,22 @@ class ResConfigSettings(models.TransientModel):
 
     ram_google_places_api_key = fields.Char(
         string="Google Places API Key",
-        config_parameter="ram_webiste.google_places_api_key",
+        config_parameter="ram_website.google_places_api_key",
     )
     ram_google_place_id = fields.Char(
         string="Google Place ID",
-        config_parameter="ram_webiste.google_place_id",
+        config_parameter="ram_website.google_place_id",
     )
     ram_google_reviews_language = fields.Char(
         string="Google Reviews Language",
         default="en",
-        config_parameter="ram_webiste.google_reviews_language",
+        config_parameter="ram_website.google_reviews_language",
         help="Language code for Google Reviews (e.g., en, ja).",
     )
     ram_google_reviews_max = fields.Integer(
         string="Max Reviews to Import",
         default=12,
-        config_parameter="ram_webiste.google_reviews_max",
+        config_parameter="ram_website.google_reviews_max",
     )
 
     def action_ram_sync_google_reviews(self):

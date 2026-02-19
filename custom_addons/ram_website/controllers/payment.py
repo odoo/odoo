@@ -72,6 +72,10 @@ class RamPaymentController(http.Controller):
         # We pass the reference so the user pays for THIS specific reference.
         # When they return, we find the transaction by this reference.
         base_url = user.get_base_url()
+        
+        # Explicit return route to our finalize logic
+        landing_route = f'/ram/payment/finalize?reference={reference}'
+        
         query = {
             'reference': reference,
             'amount': float(amount),
@@ -79,6 +83,7 @@ class RamPaymentController(http.Controller):
             'partner_id': partner.id,
             'access_token': access_token,
             'company_id': request.env.company.id,
+            # 'landing_route': landing_route, # Removed to avoid TypeError in Odoo 19 core
         }
         from werkzeug.urls import url_encode
         return {
@@ -168,38 +173,23 @@ class RamPaymentController(http.Controller):
              order_data['source'] = 'native_web'
              
              # Create Order
+             # create_api_order already handles:
+             # - Sequence generation
+             # - Payment record creation
+             # - Bus notification (NEW_REMOTE_ORDER)
              order = request.env['pos.order'].sudo().create_api_order(order_data)
              
              # 1. GENERATE INVOICE
              try:
-                 order.action_pos_order_invoice()
-                 # Ensure invoice is compliant/open if needed, usually action_pos_order_invoice does it.
-                 # order.account_move is the invoice.
+                 if order.state == 'paid':
+                     order.action_pos_order_invoice()
              except Exception as inv_e:
                  _logger.error(f"Failed to generate invoice for order {order.name}: {inv_e}")
 
-             # 2. TRIGGER POS NOTIFICATION
-             # Determine channel. For Odoo 16+, typically 'pos_config' channel.
-             # We send a message so the POS client (if customized to listen) or just the bus picks it up.
-             # 'pos_order_api' might allow polling, but we force a bus message for "Real Time" feel.
-             # Channel: request.env['pos.config'].browse(session.config_id.id)._get_bus_channel()
-             # Payload: 'RAM_ORDER_NEW'
-             try:
-                 # Check if we can get channel
-                 channel = session.config_id._get_bus_channel() if hasattr(session.config_id, '_get_bus_channel') else None
-                 if channel:
-                     request.env['bus.bus']._sendone(channel, 'RAM_ORDER_NEW', {
-                         'order_id': order.id, 
-                         'ref': order.pos_reference,
-                         'amount': order.amount_total
-                     })
-             except Exception as bus_e:
-                 _logger.error(f"Bus Notification Failed: {bus_e}")
-
-             # 3. Clean Cart
+             # 2. Clean Cart
              cart.line_ids.unlink()
              
-             # 4. Redirect to SUCCESS Page (Not Status Page)
+             # 3. Redirect to SUCCESS Page
              return request.redirect(f'/ram/order/success/{order.unique_uuid}')
              
         except Exception as e:
@@ -215,7 +205,7 @@ class RamPaymentController(http.Controller):
         if not order:
             return request.redirect('/ram')
             
-        return request.render('ram_webiste.ram_order_success_page', {'order': order})
+        return request.render('ram_website.ram_order_success_page', {'order': order})
 
     @http.route('/ram/payment/transaction/result', type='json', auth='public')
     def payment_result(self, reference):

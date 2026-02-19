@@ -12,7 +12,7 @@
         "payment",
     ],
     "data": [
-        "security/ram_webiste_security.xml",
+        "security/ram_website_security.xml",
         "security/ir.model.access.csv",
         "views/ram_backend_menus.xml",
         "views/product_template_views.xml",
@@ -27,9 +27,9 @@
     ],
     "assets": {
         "web.assets_frontend": [
-            "ram_webiste/static/src/scss/ram_website.scss",
-            "ram_webiste/static/src/js/ram_website.js",
-            "ram_webiste/static/src/js/ram_ordering.js",
+            "ram_website/static/src/scss/ram_website.scss",
+            "ram_website/static/src/js/ram_website.js",
+            "ram_website/static/src/js/ram_ordering.js",
         ],
     },
     "application": True,

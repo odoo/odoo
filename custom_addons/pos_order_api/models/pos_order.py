@@ -101,7 +101,12 @@ class PosOrder(models.Model):
         for line in order_data['lines']:
             product = self.env['product.product'].browse(line['product_id'])
             qty = line['qty']
-            price_unit = line.get('price_unit', product.lst_price)
+            
+            # IMPORTANT: Always use the product's actual list_price for tax computation.
+            # The frontend may send a tax-inclusive "display" price as price_unit,
+            # but compute_all() expects the tax-excluded price (since price_include_override=None).
+            # Using the wrong base price causes double-taxation.
+            price_unit = product.list_price  # Tax-excluded price from DB
             
             # Tax Calculation
             taxes = product.taxes_id.filtered(lambda t: t.company_id.id == session.config_id.company_id.id)
@@ -111,7 +116,7 @@ class PosOrder(models.Model):
             price_subtotal = price_unit * qty
             price_subtotal_incl = price_subtotal
             
-            # Compute taxes
+            # Compute taxes using the correct tax-excluded base price
             tax_res = taxes.compute_all(price_unit, session.currency_id, qty, product=product, partner=self.env['res.partner'].browse(order_data.get('partner_id')))
             
             price_subtotal = tax_res['total_excluded']

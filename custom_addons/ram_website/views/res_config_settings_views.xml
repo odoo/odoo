@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="res_config_settings_view_form_ram_webiste" model="ir.ui.view">
+    <record id="res_config_settings_view_form_ram_website" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.ram.webiste</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
@@ -8,11 +8,11 @@
             <xpath expr="//app[@name='website']/block[@id='website_info_settings']" position="after">
                 <block
                     title="RAM Website"
-                    id="ram_webiste_settings_block"
-                    groups="ram_webiste.group_ram_website_manager"
+                    id="ram_website_settings_block"
+                    groups="ram_website.group_ram_website_manager"
                 >
                     <setting
-                        id="ram_webiste_google_reviews_setting"
+                        id="ram_website_google_reviews_setting"
                         string="Google Reviews"
                         help="Optionally import reviews from Google Places into your website reviews."
                     >

@@ -8,11 +8,11 @@
 
     <!-- Convenience: website designers automatically get access to RAM Website menus/config. -->
     <record id="website.group_website_designer" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('ram_webiste.group_ram_website_manager'))]"/>
+        <field name="implied_ids" eval="[(4, ref('ram_website.group_ram_website_manager'))]"/>
     </record>
 
     <!-- Convenience: system admins can always manage it too. -->
     <record id="base.group_system" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('ram_webiste.group_ram_website_manager'))]"/>
+        <field name="implied_ids" eval="[(4, ref('ram_website.group_ram_website_manager'))]"/>
     </record>
 </odoo>

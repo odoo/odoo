@@ -327,27 +327,45 @@
         this.renderOrderHistory();
     },
 
-    renderOrderHistory() {
+    async renderOrderHistory() {
         const container = document.getElementById("ram_order_history_list");
         if (!container) return;
-        const history = this.getOrderHistory();
-        if (history.length === 0) {
+        
+        container.innerHTML = '<div class="text-center py-4"><i class="fa fa-spinner fa-spin fa-2x"></i></div>';
+        
+        let history = [];
+        if (window.ram_user_id) {
+            try {
+                history = await callOdooAPI("/ram/orders/json");
+            } catch (e) {
+                console.error("Failed to fetch history from server:", e);
+                history = this.getOrderHistory(); // Fallback
+            }
+        } else {
+            history = this.getOrderHistory();
+        }
+
+        if (!history || history.length === 0) {
             container.innerHTML = '<div class="text-center py-4 text-muted">No recent orders found</div>';
             return;
         }
+
         container.innerHTML = history.map(h => {
-            // Priority 1: Direct Invoice URL with token (from recent submission)
-            // Priority 2: Standard Invoice Path (fallback for older history)
-            const targetUrl = h.invoice_url || (h.invoice_id ? `/my/invoices/${h.invoice_id}` : '/my/invoices');
-            
+            const statusLabel = (h.delivery_status || h.status || 'received').toUpperCase();
+            const statusClass = h.state === 'cancel' ? 'bg-danger' : 'bg-primary';
+            const targetUrl = h.unique_uuid ? `/ram/order/status/${h.unique_uuid}` : (h.invoice_id ? `/my/invoices/${h.invoice_id}` : '#');
+
             return `
-            <div class="ram-history-item p-3 mb-2 border rounded border-secondary" style="cursor: pointer;" 
+            <div class="ram-history-item p-3 mb-2 border rounded border-secondary" style="cursor: pointer; background: rgba(255,255,255,0.03);" 
                  onclick="window.location.href='${targetUrl}'">
-                <div class="d-flex justify-content-between">
-                    <strong class="text-primary">${h.pos_reference || h.ref}</strong>
-                    <span class="badge bg-primary">${h.status || h.state}</span>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="text-white">${h.pos_reference || h.ref || h.name}</strong>
+                    <span class="badge ${statusClass}" style="font-size: 0.7rem;">${statusLabel}</span>
                 </div>
-                <div class="small text-muted mt-1">${h.date} • ${this.formatPrice(h.amount_total || h.total)}</div>
+                <div class="small text-muted">${new Date(h.date).toLocaleDateString()} • ${this.formatPrice(h.amount_total || h.total)}</div>
+                <div class="mt-2 text-end">
+                    <span class="btn btn-sm btn-link p-0 text-primary small" style="text-decoration: none;">Track Order <i class="fa fa-angle-right"></i></span>
+                </div>
             </div>
         `}).join("");
     },
@@ -571,6 +589,8 @@
     },
 
     async switchScreen(screenName) {
+        console.log(`📌 Switching Screen to: ${screenName}`);
+        
         if (screenName === 'checkout' && !window.ram_user_id) {
             this.showToast("Please login/signup to continue.");
             setTimeout(() => {
@@ -578,15 +598,40 @@
             }, 1000);
             return;
         }
+
+        // 1. Update Sub-Navigation Tabs styling
+        // Valid tabs are 'items' (Cart) and 'history' (My Orders)
+        const tabBtn = document.querySelector(`.js_ram_switch_tab[data-tab="${screenName}"]`) || 
+                      (screenName === 'items' ? document.querySelector('.js_ram_switch_tab[data-tab="items"]') : null);
+        
+        if (tabBtn) {
+            document.querySelectorAll(".js_ram_switch_tab").forEach(b => {
+                b.style.color = "rgba(255,255,255,0.6)";
+                b.style.borderBottom = "none";
+            });
+            tabBtn.style.color = "inherit";
+            tabBtn.style.borderBottom = "2px solid var(--ram-accent-1)";
+        }
+
+        // 2. Hide all screens
+        document.querySelectorAll(".ram-cart-screen").forEach(s => s.classList.add("d-none"));
+        
+        // 3. Show target screen
+        const target = document.getElementById(`ram_cart_screen_${screenName}`);
+        if (target) {
+            target.classList.remove("d-none");
+        }
+
+        // 4. Action based on screen
+        if (screenName === 'history') {
+            await this.renderOrderHistory();
+        }
+        
         if (screenName === 'checkout') {
             await this.calculateDraftTotals();
+            this.updateUI();
         }
-        this.currentScreen = screenName;
-        document.querySelectorAll(".ram-cart-screen").forEach(s => s.classList.add("d-none"));
-        const target = document.getElementById(`ram_cart_screen_${screenName}`);
-        if (target) target.classList.remove("d-none");
     },
-
     async calculateDraftTotals() {
         try {
             // Show some loading state on the total price if needed

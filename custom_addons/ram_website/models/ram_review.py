@@ -44,10 +44,10 @@ class RamWebsiteReview(models.Model):
     def _google_places_params(self):
         icp = self.env["ir.config_parameter"].sudo()
         return {
-            "api_key": (icp.get_param("ram_webiste.google_places_api_key") or "").strip(),
-            "place_id": (icp.get_param("ram_webiste.google_place_id") or "").strip(),
-            "language": (icp.get_param("ram_webiste.google_reviews_language") or "en").strip() or "en",
-            "max_reviews": int(icp.get_param("ram_webiste.google_reviews_max") or 12),
+            "api_key": (icp.get_param("ram_website.google_places_api_key") or "").strip(),
+            "place_id": (icp.get_param("ram_website.google_place_id") or "").strip(),
+            "language": (icp.get_param("ram_website.google_reviews_language") or "en").strip() or "en",
+            "max_reviews": int(icp.get_param("ram_website.google_reviews_max") or 12),
         }
 
     @api.model
@@ -74,13 +74,13 @@ class RamWebsiteReview(models.Model):
     def cron_sync_google_reviews(self):
         params = self._google_places_params()
         if not params["api_key"] or not params["place_id"]:
-            _logger.info("ram_webiste: skipping Google Reviews sync (not configured).")
+            _logger.info("ram_website: skipping Google Reviews sync (not configured).")
             return
         try:
             self._sync_google_reviews(params)
         except Exception:
             # Cron jobs should never spam tracebacks to users; log and move on.
-            _logger.exception("ram_webiste: Google Reviews cron sync failed.")
+            _logger.exception("ram_website: Google Reviews cron sync failed.")
 
     @api.model
     def _sync_google_reviews(self, params):
