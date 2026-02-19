@@ -18,7 +18,7 @@ export class BlogPosts extends DynamicSnippet {
 
         const filterByTagIds = getParsedIds("filterByTagIds");
         const filterByBlogIds = getParsedIds("filterByBlogIds");
-        const filterByAuthorId = parseInt(this.el.dataset.filterByAuthorId);
+        const filterByAuthorIds = getParsedIds("filterByAuthorIds");
 
         if (filterByBlogIds.length) {
             searchDomain.push(["blog_id", "in", filterByBlogIds]);
@@ -26,8 +26,8 @@ export class BlogPosts extends DynamicSnippet {
         if (filterByTagIds.length) {
             searchDomain.push(["tag_ids", "in", filterByTagIds]);
         }
-        if (filterByAuthorId >= 0) {
-            searchDomain.push(["author_id", "=", filterByAuthorId]);
+        if (filterByAuthorIds.length) {
+            searchDomain.push(["author_id", "in", filterByAuthorIds]);
         }
         return searchDomain;
     }

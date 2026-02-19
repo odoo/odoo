@@ -87,16 +87,13 @@ test("dynamic Snippet Blog Filter", async () => {
     );
 
     // Check for author filter
-    await contains("[data-label=Author] button.dropdown").click();
-    await contains(".dropdown-item:contains(All Authors)").click();
-    expect(":iframe .s_blog_posts").toHaveAttribute(
-        "data-filter-by-author-id",
-        "-1",
-    );
-    await contains("[data-label=Author] button.dropdown").click();
+    expect(":iframe .s_blog_posts").not.toHaveAttribute(
+        "data-filter-by-author-ids",
+    )
+    await contains("div[data-label=Authors] .dropdown").click();
     await contains(".dropdown-item:contains(Author 1)").click();
     expect(":iframe .s_blog_posts").toHaveAttribute(
-        "data-filter-by-author-id",
-        "1",
+        "data-filter-by-author-ids",
+        '[{"id":1,"name":"Author 1"}]',
     );
 });

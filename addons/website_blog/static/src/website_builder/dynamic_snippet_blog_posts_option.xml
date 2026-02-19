@@ -24,13 +24,13 @@
                 dataAttributeAction="'filterByTagIds'"
             />
         </BuilderRow>
-        <BuilderRow label.translate="Author">
-            <BuilderSelect dataAttributeAction="'filterByAuthorId'" preview="false">
-                <BuilderSelectItem dataAttributeActionValue="'-1'">All Authors</BuilderSelectItem>
-                <t t-foreach="blogState.authors" t-as="author" t-key="author.id">
-                    <BuilderSelectItem dataAttributeActionValue="`${author.id}`" t-out="author.name"/>
-                </t>
-            </BuilderSelect>
+        <BuilderRow label.translate="Authors" preview="false">
+            <SelectMenu
+                togglerClass="'form-control'"
+                choices="blogState.authors"
+                value="blogState.value"
+                multiSelect="true"
+                onSelect.bind="onSelect"/>
         </BuilderRow>
     </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
