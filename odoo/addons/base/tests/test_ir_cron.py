@@ -13,8 +13,15 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import fields
+<<<<<<< 6b959e2eff04c74314f6d20a5e3712a24c86fb90
 from odoo.tests.common import tagged, Like, RecordCapturer, TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+||||||| 2e4a4f2d063f9b09263e6c137e1c04358020c668
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.tests.common import Like, RecordCapturer, TransactionCase
+=======
+from odoo.tests.common import RecordCapturer, TransactionCase
+>>>>>>> 17266eca93816b94a6f6ee69f0ad6b5e02cbeade
 from odoo.tools import mute_logger
 
 from odoo.addons.base.models.ir_cron import (
@@ -685,28 +692,3 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
         self.env.invalidate_all()
         self.assertFalse(self.cron.active)
-
-
-class TestIrCronUser(TransactionCaseWithUserDemo, TestIrCron):
-    def test_cron_archived_admin_user(self):
-        cron_data = self._get_cron_data(self.env)
-        cron_data["user_id"] = self.user_demo.id
-
-        user = self.env['res.users'].browse(cron_data['user_id'])
-        user.active = False
-        user.group_ids = user.group_ids + self.env.ref('base.group_system')
-        cron = self.cron.create(cron_data)
-
-        default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
-
-        cron._trigger()
-        self.env.flush_all()
-        with self.enter_registry_test_mode(), self.registry.cursor() as cr:
-            with self.assertLogs('odoo.addons.base.models.ir_cron', level="WARNING") as log_catcher:
-                self.registry['ir.cron']._process_job(
-                    cr,
-                    {**cron.read(load=None)[0], **default_progress_values},
-                )
-                self.assertEqual([Like(f"...Forbidden server action '{cron.name}' executed while the user {user.login} is archived...")], log_catcher.output)
-
-        self.assertEqual(cron.failure_count, 1, 'The cron should have failed once')
