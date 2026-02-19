@@ -3102,6 +3102,15 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(self.product_avco.total_value, 2000)
         self.assertEqual(self.product_avco.standard_price, 20)
 
+    def test_return_origin_value_zero(self):
+        self.product_avco.standard_price = 0.0
+        out_move = self._make_out_move(self.product_avco, 5, force_assign=True)
+        self.assertEqual(out_move._get_valued_qty(), 5)
+        self.assertEqual(out_move.value, 0)
+
+        out_move.quantity = 0
+        self._make_return(out_move, 5)
+
     def test_avco_report_multiple_page(self):
         # New prod to have clean avco report
         prod_avco = self.env['product.product'].create({
