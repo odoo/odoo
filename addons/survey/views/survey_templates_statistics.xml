@@ -17,14 +17,16 @@
     <template id="survey_page_statistics_header" name="Survey: result statistics header">
         <div class="o_survey_statistics_header mt32">
             <h2 t-field="survey.title"/>
-            <div class="d-flex align-items-start">
+            <div class="d-flex align-items-center">
                 <div t-if="question_and_page_data" class="o_survey_results_topbar d-print-none"><t t-call="survey.survey_results_filters"/></div>
                 <h3 t-else="">
                     Sorry, no one answered this survey yet.
                 </h3>
-                <button class="btn btn-primary d-print-none o_survey_results_print mt-1 ms-auto" aria-label="Print" title="Print">
-                    <i class="fa fa-print"/>
-                </button>
+                <div class="ms-auto d-flex gap-1 align-items-center">
+                    <button class="btn btn-light d-print-none o_survey_results_print" aria-label="Print" title="Print">
+                        <i class="fa fa-print"/>
+                    </button>
+                </div>
             </div>
         </div>
     </template>
