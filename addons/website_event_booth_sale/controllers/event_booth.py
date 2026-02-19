@@ -24,7 +24,7 @@ class WebsiteEventBoothController(WebsiteEventController):
 
         website = self.env['website'].get_current_website()
         booth_values = self._prepare_booth_registration_values(event, kwargs)
-        order_sudo = website.current_sale_order_id or website._create_cart()
+        order_sudo = website.current_session_sale_order_id or website._create_cart()
         if order_sudo._is_anonymous_cart():
             order_sudo._update_address(booth_values['partner_id'], ['partner_id'])
         order_sudo._cart_add(
@@ -44,13 +44,13 @@ class WebsiteEventBoothController(WebsiteEventController):
     def _prepare_booth_contact_form_values(self, event, booth_ids, booth_category_id):
         website = self.env['website'].get_current_website()
         values = super()._prepare_booth_contact_form_values(event, booth_ids, booth_category_id)
-        values['has_payment_step'] = website.current_sale_order_id.amount_total or \
+        values['has_payment_step'] = website.current_session_sale_order_id.amount_total or \
             values.get('booth_category', request.env['event.booth.category']).price
         return values
 
     def _prepare_booth_main_values(self, event, booth_category_id=False, booth_ids=False):
         website = self.env['website'].get_current_website()
         values = super()._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids)
-        values['has_payment_step'] = website.current_sale_order_id.amount_total or \
+        values['has_payment_step'] = website.current_session_sale_order_id.amount_total or \
             any(booth_category.price for booth_category in values.get('available_booth_category_ids', request.env['event.booth.category']))
         return values

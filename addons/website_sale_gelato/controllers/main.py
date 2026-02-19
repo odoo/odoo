@@ -16,7 +16,7 @@ class WebsiteSale(main.WebsiteSale):
         """
         res = super()._check_delivery_address(partner_sudo)
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_sale_order_id
+        order_sudo = website.current_session_sale_order_id
         if not res or not order_sudo:
             return res
 

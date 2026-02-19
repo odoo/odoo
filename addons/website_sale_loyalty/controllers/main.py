@@ -14,7 +14,7 @@ class WebsiteSale(main.WebsiteSale):
     @route()
     def pricelist(self, promo, reward_id=None, **post):
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_sale_order_id):
+        if not (order_sudo := website.current_session_sale_order_id):
             return request.redirect('/shop')
         coupon_status = order_sudo._try_apply_code(promo)
         if coupon_status.get('not_found'):
@@ -46,7 +46,7 @@ class WebsiteSale(main.WebsiteSale):
 
         request.session['pending_coupon_code'] = code
         website = self.env['website'].get_current_website()
-        if order_sudo := website.current_sale_order_id:
+        if order_sudo := website.current_session_sale_order_id:
             result = order_sudo._try_pending_coupon()
             if isinstance(result, dict) and 'error' in result:
                 url_query['coupon_error'] = result['error']
@@ -62,7 +62,7 @@ class WebsiteSale(main.WebsiteSale):
     def claim_reward(self, reward_id, code=None, **post):
         redirect = post.get('r', '/shop/cart')
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_sale_order_id):
+        if not (order_sudo := website.current_session_sale_order_id):
             return request.redirect(redirect)
 
         try:

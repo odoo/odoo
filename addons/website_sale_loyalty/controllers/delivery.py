@@ -15,7 +15,7 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
         """Override of `website.sale` to include delivery discount if any."""
         res = super().express_checkout_process_delivery_address(partial_delivery_address)
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_sale_order_id
+        order_sudo = website.current_session_sale_order_id
         if free_shipping_lines := order_sudo._get_free_shipping_lines():
             res['delivery_discount_minor_amount'] = payment_utils.to_minor_currency_units(
                 sum(free_shipping_lines.mapped('price_total')), order_sudo.currency_id

@@ -91,7 +91,7 @@ class DeliveryCarrier(models.Model):
         pickup_locations = []
         location_countries = set()
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_sale_order_id
+        order_sudo = website.current_session_sale_order_id
         for wh in self.warehouse_ids:
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.

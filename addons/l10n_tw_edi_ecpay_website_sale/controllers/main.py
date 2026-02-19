@@ -16,7 +16,7 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 class WebsiteSaleL10nTW(WebsiteSale):
     def _l10n_tw_is_extra_info_needed(self):
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_sale_order_id
+        order_sudo = website.current_session_sale_order_id
         invoicing_step = website._get_checkout_step(
             '/shop/l10n_tw_invoicing_info'
         )
@@ -73,7 +73,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
     @route('/shop/l10n_tw_invoicing_info', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
     def l10n_tw_invoicing_info_get(self, **kw):
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_sale_order_id
+        order_sudo = website.current_session_sale_order_id
         default_vals = {
             'is_donate': "on" if order_sudo.l10n_tw_edi_love_code else False,
             'love_code': order_sudo.l10n_tw_edi_love_code,
@@ -88,7 +88,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
     @route('/shop/l10n_tw_invoicing_info/submit', type='http', auth='public', methods=['POST'], website=True, sitemap=False)
     def l10n_tw_invoicing_info_post(self, **kw):
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_sale_order_id
+        order_sudo = website.current_session_sale_order_id
         errors = {}
         default_vals = {
             'love_code': kw.get('l10n_tw_edi_love_code'),
@@ -190,7 +190,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
             if address_values.get('parent_name'):  # B2B customer
                 if not address_values.get('vat'):
                     missing_fields.add('vat')
-                if not self._is_valid_tax_id(address_values.get('vat'), website.current_sale_order_id):
+                if not self._is_valid_tax_id(address_values.get('vat'), website.current_session_sale_order_id):
                     invalid_fields.add('vat')
                     error_messages.append(request.env._("Please enter a valid Tax ID"))
 
@@ -201,7 +201,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
         website = self.env['website'].get_current_website()
         if website.sudo().company_id.country_id.code == 'TW' and website.sudo().company_id._is_ecpay_enabled():
-            order_sudo = website.current_sale_order_id
+            order_sudo = website.current_session_sale_order_id
             if address_values.get('parent_name'):
                 l10n_tw_edi_is_print = True
             else:
