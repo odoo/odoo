@@ -11,10 +11,6 @@ patch(Message.prototype, {
         this.url = url;
     },
 
-    get quickActionCount() {
-        return this.props.thread?.channel?.channel_type === "livechat" ? 3 : super.quickActionCount;
-    },
-
     /**
      * @param {import("@im_livechat/core/common/chatbot_step_model").StepAnswer} answer
      */
