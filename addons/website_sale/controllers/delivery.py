@@ -19,7 +19,7 @@ class Delivery(WebsiteSale):
         :rtype: str
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_session_sale_order_id
+        order_sudo = website.current_session_sale_order_id.sudo()
         values = {
             'delivery_methods': order_sudo._get_delivery_methods(),
             'selected_dm_id': order_sudo.carrier_id.id,
@@ -44,7 +44,7 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_session_sale_order_id):
+        if not (order_sudo := website.current_session_sale_order_id.sudo()):
             return {}
 
         dm_id = int(dm_id)
@@ -101,7 +101,7 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_session_sale_order_id):
+        if not (order_sudo := website.current_session_sale_order_id.sudo()):
             raise ValidationError(_("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
@@ -134,7 +134,7 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_session_sale_order_id
+        order_sudo = website.current_session_sale_order_id.sudo()
         order_sudo._set_pickup_location(pickup_location_data)
         return self._order_summary_values(order_sudo)
 
@@ -146,7 +146,7 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_session_sale_order_id
+        order_sudo = website.current_session_sale_order_id.sudo()
         country = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(country=country, **kwargs)
 
@@ -163,7 +163,7 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_session_sale_order_id):
+        if not (order_sudo := website.current_session_sale_order_id.sudo()):
             return []
 
         self._include_country_and_state_in_address(partial_delivery_address)

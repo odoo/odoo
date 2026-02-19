@@ -13,7 +13,7 @@ class MondialRelay(http.Controller):
     @http.route(['/website_sale_mondialrelay/update_shipping'], type='jsonrpc', auth="public", website=True)
     def mondial_relay_update_shipping(self, **data):
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_session_sale_order_id
+        order_sudo = website.current_session_sale_order_id.sudo()
 
         if order_sudo._is_anonymous_cart():
             raise AccessDenied(self.env._('Customer of the order cannot be the public user at this step.'))

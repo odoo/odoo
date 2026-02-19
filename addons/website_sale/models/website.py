@@ -353,7 +353,7 @@ class Website(models.Model):
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = (
-                request and hasattr(request, 'pricelist') and website.current_session_pricelist_id.currency_id
+                request and hasattr(request, 'pricelist') and website.current_session_pricelist_id.sudo().currency_id
                 or website.company_id.sudo().currency_id
             )
 

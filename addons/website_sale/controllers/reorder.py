@@ -38,7 +38,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         Cart_controller = Cart()
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_session_sale_order_id or request.website._create_cart()
+        order_sudo = website.current_session_sale_order_id.sudo() or request.website._create_cart()
         warnings_to_aggregate = set()
         values = {
             'tracking_info': [],
