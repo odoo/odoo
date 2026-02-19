@@ -752,6 +752,42 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertGoogleEventInserted({'conferenceData': False})
 
     @patch_api
+    def test_videocall_location_on_location_unset(self):
+        """
+        This makes sure calendar_external_videocall_link_generation setting is
+        correctly handled on creating new meetings without location.
+        """
+        self.assertGoogleEventNotInserted()
+        for event_name, external_generation_setting in [
+            ("simple_event_generation_on", True),
+            ("simple_event_generation_off", False)
+        ]:
+            with self.subTest(event_name=event_name, external_generation_setting=external_generation_setting):
+                # Reset insert values manually as we are doing subtests
+                self._gsync_insert_values = []
+                self.env["ir.config_parameter"].sudo().set_bool(
+                    "calendar.calendar_external_videocall_link_generation",
+                    external_generation_setting
+                )
+                partner = self.env["res.partner"].create({"name": "Jean-Luc", "email": "jean-luc@opoo.com"})
+                event = self.env["calendar.event"].create({
+                    "name": event_name,
+                    "start": datetime(2020, 1, 15, 8, 0),
+                    "stop": datetime(2020, 1, 15, 18, 0),
+                    "partner_ids": [(4, partner.id)],
+                    "need_sync": False,
+                    "location": False,
+                })
+                event._sync_odoo2google(self.google_service)
+
+                self.assertGoogleEventInserted({"summary": event_name})
+                insert_values, _unused = self._gsync_insert_values[0]
+                if external_generation_setting:
+                    self.assertTrue(insert_values["conferenceData"]["createRequest"]["requestId"])
+                else:
+                    self.assertFalse(insert_values.get("conferenceData"))
+
+    @patch_api
     def test_event_available_privacy(self):
         """ Create an event with "Available" value for 'show_as' and assert value is properly sync in google calendar. """
         event = self.env['calendar.event'].create({

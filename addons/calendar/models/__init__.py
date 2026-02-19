@@ -13,6 +13,7 @@ from . import discuss_channel
 from . import mail_activity
 from . import mail_activity_mixin
 from . import mail_activity_type
+from . import res_config_settings
 from . import res_users
 from . import res_users_settings
 from . import utils

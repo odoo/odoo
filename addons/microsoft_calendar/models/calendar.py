@@ -532,7 +532,13 @@ class CalendarEvent(models.Model):
         if 'location' in fields_to_sync:
             values['location'] = {'displayName': self.location or ''}
 
-        if not self.location and 'videocall_location' in fields_to_sync and self._need_video_call():
+        if (
+            not self.location
+            and 'videocall_location' in fields_to_sync
+            and not self.videocall_location
+            and self._need_video_call()
+            and self.env['ir.config_parameter'].sudo().get_bool('calendar.calendar_external_videocall_link_generation')
+        ):
             values['isOnlineMeeting'] = True
             values['onlineMeetingProvider'] = 'teamsForBusiness'
         else:

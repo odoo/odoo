@@ -20,6 +20,11 @@
                                 <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
                             </div>
                         </setting>
+                        <setting string="Generate meeting link automatically"
+                            invisible="not module_microsoft_calendar and not module_google_calendar"
+                            help="Generate a video call link in external calendars upon creating a new meeting without location.">
+                            <field name="calendar_external_videocall_link_generation"/>
+                        </setting>
                     </block>
                 </app>
             </xpath>
