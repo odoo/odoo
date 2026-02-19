@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import Forbidden
+
 import odoo.tests
 from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -42,3 +44,44 @@ class TestWebsiteProfile(HttpCaseGamification):
             'email': 'mitchell.admin@example.com',
         })
         self.start_tour("/", 'website_profile_description', login="admin")
+
+    def test_save_edited_profile(self):
+        """
+        Test that the WebsiteProfile.save_edited_profile method behaves as expected:
+
+        - Admin edits another user's profile -> allowed
+        - User edits own profile -> allowed
+        - User edits another user's profile -> forbidden
+        """
+        controller = WebsiteProfile()
+
+        user_admin = self.user_admin
+        user_portal = self.env['res.users'].create({'name': 'Portal User', 'login': 'portal', 'email': 'portal@user.com'})
+        base_url = self.base_url()
+
+        # Admin edits another user's profile -> allowed
+        with MockRequest(
+            self.env(user=user_admin), url_root=base_url, path='/profile/user/save',
+        ):
+            result = controller.save_edited_profile(user_id=user_portal.id, name='Edited by admin')
+            self.assertIsNone(result)
+            user_portal.invalidate_recordset()
+            self.assertEqual(user_portal.name, 'Edited by admin')
+
+        # User edits own profile -> allowed
+        with MockRequest(
+            self.env(user=user_portal), url_root=base_url, path='/profile/user/save',
+        ):
+            result = controller.save_edited_profile(user_id=user_portal.id, name='Edited by self')
+            self.assertIsNone(result)
+            user_portal.invalidate_recordset()
+            self.assertEqual(user_portal.name, 'Edited by self')
+
+        # User edits another user's profile -> forbidden
+        with MockRequest(
+            self.env(user=user_portal), url_root=base_url, path='/profile/user/save',
+        ):
+            result = controller.save_edited_profile(user_id=user_admin.id, name='Malicious edit')
+            self.assertIsInstance(result, Forbidden)
+            user_admin.invalidate_recordset()
+            self.assertNotEqual(user_admin.name, 'Malicious edit')

@@ -145,7 +145,9 @@ class WebsiteProfile(http.Controller):
     @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
     def save_edited_profile(self, **kwargs):
         user_id = int(kwargs.get('user_id', 0))
-        user = request.env['res.users'].browse(user_id or request.env.uid)
+        user = request.env['res.users'].sudo().browse(user_id or request.env.uid)
+        if not (request.env.user._is_admin() or user.partner_id._can_be_edited_by_current_customer()):
+            return werkzeug.exceptions.Forbidden()
         values = self._profile_edition_preprocess_values(user, **kwargs)
         if not user.partner_id._can_edit_country() and values.get('country_id') != user.partner_id.country_id.id:
             raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
