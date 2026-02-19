@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_timesheet.TaskTimesheetListRenderer.RecordRow"
+       t-inherit="web.ListRenderer.RecordRow"
+       t-inherit-mode="primary">
+        <xpath expr="//td[contains(@class, 'o_list_record_remove')]/button" position="attributes">
+            <attribute name="data-tooltip">Delete</attribute>
+            <attribute name="class" add="o_task_timesheet_delete" separator=" "/>
+        </xpath>
+    </t>
+</templates>
