@@ -2393,3 +2393,35 @@ test("settings search does not highlight escaped characters when highlighting th
     await editSearch("&");
     expect(queryAllTexts(".highlighter")).toEqual(["&", "&", "&"]);
 });
+
+test("search finds settings by sub-field labels in non-selected app", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="CRM Settings">
+                        <setting help="this is foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="Other" name="other">
+                    <block title="Other Settings">
+                        <setting string="Main Feature" help="enable the main feature">
+                            <field name="bar"/>
+                            <div class="text-muted">Add QR-code link on PDF</div>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+    expect(".selected").toHaveAttribute("data-key", "crm");
+
+    await editSearch("QR-code");
+    await animationFrame();
+    expect(".o_setting_box .o_form_label").toHaveCount(1);
+    expect(queryAllTexts(".o_setting_box .o_form_label")).toEqual(["Main Feature"]);
+});

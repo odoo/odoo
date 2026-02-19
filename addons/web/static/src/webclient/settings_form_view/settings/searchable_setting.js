@@ -18,6 +18,7 @@ export class SearchableSetting extends Setting {
             search: this.env.searchState,
             showAllContainer: this.env.showAllContainer,
             highlightClass: {},
+            labelsReady: false,
         });
         this.labels = [];
         this.labels.push(this.labelString, this.props.help);
@@ -29,6 +30,7 @@ export class SearchableSetting extends Setting {
                     this.labels.push(st.getAttribute("searchableText"));
                 });
             }
+            this.state.labelsReady = true;
             if (browser.location.hash.substring(1) === this.props.id) {
                 this.state.highlightClass = { o_setting_highlight: true };
                 setTimeout(() => (this.state.highlightClass = {}), 5000);
@@ -47,6 +49,12 @@ export class SearchableSetting extends Setting {
             return true;
         }
         if (this.state.showAllContainer.showAllContainer) {
+            return true;
+        }
+        // Before onMounted has collected sub-field labels from the DOM,
+        // render the setting so the DOM exists for label collection.
+        // After onMounted sets labelsReady, re-render evaluates properly.
+        if (!this.state.labelsReady) {
             return true;
         }
         if (normalizedMatch(this.labels.join(), this.state.search.value).match) {
