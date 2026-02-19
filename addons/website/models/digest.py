@@ -55,7 +55,7 @@ class Digest(models.Model):
         all_websites = Website.browse(
             list({website.id for websites in websites_per_company.values() for website in websites}))
         value_per_website = get_value_per_website(all_websites, start, end)
-        return {company: sum(value_per_website.get(website, 0) for website in websites_per_company[company])
+        return {company: sum(value_per_website.get(website, 0) for website in websites_per_company.get(company, Website))
                 for company in companies}
 
     def _compute_kpi_website_track_count_value(self):

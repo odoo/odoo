@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.digest.tests.common import TestDigestCommon
 from odoo.tests import tagged
 
@@ -77,3 +77,14 @@ class TestWebsiteDigest(TestDigestCommon):
                     digest.with_context(start_datetime=start, end_datetime=end).kpi_website_track_count_value,
                     expected_count,
                     f'{digest.name}, period {period_idx}')
+
+    def test_send_digest_mail_without_website(self):
+        company = self.env['res.company'].create({'name': 'Test Company'})
+        self.digest_1.write({
+            'kpi_website_visitor_count': True,
+            'company_id': company.id,
+            'user_ids': [Command.link(self.user_admin.id)],
+        })
+        with self.mock_mail_gateway():
+            self.digest_1.action_send()
+        self.assertEqual(len(self._new_mails), 1, "A new Email should have been created")
