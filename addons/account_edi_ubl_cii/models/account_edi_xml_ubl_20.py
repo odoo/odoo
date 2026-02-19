@@ -994,7 +994,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
             'net_price_unit': './{*}Price/{*}PriceAmount',
             'billed_qty':  './{*}InvoicedQuantity' if invoice_line.move_id.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
-            'allowance_charge': './/{*}AllowanceCharge',
+            'allowance_charge': './{*}AllowanceCharge',
             'allowance_charge_indicator': './{*}ChargeIndicator',
             'allowance_charge_amount': './{*}Amount',
             'allowance_charge_reason': './{*}AllowanceChargeReason',
