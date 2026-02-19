@@ -14,7 +14,7 @@
             <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav'" styleAction="'--tabs-bg-color'" />
         </BuilderRow>
         <BuilderRow label.translate="Links Color" level="1">
-            <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav .nav-link'" styleAction="'--tabs-link-color'" />
+            <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav .nav-link'" styleAction="'--tabs-link-color'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
     </t>
     <BuilderRow t-if="isActiveItem('pills_opt') or isActiveItem('underline_opt')"
