@@ -82,5 +82,7 @@ class MercadoPagoOnboardingController(Controller):
             'is_published': True,
             'allow_tokenization': True,
         })
+        # Set the currency to the one compatible with the seller account.
+        provider_sudo._inverse_mercado_pago_account_country_id()
 
         return request.redirect(redirect_url)
