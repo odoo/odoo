@@ -152,6 +152,60 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.start_tour('/pos/ticket', 'invoicePoSOrderWithSelfInvocing', login=None)
         self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")
 
+    def test_qr_code_receipt_with_customer_no_user_connected(self):
+        """This test make sure that when the user is not connected (public user) but
+            the pos order has a partner, the invoice is correctly created.
+            """
+        self.product1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'is_storable': True,
+            'list_price': 10.0,
+            'taxes_id': False,
+        })
+        self.new_partner = self.env['res.partner'].create({
+            'name': 'Rangilo Gujarati',
+            'zip': '654321',
+            'vat': '24AAGCC7144L6ZE',
+            'email': 'rangilo@gujarati.com',
+            'street': 'swapnpuri',
+            'phone': '1234567890',
+            'city': 'Ahmedabad',
+            'state_id': self.env.ref('base.state_in_gj').id,
+            'country_id': self.env.ref('base.in').id,
+        })
+        self.main_pos_config.open_ui()
+        self.pos_order = self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'partner_id': self.new_partner.id,
+            'access_token': '1234567890',
+            'lines': [(0, 0, {
+                'name': "Test Product 1",
+                'product_id': self.product1.id,
+                'price_unit': 10,
+                'tax_ids': False,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_tax': 10,
+            'amount_total': 10,
+            'amount_paid': 10.0,
+            'amount_return': 10.0,
+            'pos_reference': '2500-002-00003',
+            'ticket_code': 'inPoS',
+            'date_order': datetime.today(),
+        })
+        context_make_payment = {"active_ids": [self.pos_order.id], "active_id": self.pos_order.id}
+        self.pos_make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
+            'amount': 10.0,
+            'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+        })
+        context_payment = {'active_id': self.pos_order.id}
+        self.pos_make_payment.with_context(context_payment).check()
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.start_tour('/pos/ticket', 'invoicePoSOrderWithPartner', login=None)
+        self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")
+
     def test_qr_code_receipt_user_updated(self):
         """This test make sure that when the user is already connected he correctly gets redirected to the invoice."""
         self.authenticate(None, None)
