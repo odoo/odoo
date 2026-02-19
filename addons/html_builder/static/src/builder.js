@@ -23,6 +23,8 @@ import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
+import { isBlock } from "@html_editor/utils/blocks";
+import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
 
 /**
  * @typedef {(() => void)[]} on_mobile_preview_clicked
@@ -156,6 +158,12 @@ export class Builder extends Component {
                     can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
 
                     // disable the toolbar for images and icons
+
+                    // this predicates allows inline content at the root of
+                    // elements like `a`, `span`, ... even if they have a
+                    // `block` display style (for example if they are in a flex)
+                    are_inlines_allowed_at_root_predicates: (el) =>
+                        !allowsParagraphRelatedElements(el.cloneNode()) ? true : undefined,
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
