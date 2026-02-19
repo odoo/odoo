@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
             and product_or_template.is_storable
             and not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids)
         ):
-            res['show_click_and_collect_availability'] = True
+            res['show_click_and_collect_availability'] = product_or_template.get_show_click_and_collect_availability()
             order_sudo = website.sale_get_order()
             if (
                 order_sudo

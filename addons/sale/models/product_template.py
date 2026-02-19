@@ -235,6 +235,9 @@ class ProductTemplate(models.Model):
             }
         return res
 
+    def get_show_click_and_collect_availability(self):
+        return True
+
     @api.model
     def _get_saleable_tracking_types(self):
         """Return list of salealbe service_tracking types.

@@ -98,6 +98,9 @@ class ProductProduct(models.Model):
         linked_product_ids = [product.id for [product] in lines]
         return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 
+    def get_show_click_and_collect_availability(self):
+        return self.product_tmpl_id.get_show_click_and_collect_availability()
+
 
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.attribute.custom.value"
