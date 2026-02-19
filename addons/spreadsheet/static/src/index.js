@@ -38,6 +38,7 @@ import { ListCoreGlobalFilterPlugin } from "./list/plugins/list_core_global_filt
 import { globalFieldMatchingRegistry } from "./global_filters/helpers";
 import { OdooChartFeaturePlugin } from "./chart/plugins/odoo_chart_feature_plugin";
 import { LoggingUIPlugin } from "@spreadsheet/logging/logging_ui_plugin";
+import { PivotOdooCoreViewPlugin } from "./pivot/plugins/pivot_odoo_core_view_plugin";
 
 globalFieldMatchingRegistry.add("pivot", {
     getIds: (getters) =>
@@ -128,6 +129,7 @@ coreViewsPluginRegistry.add(
 coreViewsPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
 coreViewsPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
 coreViewsPluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);
+coreViewsPluginRegistry.add("PivotOdooCoreViewPlugin", PivotOdooCoreViewPlugin);
 
 featurePluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 featurePluginRegistry.add("odooPivotUIPlugin", PivotOdooUIPlugin);

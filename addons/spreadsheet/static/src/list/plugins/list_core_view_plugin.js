@@ -3,9 +3,11 @@ import { getFirstListFunction } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
+import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
 const { astToFormula } = spreadsheet;
 const { isEvaluationError } = spreadsheet.helpers;
+const { isMarkdownLink, parseMarkdownLink } = spreadsheet.links;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
@@ -202,6 +204,19 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                     if (!unusedLists.size) {
                         this.unusedLists = [];
                         return this.unusedLists;
+                    }
+                }
+                if (isMarkdownLink(cell.content)) {
+                    const { url } = parseMarkdownLink(cell.content);
+                    if (isDataSourceUrl(url)) {
+                        const [type, id] = parseDataSourceUrl(url);
+                        if (type === "list") {
+                            unusedLists.delete(id);
+                            if (!unusedLists.size) {
+                                this.unusedLists = [];
+                                return this.unusedLists;
+                            }
+                        }
                     }
                 }
             }

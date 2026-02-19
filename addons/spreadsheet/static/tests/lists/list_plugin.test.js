@@ -1386,6 +1386,9 @@ test("isListUnused getter", async () => {
 
     model.dispatch("REQUEST_UNDO", {});
     expect(model.getters.isListUnused("1")).toBe(true);
+
+    setCellContent(model, "A2", "[ds](odoo-data-source://list/1)");
+    expect(model.getters.isListUnused("1")).toBe(false);
 });
 
 test("INSERT_ODOO_LIST_WITH_TABLE adds a table that maches the list dimension", async function () {

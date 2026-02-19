@@ -2025,6 +2025,12 @@ test("isPivotUnused getter", async () => {
 
     setCellContent(model, "A1", "=PIVOT(1)");
     expect(model.getters.isPivotUnused(pivotId)).toBe(false);
+
+    model.dispatch("REQUEST_UNDO", {});
+    expect(model.getters.isPivotUnused(pivotId)).toBe(true);
+
+    setCellContent(model, "A2", "[ds](odoo-data-source://pivot/1)");
+    expect(model.getters.isListUnused("1")).toBe(false);
 });
 
 test("Data are fetched with the correct aggregator", async () => {

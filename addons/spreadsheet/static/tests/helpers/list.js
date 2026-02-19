@@ -25,7 +25,8 @@ export function insertListInSpreadsheet(model, params, mode = "static") {
         params.model,
         params.columns,
         params.actionXmlId,
-        params.orderBy
+        params.orderBy,
+        params.name
     );
     const listId = model.getters.getNextListId();
     const [col, row] = params.position || [0, 0];

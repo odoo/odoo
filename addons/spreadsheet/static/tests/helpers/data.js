@@ -101,7 +101,7 @@ function getField(model, fieldPath) {
  *
  * @returns { {definition: Object, columns: Array<Object>}}
  */
-export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
+export function generateListDefinition(model, columns, actionXmlId, orderBy = [], name = "List") {
     const cols = [];
     for (let { name, string } of columns) {
         if (!string) {
@@ -120,7 +120,7 @@ export function generateListDefinition(model, columns, actionXmlId, orderBy = []
         context: {},
         orderBy,
         actionXmlId,
-        name: "List",
+        name,
     };
 }
 
