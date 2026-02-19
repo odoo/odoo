@@ -2,7 +2,7 @@ import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements
 import { getSnippetStructure, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
@@ -102,6 +102,7 @@ test("mobile and desktop invisible elements panel", async () => {
         "Popup3",
     ]);
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
         "Popup1",
         "Popup2",
@@ -115,8 +116,10 @@ test("mobile and desktop option container", async () => {
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(".options-container").not.toHaveCount();
 });
 
