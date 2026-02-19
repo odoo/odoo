@@ -112,7 +112,7 @@ registerMessageAction("add-bookmark", {
 registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
     icon: "fa fa-bookmark",
-    name: _t("Remove from bookmarks"),
+    name: _t("Remove from Bookmarks"),
     onSelected: ({ message, thread }) => message.removeBookmark(thread),
     sequence: 30,
 });
