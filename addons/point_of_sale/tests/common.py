@@ -735,12 +735,14 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             tax_ids = fiscal_position.map_tax(product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
             discount = kwargs.get('discount', 0.0)
             price_unit_after_discount = price_unit * (1 - discount / 100.0)
+            is_refund = price_unit * quantity < 0.0
+            refund_sign = -1 if is_refund else 1
             tax_values = (
                 tax_ids.compute_all(price_unit_after_discount, self.currency, quantity)
                 if tax_ids
                 else {
-                    'total_excluded': price_unit * quantity,
-                    'total_included': price_unit * quantity,
+                    'total_excluded': price_unit * quantity * refund_sign,
+                    'total_included': price_unit * quantity * refund_sign,
                 }
             )
             return (0, 0, {
