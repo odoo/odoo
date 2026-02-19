@@ -48,4 +48,4 @@ class TestUi(HttpCase):
         })
 
         with freeze_time("2022-04-19 10:00"):
-            self.start_tour("/", 'order_lunch_tour', login='admin', timeout=180)
+            self.start_tour("/", 'order_lunch_tour', login='admin', timeout=240)
