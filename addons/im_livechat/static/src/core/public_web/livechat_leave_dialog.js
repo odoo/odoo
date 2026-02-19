@@ -19,7 +19,7 @@ export class LivechatLeaveDialog extends Component {
 
     get title() {
         return _t(
-            "Leaving will end the live chat with %(channel_name)s. Are you sure you want to continue?",
+            "Closing this will end the live chat with %(channel_name)s. Are you sure you want to proceed?",
             { channel_name: this.props.channel.displayName }
         );
     }

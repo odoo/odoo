@@ -113,10 +113,10 @@ const discussChannelPatch = {
         ) {
             return false;
         }
-        return (
-            this.self_member_id.livechat_member_type === "visitor" ||
-            this.channel_member_ids.length <= 2
+        const hasOtherAgent = this.channel_member_ids.some(
+            (m) => m.livechat_member_type === "agent" && m.notEq(this.self_member_id)
         );
+        return this.self_member_id.livechat_member_type === "visitor" || !hasOtherAgent;
     },
     get typesAllowingCalls() {
         return [...super.typesAllowingCalls, "livechat"];
