@@ -1,5 +1,8 @@
 import { fuzzyLookup } from "@web/core/utils/search";
 import { Plugin } from "../../plugin";
+import { _t } from "@web/core/l10n/translation";
+import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {import("./powerbox_plugin").PowerboxCategory} CommandGroup
@@ -16,6 +19,21 @@ export class SearchPowerboxPlugin extends Plugin {
         on_deleted_handlers: this.update.bind(this),
         on_undone_handlers: this.update.bind(this),
         on_redone_handlers: this.update.bind(this),
+        user_commands: {
+            id: "openSearchPowerbox",
+            run: () => {
+                const selection = this.dependencies.selection.getEditableSelection();
+                this.historySavePointRestore = this.dependencies.history.makeSavePoint();
+                // Anchor element for powerbox opened via power buttons.
+                this.powerButtonAnchorEl = closestElement(selection.anchorNode);
+                this.openSearchPowerbox();
+            },
+        },
+        power_buttons: withSequence(100, {
+            commandId: "openSearchPowerbox",
+            description: _t("More options"),
+            icon: "oi-ellipsis-v",
+        }),
     };
     setup() {
         const categoryIds = new Set();
@@ -27,6 +45,11 @@ export class SearchPowerboxPlugin extends Plugin {
         }
         this.categories = this.getResource("powerbox_categories");
         this.shouldUpdate = false;
+        this.addDomListener(this.editable, "pointerdown", () => {
+            if (this.powerButtonAnchorEl) {
+                this.powerButtonAnchorEl = false;
+            }
+        });
     }
     onBeforeInput(ev) {
         if (ev.data === "/") {
@@ -36,7 +59,7 @@ export class SearchPowerboxPlugin extends Plugin {
     onInput(ev) {
         this.searchTerm = undefined;
         if (ev.data === "/") {
-            this.openPowerbox();
+            this.openSearchPowerbox();
         } else {
             this.update();
         }
@@ -51,7 +74,7 @@ export class SearchPowerboxPlugin extends Plugin {
             this.dependencies.powerbox.closePowerbox();
             return;
         }
-        const searchTerm = this.searchNode.nodeValue.slice(this.offset + 1, selection.endOffset);
+        const searchTerm = this.searchNode.nodeValue?.slice(this.offset + 1, selection.endOffset);
         if (!searchTerm) {
             this.dependencies.powerbox.updatePowerbox(this.enabledCommands, this.categories);
             return;
@@ -85,13 +108,14 @@ export class SearchPowerboxPlugin extends Plugin {
      */
     isSearching(selection) {
         return (
-            selection.endContainer === this.searchNode &&
-            this.searchNode.nodeValue &&
-            this.searchNode.nodeValue[this.offset] === "/" &&
-            selection.endOffset >= this.offset
+            this.powerButtonAnchorEl === closestElement(this.searchNode) ||
+            (selection.endContainer === this.searchNode &&
+                this.searchNode.nodeValue &&
+                this.searchNode.nodeValue[this.offset] === "/" &&
+                selection.endOffset >= this.offset)
         );
     }
-    openPowerbox() {
+    openSearchPowerbox() {
         const selection = this.dependencies.selection.getEditableSelection();
         this.offset = selection.startOffset - 1;
         this.enabledCommands = this.dependencies.powerbox.getAvailablePowerboxCommands();
@@ -104,6 +128,7 @@ export class SearchPowerboxPlugin extends Plugin {
             },
             onClose: () => {
                 this.shouldUpdate = false;
+                this.powerButtonAnchorEl = false;
             },
         });
         this.shouldUpdate = true;
