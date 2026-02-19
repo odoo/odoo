@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting id="other_devices" string="Receipt Printers" help="Connect device to your PoS">
+                        <setting id="other_devices" string="Receipt Printers" help="Connect printers to your PoS">
                             <field name="other_devices" />
                             <div class="content-group" invisible="not other_devices">
                                 <div class="row mb-2">
@@ -60,7 +60,8 @@
                                         <field name="receipt_printer_ids"
                                             class="w-100 pt-1"
                                             widget="many2many_tags"
-                                            context="{'default_use_type': 'receipt'}"/>
+                                            context="{'default_use_type': 'receipt'}"
+                                            options="{'no_quick_create': True}"/>
                                     </div>
                                     <div class="col-lg-5">
                                         <widget name="point_of_sale_test_epos"/>
@@ -69,7 +70,7 @@
                                         <label string="Default" for="default_receipt_printer_id"/>
                                     </div>
                                     <div class="col-lg-10">
-                                        <field name="default_receipt_printer_id" domain="[('id', 'in', receipt_printer_ids)]" required="other_devices"/>
+                                        <field name="default_receipt_printer_id" domain="[('id', 'in', receipt_printer_ids)]" required="other_devices" options="{'no_quick_create': True}"/>
                                     </div>
                                     <div class="col-lg-6 o_light_label">
                                         <label string="Link Cashdrawer" for="iface_cashdrawer"/>
