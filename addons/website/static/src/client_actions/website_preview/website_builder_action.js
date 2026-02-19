@@ -70,6 +70,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.iframefallback = useRef("iframefallback");
 
         this.websiteContent = useRef("iframe");
+        this.builderSidebarRef = useRef("builder_sidebar");
         this.cleanups = [];
 
         this.snippetsTemplate = "website.snippets";
@@ -525,7 +526,9 @@ export class WebsiteBuilderClientAction extends Component {
         this.initialTab = param.initialTab;
         this.target = param.target || null;
         await this.reloadIframe(this.state.isEditing, param.url);
-        // trigger an new instance of the builder menu
+        // Add a loading effect, and trigger a new instance of the builder,
+        // which will not have the reloading class
+        this.builderSidebarRef.el.firstElementChild.classList.add("o_builder_reloading");
         this.state.key++;
 
         this.notification.add(_t("Your modifications were saved to apply this option."), {
