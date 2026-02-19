@@ -911,8 +911,11 @@ class PurchaseOrder(models.Model):
             params=params
         )
         if seller:
+            price = seller.price_discounted
+            if seller.currency_id != self.currency_id:
+                price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
             product_infos.update(
-                price=seller.price_discounted,
+                price=price,
                 min_qty=seller.min_qty,
             )
         # Check if the product uses some packaging.
@@ -1043,7 +1046,10 @@ class PurchaseOrder(models.Model):
                 uom_id=pol.product_uom)
             if seller:
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = seller.price
+                price = seller.price
+                if seller.currency_id != self.currency_id:
+                    price = seller.currency_id._convert(seller.price, self.currency_id)
+                pol.price_unit = price
                 pol.discount = seller.discount
         return pol.price_unit_discounted
 
