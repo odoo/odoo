@@ -191,14 +191,16 @@ class ResCompany(models.Model):
                     continue
                 elif any(not (item.get('ElectronicId') and item.get('StatusId')) for item in response):
                     # Case 2: a list with elements that appear to not be valid document dicts
-                    error = ("Incorrect multiple document response format while querying inbox for company: %s", company.name)
+                    error = ("Incorrect multiple document response format while querying inbox for company: %(company)s: %(response)s",
+                             company.name, response)
                 else:
                     # Case 3: a list of valid document dicts
                     pass
             elif isinstance(response, dict):
                 if not (response.get('ElectronicId') and response.get('StatusId')):
                     # Case 4: a single dict that doesn't appear to be a valid document
-                    error = ("Incorrect multiple document response format while querying inbox for company: %s", company.name)
+                    error = ("Incorrect single document response format while querying inbox for company: %(company)s: %(response)s",
+                             company.name, response)
                 else:
                     # Case 5: a single valid document dict
                     response = [response]
