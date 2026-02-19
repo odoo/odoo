@@ -157,6 +157,7 @@ export class ColorPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
+        const isGradientColor = isColorGradient(color);
         let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
@@ -182,21 +183,22 @@ export class ColorPlugin extends Plugin {
             const seenBlocks = new WeakSet();
             targetedNodes = this.dependencies.selection.getTargetedNodes().flatMap((node) => {
                 let block;
-                if (mode === "color" && !isColorGradient(color)) {
+                if (mode === "color" && !isGradientColor) {
                     block =
                         closestElement(node, "LI") ||
                         closestElement(node, paragraphRelatedElementsSelector);
                 }
-                if (
-                    block &&
-                    isContentEditable(node) &&
-                    this.dependencies.selection.areNodeContentsFullySelected(block)
-                ) {
-                    if (!seenBlocks.has(block)) {
+                if (block) {
+                    if (seenBlocks.has(block)) {
+                        return [];
+                    }
+                    if (
+                        isContentEditable(node) &&
+                        this.dependencies.selection.areNodeContentsFullySelected(block)
+                    ) {
                         seenBlocks.add(block);
                         return [block];
                     }
-                    return [];
                 }
                 return !isBlock(node) &&
                     this.dependencies.selection.isNodeEditable(node) &&
@@ -259,7 +261,7 @@ export class ColorPlugin extends Plugin {
                     !(
                         font.classList.contains("text-gradient") &&
                         mode === "backgroundColor" &&
-                        isColorGradient(color)
+                        isGradientColor
                     )
                 ) {
                     font = null;
@@ -268,7 +270,7 @@ export class ColorPlugin extends Plugin {
                 if (
                     node &&
                     mode === "color" &&
-                    !isColorGradient(color) &&
+                    !isGradientColor &&
                     (node.matches?.(paragraphRelatedElementsSelector) || node.nodeName === "LI") &&
                     isBlock(node) &&
                     this.dependencies.selection.areNodeContentsFullySelected(node)
