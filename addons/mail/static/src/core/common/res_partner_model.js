@@ -79,6 +79,8 @@ export class ResPartner extends Record {
     phone;
     /** @type {luxon.DateTime} */
     offline_since = fields.Datetime();
+    /** @type {boolean|undefined} */
+    partner_share = fields.Attr();
     presenceChannel = fields.Attr(null, {
         compute() {
             const channel = `odoo-presence-res.partner_${this.id}`;
