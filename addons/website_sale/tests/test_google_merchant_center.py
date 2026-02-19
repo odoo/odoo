@@ -112,15 +112,23 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_link_redirects_to_correct_product_case_specific_pricelist(self):
         self.gmc_feed.pricelist_id = self.eur_pricelist
         self.update_items()
+        slug = self.env['ir.http']._slug
 
         for product in self.red_sofa + self.blue_sofa:
             response = self.url_open(self.items[product]['link'])
 
             self.assertEqual(200, response.status_code)
             url = urlparse(product.website_url)
+            attribute_values = (
+                product.product_template_attribute_value_ids.product_attribute_value_id
+            )
+            attribute_value_params = [
+                f'{slug(attribute_value.attribute_id)}={slug(attribute_value)}'
+                for attribute_value in attribute_values
+            ]
             self.assertURLEqual(
                 f'{url.path}'
-                 f'?attribute_values={",".join(str(i) for i in product.product_template_attribute_value_ids.product_attribute_value_id.ids)}'
+                 f'?{"&".join(attribute_value_params)}'
                  f'&pricelist={self.eur_pricelist.id}'
                  f'#{url.fragment}',
                 response.url,

@@ -40,7 +40,23 @@ class TestSitemap(HttpCase):
 
     def test_01_shop_route_sitemap(self):
         resp = self.url_open('/sitemap.xml')
-        level2_url = '/shop/category/level-0-level-1-level-2-%s' % self.cats[2].id
-        self.assertIn(level2_url, resp.text, "Category entry in sitemap should be prefixed by its parent hierarchy.")
-        level2A_url = '/shop/category/level-0-level-1-level-2a-%s' % self.cats[3].id
-        self.assertNotIn(level2A_url, resp.text, "Category entry with no active products should not be listed in sitemap.")
+        level2_url = '/shop/category/level-0-%s/level-1-%s/level-2-%s' % (
+            self.cats[0].id,
+            self.cats[1].id,
+            self.cats[2].id,
+        )
+        self.assertIn(
+            level2_url,
+            resp.text,
+            "Category entry in sitemap should be prefixed by its parent hierarchy.",
+        )
+        level2a_url = '/shop/category/level-0-%s/level-1-%s/level-2a-%s' % (
+            self.cats[0].id,
+            self.cats[1].id,
+            self.cats[3].id,
+        )
+        self.assertNotIn(
+            level2a_url,
+            resp.text,
+            "Category entry with no active products should not be listed in sitemap.",
+        )

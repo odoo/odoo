@@ -2,6 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { hasTouch, isBrowserFirefox } from '@web/core/browser/feature_detection';
 import { redirect } from '@web/core/utils/urls';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class ShopPage extends Interaction {
     static selector = '.o_wsale_products_page';
@@ -52,31 +53,21 @@ export class ShopPage extends Interaction {
         }
         const form = ev.currentTarget.closest('form');
         const filters = form.querySelectorAll('input:checked, select');
-        const attributeValues = new Map();
-        const tags = new Set();
-        for (const filter of filters) {
-            if (filter.value) {
-                if (filter.name === 'attribute_value') {
-                    // Group attribute value ids by attribute id.
-                    const [attributeId, attributeValueId] = filter.value.split('-');
-                    const valueIds = attributeValues.get(attributeId) ?? new Set();
-                    valueIds.add(attributeValueId);
-                    attributeValues.set(attributeId, valueIds);
-                } else if (filter.name === 'tags') {
-                    tags.add(filter.value);
-                }
-            }
-        }
+        const attributeValueSlugs = Array.from(filters).filter(
+            filter => filter.name === 'attribute_value'
+        ).map(filter => filter.value).filter(Boolean);
+        const tagIds = Array.from(filters).filter(
+            filter => filter.name === 'tags'
+        ).map(filter => filter.value).filter(Boolean);
+        const attributeValueParams = wSaleUtils.getAttributeValueParams(attributeValueSlugs);
         const url = new URL(form.action);
-        const searchParams = url.searchParams;
-        // Aggregate all attribute values belonging to the same attribute into a single
-        // `attribute_values` search param.
-        for (const entry of attributeValues.entries()) {
-            searchParams.append('attribute_values', `${entry[0]}-${[...entry[1]].join(',')}`);
-        }
-        // Aggregate all tags into a single `tags` search param.
-        if (tags.size) {
-            searchParams.set('tags', [...tags].join(','));
+        const searchParams = new URLSearchParams({
+            ...Object.fromEntries(wSaleUtils.clearAttributeValueParams(url.searchParams)),
+            ...Object.fromEntries(attributeValueParams),
+        });
+        // Aggregate all tags into a single `tags` search param, with duplicates removed.
+        if (tagIds.length) {
+            searchParams.set('tags', [...new Set(tagIds)].join(','));
         }
         redirect(`${url.pathname}?${searchParams.toString()}`);
     }

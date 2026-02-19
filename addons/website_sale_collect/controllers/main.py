@@ -8,9 +8,9 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleCollect(WebsiteSale):
 
-    def _prepare_product_values(self, product, category, **kwargs):
+    def _prepare_product_values(self, product, **kwargs):
         """ Override of `website_sale` to configure the Click & Collect Availability widget. """
-        res = super()._prepare_product_values(product, category, **kwargs)
+        res = super()._prepare_product_values(product, **kwargs)
         if in_store_dm_sudo := request.website.sudo().in_store_dm_id:
             order_sudo = request.cart
             selected_location_data = {}

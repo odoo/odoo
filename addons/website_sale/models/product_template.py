@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import defaultdict
 
-from werkzeug import urls
+from collections import defaultdict
+from urllib.parse import urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
@@ -246,7 +246,7 @@ class ProductTemplate(models.Model):
         super()._compute_website_url()
         for product in self:
             if product.id:
-                product.website_url = "/shop/%s" % self.env['ir.http']._slug(product)
+                product.website_url = "/shop/product/%s" % self.env['ir.http']._slug(product)
 
     @api.depends('product_variant_ids.default_code')
     def _compute_variants_default_code(self):
@@ -338,7 +338,7 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants().sorted(_sort_key_variant)
 
-    def _get_previewed_attribute_values(self, category=None, product_query_params=None):
+    def _get_previewed_attribute_values(self, product_query_params=None):
         """Compute previewed product attribute values for each product in the recordset.
 
         :return: the previewed attribute values per product
@@ -346,6 +346,7 @@ class ProductTemplate(models.Model):
         """
         res = defaultdict(dict)
         show_count = 20
+        slug = self.env['ir.http']._slug
         for template in self:
             previewed_ptal = next((
                 p for p in template.attribute_line_ids
@@ -364,12 +365,12 @@ class ProductTemplate(models.Model):
                         matching_variant = min(ptav.ptav_product_variant_ids, key=lambda p: p.id)
                         variant_query_params = {
                             **(product_query_params or {}),
-                            'attribute_values': str(ptav.product_attribute_value_id.id)
+                            slug(ptav.attribute_id): slug(ptav.product_attribute_value_id),
                         }
                         previewed_ptavs_data.append({
                             'ptav': ptav,
                             'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
-                            'variant_url': template._get_product_url(category, variant_query_params),
+                            'variant_url': template._get_product_url(variant_query_params),
                         })
 
                     res[template.id] = {
@@ -874,9 +875,9 @@ class ProductTemplate(models.Model):
         if category:
             domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
         if tags:
-            if isinstance(tags, str):
-                tags = tags.split(',')
-            tags = list(map(int, tags))  # Convert list of strings to list of integers
+            tags = {
+                tag_id for tag in tags.split(',') if (tag_id := self.env['ir.http']._unslug(tag)[1])
+            }
             domains.append(Domain.OR([
                 Domain('product_tag_ids', 'in', tags),
                 Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
@@ -1119,27 +1120,24 @@ class ProductTemplate(models.Model):
     def _allow_publish_rating_stats(self):
         return True
 
-    def _get_product_url(self, category=None, query_params=None, grouped_attributes_values=None):
+    def _get_product_url(self, query_params=None, grouped_attributes_values=None):
         self.ensure_one()
-        slug = self.env['ir.http']._slug
 
-        url = (category and f'/shop/{slug(category)}/{slug(self)}') or self.website_url
-
+        url = urlparse(self.website_url)
         query_params = query_params or {}
         if grouped_attributes_values:
-            product_grouped_values = self.attribute_line_ids.value_ids.grouped('attribute_id')
-            available_pav_ids = [
-                next(v.id for v in pavs if v in product_grouped_values[pa])
+            available_grouped_pavs = self.attribute_line_ids.value_ids.grouped('attribute_id')
+            pavs = [
+                next(pav for pav in pavs if pav in available_grouped_pavs[pa])
                 for pa, pavs in grouped_attributes_values.items()
-                if pa in product_grouped_values
+                if pa in available_grouped_pavs
             ]
-            available_pav_ids.sort()
-            query_params['attribute_values'] = ','.join(str(i) for i in available_pav_ids)
-
+            slug = self.env['ir.http']._slug
+            query_params.update({slug(pav.attribute_id): slug(pav) for pav in pavs})
         if query_params:
-            url = f'{url}?{urls.url_encode(query_params)}'
+            url = url._replace(query=urlencode(query_params, doseq=True))
 
-        return url
+        return url.geturl()
 
     def _can_be_added_to_comparison(self):
         self.ensure_one()

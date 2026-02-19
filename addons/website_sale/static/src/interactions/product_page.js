@@ -4,7 +4,6 @@ import { router } from '@web/core/browser/router';
 import { localization } from '@web/core/l10n/localization';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { url } from '@web/core/utils/urls';
 import { memoize, uniqueId } from '@web/core/utils/functions';
 import { KeepLast } from '@web/core/utils/concurrency';
 import { insertThousandsSep } from '@web/core/utils/numbers';
@@ -183,20 +182,26 @@ export class ProductPage extends Interaction {
      */
     _applySearchParams() {
         let params = new URLSearchParams(window.location.search);
-        let attributeValues = params.get('attribute_values')
-        if (!attributeValues) {
-            // TODO remove in 20 (or later): hash support of attribute values
-            params = new URLSearchParams(window.location.hash.substring(1));
-            attributeValues = params.get('attribute_values')
+        let attributeValueIds = Array.from(params.entries())
+            .filter(([attribute, _]) => !!wSaleUtils.unslug(attribute))
+            .map(([_, attributeValue]) => wSaleUtils.unslug(attributeValue));
+        if (!attributeValueIds) {
+            // TODO: remove support for `attribute_values` query param in version 20 (or later).
+            let attributeValues = params.get('attribute_values');
+            if (!attributeValues) {
+                params = new URLSearchParams(window.location.hash.substring(1));
+                attributeValues = params.get('attribute_values');
+            }
+            attributeValueIds = attributeValues?.split(',')?.map(parseInt) ?? [];
         }
-        if (attributeValues) {
-            const attributeValueIds = attributeValues.split(',');
+        attributeValueIds = attributeValueIds.filter(Boolean);
+        if (attributeValueIds.length) {
             const inputs = document.querySelectorAll(
                 'input.js_variant_change, select.js_variant_change option'
             );
             let combinationChanged = false;
             inputs.forEach(element => {
-                if (attributeValueIds.includes(element.dataset.attributeValueId)) {
+                if (attributeValueIds.includes(parseInt(element.dataset.attributeValueId))) {
                     if (element.tagName === 'INPUT' && !element.checked) {
                         element.checked = true;
                         combinationChanged = true;
@@ -221,14 +226,18 @@ export class ProductPage extends Interaction {
         const inputs = document.querySelectorAll(
             'input.js_variant_change:checked, select.js_variant_change option:checked'
         );
-        const attributeIds = Array.from(inputs).map(el => el.dataset.attributeValueId);
-        if (attributeIds.length) {
-            const params = new URLSearchParams(window.location.search);
-            params.set('attribute_values', attributeIds.join(','))
+        const attributeValueSlugs = Array.from(inputs).map(
+            input => input.dataset.slug
+        ).filter(Boolean);
+        const attributeValueParams = wSaleUtils.getAttributeValueParams(attributeValueSlugs);
+        if (attributeValueParams.size) {
+            const url = new URL(window.location);
+            const searchParams = new URLSearchParams({
+                ...Object.fromEntries(wSaleUtils.clearAttributeValueParams(url.searchParams)),
+                ...Object.fromEntries(attributeValueParams),
+            });
             // Avoid adding new entries in session history by replacing the current one
-            history.replaceState(
-                null, '', url(window.location.pathname, Object.fromEntries(params))
-            );
+            history.replaceState(null, '', `${url.pathname}?${searchParams.toString()}`);
         }
     }
 
