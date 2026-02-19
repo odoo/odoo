@@ -446,7 +446,7 @@ test("reply to message from inbox (message linked to document)", async () => {
     await contains(".o-mail-Composer");
     await contains(".o-mail-Composer-coreHeader:has(:text('on: Mitchell Admin'))");
     await insertText(".o-mail-Composer-input:focus", "Hello");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message:not(.o-selected)");
     await contains(
