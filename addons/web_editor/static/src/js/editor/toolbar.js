@@ -52,7 +52,7 @@ export class Toolbar extends Component {
         showColors: true,
         showFontSize: true,
         useFontSizeInput: false,
-        showHistory: false,
+        showHistory: uiUtils.isSmall(),
 
         showStyle: true,
         showJustify: true,
