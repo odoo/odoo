@@ -656,11 +656,11 @@ class DiscussChannel(models.Model):
         :type reason: str
         """
         self.ensure_one()
+        user, guest = self.env["res.users"]._get_current_persona()
         # sudo - rating.rating: live chat customers are allowed to update their rating
         if rating_sudo := self.sudo().rating_ids[:1]:
             rating_sudo.write({"rating": rate, "feedback": reason})
         else:
-            user, _ = self.env["res.users"]._get_current_persona()
             # sudo: rating.rating - live chat customers can create ratings
             rating_values = {
                 "rating": rate,
@@ -690,6 +690,19 @@ class DiscussChannel(models.Model):
             rating_id=rating_sudo.id,
             subtype_xmlid="mail.mt_comment",
         )
+        if rating_sudo.rated_partner_id not in self.channel_member_ids.partner_id:
+            store = Store(bus_channel=rating_sudo.rated_partner_id.sudo().user_ids)
+            store.add(user.partner_id, ["name"]).add(guest, ["name"]).add(self, [])
+            store.add(rating_sudo, ["feedback", "rating_image_url"])
+            rating_sudo.rated_partner_id.sudo().user_ids._bus_send(
+                "livechat_rating_notification", {
+                    "guest_id": guest.id,
+                    "partner_id": user.partner_id.id,
+                    "rating_id": rating_sudo.id,
+                    "channel_id": self.id,
+                    "store_data": store.get_result(),
+                },
+            )
 
     # =======================
     # Chatbot

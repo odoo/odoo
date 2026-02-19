@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.RatingNotificationMessage">
+        <t t-esc="title"/> <img class="o_livechat_emoji_rating" t-att-src="rating.rating_image_url"/><br/>
+        <t t-out="rating.markupFeedback"/><br t-if="rating.feedback.length > 0"/>
+        <a class="btn btn-link" t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}" target="_blank">
+            <i class="oi oi-arrow-right"/> View Chat
+        </a>
+    </t>
+</templates>

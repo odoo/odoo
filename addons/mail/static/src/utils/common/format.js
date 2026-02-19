@@ -368,6 +368,10 @@ export function convertBrToLineBreak(str) {
     return createDocumentFragmentFromContent(str).body.textContent;
 }
 
+export function convertLineBreakToBr(str) {
+    return htmlReplace(str, /(\r|\n)/g, () => markup`<br/>`);
+}
+
 export function cleanTerm(term) {
     return typeof term === "string" ? normalize(term) : "";
 }
