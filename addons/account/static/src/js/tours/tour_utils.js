@@ -9,9 +9,9 @@ export function showProductColumn() {
         {
             content: "Show product column",
             trigger: '.o-dropdown-item input[name="product_id"], .o-dropdown-item input[name="product_template_id"]',
-            run: function (actions) {
-                if (!this.anchor.checked) {
-                    actions.click();
+            run: function ({ anchor }) {
+                if (!anchor.checked) {
+                    anchor.click();
                 }
             },
         },
