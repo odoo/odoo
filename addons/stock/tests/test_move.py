@@ -6742,3 +6742,49 @@ class TestStockMove(TestStockCommon):
         # All the move lines are also picked
         for move_line in delivery.move_ids.move_line_ids:
             self.assertTrue(move_line.picked)
+
+    def test_delivery_slip_quantity_aggregation_with_pack_uom(self):
+        """
+        Test aggregated delivery slip quantities with respect to mixed uoms and packages.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        package1, package2 = self.env['stock.package'].create([{'name': 'Pack 1'}, {'name': 'Pack 2'}])
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 10,
+                'uom_id': pack_of_6.id,
+            })],
+        })
+        self.assertEqual(receipt.move_ids.packaging_uom_id, pack_of_6)
+        receipt.action_confirm()
+        receipt.write({
+            'move_line_ids': [
+                Command.update(receipt.move_ids.move_line_ids[0].id, {
+                    'product_id': self.product.id,
+                    'quantity': 30,
+                    'uom_id': self.uom_unit.id,
+                    'result_package_id': package1.id,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'quantity': 30,
+                    'uom_id': self.uom_unit.id,
+                    'result_package_id': package2.id,
+                })],
+        })
+        for aggregate_val in receipt.move_line_ids._get_aggregated_product_quantities().values():
+            self.assertDictEqual({
+                'qty_ordered': aggregate_val['qty_ordered'],
+                'quantity': aggregate_val['quantity'],
+                'packaging_quantity': aggregate_val['packaging_quantity'],
+                'packaging_qty_ordered': aggregate_val['packaging_qty_ordered'],
+            }, {
+                'qty_ordered': 5.0,
+                'quantity': 5.0,
+                'packaging_quantity': 5.0,
+                'packaging_qty_ordered': 5.0,
+            })
