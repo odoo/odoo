@@ -5,12 +5,12 @@
             <field name="name">account.analytic.line.list.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <list editable="top" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
+                <list editable="top" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True" multi_edit="1" js_class="timesheet_list_view">
                     <field name="readonly_timesheet" column_invisible="True"/>
                     <field name="date" readonly="readonly_timesheet"/>
                     <field name="employee_id" column_invisible="True" readonly="readonly_timesheet"/>
                     <field name="project_id" options="{'no_create_edit': True}" required="1" readonly="readonly_timesheet"
-                        context="{'search_default_my_projects': True}"/>
+                        context="{'search_default_my_projects': True, 'test':True}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours"
                         context="{'default_project_id': project_id, 'search_default_my_tasks': True, 'search_default_open_tasks': True}"
                         readonly="readonly_timesheet"/>

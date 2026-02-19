@@ -356,7 +356,6 @@ class AccountAnalyticLine(models.Model):
 
     def write(self, vals):
         values = vals
-
         task = self.env['project.task'].sudo().browse(values.get('task_id'))
         project = self.env['project.project'].sudo().browse(values.get('project_id'))
         if task and not task.project_id:
