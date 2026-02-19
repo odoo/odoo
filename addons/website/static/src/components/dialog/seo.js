@@ -1096,7 +1096,7 @@ export class OptimizeSEODialog extends Component {
         await Promise.all(rpcCalls);
 
         this.website.goToWebsite({
-            path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName),
+            path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName || this.seoNameDefault),
         });
     }
 }
