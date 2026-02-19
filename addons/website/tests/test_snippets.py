@@ -4,6 +4,7 @@ import logging
 from lxml import html
 from werkzeug.urls import url_encode
 
+from odoo import Command
 from odoo.tests import HttpCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tools import create_image_attachment
@@ -145,6 +146,22 @@ class TestSnippets(HttpCase):
 
     def test_custom_popup_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/"), "custom_popup_snippet", login="admin")
+
+    def test_delayed_translations_with_custom_snippet(self):
+        ResLang = self.env['res.lang']
+
+        # Setup second language
+        parseltongue = ResLang.create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        ResLang._activate_lang(parseltongue.code)
+        website = self.env.ref('website.default_website')
+        website.language_ids = [Command.link(parseltongue.id)]
+
+        self.start_tour(self.env["website"].get_client_action_url("/"), "delayed_translations_with_custom_snippet", login="admin")
 
     def test_snippet_popup_open_on_top(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_open_on_top', login='admin')
