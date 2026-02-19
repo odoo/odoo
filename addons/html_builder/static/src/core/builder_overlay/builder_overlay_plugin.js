@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
-import { withSequence } from "@html_editor/utils/resource";
 
 function isResizable(el) {
     const isResizableY = el.matches(sizingY.selector) && !el.matches(sizingY.exclude);
@@ -26,7 +25,6 @@ export class BuilderOverlayPlugin extends Plugin {
     resources = {
         on_step_added_handlers: this.refreshOverlays.bind(this),
         on_current_options_containers_changed_handlers: this.openBuilderOverlays.bind(this),
-        on_mobile_preview_clicked: withSequence(20, this.refreshOverlays.bind(this)),
         has_overlay_options: { hasOption: (el) => isResizable(el) },
     };
 
@@ -53,6 +51,8 @@ export class BuilderOverlayPlugin extends Plugin {
 
         // Recompute the overlay when the window is resized.
         this.addDomListener(window, "resize", this._refreshOverlays);
+        this.documentResizeObserver = new ResizeObserver(() => this._refreshOverlays());
+        this.documentResizeObserver.observe(this.document.documentElement);
 
         // On keydown, hide the overlay and then show it again when the mouse
         // moves.
@@ -97,6 +97,7 @@ export class BuilderOverlayPlugin extends Plugin {
         this._cleanups.push(() => {
             this.removeBuilderOverlays();
             this.resizeObserver.disconnect();
+            this.documentResizeObserver.disconnect();
         });
     }
 
@@ -170,6 +171,7 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     refreshOverlays() {
+        this.hoverOverlay?.refreshPosition();
         this.overlays.forEach((overlay) => {
             overlay.refreshPosition();
             overlay.refreshHandles();
