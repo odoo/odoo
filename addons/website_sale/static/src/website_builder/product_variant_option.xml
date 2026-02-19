@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductVariantOption">
+    <BuilderRow label.translate="Media">
+        <BuilderButton id="'o_wsale_add_images'" type="'success'" className="'flex-grow-1'" action="'productAddImage'">Add</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Tags">
+        <ModelMany2Many
+            baseModel="domState.model"
+            createAction="'createTag'"
+            m2oField="domState.field"
+            recordId="domState.productId"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductTagOption">
+    <BuilderRow label.translate="Color">
+        <BuilderColorPicker
+            action="'productTagColorAction'"
+            enabledTabs="['solid', 'custom']"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Image">
+        <BuilderButton
+            id="'o_wsale_replace_tag_image'"
+            className="'btn-success-color-hover'"
+            action="'productTagImageAction'"
+        >
+            Add Image
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>

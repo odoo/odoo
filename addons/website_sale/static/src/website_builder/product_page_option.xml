@@ -111,19 +111,6 @@
         <hr class="mx-2 mt-0 mb-2"/>
     </t>
 
-    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
-	    <BuilderRow label.translate="Main Image">
-	        <BuilderButton id="'o_wsale_replace_main_image'" type="'success'" className="'flex-grow-1'" preview="false"
-	            applyTo="'#product_detail_main'" action="'productReplaceMainImage'"
-	        >Replace</BuilderButton>
-	    </BuilderRow>
-	    <BuilderRow label.translate="Extra Media">
-	        <BuilderButton id="'o_wsale_add_extra_images'" type="'success'" action="'productAddExtraImage'">Add More</BuilderButton>
-	        <BuilderButton id="'o_wsale_clear_extra_images'" type="'danger'" action="'productRemoveAllExtraImages'">Remove All</BuilderButton>
-	    </BuilderRow>
-        <div class="pb-2"/> <!-- Spacer -->
-    </t>
-
     <t t-if="domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Display" applyTo="'#product_detail_main'">
 	        <BuilderSelect action="'productPageImageLayout'" id="'o_wsale_image_layout'">
@@ -394,9 +381,6 @@
     </BuilderRow>
     <BuilderRow label.translate="Tax Indication">
         <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.tax_indication'] }"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Tags">
-        <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.product_tags'] }"/>
     </BuilderRow>
     <BuilderRow label.translate="Terms and Conditions">
         <BuilderCheckbox

@@ -119,6 +119,18 @@
                         will delete and recreate existing variants and lead
                         to the loss of their possible customizations.
                     </p>
+                    <group>
+                        <group name="product_tags" string="Tags">
+                            <field
+                                name="product_tag_ids"
+                                widget="many2many_tags"
+                                context="{'product_template_id': id}"
+                                options="{'on_tag_click': 'open_form'}"
+                                nolabel="1"
+                                colspan="2"
+                            />
+                        </group>
+                    </group>
                 </page>
             </xpath>
             <xpath expr="//group[@name='group_standard_price']" position="after">
