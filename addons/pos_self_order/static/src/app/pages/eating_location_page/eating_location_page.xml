@@ -11,18 +11,18 @@
                             t-as="preset" t-key="preset.id"
                             t-on-click="() => this.selectPreset(preset)"
                             role="button"
-                            class="preset_btn fs-2 fw-medium g-col-12 g-col-sm-6 d-flex flex-row-inverse flex-sm-column align-items-center border border-light shadow-sm overflow-hidden bg-white rounded cursor-pointer rounded-4"
+                            class="preset_btn fs-2 fw-medium g-col-12 g-col-sm-6 d-flex flex-column border border-light shadow-sm overflow-hidden bg-white rounded cursor-pointer rounded-4"
                             t-att-class="{
                                 'justify-content-center': !preset.has_image,
                                 'g-col-md-6': presets.length &lt; 3,
                                 'g-col-md-4': presets.length &gt; 2,
                                 'w-50': presets.length === 1
                             }">
-                            <t t-if="preset.has_image">
-                                <div class="img_container flex-shrink-0 w-25 w-sm-100 ratio ratio-1x1">
-                                    <img class="object-fit-cover" t-attf-src="/web/image/pos.preset/#{preset.id}/image_512?unique=#{preset.write_date} "/>
-                                </div>
-                            </t>
+                            <div class="d-flex flex-column justify-content-end align-items-end" t-att-style="preset.has_image ? `background-image: url(/web/image/pos.preset/${preset.id}/image_512?unique=${preset.write_date}); background-size: cover; background-position: center; height: 512px;` : ''">
+                                <span t-if="preset.service_at === 'counter' and preset.use_timing" class="badge text-bg-light p-2 m-2 bg-opacity-75">
+                                    Average time: <t t-esc="preset.interval_time"/> minutes
+                                </span>
+                            </div>
                            <span class="px-3 py-3 fw-bold"  t-esc="preset.name"/>
                        </article>
                    </div>
