@@ -718,6 +718,26 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_single_takeaway_order_can_be_canceled", {
+    steps: () =>
+        [
+            Chrome.freezeDateTime(1749965940000), // June 15, 2025
+            Chrome.startPoS(),
+            FloorScreen.clickTable("2"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            Chrome.selectPresetDateButton("06/16/2025"),
+            Chrome.presetTimingSlotHourExists("09:00"),
+            Chrome.selectPresetTimingSlotHour({ title: "takeaway", hour: "11:00" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway", {
     steps: () =>
         [

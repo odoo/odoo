@@ -687,6 +687,11 @@ class TestFrontend(TestFrontendCommon):
             'use_guest': True,
         })
         self.start_pos_tour('test_guest_count_bank_payment')
+        self.main_pos_config.write({'default_preset_id': self.preset_eat_in.id})
+        self.start_pos_tour('test_single_takeaway_order_can_be_canceled')
+        last_order = self.main_pos_config.current_session_id.order_ids[3]
+        self.assertEqual(last_order.preset_id.id, self.preset_takeaway.id, "The last order preset should be takeaway")
+        self.assertEqual(last_order.state, 'cancel', "The last order should be canceled")
 
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({
