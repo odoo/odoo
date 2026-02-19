@@ -434,3 +434,59 @@ class TestHolidaysOvertime(TransactionCase):
             expected_overtime_data,
             "get_overtime_data_by_employee() did not return the expected values",
         )
+
+    def test_overtime_when_time_off_excludes_breaks(self):
+        """
+        Test that having an attendance during a time off with a "Employee is off" rule only gives
+        extra hours according to the working schedule and excluding breaks.
+
+        This test should fail if the break hours are counted toward the extra hours
+        """
+        ruleset_with_timing_rule = self.env["hr.attendance.overtime.ruleset"].create(
+            {
+                "name": "Ruleset schedule quantity",
+                "rule_ids": [
+                    Command.create(
+                        {
+                            "name": "Rule employee is off",
+                            "base_off": "timing",
+                            "timing_type": "leave",
+                        },
+                    ),
+                ],
+            },
+        )
+
+        self.employee.version_ids.ruleset_id = ruleset_with_timing_rule
+
+        leave_type_worked = self.env["hr.leave.type"].create(
+            {
+                "name": "Worked Leave Type",
+                "company_id": self.company.id,
+                "requires_allocation": False,
+                "overtime_deductible": False,
+                "time_type": "leave",
+            },
+        )
+
+        leave = self.env["hr.leave"].create(
+            {
+                "name": "no overtime",
+                "employee_id": self.employee.id,
+                "holiday_status_id": leave_type_worked.id,
+                "request_date_from": datetime(2022, 5, 5),
+                "request_date_to": datetime(2022, 5, 5),
+            },
+        )
+
+        leave.with_user(self.user_manager).action_approve()
+
+        attendance = self.env["hr.attendance"].create(
+            {
+                "employee_id": self.employee.id,
+                "check_in": datetime(2022, 5, 5, 8),
+                "check_out": datetime(2022, 5, 5, 17),
+            },
+        )
+
+        self.assertEqual(attendance.overtime_hours, 8, "The employee should have 8 hours of overtime")
