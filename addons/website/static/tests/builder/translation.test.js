@@ -288,15 +288,6 @@ describe("paste in translate", () => {
         pasteHtml(getEditor(), `<img src="${dummyBase64Img}"/>`);
         expect(":iframe img").toHaveCount(0);
     });
-
-    test("paste html in translate mode should add o_translate_inline on `a` element", async () => {
-        const { getEditor } = await setupSidebarBuilderForTranslation({
-            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
-        });
-        setSelection({ anchorNode: queryOne(":iframe b") });
-        pasteHtml(getEditor(), `<a href="/">link</a>`);
-        expect(":iframe b a").toHaveClass("o_translate_inline");
-    });
 });
 
 test("test that powerbox should not open in translate mode", async () => {

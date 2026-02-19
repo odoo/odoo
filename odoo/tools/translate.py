@@ -63,7 +63,7 @@ import csv # pylint: disable=deprecated-module
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
-    'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
+    'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
     'sup', 'time', 'u', 'var', 'wbr', 'text',
@@ -150,41 +150,28 @@ def translate_xml_node(node, callback, parse, serialize):
         """ Return whether ``text`` is a string with non-space characters. """
         return bool(text) and not space_pattern.fullmatch(text)
 
-    def is_force_inline(node):
-        """ Return whether ``node`` is marked as it should be translated as
-            one term.
-        """
-        return "o_translate_inline" in node.attrib.get("class", "").split()
-
-    def translatable(node, force_inline=False):
+    def translatable(node):
         """ Return whether the given node can be translated as a whole. """
-        # Some specific nodes (e.g., text highlights) have an auto-updated DOM
-        # structure that makes them impossible to translate.
-        # The introduction of a translation `<span>` in the middle of their
-        # hierarchy breaks their functionalities. We need to force them to be
-        # translated as a whole using the `o_translate_inline` class.
-        force_inline = force_inline or is_force_inline(node)
         return (
-            (force_inline or node.tag in TRANSLATED_ELEMENTS)
+            node.tag in TRANSLATED_ELEMENTS
             # Nodes with directives are not translatable. Directives usually
             # start with `t-`, but this prefix is optional for `groups` (see
             # `_compile_directive_groups` which reads `t-groups` and `groups`)
             and not any(key.startswith("t-") or key == 'groups' or key.endswith(".translate") for key in node.attrib)
-            and all(translatable(child, force_inline) for child in node)
+            and all(translatable(child) for child in node)
         )
 
-    def hastext(node, pos=0, force_inline=False):
+    def hastext(node, pos=0):
         """ Return whether the given node contains some text to translate at the
             given child node position.  The text may be before the child node,
             inside it, or after it.
         """
-        force_inline = force_inline or is_force_inline(node)
         return (
             # there is some text before node[pos]
             nonspace(node[pos-1].tail if pos else node.text)
             or (
                 pos < len(node)
-                and translatable(node[pos], force_inline)
+                and translatable(node[pos])
                 and (
                     any(  # attribute to translate
                         val and (
@@ -195,9 +182,9 @@ def translate_xml_node(node, callback, parse, serialize):
                         for key, val in node[pos].attrib.items()
                     )
                     # node[pos] contains some text to translate
-                    or hastext(node[pos], 0, force_inline)
+                    or hastext(node[pos])
                     # node[pos] has no text, but there is some text after it
-                    or hastext(node, pos + 1, force_inline)
+                    or hastext(node, pos + 1)
                 )
             )
         )
@@ -221,7 +208,7 @@ def translate_xml_node(node, callback, parse, serialize):
                 # into a <div> element
                 div = etree.Element('div')
                 div.text = (node[pos-1].tail if pos else node.text) or ''
-                while pos < len(node) and translatable(node[pos], is_force_inline(node)):
+                while pos < len(node) and translatable(node[pos]):
                     div.append(node[pos])
 
                 # translate the content of the <div> element as a whole
