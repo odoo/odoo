@@ -102,6 +102,7 @@ export class PowerButtonsPlugin extends Plugin {
             }
             btn.className = className;
             btn.title = description;
+            this.addDomListener(btn, "pointerdown", (ev) => ev.preventDefault());
             this.addDomListener(btn, "click", () => this.applyCommand(run));
             return btn;
         };
