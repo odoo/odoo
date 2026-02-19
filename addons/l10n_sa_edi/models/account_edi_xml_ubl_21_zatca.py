@@ -6,6 +6,8 @@ from odoo import models, fields
 from odoo.tools.misc import file_path
 import re
 
+from datetime import timedelta
+
 TAX_EXEMPTION_CODES = ['VATEX-SA-29', 'VATEX-SA-29-7', 'VATEX-SA-30']
 TAX_ZERO_RATE_CODES = ['VATEX-SA-32', 'VATEX-SA-33', 'VATEX-SA-34-1', 'VATEX-SA-34-2', 'VATEX-SA-34-3', 'VATEX-SA-34-4',
                        'VATEX-SA-34-5', 'VATEX-SA-35', 'VATEX-SA-36', 'VATEX-SA-EDU', 'VATEX-SA-HEA']
@@ -317,13 +319,17 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'PaymentMeansType_template': 'l10n_sa_edi.ubl_21_PaymentMeansType_zatca',
         })
 
+        now_asia_riyadh = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), fields.Datetime.now())
+        zatca_issue_date = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), invoice.l10n_sa_confirmation_datetime)
+        if zatca_issue_date.date() > now_asia_riyadh.date():
+            zatca_issue_date -= timedelta(days=1)
+
         vals['vals'].update({
             'profile_id': 'reporting:1.0',
             'document_type_code_attrs': {'name': self._l10n_sa_get_invoice_transaction_code(invoice)},
             'document_type_code': self._l10n_sa_get_invoice_type(invoice),
             'tax_currency_code': invoice.company_currency_id.name,
-            'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
-                                                            invoice.l10n_sa_confirmation_datetime),
+            'issue_date': zatca_issue_date,
             'previous_invoice_hash': self._l10n_sa_get_previous_invoice_hash(invoice),
             'billing_reference_vals': self._l10n_sa_get_billing_reference_vals(invoice),
             'tax_total_vals': self._l10n_sa_get_additional_tax_total_vals(invoice, vals),
