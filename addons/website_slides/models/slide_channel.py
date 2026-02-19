@@ -939,9 +939,10 @@ class SlideChannel(models.Model):
         return activities
 
     def _get_access_action(self, access_uid=None, force_website=False):
-        """ Instead of the classic form view, redirect to website if it is published. """
+        """ Instead of the classic form view, redirect non-internal users to website
+        if it is published. """
         self.ensure_one()
-        if force_website or self.website_published:
+        if force_website or (self.website_published and self.env.user.share):
             return {
                 "type": "ir.actions.act_url",
                 "url": self.website_url,
