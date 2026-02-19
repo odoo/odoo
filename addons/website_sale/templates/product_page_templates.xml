@@ -749,7 +749,12 @@
         <div
             t-attf-class="o_product_tags o_field_tags {{ 'd-flex flex-wrap align-items-center gap-2 mb-2 mt-1' if visible_tags else '' }}"
         >
-            <t t-foreach="visible_tags" t-as="tag">
+            <a
+                t-foreach="visible_tags"
+                t-as="tag"
+                t-att-href="is_view_active('website_sale.filter_products_tags') and keep(shop_path, tags=tag.id) or None"
+                class="text-decoration-none d-inline-block"
+            >
                 <span t-if="tag.image"
                       class="order-0"
                       t-field="tag.image"
@@ -764,7 +769,7 @@
                           t-field="tag.name"
                     />
                 </span>
-            </t>
+            </a>
         </div>
     </template>
 
