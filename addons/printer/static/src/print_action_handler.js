@@ -1,13 +1,6 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-async function print(ip, job) {
-    const printMethod = job.type === "epos"
-        ? ePosPrint
-        : zplPrint
-    return printMethod(ip, job.report);
-}
-
 /**
  * Zebra printers host a web server that accepts print jobs
  * This server has not been updated to handle CORS preflight requests,
@@ -58,19 +51,13 @@ async function ePosPrint(ip, report) {
     }
 }
 
-async function printActionHandler(action, options, env) {
-    const orm = env.services.orm;
-    if (!action.printer_ip) {
-        return false;
-    }
-    const jobs = action.jobs || await orm.call("ir.actions.report", "get_print_jobs", [
-        action.report_name,
-        action.context.active_ids,
-    ]);
-
+export async function printJobs(printer, jobs, { notification }) {
+    jobs = [...jobs]; // copy to allow using the same array for multiple printers
     // print jobs one by one and retry if the printers is waiting for the user to eject the paper
     while (jobs.length > 0) {
-        const res = await print(action.printer_ip, jobs.at(-1));
+        const job = jobs.at(-1);
+        const print = job.type === "epos" ? ePosPrint : zplPrint
+        const res = await print(printer.ip_address, atob(job.report));
 
         if (res.result) {
             jobs.pop();
@@ -82,8 +69,8 @@ async function printActionHandler(action, options, env) {
             continue;
         }
 
-        env.services.notification.add(_t(
-            "Error occurred while printing the document. Please check the printer and try again: %s",
+        notification.add(_t(
+                "Error occurred while printing the document. Please check the printer and try again: %s",
                 res.errorCode
             ), {
                 type: "danger",
@@ -91,10 +78,28 @@ async function printActionHandler(action, options, env) {
         );
         jobs.pop();
     }
+}
+
+async function printActionHandler(action, options, { services }) {
+    const printersCache = services.report_printers_cache;
+    const { report_id, printer_ids, jobs } = action.context;
+    if (!printer_ids || printer_ids.length === 0) {
+        return false;
+    }
+
+    const { selectedPrinters } = await printersCache.getSelectedPrintersForReport(report_id);
+    if (!selectedPrinters) {
+        // If the user does not select any printer, fall back to normal printing
+        return false;
+    }
+
+    for (const printer of selectedPrinters) {
+        await printJobs(printer, jobs, services);
+    }
     options.onClose?.();
     return true;
 }
 
 registry
     .category("ir.actions.report handlers")
-    .add("print_action_andler", printActionHandler);
+    .add("print_action_handler", printActionHandler);

@@ -10,7 +10,7 @@ Allows you to add delivery methods in pickings.
 
 When creating invoices from picking, the system is able to add and compute the shipping line.
 """,
-    'depends': ['sale_stock', 'delivery'],
+    'depends': ['printer', 'sale_stock', 'delivery'],
     'data': [
         'security/ir.model.access.csv',
         'report/shipping_reports.xml',
@@ -27,13 +27,9 @@ When creating invoices from picking, the system is able to add and compute the s
         'views/stock_picking_type_views.xml',
         'views/stock_rule_views.xml',
         'views/stock_move_line_views.xml',
+        'views/stock_menu_views.xml',
         'report/product_templates.xml',
     ],
-    "assets": {
-        "web.assets_backend": [
-            'stock_delivery/static/src/print_action_handler.js',
-        ],
-    },
     'demo': ['data/delivery_demo.xml'],
     'auto_install': True,
     'author': 'Odoo S.A.',

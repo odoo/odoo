@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record  id="view_printer_form" model="ir.ui.view">
+        <field name="name">printer.form</field>
+        <field name="model">printer.printer</field>
+        <field name="arch" type="xml">
+            <form string="Printer">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="ip_address"/>
+                        <field name="report_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="manage_printers_action" model="ir.actions.act_window">
+        <field name="name">Printers</field>
+        <field name="path">printers</field>
+        <field name="res_model">printer.printer</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No printer configured!
+            </p>
+            <p>Click "New" to configure a printer.</p>
+        </field>
+    </record>
+
+    <record id="printer_view_list" model="ir.ui.view">
+        <field name="name">printer.printer.view.list</field>
+        <field name="model">printer.printer</field>
+        <field name="arch" type="xml">
+            <list default_order="name" editable="bottom">
+                <field name="name"/>
+                <field name="ip_address"/>
+                <field name="report_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_reset_linked_printers" model="ir.actions.client">
+        <field name="name">reset.linked.printers</field>
+        <field name="path">reset-printers</field>
+        <field name="tag">reset_linked_printers</field>
+    </record>
+</odoo>

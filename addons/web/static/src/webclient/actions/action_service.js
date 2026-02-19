@@ -1358,7 +1358,8 @@ export function makeActionManager(env, router = _router) {
      */
     async function _executeReportAction(action, options) {
         const handlers = registry.category("ir.actions.report handlers").getAll();
-        for (const handler of handlers) {
+        // handlers array needs to be revered in order to allow handlers overrides
+        for (const handler of handlers.reverse()) {
             const result = await handler(action, options, env);
             if (result) {
                 const { onClose } = options;

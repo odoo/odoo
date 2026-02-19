@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="act_report_xml_view_stock_delivery" model="ir.ui.view">
-        <field name="name">ir.actions.report.stock_delivery</field>
-        <field name="model">ir.actions.report</field>
-        <field name="inherit_id" ref="base.act_report_xml_view"/>
-        <field name="arch" type="xml">
-            <field name="report_type" position="after">
-                <field name="printer_ip"  required="context.get('missing_printer_ip')"/>
-            </field>
-        </field>
-    </record>
-
     <!-- Window action to help assigning printers to the reports. -->
     <record id="open_shipping_labels_report" model="ir.actions.act_window">
         <field name="name">Shipping Labels Report</field>
@@ -18,7 +7,7 @@
         <field name="view_mode">form</field>
         <field name="res_id" ref="action_report_shipping_labels"/>
         <field name="target">new</field>
-        <field name="context">{'missing_printer_ip': True}</field>
+        <field name="context">{'missing_printer': True}</field>
     </record>
 
     <record id="open_export_docs_report" model="ir.actions.act_window">
@@ -27,6 +16,6 @@
         <field name="view_mode">form</field>
         <field name="res_id" ref="action_report_shipping_docs"/>
         <field name="target">new</field>
-        <field name="context">{'missing_printer_ip': True}</field>
+        <field name="context">{'missing_printer': True}</field>
     </record>
 </odoo>
