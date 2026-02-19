@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
         order_lines = self.env['sale.order.line'].search_fetch([('order_id', 'in', self.ids)])
         for order in self:
             order.website_order_line = order_lines.filtered(
-                lambda sol: sol.order_id == order and sol._show_in_cart(),
+                lambda sol: sol.order_id == order and sol._has_regular_product(),
             )
 
     @api.depends('order_line.price_total', 'order_line.price_subtotal')

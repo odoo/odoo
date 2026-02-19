@@ -36,20 +36,3 @@ class SaleStockPortal(CustomerPortal):
             ('Content-Length', len(pdf)),
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
-
-    @route(['/my/picking/return/pdf/<int:picking_id>'], type='http', auth="public", website=True)
-    def portal_my_picking_return_report(self, picking_id, access_token=None, **kw):
-        """ Print return label for customer, using either access rights or access token
-        to be sure customer has access """
-        try:
-            picking_sudo = self._stock_picking_check_access(picking_id, access_token=access_token)
-        except (exceptions.AccessError, exceptions.MissingError):
-            return NotFound()
-
-        pdf = \
-        request.env['ir.actions.report'].sudo()._render_qweb_pdf('stock.return_label_report', [picking_sudo.id])[0]
-        pdfhttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(pdf)),
-        ]
-        return request.make_response(pdf, headers=pdfhttpheaders)

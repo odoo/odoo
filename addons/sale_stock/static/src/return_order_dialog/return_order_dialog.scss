@@ -1,0 +1,16 @@
+.o_return_order_dialog{
+    @include media-breakpoint-down(sm) {
+        --ReturnOrderDialog-img-size-sm: 3.5rem;
+
+        .o_return_order_dialog_price {
+            margin-left: calc(var(--ReturnOrderDialog-img-size-sm) + #{map-get($spacers, 2)});
+        }
+    }
+    .o_return_order_dialog_img {
+        width: var(--ReturnOrderDialog-img-size-sm, 6rem);
+    }
+
+    .o_return_order_dialog_return_reason {
+        background: darken($modal-content-bg, 2%);
+    }
+}

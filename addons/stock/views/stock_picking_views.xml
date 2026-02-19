@@ -255,6 +255,10 @@
                                 decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                             <field name="date_done" string="Effective Date" invisible="state != 'done'" readonly="not is_date_editable"/>
                             <field name="origin" placeholder="e.g. PO0032" readonly="state in ['cancel', 'done']"/>
+                            <field
+                                name="return_reason_id"
+                                invisible="picking_type_code != 'incoming'"
+                            />
                             <field name="owner_id" groups="stock.group_tracking_owner"
                                    invisible="picking_type_code != 'incoming'"
                                    readonly="state in ['cancel', 'done']"/>

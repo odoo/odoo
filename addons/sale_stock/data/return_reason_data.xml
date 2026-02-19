@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- return.reason -->
+    <record id="return_reason_wrong_item" model="return.reason">
+        <field name="name">Received the wrong item</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="return_reason_damaged_product" model="return.reason">
+        <field name="name">Item arrived damaged or defective</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="return_reason_not_meeting_expectations" model="return.reason">
+        <field name="name">Product does not meet expectations</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="return_reason_incorrect_specs" model="return.reason">
+        <field name="name">Incorrect specifications or compatibility issues</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="return_reason_order_by_mistake" model="return.reason">
+        <field name="name">Ordered by mistake</field>
+        <field name="sequence">50</field>
+    </record>
+
+</odoo>

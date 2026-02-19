@@ -1,0 +1,14 @@
+<t t-name="sale_stock.ReturnLabelBody">
+    Download, print and add this label in your package and send it to this address:<br/><br/>
+
+    <div class="card border">
+        <div class="card-body">
+            <b class="d-block mb-2">
+                <t t-out="company_name"/>
+            </b>
+            <span class="text-muted">
+                <t t-out="warehouse_address.replace('\n', ' ')"/>
+            </span>
+        </div>
+    </div>
+</t>

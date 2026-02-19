@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Views -->
+    <record id="return_reason_list" model="ir.ui.view">
+        <field name="name">return.reason.list</field>
+        <field name="model">return.reason</field>
+        <field name="arch" type="xml">
+            <list editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_manage_return_reasons" model="ir.actions.act_window">
+        <field name="name">Return Reasons</field>
+        <field name="res_model">return.reason</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

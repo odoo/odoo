@@ -13,9 +13,8 @@ class SaleOrderLine(models.Model):
             return self.name
         return super()._get_line_header()
 
-    def _show_in_cart(self):
-        # Hide discount lines from website_order_line, see `order._compute_website_order_line`
-        return self.reward_id.reward_type != 'discount' and super()._show_in_cart()
+    def _has_regular_product(self):
+        return self.reward_id.reward_type != 'discount' and super()._has_regular_product()
 
     def _is_reorder_allowed(self):
         # Hide all types of rewards from reorder

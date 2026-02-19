@@ -692,6 +692,7 @@ class StockPicking(models.Model):
         "Picking Instructions",
         help="Internal instructions for the partner or its parent company as set by the user.",
         compute='_compute_picking_warning_text')
+    return_reason_id = fields.Many2one('return.reason')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',

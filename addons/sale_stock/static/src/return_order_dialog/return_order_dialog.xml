@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale_stock.ReturnOrderDialog">
+        <Dialog
+            t-if="this.state.returnableLines.length"
+            size="size"
+            title="title"
+            contentClass="'o_return_order_dialog'"
+            bodyClass="'d-flex flex-column d-sm-block'"
+        >
+            <table class="table table-sm table-borderless position-relative mb-0">
+                <tbody class="sale_tbody">
+                    <t t-foreach="this.state.returnableLines" t-as="line" t-key="line_index">
+                        <tr class="js_product">
+                            <td class="d-block d-sm-table-cell pb-1 pb-sm-3 p-0">
+                                <div class="d-flex align-items-start gap-2 gap-md-3">
+                                    <img
+                                        t-att-alt="line.name"
+                                        t-attf-src="/web/image/product.product/{{line.product_id}}/image_128"
+                                        class="o_return_order_dialog_img border rounded d-block"
+                                    />
+                                    <div>
+                                        <h6 class="o_line_clamp mb-1" t-out="line.name"/>
+                                        <div t-if="line.lot_name" class="small">
+                                            Lot/Serial Number: <strong><t t-out="line.lot_name" /></strong>
+                                        </div>
+                                        <div t-if="line.delivery_name" class="small">
+                                            Delivery: <strong><t t-out="line.delivery_name" /></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="d-flex d-sm-table-cell align-items-center justify-content-between w-sm-25 pb-3 p-0 text-sm-end">
+                                <span
+                                    t-out="formatCurrency(
+                                        line.price, line.currency
+                                    )"
+                                    class="o_return_order_dialog_price h6 d-block mb-0 mb-sm-2 text-nowrap fw-bold text-end"
+                                />
+                                <QuantityButtons
+                                    quantity="line.quantity or 0"
+                                    setQuantity="quantity => this.setQuantity(line, quantity)"
+                                    isMinusButtonDisabled="line.quantity === 0"
+                                    isPlusButtonDisabled="line.quantity == line.delivered_qty"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <div class="o_return_order_dialog_return_reason d-sm-flex align-items-center gap-3 mt-auto me-n3 mb-n3 ms-n3 px-3 py-4 border-top">
+                <h6 class="mb-sm-0 text-nowrap">Return reason</h6>
+                <select
+                        name="return_reason"
+                        class="form-select"
+                        required=""
+                        t-on-change="onReturnReasonChange"
+                    >
+                    <option value="" disabled="disabled" selected="selected">
+                        Select a reason...
+                    </option>
+                    <t t-foreach="content.reasons" t-as="reason" t-key="reason.id">
+                        <option t-att-value="reason.id" t-out="reason.name"/>
+                    </t>
+                </select>
+            </div>
+            <t t-set-slot="footer">
+                <t t-set="noProductAndNoReason" t-value="this.state.returnableLines.every(
+                        line => (line.quantity || 0) === 0
+                    ) || !this.state.returnReason" />
+                <button
+                    name="continue"
+                    class="btn btn-primary"
+                    t-on-click="onContinue"
+                    t-att-disabled="noProductAndNoReason"
+                >
+                    Continue
+                </button>
+                <small t-if="noProductAndNoReason" class="ms-2 text-muted">Select at least one product and a return reason.</small>
+            </t>
+        </Dialog>
+        <WarningDialog
+            t-else=""
+            message.translate="No products are available to return."
+            close="props.close"
+        />
+    </t>
+</templates>

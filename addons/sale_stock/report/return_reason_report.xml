@@ -1,0 +1,55 @@
+<odoo>
+
+    <record id="stock_picking_return_report_graph" model="ir.ui.view">
+         <field name="name">stock.picking.return.report.graph</field>
+         <field name="model">stock.picking</field>
+         <field name="arch" type="xml">
+             <graph sample="1">
+                 <field name="scheduled_date" interval="week" type="col"/>
+                 <field name="return_reason_id" type="row"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="stock_picking_return_report_pivot" model="ir.ui.view">
+         <field name="name">stock.picking.return.report.pivot</field>
+         <field name="model">stock.picking</field>
+         <field name="arch" type="xml">
+             <pivot sample="1">
+                 <field name="scheduled_date" interval="week" type="col"/>
+                 <field name="return_reason_id" type="row"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="action_stock_picking_return_report" model="ir.actions.act_window">
+        <field name="name">Returns</field>
+        <field name="res_model">stock.picking</field>
+        <field name="domain">[('picking_type_id.code', '=', 'incoming')]</field>
+        <field name="context">{'search_default_group_by_return_reason': 1}</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+    </record>
+
+    <record id="action_stock_picking_return_report_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="stock_picking_return_report_graph"/>
+        <field name="act_window_id" ref="action_stock_picking_return_report"/>
+    </record>
+
+    <record id="action_stock_picking_return_report_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="stock_picking_return_report_pivot"/>
+        <field name="act_window_id" ref="action_stock_picking_return_report"/>
+    </record>
+
+    <menuitem
+        id="menu_stock_return"
+        name="Returns"
+        action="sale_stock.action_stock_picking_return_report"
+        parent="stock.menu_warehouse_report"
+        sequence="350"
+    />
+
+</odoo>

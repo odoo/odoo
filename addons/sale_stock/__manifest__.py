@@ -33,8 +33,11 @@ Preferences
         'views/stock_reference_views.xml',
 
         'report/stock_report_deliveryslip.xml',
+        'report/return_reason_report.xml',
+        'report/return_slip_report.xml',
 
         'data/mail_templates.xml',
+        'data/return_reason_data.xml',
         'data/sale_stock_data.xml',
 
         'wizard/stock_rules_report_views.xml',
@@ -44,6 +47,13 @@ Preferences
     'assets': {
         'web.assets_backend': [
             'sale_stock/static/src/**/*',
+            ('remove', 'sale_stock/static/src/iteractions/*'),
+            ('remove', 'sale_stock/static/src/return_order_dialog/*'),
+        ],
+        'web.assets_frontend': [
+            'sale/static/src/js/quantity_buttons/*',
+            'sale_stock/static/src/iteractions/*',
+            'sale_stock/static/src/return_order_dialog/*',
         ],
         'web.assets_tests': [
             'sale_stock/static/tests/tours/*.js',

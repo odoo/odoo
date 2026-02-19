@@ -3,6 +3,8 @@
 import json
 import logging
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from odoo.fields import Command
 from odoo.exceptions import UserError
@@ -260,6 +262,23 @@ class SaleOrder(models.Model):
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super()._action_cancel()
+
+    def _display_return_button(self):
+        """Return whether we should display return button on sale order portal or not."""
+        self.ensure_one()
+        today = fields.Date.today()
+        return (
+            self.company_id.allow_spontaneous_returns
+            and self.state == 'sale'
+            and self.effective_date
+            and self.effective_date.date() >= (
+                today - relativedelta(days=self.company_id.return_validity_days)
+            )
+            and any(
+                line.product_id.type == 'consu'
+                for line in self.order_line
+            )
+        )
 
     def _get_action_view_picking(self, pickings):
         '''

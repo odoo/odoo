@@ -438,5 +438,14 @@ class SaleOrderLine(models.Model):
         )
         return res
 
+    def _is_returnable(self):
+        """Return whether this line contain returnable product and have related delivery or not."""
+        self.ensure_one()
+        return (
+            self.product_type == 'consu'
+            and self._has_regular_product()
+            and self.has_valued_move_ids()
+        )
+
     def has_valued_move_ids(self):
         return any(move.state not in ('cancel', 'draft') for move in self.move_ids)
