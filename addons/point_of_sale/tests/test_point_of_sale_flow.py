@@ -1150,7 +1150,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.PosOrder.sync_from_ui([product5_order])
 
         # delete tax
-        dummy_50_perc_tax.unlink()
+        dummy_50_perc_tax.active = False
 
         total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
         pos_session.post_closing_cash_details(total_cash_payment)

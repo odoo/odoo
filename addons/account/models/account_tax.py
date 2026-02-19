@@ -5125,6 +5125,11 @@ class AccountTax(models.Model):
             return ''
         return html2plaintext(self.description)
 
+    @api.ondelete(at_uninstall=False)
+    def unlink_except_tax_used(self):
+        if any(self.mapped('is_used')):
+            raise ValidationError(self.env._("You cannot delete taxes that are currently in use."))
+
 
 class AccountTaxRepartitionLine(models.Model):
     _name = 'account.tax.repartition.line'
