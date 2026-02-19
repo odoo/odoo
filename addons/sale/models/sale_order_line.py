@@ -468,7 +468,7 @@ class SaleOrderLine(models.Model):
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - multi_ptavs - custom_ptavs):
-            name += "\n" + ptav.display_name
+            name += f"\n{ptav.attribute_id.name}: {ptav.name}"
 
         # display the selected values per attribute on a single for a multi checkbox
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
