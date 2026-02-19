@@ -10,7 +10,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { ancestors, closestElement, descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
-import { leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
+import { leftPos, rightPos, nodeSize, DIRECTIONS } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
@@ -95,6 +95,7 @@ export class TablePlugin extends Plugin {
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
         normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
+        custom_selection_range_providers: this.getTableSelectionRange.bind(this),
     };
 
     setup() {
@@ -476,6 +477,27 @@ export class TablePlugin extends Plugin {
         }
 
         return false;
+    }
+
+    getTableSelectionRange() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (closestElement(selection.commonAncestorContainer, "table.o_selected_table")) {
+            let [startTd, endTd] = [
+                closestElement(selection.anchorNode, "td"),
+                closestElement(selection.focusNode, "td"),
+            ];
+            if (selection.direction === DIRECTIONS.LEFT) {
+                [startTd, endTd] = [endTd, startTd];
+            }
+            const startTdRect = startTd.getBoundingClientRect();
+            const endTdRect = endTd.getBoundingClientRect();
+            const { left, top } = startTdRect;
+            const { bottom, right } = endTdRect;
+            const range = {
+                getBoundingClientRect: () => new DOMRect(left, top, right - left, bottom - top),
+            };
+            return range;
+        }
     }
 
     /**

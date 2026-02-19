@@ -29,6 +29,7 @@ export class EditorOverlay extends Component {
         history: Object,
         close: Function,
         isOverlayOpen: Function,
+        getCustomSelectionRange: { type: Function, optional: true },
 
         // Props from createOverlay
         positionOptions: { type: Object, optional: true },
@@ -114,7 +115,7 @@ export class EditorOverlay extends Component {
         const inEditable = this.props.editable.contains(selection.anchorNode);
         let range;
         if (inEditable) {
-            range = selection.getRangeAt(0);
+            range = this.props.getCustomSelectionRange?.() || selection.getRangeAt(0);
             this.lastSelection = { range };
         } else {
             if (!this.lastSelection) {
