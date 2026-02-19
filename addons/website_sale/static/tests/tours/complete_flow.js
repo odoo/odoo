@@ -5,7 +5,6 @@ import { post } from "@web/core/network/http_service";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
-    url: '/shop?search=Storage Box Test',
     steps: () => [
         // Testing b2c with Tax-Excluded Prices
         {
@@ -315,7 +314,6 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
 });
 
 registry.category("web_tour.tours").add('website_sale.complete_flow_2', {
-    url: '/shop/cart',
     steps: () => [
         {
             trigger: '.o_wizard:contains("Extra Info")',

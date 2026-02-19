@@ -4,7 +4,6 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale.product_comparison', {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: "/shop",
     steps: () => [
         // test from shop page
         {
