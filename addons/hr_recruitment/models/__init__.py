@@ -8,6 +8,7 @@ from . import hr_recruitment_degree
 from . import hr_recruitment_source
 from . import hr_recruitment_stage
 from . import hr_employee
+from . import hr_employee_public
 from . import hr_job
 from . import hr_talent_pool
 from . import res_config_settings
@@ -23,3 +24,4 @@ from . import ir_ui_menu
 from . import mail_activity_plan
 from . import hr_job_platform
 from . import hr_job_tag
+from . import hr_version
