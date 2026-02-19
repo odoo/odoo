@@ -1,4 +1,3 @@
-import { isVisible } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
@@ -73,7 +72,10 @@ export class DropZonePlugin extends Plugin {
      */
     getDropRootElement() {
         const openModalEl = this.editable.querySelector(".modal.show");
-        if (openModalEl && isVisible(openModalEl)) {
+        if (
+            openModalEl &&
+            !this.getResource("hidden_element_predicates").some((p) => p(openModalEl))
+        ) {
             return openModalEl;
         }
         const openDropdownEl = this.editable.querySelector(
@@ -244,7 +246,7 @@ export class DropZonePlugin extends Plugin {
             return false;
         }
         // Drop only in visible elements.
-        if (!isVisible(el)) {
+        if (this.getResource("hidden_element_predicates").some((p) => p(el))) {
             return false;
         }
         // Drop only in open dropdown and offcanvas elements.
@@ -471,7 +473,9 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
+        const isIgnored = (el) =>
+            el.matches(".o_we_no_overlay") ||
+            this.getResource("hidden_element_predicates").some((p) => p(el));
         let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));

@@ -4,6 +4,8 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
+    styleConditionalInvisible,
+    styleDeviceInvisible,
 } from "@website/../tests/builder/website_helpers";
 import {
     dummyBase64Img,
@@ -250,5 +252,31 @@ test("Dragging an inner content from the page should not make grid dropzones app
     expect(".o_website_preview").toHaveClass("o_is_mobile");
     const { cancel } = await contains(".o_overlay_options .o_move_handle").drag();
     expect(":iframe .oe_grid_zone").toHaveCount(0);
+    await cancel();
+});
+
+test("only one dropzone should appear on a group of invisible elements", async () => {
+    await setupWebsiteBuilder(
+        `
+        <section class="s_cover" data-snippet="s_cover" data-name="Cover">
+            <span>content</span>
+        </section>
+        <section class="s_cover o_conditional_hidden" data-snippet="s_cover" data-name="Cover" data-visibility="conditional">
+            <span>content</span>
+        </section>
+        <section class="s_cover d-lg-none o_snippet_desktop_invisible" data-snippet="s_cover" data-name="Cover">
+            <span>content</span>
+        </section>
+        <div class="s_popup" data-vcss="001" data-snippet="s_popup" data-name="Popup" id="sPopup1761558358718">
+            <div class="modal fade s_popup_middle modal_shown" style="background-color: var(--black-50) !important; display: none;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-label="Popup" aria-hidden="true">
+            <span>content</span>
+            </div>
+        </div>
+        `,
+        { styleContent: styleDeviceInvisible + styleConditionalInvisible }
+    );
+    const { cancel } = await contains(".o_snippet_thumbnail[data-snippet=s_snippet_group]").drag();
+    // expect only one before and one after the visible section
+    expect(":iframe .oe_drop_zone").toHaveCount(2);
     await cancel();
 });

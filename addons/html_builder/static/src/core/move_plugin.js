@@ -26,9 +26,13 @@ import { localization } from "@web/core/l10n/localization";
  *      dragState: DragState,
  * }) => void)[]} on_element_arrow_moved_handlers
  */
+/**
+ * @typedef { Object } MoveShared
+ * @property { MovePlugin['getNearestSibling'] } getNearestSibling
+ */
 export class MovePlugin extends Plugin {
     static id = "move";
-    static dependencies = ["visibility"];
+    static shared = ["getNearestSibling"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         has_overlay_options: { hasOption: (el) => this.isMovable(el) },
@@ -145,14 +149,8 @@ export class MovePlugin extends Plugin {
                 (this.overlayTarget.matches(this.verticalMove.selector) &&
                     !this.overlayTarget.matches(this.verticalMove.exclude)) ||
                 this.isFullWidthColumn(this.overlayTarget);
-            const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
-                this.overlayTarget,
-                "prev"
-            );
-            const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(
-                this.overlayTarget,
-                "next"
-            );
+            const previousSiblingEl = this.getNearestSibling(this.overlayTarget, "prev");
+            const nextSiblingEl = this.getNearestSibling(this.overlayTarget, "next");
 
             if (previousSiblingEl) {
                 const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
@@ -273,10 +271,7 @@ export class MovePlugin extends Plugin {
             hasMobileOrder = false;
         }
 
-        const siblingEl = this.dependencies.visibility.getVisibleSibling(
-            this.overlayTarget,
-            direction
-        );
+        const siblingEl = this.getNearestSibling(this.overlayTarget, direction);
         if (hasMobileOrder) {
             // Swap the mobile orders.
             const currentOrder = this.overlayTarget.style.order;
@@ -306,5 +301,33 @@ export class MovePlugin extends Plugin {
                 duration: 500,
             });
         }
+    }
+
+    /**
+     * @param {HTMLElement} target
+     * @param {"prev"|"next"} direction
+     * @returns {HTMLElement?}
+     */
+    getNearestSibling(target, direction) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
+        const siblingEls = [...target.parentNode.children];
+        const visibleSiblingEls = siblingEls.filter(
+            (el) =>
+                !el.classList.contains("o_we_no_overlay") &&
+                !this.getResource("hidden_element_predicates").some((p) => p(el)) &&
+                !el.closest(systemNodeSelectors)
+        );
+        const targetMobileOrder = target.style.order;
+        // On mobile, if the target has a mobile order (which is independent
+        // from desktop), consider these orders instead of the DOM order.
+        if (targetMobileOrder && this.config.isMobileView(target)) {
+            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
+        }
+        const targetIndex = visibleSiblingEls.indexOf(target);
+        const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
+        if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
+            return false;
+        }
+        return visibleSiblingEls[siblingIndex];
     }
 }

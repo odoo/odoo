@@ -32,6 +32,9 @@ declare module "plugins" {
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
     import { mark_translatable_nodes } from "@website/builder/plugins/translation/translation_plugin";
+    import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
+    import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
+    import { invisible_items, VisibilityShared } from "@website/builder/plugins/visibility_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
@@ -59,6 +62,7 @@ declare module "plugins" {
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
         translateWebpageOption: TranslateWebpageOptionShared;
+        visibility: VisibilityShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;
@@ -93,6 +97,7 @@ declare module "plugins" {
         footer_templates_providers: footer_templates_providers;
 
         // Data
+        invisible_items: invisible_items;
         searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
         theme_options: theme_options;

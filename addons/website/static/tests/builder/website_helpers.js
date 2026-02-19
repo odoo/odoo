@@ -58,7 +58,25 @@ class IrUiView extends models.Model {
 export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
-    '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
+    '<div class="s_invisible_el" data-name="Invisible Element" style="display: none">Invisible</div>';
+export class TestInvisibleElementPlugin extends Plugin {
+    static id = "testInvisibleElement";
+    resources = {
+        invisible_items: {
+            selector: ".s_invisible_el",
+            toggle: (el, show) => (el.style.display = show ? null : "none"),
+        },
+    };
+}
+export const styleConditionalInvisible = `.o_conditional_hidden { display: none !important; }`;
+export const styleDeviceInvisible = `
+    .d-none { display: none !important; }
+    @media (min-width: 992px) {
+        .d-lg-none { display: none !important; }
+        .d-lg-block { display: block !important; }
+    }
+    .o_snippet_override_invisible { display: block !important; }
+`;
 
 export function defineWebsiteModels() {
     describe.current.tags("desktop");

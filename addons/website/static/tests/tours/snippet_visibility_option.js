@@ -45,7 +45,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the popup snippet in the list of invisible elements.",
-            trigger: ".o_we_invisible_root_parent",
+            trigger: ".o_we_invisible_root_parent i.fa-eye-slash",
             run: "click",
         },
         {
@@ -115,7 +115,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that only the popup entry is displayed and that it is invisible.",
-            trigger: ".o_we_invisible_root_parent",
+            trigger: ".o_we_invisible_root_parent i.fa-eye-slash",
             run: () => {
                 const isSubentryDisplayed = document.querySelector("li .o_we_invisible_entry");
                 const isPopupInvisible = document

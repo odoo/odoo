@@ -6,7 +6,6 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
-    onWillUpdateProps,
     status,
     useRef,
     useState,
@@ -17,19 +16,18 @@ import { _t } from "@web/core/l10n/translation";
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
-import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
-import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
-import { isVisible } from "@html_builder/utils/utils";
 
 /**
  * @typedef {(() => void)[]} on_mobile_preview_clicked
  * @typedef {(() => void)[]} trigger_dom_updated
  * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
+ * @typedef {(() => void)[]} editor_enabled_handlers
+ * @typedef {((el: HTMLElement) => boolean)[]} hidden_element_predicates
  */
 
 export class Builder extends Component {
@@ -72,10 +70,6 @@ export class Builder extends Component {
             activeTab: this.props.onlyCustomizeTab ? "customize" : this.props.initialTab,
             currentOptionsContainers: undefined,
         });
-        this.invisibleElementsPanelState = useState({
-            invisibleEls: [],
-            invisibleSelector: this.getInvisibleSelector(),
-        });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
@@ -112,7 +106,6 @@ export class Builder extends Component {
                     if (!isPreviewing) {
                         this.state.canUndo = this.editor.shared.history.canUndo();
                         this.state.canRedo = this.editor.shared.history.canRedo();
-                        this.updateInvisibleEls();
                         this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
                         this.triggerDomUpdated();
                         this.props.config.onChange?.();
@@ -133,9 +126,9 @@ export class Builder extends Component {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
                     },
-                    on_mobile_preview_clicked: withSequence(20, () => {
+                    device_view_switched_handlers: () => {
                         this.triggerDomUpdated();
-                    }),
+                    },
                     before_save_handlers: () => {
                         const snippetMenuEl = this.builder_sidebarRef.el;
                         const saveButton = snippetMenuEl.querySelector("[data-action='save']");
@@ -170,10 +163,6 @@ export class Builder extends Component {
                             this.setTab("blocks");
                         }
                     },
-                    lower_panel_entries: withSequence(20, {
-                        Component: InvisibleElementsPanel,
-                        props: this.invisibleElementsPanelState,
-                    }),
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
                 },
@@ -188,7 +177,6 @@ export class Builder extends Component {
                         wrapWithSaveSnippetHandlers
                     ),
                 snippetModel: this.snippetModel,
-                updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 hideStylingInLinkPopover: true,
                 allowTargetBlank: true,
                 dropImageAsAttachment: true,
@@ -243,21 +231,13 @@ export class Builder extends Component {
 
         onMounted(() => {
             this.editor.document.body.classList.add("editor_enable");
+            this.editor.dispatchTo("editor_enabled_handlers");
             setBuilderCSSVariables(getHtmlStyle(this.editor.document));
             // TODO: onload editor
-            this.updateInvisibleEls();
             this.editableEl.addEventListener("dragstart", this.onDragStart);
         });
         onWillUnmount(() => {
             this.editableEl.removeEventListener("dragstart", this.onDragStart);
-        });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.isMobile !== this.props.isMobile) {
-                this.updateInvisibleEls(nextProps.isMobile);
-                this.invisibleElementsPanelState.invisibleSelector = this.getInvisibleSelector(
-                    nextProps.isMobile
-                );
-            }
         });
     }
     async triggerDomUpdated() {
@@ -269,12 +249,6 @@ export class Builder extends Component {
         await Promise.all(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
-    }
-
-    getInvisibleSelector(isMobile = this.props.isMobile) {
-        return `.o_snippet_invisible, ${
-            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
     }
 
     /**
@@ -297,7 +271,11 @@ export class Builder extends Component {
             this.activeTargetEl = this.activeTargetEl || this.getActiveTarget();
             this.editor.shared.builderOptions.deactivateContainers();
         } else if (this.activeTargetEl) {
-            if (isVisible(this.activeTargetEl)) {
+            if (
+                !this.editor
+                    .getResource("hidden_element_predicates")
+                    .some((p) => p(this.activeTargetEl))
+            ) {
                 // Reactivate the previously active element.
                 this.editor.shared.builderOptions.updateContainers(this.activeTargetEl);
             }
@@ -319,17 +297,11 @@ export class Builder extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
-        this.editor.resources["on_mobile_preview_clicked"].forEach((handler) => handler());
-    }
-
-    updateInvisibleEls(isMobile = this.props.isMobile) {
-        this.invisibleElementsPanelState.invisibleEls = [
-            ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
-        ];
+        this.triggerDomUpdated();
     }
 
     lowerPanelEntries() {
-        return this.editor.resources["lower_panel_entries"] ?? [];
+        return this.editor.getResource("lower_panel_entries");
     }
 
     editColorCombination(presetId) {

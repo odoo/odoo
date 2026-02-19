@@ -40,7 +40,7 @@ export function isRemovable(el) {
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
-    static dependencies = ["builderOptions", "visibility"];
+    static dependencies = ["builderOptions", "move"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         get_overlay_buttons: withSequence(3, {
@@ -141,11 +141,8 @@ export class RemovePlugin extends Plugin {
 
         // Get the parent and the previous and next visible siblings.
         let parentEl = toRemoveEl.parentElement;
-        const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
-            toRemoveEl,
-            "prev"
-        );
-        const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(toRemoveEl, "next");
+        const previousSiblingEl = this.dependencies.move.getNearestSibling(toRemoveEl, "prev");
+        const nextSiblingEl = this.dependencies.move.getNearestSibling(toRemoveEl, "next");
         if (parentEl.matches(".o_savable:not(body)")) {
             // If we target the savable, we want to reset the selection to the
             // body. If the savable has options, we do not want to show them.
