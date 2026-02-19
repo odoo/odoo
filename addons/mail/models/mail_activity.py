@@ -377,12 +377,29 @@ class MailActivity(models.Model):
         ):
             kwargs['active_test'] = False
 
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
         # Rules do not apply to administrator or when we search only activities assigned to the current user
         domain = Domain(domain).optimize(self)
         if self.env.su or bypass_access or domain.is_false() or tuple(condition_values(self, 'user_id', domain) or ()) == (self.env.uid,):
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
         if self.env.context.get('_read_groupby'):
             raise ValueError("Cannot group by mail.activity")
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+        allowed_ids = defaultdict(set)
+        for res_model, res_ids in model_ids.items():
+            records = self.env[res_model].browse(res_ids).exists()
+            # fall back on related document access right checks. Use the same as defined for mail.thread
+            # if available; otherwise fall back on read
+            operation = getattr(records, '_mail_post_access', 'read')
+            allowed_ids[res_model] = set(records._filtered_access(operation)._ids)
+=======
+        allowed_ids = defaultdict(set)
+        for res_model, res_ids in model_ids.items():
+            allowed = self.env['mail.message']._filter_records_for_message_operation(
+                res_model, res_ids, 'read',
+            )
+            allowed_ids[res_model] = set(allowed._ids)
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
 
         # search by ids
         if (ids := condition_values(self, 'id', domain)) is not None:
