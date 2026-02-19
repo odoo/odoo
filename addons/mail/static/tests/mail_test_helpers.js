@@ -1,5 +1,13 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
-import { after, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
+import {
+    after,
+    before,
+    expect,
+    getFixture,
+    mockPermission,
+    registerDebugInfo,
+    test,
+} from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import {
@@ -160,11 +168,20 @@ export function onRpcAfter(route, callback) {
     const handler = registry.category("mail.mock_rpc").get(route);
     patchWithCleanup(handler, { after: callback });
 }
+/** @type {Map<string, string>} */
+const globalArchs = new Map();
 
-let archs = {};
+/**
+ * @param {Record<string, string>} newArchs
+ */
 export function registerArchs(newArchs) {
-    archs = newArchs;
-    after(() => (archs = {}));
+    if (!globalArchs.size) {
+        after(() => globalArchs.clear());
+    }
+    globalArchs.clear();
+    for (const [key, value] of Object.entries(newArchs)) {
+        globalArchs.set(key, value);
+    }
 }
 
 export function onlineTest(...args) {
@@ -224,15 +241,16 @@ export async function openView({ context, res_model, res_id, views, domain, ...p
         type,
         resModel: res_model,
         resId: res_id,
-        arch: params?.arch || archs[viewId || res_model + `,false,` + type] || undefined,
+        arch: params?.arch || globalArchs.get(viewId || res_model + `,false,` + type) || undefined,
         viewId: params?.arch || viewId,
         ...params,
     });
     await getService("action").doAction(action, { props: options });
 }
 
-let tabs = [];
-after(() => (tabs = []));
+/** @type {Set<HTMLElement>} */
+const globalTabs = new Set();
+
 /**
  * Add an item to the "Switch Tab" dropdown. If it doesn't exist, create the
  * dropdown and add the item afterwards.
@@ -242,13 +260,16 @@ after(() => (tabs = []));
  * item.
  */
 async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
-    tabs.push(tabTarget);
+    if (!globalTabs.size) {
+        after(() => globalTabs.clear());
+    }
+    globalTabs.add(tabTarget);
     const zIndexMainTab = 100000;
     let dropdownDiv = rootTarget.querySelector(".o-mail-multi-tab-dropdown");
     const onClickDropdownItem = (e) => {
         const dropdownToggle = dropdownDiv.querySelector(".dropdown-toggle");
         dropdownToggle.innerText = `Switch Tab (${e.target.innerText})`;
-        tabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
+        globalTabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
         if (e.target.innerText !== "Hoot") {
             tabTarget.style.zIndex = zIndexMainTab;
         }
@@ -264,7 +285,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
         dropdownDiv.classList.add("o-mail-multi-tab-dropdown");
         dropdownDiv.innerHTML = `
             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Switch Tab (${tabs.length})
+                Switch Tab (${globalTabs.size})
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item">Hoot</a></li>
@@ -273,7 +294,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
         dropdownDiv.querySelector("a").onclick = onClickDropdownItem;
         rootTarget.appendChild(dropdownDiv);
     }
-    const tabIndex = tabs.length;
+    const tabIndex = globalTabs.size;
     const li = document.createElement("li");
     const a = document.createElement("a");
     li.appendChild(a);
@@ -491,39 +512,15 @@ export function mockGetMedia() {
  * based on the given value. Note that when `requestPermissionResult` is passed,
  * the `change` event of the `Permissions` API will also be triggered.
  *
- * @param {"default" | "denied" | "granted"} permission
- * @param {"default" | "denied" | "granted"} requestPermissionResult
+ * @param {PermissionName} requestPermissionResult
  */
-export function patchBrowserNotification(permission = "default", requestPermissionResult) {
-    if (!browser.Notification || !browser.navigator.permissions) {
-        return;
-    }
-    const notificationQueries = [];
-    patchWithCleanup(browser.navigator.permissions, {
-        async query({ name }) {
-            const result = await super.query(...arguments);
-            if (name === "notifications") {
-                Object.defineProperty(result, "state", {
-                    get: () => (permission === "default" ? "prompt" : permission),
-                });
-                notificationQueries.push(result);
-            }
-            return result;
-        },
-    });
-    patchWithCleanup(browser.Notification, {
-        permission,
-        isPatched: true,
+export function patchBrowserNotification(requestPermissionResult) {
+    mockPermission("notifications", "prompt");
+
+    patchWithCleanup(Notification, {
         requestPermission() {
-            if (!requestPermissionResult) {
-                return super.requestPermission(...arguments);
-            }
-            this.permission = requestPermissionResult;
-            for (const query of notificationQueries) {
-                query.permission = requestPermissionResult;
-                query.dispatchEvent(new Event("change"));
-            }
-            return requestPermissionResult;
+            mockPermission("notifications", requestPermissionResult);
+            return super.requestPermission();
         },
     });
 }
