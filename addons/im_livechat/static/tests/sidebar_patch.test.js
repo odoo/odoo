@@ -289,12 +289,12 @@ test("Clicking on leave button leaves the channel", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
     await click("[title='Chat Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click(".o-dropdown-item:contains('Close Conversation')");
     await contains(
-        ".modal-header:has(:text('Leaving will end the live chat with Visitor 11. Are you sure you want to continue?'))"
+        ".modal-header:has(:text('Closing this will end the live chat with Visitor 11. Are you sure you want to continue?'))"
     );
     await contains(".modal-body .o-mail-Message-body:has(:text('Last message from Visitor'))");
-    await click("button:contains(Leave Conversation)");
+    await click("button:contains(Close Conversation)");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Visitor 11" });
 });
 
