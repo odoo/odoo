@@ -3114,6 +3114,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Delivery',
             'identification': 'address',
         })
+        # Ensure Test partner is loaded.
+        self.env['ir.config_parameter'].set_param('point_of_sale.limited_customer_count', 9999)
         self.env['res.partner'].create({
             'name': 'Test Partner',
             'street': '123 Test Street',
