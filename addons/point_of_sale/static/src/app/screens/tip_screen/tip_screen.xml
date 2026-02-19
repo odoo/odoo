@@ -28,13 +28,13 @@
                     </div>
                     <div class="tip-amount-options d-flex flex-column gap-2 mx-4 p-3 rounded bg-view">
                         <div class="percentage-amounts d-flex gap-2">
-                            <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
-                                <button class="button btn btn-lg btn-secondary flex-fill py-5" t-on-click="() => { state.inputTipAmount = env.utils.formatCurrency(tip.amount,false); }">
+                            <t t-foreach="percentageTips" t-as="tip" t-key="tip_index">
+                                <button class="button btn btn-lg btn-secondary flex-fill py-5" t-on-click="() => { state.inputTipAmount = env.utils.formatCurrency(tip.inputTipAmount,false); }">
                                     <div class="percentage fs-1 text-primary text-center">
                                         <t t-esc="tip.percentage"></t>
                                     </div>
                                     <div class="amount text-muted">
-                                        <t t-esc="env.utils.formatCurrency(tip.amount)" />
+                                        <t t-esc="tip.amount" />
                                     </div>
                                 </button>
                             </t>

@@ -7,5 +7,8 @@ PosConfig._records = PosConfig._records.map((record) => ({
     iface_tipproduct: true,
     tip_product_id: 1,
     set_tip_after_payment: true,
+    tip_percentage_1: 10,
+    tip_percentage_2: 20,
+    tip_percentage_3: 30,
     default_screen: "tables",
 }));

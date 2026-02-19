@@ -22,7 +22,12 @@ class ProductTemplate(models.Model):
         return max_sequence + 1
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
-    to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
+    to_weight = fields.Boolean(
+        string='To Weigh',
+        help="Enable this option if the product should be sold by weight. "
+            "When enabled and scale is not avalable, the 'Price' button will update the quantity instead of the unit price. "
+            "This applies to both normal POS usage and when integrated with a hardware scale."
+    )
     pos_categ_ids = fields.Many2many(
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
