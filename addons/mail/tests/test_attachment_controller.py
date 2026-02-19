@@ -36,6 +36,7 @@ class TestAttachmentControllerCommon(TestControllerCommon):
                         self._upload_attachment(record.id, record._name, route_kw)
 
     def _upload_attachment(self, thread_id, thread_model, route_kw):
+        headers = route_kw.pop("headers", None)
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             res = self.url_open(
                 url="/mail/attachment/upload",
@@ -47,6 +48,7 @@ class TestAttachmentControllerCommon(TestControllerCommon):
                     **route_kw,
                 },
                 files={"ufile": file},
+                **({"headers": headers} if headers else {}),
             )
             res.raise_for_status()
             return json.loads(res.content.decode("utf-8"))["data"]["ir.attachment"][0]["id"]
@@ -81,3 +83,20 @@ class TestAttachmentController(TestAttachmentControllerCommon):
 
     def test_send_attachment_without_body(self):
         self.start_tour("/odoo/discuss", "create_thread_for_attachment_without_body",login="admin")
+
+    def test_company_assign_on_attachment_upload(self):
+        record = self.user_demo.partner_id
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.assertTrue(record.company_id)  # Ensure the thread has a company
+        attachment_id = self._upload_attachment(record.id, record._name, {})
+        attachment = self.env["ir.attachment"].browse(attachment_id)
+        self.assertEqual(attachment.company_id, self.user_demo.company_id)
+        record.company_id = False  # Test with multiple companies
+        headers = {"Cookie": f"session_id={self.session.sid};cids={self.company_2.id}-{self.company_3.id};"}
+        attachment_id = self._upload_attachment(record.id, record._name, {"headers": headers})
+        attachment = self.env["ir.attachment"].browse(attachment_id)
+        self.assertIn(attachment.company_id, [self.company_2, self.company_3])
+        headers = {"Cookie": f"session_id={self.session.sid};cids={self.company_2.id}-{self.user_admin.company_id.id};"}
+        attachment_id = self._upload_attachment(record.id, record._name, {"headers": headers})
+        attachment = self.env["ir.attachment"].browse(attachment_id)
+        self.assertEqual(attachment.company_id, self.user_admin.company_id)
