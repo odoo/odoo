@@ -8,6 +8,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { expect, test, describe } from "@odoo/hoot";
 import { onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -418,4 +419,47 @@ test("not editable builder list option", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".we-bg-options-container .builder_list_add_item").toHaveCount(0);
     expect(".we-bg-options-container .o-hb-input-base[disabled]").toHaveCount(2);
+});
+
+test("drops blank textual entries", async () => {
+    addBuilderOption({
+        selector: ".test-options-target-a",
+        template: xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                addItemTitle="'Add'"
+                itemShape="{ display_name: 'text' }"
+                default="{ display_name: 'default' }"/>`,
+    });
+    addBuilderOption({
+        selector: ".test-options-target-b",
+        template: xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                addItemTitle="'Add'"
+                itemShape="{ display_name: 'text' }"
+                default="{ display_name: 'default' }"
+                forbidLastItemRemoval="true"/>`,
+    });
+    await setupHTMLBuilder(`
+        <div class="test-options-target-a">a</div>
+        <div class="test-options-target-b">b</div>`);
+
+    // forbidLastItemRemoval="false"
+    await contains(":iframe .test-options-target-a").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    expect(".we-bg-options-container input").toHaveCount(1);
+
+    await contains(".we-bg-options-container input").clear();
+    await press("enter");
+    expect(".we-bg-options-container input").toHaveCount(0);
+
+    // forbidLastItemRemoval="true"
+    await contains(":iframe .test-options-target-b").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    expect(".we-bg-options-container input").toHaveCount(1);
+
+    await contains(".we-bg-options-container input").clear();
+    await press("enter");
+    expect(".we-bg-options-container input").toHaveCount(1);
 });
