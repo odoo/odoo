@@ -42,8 +42,8 @@ export class ResourceCalendarAttendanceCalendarController extends CalendarContro
                 lastPeriods.push({
                     date: newDate,
                     string: _t("Week %(weekNumber)s %(year)s: %(start)s - %(end)s", {
-                        start: start.toFormat("MMM dd"),
-                        end: end.toFormat("MMM dd"),
+                        start: start.toLocaleString({month: "short", day: "numeric",}),
+                        end: end.toLocaleString({month: "short", day: "numeric",}),
                         year: newDate.year,
                         weekNumber: getLocalYearAndWeek(newDate).week,
                     }),

@@ -49,10 +49,6 @@ class ResourceCalendar(models.Model):
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time', precompute=True,
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
-    attendance_ids_1st_week = fields.One2many('resource.calendar.attendance', 'calendar_id', 'Working Time 1st Week',
-        compute="_compute_two_weeks_attendance", inverse="_inverse_two_weeks_calendar")
-    attendance_ids_2nd_week = fields.One2many('resource.calendar.attendance', 'calendar_id', 'Working Time 2nd Week',
-        compute="_compute_two_weeks_attendance", inverse="_inverse_two_weeks_calendar")
     company_id = fields.Many2one(
         'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
         default=lambda self: self.env.company, index='btree_not_null')
@@ -76,8 +72,6 @@ class ResourceCalendar(models.Model):
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, readonly=False, copy=False)
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
-    two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
-    two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')

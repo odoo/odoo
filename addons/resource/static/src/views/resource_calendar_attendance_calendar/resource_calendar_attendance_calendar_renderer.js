@@ -1,5 +1,5 @@
 import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
-import { ResourceCalendarAttendanceCalendarCommonRenderer } from "./resource_calendar_attendance_calendar_common_renderer";
+import { ResourceCalendarAttendanceCalendarCommonRenderer } from "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_common_renderer";
 
 export class ResourceCalendarAttendanceCalendarRenderer extends CalendarRenderer {
     static components = {

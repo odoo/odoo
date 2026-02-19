@@ -64,7 +64,7 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.constrains('calendar_id', 'date', 'duration_hours', 'dayofweek')
     def _check_attendance(self):
-        # will check for each day of week that there are no superimpose.
+        # Check for each day of week that there are no superimposed attendances.
         target_calendars = self.mapped("calendar_id")
         target_dates = list(set(self.mapped("date")))
         target_dayofweeks = list(set(self.mapped("dayofweek")))

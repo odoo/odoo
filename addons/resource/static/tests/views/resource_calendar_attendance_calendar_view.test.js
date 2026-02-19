@@ -82,7 +82,7 @@ test(`resource calendar week daygrid to timegrid`, async () => {
     await clickEvent(1);
     await animationFrame();
     expect("div[name=duration_hours] input").toHaveValue(2, {
-        message: "The duration_hours of the vent should stay the same",
+        message: "The duration_hours of the event should stay the same",
     });
     expect("div[name=hour_from] input").toHaveValue(10, {
         message: "As the attendance is moved to the timegrid, hour_from should be set",
@@ -120,7 +120,7 @@ test(`resource calendar week timegrid to daygrid`, async () => {
     await clickEvent(1);
     await animationFrame();
     expect("div[name=duration_hours] input").toHaveValue(2, {
-        message: "The duration_hours of the vent should stay the same",
+        message: "The duration_hours of the event should stay the same",
     });
     expect("div[name=hour_from] input").toHaveValue(0, {
         message: "As the attendance is moved to the daygrid, hour_from should not be set",

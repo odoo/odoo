@@ -69,6 +69,7 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
         data[this.meta.fieldMapping.date_start] = serializeDate(start);
         if ((!partialRecord.isAllDay || !this.hasAllDaySlot) && end) {
             data["duration_based"] = false;
+            // TODO ZIRAH: Is this safe?
             data["hour_from"] = start?.hour + start?.minute / 60;
             data["hour_to"] = end?.hour + end?.minute / 60;
         } else {

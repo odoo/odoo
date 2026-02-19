@@ -330,6 +330,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.date_to, datetime(2019, 9, 3, 10, 0, 0))
 
     def test_variable_calendar(self):
+        # The difference in hours between the calendar and the result in this test is due to the timezones.
+        # Times in the calendars do not have a timezone. The same hour in the user's timezone is 2 hours before the one in calendar.
         self.env.user.tz = 'Europe/Brussels'
         calendar = self.env['resource.calendar'].create({
             'name': 'auto next day',
@@ -371,6 +373,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.date_to, datetime(2019, 9, 9, 10, 0, 0))
 
     def test_variable_calendar_next_week(self):
+        # The difference in hours between the calendar and the result in this test is due to the timezones.
+        # Times in the calendars do not have a timezone. The same hour in the user's timezone is 2 hours before the one in calendar.
         self.env.user.tz = 'Europe/Brussels'
         calendar = self.env['resource.calendar'].create({
             'name': 'auto next day',
