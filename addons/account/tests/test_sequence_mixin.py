@@ -783,7 +783,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
         with self.env.registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
             moves = env['account.move'].browse(self.data['move_ids'])
-            moves.button_draft()
+            moves.filtered(lambda x: x.state in ('posted', 'cancel')).button_draft()
             moves.posted_before = False
             moves.unlink()
             journal = env['account.journal'].browse(self.data['journal_id'])
