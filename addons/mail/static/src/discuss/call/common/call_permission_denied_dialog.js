@@ -19,12 +19,12 @@ export class CallPermissionDeniedDialog extends Component {
     get title() {
         const permissionType = this.props.permissionType;
         if (permissionType === "camera") {
-            return _t("Discuss cannot access your camera");
+            return _t("Unable to access your camera");
         }
         if (permissionType === "microphone") {
-            return _t("Discuss cannot access your microphone");
+            return _t("Unable to access your microphone");
         }
-        return _t("Discuss cannot access your camera and microphone");
+        return _t("Unable to access your camera and microphone");
     }
 
     get stepTwoText() {

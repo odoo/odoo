@@ -12,8 +12,19 @@ export class CallPermissionDialog extends Component {
             type: String,
             validate: (s) => ["camera", "microphone"].includes(s),
         },
+        permissionPrompt: {
+            type: String,
+            optional: true,
+        },
+        suggestAllMedias: {
+            type: Boolean,
+            optional: true,
+        },
         useMicrophone: Function,
         useCamera: Function,
+    };
+    static defaultProps = {
+        suggestAllMedias: true,
     };
     static template = "discuss.CallPermissionDialog";
 
@@ -48,6 +59,9 @@ export class CallPermissionDialog extends Component {
     }
 
     get permissionPrompt() {
+        if (this.props.permissionPrompt) {
+            return this.props.permissionPrompt;
+        }
         if (this.props.media === "microphone") {
             return _t("Do you want people to hear you in the meeting?");
         }

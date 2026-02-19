@@ -858,16 +858,29 @@ export class Rtc extends Record {
         this.soundEffectsService.play("earphone-on");
     }
 
-    /** @param {"microphone" | "camera"} media */
-    showMediaPermissionDialog(media) {
+    /**
+     * @param {"microphone" | "camera"} media
+     * @param {Object} options
+     */
+    showMediaPermissionDialog(media, { props = {}, options = {} } = {}) {
         this.closeCallPermissionDialog = this.dialog.add(
             CallPermissionDialog,
             {
+                ...props,
                 media,
-                useMicrophone: () => this.unmute(),
-                useCamera: () => this.toggleVideo("camera", { force: true, refreshStream: true }),
+                useMicrophone: async () => {
+                    await this.unmute();
+                    await props.useMicrophone?.();
+                },
+                useCamera: async () => {
+                    await this.toggleVideo("camera", { force: true, refreshStream: true });
+                    await props.useCamera?.();
+                },
             },
-            { context: { root: { el: this.rootEl } } }
+            {
+                context: { root: { el: this.rootEl } },
+                ...options,
+            }
         );
     }
 

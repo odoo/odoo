@@ -12,12 +12,20 @@ const deviceKind = new Set(["audioinput", "videoinput", "audiooutput"]);
 
 export class DeviceSelect extends Component {
     static props = {
+        menuClass: {
+            type: String,
+            optional: true,
+        },
         kind: {
             type: String,
             validate: (string) => deviceKind.has(string),
         },
         icon: {
             type: String,
+            optional: true,
+        },
+        permissionDialogConfiguration: {
+            type: Object,
             optional: true,
         },
     };
@@ -82,20 +90,20 @@ export class DeviceSelect extends Component {
     }
 
     async showPermissionDialog(kind) {
-        if (kind === "videoinput") {
-            if (this.store.rtc.cameraPermission === "denied") {
-                this.store.rtc.showMediaUnavailableWarning({ camera: true });
-            } else {
-                this.store.rtc.showMediaPermissionDialog("camera");
-                return;
-            }
+        const [permissionVar, permissionValue] =
+            kind === "videoinput"
+                ? ["cameraPermission", "camera"]
+                : ["microphonePermission", "microphone"];
+        if (this.store.rtc[permissionVar] === "denied") {
+            // Bypass the permission dialog in this case: we still need to do
+            // the potential thing that was supposed to be done once it closes.
+            this.props.permissionDialogConfiguration?.options?.onClose?.();
+            this.store.rtc.showMediaUnavailableWarning({ [permissionValue]: true });
         } else {
-            if (this.store.rtc.microphonePermission === "denied") {
-                this.store.rtc.showMediaUnavailableWarning({ microphone: true });
-            } else {
-                this.store.rtc.showMediaPermissionDialog("microphone");
-                return;
-            }
+            this.store.rtc.showMediaPermissionDialog(
+                permissionValue,
+                this.props.permissionDialogConfiguration
+            );
         }
     }
 
