@@ -1,6 +1,6 @@
 import { cookie } from "@web/core/browser/cookie";
 
-import lazyloader from "@web/legacy/js/public/lazyloader";
+import lazyloader from "@web/public/lazyloader";
 
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from "@web/core/templates";

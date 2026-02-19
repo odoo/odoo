@@ -155,7 +155,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/browser/cookie.js',
             'web/static/src/core/utils/ui.js',
             'web/static/src/public/utils.js',
-            'web/static/src/legacy/js/public/lazyloader.js',
+            'web/static/src/public/lazyloader.js',
         ],
         'web.assets_frontend': [
             # TODO the 'assets_frontend' bundle now includes 'assets_common'
@@ -234,8 +234,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/public/**/*.xml',
             ('remove', 'web/static/src/public/database_manager.js'),
 
-            'web/static/src/legacy/js/public/public_root.js',
-            'web/static/src/legacy/js/public/public_root_instance.js',
+            'web/static/src/public/public_root.js',
+            'web/static/src/public/public_root_instance.js',
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -245,7 +245,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/browser/cookie.js'),
             ('remove', 'web/static/src/core/utils/ui.js'),
             ('remove', 'web/static/src/public/utils.js'),
-            ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
+            ('remove', 'web/static/src/public/lazyloader.js'),
         ],
         'web.report_assets_common': [
             # Include some helpers early to define $enable-rfs before
