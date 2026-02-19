@@ -564,7 +564,7 @@ export class MailThread extends models.ServerModel {
             for (const fname in changedFieldNames) {
                 changedFieldsInitialValues[fname] = initialFieldValues[fname];
             }
-            const subtype = MailThread._track_subtype.call(this, changedFieldsInitialValues);
+            const subtype = MailThread._track_post_get_default_subtype.call(this, changedFieldsInitialValues);
             MailThread.message_post.call(this, [record.id], subtype.id, trackingValueIds);
         }
         return tracking;
@@ -614,7 +614,7 @@ export class MailThread extends models.ServerModel {
     }
 
     /** @param {Object} track_init_values */
-    _track_subtype(track_init_values) {
+    _track_post_get_default_subtype(track_init_values) {
         return false;
     }
 

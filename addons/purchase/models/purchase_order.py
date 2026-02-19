@@ -550,7 +550,7 @@ class PurchaseOrder(models.Model):
         render_context['subtitles'] = subtitles
         return render_context
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'state' in track_init_values and self.state == 'purchase':
             if track_init_values['state'] == 'to approve':
@@ -560,7 +560,7 @@ class PurchaseOrder(models.Model):
             return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in track_init_values and self.state == 'sent':
             return self.env.ref('purchase.mt_rfq_sent')
-        return super(PurchaseOrder, self)._track_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     # ------------------------------------------------------------
     # ACTIONS

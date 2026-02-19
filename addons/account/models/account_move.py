@@ -7219,7 +7219,7 @@ class AccountMove(models.Model):
         else:
             return super()._creation_subtype()
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         # EXTENDS mail mail.thread
         # add custom subtype depending of the state.
         self.ensure_one()
@@ -7228,13 +7228,13 @@ class AccountMove(models.Model):
             # TDE CLEANME: to be cleaned using standard track API, should not be done here
             if self.origin_payment_id and 'state' in track_init_values:
                 self.origin_payment_id._message_track(['state'], {self.origin_payment_id.id: track_init_values})
-            return super()._track_subtype(track_init_values)
+            return super()._track_post_get_default_subtype(track_init_values)
 
         if 'payment_state' in track_init_values and self.payment_state == 'paid':
             return self.env.ref('account.mt_invoice_paid')
         elif 'state' in track_init_values and self.state == 'posted' and self.is_sale_document(include_receipts=True):
             return self.env.ref('account.mt_invoice_validated')
-        return super()._track_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     def _creation_message(self):
         # EXTENDS mail mail.thread

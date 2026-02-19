@@ -3055,7 +3055,7 @@ class MrpProduction(models.Model):
         self.qty_producing = 0
         self._set_qty_producing(False)
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'state' in track_init_values and self.state == 'confirmed':
             return self.env.ref('mrp.mrp_mo_in_confirmed')
@@ -3067,7 +3067,7 @@ class MrpProduction(models.Model):
             return self.env.ref('mrp.mrp_mo_in_done')
         elif 'state' in track_init_values and self.state == 'cancel':
             return self.env.ref('mrp.mrp_mo_in_cancelled')
-        return super()._track_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     # -------------------------------------------------------------------------
     # CATALOG

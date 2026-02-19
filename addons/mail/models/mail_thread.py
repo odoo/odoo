@@ -33,9 +33,7 @@ from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
     ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
 )
-from odoo.api import ValuesType
 from odoo.exceptions import MissingError, AccessError
-from odoo.models import BaseModel
 from odoo.fields import Domain
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
@@ -50,6 +48,10 @@ from odoo.tools.mail import (
     generate_tracking_message_id,
     unfold_references,
 )
+
+if typing.TYPE_CHECKING:
+    from odoo.api import ValuesType
+    from odoo.models import BaseModel
 
 MAX_DIRECT_PUSH = 5
 
@@ -581,13 +583,19 @@ class MailThread(models.AbstractModel):
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
             return
-        records = self.browse(ids).sudo()
         fnames = self._track_get_fields()
-        context = clean_context(self.env.context)
-        tracking = records.with_context(context)._message_track(fnames, initial_values)
-        for record in records:
-            tracked_fields, _tracking_value_ids = tracking.get(record.id, (None, None))
-            record._message_track_post_template(tracked_fields)
+
+        # Clean the context to get rid of residual default_* keys that could
+        # cause issues afterward during the mail.message generation. Example:
+        # 'default_parent_id' would refer to the parent_id of the current
+        # record that was used during its creation, but could refer to wrong
+        # parent message id, leading to a traceback or a wrongly referenced
+        # record
+        records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
+        tracking = records_su._message_track(fnames, initial_values)
+        for record_su in records_su:
+            tracked_fields, _tracking_value_ids = tracking.get(record_su.id, (None, None))
+            record_su._message_track_post_template(tracked_fields)
 
     def _track_set_author(self, author: BaseModel):
         """ Set the author (res.partner) of the tracking message for `self`. """
@@ -603,8 +611,6 @@ class MailThread(models.AbstractModel):
         """ Link tracking to a message logged as body, in addition to subtype
         description (if set) and tracking values that make the core content of
         tracking message. """
-        if not self._track_get_fields():
-            return
         body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {})
         for id_ in self.ids:
             body_values[id_] = message
@@ -638,7 +644,7 @@ class MailThread(models.AbstractModel):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
-        given by the ``_track_subtype`` method.
+        given by the ``_track_post_get_default_subtype`` method.
 
         :param Iterable[str] tracked_fields: iterable of field names to track
         :param dict[int, dict[str, ValuesType]] track_init_values: mapping
@@ -667,13 +673,13 @@ class MailThread(models.AbstractModel):
                 continue
 
             # find subtypes and post messages or log if no subtype found
-            subtype = record._track_subtype({
+            subtype = record._track_post_get_default_subtype({
                 (col_name, track_init_values[record.id][col_name])
                 for col_name in changes
             })
             author_id = authors[record.id].id if record.id in authors else None
-            # _set_log_message takes priority over _track_get_default_log_message even if it's an empty string
-            body = bodies[record.id] if record.id in bodies else record._track_get_default_log_message(changes)
+            # _set_log_message takes priority over _track_post_get_default_body even if it's an empty string
+            body = bodies[record.id] if record.id in bodies else record._track_post_get_default_body(changes)
             if subtype:
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
@@ -693,7 +699,7 @@ class MailThread(models.AbstractModel):
 
         return tracking
 
-    def _track_get_default_log_message(self, tracked_fields: Iterable[str]) -> str | Markup:
+    def _track_post_get_default_body(self, tracked_fields: Iterable[str]) -> str | Markup:
         """Get a default log message content based on tracked and updated fields.
 
         :param Iterable[str] tracked_fields: name of fields being tracked and updated
@@ -704,17 +710,17 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return ''
 
-    def _track_subtype(self, track_init_values: dict[str, ValuesType]) -> BaseModel | False:
+    def _track_post_get_default_subtype(self, track_init_values: dict[str, ValuesType]) -> BaseModel:
         """ Give the subtype triggered by the changes on the record according
         to values that have been updated.
 
         :param dict[str, ValuesType] track_init_values: original values of the
             record; only modified fields are present in the dict
 
-        :return: a subtype browse record or False if no subtype is triggered
+        :returns: subtype record (may be void for pure logs)
         """
         self.ensure_one()
-        return False
+        return self.env['mail.message.subtype']
 
     def _message_track_post_template(self, tracked_fields: Iterable[str]) -> True:
         """ Based on a tracking, post a message based on a template, as defined
@@ -725,14 +731,6 @@ class MailThread(models.AbstractModel):
         """
         if not self or not tracked_fields:
             return True
-        # Clean the context to get rid of residual default_* keys
-        # that could cause issues afterward during the mail.message
-        # generation. Example: 'default_parent_id' would refer to
-        # the parent_id of the current record that was used during
-        # its creation, but could refer to wrong parent message id,
-        # leading to a traceback in case the related message_id
-        # doesn't exist
-        cleaned_self = self.with_context(clean_context(self.env.context))._fallback_lang()
         try:
             templates = self._track_template(tracked_fields)
         except MissingError:
@@ -750,9 +748,9 @@ class MailThread(models.AbstractModel):
             # by default, allow sending stage updates to author
             post_kwargs.setdefault('notify_author_mention', True)
             if composition_mode == 'mass_mail':
-                cleaned_self.message_mail_with_source(template, **post_kwargs)
+                self.message_mail_with_source(template, **post_kwargs)
             else:
-                cleaned_self.message_post_with_source(template, **post_kwargs)
+                self.message_post_with_source(template, **post_kwargs)
         return True
 
     def _track_template(self, tracked_fields: Iterable[str]) -> dict[str, tuple[BaseModel, dict[str, ValuesType]]]:

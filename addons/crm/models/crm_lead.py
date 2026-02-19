@@ -2064,7 +2064,7 @@ class CrmLead(models.Model):
             "street", "street2", "city", "zip", "state_id", "country_id"
         ])
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'stage_id' in track_init_values and self.won_status == 'won':
             return self.env.ref('crm.mt_lead_won')
@@ -2076,7 +2076,7 @@ class CrmLead(models.Model):
             return self.env.ref('crm.mt_lead_restored')
         elif 'won_status' in track_init_values and self.won_status == 'lost':
             return self.env.ref('crm.mt_lead_lost')
-        return super()._track_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,

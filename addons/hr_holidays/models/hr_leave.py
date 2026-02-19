@@ -1577,11 +1577,11 @@ class HrLeave(models.Model):
                     subject=_('Your Time Off'),
                 )
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         if 'state' in track_init_values and self.state == 'validate':
             leave_notif_subtype = self.work_entry_type_id.leave_notif_subtype_id
             return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
-        return super()._track_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo

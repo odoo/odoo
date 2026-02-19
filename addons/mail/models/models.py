@@ -278,13 +278,7 @@ class Base(models.AbstractModel):
             if col_name not in initial_values:
                 continue
             initial_value = initial_values[col_name]
-            new_value = (
-                # get the properties definition with the value
-                # (not just the dict with the value)
-                field.convert_to_read(self[col_name], self)
-                if (field := self._fields[col_name]).type == 'properties'
-                else self[col_name]
-            )
+            new_value = self._track_convert_value(col_name, self[col_name])
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 

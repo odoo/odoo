@@ -468,17 +468,17 @@ class EventEvent(models.Model):
             return self.sudo().address_id.google_map_link(zoom=zoom)
         return None
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if track_init_values.keys() & {'publish_on'}:
             if self.publish_on:
-                return self.env.ref('website_event.mt_event_scheduled', raise_if_not_found=False)
-            return self.env.ref('website_event.mt_event_unscheduled', raise_if_not_found=False)
+                return self.env.ref('website_event.mt_event_scheduled', raise_if_not_found=False) or super()._track_post_get_default_subtype(track_init_values)
+            return self.env.ref('website_event.mt_event_unscheduled', raise_if_not_found=False) or super()._track_post_get_default_subtype(track_init_values)
         if track_init_values.keys() & {'is_published', 'website_published'}:
             if self.is_published:
-                return self.env.ref('website_event.mt_event_published', raise_if_not_found=False)
-            return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
-        return super()._track_subtype(track_init_values)
+                return self.env.ref('website_event.mt_event_published', raise_if_not_found=False) or super()._track_post_get_default_subtype(track_init_values)
+            return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False) or super()._track_post_get_default_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     def _get_event_resource_urls(self, slot=False):
         """ Prepare the Google and iCal urls for the event.

@@ -18,10 +18,10 @@ class ResPartner(models.Model):
             if partner.id:
                 partner.website_url = "/partners/%s" % self.env['ir.http']._slug(partner)
 
-    def _track_subtype(self, track_init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'is_published' in track_init_values:
             if self.is_published:
-                return self.env.ref('website_partner.mt_partner_published', raise_if_not_found=False)
-            return self.env.ref('website_partner.mt_partner_unpublished', raise_if_not_found=False)
-        return super()._track_subtype(track_init_values)
+                return self.env.ref('website_partner.mt_partner_published', raise_if_not_found=False) or super()._track_post_get_default_subtype(track_init_values)
+            return self.env.ref('website_partner.mt_partner_unpublished', raise_if_not_found=False) or super()._track_post_get_default_subtype(track_init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
