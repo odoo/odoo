@@ -1,5 +1,5 @@
-import { createPublicRoot } from "@web/legacy/js/public/public_root";
-import lazyloader from "@web/legacy/js/public/lazyloader";
+import { createPublicRoot } from "@web/public/public_root";
+import lazyloader from "@web/public/lazyloader";
 
 const prom = createPublicRoot().then(async (rootInstance) => {
     if (window.frameElement) {
