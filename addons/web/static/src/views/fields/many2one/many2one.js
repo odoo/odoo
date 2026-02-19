@@ -58,6 +58,7 @@ export function computeM2OProps(fieldProps) {
         readonly: fieldProps.readonly,
         relation: fieldProps.record.fields[fieldProps.name].relation,
         searchThreshold: fieldProps.searchThreshold,
+        preventMemoization: fieldProps.preventMemoization,
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
         update: (value, options = {}) =>
             fieldProps.record.update({ [fieldProps.name]: value }, options),
@@ -94,6 +95,7 @@ export class Many2One extends Component {
         relation: { type: String },
         searchMoreLabel: { type: String, optional: true },
         searchThreshold: { type: Number, optional: true },
+        preventMemoization: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
@@ -174,6 +176,7 @@ export class Many2One extends Component {
             resModel: this.props.relation,
             searchMoreLabel: this.props.searchMoreLabel,
             searchThreshold: this.props.searchThreshold,
+            preventMemoization: this.props.preventMemoization,
             setInputFloats: (isFloating) => {
                 this.state.isFloating = isFloating;
             },

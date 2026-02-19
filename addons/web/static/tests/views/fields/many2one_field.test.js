@@ -4074,6 +4074,37 @@ test("search typeahead", async () => {
     ]);
 });
 
+test.tags("desktop");
+test("skip name search optimization", async () => {
+    class Parent extends Component {
+        static template = xml`<Many2XAutocomplete
+            value="test"
+            resModel="'partner'"
+            activeActions="{}"
+            fieldString.translate="Field"
+            getDomain.bind="getDomain"
+            update.bind="update"
+            preventMemoization="true"
+        />`;
+        static components = { Many2XAutocomplete };
+        static props = ["*"];
+        getDomain() {
+            return [];
+        }
+        update() {}
+    }
+    await mountWithCleanup(Parent);
+    onRpc("web_name_search", () => expect.step("web_name_search"));
+    await contains(".o_input_dropdown input").edit("wxy", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["web_name_search"]);
+    expect(`.o-autocomplete.dropdown li:not(.o_m2o_dropdown_option) a`).toHaveCount(0);
+    await contains(".o_input_dropdown input").edit("wxyz", { confirm: false });
+    expect(`.o-autocomplete.dropdown li:not(.o_m2o_dropdown_option) a`).toHaveCount(0);
+    await runAllTimers();
+    expect.verifySteps(["web_name_search"]);
+});
+
 test("highlight search in many2one", async () => {
     await mountView({
         type: "form",

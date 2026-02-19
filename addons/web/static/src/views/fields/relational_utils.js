@@ -219,6 +219,7 @@ export class Many2XAutocomplete extends Component {
         searchMoreLimit: { type: Number, optional: true },
         searchThreshold: { type: Number, optional: true },
         setInputFloats: { type: Function, optional: true },
+        preventMemoization: { type: Boolean, optional: true },
         slots: { optional: true },
         specification: { type: Object, optional: true },
         update: Function,
@@ -352,8 +353,37 @@ export class Many2XAutocomplete extends Component {
         };
     }
 
+<<<<<<< 5fdc44a3753a03127890b3e635708225779db69f
     async search(name, domain, context) {
         return await this.orm.call(this.props.resModel, "web_name_search", [], {
+||||||| 0b820560086209e0b472a9fde7205e7edde95dc7
+    async search(name) {
+        const domain = this.props.getDomain();
+        const context = this.props.context;
+        if (
+            this.lastEmptySearch &&
+            deepEqual(this.lastEmptySearch.domain, domain) &&
+            deepEqual(this.lastEmptySearch.context, context) &&
+            (name.startsWith(this.lastEmptySearch.name) || name.length < this.props.searchThreshold)
+        ) {
+            return [];
+        }
+        const records = await this.orm.call(this.props.resModel, "web_name_search", [], {
+=======
+    async search(name) {
+        const domain = this.props.getDomain();
+        const context = this.props.context;
+        if (
+            !this.props.preventMemoization &&
+            this.lastEmptySearch &&
+            deepEqual(this.lastEmptySearch.domain, domain) &&
+            deepEqual(this.lastEmptySearch.context, context) &&
+            (name.startsWith(this.lastEmptySearch.name) || name.length < this.props.searchThreshold)
+        ) {
+            return [];
+        }
+        const records = await this.orm.call(this.props.resModel, "web_name_search", [], {
+>>>>>>> ac74e03f510be720749b0c61ba03f1362e3e1312
             name,
             operator: "ilike",
             domain,
