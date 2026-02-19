@@ -413,7 +413,7 @@ class AccountChartTemplate(models.AbstractModel):
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
-                    if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                    if not account or not account.code or not re.match(f'^{values["code"]}0*$', account.code):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
                         account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
                         query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
