@@ -3,6 +3,7 @@
 from odoo import api, fields, models
 from odoo.addons.l10n_id_efaktur_coretax.models.account_move import TAX_TRANSACTION_CODE
 
+
 class Partner(models.Model):
     _inherit = "res.partner"
 
@@ -28,6 +29,19 @@ class Partner(models.Model):
         default='04',
         tracking=True,
     )
+
+    @api.depends('vat', 'parent_id', 'l10n_id_tku', 'country_code')
+    def _compute_is_company(self):
+        l10n_id_partners = self.filtered(lambda p: p.country_code == 'ID')
+        for partner in l10n_id_partners:
+            vat = partner.vat or ''
+            tku = (partner.l10n_id_tku or '000000').strip()
+            is_commercial_partner = partner.commercial_partner_id == partner
+            partner.is_company = (
+                (not is_commercial_partner and tku != '000000') or
+                (is_commercial_partner and vat.startswith(('0', '10')))
+            )
+        super(Partner, self - l10n_id_partners)._compute_is_company()
 
     @api.depends('vat', 'country_code')
     def _compute_l10n_id_pkp(self):
