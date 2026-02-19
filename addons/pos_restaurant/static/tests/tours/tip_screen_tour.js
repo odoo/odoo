@@ -242,6 +242,7 @@ registry.category("web_tour.tours").add("test_tip_after_payment", {
             ProductScreen.clickPayButton(false),
             ProductScreen.discardOrderWarningDialog(),
             // case 1: remaining < 0 => increase PaymentLine amount
+            PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.enterPaymentLineAmount("Bank", "1"),
             PaymentScreen.clickTipButton(),
             {
@@ -252,6 +253,7 @@ registry.category("web_tour.tours").add("test_tip_after_payment", {
             Dialog.confirm(),
             PaymentScreen.selectedPaymentlineHas("Bank", "2.00"),
             // case 2: remaining >= 0 and remaining >= tip => don't change PaymentLine amount
+            PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickPaymentlineDelButton("Bank", "2.00"),
             PaymentScreen.enterPaymentLineAmount("Bank", "5"),
             PaymentScreen.clickTipButton(),
@@ -263,6 +265,7 @@ registry.category("web_tour.tours").add("test_tip_after_payment", {
             Dialog.confirm(),
             PaymentScreen.selectedPaymentlineHas("Bank", "5.00"),
             // case 3: remaining >= 0 and remaining < tip => increase by the difference
+            PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickPaymentlineDelButton("Bank", "5.00"),
             PaymentScreen.enterPaymentLineAmount("Bank", "5"),
             PaymentScreen.clickTipButton(),

@@ -132,6 +132,7 @@ class PosPaymentMethod(models.Model):
                     'name': _('Online Payment'),
                     'is_online_payment': True,
                     'company_id': company_id,
+                    'sequence': 3,
                 })
                 if not payment_method_id:
                     raise ValidationError(_(
