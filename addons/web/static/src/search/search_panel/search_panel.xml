@@ -16,8 +16,8 @@
         <t t-set="categories" t-value="this.getCategorySelection()" />
         <t t-set="filters" t-value="this.getFilterSelection()" />
         <div class="d-flex">
-            <button title="Open sidebar" aria-label="Open sidebar" class="btn btn-light btn-sm m-2 p-1 py-2">
-                <i class="oi oi-panel-right fa-flip-horizontal align-middle"/>
+            <button class="o_search_panel_sidebar_button btn btn-light btn-sm m-2 px-1 py-2" title="Open sidebar" aria-label="Open sidebar">
+                <i class="oi oi-panel-right fa-flip-horizontal"/>
             </button>
             <div class="o_search_panel_current_selection text-truncate mx-auto">
                 <t t-if="!categories.length and !filters.length">
@@ -49,12 +49,14 @@
 </t>
 
 <t t-name="web.SearchPanelContent">
-    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 pt-4 px-2 bg-view overflow-auto position-relative"
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 px-2 bg-view overflow-auto position-relative"
          t-att-class="this.env.searchModel.searchPanelInfo.className"
          t-custom-ref="root">
-        <button t-if="!this.env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="this.toggleSidebar">
-            <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
-        </button>
+        <div t-if="!this.env.isSmall" class="d-flex align-items-center pt-2">
+            <button class="btn btn-light btn-sm ms-auto" t-on-click="this.toggleSidebar">
+                <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
+            </button>
+        </div>
         <div t-if="!this.sections or this.sections.length === 0" class="o_search_panel_empty_state me-3">
             <button class="btn mt-2 w-100 overflow-visible">
                 <div class="d-flex align-items-center me-2 ms-auto">All</div>
@@ -63,7 +65,9 @@
         <section t-foreach="this.sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
-            <header class="o_search_panel_section_header pt-4 pb-2 ps-2 text-uppercase cursor-default">
+            <header
+                class="o_search_panel_section_header ps-2 pb-2 text-uppercase cursor-default"
+                t-attf-class="{{section_first ? 'pt-2' : 'pt-3'}}">
                 <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
@@ -188,11 +192,14 @@
                 t-on-click="() => this.toggleCategory(section, value)"
                 >
                 <div
-                    class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0"
-                    t-att-class="{'o_with_counters': section.enableCounters }"
+                    class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0 gap-1"
+                    t-att-class="{
+                        'o_with_counters': section.enableCounters,
+                        'o_search_panel_label_expanded':  state.expanded[section.id][valueId]
+                        }"
                     t-att-data-tooltip="value.display_name"
                     >
-                    <button class="o_toggle_fold btn p-0 px-1 flex-shrink-0 text-center">
+                    <button class="o_toggle_fold btn border-0 p-0 px-1 flex-shrink-0 lh-sm text-center">
                         <i
                             t-if="value.childrenIds.length"
                             class="fa"
@@ -203,13 +210,14 @@
                             />
                     </button>
                     <span
-                        class="o_search_panel_label_title text-truncate"
+                        class="o_search_panel_label_title text-truncate lh-sm"
                         t-att-class="{'fw-bold' : value.bold}"
                         t-out="value.display_name"
                         />
                 </div>
                 <small t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter text-muted mx-2 fw-bold"
+                    class="o_search_panel_counter mx-2 fw-bold lh-sm"
+                    t-att-class="{'text-muted': state.active[section.id] !== valueId}"
                     t-out="value.__count"
                 />
             </header>
@@ -227,9 +235,8 @@
 
 <t t-name="web.SearchPanel.FiltersGroup">
     <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
-        class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 cursor-pointer"
-        t-att-class="{ 'ps-2' : this.isChildList }"
-        >
+        class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 cursor-pointer ps-2"
+    >
         <t t-set="value" t-value="values.get(valueId)"/>
         <div class="form-check w-100">
             <input type="checkbox"

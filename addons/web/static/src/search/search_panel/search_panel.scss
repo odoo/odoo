@@ -15,7 +15,8 @@
 
 .o_search_panel {
     --treeEntry-padding-h: #{map-get($spacers, 3)};
-    --treeEntry-padding-v: calc(#{map-get($spacers, 2)} + #{map-get($spacers, 1)});
+    --treeEntry-padding-v: #{map-get($spacers, 2)};
+    --searchPanelHeader-margin-y: #{map-get($spacers, 1) * .5};
 
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
@@ -25,7 +26,11 @@
     }
 
     .o_toggle_fold {
-        width: map-get($spacers, 3);
+        width: var(--searchPanelHeader-toggle-fold-width, map-get($spacers, 3));
+
+        &:focus-visible {
+            box-shadow: inset 0 0 0 $focus-ring-width $focus-ring-color;
+        }
     }
 
     .o_search_panel_counter {
@@ -33,8 +38,21 @@
     }
 
     .list-group-item {
-        --list-group-item-padding-y: #{map-get($spacers, 1)};
+        --list-group-color: #{$gray-800};
+        --list-group-item-padding-y: var(--searchPanelHeader-padding-y, calc(#{map-get($spacers, 2)} - var(--searchPanelHeader-margin-y)));
         --list-group-item-padding-x: 0;
+
+        &:where(:not(.list-group-item-action)) {
+            // This acts as a margin, we use padding to avoid space between
+            // pseudo elements used to display the tree.
+            --list-group-item-padding-y: var(--searchPanelHeader-margin-y);
+
+            + .list-group-item {
+                padding-top: 0;
+            }
+        }
+
+        border-radius: var(--searchPanelHeader-border-radius, var(--border-radius));
     }
 }
 
@@ -56,13 +74,16 @@
     @include media-breakpoint-up(md) {
         border-right: $border-width solid $border-color;
     }
+
+    &:hover .o_search_panel_sidebar_button {
+        background-color: var(--btn-hover-bg);
+        color: var(--btn-hover-color);
+    }
 }
 
 .o_mobile_search_content {
     --SearchPanel-width: 100%;
     --SearchPanel-fontSize: 1.1em;
-
-    --treeEntry-padding-v: #{$list-group-item-padding-y * 2};
 }
 
 @include media-breakpoint-down(md) {
@@ -75,5 +96,48 @@
 .o_search_panel_section {
     .o_bottom_sheet & .list-group {
         --#{$prefix}list-group-bg: transparent;
+    }
+}
+
+.o_search_panel:has(.o_treeEntry:hover) {
+    .o_treeEntry::before,
+    .o_treeEntry::after {
+        background-color: var(--treeEntry--beforeAfter-color, #{$border-color});
+    }
+
+    .o_search_panel_category_value_header_expanded::before {
+        background-color: $body-color;
+    }
+
+    .o_search_panel_category_value:hover > header {
+        --list-group-color: #{$black};
+    }
+
+    // Unfolded parent tree entry and hovered entry
+    .o_treeEntry:hover,
+    .o_treeEntry:has(.o_treeEntry:hover) {
+        &::before {
+            height: var(--treeEntry-branch-top);
+        }
+
+        &::before, &::after {
+            background-color: $body-color;
+        }
+    }
+
+    .o_treeEntry:has(~ .o_treeEntry:hover, ~ .o_treeEntry .o_treeEntry:hover)::before {
+        background-color: $body-color;
+    }
+}
+
+.o_search_panel_category_value {
+    .o_toggle_fold {
+        color: $text-muted;
+    }
+
+    header.active:hover {
+        .o_toggle_fold {
+            color: var(--searchPanelHeader-hover-fold-color, #{$black});
+        }
     }
 }
