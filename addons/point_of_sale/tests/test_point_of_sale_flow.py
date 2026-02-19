@@ -3110,6 +3110,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             return current_session
 
         self.bank_payment_method.outstanding_account_id = self.inbound_payment_method_line.payment_account_id.id
+        self.bank_payment_method.outstanding_account_id.account_type = "asset_cash"
         session_ids = [
             _do_pos_transaction(amount, split, idx).id
             for idx, (amount, split) in enumerate([(100, False), (-100, False), (100, True), (-100, True)])
@@ -3121,21 +3122,25 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     "payment_type": "inbound",
                     "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
                     "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                    "state": "paid"
                 },
                 {
                     "payment_type": "outbound",
                     "outstanding_account_id": self.bank_payment_method.receivable_account_id.id,
                     "destination_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "state": "paid"
                 },
                 {
                     "payment_type": "inbound",
                     "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
                     "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                    "state": "paid"
                 },
                 {
                     "payment_type": "outbound",
                     "outstanding_account_id": self.bank_payment_method.receivable_account_id.id,
                     "destination_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "state": "paid"
                 },
             ],
         )

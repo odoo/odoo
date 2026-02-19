@@ -33,3 +33,23 @@ class AccountPayment(models.Model):
             if sepa_ct and 'pos_payment' in self.env.context and sepa_ct.code not in res:
                 res.append(sepa_ct.code)
         return res
+
+    def _get_refund_pos_payment(self):
+        return self.filtered(
+            lambda pay: pay.payment_type == "outbound"
+            and pay.destination_account_id.account_type == "asset_cash"
+            and "POS payment" in pay.memo
+            and pay.move_id
+        )
+
+    def action_post(self):
+        """in_process -> posted: for refunded pos order"""
+        super().action_post()
+        self._get_refund_pos_payment().write({"state": "paid"})
+
+    def _get_valid_liquidity_accounts(self):
+        accounts = super()._get_valid_liquidity_accounts()
+        refund_payments = self._get_refund_pos_payment()
+        if refund_payments:
+            accounts = (accounts - self.outstanding_account_id) | self.destination_account_id
+        return accounts
