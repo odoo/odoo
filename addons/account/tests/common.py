@@ -80,6 +80,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         super().setUpClass()
 
         cls.maxDiff = None
+        cls._set_extract_single_line_per_tax(cls.env.company)
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
         cls.product_category.with_company(cls.env.company).write({
             'property_account_income_categ_id': cls.company_data['default_account_revenue'].id,
@@ -270,6 +271,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                 create_values['country_id'] = country.id
             if 'currency_id' not in create_values:
                 create_values['currency_id'] = country.currency_id.id
+        if 'extract_single_line_per_tax' in cls.env['res.company']._fields and 'extract_single_line_per_tax' not in create_values:
+            create_values['extract_single_line_per_tax'] = False
         company = super()._create_company(**create_values)
         cls._use_chart_template(company, cls.chart_template)
         # if the currency_id was defined explicitly (or via the country), it should override the one from the coa
@@ -978,6 +981,11 @@ class AccountTestInvoicingCommon(ProductCommon):
         )
         discount_wizard.action_apply_discount()
         return discount_wizard
+
+    @classmethod
+    def _set_extract_single_line_per_tax(cls, company):
+        if 'extract_single_line_per_tax' in company._fields:
+            company.extract_single_line_per_tax = False
 
     # -------------------------------------------------------------------------
     # Assertions

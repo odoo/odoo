@@ -1,6 +1,7 @@
 from lxml import etree
+from collections import defaultdict
 
-from odoo import _, models, Command
+from odoo import _, api, models, Command
 from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
@@ -1134,6 +1135,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         )
         invoice_line_vals, line_logs = self._import_lines(invoice, tree, './{*}' + line_tag, document_type=invoice.move_type, tax_type=invoice.journal_id.type, qty_factor=qty_factor)
         rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', document_type=invoice.move_type, qty_factor=qty_factor)
+
+        if (
+            'extract_single_line_per_tax' in invoice.company_id._fields  # defined in account_invoice_extract
+            and invoice.company_id.extract_single_line_per_tax
+            # We also need to check if group_invoice_lines is not in context in the case the setting is True
+            # but the user wants to ungroup lines, then group_invoice_lines will be set to False in context
+            and 'group_invoice_lines' not in invoice.env.context
+        ) or invoice.env.context.get('group_invoice_lines'):
+            # group amls with the same tax id into one aml, with the total amount
+            invoice_line_vals = self._get_lines_vals_group_by_tax(invoice_line_vals, invoice.partner_id, invoice_values['invoice_date'], invoice.currency_id)
+
         line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
 
         invoice_values = {
@@ -1143,6 +1155,49 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice.write(invoice_values)
         logs += partner_logs + currency_logs + line_logs + allowance_charges_logs + rounding_logs
         return logs
+
+    @api.model
+    def _get_lines_vals_group_by_tax(self, lines_vals, partner_id, date, currency):
+        """
+        This method group the lines in lines_vals by tax.
+        lines_vals can either be a list of vals dict(s) to create lines
+        :param lines_vals: list of dict
+        :param partner_id: the partner of the move related to the lines
+        :param date: the date of the move in str format
+        :param currency: the currency of the move related to lines
+        :return: a list of dict vals line grouped by tax
+        """
+        # group amls with same tax id into one aml, with the total amount
+        taxes = dict()
+        line_vals_to_group = defaultdict(list)
+        for line in lines_vals:
+            if currency.is_zero(line.get('price_unit', 0.0)):
+                continue
+            line_tax_ids = line.get('tax_ids', [])
+            tax_ref = str(line_tax_ids)
+            if 'Command' in tax_ref:
+                # unhandled, we don't group
+                return lines_vals
+            tax_ids = taxes.get(tax_ref)
+            if tax_ids is None:
+                taxes[tax_ref] = tax_ids = self.env['account.tax'].browse(line_tax_ids)
+            dates = (False, False)
+            if line.get('deferred_start_date') and line.get('deferred_end_date'):
+                dates = (line['deferred_start_date'], line['deferred_end_date'])
+            line_vals_to_group[tax_ids, dates].append(line)
+
+        return [{
+            'name': " - ".join(
+                [partner_id.name or _("Unknown partner"), date] + (tax_ids.mapped('name') or [_("Untaxed")])),
+            'price_unit': sum(
+                line.get('price_unit') * line.get('quantity', 0.0) - line.get('price_unit') * line.get('quantity', 0.0) * line.get('discount', 0.0) / 100
+                for line in lines
+            ),
+            'quantity': 1,
+            'tax_ids': tax_ids.ids,
+            'deferred_start_date': deferred_start_date,
+            'deferred_end_date': deferred_end_date,
+        } for (tax_ids, (deferred_start_date, deferred_end_date)), lines in line_vals_to_group.items()]
 
     def _get_tax_nodes(self, tree):
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')

@@ -1,10 +1,12 @@
 from base64 import b64decode
 from contextlib import suppress
 import binascii
+import re
 
 from lxml import etree
 
 from odoo import _, api, fields, models, Command
+from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
 
 
@@ -47,6 +49,46 @@ class AccountMove(models.Model):
             'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/ubl?allow_fallback=true',
             'target': 'download',
         }
+
+    def action_group_ungroup_lines_by_tax(self):
+        """
+        This action allows the user to reload an imported move, grouping or not lines by tax
+        """
+        self.ensure_one()
+        self._check_move_for_group_ungroup_lines_by_tax()
+
+        # Check if lines look like they're grouped
+        lines_grouped = any(re.match(re.escape(self.partner_id.name) + r' - \d{4}-\d{2}-\d{2} - .*', line.name) for line in self.invoice_line_ids)
+
+        old_amount_untaxed, old_amount_total = self.amount_untaxed, self.amount_total
+
+        attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', self.id),
+        ], order='create_date')
+        if not attachments:
+            raise UserError(_("Cannot find the origin file, try by importing it again"))
+
+        files_data = self._to_files_data(attachments)
+        files_data.extend(self._unwrap_attachments(files_data))
+        file_data_groups = self._group_files_data_into_groups_of_mixed_types(files_data)
+        success = False
+
+        for file_data_group in file_data_groups:
+            self.invoice_line_ids = [Command.clear()]
+            self.with_context(group_invoice_lines=not lines_grouped)._extend_with_attachments(file_data_group)
+            if self.currency_id.compare_amounts(self.amount_untaxed, old_amount_untaxed) == 0\
+                and self.currency_id.compare_amounts(self.amount_total, old_amount_total) == 0:
+                success = True
+                self._message_log(body=_("Ungrouped lines from origin file") if lines_grouped else _("Grouped lines by tax"))
+                break
+
+        if not success:
+            raise UserError(_("Cannot find the origin file, try by importing it again"))
+
+    def _check_move_for_group_ungroup_lines_by_tax(self):
+        if self.state != 'draft':
+            raise UserError(_("You can only (un)group lines of a draft invoice"))
 
     # -------------------------------------------------------------------------
     # BUSINESS
