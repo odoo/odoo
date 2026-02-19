@@ -7,13 +7,13 @@ import secrets
 import textwrap
 import time
 from contextlib import closing
-from datetime import timedelta
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from freezegun import freeze_time
+import freezegun
 
 from odoo import fields
-from odoo.tests.common import RecordCapturer, TransactionCase, tagged
+from odoo.tests.common import RecordCapturer, TransactionCase, tagged, freeze_time
 from odoo.tools import mute_logger
 
 from odoo.addons.base.models.ir_cron import (
@@ -78,7 +78,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        freezer = freeze_time(cls.cr.now())
+        freezer = freezegun.freeze_time(cls.cr.now())
         cls.frozen_datetime = freezer.start()
         cls.addClassCleanup(freezer.stop)
 
@@ -684,3 +684,67 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
         self.env.invalidate_all()
         self.assertFalse(self.cron.active)
+
+
+COALESCE_WINDOW_MINS = 5
+COALESCE_WINDOW_SECS = COALESCE_WINDOW_MINS * 60
+
+
+@tagged('-at_install', 'post_install')
+@freeze_time("1999-09-30 10:32:00")
+class TestIrCronTriggerCoalescing(TransactionCase, CronMixinCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.cron = cls.env['ir.cron'].create(cls._get_cron_data(cls.env))
+
+    def test_cron_trigger_coalesce_instant(self):
+        with self.capture_triggers(self.cron.id) as capture:
+            self.cron._trigger(coalesce=COALESCE_WINDOW_MINS)
+
+        self.assertEqual(len(capture.records), 1)
+        self.assertEqual(
+            capture.records[0].call_at,
+            datetime(1999, 9, 30, 10, 35),
+        )
+
+    def test_cron_trigger_coalesce_explicit(self):
+        at = datetime.now() + timedelta(minutes=11)
+
+        with self.capture_triggers(self.cron.id) as capture:
+            self.cron._trigger(at=at, coalesce=COALESCE_WINDOW_MINS)
+
+        self.assertEqual(len(capture.records), 1)
+        self.assertEqual(
+            capture.records[0].call_at,
+            datetime(1999, 9, 30, 10, 45),
+        )
+
+    def test_cron_trigger_coalesce_same_window(self):
+        now = datetime.now()
+        t1 = now + timedelta(minutes=1)
+        t2 = now + timedelta(minutes=2)
+
+        with self.capture_triggers(self.cron.id) as capture:
+            self.cron._trigger(at=[t1, t2], coalesce=COALESCE_WINDOW_MINS)
+
+        self.assertEqual(len(capture.records), 2)
+        call_ats = {r.call_at for r in capture.records}
+        self.assertEqual(len(call_ats), 1)
+        self.assertEqual(
+            call_ats.pop(),
+            datetime(1999, 9, 30, 10, 35)
+        )
+
+    def test_cron_trigger_coalesce_different_windows(self):
+        now = datetime.now()
+        t1 = now + timedelta(minutes=2)
+        t2 = now + timedelta(minutes=4)
+
+        with self.capture_triggers(self.cron.id) as capture:
+            self.cron._trigger(at=[t1, t2], coalesce=COALESCE_WINDOW_MINS)
+
+        call_ats = sorted(r.call_at for r in capture.records)
+        self.assertEqual(len(call_ats), 2)
+        self.assertEqual(call_ats[0], datetime(1999, 9, 30, 10, 35))
+        self.assertEqual(call_ats[1], datetime(1999, 9, 30, 10, 40))
