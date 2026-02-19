@@ -453,8 +453,16 @@ class MrpProduction(models.Model):
 
     @api.depends('workorder_ids.duration_expected')
     def _compute_duration_expected(self):
-        for production in self:
-            production.duration_expected = sum(production.workorder_ids.mapped('duration_expected'))
+        res = self.env['mrp.workorder']._read_group(
+            [('production_id', 'in', self.ids)],
+            ['production_id'],
+            ['duration_expected:sum'],
+        )
+        productions_with_wo = self.env['mrp.production']
+        for production, total_duration_expected in res:
+            production.duration_expected = total_duration_expected
+            productions_with_wo |= production
+        (self - productions_with_wo).duration_expected = 0.0
 
     @api.depends('workorder_ids.duration')
     def _compute_duration(self):
@@ -818,26 +826,20 @@ class MrpProduction(models.Model):
 
     @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids', 'never_product_template_attribute_value_ids')
     def _compute_move_finished_ids(self):
-        production_with_move_finished_ids_to_unlink_ids = OrderedSet()
-        for production in self:
-            if production.state != 'draft':
-                updated_values = {}
-                if production.date_finished:
-                    updated_values['date'] = production.date_finished
-                if production.date_deadline:
-                    updated_values['date_deadline'] = production.date_deadline
-                if 'date' in updated_values or 'date_deadline' in updated_values:
-                    production.move_finished_ids = [
-                        Command.update(m.id, updated_values) for m in production.move_finished_ids
-                        if any(
-                            updated_values.get(field) and m[field] != updated_values[field]
-                            for field in ('date', 'date_deadline')
-                        )
-                    ]
+        productions_to_process = self.filtered(lambda p: p.state != 'draft')
+        for (date_finished, date_deadline), productions in productions_to_process.grouped(key=lambda p: (p.date_finished, p.date_deadline)).items():
+            if not date_finished and not date_deadline:
                 continue
-            production_with_move_finished_ids_to_unlink_ids.add(production.id)
+            updated_values = {}
+            moves_to_update = productions.move_finished_ids
+            if date_finished:
+                updated_values['date'] = date_finished
+            if date_deadline:
+                updated_values['date_deadline'] = date_deadline
+            moves_to_update = moves_to_update.filtered(lambda m: m.date != date_finished or m.date_deadline != date_deadline)
+            moves_to_update.update(updated_values)
 
-        production_with_move_finished_ids_to_unlink = self.browse(production_with_move_finished_ids_to_unlink_ids)
+        production_with_move_finished_ids_to_unlink = self - productions_to_process
 
         # delete to remove existing moves from database and clear to remove new records
         production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.delete(m) for m in production_with_move_finished_ids_to_unlink.move_finished_ids.ids]
@@ -1318,32 +1320,52 @@ class MrpProduction(models.Model):
         return origin
 
     def _set_qty_producing(self, pick_manual_consumption_moves=True):
-        if self.product_id.tracking == 'serial':
-            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
-            # allow changing a non-zero value to a 0 to not block mass produce feature
-            if qty_producing_uom != 1 and not (qty_producing_uom == 0 and self._origin.qty_producing != self.qty_producing):
-                self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
+        moves_to_set = self.env['stock.move']
+        quantities = []
+        for production in self:
+            if production.product_id.tracking == 'serial':
+                qty_producing_uom = production.product_uom_id._compute_quantity(
+                    production.qty_producing,
+                    production.product_id.uom_id,
+                    rounding_method="HALF-UP",
+                )
+                # allow changing a non-zero value to a 0 to not block mass produce feature
+                if qty_producing_uom != 1 and not (qty_producing_uom == 0 and production._origin.qty_producing != production.qty_producing):
+                    production.qty_producing = production.product_id.uom_id._compute_quantity(1, production.product_uom_id, rounding_method='HALF-UP')
+            # waiting for a preproduction move before assignement
+            is_waiting = (
+                production.warehouse_id.manufacture_steps != "mrp_one_step"
+                and production.picking_ids.filtered(lambda p: (
+                        p.picking_type_id == production.warehouse_id.pbm_type_id
+                        and p.state not in ("done", "cancel")
+                    )
+                )
+            )
+            accumulated_qty = 0.0
+            production_finished_ids = set(production.move_finished_ids.ids)
+            for move in (
+                production.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
+                | production.move_finished_ids.filtered(lambda m: m.product_id != production.product_id or m.product_id.tracking == 'serial')
+            ):
+                # picked + manual means the user set the quantity manually
+                if move.manual_consumption and move.picked:
+                    continue
 
-        # waiting for a preproduction move before assignement
-        is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
-
-        for move in (
-            self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
-            | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
-        ):
-            # picked + manual means the user set the quantity manually
-            if move.manual_consumption and move.picked:
-                continue
-
-            # sudo needed for portal users
-            if move.sudo()._should_bypass_set_qty_producing():
-                continue
-
-            new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
-            move._set_quantity_done(new_qty)
+                # sudo needed for portal users
+                if move.sudo()._should_bypass_set_qty_producing():
+                    continue
+                new_qty = production.qty_producing - production.qty_produced - accumulated_qty
+                new_qty = float_round(new_qty * move.unit_factor, precision_rounding=move.product_uom.rounding)
+                moves_to_set |= move
+                quantities.append(new_qty)
+                if move.id in production_finished_ids and (move.product_id == production.product_id and move.product_id.tracking == 'serial') and move.picked:
+                    accumulated_qty += new_qty
+        if moves_to_set:
+            moves_to_set._set_quantities_done(quantities)
+        for move in moves_to_set:
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
-                    and (move.product_id != self.product_id or not move.production_id or move.product_id.tracking != 'serial'):
+                    and (not move.production_id or move.product_id != move.production_id.product_id or move.product_id.tracking != 'serial'):
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -2082,8 +2104,12 @@ class MrpProduction(models.Model):
             bo = production_to_backorders[production]
 
             # Adapt duration
+            new_durations = defaultdict(set)
             for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+                duration_expected = workorder._get_duration_expected()
+                new_durations[duration_expected].add(workorder.id)
+            for duration_expected, workorder_ids in new_durations.items():
+                self.env['mrp.workorder'].browse(workorder_ids).duration_expected = duration_expected
 
             # Adapt quantities produced
             for workorder in production.workorder_ids.sorted('id'):
@@ -2242,8 +2268,7 @@ class MrpProduction(models.Model):
             else:
                 return production.action_mass_produce()
 
-        for production in self.env['mrp.production'].browse(productions_auto):
-            production._set_quantities()
+        self.env['mrp.production'].browse(productions_auto)._set_quantities()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -2817,29 +2842,28 @@ class MrpProduction(models.Model):
         return origs
 
     def _set_quantities(self):
-        self.ensure_one()
-        missing_lot_id_products = ""
-        if self.product_tracking in ('lot', 'serial') and not self.lot_producing_id:
-            self.action_generate_serial()
-        if self.product_tracking == 'serial' and float_compare(self.qty_producing, 1, precision_rounding=self.product_uom_id.rounding) == 1:
-            self.qty_producing = 1
-        else:
-            self.qty_producing = self.product_qty - self.qty_produced
+        for production in self:
+            if production.product_tracking in ('lot', 'serial') and not production.lot_producing_id:
+                production.action_generate_serial()
+            if production.product_tracking == 'serial' and float_compare(production.qty_producing, 1, precision_rounding=self.product_uom_id.rounding) == 1:
+                production.qty_producing = 1
+            else:
+                production.qty_producing = production.product_qty - production.qty_produced
         self._set_qty_producing()
-
-        for move in self.move_raw_ids:
-            if move.state in ('done', 'cancel') or not move.product_uom_qty:
-                continue
-            rounding = move.product_uom.rounding
-            if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
-                    missing_lot_id_products += "\n  - %s" % move.product_id.display_name
-        if missing_lot_id_products:
-            error_msg = _(
+        for production in self:
+            missing_lot_id_products = ""
+            for move in production.move_raw_ids:
+                if move.state in ('done', 'cancel') or not move.product_uom_qty:
+                    continue
+                if move.manual_consumption:
+                    if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
+                        missing_lot_id_products += "\n  - %s" % move.product_id.display_name
+            if missing_lot_id_products:
+                error_msg = _(
                 "You need to supply Lot/Serial Number for products and 'consume' them: %(missing_products)s",
                 missing_products=missing_lot_id_products,
-            )
-            raise UserError(error_msg)
+                )
+                raise UserError(error_msg)
 
     def _get_autoprint_done_report_actions(self):
         """ Reports to auto-print when MO is marked as done

@@ -2344,6 +2344,37 @@ Please change the quantity done or the rounding precision of your unit of measur
                     res.append((0, 0, vals))
         return res
 
+    def _set_quantities_done(self, quantities):
+        """
+        Set the given quantities to the moves in self.
+        Batched version of _set_quantity_done that creates/updates/deletes lines in batches.
+        :param quantities: a sequence of quantities, 1 by move in self.
+        """
+        move_lines_to_create_vals = []
+        move_lines_to_unlink = self.env['stock.move.line']
+        for move, qty in zip(self, quantities):
+            commands = move._set_quantity_done_prepare_vals(qty)
+            for command in commands:
+                match command:
+                    case Command.CREATE, _, vals:
+                        vals.setdefault('move_id', move.id)
+                        move_lines_to_create_vals.append(vals)
+                    case Command.DELETE, line_id, _:
+                        move_lines_to_unlink |= self.env['stock.move.line'].browse([line_id])
+                    case Command.UPDATE, line_id, vals:
+                        self.env['stock.move.line'].browse([line_id]).update(vals)
+        # Handle NewIds
+        if self and not self[0].id:
+            new_lines = self.env['stock.move.line'].concat(*[self.env['stock.move.line'].new(vals) for vals in move_lines_to_create_vals])
+            move_lines_to_unlink['move_id'] = False
+        else:
+            new_lines = self.env['stock.move.line'].create(move_lines_to_create_vals)
+            move_lines_to_unlink.unlink()
+        # `_set_quantity_done_prepare_vals` may return some commands to create new SMLs
+        # These new SMLs need to be redirected thanks to putaway rules
+        for move, lines in new_lines.grouped(key='move_id').items():
+            lines._apply_putaway_strategy()
+
     def _set_quantity_done(self, qty):
         """
         Set the given quantity as quantity done on the move through the move lines. The method is
@@ -2351,11 +2382,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         looking for trouble...).
         @param qty: quantity in the UoM of move.product_uom
         """
-        existing_smls = self.move_line_ids
-        self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
-        # `_set_quantity_done_prepare_vals` may return some commands to create new SMLs
-        # These new SMLs need to be redirected thanks to putaway rules
-        (self.move_line_ids - existing_smls)._apply_putaway_strategy()
+        self._set_quantities_done([qty])
 
     def _adjust_procure_method(self, picking_type_code=False):
         """ This method will try to apply the procure method MTO on some moves if

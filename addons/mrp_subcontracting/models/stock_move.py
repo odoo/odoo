@@ -63,15 +63,21 @@ class StockMove(models.Model):
         not_editable.is_quantity_done_editable = False
         super(StockMove, self - not_editable)._compute_is_quantity_done_editable()
 
-    def _set_quantity_done(self, qty):
-        to_set_moves = self
-        for move in self:
+    def _set_quantities_done(self, quantities):
+        to_set_moves = self.env['stock.move']
+        to_set_quantities = []
+        for move, qty in zip(self, quantities):
             if move.is_subcontract and move._subcontracting_possible_record():
                 # If 'done' quantity is changed through the move, record components as if done through the wizard.
                 move._auto_record_components(qty)
-                to_set_moves -= move
+            else:
+                to_set_moves |= move
+                to_set_quantities.append(qty)
         if to_set_moves:
-            super(StockMove, to_set_moves)._set_quantity_done(qty)
+            super(StockMove, to_set_moves)._set_quantities_done(to_set_quantities)
+
+    def _set_quantity_done(self, qty):
+        super()._set_quantity_done(qty)
 
     def _set_quantity(self):
         to_set_moves = self
