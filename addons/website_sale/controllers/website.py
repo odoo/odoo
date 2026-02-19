@@ -26,7 +26,7 @@ class WebsiteSaleForm(WebsiteForm):
             return json.dumps({'error_fields': e.args[0]})
 
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_cart):
+        if not (order_sudo := website.current_sale_order_id):
             return json.dumps({'error': "No order found; please add a product to your cart."})
 
         if data['record']:
@@ -72,7 +72,7 @@ class Website(main.Website):
     @route()
     def change_lang(self, lang, **kwargs):
         website = self.env['website'].get_current_website()
-        if cart := website.current_cart:
+        if cart := website.current_sale_order_id:
             request.env.add_to_compute(
                 cart.order_line._fields['name'],
                 cart.order_line.with_context(lang=lang),

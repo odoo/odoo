@@ -896,7 +896,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
-        prev_pricelist = website.current_pricelist
+        prev_pricelist = website.current_pricelist_id
         if (
             self._apply_selectable_pricelist(pricelist.id)
             and redirect_url
@@ -983,9 +983,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if pricelist is None:  # Reset the pricelist
             request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
             request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
-            website.current_pricelist = website._get_and_cache_current_pricelist()
+            website.invalidate_model(['current_pricelist_id'])
 
-            if order_sudo := website.current_cart:
+            if order_sudo := website.current_sale_order_id:
                 pl_before = order_sudo.pricelist_id
                 order_sudo._compute_pricelist_id()
                 if order_sudo.pricelist_id != pl_before:
@@ -994,15 +994,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         pricelist.ensure_one()
 
-        if pricelist.id == website.current_pricelist.id:
+        if pricelist.id == website.current_pricelist_id.id:
             # Nothing to do
             return
 
         request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist.id
         request.session[PRICELIST_SELECTED_SESSION_CACHE_KEY] = pricelist.id
-        website.current_pricelist = pricelist.sudo()
+        website.invalidate_model(['current_pricelist_id'])
 
-        if order_sudo := website.current_cart:
+        if order_sudo := website.current_sale_order_id:
             order_sudo.pricelist_id = pricelist
             order_sudo._recompute_prices()
 
@@ -1027,7 +1027,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         website = self.env['website'].get_current_website()
         try_skip_step = str2bool(try_skip_step or 'false')
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
         request.session['sale_last_order_id'] = order_sudo.id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
@@ -1102,7 +1102,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
         website = self.env['website'].get_current_website()
 
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
         if redirection := self._check_cart(order_sudo):
             return redirection
 
@@ -1205,7 +1205,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: str
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
         if redirection := self._check_cart(order_sudo):
             return json.dumps({'redirectUrl': redirection.location})
 
@@ -1258,7 +1258,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _needs_address(self):
         website = self.env['website'].get_current_website()
-        if cart := website.current_cart:
+        if cart := website.current_sale_order_id:
             return cart._needs_customer_address()
         return super()._needs_address()
 
@@ -1371,7 +1371,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return int: The order's partner id.
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
@@ -1483,7 +1483,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         partner_id = int(partner_id)
 
         website = self.env['website'].get_current_website()
-        if not (order_sudo := website.current_cart):
+        if not (order_sudo := website.current_sale_order_id):
             return
 
         ResPartner = request.env['res.partner'].sudo()
@@ -1529,7 +1529,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # check that cart is valid
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
         if redirection := self._check_cart(order_sudo):
             return redirection
 
@@ -1595,7 +1595,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
            paying / canceling
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
@@ -1621,7 +1621,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         if sale_order_id is None:
             website = self.env['website'].get_current_website()
-            order_sudo = website.current_cart
+            order_sudo = website.current_sale_order_id
             if not order_sudo and 'sale_last_order_id' in request.session:
                 # Retrieve the last known order from the session if the session key `sale_order_id`
                 # was prematurely cleared. This is done to prevent the user from updating their cart
@@ -1979,7 +1979,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.website
         kwargs.update({
             'currency_id': website.currency_id.id,
-            'pricelist_id': website.current_pricelist.id,
+            'pricelist_id': website.current_pricelist_id.id,
         })
 
     @staticmethod

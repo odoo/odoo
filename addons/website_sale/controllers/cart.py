@@ -34,7 +34,7 @@ class Cart(PaymentPortal):
         if not website.has_ecommerce_access():
             return request.redirect('/web/login')
 
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
 
         values = {}
         if id and access_token:
@@ -113,7 +113,7 @@ class Cart(PaymentPortal):
         :rtype: dict
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_cart or website._create_cart()
+        order_sudo = website.current_sale_order_id or website._create_cart()
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
 
@@ -245,7 +245,7 @@ class Cart(PaymentPortal):
 
         website = self.env['website'].get_current_website()
         IrUiView = request.env['ir.ui.view']
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
         values['website_sale.cart_lines'] = IrUiView._render_template(
             'website_sale.cart_lines', {
                 'website_sale_order': order_sudo,
@@ -317,7 +317,7 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         website = self.env['website'].get_current_website()
-        order_sudo = website.current_cart
+        order_sudo = website.current_sale_order_id
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
         IrUiView = request.env['ir.ui.view']
 
@@ -395,7 +395,7 @@ class Cart(PaymentPortal):
         # Prepare the order history.
         website = self.env['website'].get_current_website()
         SaleOrderLineSudo = request.env['sale.order.line'].sudo()
-        cart_lines_sudo = website.current_cart.order_line if website.current_cart else SaleOrderLineSudo
+        cart_lines_sudo = website.current_sale_order_id.order_line if website.current_sale_order_id else SaleOrderLineSudo
         seen_lines_sudo = SaleOrderLineSudo
         lines_per_order_date = {}
         for line_sudo in previous_orders_lines_sudo:

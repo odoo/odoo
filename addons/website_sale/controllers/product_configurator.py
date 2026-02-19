@@ -239,7 +239,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         )
         if product_taxes:
             website = request.env['website'].get_current_website()
-            taxes = website.current_fiscal_position.map_tax(product_taxes)
+            taxes = website.current_fiscal_position_id.map_tax(product_taxes)
             return request.env['product.template']._apply_taxes_to_price(
                 price, currency, product_taxes, taxes, product_or_template, website=request.website
             )

@@ -311,9 +311,21 @@ class Website(models.Model):
         default=_default_confirmation_email_template,
     )
 
-    current_cart = fields.Many2many(string="Current Cart", compute="_compute_current_cart")
-    current_fiscal_position = fields.Many2many(string="Current Fiscal Position", compute="_compute_current_fiscal_position")
-    current_pricelist = fields.Many2many(string="Current Currency", compute="_compute_current_pricelist")
+    current_sale_order_id = fields.Many2many(
+        string="Current user cart",
+        comodel_name='sale.order',
+        compute="_compute_current_sale_order_id",
+    )
+    current_fiscal_position_id = fields.Many2many(
+        string="Current Fiscal Position",
+        comodel_name='account.fiscal.position',
+        compute="_compute_current_fiscal_position_id",
+    )
+    current_pricelist_id = fields.Many2many(
+        string="Current Currency",
+        comodel_name='product.pricelist',
+        compute="_compute_current_pricelist_id",
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -325,23 +337,23 @@ class Website(models.Model):
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
-    def _compute_current_cart(self):
+    def _compute_current_sale_order_id(self):
         for website in self:
-            website.current_cart = website._get_and_cache_current_cart()
+            website.current_sale_order_id = website._get_and_cache_current_sale_order_id()
 
-    def _compute_current_fiscal_position(self):
+    def _compute_current_fiscal_position_id(self):
         for website in self:
-            website.current_fiscal_position = website._get_and_cache_current_fiscal_position()
+            website.current_fiscal_position_id = website._get_and_cache_current_fiscal_position_id()
 
-    def _compute_current_pricelist(self):
+    def _compute_current_pricelist_id(self):
         for website in self:
-            website.current_pricelist = website._get_and_cache_current_pricelist()
+            website.current_pricelist_id = website._get_and_cache_current_pricelist_id()
 
     @api.depends('company_id')
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = (
-                request and hasattr(request, 'pricelist') and website.current_pricelist.currency_id
+                request and hasattr(request, 'pricelist') and website.current_pricelist_id.currency_id
                 or website.company_id.sudo().currency_id
             )
 
@@ -683,12 +695,12 @@ class Website(models.Model):
             partner_pricelist_id = False
         website_pricelists = website.sudo().pricelist_ids
 
-        current_pricelist_id = request and request.session.get(PRICELIST_SESSION_CACHE_KEY) or None
+        current_pricelist_id_id = request and request.session.get(PRICELIST_SESSION_CACHE_KEY) or None
 
         pricelist_ids = website._get_pl_partner_order(
             country_code,
             show_visible,
-            current_pl_id=current_pricelist_id,
+            current_pl_id=current_pricelist_id_id,
             website_pricelist_ids=tuple(website_pricelists.ids),
             partner_pl_id=partner_pricelist_id,
         )
@@ -735,7 +747,7 @@ class Website(models.Model):
 
         request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
         request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
-        self.current_cart = sale_order_sudo
+        self.invalidate_model(['current_sale_order_id'])
 
         return sale_order_sudo
 
@@ -746,14 +758,14 @@ class Website(models.Model):
             'company_id': self.company_id.id,
             'partner_id': partner_sudo.id,
 
-            'fiscal_position_id': self.current_fiscal_position.id,
-            'pricelist_id': self.current_pricelist.id,
+            'fiscal_position_id': self.current_fiscal_position_id.id,
+            'pricelist_id': self.current_pricelist_id.id,
 
             'team_id': self.salesteam_id.id,
             'website_id': self.id,
         }
 
-    def _get_and_cache_current_pricelist(self):
+    def _get_and_cache_current_pricelist_id(self):
         """Retrieve and cache the current pricelist for the session.
 
         Note: self.ensure_one()
@@ -778,7 +790,7 @@ class Website(models.Model):
             ):
                 return pricelist_sudo.sudo()
 
-        if cart_sudo := self.current_cart:
+        if cart_sudo := self.current_sale_order_id:
             if not request.env.cr.readonly:
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()
@@ -793,7 +805,7 @@ class Website(models.Model):
 
         return pricelist_sudo
 
-    def _get_and_cache_current_fiscal_position(self):
+    def _get_and_cache_current_fiscal_position_id(self):
         """Retrieve and cache the current fiscal position for the session.
 
         Note: self.ensure_one()
@@ -832,7 +844,7 @@ class Website(models.Model):
 
         return fpos_sudo
 
-    def _get_and_cache_current_cart(self):
+    def _get_and_cache_current_sale_order_id(self):
         """ Retrieves and caches the current cart for the session.
 
         Note: self.ensure_one()

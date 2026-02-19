@@ -22,7 +22,7 @@ class ProductWishlist(Controller):
         website = self.env['website'].get_current_website()
 
         wish = Wishlist._add_to_wishlist(
-            website.current_pricelist.id,
+            website.current_pricelist_id.id,
             request.website.currency_id.id,
             request.website.id,
             price,
