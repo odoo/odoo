@@ -221,15 +221,15 @@
                 ]"/>
                 <field name="user_id"/>
                 <field name="activity_type_id"/>
-                <filter name="filter_user_id_uid" string="My Activities" domain="[('user_id', '=', uid)]"/>
+                <filter name="filter_activities_my" string="My Activities" domain="[('user_id', '=', uid)]"/>
                 <filter name="filter_user_id_no_user" string="Unassigned Activities" domain="[('user_id', '=', False)]"/>
                 <separator/>
                 <separator invisible="1"/>
                 <filter string="Done" name="filter_archived" domain="[('active', '=', False)]"/>
-                <filter string="Overdue" name="filter_date_deadline_past"
+                <filter string="Overdue" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', 'today')]"
                         help="Show all records whose next activity date is past"/>
-                <filter string="Today" name="filter_date_deadline_today"
+                <filter string="Today" name="activities_today"
                         domain="[('date_deadline', '=', 'today')]"/>
                 <filter string="Tomorrow" name="filter_date_deadline_tomorrow"
                         help="Show all records whose next action date is tomorrow"
@@ -240,7 +240,7 @@
                             ('date_deadline', '&gt;=', '=week_start'),
                             ('date_deadline', '&lt;', '=week_start +1w')
                         ]"/>
-                <filter string="Future" name="filter_date_deadline_future"
+                <filter string="Future" name="activities_upcoming_all"
                         domain="[('date_deadline', '&gt;', 'today')
                         ]"/>
                 <separator />
@@ -441,9 +441,9 @@
         <!-- ensure pagination works even if _search removes records after fetching -->
         <field name="context">{
             'force_search_count': 1,
-            'search_default_filter_user_id_uid': 1,
-            'search_default_filter_date_deadline_past': 1,
-            'search_default_filter_date_deadline_today': 1,
+            'search_default_filter_activities_my': 1,
+            'search_default_activities_today': 1,
+            'search_default_activities_overdue': 1,
         }</field>
     </record>
 
