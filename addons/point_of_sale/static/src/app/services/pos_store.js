@@ -2636,6 +2636,23 @@ export class PosStore extends WithLazyGetterTrap {
         });
         await validation.validateOrder(false);
     }
+<<<<<<< eec4bedfcdcf30e8b3cb41a0ba83bf5c712a1c6a
+||||||| 47e561bd1f6bc14724d60ebf09a66e458dfd4799
+}
+=======
+
+    clickSaveOrder() {
+        this.syncAllOrders({ orders: [this.getOrder()] });
+        this.notification.add(_t("Order saved for later"), { type: "success" });
+        this.setOrder(this.getEmptyOrder());
+        this.mobile_pane = "right";
+    }
+
+    get showSaveOrderButton() {
+        return this.config.raw.trusted_config_ids.length > 0;
+    }
+}
+>>>>>>> f197acb88ec8ad780307ef0372119a4c359534a2
 
     handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
         const srcKey = srcLine.preparationKey;
