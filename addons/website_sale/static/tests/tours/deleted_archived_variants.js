@@ -1,8 +1,7 @@
 import { registry } from "@web/core/registry";
 
 // This tour relies on a data created from the python test.
-registry.category("web_tour.tours").add('website_sale.deleted_archived_variants', {
-    url: '/shop?search=Test Product 2',
+registry.category("web_tour.tours").add("website_sale.deleted_archived_variants", {
     steps: () => [
         {
             content: "check price on /shop (template price)",
@@ -43,6 +42,6 @@ registry.category("web_tour.tours").add('website_sale.deleted_archived_variants'
         {
             content: "check add to cart not possible",
             trigger: '.js_product button[name="add_to_cart"]:disabled',
-        }
-    ]
+        },
+    ],
 });

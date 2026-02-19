@@ -4,12 +4,11 @@ import { redirect } from "@web/core/utils/urls";
 import { post } from "@web/core/network/http_service";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
-var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
+var orderIdKey = "website_sale.tour_shop_cart_recovery.orderId";
+var recoveryLinkKey = "website_sale.tour_shop_cart_recovery.recoveryLink";
 
-registry.category("web_tour.tours").add('website_sale.cart_recovery', {
+registry.category("web_tour.tours").add("website_sale.cart_recovery", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: '/shop',
     steps: () => [
         ...tourUtils.addToCart({ productName: "Acoustic Bloc Screens", expectUnloadPage: true }),
         tourUtils.goToCart(),
@@ -20,7 +19,11 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
                 const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
                 browser.localStorage.setItem(orderIdKey, orderId);
 
-                const url = await post('/web/session/logout?redirect=/web/login', { csrf_token: odoo.csrf_token }, "url");
+                const url = await post(
+                    "/web/session/logout?redirect=/web/login",
+                    { csrf_token: odoo.csrf_token },
+                    "url"
+                );
                 redirect(url);
             },
             expectUnloadPage: true,
@@ -42,7 +45,7 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
                 const orderId = browser.localStorage.getItem(orderIdKey);
                 const url = "/odoo/action-sale.action_orders/" + orderId;
                 this.anchor.value = url;
-            }
+            },
         },
         {
             content: "login as admin and go to the SO (backend)",
@@ -52,7 +55,7 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
         },
         {
             content: "click action",
-            trigger: '.o_cp_action_menus .dropdown-toggle',
+            trigger: ".o_cp_action_menus .dropdown-toggle",
             run: "click",
         },
         {
@@ -71,22 +74,29 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
         },
         {
             content: 'Select the "Ecommerce: Cart Recovery" template from the list.',
-            trigger: '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Ecommerce: Cart Recovery")',
-            run: 'click'
+            trigger:
+                '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Ecommerce: Cart Recovery")',
+            run: "click",
         },
         {
             content: "click Send email",
-            trigger: '.btn.o_mail_send',
+            trigger: ".btn.o_mail_send",
             run: "click",
         },
         {
             content: "check the mail is sent, grab the recovery link, and logout",
             trigger: ".o-mail-Message-body a:text(Resume order)",
             async run({ queryOne }) {
-                var link = queryOne('.o-mail-Message-body a:contains("Resume order")').getAttribute('href');
+                var link = queryOne('.o-mail-Message-body a:contains("Resume order")').getAttribute(
+                    "href"
+                );
                 browser.localStorage.setItem(recoveryLinkKey, link);
 
-                const url = await post('/web/session/logout?redirect=/', { csrf_token: odoo.csrf_token }, "url");
+                const url = await post(
+                    "/web/session/logout?redirect=/",
+                    { csrf_token: odoo.csrf_token },
+                    "url"
+                );
                 redirect(url);
             },
             expectUnloadPage: true,
@@ -113,5 +123,5 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
             content: "check product is in restored cart",
             trigger: 'div>a>h6:contains("Acoustic Bloc Screens")',
         },
-    ]
+    ],
 });

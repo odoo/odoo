@@ -32,7 +32,6 @@ let itemId;
 
 
 registry.category("web_tour.tours").add('website_sale.google_analytics_view_item', {
-    url: '/shop?search=Colored T-Shirt',
     steps: () => [
         {
             content: "select Colored T-Shirt",
@@ -64,7 +63,6 @@ registry.category("web_tour.tours").add('website_sale.google_analytics_view_item
 });
 
 registry.category("web_tour.tours").add('website_sale.google_analytics_add_to_cart', {
-    url: '/shop?search=Basic Shirt',
     steps: () => [
         ...tourUtils.addToCart({ productName: 'Basic Shirt', search: false, expectUnloadPage: true }),
         {

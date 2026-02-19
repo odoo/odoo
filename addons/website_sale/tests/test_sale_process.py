@@ -87,20 +87,20 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         )
 
     def test_01_cart_update_check(self):
-        self.start_tour('/', 'website_sale.update_cart', login='admin')
+        self.start_tour('/shop', 'website_sale.update_cart', login='admin')
 
     def test_02_admin_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
-        self.start_tour('/', 'website_sale.basic_shop_flow', login='admin')
+        self.start_tour('/shop', 'website_sale.basic_shop_flow', login='admin')
 
     def test_03_demo_checkout(self):
         self.partner_demo.write(self.dummy_partner_address_values)
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
-        self.start_tour('/', 'website_sale.basic_shop_flow', login='demo')
+        self.start_tour('/shop', 'website_sale.basic_shop_flow', login='demo')
 
     def test_04_admin_website_sale_tour(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
@@ -128,13 +128,13 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'show_line_subtotals_tax_selection': 'tax_excluded',
         }).execute()
 
-        self.start_tour('/', 'website_sale.complete_flow_1')
+        self.start_tour('/shop?search=Storage Box Test', 'website_sale.complete_flow_1')
         self.start_tour(
             self.env['website'].get_client_action_url('/shop/cart'),
             'website_sale.enable_extra_info',
             login='admin'
         )
-        self.start_tour('/', 'website_sale.complete_flow_2', login='admin')
+        self.start_tour('/shop/cart', 'website_sale.complete_flow_2', login='admin')
 
     def test_05_google_analytics_tracking(self):
         # Data for google_analytics_view_item
@@ -165,7 +165,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             ]
         })
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
-        self.start_tour('/shop', 'website_sale.google_analytics_view_item')
+        self.start_tour('/shop?search=Colored T-Shirt', 'website_sale.google_analytics_view_item')
         # Data for google_analytics_add_to_cart
         self.env['product.template'].create({
             'name': 'Basic Shirt',
@@ -173,7 +173,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'type': 'consu',
             'website_published': True
         })
-        self.start_tour('/shop', 'website_sale.google_analytics_add_to_cart')
+        self.start_tour('/shop?search=Basic Shirt', 'website_sale.google_analytics_add_to_cart')
 
     def test_06_public_user_shop_repair(self):
         """ Public user purchasing repair service products in website shop. """
@@ -187,7 +187,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'sale_ok': True,
             'is_published': True,
         })
-        self.start_tour("/", 'shop_repair_product', login=None)
+        self.start_tour("/shop", 'shop_repair_product', login=None)
 
     def test_checkout_with_rewrite(self):
         # check that checkout page can be open with step rewritten

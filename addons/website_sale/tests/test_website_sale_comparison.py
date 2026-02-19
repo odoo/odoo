@@ -119,7 +119,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
                 })
             ]
         }])
-        self.start_tour("/", 'website_sale.product_comparison', login='admin')
+        self.start_tour("/shop", 'website_sale.product_comparison', login='admin')
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)

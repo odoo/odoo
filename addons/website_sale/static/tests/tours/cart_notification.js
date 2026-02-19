@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("website_sale.cart_notification_tax_included", {
-    url: "/shop",
     steps: () => [
         ...tourUtils.addToCart({
             productName: "website_sale_cart_notification_product_1",
@@ -26,7 +25,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_tax_incl
         },
         {
             content: "change quantity",
-            trigger: '.js_product input[name=add_qty]',
+            trigger: ".js_product input[name=add_qty]",
             run: "edit 3",
         },
         ...tourUtils.addToCartFromProductPage(),
@@ -63,9 +62,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_tax_incl
     ],
 });
 
-
 registry.category("web_tour.tours").add("website_sale.cart_notification_tax_excluded", {
-    url: "/shop",
     steps: () => [
         ...tourUtils.addToCart({
             productName: "website_sale_cart_notification_product_1",
@@ -89,7 +86,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_tax_excl
         },
         {
             content: "change quantity",
-            trigger: '.js_product input[name=add_qty]',
+            trigger: ".js_product input[name=add_qty]",
             run: "edit 3",
         },
         ...tourUtils.addToCartFromProductPage(),
@@ -126,9 +123,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_tax_excl
     ],
 });
 
-
 registry.category("web_tour.tours").add("website_sale.cart_notification_qty_and_total", {
-    url: "/shop",
     steps: () => [
         ...tourUtils.addToCart({
             productName: "website_sale_cart_notification_product_1",
@@ -149,7 +144,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_qty_and_
         // Again add same product
         {
             content: "change quantity",
-            trigger: '.js_product input[name=add_qty]',
+            trigger: ".js_product input[name=add_qty]",
             run: "edit 3",
         },
         ...tourUtils.addToCartFromProductPage(),

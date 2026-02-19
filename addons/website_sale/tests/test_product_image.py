@@ -208,7 +208,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # This ensures that tours with triggers on the amounts will run properly.
         self.env['product.pricelist'].search([]).action_archive()
 
-        self.start_tour('/', 'website_sale.product_page_zoom', login='website_user')
+        self.start_tour('/shop?debug=1&search=A Colorful Image', 'website_sale.product_page_zoom', login='website_user')
 
         # CASE: unlink move image to fallback if fallback image empty
         template.image_1920 = False
@@ -376,7 +376,7 @@ class TestWebsiteSaleRemoveImage(HttpCase):
         })
 
         self.start_tour(
-            self.env['website'].get_client_action_url('/'),
+            self.env['website'].get_client_action_url('/shop?search=Test Remove Image'),
             'website_sale.add_and_remove_main_product_image_no_variant',
             login='admin',
         )
@@ -394,7 +394,7 @@ class TestWebsiteSaleRemoveImage(HttpCase):
             'product_tmpl_id': self.template.id,
         })
         self.start_tour(
-            self.env['website'].get_client_action_url('/'),
+            self.env['website'].get_client_action_url('/shop?search=Test Remove Image'),
             'website_sale.remove_main_product_image_with_variant',
             login='admin',
         )

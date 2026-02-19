@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("shop_attribute_filters_remain_when_changing_page", {
-    url: "/shop",
     steps: () => [
         {
             content: "Select first attribute value",

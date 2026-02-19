@@ -108,7 +108,7 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             'group_product_price_comparison': True,
         }).execute()
         self.start_tour(
-            '/',
+            '/shop?search=test_product',
             'website_sale.compare_list_price_price_list_display',
             login=self.env.user.login,
         )

@@ -38,16 +38,16 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
     def test_website_sale_cart_notification_tax_included(self):
         self.env.ref('website_sale.product_search').active = True
         self.website.show_line_subtotals_tax_selection = 'tax_included'
-        self.start_tour("/", 'website_sale.cart_notification_tax_included')
+        self.start_tour("/shop", 'website_sale.cart_notification_tax_included')
 
     def test_website_sale_cart_notification_tax_excluded(self):
         self.env.ref('website_sale.product_search').active = True
         self.website.show_line_subtotals_tax_selection = 'tax_excluded'
-        self.start_tour("/", 'website_sale.cart_notification_tax_excluded')
+        self.start_tour("/shop", 'website_sale.cart_notification_tax_excluded')
 
     def test_website_sale_cart_notification_qty_and_total(self):
         """Check that adding product into cart which is already in the cart only display newly
         added qty count and total.
         """
         self.env.ref('website_sale.product_search').active = True
-        self.start_tour('/', 'website_sale.cart_notification_qty_and_total')
+        self.start_tour('/shop', 'website_sale.cart_notification_qty_and_total')

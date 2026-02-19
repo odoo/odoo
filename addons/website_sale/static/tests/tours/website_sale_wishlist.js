@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/wishlist_tour_utils";
 
 registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
-    url: '/shop?search=Customizable Desk',
     steps: () => [
         ...tourUtils.addToWishlistFromShopPage(),
         tourUtils.goToWishlist({ quantity: 1 }),
@@ -169,7 +168,6 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
 
 
 registry.category("web_tour.tours").add('website_sale.dynamic_variants_wishlist', {
-    url: '/shop?search=Bottle',
     steps: () => [
         {
             trigger: '.oe_product_cart:contains("Bottle")',
@@ -219,7 +217,6 @@ registry.category("web_tour.tours").add('website_sale.dynamic_variants_wishlist'
 });
 
 registry.category("web_tour.tours").add('website_sale.archived_variant', {
-    url: '/shop?search=Bottle',
     steps: () => [
         {
             trigger: ".o_wsale_products_page",

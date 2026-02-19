@@ -1,16 +1,14 @@
 import { registry } from "@web/core/registry";
 
 var imageSelector = '#o-carousel-product .carousel-item.active img';
-var imageName = "A Colorful Image";
 var nameGreen = "Forest Green";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('website_sale.product_page_zoom', {
-    url: '/shop?debug=1&search=' + imageName,
     steps: () => [
         {
-            content: "select " + imageName,
-            trigger: `.oe_product_cart a:text(${imageName})`,
+            content: "select A Colorful Image",
+            trigger: `.oe_product_cart a:text(A Colorful Image)`,
             run: "click",
             expectUnloadPage: true,
         },

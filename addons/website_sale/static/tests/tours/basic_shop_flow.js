@@ -1,8 +1,7 @@
 import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-registry.category("web_tour.tours").add('website_sale.basic_shop_flow', {
-    url: '/shop',
+registry.category("web_tour.tours").add("website_sale.basic_shop_flow", {
     steps: () => [
         ...tourUtils.searchProduct("Storage Box", { select: true }),
         ...tourUtils.addToCartFromProductPage(),
@@ -14,14 +13,13 @@ registry.category("web_tour.tours").add('website_sale.basic_shop_flow', {
             expectUnloadPage: true,
             waitFinalizeYourPayment: true,
         }),
-    ]
+    ],
 });
 
-registry.category("web_tour.tours").add('shop_repair_product', {
-    url: '/shop',
+registry.category("web_tour.tours").add("shop_repair_product", {
     steps: () => [
         ...tourUtils.searchProduct("Test Repair Service", { select: true }),
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart(),
-    ]
+    ],
 });
