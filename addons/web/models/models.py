@@ -1610,7 +1610,7 @@ class Base(models.AbstractModel):
             or an object with an error message when limit is defined and is reached.
         """
         field = self._fields[field_name]
-        supported_types = ['many2one', 'selection']
+        supported_types = ['many2one', 'selection', 'many2many']
         if field.type not in supported_types:
             types = dict(self.env["ir.model.fields"]._fields["ttype"]._description_selection(self.env))
             raise UserError(self.env._(

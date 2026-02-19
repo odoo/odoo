@@ -8,6 +8,11 @@ class Test_Search_PanelSource_Model(models.Model):
     name = fields.Char('Name', required=True)
     state = fields.Selection([('a', "A"), ('b', "B")])
     folder_id = fields.Many2one('test_search_panel.category_target_model')
+    folder_ids = fields.Many2many(
+        comodel_name='test_search_panel.category_target_model',
+        relation='test_sp_source_categ_m2m_rel',
+        string="Folders M2M"
+    )
     categ_id = fields.Many2one(
         'test_search_panel.category_target_model_no_parent_name')
     tag_ids = fields.Many2many(

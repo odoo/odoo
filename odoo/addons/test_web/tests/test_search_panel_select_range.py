@@ -1,4 +1,5 @@
 import odoo.tests
+from odoo import Command
 
 SEARCH_PANEL_ERROR = {'error_msg': "Too many items to display."}
 
@@ -702,4 +703,365 @@ class TestSelectRange(odoo.tests.TransactionCase):
             [
                 {'display_name': 'A', 'id': 'a'},
             ],
+        )
+
+    # Many2many case
+
+    def test_many2many_empty(self):
+        result = self.SourceModel.search_panel_select_range('folder_ids')
+        self.assertEqual(
+            result,
+            {
+                'parent_field': 'parent_name_id',
+                'values': [],
+            },
+        )
+
+    def test_many2many(self):
+        self.maxDiff = None
+        parent_folders = self.TargetModel.create([
+            {'name': 'Folder 1'},
+            {'name': 'Folder 2'},
+        ])
+
+        f1_id, f2_id = parent_folders.ids
+
+        children_folders = self.TargetModel.create([
+            {'name': 'Folder 3', 'parent_name_id': f1_id},
+            {'name': 'Folder 4', 'parent_name_id': f2_id},
+        ])
+
+        f3_id, f4_id = children_folders.ids
+
+        records = self.SourceModel.create([
+            {'name': 'Rec 1', 'folder_ids': [Command.set([f1_id, f2_id])]},
+            {'name': 'Rec 2', 'folder_ids': [Command.set([f3_id])]},
+            {'name': 'Rec 3', 'folder_ids': [Command.set([f4_id, f1_id])]},
+            {'name': 'Rec 4'},
+        ])
+
+        # counters, expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            expand=True,
+        )
+
+        # Folder1 ( rec1, rec3 ) + Folder3 ( rec2 ) -> 3
+        # Folder2 ( rec1 )       + Folder4 ( rec3 ) -> 2
+        # Folder3 ( rec2 ) -> 1
+        # Folder4 ( rec3 ) -> 1
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 3, 'display_name': 'Folder 1', 'id': f1_id, 'parent_name_id': False},
+                {'__count': 2, 'display_name': 'Folder 2', 'id': f2_id, 'parent_name_id': False},
+                {'__count': 1, 'display_name': 'Folder 3', 'id': f3_id, 'parent_name_id': f1_id},
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id, 'parent_name_id': f2_id},
+            ],
+        )
+
+        r1_id, _, r3_id, _ = records.ids
+
+        # counters, expand, hierarchization, and search domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r3_id]]],  # impact expected
+        )
+
+        # Folder1 ( rec1, rec3 ) + Folder3 ( \rec2 ) -> 2
+        # Folder2 ( rec1 )       + Folder4 ( rec3 )  -> 2
+        # Folder3 ( \rec2 ) -> 0
+        # Folder4 ( rec3 )  -> 1
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False},
+                {'__count': 2, 'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False},
+                {'__count': 0, 'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id},
+                {'__count': 1, 'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id},
+            ],
+        )
+
+        # counters, expand, hierarchization, and reached limit
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            expand=True,
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
+
+        # counters, expand, hierarchization, and unreached limit
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            expand=True,
+            limit=200,
+        )
+        self.assertEqual(
+            result,
+            {
+                'parent_field': 'parent_name_id',
+                'values': [
+                    {'__count': 3, 'display_name': 'Folder 1',
+                        'id': f1_id, 'parent_name_id': False},
+                    {'__count': 2, 'display_name': 'Folder 2',
+                        'id': f2_id, 'parent_name_id': False},
+                    {'__count': 1, 'display_name': 'Folder 3',
+                        'id': f3_id, 'parent_name_id': f1_id},
+                    {'__count': 1, 'display_name': 'Folder 4',
+                        'id': f4_id, 'parent_name_id': f2_id},
+                ],
+            },
+        )
+
+        # counters, expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            expand=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Folder 1', 'id': f1_id},
+                {'__count': 1, 'display_name': 'Folder 2', 'id': f2_id},
+                {'__count': 1, 'display_name': 'Folder 3', 'id': f3_id},
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False,
+        )
+
+        # no counters, expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            expand=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False},
+                {'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False},
+                {'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id},
+                {'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id},
+            ],
+        )
+
+        # no counters, expand, hierarchization, and search domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r3_id]]],  # no impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False},
+                {'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False},
+                {'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id},
+                {'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id},
+            ],
+        )
+
+        # no counters, expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            expand=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id},
+                {'display_name': 'Folder 2',
+                    'id': f2_id},
+                {'display_name': 'Folder 3',
+                    'id': f3_id},
+                {'display_name': 'Folder 4',
+                    'id': f4_id},
+            ],
+        )
+
+        # counters, no expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 3, 'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False},
+                {'__count': 2, 'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False},
+                {'__count': 1, 'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id},
+                {'__count': 1, 'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            'parent_name_id',
+        )
+
+        # counters, no expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Folder 1', 'id': f1_id},
+                {'__count': 1, 'display_name': 'Folder 2', 'id': f2_id},
+                {'__count': 1, 'display_name': 'Folder 3', 'id': f3_id},
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False,
+        )
+
+        # counters, no expand, no hierarchization, and category_domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            hierarchize=False,
+            category_domain=[['id', 'in', [r1_id, r3_id]]],  # impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Folder 1', 'id': f1_id},
+                {'__count': 1, 'display_name': 'Folder 2', 'id': f2_id},
+                {'__count': 0, 'display_name': 'Folder 3', 'id': f3_id},
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False,
+        )
+
+        # counters, no expand, no hierarchization, and limit
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            enable_counters=True,
+            hierarchize=False,
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
+
+        # no counters, no expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            hierarchize=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False},
+                {'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False},
+                {'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id},
+                {'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            'parent_name_id',
+        )
+
+        # no counters, no expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            search_domain=[(0, '=', 1)],
+        )
+        self.assertEqual(
+            result,
+            {'parent_field': 'parent_name_id', 'values': []},  # should not be a SEARCH_PANEL_ERROR
+        )
+
+        # no counters, no expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id},
+                {'display_name': 'Folder 2', 'id': f2_id},
+                {'display_name': 'Folder 3', 'id': f3_id},
+                {'display_name': 'Folder 4', 'id': f4_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False,
+        )
+
+        # no counters, no expand, no hierarchization, and category_domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            hierarchize=False,
+            category_domain=[['id', 'in', [r1_id, r3_id]]],  # no impact expected
+
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id},
+                {'display_name': 'Folder 2', 'id': f2_id},
+                {'display_name': 'Folder 3', 'id': f3_id},
+                {'display_name': 'Folder 4', 'id': f4_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False,
+        )
+
+        # no counters, no expand, no hierarchization, and comodel_domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_ids',
+            hierarchize=False,
+            comodel_domain=[['id', 'in', [f1_id, f4_id]]],
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id},
+                {'display_name': 'Folder 4', 'id': f4_id},
+            ],
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False,
         )

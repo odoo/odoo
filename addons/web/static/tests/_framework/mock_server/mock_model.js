@@ -961,7 +961,7 @@ function parseView(model, params) {
 function searchPanelDomainImage(model, fieldName, domain, setCount = false, limit = false) {
     const field = model._fields[fieldName];
     let groupIdName;
-    if (isM2OField(field)) {
+    if (isM2OField(field) || field.type === "many2many") {
         groupIdName = (value) => value || [false, undefined];
         // formatted_read_group does not take care of the condition [fieldName, '!=', false]
         // in the domain defined below!!!
@@ -2311,7 +2311,7 @@ export class Model extends Array {
 
         const field = this._fields[fieldName];
         const coModel = getRelation(field);
-        const supportedTypes = ["many2one", "selection"];
+        const supportedTypes = ["many2one", "selection", "many2many"];
         if (!supportedTypes.includes(field.type)) {
             throw new MockServerError(
                 `Only category types ${supportedTypes.join(" and ")} are supported, got "${
