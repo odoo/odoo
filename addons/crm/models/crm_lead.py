@@ -1318,6 +1318,10 @@ class CrmLead(models.Model):
         }
         return action
 
+    def action_convert_to_opportunity(self):
+        self.ensure_one()
+        self.convert_opportunity(self.partner_id.id)
+
     # ------------------------------------------------------------
     # VIEWS
     # ------------------------------------------------------------
@@ -1959,8 +1963,6 @@ class CrmLead(models.Model):
 
         if with_parent:
             partner_company = with_parent
-        elif self.partner_name:
-            partner_company = Partner.create(self._prepare_customer_values(self.partner_name))
         elif self.partner_id:
             partner_company = self.partner_id
         else:
