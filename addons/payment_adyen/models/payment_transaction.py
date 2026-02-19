@@ -421,14 +421,16 @@ class PaymentTransaction(models.Model):
                     "The capture of the transaction %s failed. reason: %s.",
                     self.reference, refusal_reason,
                 )
+                state_message = _("The capture of the transaction %s failed.", self.reference)
                 if self.source_transaction_id:  # child_tx => The event can't be retried.
-                    self._set_error(_(
-                        "The capture of the transaction %s failed.", self.reference
-                    ))
-                else:  # source tx with failed capture stays in its state, could be captured again
-                    self._log_message_on_linked_documents(_(
-                        "The capture of the transaction %s failed.", self.reference
-                    ))
+                    # A CAPTURE_FAILED webhook can be sent after an initial CAPTURE success.
+                    self._set_error(state_message, extra_allowed_states=('done',))
+                elif self.state == 'done':
+                    # If the capture ultimately failed after a successful capture notification,
+                    # revert the transaction to cancel linked accounting entries at post-process.
+                    self._set_canceled(state_message, extra_allowed_states=('done',))
+                else:  # source tx with failed capture stays in its state and can be captured again
+                    self._log_message_on_linked_documents(state_message)
         elif payment_state in const.RESULT_CODES_MAPPING['refused']:
             _logger.warning(
                 "the transaction %s was refused. reason: %s",
