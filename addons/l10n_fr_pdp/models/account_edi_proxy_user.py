@@ -1,4 +1,7 @@
 import logging
+from datetime import datetime
+from lxml import etree
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
@@ -8,6 +11,42 @@ from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
+
+CDAR_NSMAP = {
+    'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+    'rsm': "urn:un:unece:uncefact:data:standard:CrossDomainAcknowledgementAndResponse:100",
+    'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+    'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+    'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+}
+
+PROCESS_CONDITION_CODE_TO_RESPONSE_CODE = {
+    '200': 'submitted',  # PA-S (sending platform)
+    '202': 'received',  # PA-R (receiving platform)
+    '203': 'made_available',  # PA-R
+    '204': 'in_hand',  # R (receiver)
+    '205': 'approved',  # R
+    '207': 'contested',  # R
+    '210': 'refused',  # R
+    '211': 'payment_sent',  # R
+    '212': 'paid',  # S (sender)
+    '213': 'rejected',  # PA-R
+    '220': 'cancelled',  # S
+}
+
+
+
+def _parse_cdar_datetime(date_string):
+    if date_string is None:
+        return None
+    return datetime.strptime(date_string, '%Y%m%d%H%M%S')
+
+
+def _parse_cdar_date(date_string):
+    if date_string is None:
+        return None
+    return datetime.strptime(date_string, '%Y%m%d')
+
 
 
 class AccountEdiProxyClientUser(models.Model):
@@ -205,47 +244,12 @@ class AccountEdiProxyClientUser(models.Model):
                 }
             )
 
-    def _pdp_import_invoice(self, attachment, partner_endpoint, pdp_state, uuid):
-        """Save new documents in an accounting journal, when one is specified on the company.
-
-        :param attachment: the new document
-        :param partner_endpoint: DEPRECATED - to be removed in master
-        :param pdp_state: the state of the received PDP document
-        :param uuid: the UUID of the PDP document
-        :return: `True` if the document was saved, `False` if it was not
-        """
-        self.ensure_one()
-        journal = self.company_id.pdp_purchase_journal_id
-        if not journal:
-            return False
-
-        move = self.env['account.move'].create({
-            'journal_id': journal.id,
-            'move_type': 'in_invoice',
-            'pdp_move_state': pdp_state,
-            'pdp_message_uuid': uuid,
-        })
-        if 'is_in_extractable_state' in move._fields:
-            move.is_in_extractable_state = False
-
-        move._extend_with_attachments(attachment, new=True)
-        move._message_log(
-            body=_(
-                "PDP document (UUID: %(uuid)s) has been received successfully",
-                uuid=uuid,
-            ),
-            attachment_ids=attachment.ids,
-        )
-        move._autopost_bill()
-        attachment.write({'res_model': 'account.move', 'res_id': move.id})
-        return True
-
     def _pdp_get_new_documents(self, batch_size=None):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
         params = {
             'domain': {
-                'direction': 'incoming',
+                'direction': 'incoming',  # TODO: maybe we should also fetch outgoing lifecycle documents (adjust IAP code)
                 'errors': False,
             }
         }
@@ -272,36 +276,19 @@ class AccountEdiProxyClientUser(models.Model):
             need_retrigger = need_retrigger or len(message_uuids) > job_count
             message_uuids = message_uuids[:job_count]
 
-            proxy_acks = []
             # retrieve attachments for filtered messages
             all_messages = edi_user._call_pdp_proxy(
                 "/api/pdp/1/get_document",
                 params={'message_uuids': message_uuids},
             )
-
-            for uuid, content in all_messages.items():
-                enc_key = content["enc_key"]
-                document_content = content["document"]
-                filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                decoded_document = edi_user._decrypt_data(document_content, enc_key)
-                attachment = self.env["ir.attachment"].create(
-                    {
-                        "name": f"{filename}.xml",
-                        "raw": decoded_document,
-                        "type": "binary",
-                        "mimetype": "application/xml",
-                    }
-                )
-                if edi_user._pdp_import_invoice(attachment, None, content["state"], uuid):
-                    # Only acknowledge when we saved the document somewhere
-                    proxy_acks.append(uuid)
+            processed_uuid_to_record = edi_user._pdp_process_new_messages(all_messages)
 
             if not tools.config['test_enable']:
                 self.env.cr.commit()
-            if proxy_acks:
+            if processed_uuid_to_record:
                 edi_user._call_pdp_proxy(
                     "/api/pdp/1/ack",
-                    params={'message_uuids': proxy_acks},
+                    params={'message_uuids': list(processed_uuid_to_record)},
                 )
         if need_retrigger:
             self.env.ref('l10n_fr_pdp.ir_cron_pdp_get_new_documents')._trigger()
@@ -310,52 +297,291 @@ class AccountEdiProxyClientUser(models.Model):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
-            edi_user_moves = self.env['account.move'].search(
-                [
-                    ('pdp_move_state', '=', 'processing'),
-                    ('company_id', '=', edi_user.company_id.id),
-                ],
-                limit=job_count + 1,
-            )
-            if not edi_user_moves:
+            edi_user = edi_user.with_company(edi_user.company_id)
+            documents = edi_user._pdp_get_documents_for_status(job_count)
+            if not documents:
                 continue
-
-            need_retrigger = need_retrigger or len(edi_user_moves) > job_count
-            message_uuids = {move.pdp_message_uuid: move for move in edi_user_moves[:job_count]}
+            need_retrigger = need_retrigger or len(documents) > job_count
+            uuid_to_record = {document.pdp_message_uuid: document for document in documents[:job_count]}
             messages_to_process = edi_user._call_pdp_proxy(
                 "/api/pdp/1/get_document",
-                params={'message_uuids': list(message_uuids.keys())},
+                params={'message_uuids': list(uuid_to_record)},
             )
 
-            for uuid, content in messages_to_process.items():
-                if uuid == 'error':
-                    # this rare edge case can happen if the participant is not active on the proxy side
-                    # in this case we can't get information about the invoices
-                    edi_user_moves.pdp_move_state = 'error'
-                    log_message = _("PDP error: %s", content['message'])
-                    edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
-                    break
+            processed_message_uuids = edi_user._pdp_process_messages_status(messages_to_process, uuid_to_record)
 
-                move = message_uuids[uuid]
+            if processed_message_uuids:
+                edi_user._call_pdp_proxy(
+                    "/api/pdp/1/ack",
+                    params={'message_uuids': processed_message_uuids},
+                )
+        if need_retrigger:
+            self.env.ref('l10n_fr_pdp.ir_cron_pdp_get_message_status')._trigger()
+
+    def _pdp_get_documents_for_status(self, batch_size):
+        self.ensure_one()
+
+        edi_user_moves = self.env['account.move'].search(
+            [
+                ('pdp_move_state', '=', 'processing'),
+                ('company_id', '=', self.company_id.id),
+            ],
+            limit=batch_size + 1,
+        )
+        documents = list(edi_user_moves)
+        if len(documents) > batch_size:
+            return documents
+
+        edi_user_responses = self.env['pdp.response'].search(
+            [
+                ('pdp_state', '=', 'processing'),
+                ('company_id', '=', self.company_id.id),
+            ],
+            limit=batch_size - len(documents) + 1,
+        )
+        return documents + list(edi_user_responses)
+
+    def _pdp_process_messages_status(self, messages, uuid_to_record):
+        self.ensure_one()
+        processed_message_uuids = []
+        for uuid, content in messages.items():
+            record_model = uuid_to_record[uuid]._name
+            if record_model == 'pdp.response':
+                pdp_response = uuid_to_record[uuid]
                 if content.get('error'):
-                    # "PDP request not ready" error:
-                    # thrown when the IAP is still processing the message
                     if content['error'].get('code') == 702:
+                        # "Peppol request not ready" error:
+                        # thrown when the IAP is still processing the message
                         continue
+                    if content['error'].get('code') == 207:
+                        pdp_response.pdp_state = 'not_serviced'
+                    else:
+                        pdp_response.pdp_state = 'error'
+                        pdp_response.move_id._message_log(
+                            body=self.env._("PDP response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
+                        )
+                    processed_message_uuids.append(uuid)
+                    continue
 
+                pdp_response.pdp_state = content['state']
+                processed_message_uuids.append(uuid)
+            elif record_model == 'account.move':
+                move = uuid_to_record[uuid]
+                if content.get('error'):
+                    if content['error'].get('code') == 702:
+                        # "Peppol request not ready" error:
+                        # thrown when the IAP is still processing the message
+                        continue
+                    move._message_log(body=self.env._("PDP error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
                     move.pdp_move_state = 'error'
-                    move._message_log(body=_("PDP error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
+                    processed_message_uuids.append(uuid)
                     continue
 
                 move.pdp_move_state = content['state']
-                move._message_log(body=_('PDP status update: %s', content['state']))
+                move._message_log(body=self.env._('PDP status update: %s', content['state']))
+                processed_message_uuids.append(uuid)
+        return processed_message_uuids
 
-            edi_user._call_pdp_proxy(
-                "/api/pdp/1/ack",
-                params={'message_uuids': list(message_uuids.keys())},
+    def _pdp_send_response(self, reference_moves, status, additional_info=None):
+        self.ensure_one()
+        reference_moves = reference_moves.filtered(lambda rm: rm.pdp_can_send_response)
+        if not reference_moves:
+            return
+        if additional_info is None:
+            additional_info = {}
+
+        if status not in self.env['pdp.response']._fields['response_code'].get_values(self.env):
+            raise UserError(_("Unsupported response status: '%s'.", status))
+
+        try:
+            issue_time = fields.Datetime.now()
+            additional_info['issue_datetime'] = issue_time
+            response = self._call_pdp_proxy(
+                "/api/pdp/1/send_response",
+                params={
+                    'reference_uuids': reference_moves.mapped('pdp_message_uuid'),
+                    'status': status,
+                    'additional_info': additional_info or {},
+                },
             )
-        if need_retrigger:
-            self.env.ref('l10n_fr_pdp.ir_cron_pdp_get_message_status')._trigger()
+        except UserError as e:
+            log_message = Markup(self.env._(
+                "An error occurred with the PDP proxy while sending a response message to this invoice's expeditor.<br/>Status: %(status)s - %(error)s",
+                status=status,
+                error=str(e),
+            ))
+            reference_moves._message_log_batch(
+                bodies={move.id: log_message for move in reference_moves},
+            )
+            return
+
+        if response.get('error'):
+            log_message = Markup(self.env._(
+                "An error occurred with the PDP server while sending a response message to this invoice's expeditor.<br/>Status: %(status)s - %(error)s",
+                status=status,
+                error=response['error']['message'],
+            ))
+            reference_moves._message_log_batch(
+                bodies={move.id: log_message for move in reference_moves},
+            )
+        else:
+            self.env['pdp.response'].create([
+                {
+                    'pdp_message_uuid': message['message_uuid'],
+                    'response_code': status,
+                    # TODO: status_info
+                    'pdp_state': 'processing',
+                    'move_id': move.id,
+                    'issue_date': issue_time,
+                }
+                for message, move in zip(response.get('messages'), reference_moves)
+            ])
+            log_message = self.env._(
+                "A PDP response was sent to the PDP Access Point declaring you %(status)s this document.",
+                status=status,  # TODO: translation
+            )
+            reference_moves._message_log_batch(bodies={move.id: log_message for move in reference_moves})
+
+    def _pdp_process_new_messages(self, messages):
+        self.ensure_one()
+        processed_messages = {}
+        response_uuids = []
+        purchase_journal = self.company_id.pdp_purchase_journal_id
+
+        # Note: We process the invoices first to avoid importing a respnse before its origin move
+        for uuid, content in messages.items():
+            if content['document_type'] == 'CrossDomainAcknowledgementAndResponse':
+                response_uuids.append(uuid)
+            else:
+                if move := self._pdp_import_invoice(uuid, content, purchase_journal):
+                    processed_messages[uuid] = move
+        if not response_uuids:
+            return processed_messages
+
+        origin_message_uuids = [messages[uuid]['origin_message_uuid'] for uuid in response_uuids]
+        relevant_moves_domain = [
+            ('pdp_message_uuid', 'in', origin_message_uuids),
+            ('company_id', '=', self.company_id.id),  # TODO: on PRRO PR?
+        ]
+        uuid_to_move_map = self.env['account.move'].search(relevant_moves_domain).grouped('pdp_message_uuid')
+        for uuid in response_uuids:
+            content = messages[uuid]
+            origin_uuid = content['origin_message_uuid']
+            origin_move = uuid_to_move_map.get(origin_uuid)
+            if not origin_move:
+                _logger.warning('The PDP response with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uuid, origin_uuid)
+                continue
+            if response := self._pdp_import_response(uuid, content, origin_move):
+                processed_messages[uuid] = response
+
+        return processed_messages
+
+    def _pdp_import_response(self, uuid, content, origin_move):
+        response = self.env['pdp.response']
+        if not origin_move:
+            return response
+
+        enc_key = content["enc_key"]
+        document_content = content["document"]
+        decoded_document = self._decrypt_data(document_content, enc_key)
+        info = self._pdp_extract_response_info(decoded_document)
+        response_code = info['response_code']
+        issue_date = info['issue_date']
+        status_info = info['status_info']
+        # TODO: Map response code to response text
+        # TODO: Maybe split note reason / reason code part off from `note`
+        if response_code not in response._fields['response_code'].get_values(self.env) or not issue_date:
+            origin_move._message_log(
+                body=self.env._(
+                    "Failed to process incoming response (Response Code = %(response_code)s; Issue Date = %(issue_date)s).%(br)s%(note_info)s",
+                    response_code=response_code,
+                    issue_date=issue_date,
+                    note_info=f"It included the following status info:\n{status_info}" if status_info else '',
+                    br=Markup('<br/>') if status_info else '',
+                ),
+            )
+            return response
+
+        response = self.env['pdp.response'].create({
+            'pdp_message_uuid': uuid,
+            'response_code': response_code,
+            'pdp_state': content['state'],  # TODO: do we need to fetch response messages that are not 'done'?
+            'move_id': origin_move.id,
+            'status_info': status_info,
+            'issue_date': issue_date,
+        })
+        if content['state'] == 'done':
+            origin_move._message_log(
+                body=self.env._(
+                    "Received response with Response Code '%(response_code)s' issued on %(issue_date)s.%(br)s%(note_info)s",
+                    response_code=response_code,
+                    issue_date=issue_date,
+                    note_info=f"It included the following status info:\n{status_info}" if status_info else '',
+                    br=Markup('<br/>') if status_info else '',
+                ),
+            )
+        return response
+
+    @api.model
+    def _pdp_extract_response_info(self, document):
+        xml_node = etree.fromstring(document)
+        status_nodes = xml_node.findall("rsm:AcknowledgementDocument/ram:ReferenceReferencedDocument/ram:SpecifiedDocumentStatus", namespaces=CDAR_NSMAP)
+        process_condition_code = xml_node.findtext("rsm:AcknowledgementDocument/ram:ReferenceReferencedDocument/ram:ProcessConditionCode", namespaces=CDAR_NSMAP)
+        status_list = [
+            {
+              'index': node.findtext("./ram:SequenceNumeric", namespaces=CDAR_NSMAP),
+              'reason_code': node.findtext("./ram:ReasonCode", namespaces=CDAR_NSMAP),
+              'reason': node.findtext("./ram:Reason", namespaces=CDAR_NSMAP),
+              'note': "\n".join([
+                  f"({note_node.findtext('./ram:SubjectCode', namespaces=CDAR_NSMAP)}) {note_node.findtext('./ram:Content', namespaces=CDAR_NSMAP)}"
+                  for note_node in node.findall("./ram:IncludedNote", namespaces=CDAR_NSMAP)
+              ]),
+            } for node in status_nodes
+        ] if status_nodes is not None else []
+
+        return {
+            'response_code': PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(process_condition_code, process_condition_code),
+            'issue_date': _parse_cdar_datetime(xml_node.findtext("rsm:AcknowledgementDocument/ram:IssueDateTime/udt:DateTimeString", namespaces=CDAR_NSMAP)),
+            'status_info': "\n\n".join([f"#{status['index']}\n[{status['reason_code']}] {status['reason']}\n{status['note']}" for status in status_list]),
+        }
+
+    def _pdp_import_invoice(self, uuid, content, journal):
+        if not journal:
+            _logger.warning('The PDP document with UUID %s could not be imported (missing journal)', uuid)
+            return self.env['account.move']
+        enc_key = content["enc_key"]
+        document_content = content["document"]
+        filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+        decoded_document = self._decrypt_data(document_content, enc_key)
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": f"{filename}.xml",
+                "raw": decoded_document,
+                "type": "binary",
+                "mimetype": "application/xml",
+            }
+        )
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'move_type': 'in_invoice',
+            'pdp_move_state': content['state'],
+            'pdp_message_uuid': uuid,
+        })
+        if 'is_in_extractable_state' in move._fields:
+            move.is_in_extractable_state = False
+
+        move._extend_with_attachments(attachment, new=True)
+        move._message_log(
+            body=_(
+                "PDP document (UUID: %(uuid)s) has been received successfully",
+                uuid=uuid,
+            ),
+            attachment_ids=attachment.ids,
+        )
+        move._autopost_bill()
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+        return move
 
     # -------------------------------------------------------------------------
     # CRONS

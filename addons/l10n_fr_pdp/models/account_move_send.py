@@ -4,6 +4,8 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_fr_pdp.models.account_move import UNSENT_PDP_MOVE_STATES
+
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
@@ -44,7 +46,7 @@ class AccountMoveSend(models.AbstractModel):
             self._is_applicable_to_company(method, move.company_id),
             partner._get_pdp_verification_state(invoice_edi_format) == 'valid',
             move._need_ubl_cii_xml(invoice_edi_format)
-            or move.ubl_cii_xml_id and move.pdp_move_state not in {'processing', 'done'},
+            or move.ubl_cii_xml_id and move.pdp_move_state in UNSENT_PDP_MOVE_STATES,
         ])
 
     def _hook_if_errors(self, moves_data, allow_raising=True):
@@ -87,7 +89,7 @@ class AccountMoveSend(models.AbstractModel):
             if invoice_data.get('ubl_cii_xml_attachment_values'):
                 xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
                 filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-            elif invoice.ubl_cii_xml_id and invoice.pdp_move_state not in {'processing', 'done'}:
+            elif invoice.ubl_cii_xml_id and invoice.pdp_move_state in UNSENT_PDP_MOVE_STATES:
                 xml_file = invoice.ubl_cii_xml_id.raw
                 filename = invoice.ubl_cii_xml_id.name
             else:

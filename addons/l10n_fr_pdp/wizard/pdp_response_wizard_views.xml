@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pdp_response_wizard_form" model="ir.ui.view">
+        <field name="name">pdp.response.wizard.form</field>
+        <field name="model">pdp.response.wizard</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form string="Send Response Message">
+                <sheet>
+                    <group>
+                        <field name="available_statuses" invisible="1"/>  <!-- needed for the dynamic_selection widget on `status`-->
+                        <field name="status" required="True" widget="dynamic_selection"
+                               options="{'available_field': 'available_statuses'}"/>
+                        <field name="reason_code" invisible="not show_reason_code"/>
+                        <field name="note" nolabel="1" placeholder="Enter an optional note here..."/>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="button_send" string="Send" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

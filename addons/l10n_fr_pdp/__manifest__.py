@@ -17,6 +17,7 @@
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizard/pdp_registration_views.xml',
+        'wizard/pdp_response_wizard_views.xml',
     ],
     'demo': [
         'demo/l10n_fr_pdp_demo.xml',

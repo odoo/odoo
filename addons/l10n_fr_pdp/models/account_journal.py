@@ -21,4 +21,5 @@ class AccountJournal(models.Model):
             ('company_id', 'in', self.company_id.ids),
             ('proxy_type', '=', 'pdp'),
         ])
+        edi_users._pdp_get_new_documents()  # TODO: to fetch incoming lifecycle messages
         edi_users._pdp_get_message_status()

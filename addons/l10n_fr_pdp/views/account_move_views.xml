@@ -12,13 +12,18 @@
                         class="btn btn-secondary"
                         string="Cancel PDP"
                         invisible="pdp_move_state != 'to_send' or state == 'draft'"/>
+                <button name="action_pdp_open_response_wizard"
+                        type="object"
+                        class="btn btn-secondary"
+                        string="Send Response"
+                        invisible="not pdp_can_send_response"/>
             </header>
             <xpath expr="//div[@name='journal_div']" position="after">
                 <label for="pdp_move_state"
-                       invisible="not pdp_move_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')"/>
+                       invisible="not pdp_move_state"/>
                 <div name="pdp_div"
                      class="d-flex"
-                     invisible="not pdp_move_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')">
+                     invisible="not pdp_move_state">
                     <field name="pdp_move_state" class="oe_inline"/>
                     <span class="mx-1" invisible="'demo_' not in pdp_message_uuid"> (Demo)</span>
                     <span class="text-muted mx-3"
