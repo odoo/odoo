@@ -273,3 +273,20 @@ registry.category("web_tour.tours").add("test_table_stand_number_exported", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_products_variants_attribute_value_filtering", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickProductInfo("Small Shelf"),
+            ProductScreen.clickProductInfoAttributeValue("Color", "White"),
+            ProductScreen.checkProductsNumber(2),
+            ProductScreen.productIsDisplayed("Small Shelf (Small)"),
+            ProductScreen.productIsDisplayed("Small Shelf (Medium)"),
+            ProductScreen.clickProductInfo("Small Shelf"),
+            ProductScreen.clickProductInfoAttributeValue("Size", "Medium"),
+            ProductScreen.checkProductsNumber(1),
+            ProductScreen.productIsDisplayed("Small Shelf (Medium)"),
+        ].flat(),
+});
