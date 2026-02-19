@@ -104,8 +104,7 @@
                                 <field name="channel_type" invisible="1"/>
                                 <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <list string="Members" editable="bottom">
-                                        <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
-                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
+                                        <field name="member_ref" widget="member_reference" string="Name" context="{'display_email': True}"/>
                                         <field name="channel_role" readonly="guest_id" widget="selection"/>
                                     </list>
                                 </field>

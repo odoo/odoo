@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MemberReferenceField">
+        <t t-set="model" t-value="m2oProps.relation"/>
+        <t t-set="id" t-value="m2oProps.value.id"/>
+        <div class="d-flex align-items-center gap-2">
+            <span t-if="id" class="o_avatar o_m2o_avatar">
+                <img class="rounded" t-attf-src="/web/image/{{model}}/{{id}}/avatar_128?unique={{m2oProps.value.write_date?.toMillis()}}"/>
+            </span>
+            <Many2One t-props="m2oProps">
+                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{model}}/{{autoCompleteItemScope.record.id}}/avatar_128?unique={{autoCompleteItemScope.record.write_date?.toMillis()}}"/>
+                        <span t-out="autoCompleteItemScope.label"/>
+                    </span>
+                </t>
+            </Many2One>
+        </div>
+    </t>
+</templates>

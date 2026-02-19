@@ -7,7 +7,7 @@ from datetime import timedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import Store, get_member_ref_values
 from odoo.addons.web.models.models import lazymapping
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -30,6 +30,9 @@ class DiscussChannelMember(models.Model):
     # identity
     partner_id = fields.Many2one("res.partner", "Partner", ondelete="cascade", index=True)
     guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade", index=True)
+    member_ref = fields.Reference(
+        [("res.partner", "Partner"), ("mail.guest", "Guest")], "Member", compute="_compute_member_ref", readonly=False
+    )
     is_self = fields.Boolean(compute="_compute_is_self", search="_search_is_self")
     # channel
     channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", required=True, bypass_search_access=True)
@@ -195,6 +198,14 @@ class DiscussChannelMember(models.Model):
                 channel_name=member.channel_id.display_name,
             )
 
+    @api.depends("partner_id", "guest_id")
+    def _compute_member_ref(self):
+        for member in self:
+            if member.partner_id:
+                member.member_ref = f"res.partner,{member.partner_id.id}"
+            elif member.guest_id:
+                member.member_ref = f"mail.guest,{member.guest_id.id}"
+
     @api.depends("last_interest_dt", "unpin_dt", "channel_id.last_interest_dt")
     def _compute_is_pinned(self):
         for member in self:
@@ -234,6 +245,7 @@ class DiscussChannelMember(models.Model):
                 raise UserError(
                     _("Adding more members to this chat isn't possible; it's designed for just two people.")
                 )
+            vals.update(get_member_ref_values(vals.get("member_ref")))
         name_members_by_channel = {
             channel: channel.channel_name_member_ids
             for channel in self.env["discuss.channel"].browse(
