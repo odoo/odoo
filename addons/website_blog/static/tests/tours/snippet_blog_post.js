@@ -9,7 +9,6 @@ import {
 registerWebsitePreviewTour(
     "snippet_blog_bost",
     {
-        url: "/",
         edition: true,
     },
     () => [

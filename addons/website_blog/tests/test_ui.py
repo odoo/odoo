@@ -47,7 +47,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'mimetype': 'image/png',
         })
 
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_tour', login='admin')
 
     def test_blog_post_tags(self):
         self.start_tour(self.env['website'].get_client_action_url('/blog'), 'blog_tags', login='admin')
@@ -134,7 +134,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             "email": "adam.manager@example.com",
             "group_ids": [(6, 0, [group_website_blog_manager_id, group_employee_id])],
         })
-        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_manager", login="adam")
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_manager_tour", login="adam")
         self.env["res.users"].with_context({"no_reset_password": True}).create({
             "name": "Eve Employee",
             "login": "eve",
