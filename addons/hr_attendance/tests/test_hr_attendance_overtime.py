@@ -1287,3 +1287,64 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertTrue(afternoon_att.linked_overtime_ids)
         # Should be the same as it's the reverse checking
         self.assertEqual(overtime_lines._linked_attendances(), afternoon_att)
+
+    def test_overtime_across_midnight_in_utc_timezone(self):
+        self.europe_employee.tz = 'UTC'
+        self.europe_employee.ruleset_id = self.ruleset
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2026, 2, 3, 22, 0),
+            'check_out': datetime(2026, 2, 4, 2, 0),
+        })
+
+        self.assertEqual(attendance.worked_hours, 4.0)
+        self.assertEqual(attendance.overtime_hours, 0.0)
+
+        overtime_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2026, 2, 5, 22, 0),
+            'check_out': datetime(2026, 2, 6, 10, 0),
+        })
+
+        self.assertEqual(overtime_attendance.worked_hours, 12.0)
+        self.assertEqual(overtime_attendance.overtime_hours, 2.0)  # overtime should be 2 hours as the employee works 10 hours on the 5th of February
+
+    def test_overtime_across_midnight_in_utc_plus_timezone(self):
+        self.jpn_employee.ruleset_id = self.ruleset
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.jpn_employee.id,        # UTC+9
+            'check_in': datetime(2026, 2, 3, 13, 0),    # 3rd 22:00 in Tokyo is 3rd 13:00 UTC
+            'check_out': datetime(2026, 2, 3, 17, 0),   # 4th 02:00 in Tokyo is 3rd 17:00 UTC
+        })
+
+        self.assertEqual(attendance.worked_hours, 4.0)
+        self.assertEqual(attendance.overtime_hours, 0.0)
+
+        overtime_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.jpn_employee.id,        # UTC+9
+            'check_in': datetime(2026, 2, 5, 13, 0),    # 5th 22:00 in Tokyo is 5th 13:00 UTC
+            'check_out': datetime(2026, 2, 6, 1, 0),    # 6th 10:00 in Tokyo is 6h 01:00 UTC
+        })
+
+        self.assertEqual(overtime_attendance.worked_hours, 12.0)
+        self.assertEqual(overtime_attendance.overtime_hours, 2.0)
+
+    def test_overtime_across_midnight_in_utc_minus_timezone(self):
+        self.honolulu_employee.ruleset_id = self.ruleset
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.honolulu_employee.id,   # UTC-10
+            'check_in': datetime(2026, 2, 4, 8, 0),     # 3rd 22:00 in Honolulu is 4th 08:00 UTC
+            'check_out': datetime(2026, 2, 4, 12, 0),   # 4th 02:00 in Honolulu is 4th 12:00 UTC
+        })
+
+        self.assertEqual(attendance.worked_hours, 4.0)
+        self.assertEqual(attendance.overtime_hours, 0.0)
+
+        overtime_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.honolulu_employee.id,   # UTC-10
+            'check_in': datetime(2026, 2, 6, 8, 0),     # 5th 22:00 in Honolulu is 6th 08:00 UTC
+            'check_out': datetime(2026, 2, 6, 20, 0),   # 6th 10:00 in Honolulu is 6th 20:00 UTC
+        })
+
+        self.assertEqual(overtime_attendance.worked_hours, 12.0)
+        self.assertEqual(overtime_attendance.overtime_hours, 2.0)
