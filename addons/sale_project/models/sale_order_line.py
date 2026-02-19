@@ -2,6 +2,7 @@
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessError, UserError
+from odoo.tools import float_is_zero
 
 
 class SaleOrderLine(models.Model):
@@ -434,10 +435,10 @@ class SaleOrderLine(models.Model):
         if not self.project_id.allow_milestones:
             self.project_id.allow_milestones = True
         if (milestones := project.milestone_ids.filtered(lambda milestone: not milestone.sale_line_id)):
-            milestones.write({
-                'sale_line_id': self.id,
-                'product_uom_qty': self.product_uom_qty / len(milestones),
-            })
+            write_vals = {'sale_line_id': self.id}
+            if all(float_is_zero(milestone.quantity_percentage, 2) for milestone in milestones):
+                write_vals['product_uom_qty'] = self.product_uom_qty / len(milestones)
+            milestones.write(write_vals)
         else:
             milestone = self.env['project.milestone'].create({
                 'name': self.name,
