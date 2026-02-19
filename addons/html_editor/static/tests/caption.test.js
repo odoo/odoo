@@ -603,6 +603,39 @@ test("replace an image with a caption", async () => {
     });
 });
 
+test("remove caption when replacing an image with other media", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const { el } = await setupEditorWithEmbeddedCaption(
+        unformat(
+            `<figure>
+                <img src="/web/static/img/logo.png">
+                <figcaption>Hello</figcaption>
+            </figure>
+            <p>abc</p>`
+        )
+    );
+    await click("img");
+    await waitFor(".o-we-toolbar button[name='replace_image']");
+    await click("button[name='replace_image']");
+    await waitFor(".o_select_media_dialog");
+    await click(".modal .modal-body .nav-item:nth-child(3) a"); // Icons
+    await waitFor(".modal .modal-body .fa-heart");
+    await click(".modal .modal-body .fa-heart");
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+    expect(getContent(el)).toBe(
+        '<p><br></p><p>\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>[]\ufeff</p><p>abc</p>'
+    );
+});
+
 test("edit caption after replacing image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
         {
