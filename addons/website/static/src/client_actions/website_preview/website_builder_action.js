@@ -73,6 +73,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.iframefallback = useRef("iframefallback");
 
         this.websiteContent = useRef("iframe");
+        this.builderSidebarRef = useRef("builder_sidebar");
         this.cleanups = [];
 
         this.snippetsTemplate = "website.snippets";
@@ -539,7 +540,9 @@ export class WebsiteBuilderClientAction extends Component {
         this.initialTab = param.initialTab;
         this.target = param.target || null;
         await this.reloadIframe(this.state.isEditing, param.url);
-        // trigger an new instance of the builder menu
+        // Disable the current instance of the builder and trigger a new
+        // instance of it with `t-key`
+        this.builderSidebarRef.el.firstElementChild.classList.add("o_builder_disabled");
         this.state.key++;
     }
 
