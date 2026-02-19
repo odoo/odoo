@@ -2994,9 +2994,11 @@ class BaseModel(metaclass=MetaModel):
 
         if field.translate:
             langs = field.get_translation_fallback_langs(self.env)
+            if len(langs) == 1:
+                # Wrap the ->> operator in parenthesis to ensure correct operator precedence
+                # e.g. when used with the % operator from pg_trgm
+                return SQL("(%s->>%s)", sql_field, langs[0])
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
-            if len(sql_field_langs) == 1:
-                return sql_field_langs[0]
             return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
 
         if field.company_dependent:
