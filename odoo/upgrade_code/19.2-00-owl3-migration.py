@@ -2,13 +2,6 @@ import re
 import sys
 import os
 
-# Get the folder containing this script
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Force Python to look in this folder for imports
-if current_dir not in sys.path:
-    sys.path.append(current_dir)
-
 from tools_js_expressions import aggregate_vars, update_template
 
 EXCLUDED_FILES = (
@@ -321,21 +314,21 @@ def upgrade_this(file_manager, log_info, log_error):
         and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
     ]
 
-    outside_vars = {
+    all_vars = {
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
-    }  # vars defined under t-call
-    outside_vars = outside_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
-    inside_vars = {}  # vars defined inside template, eg. using t-set
+    }  # vars defined inside template, eg. using t-set
+    all_vars = all_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
+    t_call_inner = {}  # vars defined under t-call
 
     # Iteration 1: Gather all variables
     for fileno, file in enumerate(all_files, start=1):
-        aggregate_vars(file.content, outside_vars, inside_vars)
+        t_call_outer = aggregate_vars(file.content, all_vars, t_call_inner)
 
     # Iteration 2: Update templates
     for fileno, file in enumerate(all_files, start=1):
         try:
-            file.content = update_template(file.path._str, file.content, outside_vars, inside_vars, THIS_TARGETS)
+            file.content = update_template(file.path._str, file.content, THIS_TARGETS, all_vars, t_call_inner, t_call_outer)
         except Exception as e:
             log_error(file.path, e)
 

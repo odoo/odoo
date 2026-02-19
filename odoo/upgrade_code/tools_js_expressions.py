@@ -199,126 +199,6 @@ def prev_non_whitespace(tokens, i):
     return tokens[j] if j >= 0 else None
 
 
-TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
-
-
-def compile_expr(expr, bound_variables):
-    bound_variables = set(bound_variables)
-
-    leading_ws = len(expr) - len(expr.lstrip(" "))
-    trailing_ws = len(expr) - len(expr.rstrip(" "))
-    stripped = expr.strip()
-    if not stripped:
-        return expr
-
-    # stripped = re.sub(r'\u2007', '', stripped)
-    tokens = tokenize(stripped)
-    local_vars = set()
-    stack = []  # track {, [, ( for group context
-
-    i = 0
-    while i < len(tokens):
-        tok = tokens[i]
-        if tok.type == "WHITESPACE":
-            i += 1
-            continue
-        if tok.type == "TEMPLATE_STRING":
-
-            def replace(match):
-                inner_expr = match.group(1)
-                rewritten = compile_expr(inner_expr, bound_variables)
-                return "${" + rewritten + "}"
-
-            tok.value = TEMPLATE_EXPR.sub(replace, tok.value)
-
-        next_tok = next_non_whitespace(tokens, i)
-        prev_tok = prev_non_whitespace(tokens, i)
-        group_type = stack[-1] if stack else None
-
-        # --- Track groups ---
-        if tok.type in ("LEFT_BRACE", "LEFT_BRACKET", "LEFT_PAREN"):
-            stack.append(tok.type)
-        elif tok.type in ("RIGHT_BRACE", "RIGHT_BRACKET", "RIGHT_PAREN"):
-            stack.pop()
-
-        # Arrow detection
-        if next_tok and next_tok.type == "OPERATOR" and next_tok.value == "=\u2007>":
-            if tok.type == "RIGHT_PAREN":
-                # (a, b) => ...
-                j = i - 1
-                while j >= 0 and tokens[j].type != "LEFT_PAREN":
-                    if tokens[j].type == "SYMBOL":
-                        tokens[j].value = tokens[j].original_value
-                        local_vars.add(tokens[j].value)
-                    j -= 1
-            elif tok.type == "SYMBOL":
-                local_vars.add(tok.value)
-
-        # Variable rewrite
-        if (
-            tok.type == "SYMBOL"
-            and tok.value not in RESERVED_WORDS
-            and tok.value not in bound_variables
-            and tok.value not in local_vars
-            and tok.value != "this"
-            and not (prev_tok and prev_tok.type == "OPERATOR" and prev_tok.value == ".")
-            and not (
-                prev_tok
-                and (prev_tok.type == "LEFT_BRACE" or prev_tok.type == "COMMA")
-                and next_tok
-                and next_tok.type == "COLON"
-            )
-        ):
-            if (
-                group_type == "LEFT_BRACE"
-                and prev_tok
-                and (prev_tok.type == "LEFT_BRACE" or prev_tok.type == "COMMA")
-                and next_tok
-                and (next_tok.type == "RIGHT_BRACE" or next_tok.type == "COMMA")
-            ):
-                tok.value = f"{tok.value}: this.{tok.value}"
-            else:
-                tok.value = f"this.{tok.value}"
-
-        i += 1
-
-    compiled = "".join((t.value) for t in tokens)
-    return " " * leading_ws + compiled + " " * trailing_ws
-
-
-def _process_dynamic_string(str, bound_variables):
-    INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
-
-    def repl(match):
-        # Pick the captured group depending on which syntax matched
-        expr = match.group(2) if match.group(2) is not None else match.group(3)
-
-        # Preserve leading/trailing spaces inside the interpolation
-        leading_ws = len(expr) - len(expr.lstrip(" "))
-        trailing_ws = len(expr) - len(expr.rstrip(" "))
-        stripped_expr = expr.strip()
-        if not stripped_expr:
-            return match.group(0)  # empty expression → leave unchanged
-
-        compiled = compile_expr(stripped_expr, bound_variables)
-        # Reconstruct using the original delimiters
-        if match.group(2) is not None:
-            return f"#{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}"
-        else:
-            return f"{{{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}}}"
-
-    return INTERP_RE.sub(repl, str)
-
-
-def process_dynamic_string(node, bound_variables, attr="t-attf-class"):
-    value = node.get(attr)
-    if not value:
-        return
-
-    new_value = _process_dynamic_string(value, bound_variables)
-    node.set(attr, new_value)
-
-
 T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")
 COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
 SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
@@ -361,24 +241,35 @@ class TemplateCompiler:
         modules (list[str] | bool): List of specific XPaths / inherit to process, or False to process all.
     """
 
-    def __init__(self, path: str, t_call_vars: dict[str, set[str]], all_vars: dict[str, set[str]], modules: list[str]):
-        self.t_call_vars = t_call_vars
+    def __init__(
+            self,
+            path: str,
+            modules: list[str],
+            all_vars: dict[str, set[str]],
+            t_call_inner: dict[str, set[str]],
+            t_call_outer: dict[str, set[str]]
+    ):
+        self.t_call_inner = t_call_inner
+        self.t_call_outer = t_call_outer
         self.allVars = all_vars
         self.modules = modules
         self.template_path = path
+
+        self.current_template = path  # default
 
     def fix_rendering_context(self, root: etree._ElementTree):
         template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
 
         if template_nodes:
             for template in template_nodes:
-                bound_variables = self.collect_bound_variables(template)
-                bound_variables |= set(self.t_call_vars.get(template.attrib["t-name"], {}))
+                self.current_template = template.attrib.get("t-name") or "Unknown"
+                bound_variables = self._collect_bound_variables(template)
+                bound_variables |= set(self.t_call_inner.get(template.attrib["t-name"], {}))
 
                 self.fix_template(template, bound_variables)
 
         else:
-            bound_variables = self.collect_bound_variables(root)
+            bound_variables = self._collect_bound_variables(root)
             self.fix_template(root, bound_variables)
 
     def _should_skip_node(self, node: etree._Element):
@@ -415,29 +306,29 @@ class TemplateCompiler:
             if self._should_skip_node(node):
                 continue
 
-            node_vars = self._get_node_vars(node, bound_variables)
+            node_vars, warning_vars = self._get_node_vars(node, bound_variables)
 
             if node.tag == "xpath":
-                node.set("expr", self._process_xpath_expr(node, node_vars))
+                node.set("expr", self._process_xpath_expr(node, node_vars, warning_vars))
             elif node.tag == "attribute":
-                self._process_attribute(node, node_vars)
+                self._process_attribute(node, node_vars, warning_vars)
                 continue
 
             for d in DIRECTIVES:
                 if d in node.attrib:
                     val = node.get(d)
                     if val:
-                        node.set(d, compile_expr(val, node_vars))
+                        node.set(d, self._compile_expr(val, node_vars, warning_vars))
 
             for attr, value in node.attrib.items():
                 if attr.startswith("t-on-") and value:
-                    node.set(attr, compile_expr(value, node_vars))
+                    node.set(attr, self._compile_expr(value, node_vars, warning_vars))
                 if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
-                    node.set(attr, compile_expr(value, node_vars))
+                    node.set(attr, self._compile_expr(value, node_vars, warning_vars))
                 if attr.startswith("t-attf-"):
-                    process_dynamic_string(node, node_vars, attr)
+                    self.process_dynamic_string(node, node_vars, warning_vars, attr)
                 if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
-                    process_dynamic_string(node, node_vars, attr)
+                    self.process_dynamic_string(node, node_vars, warning_vars, attr)
 
             if self._is_component(node):
                 for attr, value in node.attrib.items():
@@ -447,16 +338,25 @@ class TemplateCompiler:
                         continue  # skip Owl directives
                     if self._is_inside_inherit(node) and attr.startswith("position"):
                         continue  # A component can be replaced with <A position="replace"/> inside inherits
-                    node.set(attr, compile_expr(value, node_vars))
+                    node.set(attr, self._compile_expr(value, node_vars, warning_vars))
+
+    def process_dynamic_string(self, node, bound_variables, warning_vars, attr="t-attf-class"):
+        value = node.get(attr)
+        if not value:
+            return
+
+        new_value = self._process_dynamic_string(value, bound_variables, warning_vars)
+        node.set(attr, new_value)
 
     def _get_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
         """ If inside a t-inherit subtree, merge target template locals into the vars. """
         if self._is_inside_inherit(node):
             target = self._is_inside_inherit(node)[0].get("t-inherit")
-            return base_vars | (self.allVars.get(target, set())) | (self.t_call_vars.get(target, set()))
-        return base_vars
+            node_vars = base_vars | (self.allVars.get(target, set())) | self.t_call_inner.get(target, set())
+            return node_vars, self.t_call_outer.get(target, set())
+        return base_vars, {}
 
-    def _process_attribute(self, node: etree._Element, node_vars: set[str]):
+    def _process_attribute(self, node: etree._Element, node_vars: set[str], warning_vars: set[str]):
         """ Static handler for <attribute> nodes processing """
         attr_name = node.get("name")
         txt = node.text or ""
@@ -467,16 +367,146 @@ class TemplateCompiler:
         xp = node.xpath("ancestor::xpath[@expr][1]")
         xp_expr = xp[0].get("expr") if xp else ""
 
-        if self.should_compile_attribute_node(attr_name, xp_expr):
+        if self._should_compile_attribute_node(attr_name, xp_expr):
             if attr_name and attr_name.startswith("t-attf-"):
-                compiled = _process_dynamic_string(txt, node_vars)
+                compiled = self._process_dynamic_string(txt, node_vars, warning_vars)
             else:
-                compiled = compile_expr(txt, node_vars)
+                compiled = self._compile_expr(txt, node_vars, warning_vars)
 
             node.text = etree.CDATA(compiled)
 
+    def _process_xpath_expr(self, node: etree._Element, bound_variables: set[str], warning_vars: set[str]):
+        def repl(match):
+            attr_name = match.group(1)
+            js_expr = match.group(2)
+            if attr_name in SKIP_XPATH_ATTRS:
+                # return original string unchanged
+                return match.group(0)
+
+            if attr_name == "call":
+                new_expr = self._process_dynamic_string(js_expr, bound_variables, warning_vars)
+            else:
+                new_expr = self._compile_expr(js_expr, bound_variables, warning_vars)
+            # preserve quotes
+            return match.group(0).replace(js_expr, new_expr)
+
+        expr = node.get("expr")
+        if expr:
+            return T_ATTR_RE.sub(repl, expr)
+        return node
+
+    def _compile_expr(self, expr, bound_variables, warning_variables):
+        TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
+
+        bound_variables = set(bound_variables)
+
+        leading_ws = len(expr) - len(expr.lstrip(" "))
+        trailing_ws = len(expr) - len(expr.rstrip(" "))
+        stripped = expr.strip()
+        if not stripped:
+            return expr
+
+        # stripped = re.sub(r'\u2007', '', stripped)
+        tokens = tokenize(stripped)
+        local_vars = set()
+        stack = []  # track {, [, ( for group context
+
+        i = 0
+        while i < len(tokens):
+            tok = tokens[i]
+            if tok.type == "WHITESPACE":
+                i += 1
+                continue
+            if tok.type == "TEMPLATE_STRING":
+
+                def replace(match):
+                    inner_expr = match.group(1)
+                    rewritten = self._compile_expr(inner_expr, bound_variables, warning_variables)
+                    return "${" + rewritten + "}"
+
+                tok.value = TEMPLATE_EXPR.sub(replace, tok.value)
+
+            next_tok = next_non_whitespace(tokens, i)
+            prev_tok = prev_non_whitespace(tokens, i)
+            group_type = stack[-1] if stack else None
+
+            # --- Track groups ---
+            if tok.type in ("LEFT_BRACE", "LEFT_BRACKET", "LEFT_PAREN"):
+                stack.append(tok.type)
+            elif tok.type in ("RIGHT_BRACE", "RIGHT_BRACKET", "RIGHT_PAREN"):
+                stack.pop()
+
+            # Arrow detection
+            if next_tok and next_tok.type == "OPERATOR" and next_tok.value == "=\u2007>":
+                if tok.type == "RIGHT_PAREN":
+                    # (a, b) => ...
+                    j = i - 1
+                    while j >= 0 and tokens[j].type != "LEFT_PAREN":
+                        if tokens[j].type == "SYMBOL":
+                            tokens[j].value = tokens[j].original_value
+                            local_vars.add(tokens[j].value)
+                        j -= 1
+                elif tok.type == "SYMBOL":
+                    local_vars.add(tok.value)
+
+            # Variable rewrite
+            if (
+                tok.type == "SYMBOL"
+                and tok.value not in RESERVED_WORDS
+                and tok.value not in bound_variables
+                and tok.value not in local_vars
+                and tok.value != "this"
+                and not (prev_tok and prev_tok.type == "OPERATOR" and prev_tok.value == ".")
+                and not (
+                    prev_tok
+                    and (prev_tok.type == "LEFT_BRACE" or prev_tok.type == "COMMA")
+                    and next_tok
+                    and next_tok.type == "COLON"
+                )
+            ):
+                if tok.value in warning_variables:
+                    print("WARNING in template " + self.current_template + " : t-call-outer variable" + expr)
+                if (
+                    group_type == "LEFT_BRACE"
+                    and prev_tok
+                    and (prev_tok.type == "LEFT_BRACE" or prev_tok.type == "COMMA")
+                    and next_tok
+                    and (next_tok.type == "RIGHT_BRACE" or next_tok.type == "COMMA")
+                ):
+                    tok.value = f"{tok.value}: this.{tok.value}"
+                else:
+                    tok.value = f"this.{tok.value}"
+
+            i += 1
+
+        compiled = "".join((t.value) for t in tokens)
+        return " " * leading_ws + compiled + " " * trailing_ws
+
+    def _process_dynamic_string(self, str, bound_variables, warning_variables):
+        INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
+
+        def repl(match):
+            # Pick the captured group depending on which syntax matched
+            expr = match.group(2) if match.group(2) is not None else match.group(3)
+
+            # Preserve leading/trailing spaces inside the interpolation
+            leading_ws = len(expr) - len(expr.lstrip(" "))
+            trailing_ws = len(expr) - len(expr.rstrip(" "))
+            stripped_expr = expr.strip()
+            if not stripped_expr:
+                return match.group(0)  # empty expression → leave unchanged
+
+            compiled = self._compile_expr(stripped_expr, bound_variables, warning_variables)
+            # Reconstruct using the original delimiters
+            if match.group(2) is not None:
+                return f"#{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}"
+            else:
+                return f"{{{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}}}"
+
+        return INTERP_RE.sub(repl, str)
+
     @staticmethod
-    def collect_bound_variables(root: etree._ElementTree):
+    def _collect_bound_variables(root: etree._ElementTree):
         def expand_t_as(name):
             return {
                 name,
@@ -516,28 +546,7 @@ class TemplateCompiler:
         return node.xpath("ancestor-or-self::*[@t-inherit][1]")
 
     @staticmethod
-    def _process_xpath_expr(node: etree._Element, bound_variables: set[str]):
-        def repl(match):
-            attr_name = match.group(1)
-            js_expr = match.group(2)
-            if attr_name in SKIP_XPATH_ATTRS:
-                # return original string unchanged
-                return match.group(0)
-
-            if attr_name == "call":
-                new_expr = _process_dynamic_string(js_expr, bound_variables)
-            else:
-                new_expr = compile_expr(js_expr, bound_variables)
-            # preserve quotes
-            return match.group(0).replace(js_expr, new_expr)
-
-        expr = node.get("expr")
-        if expr:
-            return T_ATTR_RE.sub(repl, expr)
-        return node
-
-    @staticmethod
-    def should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
+    def _should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
         def is_component_xpath_expr(expr: str) -> bool:
             # component tag selection: //Navbar, //MyComp, etc.
             if expr and COMP_REGEXP.match(expr):
@@ -562,8 +571,8 @@ class TemplateCompiler:
         return False
 
 
-def update_template(path: str, content: str, t_call_vars, all_vars, modules: list[str]):
-    compiler = TemplateCompiler(path, t_call_vars, all_vars, modules)
+def update_template(path: str, content: str, modules: list[str], all_vars, t_call_inner, t_call_outer):
+    compiler = TemplateCompiler(path, modules, all_vars, t_call_inner, t_call_outer)
 
     def callback(tree):
         compiler.fix_rendering_context(tree)
@@ -587,6 +596,7 @@ class VariableAggregator:
 
     def __init__(self):
         self.tCallVars = defaultdict(set)
+        self.tCallVarsOutside = defaultdict(set)
         self.insideVars = defaultdict(set)
 
     def aggregate_call_vars(self, root: etree._ElementTree):
@@ -608,6 +618,11 @@ class VariableAggregator:
                 if var_name:
                     self.tCallVars[template_name].add(var_name)
 
+            scope_nodes = call_node.xpath(
+                "ancestor::* | ancestor-or-self::*/preceding-sibling::*"
+            )
+            self.tCallVarsOutside[template_name].update(self._extract_vars_from_nodes(scope_nodes))
+
     def aggregate_inside_vars(self, root: etree._ElementTree):
         """
             Maps all variable inside a template in a dict keyed by template name.
@@ -622,34 +637,38 @@ class VariableAggregator:
             if not template_name:
                 continue
 
-            # t-set introduces a local
-            for set_node in tpl.xpath("descendant-or-self::*[@t-set]"):
-                var_name = set_node.get("t-set")
-                if var_name:
-                    self.insideVars[template_name].add(var_name)
+            nodes = tpl.xpath("descendant-or-self::*[not(ancestor::*[@t-call])]")
+            self.insideVars[template_name].update(self._extract_vars_from_nodes(nodes))
 
-            # Loops introduce locals via t-as (and maybe an index var)
-            for loop_node in tpl.xpath(
-                "descendant-or-self::*[@t-foreach] | descendant-or-self::*[@t-for-each]"
-            ):
-                var_name = loop_node.get("t-as")
-                if var_name:
-                    self.insideVars[template_name].add(var_name)
+    def _extract_vars_from_nodes(self, nodes):
+        """
+            Helper generator that yields variable names found in a given iterable of XML nodes.
+            Checks for t-set, t-as, t-index, and t-slot-scope.
+        """
+        for node in nodes:
+            var_name = node.get("t-set")
+            if var_name:
+                yield var_name
 
-                var_name = loop_node.get("t-foreach-index") or loop_node.get("t-index")
+            if node.get("t-foreach") or node.get("t-for-each"):
+                var_name = node.get("t-as")
                 if var_name:
-                    self.insideVars[template_name].add(var_name)
+                    yield var_name
 
-            for set_node in tpl.xpath("descendant-or-self::*[@t-set-slot]"):
-                var_name = set_node.get("t-slot-scope")
+                var_name = node.get("t-foreach-index") or node.get("t-index")
                 if var_name:
-                    self.insideVars[template_name].add(var_name)
+                    yield var_name
+
+            if node.get("t-set-slot"):
+                var_name = node.get("t-slot-scope")
+                if var_name:
+                    yield var_name
 
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
     def callback(tree):
-        aggregator.aggregate_call_vars(tree)
         aggregator.aggregate_inside_vars(tree)
+        aggregator.aggregate_call_vars(tree)
 
     aggregator = VariableAggregator()
     update_etree(content, callback)
@@ -664,13 +683,15 @@ def aggregate_vars(content: str, vars={}, inside_vars={}):
             inside_vars[template] = set()
         inside_vars[template].update(variables)
 
+    return aggregator.tCallVarsOutside
+
 # ------------------------------------------------------------------------------
 # TESTS
 # ------------------------------------------------------------------------------
 
 
 def run_tests_main(test):
-    return update_template("", test["content"], {}, {}, [])
+    return update_template("", test["content"], [], {}, {},  {})
 
 
 tests = [
@@ -1491,7 +1512,7 @@ def run_test_specific_modules(test):
     variables = test.get("inside_vars", {})
     modules = test.get("modules", False)
     path = test.get("path", False)
-    return update_template(path, test["content"], {}, variables, modules)
+    return update_template(path, test["content"], modules, {}, variables, {})
 
 
 test_external_xpath = [
@@ -1623,7 +1644,7 @@ test_external_xpath = [
 
 
 def run_test_vars(test):
-    return update_template("", test["content"], test["outside_vars"], test["inside_vars"], False)
+    return update_template("", test["content"], False, test["inside_vars"], test["outside_vars"], {})  # {"web.ListView": "notitem"}
 
 
 test_vars = [
@@ -1737,8 +1758,12 @@ test_vars = [
 
 
 def run_test_vars_collection(test):
-    aggregate_vars(test["content"], test["outside_vars"], test["inside_vars"])
-    return test["outside_vars"], test["inside_vars"]
+    outside_t_call_vars = aggregate_vars(test["content"], test["outside_vars"], test["inside_vars"])
+    # Convert defaultdicts to standard dicts for clean printing/comparison
+    clean_inside_vars = dict(test["inside_vars"])
+    clean_outside_vars = dict(test["outside_vars"])
+    clean_t_call_outer = dict(outside_t_call_vars)
+    return f"All vars: {clean_inside_vars} | t-call-inner: {clean_outside_vars} | t-call-outer: {clean_t_call_outer}"
 
 
 test_vars_collection = [
@@ -1747,7 +1772,7 @@ test_vars_collection = [
         "outside_vars": {},
         "inside_vars": {"abc": {"a"}},
         "content": '<t t-name="web.xyz"> <t t-set="b" t-value="2"/> </t>',
-        "expected": ({}, {'abc': {'a'}, 'web.xyz': {'b'}}),
+        "expected": """All vars: {'abc': {'a'}, 'web.xyz': {'b'}} | t-call-inner: {} | t-call-outer: {}"""
     },
     {
         "name": "t-slot-scope-vars",
@@ -1767,7 +1792,19 @@ test_vars_collection = [
     </div>
 </t>
         """,
-        "expected": ({}, {'web.Many2XAutocomplete': {'optionScope'}}),
+        "expected": """All vars: {'web.Many2XAutocomplete': {'optionScope'}} | t-call-inner: {} | t-call-outer: {}"""
+    },
+    {
+        "name": "t-call",
+        "outside_vars": {},
+        "inside_vars": defaultdict(set),
+        "content": """
+<t t-name="web.xyz" >
+    <t t-set="outside" t-value="2"/>
+    <t t-call="mail.xyz"> <t t-set="inside" t-value="a"/> </t>
+</t>
+        """,
+        "expected": """All vars: {'web.xyz': {'outside'}} | t-call-inner: {'mail.xyz': {'inside'}} | t-call-outer: {'mail.xyz': {'outside'}}"""
     },
 ]
 
