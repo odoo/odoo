@@ -17,7 +17,7 @@
                     </button>
 
                     <!-- Center Side Div -->
-                    <div class="floor-selector d-flex gap-1 overflow-auto">
+                    <div class="floor-selector d-flex gap-1 overflow-auto position-absolute start-50 translate-middle-x">
                         <t t-if="floorPlanStore.floors.length > 1" t-foreach="floorPlanStore.floors" t-as="floor" t-key="floor.uuid">
                             <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body"
                                     t-att-class="{'active': floor === floorPlanStore.selectedFloor}"
