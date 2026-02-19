@@ -72,10 +72,25 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: '.modal-footer .btn-primary',
     },
     {
-        content: "It didn't save without a url. Fill url input.",
+        content: "It didn't save without a url. Enter a URL containing a space",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
-        run: 'text #',
+        run: "text /url with space",
+    },
+    {
+        content: "Check that a warning is shown when the URL contains spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Clear the URL containing a space and enter a valid one",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+        run: "text #",
+    },
+    {
+        content: "Verify the warning is hidden when the URL has no spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible",
+        run: () => {}, // It's a check.
     },
     {
         content: "Confirm the new menu entry",
