@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="apply_skills" inherit_id="website_hr_recruitment.apply">
+        <xpath expr="//div[hasclass('s_website_form_submit')]" position="before">
+            <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="one2many_skill" data-translated-name="Skills">
+                <div class="row s_col_no_resize s_col_no_bgcolor">
+                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment10">
+                        <span class="s_website_form_label_content">Skills</span>
+                    </label>
+                    <div class="col-sm">
+                        <!-- The selected type_ids set in the builder -->
+                        <div class="d-none row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="applicant_skill_ids" data-display="horizontal">
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment100" name="applicant_skill_ids" value="6" data-fill-with="undefined"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment100">Certifications🎖</label>
+                                </div>
+                            </div>
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment101" name="applicant_skill_ids" value="4"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment101">IT</label>
+                                </div>
+                            </div>
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment102" name="applicant_skill_ids" value="1"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment102">Languages</label>
+                                </div>
+                            </div>
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment103" name="applicant_skill_ids" checked="checked" value="5"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment103">Marketing</label>
+                                </div>
+                            </div>
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment104" name="applicant_skill_ids" value="3"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment104">Programming Languages</label>
+                                </div>
+                            </div>
+                            <div class="checkbox col-12 col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment105" name="applicant_skill_ids" value="2"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment105">Soft Skills</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Related skill_ids to the selected type_ids from the builder -->
+                        <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_skills s_col_no_bgcolor s_website_form_multiple">
+                            <div class="horizontal col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment100" name="skill_ids" value="62"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment100">Communication</label>
+                                </div>
+                            </div>
+                            <div class="horizontal col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment101" name="skill_ids" value="63"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment101">Analytics</label>
+                                </div>
+                            </div>
+                            <div class="horizontal col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment102" name="skill_ids" value="64"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment102">Digital advertising</label>
+                                </div>
+                            </div>
+                            <div class="horizontal col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment103" name="skill_ids" value="65"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment103">Public Speaking</label>
+                                </div>
+                            </div>
+                            <div class="horizontal col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment104" name="skill_ids" value="66"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment104">CMS</label>
+                                </div>
+                            </div>
+                            <div class="horizontal col-lg-4 col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="s_website_form_input form-check-input" id="recruitment105" name="skill_ids" value="67"/>
+                                    <label class="form-check-label s_website_form_check_label" for="recruitment105">Email Marketing</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
