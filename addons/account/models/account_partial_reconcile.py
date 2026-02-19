@@ -223,7 +223,8 @@ class AccountPartialReconcile(models.Model):
             return {}
 
         for partial in self:
-            for move in {partial.debit_move_id.move_id, partial.credit_move_id.move_id}:
+            for field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
+                move, counterpart_move = partial[f'{field}_move_id'].move_id, partial[f'{counterpart_field}_move_id'].move_id
 
                 # Collect data about cash basis.
                 if move.id in tax_cash_basis_values_per_move:
@@ -312,6 +313,7 @@ class AccountPartialReconcile(models.Model):
                     'partial': partial,
                     'percentage': percentage,
                     'payment_rate': payment_rate,
+                    'counterpart_move': counterpart_move,
                 }
 
                 # Add partials.
@@ -322,13 +324,15 @@ class AccountPartialReconcile(models.Model):
         return {k: v for k, v in tax_cash_basis_values_per_move.items() if v}
 
     @api.model
-    def _prepare_cash_basis_base_line_vals(self, base_line, balance, amount_currency):
+    def _prepare_cash_basis_base_line_vals(self, base_line, balance, amount_currency, partial_values):
         ''' Prepare the values to be used to create the cash basis journal items for the tax base line
         passed as parameter.
 
         :param base_line:       An account.move.line being the base of some taxes.
         :param balance:         The balance to consider for this line.
         :param amount_currency: The balance in foreign currency to consider for this line.
+        :param partial_values:  A dict with the values of the partial that triggered these cash
+                                basis journal items. See '_collect_tax_cash_basis_values'.
         :return:                A python dictionary that could be passed to the create method of
                                 account.move.line.
         '''
@@ -340,7 +344,7 @@ class AccountPartialReconcile(models.Model):
         all_tags = tax_tags + product_tags
 
         return {
-            'name': base_line.move_id.name,
+            'name': f'{base_line.move_id.name} - {partial_values["counterpart_move"].name}',
             'debit': balance if balance > 0.0 else 0.0,
             'credit': -balance if balance < 0.0 else 0.0,
             'amount_currency': amount_currency,
@@ -558,7 +562,7 @@ class AccountPartialReconcile(models.Model):
                     elif caba_treatment == 'base':
                         # Base line.
 
-                        cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
+                        cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency, partial_values)
                         grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_line_vals)
 
                     if grouping_key in partial_lines_to_create:
