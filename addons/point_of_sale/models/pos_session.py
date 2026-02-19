@@ -1206,10 +1206,12 @@ class PosSession(models.Model):
         outstanding_account = payment_method.outstanding_account_id
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
+        payment_type = 'inbound'
 
         if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
             # revert the accounts because account.payment doesn't accept negative amount.
             outstanding_account, destination_account = destination_account, outstanding_account
+            payment_type = 'outbound'
 
         account_payment = self.env['account.payment'].create({
             'amount': abs(amounts['amount']),
@@ -1220,6 +1222,7 @@ class PosSession(models.Model):
             'memo': _('%(payment_method)s POS payment of %(partner)s in %(session)s', payment_method=payment_method.name, partner=payment.partner_id.display_name, session=self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
+            'payment_type': payment_type,
         })
         account_payment.action_post()
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == accounting_partner.property_account_receivable_id)
