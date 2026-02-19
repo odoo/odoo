@@ -953,7 +953,7 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             },
             {
                 content: "Check that VAT label is present in the product details popup",
-                trigger: ".section-financials .vat-label:contains('TIN')",
+                trigger: ".section-financials .vat-label:contains('VAT')",
             },
             {
                 content: "Check that VAT value is correct in the product details popup",
