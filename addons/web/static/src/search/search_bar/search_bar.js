@@ -9,7 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 import { Component, status, useRef, useState } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useNavigation } from "@web/core/navigation/navigation";
@@ -669,6 +669,9 @@ export class SearchBar extends Component {
     onSearchInput(ev) {
         if (!hasTouch()) {
             this.searchBarDropdownState.close();
+        }
+        if (isIOS() && !ev.key) {
+            return;
         }
         const query = ev.target.value;
         if (query.trim()) {
