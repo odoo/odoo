@@ -343,6 +343,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
 
         self.assertEqual(self.so1_line_deliver_no_task.qty_delivered, timesheet1.unit_amount)
+        self.sale_order_1.action_confirm()
         invoice1 = self.sale_order_1._create_invoices()[0]
         invoice1.action_post()
 
