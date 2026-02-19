@@ -108,7 +108,7 @@ patch(PosStore.prototype, {
     },
     async sendOrderInPreparation(order, opts = {}) {
         let categoryCount = [];
-        if (!opts.cancelled) {
+        if (!opts.cancelled && opts?.showNotification) {
             categoryCount = this.getCategoryCount(order);
         }
         const result = await super.sendOrderInPreparation(order, opts);
@@ -564,7 +564,9 @@ patch(PosStore.prototype, {
             try {
                 await this.ensureGuestCustomerCount(order);
                 this.env.services.ui.block();
-                await this.sendOrderInPreparationUpdateLastChange(order);
+                await this.sendOrderInPreparationUpdateLastChange(order, {
+                    showNotification: true,
+                });
             } finally {
                 this.env.services.ui.unblock();
             }
@@ -619,9 +621,10 @@ patch(PosStore.prototype, {
     },
     async editFloatingOrderName(order) {
         const payload = await makeAwaitable(this.dialog, EditOrderNamePopup, {
-            title: _t("Edit Order Name"),
+            title: _t("Set Order Name"),
             placeholder: _t("e.g. John"),
-            startingValue: order.floating_order_name || "",
+            startingValue: order.floatingOrderName,
+            size: "sm",
         });
         if (payload) {
             if (order.isSynced) {

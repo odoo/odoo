@@ -312,6 +312,10 @@ registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
                     attributeLine: "Blue",
                 }),
             ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
         ].flat(),
 });
 
@@ -337,6 +341,57 @@ registry.category("web_tour.tours").add("test_combo_item_image_not_display", {
             combo.checkImgAndSelect("Combo Product 4", false),
             combo.checkImgAndSelect("Combo Product 6", false),
             Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_convert_orderlines_to_combo_with_upsell", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+
+            // Add products that can be part of a first combo
+            ProductScreen.clickDisplayedProduct("Combo Product 2"),
+            ProductScreen.clickDisplayedProduct("Combo Product 4"),
+            ProductScreen.clickDisplayedProduct("Combo Product 6"),
+
+            // Add products that can be part of a second combo
+            ProductScreen.clickDisplayedProduct("Second Product 2"),
+            ProductScreen.clickDisplayedProduct("Second Product 4"),
+            ProductScreen.clickDisplayedProduct("Second Product 6"),
+
+            inLeftSide([
+                {
+                    content: "Click apply combo button",
+                    trigger: ".combo-proposition button.btn",
+                    run: "click",
+                },
+                Dialog.is(),
+                {
+                    content: "Check 'Second Combo Product' price",
+                    trigger: ".modal-body .combo-item:eq(0) .fw-bolder:contains('50.00')",
+                },
+                {
+                    content: "Check 'Second Combo Product' save price",
+                    trigger: ".modal-body .combo-item:eq(0) span:contains('11.00')",
+                },
+                {
+                    content: "Check 'Office Combo' price",
+                    trigger: ".modal-body .combo-item:eq(1) .fw-bolder:contains('47.33')",
+                },
+                {
+                    content: "Check 'Office Combo' save price",
+                    trigger: ".modal-body .combo-item:eq(1) span:contains('24.67')",
+                },
+                {
+                    content: "Check 'Third Combo Product' price",
+                    trigger: ".modal-body .combo-item:eq(2) span:contains('80.00')",
+                },
+                {
+                    content: "Check 'Third Combo Product' add price",
+                    trigger: ".modal-body .combo-item:eq(2) span:contains('19.00')",
+                },
+                Dialog.cancel(),
+            ]),
         ].flat(),
 });
 

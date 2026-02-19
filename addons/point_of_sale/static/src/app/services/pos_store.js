@@ -40,6 +40,7 @@ import { DebugWidget } from "../utils/debug/debug_widget";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -47,7 +48,7 @@ export const CONSOLE_COLOR = "#F5B427";
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
-    feedbackScreenAutoSkipDelay = 5000;
+    feedbackScreenAutoSkipDelay = 1000;
 
     static serviceDependencies = [
         "bus_service",
@@ -2794,10 +2795,24 @@ export class PosStore extends WithLazyGetterTrap {
                             if (qtyNeeded === 0) {
                                 break;
                             }
+                            const line = this.selectedOrder.lines.filter(
+                                (l) => l.uuid === lUuid
+                            )[0];
                             const takeQty = Math.min(qty, qtyNeeded);
                             quantityTaken[comboId][lUuid] = {
                                 qty: takeQty,
                                 combo_item: item,
+                                line_price:
+                                    this.config.iface_tax_included == "total"
+                                        ? line.priceIncl
+                                        : line.priceExcl,
+                                attribute_value_ids: line.attribute_value_ids.map(
+                                    (value) => value.id
+                                ),
+                                attribute_value_extra_price: line.attribute_value_ids.reduce(
+                                    (sum, value) => sum + value.price_extra,
+                                    0
+                                ),
                             };
                             availableQty[productId].lines[lUuid] -= takeQty;
                             qtyNeeded -= takeQty;
@@ -2809,11 +2824,97 @@ export class PosStore extends WithLazyGetterTrap {
                 }
                 combinations.push(quantityTaken);
             }
+            let totalSplitedComboLinePrice = 0;
 
+            const itemLines = combinations
+                .flatMap((items) => Object.values(items))
+                .flatMap((item) => Object.values(item))
+                .filter((val) => val && typeof val === "object");
+
+            const remainingFreeByComboItem = new Map();
+            const childLineConf = [];
+            const comboExtraLines = [];
+            for (const item of itemLines) {
+                const combo = item.combo_item;
+                const comboItemId = combo.combo_id.id;
+                if (!remainingFreeByComboItem.has(comboItemId)) {
+                    remainingFreeByComboItem.set(comboItemId, combo.combo_id.qty_free);
+                }
+                const remainingFree = remainingFreeByComboItem.get(comboItemId);
+                const base = {
+                    combo_item_id: combo,
+                    configuration: {
+                        attribute_value_ids: item.attribute_value_ids,
+                        price_extra: item.attribute_value_extra_price,
+                    },
+                };
+                if (remainingFree > 0) {
+                    const freeQty = Math.min(item.qty, remainingFree);
+                    const extraQty = item.qty - freeQty;
+                    if (freeQty > 0) {
+                        childLineConf.push({
+                            ...base,
+                            qty: freeQty,
+                        });
+                    }
+                    if (extraQty > 0) {
+                        comboExtraLines.push({
+                            ...base,
+                            qty: extraQty,
+                        });
+                    }
+                    remainingFreeByComboItem.set(comboItemId, remainingFree - freeQty);
+                } else {
+                    comboExtraLines.push({
+                        ...base,
+                        qty: item.qty,
+                    });
+                }
+            }
+            const comboPrices = computeComboItems(
+                comboProduct,
+                childLineConf,
+                this.selectedOrder.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines,
+                this.currency
+            );
+            const baseLines = comboPrices.map((comboPrice) =>
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                    {},
+                    {
+                        currency_id: this.currency,
+                        quantity: comboPrice.qty,
+                        price_unit: comboPrice.price_unit,
+                        tax_ids: comboPrice.combo_item_id.product_id.taxes_id,
+                        product_id: comboPrice.combo_item_id.product_id,
+                    }
+                )
+            );
+            accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
+            accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
+            const cashRounding = this.config.cash_rounding ? this.config.rounding_method : null;
+            const taxDetails = accountTaxHelpers.get_tax_totals_summary(
+                baseLines,
+                this.currency,
+                this.company,
+                {
+                    cash_rounding: cashRounding,
+                }
+            );
+            totalSplitedComboLinePrice = this.currency.round(
+                itemLines.reduce((sum, line) => sum + line.line_price, 0)
+            );
             matchingCombos.push({
                 productTmpl: comboProduct,
                 combinations,
                 combinationsQty: comboQty,
+                totalComboPrice:
+                    this.config.iface_tax_included == "total"
+                        ? taxDetails.total_amount
+                        : taxDetails.base_amount,
+                totalSplitedComboLinePrice,
             });
         }
         return matchingCombos;

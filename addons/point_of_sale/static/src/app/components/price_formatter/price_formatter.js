@@ -19,8 +19,8 @@ export class PriceFormatter extends Component {
         }
         const numericPart = trimmedPrice.replace(currencySymbol, "").trim();
         const amountParts = numericPart.split(localization.decimalPoint);
-        const decimal = amountParts[1] || "";
-        const amountStr = amountParts[0] + (decimal ? localization.decimalPoint : ""); // ex. "1000."
+        const decimal = amountParts?.[1] ? localization.decimalPoint + amountParts[1] : ""; // ex. ".00"
+        const amountStr = amountParts[0]; // ex. "1000"
         return {
             amountStr,
             decimal,
