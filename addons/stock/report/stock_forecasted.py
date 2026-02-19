@@ -5,7 +5,13 @@ from datetime import date, datetime
 
 from odoo import api, models
 from odoo.fields import Domain
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
 from odoo.tools import format_date
+||||||| fbdcb07f50c1c6ba3449afcf41f0144a08413a11
+from odoo.tools import float_is_zero, format_date
+=======
+from odoo.tools import float_is_zero, format_date, OrderedSet
+>>>>>>> 6a8721509a001d01d7a926027f2c22a8b6fe376d
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
@@ -302,24 +308,56 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 'taken_from_stock': taken_from_stock_out,
             }
 
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
         def _reconcile_out_with_ins(lines, out, ins, demand, product_uom, only_matching_move_dest=True, read=True):
             index_to_remove = []
             for index, in_ in enumerate(ins):
                 if product_uom.is_zero(in_['qty']):
                     index_to_remove.append(index)
+||||||| fbdcb07f50c1c6ba3449afcf41f0144a08413a11
+        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True, read=True):
+            index_to_remove = []
+            for index, in_ in enumerate(ins):
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
+                    index_to_remove.append(index)
+=======
+        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=True):
+            ins_to_remove = []
+            for in_id in ins:
+                in_data = in_id_to_in_data[in_id]
+                if float_is_zero(in_data['qty'], precision_rounding=product_rounding):
+                    ins_to_remove.append(in_id)
+>>>>>>> 6a8721509a001d01d7a926027f2c22a8b6fe376d
                     continue
-                if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
-                    continue
-                taken_from_in = min(demand, in_['qty'])
+                taken_from_in = min(demand, in_data['qty'])
                 demand -= taken_from_in
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
                 lines.append(self._prepare_report_line(taken_from_in, move_in=in_['move'], move_out=out, read=read))
                 in_['qty'] -= taken_from_in
                 if in_['qty'] <= 0:
                     index_to_remove.append(index)
                 if product_uom.is_zero(demand):
+||||||| fbdcb07f50c1c6ba3449afcf41f0144a08413a11
+                lines.append(self._prepare_report_line(taken_from_in, move_in=in_['move'], move_out=out, read=read))
+                in_['qty'] -= taken_from_in
+                if in_['qty'] <= 0:
+                    index_to_remove.append(index)
+                if float_is_zero(demand, precision_rounding=product_rounding):
+=======
+                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
+                in_data['qty'] -= taken_from_in
+                if in_data['qty'] <= 0:
+                    ins_to_remove.append(in_id)
+                if float_is_zero(demand, precision_rounding=product_rounding):
+>>>>>>> 6a8721509a001d01d7a926027f2c22a8b6fe376d
                     break
-            for index in reversed(index_to_remove):
-                del ins[index]
+
+            for in_id in ins_to_remove:
+                in_data = in_id_to_in_data[in_id]
+                product_id = in_data['move'].product_id.id
+                for dest in in_data['move_dests']:
+                    dest_ids_to_in_ids[dest].remove(in_id)
+                ins_per_product[product_id].remove(in_id)
             return demand
 
         in_domain, out_domain = self._move_confirmed_domain(
@@ -365,13 +403,18 @@ class StockForecasted_Product_Product(models.AbstractModel):
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
 
-        ins_per_product = defaultdict(list)
+        dest_ids_to_in_ids, in_id_to_in_data = defaultdict(OrderedSet), {}
+        ins_per_product = defaultdict(OrderedSet)
         for in_ in ins:
-            ins_per_product[in_.product_id.id].append({
+            in_id_to_in_data[in_.id] = {
                 'qty': in_.product_qty,
                 'move': in_,
-                'move_dests': in_._rollup_move_dests()
-            })
+                'move_dests': in_._rollup_move_dests(),
+            }
+            product_id = in_.product_id.id
+            ins_per_product[product_id].add(in_.id)
+            for dest in in_id_to_in_data[in_.id]['move_dests']:
+                dest_ids_to_in_ids[dest].add(in_.id)
 
         qties = self.env['stock.quant']._read_group(
             self._get_quant_domain(wh_location_ids, outs.product_id | self._get_products(product_template_ids, product_ids)),
@@ -445,15 +488,33 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     continue
 
                 # Reconcile with the ins.
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
                 if not product.uom_id.is_zero(demand_out):
                     demand_out = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand_out, product.uom_id, only_matching_move_dest=True, read=read)
                 if not product.uom_id.is_zero(demand_out):
+||||||| fbdcb07f50c1c6ba3449afcf41f0144a08413a11
+                if not float_is_zero(demand_out, precision_rounding=product_rounding):
+                    demand_out = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand_out, product_rounding, only_matching_move_dest=True, read=read)
+                if not float_is_zero(demand_out, precision_rounding=product_rounding):
+=======
+                demand_out = _reconcile_out_with_ins(lines, out, dest_ids_to_in_ids[out.id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+
+                if not float_is_zero(demand_out, precision_rounding=product_rounding):
+>>>>>>> 6a8721509a001d01d7a926027f2c22a8b6fe376d
                     unreconciled_outs.append((demand_out, out))
 
             # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
             for (demand, out) in unreconciled_outs:
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
                 demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product.uom_id, only_matching_move_dest=False, read=read)
                 if not product.uom_id.is_zero(demand):
+||||||| fbdcb07f50c1c6ba3449afcf41f0144a08413a11
+                demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False, read=read)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+=======
+                demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+>>>>>>> 6a8721509a001d01d7a926027f2c22a8b6fe376d
                     # Not reconciled
                     lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
             # Stock in transit
@@ -465,10 +526,19 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
 
             # In moves not used.
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
             for in_ in ins_per_product[product.id]:
                 if product.uom_id.is_zero(in_['qty']):
+||||||| fbdcb07f50c1c6ba3449afcf41f0144a08413a11
+            for in_ in ins_per_product[product.id]:
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
+=======
+            for in_id in ins_per_product[product.id]:
+                in_data = in_id_to_in_data[in_id]
+                if float_is_zero(in_data['qty'], precision_rounding=product_rounding):
+>>>>>>> 6a8721509a001d01d7a926027f2c22a8b6fe376d
                     continue
-                lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move'], read=read))
+                lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
         return lines
 
     def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
