@@ -194,7 +194,12 @@ export class DomPlugin extends Plugin {
         for (const node of children) {
             if (isBlock(node)) {
                 shouldBreakLine = true;
-            } else if (!visibleNodes.has(node)) {
+            } else if (
+                !visibleNodes.has(node) &&
+                !this.getResource("unremovable_node_predicates").some((predicate) =>
+                    predicate(node)
+                )
+            ) {
                 removeNode(node, cursors);
             } else if (node.nodeName === "BR") {
                 if (shouldBreakLine) {
