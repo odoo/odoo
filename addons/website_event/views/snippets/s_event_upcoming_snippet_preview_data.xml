@@ -157,28 +157,38 @@
     <!-- Single record preview -->
     <template id="s_dynamic_snippet_events_single_offset_preview_data" name="Single Event Offset Preview Data">
         <div class="s_dialog_preview my-4">
-            <div class="w-100 rounded" style="background-image: url('/website_event/static/src/img/event_previews/event_1.jpg'); background-size: cover; background-position: center;">
+            <div class="w-100 rounded" style="background-image: url('/website_event/static/src/img/event_cover_4.jpg'); background-size: cover; background-position: center;">
                 <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
-                <div class="position-relative p-5 text-white">
-                    <div class="py-5">
-                        <h2>Innovations in Technology and Society</h2>
-                        <p class="lead">Shaping tomorrow through ideas that transform how we live today.</p>
+                <div class="position-relative p-4 p-lg-5">
+                    <div class="py-lg-5">
+                        <h2>Business workshops</h2>
+                        <p class="lead">Discover how to grow a sustainable business with our experts. snippet-1</p>
                     </div>
-                    <div class="o_cc o_cc5 position-absolute top-100 start-50 w-75 d-flex gap-5 mx-0 px-4 py-3 rounded" style="transform: translate(-50%, -50%);">
-                        <div class="me-5">
+                    <div class="o_cc o_cc5 position-lg-absolute top-100 start-50 w-100 d-flex flex-wrap gap-4 w-xl-75 mt-3 mt-lg-0 mx-0 px-4 py-4 py-lg-3 rounded">
+                        <div class="me-lg-5 order-1 order-lg-0">
                             <p class="mb-2 fw-bold">Time</p>
-                            <span><i class="fa fa-clock-o me-2" role="presentation"/>8:15 PM</span>
+                            <span>
+                                <i class="fa fa-clock-o me-2"></i>
+                                <span>11:00 AM</span>
+                            </span>
                         </div>
-                        <div>
+                        <div class="order-1 order-lg-0">
                             <p class="mb-2 fw-bold">Location</p>
-                            <span><i class="fa fa-map-marker me-2" role="presentation"/>Los Angeles, CA, United States</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-end ms-auto">
-                            <p class="h4-fs mb-0 me-3 pe-3">August 23, 2025</p>
-                            <div class="ps-3 border-start">
-                                <a href="#" class="btn btn-primary">Register</a>
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-map-marker me-2" role="img"></i>
+                                <div>
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <span>
+                                            <div>
+                                                <span> Los Angeles, CA, United States</span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <p class="h4-fs mb-0 me-3">October 29, 2025</p>
+                        <button class="d-lg-none btn btn-primary w-100 mt-3 order-1">Register</button>
                     </div>
                 </div>
             </div>
@@ -186,23 +196,35 @@
     </template>
     <template id="s_dynamic_snippet_events_single_entry_preview_data" name="Single Event Entry Preview Data">
         <div class="s_dialog_preview my-4">
-            <div class="w-100 rounded" style="background-image: url('/website_event/static/src/img/event_previews/event_3.jpg'); background-size: cover; background-position: center;">
+            <div class="w-100 rounded" style="background-image: url('/website_event/static/src/img/event_cover_4.jpg'); background-size: cover; background-position: center;">
                 <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
-                <div class="position-relative d-flex flex-column gap-5 w-100 h-100 p-4 p-lg-5 text-white">
-                    <div class="d-flex gap-5">
-                        <div class="flex-grow-1">
-                            <h2>Harmony Under the Stars</h2>
-                            <p class="lead">Melancholic melodies and textured soundscapes exploring memory and quiet distance.</p>
+                    <div class="position-relative d-flex flex-column gap-5 w-100 h-100 p-4 p-lg-5">
+                        <div class="d-flex flex-column flex-lg-row gap-lg-5">
+                            <div class="flex-grow-1 order-1 order-lg-0">
+                                <h2>Business workshops snippet-2</h2>
+                                <p class="lead">Discover how to grow a sustainable business with our experts.</p>
+                            </div>
+                            <p class="h4-fs">
+                                <span>October 29, 2025</span>
+                                <span class="text-nowrap">at <span>11:00 AM</span></span>
+                            </p>
                         </div>
-                        <div>
-                            <p class="h3-fs text-nowrap">August 23, 2025 at 8:15 PM</p>
+                        <div class="flex-column flex-md-row align-items-md-center gap-3 gap-md-5">
+                            <div class="d-flex align-items-center fs-5">
+                                <i class="fa fa-map-marker me-2" role="img"></i>
+                                <div class="gap-2">
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <span>
+                                            <div>
+                                                <span> Los Angeles, CA, United States</span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="flex-grow-1 mt-3">
+                            <button class="btn btn-lg btn-primary w-100 w-lg-auto text-nowrap">Register Now</button>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-5 mt-auto">
-                        <div class="flex-grow-1">
-                            <a href="#" class="btn btn-lg btn-primary">Register Now</a>
-                        </div>
-                        <span class="fs-5"><i class="fa fa-map-marker me-2" role="presentation"/>Los Angeles, CA, United States</span>
                     </div>
                 </div>
             </div>
@@ -234,36 +256,56 @@
     </template>
     <template id="s_dynamic_snippet_events_single_badge_preview_data" name="Single Event Badge Preview Data">
         <div class="s_dialog_preview my-4">
-            <div class="text-center">
-                <span class="o_cc o_cc1 d-inline-flex align-items-center justify-content-center gap-3 border rounded py-2 px-3 rounded-pill">
-                    <i class="fa fa-calendar" role="presentation"/>
-                    <strong>Harmony Under the Stars</strong>
-                    <span class="text-muted">August 23, 2025 - 8:15 PM</span>
-                    <span class="text-primary">Register <i class="fa fa-long-arrow-right" role="presentation"/></span>
-                </span>
+            <div class="col-lg-12 text-center">
+                <div class="text-center">
+                    <span class="d-inline-flex align-items-center justify-content-center flex-wrap gap-3 my-3 border rounded py-2 px-3">
+                        <strong class="text-nowrap">Business workshops</strong>
+                        <span class="text-muted">
+                            <span >October 29, 2025</span>
+                                <span>
+                                    - <span>11:00 AM</span>
+                                </span>
+                        </span>
+                        <span class="text-primary">Register Now <i class="fa fa-long-arrow-right"></i></span>
+                    </span>
+                </div>
             </div>
         </div>
     </template>
     <template id="s_dynamic_snippet_events_single_aside_preview_data" name="Single Event Aside Preview Data">
         <div class="s_dialog_preview row my-4">
-            <div class="col-lg-6 pe-5 align-content-center">
-                <h2>Innovations in Technology and Society</h2>
-                <p class="lead">Shaping tomorrow through ideas that transform how we live today.</p>
-                <a class="btn btn-primary" href="#">Register <i class="fa fa-long-arrow-right ms-2" role="presentation"/></a>
-                <div class="d-flex gap-5 mt-5">
-                    <div>
-                        <p class="text-muted">Date</p>
-                        <span><i class="fa fa-calendar me-2" role="presentation"/>August 23, 2025 at 8:15 PM</span>
-                    </div>
-                    <div>
+            <div class="col-lg-12">
+                <div class="s_dynamic_snippet_content_position row">
+                    <div class="col-12 col-lg-6 d-flex d-lg-block flex-column align-content-center align-items-start order-2">
+                        <h2>Business workshops snippet 3</h2>
+                        <p class="lead">Discover how to grow a sustainable business with our experts.</p>
+                        <button class="btn btn-primary w-100 w-sm-auto mt-4 mt-lg-0 order-last order-lg-auto">Register Now <i class="fa fa-long-arrow-right"></i></button>
+                        <div class="d-flex flex-wrap mt-lg-5">
+                            <div class="me-5 mb-3">
+                                <p class="text-muted">Date</p>
+                                <span><i class="fa fa-calendar me-2"></i><span>October 29, 2025</span></span>
+                                <span>at 11:00 AM</span>
+                            </div>
+                        <div>
                         <p class="text-muted">Location</p>
-                        <span><i class="fa fa-map-marker me-2" role="presentation"/>Los Angeles, CA, United States</span>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-map-marker me-2"></i>
+                            <div class="gap-2">
+                                <div class="d-flex align-items-baseline gap-1">
+                                    <div>
+                                        <span> Los Angeles, CA, United States</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="ratio ratio-16x9">
-                    <div class="rounded" style="background-image: url('/website_event/static/src/img/event_previews/event_1.jpg'); background-size: cover;"></div>
+            <div class="col-12 col-lg-6 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
+                <div class="o_record_cover_container d-flex flex-column h-100 o_cc ratio ratio-16x9">
+                    <div class="o_record_cover_component " style="background-image: url('/website_event/static/src/img/event_cover_4.jpg');"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
