@@ -196,10 +196,11 @@ class PosOrderLine(models.Model):
 
     def _compute_amount_line_all(self, qty=None):
         self.ensure_one()
+        sign = -1 if self.order_id.is_refund else 1
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        line_qty = qty or self.qty
+        line_qty = qty or (self.qty * sign)
         taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, line_qty, product=self.product_id, partner=self.order_id.partner_id)
         return {
             'price_subtotal_incl': taxes['total_included'],
