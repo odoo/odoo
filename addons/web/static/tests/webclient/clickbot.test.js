@@ -548,7 +548,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             <div role="alert">
                 <p> Something went wrong... If you really are stuck, share the report with your friendly support service </p>
                 <details>
-                    <summary class="mb-1 link-info">See technical details</summary>
+                    <summary class="mb-1 link-info"><span>See technical details</span><span class="ms-1 text-400 small">(10/Apr/2024 00:00:04)</span></summary>
                     <div class="text-bg-100 clearfix mt-2 position-relative o_error_detail pb-2">
                         <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis" data-available-offline=""><span class="fa fa-clipboard"></span></button>
                         <div class="ps-1 pt-1 ps-md-3 pt-md-3">

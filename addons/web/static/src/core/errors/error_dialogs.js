@@ -59,6 +59,12 @@ export class ErrorDialog extends Component {
         });
         this.copyButtonRef = useRef("copyButton");
         this.popover = usePopover(Tooltip);
+        let date = DateTime.now().setZone("UTC");
+        if (this.props.data?.timestamp) {
+            date = DateTime.fromSeconds(this.props.data.timestamp, { zone: "utc" });
+        }
+        this.logDate = date.toFormat("dd/MMM/yyyy HH:mm:ss", { locale: "en" });
+
         this.contextDetails = "Occured ";
         if (this.props.serverHost) {
             this.contextDetails += `on ${this.props.serverHost} `;
@@ -66,9 +72,7 @@ export class ErrorDialog extends Component {
         if (this.props.model) {
             this.contextDetails += `on model ${this.props.model} `;
         }
-        this.contextDetails += `on ${DateTime.now()
-            .setZone("UTC")
-            .toFormat("yyyy-MM-dd HH:mm:ss")} GMT`;
+        this.contextDetails += `on ${this.logDate}`;
     }
 
     showTooltip() {

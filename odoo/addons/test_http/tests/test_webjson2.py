@@ -36,7 +36,7 @@ class TestHttpWebJson_2(TestHttpBase):
             exc.add_note(response.text)
             raise
         self.assertIsInstance(body, dict, body)
-        self.assertEqual(list(body), ['name', 'message', 'arguments', 'context', 'debug'])
+        self.assertEqual(list(body), ['name', 'message', 'arguments', 'timestamp', 'context', 'debug'])
         self.assertEqual(submap(body, expected_error), expected_error)
 
     def test_webjson2_multi_db_no_header(self):

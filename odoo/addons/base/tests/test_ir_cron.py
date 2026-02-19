@@ -128,7 +128,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         action_params = action.pop('params')
         self.assertEqual(action, {'type': 'ir.actions.client', 'tag': 'display_exception'})
         self.assertEqual(list(action_params), ['code', 'message', 'data'])
-        self.assertEqual(list(action_params['data']), ['name', 'message', 'arguments', 'context', 'debug'])
+        self.assertEqual(list(action_params['data']), ['name', 'message', 'arguments', 'timestamp', 'context', 'debug'])
 
     def test_cron_no_job_ready(self):
         self.cron.nextcall = fields.Datetime.now() + timedelta(days=1)
