@@ -412,7 +412,7 @@
                         <t t-out="footer_additionnal_content"/>
                     </td>
                 </tr>
-                <tr t-if="not is_centered_footer and (is_preview or report_type == 'pdf')">
+                <tr t-if="not hide_footer_pager and not is_centered_footer and (is_preview or report_type == 'pdf')">
                     <td class="align-bottom text-end ps-3">
                         <t t-out="footer_pager"/>
                     </td>
@@ -420,7 +420,9 @@
                 <tr t-elif="is_centered_footer">
                     <td class="align-top text-center">
                         <t t-out="footer_additionnal_content"/>
-                        <t t-out="footer_pager"/>
+                        <t t-if="not hide_footer_pager">
+                            <t t-out="footer_pager"/>
+                        </t>
                     </td>
                 </tr>
             </table>
