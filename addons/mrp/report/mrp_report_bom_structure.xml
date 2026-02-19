@@ -104,7 +104,7 @@
                     <span t-out="l['name']"/>
                 </td>
                 <td class="text-end">
-                    <t t-if="l['type'] == 'operation'" t-out="l['quantity']" t-options='{"widget": "float_time"}'/>
+                    <t t-if="l['type'] == 'operation'" t-out="l['quantity']" t-options="{'widget': 'float_time', 'unit': 'minutes'}"/>
                     <t t-else="" t-out="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                 </td>
                 <td class="text-start" groups="uom.group_uom" t-out="l['uom']"/>
