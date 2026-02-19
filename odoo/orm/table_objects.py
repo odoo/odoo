@@ -90,7 +90,7 @@ class Constraint(TableObject):
 
     def __init__(
         self,
-        definition: str,
+        definition: str | None,
         message: ConstraintMessageType = '',
     ) -> None:
         """ SQL table containt.
@@ -127,16 +127,23 @@ class Constraint(TableObject):
         conname = self.full_name(model)
         definition = self.get_definition(model.pool)
         current_definition = sql.constraint_definition(cr, model._table, conname)
-        if current_definition == definition:
+
+        if current_definition == definition and definition is not None:
             return
 
         if current_definition:
             # constraint exists but its definition may have changed
             sql.drop_constraint(cr, model._table, conname)
 
+        if definition is None:
+            # when clearing a constraint, ensure we drop deferred operations
+            model.pool._constraint_queue.pop(conname, None)
+            return
+
         model.pool.post_constraint(
             cr, lambda cr: sql.add_constraint(cr, model._table, conname, definition), conname)
 
+Constraint.CLEAR = Constraint(None)
 
 class Index(TableObject):
     """ Index on the table.
