@@ -139,7 +139,7 @@ class TimesheetCustomerPortal(CustomerPortal):
                 else:
                     time_data = Timesheet_sudo._read_group(domain, [field], ['unit_amount:sum'])
                     mapped_time = {field.id: unit_amount for field, unit_amount in time_data}
-                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
+                    grouped_timesheets = [(Timesheet_sudo.concat(g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
                 return timesheets, grouped_timesheets
 
             grouped_timesheets = [(

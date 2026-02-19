@@ -88,7 +88,7 @@ class ProductValue(models.Model):
         if products:
             moves_by_product = products._get_remaining_moves()
             for qty_by_move in moves_by_product.values():
-                move_ids.update(self.env['stock.move'].concat(*qty_by_move.keys()).ids)
+                move_ids.update(self.env['stock.move'].concat(qty_by_move.keys()).ids)
 
         res = super().create(vals_list)
         if move_ids:

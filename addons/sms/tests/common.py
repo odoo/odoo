@@ -250,7 +250,7 @@ class SMSCase(MockSMS):
           :param content: SMS content
           :param mail_message_values: dictionary of expected mail message fields values
         """
-        partners = self.env['res.partner'].concat(*list(p['partner'] for p in recipients_info if p.get('partner')))
+        partners = self.env['res.partner'].concat(p['partner'] for p in recipients_info if p.get('partner'))
         numbers = [p['number'] for p in recipients_info if p.get('number')]
         # special case of void notifications: check for False / False notifications
         if not partners and not numbers:

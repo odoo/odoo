@@ -27,7 +27,7 @@ class HrVersion(models.Model):
     def _get_versions_by_employee_and_date(self, employee_dates):
         # for `employee_dates` a dict[employee] -> dates
         # Generate a 2 level dict[employee][date] -> version
-        employees = self.env['hr.employee'].union(*employee_dates.keys())
+        employees = self.env['hr.employee'].union(employee_dates.keys())
         all_dates = [date for dates in employee_dates.values() for date in dates]
         if not all_dates:
             return {}

@@ -119,7 +119,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
             # We now know the amount of lines; we want to create one consolidated invoice per 100 lines.
             for (journal, prefix), lines in lines_per_journal_prefix.items():
                 for line_batch in split_every(MAX_LINE_COUNT_PER_INVOICE, lines, list):
-                    invoices = self.env["account.move"].union(*line_batch)
+                    invoices = self.env["account.move"].union(line_batch)
                     consolidated_invoice_vals.append({
                         "invoice_ids": [Command.set(invoices.ids)],
                         "company_id": journal.company_id.id,

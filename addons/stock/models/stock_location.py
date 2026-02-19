@@ -499,7 +499,7 @@ class StockLocation(models.Model):
             groupby=['location_dest_id', 'product_id'], aggregates=['quantity_product_uom:sum']
         )
 
-        products = Product.union(*(product for __, product, __ in quants + outgoing_move_lines + incoming_move_lines))
+        products = Product.union(product for __, product, __ in quants + outgoing_move_lines + incoming_move_lines)
         products.fetch(['weight'])
 
         result = defaultdict(lambda: defaultdict(float))

@@ -48,7 +48,7 @@ class AccountMove(models.Model):
         for (user_id, company_id), moves in groupby(
             sale_moves, key=lambda m: (m.invoice_user_id.id, m.company_id.id)
         ):
-            self.env["account.move"].concat(*moves).team_id = (
+            self.env["account.move"].concat(moves).team_id = (
                 self
                 .env["crm.team"]
                 .with_context(allowed_company_ids=[company_id])

@@ -300,7 +300,7 @@ class SaleOrder(models.Model):
         def _render_note_exception_quantity_so(rendering_context):
             order_exceptions, visited_moves = rendering_context
             visited_moves = list(visited_moves)
-            visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
+            visited_moves = self.env[visited_moves[0]._name].concat(visited_moves)
             order_line_ids = self.env['sale.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
             sale_order_ids = order_line_ids.mapped('order_id')
             impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')

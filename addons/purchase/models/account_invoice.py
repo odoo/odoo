@@ -411,7 +411,7 @@ class AccountMove(models.Model):
                     matching_po_lines = self._find_matching_subset_po_lines(
                         po_lines_with_amount, amount_total, timeout)
                     if matching_po_lines:
-                        return 'subset_total_match', self.env['purchase.order.line'].union(*matching_po_lines), None
+                        return 'subset_total_match', self.env['purchase.order.line'].union(matching_po_lines), None
                     else:
                         # We did not find a match for the invoice total.
                         # We return all purchase order lines based only on the purchase order reference(s) in the
@@ -428,7 +428,7 @@ class AccountMove(models.Model):
                         # We found a subset of purchase order lines that match a subset of the vendor bill lines.
                         # We return the matching purchase order lines and vendor bill lines.
                         return ('subset_match',
-                                self.env['purchase.order.line'].union(*matching_po_lines),
+                                self.env['purchase.order.line'].union(matching_po_lines),
                                 matching_inv_lines)
 
         # As a last resort we try matching a purchase order by vendor and total amount.

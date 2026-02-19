@@ -905,7 +905,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             )
             combination_info = product._get_combination_info(
-                combination=request.env["product.template.attribute.value"].concat(combination)
+                combination=combination.with_env(self.env)
             )
         else:
             combination_info = product._get_combination_info()

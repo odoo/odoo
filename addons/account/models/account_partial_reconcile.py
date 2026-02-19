@@ -165,7 +165,7 @@ class AccountPartialReconcile(models.Model):
                 if not payment.currency_id.compare_amounts(payment.amount_signed, amount):
                     to_update.append(payment)
                     break
-        return self.env['account.payment'].union(*to_update)
+        return self.env['account.payment'].union(to_update)
 
     @api.model
     def _update_matching_number(self, amls):

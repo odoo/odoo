@@ -223,7 +223,7 @@ class TestViewInheritance(ViewCase):
         return view
 
     def get_views(self, names):
-        return self.View.concat(*(self.view_ids[name] for name in names))
+        return self.View.concat(self.view_ids[name] for name in names)
 
     def setUp(self):
         super(TestViewInheritance, self).setUp()
