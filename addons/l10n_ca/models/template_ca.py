@@ -56,3 +56,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'l10n_ca_512207',
             },
         }
+
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
+        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
+        if company.account_fiscal_country_id.code == 'CA':
+            accounts_data['default_cash_difference_expense_account_id'].update({
+                'description': self.env._('Losses resulting from discrepancies in cash balances or reconciliations'),
+            })
+        return accounts_data
