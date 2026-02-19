@@ -12,12 +12,12 @@
             </t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
-            <div t-if="channel.livechat_status === 'need_help' and channel.description" t-att-title="channel.description" class="text-muted text-truncate smaller" t-esc="channel.description"/>
+            <div t-if="channel.livechat_status === 'need_help' and channel.topic" t-att-title="channel.topic" class="text-muted text-truncate smaller" t-esc="channel.topic"/>
         </xpath>
     </t>
     <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-floatingName')]" position="after">
-            <div t-if="channel.livechat_status === 'need_help' and channel.description" t-att-title="channel.description" class="text-muted text-truncate smaller px-2 pb-1" t-esc="channel.description"/>
+            <div t-if="channel.livechat_status === 'need_help' and channel.topic" t-att-title="channel.topic" class="text-muted text-truncate smaller px-2 pb-1" t-esc="channel.topic"/>
             <div class="d-flex align-items-baseline gap-1 px-2 pb-2">
                 <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country my-auto'"/>
                 <span t-if="channel.livechat_lang_id" t-out="channel.livechat_lang_id.name" class="fw-normal small"/>

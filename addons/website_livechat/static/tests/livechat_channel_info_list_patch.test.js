@@ -54,14 +54,14 @@ test("Show recent conversations in channel info list", async () => {
         {
             channel_member_ids: [],
             channel_type: "livechat",
-            description: "question about the live chat app",
+            topic: "question about the live chat app",
             livechat_status: "in_progress",
             livechat_visitor_id: visitorId,
         },
         {
             channel_member_ids: [],
             channel_type: "livechat",
-            description: "question about the discuss app",
+            topic: "question about the discuss app",
             livechat_status: "in_progress",
             livechat_visitor_id: visitorId,
         },

@@ -157,7 +157,7 @@ test("open visitor's partner profile if visitor has one", async () => {
     await contains("div.o_field_widget > input:value(Joel Willis)");
 });
 
-test("Conversation description works in livechat", async () => {
+test("Conversation topic works in livechat", async () => {
     const pyEnv = await startServer();
     const livechatPartner = pyEnv["res.partner"].create({ name: "Joel Willis" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -166,12 +166,12 @@ test("Conversation description works in livechat", async () => {
             Command.create({ partner_id: livechatPartner, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        description: "Yup, that customer again...",
+        topic: "Yup, that customer again...",
     });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
     await contains(
-        "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
+        "input.o-mail-DiscussContent-threadTopic:value(Yup, that customer again...)"
     );
 });

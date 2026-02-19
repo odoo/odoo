@@ -647,7 +647,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(test_channel.avatar_128, test_channel.image_128)
 
     def test_channel_write_should_send_notification(self):
-        channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
+        channel = self.env["discuss.channel"].create({"name": "test", "topic": "test"})
         with self.assertBus(
             [(self.cr.dbname, "discuss.channel", channel.id)],
             [

@@ -73,8 +73,8 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         self.assertEqual(chat.livechat_failure, "no_failure")
 
-    def test_livechat_description_sync_to_internal_user_bus(self):
-        """Test the description of a livechat conversation is sent to the internal user bus."""
+    def test_livechat_topic_sync_to_internal_user_bus(self):
+        """Test the topic of a livechat conversation is sent to the internal user bus."""
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {"channel_id": self.livechat_channel.id},
@@ -89,14 +89,14 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "description": "Description of the conversation",
+                                "topic": "Topic of the conversation",
                             }
                         ]
                     },
                 }
             ],
         ):
-            channel.description = "Description of the conversation"
+            channel.topic = "Topic of the conversation"
 
     def test_livechat_note_sync_to_internal_user_bus(self):
         """Test that a livechat note is sent to the internal user bus."""

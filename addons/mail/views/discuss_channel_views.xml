@@ -23,7 +23,7 @@
                                     <span class="fw-bold fs-5">#<field name="display_name"/></span>
                                 </div>
                                 <field name="channel_type" groups="base.group_no_one"/>
-                                <field name="description" class="small text-muted"/>
+                                <field name="topic" widget="char_emojis" placeholder="Let everyone know what's being discussed here" readonly="not is_editable"  invisible="channel_type not in ('channel', 'group')"/>
                             </main>
                             <footer>
                                 <button type="object" invisible="not can_leave" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow">
@@ -47,7 +47,7 @@
                 <list default_order="last_interest_dt desc" action="open_chat_window_action" type="object">
                     <field name="avatar_128" invisible="parent_channel_id" widget="image" options="{'size': [24, 24]}" width="30" string=""/>
                     <field name="display_name"/>
-                    <field name="description"/>
+                    <field name="topic" widget="char_emojis" placeholder="Let everyone know what's being discussed here" readonly="not is_editable"  invisible="channel_type not in ('channel', 'group')"/>
                     <field name="last_interest_dt" optional="hide"/>
                     <button type="object" invisible="not can_leave" class="btn btn-secondary" name="action_unfollow" string="Leave"/>
                     <button type="object" invisible="not can_join" class="btn btn-primary" name="channel_join" string="Join"/>
@@ -87,7 +87,7 @@
                         <group class="o_label_nowrap">
                             <field name="active" invisible="1"/>
                             <field name="discuss_category_id"/>
-                            <field name="description" placeholder="Topics discussed in this group..." readonly="not is_editable"/>
+                            <field name="topic" widget="char_emojis" placeholder="Let everyone know what's being discussed here" readonly="not is_editable"  invisible="channel_type not in ('channel', 'group')"/>
                             <field name="is_readonly" invisible="channel_type != 'channel'" readonly="id and not can_self_edit_readonly_channel"/>
                         </group>
                         <notebook>
@@ -144,7 +144,7 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <search>
-                    <field name="display_name"/>
+                    <field name="topic"/>
                     <filter string="Joined" name="filter_joined" domain="[('is_member', '=', True)]"/>
                     <filter string="Not Joined" name="filter_not_joined" domain="[('is_member', '=', False)]"/>
                     <separator/>
