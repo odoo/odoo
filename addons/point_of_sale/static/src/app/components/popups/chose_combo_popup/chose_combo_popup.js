@@ -24,7 +24,7 @@ export class ChoseComboPopup extends Component {
             const comboProduct = this.pos.models["product.combo"].get(comboId);
             const maxQty = comboProduct.qty_max;
             const totalChosenQty = Object.values(comboChoice).reduce(
-                (sum, line) => (line === true ? sum : sum + line.qty),
+                (sum, line) => (line === true || typeof line === "number" ? sum : sum + line.qty),
                 0
             );
             for (const line of Object.values(comboChoice)) {

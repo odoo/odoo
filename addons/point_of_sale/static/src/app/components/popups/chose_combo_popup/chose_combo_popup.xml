@@ -10,16 +10,28 @@
                 <div class="d-flex justify-content-between p-3 combo-item" t-att-class="{'border-top': combo_index > 0}" t-foreach="this.allCombos" t-as="combo" t-key="combo_index">
                     <div>
                         <span class="fs-3" t-esc="combo.productTmpl.display_name"/>
+                        <span class="fw-bolder ms-2 fs-3" t-esc="env.utils.formatCurrency(combo.totalComboPrice)"/>
                         <ul class="mb-0 ps-3">
                             <li t-foreach="combo.lines" t-as="line" t-key="line_index" t-att-class="{'text-info': line.upsell}">
                                 - <t t-if="!line.upsell"><span t-esc="line.quantity"/> x </t><span t-esc="line.name"/><t t-if="line.upsell"> (up to <span t-esc="line.quantity"/> more)</t>
                             </li>
                         </ul>
                     </div>
-                    <button class="apply-combo-btn button btn btn-primary btn-lg align-self-start" t-on-click="() => this.confirm(combo)">
-                        <t t-if="combo.upsell">Choose</t>
-                        <t t-else="">Apply</t>
-                    </button>
+                    <div class="d-flex flex-column align-items-end">
+                        <button class="apply-combo-btn button btn btn-primary btn-lg" t-on-click="() => this.confirm(combo)">
+                            <t t-if="combo.upsell">Choose</t>
+                            <t t-else="">Apply</t>
+                        </button>
+                        <span class="mt-2">
+                            <t t-set="price_diff" t-value="combo.totalSplitedComboLinePrice - combo.totalComboPrice"/>
+                            <t t-if="price_diff > 0">
+                                Save <t t-esc="env.utils.formatCurrency(price_diff)"/>
+                            </t>
+                            <t t-else="">
+                                Add <t t-esc="env.utils.formatCurrency(Math.abs(price_diff))"/>
+                            </t>
+                        </span>
+                    </div>
                 </div>
             </div>
         </Dialog>
