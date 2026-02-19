@@ -20,6 +20,10 @@ class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
     static dependencies = ["translateWebpageOption"];
 
+    setup() {
+        this.canTimeout = false;
+    }
+
     async apply() {
         const translationState = this.dependencies.translateWebpageOption.getTranslationState();
         try {
