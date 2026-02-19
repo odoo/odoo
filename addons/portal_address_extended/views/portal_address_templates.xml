@@ -7,7 +7,7 @@
                 class="col-lg-6 mb-2"
                 t-att-style="not country._enforce_city_choice() and 'display:none;'"
             >
-                <label class="col-form-label label-optional" for="city_id">City</label>
+                <label class="col-form-label label-optional" for="o_city_id">City</label>
                 <select id="o_city_id" name="city_id" class="form-select">
                     <option value="">City...</option>
                     <option t-foreach="state_cities"
