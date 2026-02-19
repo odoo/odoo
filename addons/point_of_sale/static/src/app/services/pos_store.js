@@ -1804,36 +1804,46 @@ export class PosStore extends WithLazyGetterTrap {
     getOrderChanges(order = this.getOrder()) {
         return getOrderChanges(order, this.config.preparationCategories);
     }
+    async handlePrepChangeOffline(order, opts) {
+        throw new ConnectionLostError();
+    }
     async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
         if (!order.isSynced) {
             return this.sendOrderInPreparation(order, opts);
         }
 
-        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
-        const rawchange = data.last_order_preparation_change || "{}";
-        const lastChanges = JSON.parse(rawchange);
-        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
-        const lastLocalDate = DateTime.fromSQL(
-            order.last_order_preparation_change?.metadata?.serverDate
-        ).toUTC();
+        try {
+            const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
+            const rawchange = data.last_order_preparation_change || "{}";
+            const lastChanges = JSON.parse(rawchange);
+            const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
+            const lastLocalDate = DateTime.fromSQL(
+                order.last_order_preparation_change?.metadata?.serverDate
+            ).toUTC();
 
-        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Order Outdated"),
-                body: _t(
-                    "The order has been modified on another device. If you have modified existing " +
-                        "order lines, check that your changes have not been overwritten.\n\n" +
-                        "The order will be sent to the server with the last changes made on this device."
-                ),
-            });
+            if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Order Outdated"),
+                    body: _t(
+                        "The order has been modified on another device. If you have modified existing " +
+                            "order lines, check that your changes have not been overwritten.\n\n" +
+                            "The order will be sent to the server with the last changes made on this device."
+                    ),
+                });
 
-            // Update before syncing otherwise it will overwrite the last change
-            order.last_order_preparation_change = lastChanges;
-            await this.syncAllOrders({ orders: [order] });
-            return;
+                // Update before syncing otherwise it will overwrite the last change
+                order.last_order_preparation_change = lastChanges;
+                await this.syncAllOrders({ orders: [order] });
+                return;
+            }
+
+            return this.sendOrderInPreparation(order, opts);
+        } catch (error) {
+            if (error instanceof ConnectionLostError) {
+                return this.handlePrepChangeOffline(order, opts);
+            }
+            throw error;
         }
-
-        return this.sendOrderInPreparation(order, opts);
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
@@ -1860,8 +1870,11 @@ export class PosStore extends WithLazyGetterTrap {
             await this.syncAllOrders({ orders: [order] });
         }
     }
+    isNetworkOffline() {
+        return this.data.network.offline;
+    }
     async sendOrderInPreparationUpdateLastChange(o, opts) {
-        if (this.data.network.offline) {
+        if (this.isNetworkOffline()) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
         }
