@@ -5,7 +5,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
-export class EditInvoicingInfo extends Interaction {
+export class EdiInvoicingInfo extends Interaction {
     static selector = ".o_l10n_tw_edi_invoicing_info";
     dynamicContent = {
         "#l10n_tw_edi_is_donate": {
@@ -13,7 +13,6 @@ export class EditInvoicingInfo extends Interaction {
         },
         "#l10n_tw_edi_carrier_type": {
             "t-on-change": this.onChangeCarrierType,
-            "t-att-disabled": () => this.carrierTypeDisabled,
         },
         "#l10n_tw_edi_carrier_number": {
             "t-on-input": this.onInputCarrierNumber,
@@ -87,7 +86,6 @@ export class EditInvoicingInfo extends Interaction {
         this.showReenterLoveCode = false;
 
         // Attributes
-        this.carrierTypeDisabled = false;
         this.carrierNumberReadonly = false;
         this.loveCodeReadonly = false;
         this.validateCarrierNumberDisabled = false;
@@ -133,6 +131,7 @@ export class EditInvoicingInfo extends Interaction {
     onChangeCarrierType(ev) {
         const carrierType = ev.target.value;
         const carrierNumberField = document.getElementById("l10n_tw_edi_carrier_number");
+        carrierNumberField.removeAttribute("readonly");
         if (carrierType === "2") {
             this.carrierNumberPlaceholder = _t("Example: TP03000001234567");
             this.showCarrier = true;
@@ -194,7 +193,7 @@ export class EditInvoicingInfo extends Interaction {
             } else {
                 this.services.dialog.add(WarningDialog, {
                     title: _t("Error"),
-                    message: _t("Carrier number is invalid"),
+                    message: _t("Storage Code is invalid"),
                 });
             }
         } catch (error) {
@@ -235,7 +234,6 @@ export class EditInvoicingInfo extends Interaction {
         this.validCarrierNumber = validity;
         this.showValidateCarrierNumber = !validity;
         this.showReenterCarrierNumber = validity;
-        this.carrierTypeDisabled = validity;
         this.carrierNumberReadonly = validity;
     }
 
@@ -249,4 +247,4 @@ export class EditInvoicingInfo extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("l10n_tw_edi_ecpay_website_sale.edit_invoicing_info", EditInvoicingInfo);
+    .add("l10n_tw_edi_ecpay_website_sale.edi_invoicing_info", EdiInvoicingInfo);
