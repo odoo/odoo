@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Data retrieval tree view -->
+    <record id="ocr_data_template_view_tree" model="ir.ui.view">
+        <field name="name">ocr.data.template.view.tree</field>
+        <field name="model">ocr.data.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="file_name"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Data retrieval form view -->
+    <record id="ocr_data_template_view_form" model="ir.ui.view">
+        <field name="name">ocr.data.template.view.form</field>
+        <field name="model">ocr.data.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div style="width:100%;">
+                        <div style="float:left; width:40%;">
+                            <div style="height:50%;">
+                                <group>
+                                    <field name="image"
+                                           filename="file_name"
+                                           style="max-width: 100%; max-height: 100%"
+                                           attrs="{'invisible':[('flag','!=', False)]}"/>
+                                </group>
+                                <field name="file_name" invisible="1"/>
+                                <field name="image2" widget="image"
+                                       attrs="{'invisible':[('flag','!=', True)], 'readonly': [('flag', '==', True)]}"/>
+                            </div>
+                            <div style="height:50%;">
+                                <button name="action_get_data"
+                                        type="object" class="btn btn-primary"
+                                        string="GET DATA"
+                                        attrs="{'invisible':[('flag','!=', False)]}"/>
+                            </div>
+                        </div>
+                        <div style="float:right; width:60%; height:100%;">
+                            <group>
+                                <field name="flag" attrs="{'invisible':True}"/>
+                                <field name="data"
+                                       attrs="{'invisible':[('flag','!=', True)]}"/>
+                            </group>
+                        </div>
+                    </div>
+                    <notebook attrs="{'invisible':[('flag','!=', True)]}">
+                        <page string="Process Data">
+                            <group>
+                                <group>
+                                    <field name="model_name_id"/>
+                                    <field name="model_field_ids"
+                                           widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <button name="action_process_data"
+                                            type="object"
+                                            class="btn btn-primary"
+                                            string="PROCESS DATA"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Data retrieval view action-->
+    <record id="ocr_data_template_action" model="ir.actions.act_window">
+        <field name="name">OCR Data Template</field>
+        <field name="res_model">ocr.data.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Data retrieval menu -->
+    <menuitem id="ocr_data_template_menu" name="OCR data template"
+              parent="mail.mail_menu_technical"
+              action="ocr_data_template_action"
+              sequence="56"/>
+</odoo>

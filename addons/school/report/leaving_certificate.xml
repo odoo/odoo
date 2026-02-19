@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- #TODO : School leaving certificate formate might be improve -->
+    <template id="leaving_certificate">
+        <t t-call="web.html_container">
+                 <t t-foreach="docs" t-as="stud">
+                    <div class="page">
+                        <div class="header" align="right">
+                            <img
+                            t-if="stud.sudo().photo"
+                            t-att-src="image_data_uri(stud.sudo().photo)"
+                            style="max-height: 100px;"
+                            alt="Logo"
+                        />
+                        </div>
+                        <div class="oe_structure" />
+                            <div class="co_logo">
+                                <img
+                            t-if="request.env.company.sudo().logo"
+                            t-att-src="image_data_uri(request.env.company.sudo().logo)"
+                            style="display:block; margin-left:auto; margin-right:auto; margin-top:200px; width:25%;"
+                            alt="Company Logo"
+                        />
+                                </div>
+                            <div width="100%">
+                            <center>
+                                <h1>
+                                    School Leaving Certificate
+                                </h1>
+                            </center>
+                                </div>
+                                <t t-if="stud.state in ['terminate', 'alumni']">
+                                    <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>Student Name</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                        <span t-field="stud.name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px;padding-right: 10px;"
+                                >
+                                            <b>School Address</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <t t-if="stud.street"><span
+                                            t-field="stud.street"
+                                        /></t>
+                                            <t t-if="stud.street2">, <span
+                                            t-field="stud.street2"
+                                        /></t>
+                                            <t t-if="stud.city">, <span
+                                            t-field="stud.city"
+                                        /></t>
+                                            <t t-if="stud.state_id">, <span
+                                            t-field="stud.state_id"
+                                        /></t>
+                                            <t t-if="stud.zip">, <span
+                                            t-field="stud.zip"
+                                        /></t>
+                                            <t t-if="stud.country_id">, <span
+                                            t-field="stud.country_id"
+                                        /></t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>School</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.school_id.name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>Student Code</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.student_code" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>Gender</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.gender" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>Religion/Caste</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.cast_id" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-right:15px;"
+                                >
+                                            <b>BirthDate</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.date_of_birth" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>Admission Date</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.admission_date" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-top:15px"
+                                >
+                                            <b>Leave Date</b>
+                                        </td>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                >
+                                            <span t-field="stud.leave_date" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                    style="font-family: 'Helvetica';font-size: 18px;padding-right:50px;padding-top:15px"
+                                >
+                                            <b>Reason</b>
+                                        </td>
+                                        <t t-if="stud.state == 'terminate'">
+                                            <td
+                                        style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
+                                    >
+                                                <span t-field="stud.terminate_reason" />
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td
+                                        align="center"
+                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                    >
+                                                Alumni
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </t>
+                    <div style="font-size:18px;">
+                        <!-- <t t-if="o.state in ['terminate', 'alumni']"> -->
+                        <t t-if="stud.state in ['terminate', 'alumni']">
+                            <table
+                                style="width: 100%; padding-left:105px;padding-top:45px;border: 0px solid white;"
+                            >
+                                <tr style="height:200px;">
+                                    <td class="text-center" style="width:40%;">
+                                        <span style="width: 60%;display:inline-table;">
+                                            <span /><br />
+                                            <span
+                                                style="display:block;block;border-top: 2px solid #000000;"
+                                            >Date (mm/dd/yy)</span>
+                                        </span>
+                                    </td>
+                                     <td class="text-center" style="width:40%;">
+                                        <span style="width: 60%;display:inline-table;">
+                                            <span /><br />
+                                            <span
+                                                style="display:block;border-top: 2px solid #000000;"
+                                            >Signature of Headmaster/ Headmistress and official stamp</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

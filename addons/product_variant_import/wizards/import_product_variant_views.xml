@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- This is used to import the /export the product-->
+    <record id="import_product_variant_action" model="ir.actions.act_window">
+        <field name="name">Product Variant</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">import.product.variant</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="import_product_variant_view_form" model="ir.ui.view">
+        <field name="name">import.product.variant.view.form</field>
+        <field name="model">import.product.variant</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="import_file" widget="radio"/>
+                        <field name="method" widget="radio"/>
+                        <field name="file"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Import" type="object"
+                            name="action_import_product_variant" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--Import/export wizard menu-->
+    <menuitem id="import_product_variant_menu_action"
+              name="Import Product Variant"
+              parent="stock.menu_stock_inventory_control"
+              action="import_product_variant_action"
+              groups="product_variant_import.product_variant_access"
+              sequence="3">
+    </menuitem>
+</odoo>

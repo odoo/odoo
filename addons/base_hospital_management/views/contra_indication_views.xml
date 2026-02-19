@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Contra indication tree view-->
+    <record id="contra_indication_view_tree" model="ir.ui.view">
+        <field name="name">contra.indication.view.tree</field>
+        <field name="model">contra.indication</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="blood_donation_question"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Contra Indication menu action-->
+    <record id="contra_indication_action" model="ir.actions.act_window">
+        <field name="name">Contra Indications</field>
+        <field name="res_model">contra.indication</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <!--    Contra Indication menu-->
+    <menuitem id="contra_indication_menu" name="Contra Indications"
+              parent="hospital_menu_configuration" action="contra_indication_action"
+              sequence="8"/>
+</odoo>

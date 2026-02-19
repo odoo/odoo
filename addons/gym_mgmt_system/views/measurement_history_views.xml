@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--Form view for measurement history -->
+    <record id="measurement_history_view_form" model="ir.ui.view">
+        <field name="name">measurement.history.view.form</field>
+        <field name="model">measurement.history</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group name="member_id" string="Details">
+                            <field name="member_id"/>
+                            <field name="gender"/>
+                            <field name="age"/>
+                            <field name="date"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="group_lots_and_weight" string="Measurements">
+                            <label for="weight"/>
+                            <div class="o_row" name="weight">
+                                <field name="weight"/>
+                                <field name="weight_uom_name"/>
+                            </div>
+                            <label for="height"/>
+                            <div class="o_row" name="height">
+                                <field name="height"/>
+                                <field name="height_uom_name"/>
+                            </div>
+                            <field name="bmi"/>
+                            <field name="bmr"/>
+                        </group>
+                    </group>
+                    <group name="body_measurement" string="Body Measurements">
+                        <group>
+                            <group>
+                                <label for="neck"/>
+                                <div class="o_row" name="neck">
+                                    <field name="neck"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                                <label for="biceps"/>
+                                <div class="o_row" name="biceps">
+                                    <field name="biceps"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                                <label for="calf"/>
+                                <div class="o_row" name="calf">
+                                    <field name="calf"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                                <label for="hips"/>
+                                <div class="o_row" name="hips">
+                                    <field name="hips"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <label for="chest"/>
+                                <div class="o_row" name="chest">
+                                    <field name="chest"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                                <label for="waist"/>
+                                <div class="o_row" name="waist">
+                                    <field name="waist"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                                <label for="thighs"/>
+                                <div class="o_row" name="thighs">
+                                    <field name="thighs"/>
+                                    <field name="height_uom_name"/>
+                                </div>
+                            </group>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+
+            </form>
+        </field>
+    </record>
+<!--Tree view for measurement history -->
+    <record id="measurement_history_view_tree" model="ir.ui.view">
+        <field name="name">measurement.history.view.tree</field>
+        <field name="model">measurement.history</field>
+        <field name="arch" type="xml">
+            <tree default_order="member_id desc">
+                <field name="member_id"/>
+                <field name="gender"/>
+                <field name="date"/>
+                <field name="age"/>
+            </tree>
+        </field>
+    </record>
+<!--Action for measurement history -->
+    <record id="measurement_history_action" model="ir.actions.act_window">
+        <field name="name">Measurement History</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">measurement.history</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Measurement History!
+            </p>
+        </field>
+    </record>
+<!--Sub Menu-->
+    <menuitem
+            id="measurement_history_menu_action"
+            name="Measurement History"
+            parent="gym_member_root"
+            action="measurement_history_action"
+            sequence="40"/>
+</odoo>

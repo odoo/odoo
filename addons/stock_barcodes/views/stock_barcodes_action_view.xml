@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Main menu from scan wizard -->
+    <record model="ir.actions.act_window" id="action_stock_barcodes_action">
+        <field name="res_model">wiz.stock.barcodes.read.picking</field>
+        <field name="name">Barcodes actions</field>
+        <field name="view_mode">form</field>
+        <field
+            name="context"
+        >{'control_panel_hidden': True, 'default_display_menu': True}</field>
+    </record>
+    <!-- Actions inside the menu -->
+    <record id="view_stock_barcodes_action_tree" model="ir.ui.view">
+        <field name="name">stock.barcodes.action.tree</field>
+        <field name="model">stock.barcodes.action</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="action_window_id" />
+                <field name="context" />
+                <field name="key_shortcut" />
+                <field name="key_char_shortcut" />
+                <field name="active" widget="boolean_toggle" />
+                <field name="icon_class" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_stock_barcodes">
+        <field name="res_model">stock.barcodes.action</field>
+        <field name="name">Barcodes actions</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem
+        action="action_stock_barcodes"
+        id="menu_action_stock_barcodes"
+        groups="stock.group_stock_user"
+        name="Barcode actions"
+        parent="stock.menu_product_in_config_stock"
+        sequence="100"
+    />
+</odoo>

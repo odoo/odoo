@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- New page on Stock Warehouse form view-->
+    <record id="view_warehouse" model="ir.ui.view">
+        <field name="name">
+            stock.warehouse.view.form.inherit.user.warehouse.restriction
+        </field>
+        <field name="model">stock.warehouse</field>
+        <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[@colspan='4' and @groups='stock.group_adv_location,stock.group_stock_multi_warehouses']"
+                   position="attributes">
+                <attribute name="groups">
+                    stock.group_adv_location,stock.group_stock_multi_warehouses,user_warehouse_restriction.user_warehouse_restriction_group_user
+                </attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='warehouse_config']"
+                   position="attributes">
+                <attribute name="groups">
+                    stock.group_adv_location,stock.group_stock_multi_warehouses
+                </attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Warehouse Allowed users"
+                      groups="user_warehouse_restriction.user_warehouse_restriction_group_user"
+                      name="allowed_users" colspan="4">
+                    <group colspan="4">
+                        <field name="user_ids" widget="many2many_tags"/>
+                        <field name="restrict_location"/>
+                    </group>
+                    <button string="Restrict location for User"
+                            class="btn btn-link"
+                            attrs="{'invisible':[('restrict_location', '=', False)]}"
+                            icon="fa-arrow-right"
+                            type="object" name="action_open_users_view"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

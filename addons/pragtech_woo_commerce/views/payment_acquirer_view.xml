@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="woo_inherit_payment_acquirer_form" model="ir.ui.view">
+        <field name="name">payment.provider.form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='payment_state']" position="after">
+                <group>
+                    <field name="woo_id"/>
+                    <field name="is_exported"/>
+                    <field name="woo_instance_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="woo_inherit_payment_acquirer_list" model="ir.ui.view">
+        <field name="name">payment.provider.list</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_payment_method_button</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="woo_id"/>
+                <field name="is_exported"/>
+                <field name="woo_instance_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_payment_provider_search_inherit_woo_commerce" model="ir.ui.view">
+        <field name="name">payment.provider.search.inherit.woo.commerce</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='provider_installed']" position="after">
+                <separator/>
+                <filter string="Woo Synced Payment Methods" name="woo_imported_coupons" domain="[('is_exported', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_woo_payment_acquirer" model="ir.actions.act_window">
+        <field name="name">Payment method</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">payment.provider</field>
+        <field name="view_id" ref="payment.payment_provider_list"/>
+        <field name="context">{'search_default_woo_imported_coupons': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
+

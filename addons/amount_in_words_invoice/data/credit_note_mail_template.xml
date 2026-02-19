@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', '=', 'email_template_edi_credit_note'), ('module', '=', 'account')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+        <!--showing the amount in words on the credit note sent mail-->
+        <record id="account.email_template_edi_credit_note" model="mail.template">
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear
+                        <t t-if="object.partner_id.parent_id">
+                            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+                            (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+                        </t>
+                        <t t-else="">
+                            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+                        </t>
+                        <br/>
+                        <br/>
+                        Here is your
+                        <t t-if="object.name">
+                            credit note
+                            <strong t-out="object.name or ''">RINV/2021/05/0001</strong>
+                        </t>
+                        <t t-else="">
+                            credit note
+                        </t>
+                        <t t-if="object.invoice_origin">
+                            (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+                        </t>
+                        amounting in
+                        <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00
+                        </strong>
+                        <span>
+                            (<strong t-out="object.number_to_words"/>)
+                        </span>
+                        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+                        <br/>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <t t-if="object.invoice_user_id.signature">
+                            <br/>
+                            <t t-out="object.invoice_user_id.signature or ''">--<br/>Mitchell Admin
+                            </t>
+                        </t>
+                    </p>
+                </div>
+            </field>
+        </record>
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', '=', 'email_template_edi_credit_note'), ('module', '=', 'account')]"/>
+            </function>
+            <value eval="{'noupdate': True}"/>
+        </function>
+    </data>
+</odoo>

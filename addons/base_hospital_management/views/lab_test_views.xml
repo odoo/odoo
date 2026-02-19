@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Lab test form view-->
+    <record id="lab_test_view_form" model="ir.ui.view">
+        <field name="name">lab.test.view.form</field>
+        <field name="model">lab.test</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="patient_lead" widget="float_time"/>
+                            <field name="test_type"/>
+                        </group>
+                        <group>
+                            <field name="tax_ids" widget="many2many_tags"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="price" widget="monetary"/>
+                        </group>
+                    </group>
+                    <field name="medicine_ids">
+                        <tree editable="bottom">
+                            <field name="medicine_id"/>
+                            <field name="qty_available"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="sub_total"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Lab test tree view-->
+    <record id="lab_test_view_tree" model="ir.ui.view">
+        <field name="name">lab.test.view.tree</field>
+        <field name="model">lab.test</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="patient_lead" widget="float_time"/>
+                <field name="tax_ids" widget="many2many_tags"/>
+                <field name="price" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+    <!--Lab test menu action-->
+    <record id="lab_test_action" model="ir.actions.act_window">
+        <field name="name">Laboratory Test</field>
+        <field name="res_model">lab.test</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Laboratory
+            </p>
+        </field>
+    </record>
+    <!--Lab test menu-->
+    <menuitem id="lab_test_menu" name="Lab Test"
+              parent="hospital_menu_laboratory" sequence="4"
+              action="lab_test_action"/>
+</odoo>

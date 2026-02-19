@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="customer_qr_template">
+            <t t-foreach="data" t-as="records">
+                <t t-foreach="records" t-as="record">
+                    <t t-call="web.html_container">
+                        <t t-call="web.internal_layout">
+                            <style>
+                                table{
+                                border:1px solid black !important;
+                                height:370px;
+                                width:370px;
+                                }
+                                tr{
+                                border:1px solid black !important;
+                                }
+                                td{
+                                border:1px solid black !important;
+                                font-size:30px;
+                                }
+                            </style>
+                            <div class="page">
+                                <center>
+                                    <table>
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <span t-esc="record.name"
+                                                      style="float:center;"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <center>
+                                                    <span t-field="record.qr"
+                                                          t-options="{'widget': 'image'}"/>
+                                                    <span t-esc="record.sequence"
+                                                          style="float:center;"/>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </center>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

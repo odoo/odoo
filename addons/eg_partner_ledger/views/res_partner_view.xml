@@ -1,0 +1,27 @@
+<odoo>
+    <record id="partner_inherit_partner_ledger_form_view" model="ir.ui.view">
+        <field name="name">partner.inherit.partner.ledger.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Ledger">
+                    <field name="account_ledger_ids" default_order="id">
+                        <tree editable="bottom">
+                            <field name="partner_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="account_id" domain="[('company_id', '=', company_id)]"/>
+                            <field name="journal_id"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="ref"/>
+                            <field name="debit" sum="Total" widget="monetary"/>
+                            <field name="credit" sum="Total" widget="monetary"/>
+                            <field name="balance" sum="Total" widget="monetary"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

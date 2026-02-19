@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+   <t t-name="FieldAddressAutocomplete" owl="1">
+    <input type="text" t-att-value="props.value" t-ref="inputAddress" placeholder="Enter your address" />
+    <div t-ref="mapContainer"  t-attf-class="{{ state.apiKeyAvailable ? '' : 'map-hidden' }}" id="map_container" style="height: 400px; margin-top: 10px;"></div>    
+   </t>
+</templates>

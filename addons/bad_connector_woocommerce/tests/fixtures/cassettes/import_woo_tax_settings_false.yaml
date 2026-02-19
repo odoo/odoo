@@ -1,0 +1,57 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/settings/tax/woocommerce_prices_include_tax
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": "woocommerce_prices_include_tax",
+                "label": "Prices entered with tax",
+                "description": "",
+                "type": "radio",
+                "default": "no",
+                "options": {
+                    "yes": "Yes, I will enter prices inclusive of tax",
+                    "no": "No, I will enter prices exclusive of tax"
+                },
+                "tip": "This option is important as it will affect how you input prices. Changing it will not update existing products.",
+                "value": "no",
+                "group_id": "tax",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/tax/woocommerce_prices_include_tax"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/tax"
+                        }
+                    ]
+                }
+              }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}

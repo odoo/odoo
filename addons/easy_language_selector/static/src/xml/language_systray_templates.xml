@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <!--  Template for the systray bar for display the language selections  -->
+    <t t-name="LanguageSystray">
+        <div class="new_icon" t-ref="root">
+            <div class="o-dropdown dropdown">
+                <div id="language_select_div" class="toggle-icon"
+                     role="button">
+                    <select id="language_selector"
+                            style="color:#fff;background-color: transparent;border-color:transparent">
+                        <option value="0" hidden="1">Select Language</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

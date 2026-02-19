@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_journal_entries">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page" style="font-size:15px;">
+                        <div>
+                            <h3>
+                                <span t-field="o.name"/>
+                            </h3>
+                        </div>
+                        <br></br>
+                        <div class="row">
+                            <table width="100%" class="table-bordered">
+
+                                <tr>
+                                    <td>Journal:
+                                        <span t-field="o.journal_id.name"/>
+                                    </td>
+                                    <td>
+                                        Date:
+                                        <span t-field="o.date" t-options="{'widget': 'date'}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Partner:
+                                        <span t-field="o.partner_id.display_name"/>
+                                    </td>
+                                    <td>
+                                        Reference:
+                                        <span t-field="o.ref"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <br></br>
+                            <table width="100%" class="table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Account</th>
+                                        <th>Date</th>
+                                        <th>Partner</th>
+                                        <th>Label</th>
+                                        <th>Analytic Account</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_credit" t-value="0"/>
+                                    <t t-set="total_debit" t-value="0"/>
+                                    <t t-foreach="o.line_ids" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <span t-field="line.account_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.date" t-options="{'widget': 'date'}"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.partner_id.display_name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <div t-foreach="line.analytic_distribution" t-as="distribution">
+                                                        <t t-esc="line.env['account.analytic.account'].browse(int(distribution))[0].name"/>: <t t-esc="line.analytic_distribution.get(distribution)"/>
+                                                    </div>
+                                                </span>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-field="line.debit"
+                                                      t-options="{'widget': 'monetary', 'display_currency': line.currency_id}"/>
+
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-field="line.credit"
+                                                      t-options="{'widget': 'monetary', 'display_currency': line.currency_id}"/>
+                                            </td>
+                                            <t t-set="total_credit" t-value="total_credit + line.credit"/>
+                                            <t t-set="total_debit" t-value="total_debit + line.debit"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfooter>
+                                    <tr>
+                                        <td colspan="5"></td>
+                                        <td class="text-end">
+                                            <span t-esc="total_debit"
+                                                  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-esc="total_credit"
+                                                  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </tfooter>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

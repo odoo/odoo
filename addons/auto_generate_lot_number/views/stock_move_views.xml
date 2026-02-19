@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherited the stock.move form view to make changes in attributes-->
+    <record id="view_stock_move_nosuggest_operations_custom" model="ir.ui.view">
+        <field name="name">stock.move.operations.nosuggest.form</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="arch" type="xml">
+            <field name="move_line_ids" position="replace">
+                <field name="move_line_nosuggest_ids"
+                       attrs="{'readonly': ['|', ('state', '=', 'cancel'),'&amp;',
+                       ('state', '=', 'done'), ('is_locked', '=', True)]}"
+                       context="{'tree_view_ref':
+                       'stock.view_stock_move_line_operation_tree_custom',
+                       'default_picking_id': picking_id, 'default_move_id': id,
+                       'default_product_id': product_id,
+                       'default_location_id': location_id,
+                       'default_location_dest_id': location_dest_id,
+                       'default_company_id': company_id}"/>
+            </field>
+        </field>
+    </record>
+    <!-- Inherited the stock.move.line tree view-->
+    <record id="view_stock_move_line_operation_tree_custom" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="false"
+                  decoration-muted="state == 'done' and is_locked == True"
+                  decoration-success="reserved_uom_qty==qty_done"
+                  decoration-danger="qty_done &gt;
+                   reserved_uom_qty and state != 'done'
+                    and picking_code != 'incoming'">
+                <field name="company_id" invisible="1" force_save="1"/>
+                <field name="picking_id" invisible="1" force_save="1"/>
+                <field name="move_id" invisible="1" force_save="1"/>
+                <field name="product_uom_category_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="package_level_id" invisible="1"/>
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
+                <field name="package_id" invisible="1"/>
+                <field name="location_id" options="{'no_create': True}"
+                       attrs="{'readonly': ['&amp;',
+                       ('package_level_id', '!=', False),
+                        ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_source_location')"
+                       domain="[('id', 'child_of', parent.location_id),
+                        '|', ('company_id', '=', False),
+                        ('company_id', '=', company_id),
+                        ('usage', '!=', 'view')]"
+                       groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id"
+                       attrs="{'readonly': ['&amp;',
+                       ('package_level_id', '!=', False),
+                        ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_destination_location')"
+                       domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"
+                       groups="stock.group_stock_multi_locations"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                       attrs="{'readonly': ['&amp;',
+                       ('package_level_id', '!=', False),
+                       ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_lots_m2o')"
+                       domain="[('product_id', '=', parent.product_id),
+                       ('company_id', '=', company_id)]"
+                       context="{
+                            'active_picking_id': picking_id,
+                            'default_company_id': parent.company_id,
+                            'default_product_id': parent.product_id,
+                        }"
+                />
+                <field name="lot_name" string="Lot/Serial Number" widget="text"
+                       groups="stock.group_production_lot"
+                       placeholder="Write your SN/LN one by one or copy paste a list."
+                       attrs="{'readonly': ['&amp;',
+                        ('package_level_id', '!=', False),
+                         ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_lots_text')"/>
+                <field name="package_id"
+                       attrs="{'readonly': ['&amp;',
+                       ('package_level_id', '!=', False),
+                       ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_package')"
+                       groups="stock.group_tracking_lot"/>
+                <field name="result_package_id"
+                       attrs="{'readonly': ['&amp;',
+                       ('package_level_id', '!=', False),
+                       ('parent.picking_type_entire_packs', '=', True)]}"
+                       groups="stock.group_tracking_lot"
+                       context="{'picking_id': picking_id}"/>
+                <field name="owner_id"
+                       attrs="{'readonly': ['&amp;',
+                        ('package_level_id', '!=', False),
+                        ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_owner')"
+                       groups="stock.group_tracking_owner"/>
+                <field name="reserved_uom_qty"
+                       invisible="not context.get('show_reserved_quantity')"
+                       readonly="1"/>
+                <field name="state" invisible="1"/>
+                <field name="is_locked" invisible="1"/>
+                <field name="picking_code" invisible="1"/>
+                <field name="qty_done"
+                       attrs="{'readonly': ['|', '&amp;',
+                       ('state', '=', 'done'), ('is_locked', '=', True),
+                       '&amp;', ('package_level_id', '!=', False),
+                       ('parent.picking_type_entire_packs', '=', True)]}"/>
+                <field name="product_uom_id"
+                       options="{'no_open': True, 'no_create': True}"
+                       string="Unit of Measure"
+                       groups="uom.group_uom"
+                       attrs="{'readonly':
+                            ['|', '|', ('reserved_uom_qty', '!=', 0.0),
+                            '&amp;', ('package_level_id', '!=', False),
+                            ('parent.picking_type_entire_packs', '=', True),
+                            '&amp;', ('state', '=', 'done'),
+                            ('id', '!=', False)]}"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

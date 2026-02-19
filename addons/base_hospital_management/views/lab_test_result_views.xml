@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Lab test result form view-->
+    <record id="lab_test_result_view_form" model="ir.ui.view">
+        <field name="name">lab.test.result.view.form</field>
+        <field name="model">lab.test.result</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="test_id"/>
+                            <field name="patient_id" widget="selection" />
+                            <field name="normal"/>
+                            <field name="result"/>
+                            <field name="uom_id"/>
+                        </group>
+                        <group>
+                            <field name="price" widget="monetary"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

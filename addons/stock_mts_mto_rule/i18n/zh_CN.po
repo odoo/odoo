@@ -1,0 +1,120 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_mts_mto_rule
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-28 02:58+0000\n"
+"PO-Revision-Date: 2019-10-10 17:37+0000\n"
+"Last-Translator: 黎伟杰 <674416404@qq.com>\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/oca/teams/23907/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.8\n"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_rule__action
+msgid "Action"
+msgstr "动作"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields.selection,name:stock_mts_mto_rule.selection__stock_rule__action__split_procurement
+msgid "Choose between MTS and MTO"
+msgstr "在MTS和MTO之间选择"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,help:stock_mts_mto_rule.field_stock_warehouse__mto_mts_management
+msgid ""
+"If this new route is selected on product form view, a purchase order will be "
+"created only if the virtual stock is less than 0 else, the product will be "
+"taken from stocks"
+msgstr ""
+"如果在产品表单视图中选择了此新路线，则仅当虚拟库存小于0时才创建采购订单，否则"
+"将从库存中提取产品"
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_rule.py:0
+#, python-format
+msgid ""
+"Inconsistency between the source locations of the mts and mto rules linked "
+"to the procurement rule: %s! It should be the same."
+msgstr "链接到采购规则的MTS和MTO规则的源位置不一致：%s！应该是一样的。"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_rule__mto_rule_id
+msgid "MTO Rule"
+msgstr "MTO规则"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_warehouse__mts_mto_rule_id
+msgid "MTO+MTS rule"
+msgstr "MTO+MTS 规则"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_rule__mts_rule_id
+msgid "MTS Rule"
+msgstr "MTS规则"
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_warehouse.py:0
+#, python-format
+msgid "MTS+MTO"
+msgstr "MTS+MTO"
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_warehouse.py:0
+#: model:stock.route,name:stock_mts_mto_rule.route_mto_mts
+#, python-format
+msgid "Make To Order + Make To Stock"
+msgstr "按订单生产+按库存生产"
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_rule.py:0
+#, python-format
+msgid "No MTS or MTO rule configured on procurement rule: %s!"
+msgstr "采购规则上未配置MTS或MTO规则：%s！"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model,name:stock_mts_mto_rule.model_stock_rule
+msgid "Stock Rule"
+msgstr "库存规则"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_warehouse__mto_mts_management
+msgid "Use MTO+MTS rules"
+msgstr "使用MTO+MTS规则"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model,name:stock_mts_mto_rule.model_stock_warehouse
+msgid "Warehouse"
+msgstr "仓库"
+
+#~ msgid "Buy"
+#~ msgstr "购买"
+
+#~ msgid "Manufacture"
+#~ msgstr "制造"
+
+#~ msgid "Pull & Push"
+#~ msgstr "推拉"
+
+#~ msgid "Pull From"
+#~ msgstr "拉"
+
+#~ msgid "Push To"
+#~ msgstr "推"
+
+#~ msgid "Procurement"
+#~ msgstr "补货"

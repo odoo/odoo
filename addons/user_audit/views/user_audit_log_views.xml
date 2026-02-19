@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- User audit log form view -->
+    <record id="user_audit_log_view_form" model="ir.ui.view">
+        <field name="name">user.audit.log.view.form</field>
+        <field name="model">user.audit.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="record"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="operation_type"/>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- User audit log tree view -->
+    <record id="user_audit_log_view_tree" model="ir.ui.view">
+        <field name="name">user.audit.log.view.tree</field>
+        <field name="model">user.audit.log</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="record"/>
+                <field name="model_id"/>
+                <field name="operation_type"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+    <!-- User audit log search view -->
+    <record id="user_audit_log_view_search" model="ir.ui.view">
+        <field name="name">user.audit.log.view.search</field>
+        <field name="model">user.audit.log</field>
+        <field name="arch" type="xml">
+            <search string="Search contacts">
+                <field name="name"/>
+                <field name="model_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="User" name="user_group"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter string="Object" name="object_group"
+                            context="{'group_by': 'model_id'}"/>
+                    <filter string="Type" name="type_group"
+                            context="{'group_by': 'operation_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- User audit log -->
+    <record id="user_audit_log_action"
+            model="ir.actions.act_window">
+        <field name="name">User Audit Logs</field>
+        <field name="res_model">user.audit.log</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                User Audit Logs
+            </p>
+        </field>
+    </record>
+</odoo>

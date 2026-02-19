@@ -1,0 +1,205 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2019-2023 Sodexis License OPL-1 (See LICENSE file for full copyright
+	and licensing details) -->
+<odoo>
+
+	<record id="crm_claim_team_dashboard_action_main" model="ir.actions.act_window">
+		<field name="name">Return Overview</field>
+		<field name="res_model">crm.claim.team</field>
+		<field name="view_mode">kanban,form</field>
+		<field name="context">{}</field>
+		<field name="view_id" ref="sod_crm_claim.crm_claim_team_view_kanban" />
+		<field name="help" type="html">
+			<p class="o_view_nocontent_empty_folder">
+				Your teams will appear here
+			</p>
+		</field>
+	</record>
+
+	<menuitem
+        id="menu_crm_claim_root"
+        action="sod_crm_claim.crm_claim_team_dashboard_action_main"
+        name="Returns"
+        web_icon="sod_crm_claim,static/description/icon.png"
+        sequence="200"
+    />
+
+	<menuitem
+        id="menu_claim"
+        name="Returns"
+        parent="sod_crm_claim.menu_crm_claim_root"
+        sequence="5"
+    />
+
+	<menuitem
+        id="menu_claim_config"
+        name="Configuration"
+        parent="sod_crm_claim.menu_crm_claim_root"
+        sequence="6"
+    />
+
+	<!-- <menuitem id="sale_stock.menu_aftersale" name="After-Sale" groups="sales_team.group_sale_salesman"
+		parent="sale.sale_menu_root" sequence="5" /> -->
+
+	<!-- <menuitem id="menu_services" name="Services"
+		groups="sod_crm_claim.group_crm_claim_manager,sod_crm_claim.group_crm_claim_user"
+		parent="sale_stock.menu_aftersale" sequence="2" /> -->
+
+	<!-- Claims Menu -->
+	<record model="ir.actions.act_window" id="crm_claim_category_claim0">
+		<field name="name">Returns</field>
+		<field name="res_model">crm.claim</field>
+		<field name="view_mode">tree,calendar,form</field>
+		<field name="view_id" ref="sod_crm_claim.crm_claim_team_view_kanban" />
+		<field name="context">{"search_default_user_id":uid, "stage_type":'claim'}
+		</field>
+		<field name="search_view_id" ref="sod_crm_claim.view_crm_case_claims_filter" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Record and track your customers' returns. Returns may be
+				linked to a sales
+				order.You can send emails with attachments and keep
+				the full history
+				for a return (emails sent, intervention type and so
+				on).Returns may
+				automatically be linked to an email address using the
+				mail gateway
+				module.
+			</p>
+		</field>
+	</record>
+
+	<!-- Claims Menu -->
+	<record model="ir.actions.act_window" id="crm_claim_claim1">
+		<field name="name">Returns</field>
+		<field name="res_model">crm.claim</field>
+		<field name="view_mode">tree,calendar,form</field>
+		<field name="view_id" ref="sod_crm_claim.crm_claim_team_view_kanban" />
+		<field name="context">{"search_default_team_id":id}</field>
+		<field name="search_view_id" ref="sod_crm_claim.view_crm_case_claims_filter" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Record and track your customers' returns. Returns may be
+				linked to a sales
+				order.You can send emails with attachments and keep
+				the full history
+				for a return (emails sent, intervention type and so
+				on).Returns may
+				automatically be linked to an email address using the
+				mail gateway
+				module.
+			</p>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="crm_claim_claim_new">
+		<field name="name">Returns</field>
+		<field name="res_model">crm.claim</field>
+		<field name="view_mode">tree,calendar,form</field>
+		<field name="view_id" ref="crm_case_claims_form_view" />
+	</record>
+
+	<record id="crm_claim_reason_code_act" model="ir.actions.act_window">
+		<field name="name">Return Reason Code</field>
+		<field name="res_model">crm.claim.reason</field>
+		<field name="view_id" ref="crm_claim_reason_tree_view" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Click to setup a new reason code for the returns.
+			</p>
+		</field>
+	</record>
+
+	<record id="crm_claim_team_act" model="ir.actions.act_window">
+		<field name="name">Return Teams</field>
+		<field name="res_model">crm.claim.team</field>
+		<field name="view_id" ref="crm_claim_team_tree_view" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Click to setup a new team in the processing of the returns.
+			</p>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window.view" id="action_crm_kanban_claim0">
+		<field name="sequence" eval="1" />
+		<field name="view_mode">kanban</field>
+		<field name="view_id" ref="view_crm_claim_kanban" />
+		<field name="act_window_id" ref="crm_claim_category_claim0" />
+	</record>
+
+	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_claim0">
+		<field name="sequence" eval="2" />
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="crm_case_claims_tree_view" />
+		<field name="act_window_id" ref="crm_claim_category_claim0" />
+	</record>
+
+	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_claim0">
+		<field name="sequence" eval="3" />
+		<field name="view_mode">calendar</field>
+		<field name="view_id" ref="crm_case_claims_calendar_view" />
+		<field name="act_window_id" ref="crm_claim_category_claim0" />
+	</record>
+
+	<record model="ir.actions.act_window.view" id="action_crm_tag_form_claim0">
+		<field name="sequence" eval="4" />
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="crm_case_claims_form_view" />
+		<field name="act_window_id" ref="crm_claim_category_claim0" />
+	</record>
+
+
+	<menuitem
+        name="Returns"
+        id="menu_crm_case_claims"
+        parent="sod_crm_claim.menu_claim"
+        action="crm_claim_category_claim0"
+        sequence="1"
+    />
+
+	<menuitem
+        id="menu_claim_reason_code_view"
+        name="Return Reason Code"
+        action="crm_claim_reason_code_act"
+        parent="sod_crm_claim.menu_claim_config"
+        sequence="20"
+        groups="sod_crm_claim.group_crm_claim_manager"
+    />
+
+	<!-- Claim Stages -->
+	<menuitem
+        id="menu_claim_stage_view"
+        name="Stages"
+        action="crm_claim_stage_act"
+        parent="sod_crm_claim.menu_claim_config"
+        sequence="20"
+    />
+
+	<menuitem
+        id="menu_crm_claim_team"
+        name="Return Team"
+        parent="sod_crm_claim.menu_claim_config"
+        action="crm_claim_team_act"
+        sequence="20"
+    />
+
+	<menuitem
+        id="crm_claim_tags"
+        action="action_crm_claim_tags"
+        parent="sod_crm_claim.menu_claim_config"
+    />
+
+
+
+	<menuitem
+        id="crm_claim_menu_team_dashboard"
+        action="sod_crm_claim.crm_claim_team_dashboard_action_main"
+        sequence="1"
+        parent="sod_crm_claim.menu_crm_claim_root"
+        name="Overview"
+        groups="sod_crm_claim.group_crm_claim_user"
+    />
+
+
+</odoo>

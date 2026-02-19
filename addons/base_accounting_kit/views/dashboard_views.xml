@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="action_account_invoice_report_all" model="ir.actions.client">
+            <field name="name">Account Report</field>
+            <field name="tag">invoice_dashboard</field>
+        </record>
+
+        <menuitem name="Dashboard" id="menu_accounting_dashboard" parent="account.menu_finance"
+                  sequence="0"
+                  groups="group_account_dashboard"
+                  action="action_account_invoice_report_all"/>
+        <record model="ir.ui.menu" id="account.menu_board_journal_1">
+            <field name="name">Overview</field>
+        </record>
+    </data>
+</odoo>

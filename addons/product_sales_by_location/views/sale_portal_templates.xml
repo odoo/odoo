@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Added location field in -->
+    <template id="sale_order_portal_content_inherit_product_sales_by_location"
+              name="location in sale order portal"
+              inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//table/thead/tr/th[hasclass('text-start')]"
+               position="after">
+            <th>Location</th>
+            <input type="hidden" t-att-value="sale_order.id"
+                   id="sale_order_id"/>
+        </xpath>
+        <xpath expr="//section[@id='details']//tbody//td[@id='product_name']"
+               position="after">
+            <td id="location_id">
+                <span t-field="line.line_location_id.name"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

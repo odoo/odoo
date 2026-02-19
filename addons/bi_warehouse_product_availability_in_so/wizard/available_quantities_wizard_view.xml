@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="view_available_quantities_wizard" model="ir.ui.view">
+		<field name="name">available.quantities.wizard</field>
+		<field name="model">available.quantities.wizard</field>
+		<field name="arch" type="xml">
+			<form create="false" edit="false">
+				<group>
+					<field name="stock_product_id"/>
+				</group>
+				<field name="stock_location_id"/>
+				<footer>
+					<button string="Cancel" class="btn-secondary" special="cancel" invisible="1"/> 
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_available_quantities_wizard" model="ir.actions.act_window">
+		<field name="name">Product Availability</field>
+		<field name="res_model">available.quantities.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+		<field name="view_id" ref="view_available_quantities_wizard"></field>
+	</record>
+</odoo>

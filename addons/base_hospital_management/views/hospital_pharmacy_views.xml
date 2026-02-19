@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Hospital pharmacy form view-->
+    <record id="hospital_pharmacy_view_form" model="ir.ui.view">
+        <field name="name">hospital.pharmacy.view.form</field>
+        <field name="model">hospital.pharmacy</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button id="pharmacy_sale" name="action_get_sale_order"
+                                type="object" class="oe_stat_button"
+                                icon="fa-dollar">
+                            Sale Orders
+                        </button>
+                        <button id="medicine_inventory"
+                                name="action_get_inventory"
+                                type="object" class="oe_stat_button"
+                                icon="fa-archive">
+                            Inventory
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                   placeholder="Pharmacy's Name"
+                                   required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="pharmacist_id"
+                                   placeholder="Pharmacist's Name"/>
+                            <br/>
+                            <br/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..."
+                                       class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..."
+                                       class="o_address_street"/>
+                                <field name="city" placeholder="City"
+                                       class="o_address_city"/>
+                                <field name="state_id" class="o_address_state"
+                                       placeholder="State"
+                                       options="{ 'no_open': True}"/>
+                                <field name="zip" placeholder="ZIP"
+                                       class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country"
+                                       class="o_address_country"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <br/>
+                            <br/>
+                            <field name="mobile"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="description" string="Description">
+                            <field name="medicine_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="qty_available"/>
+                                    <field name="list_price"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="information"
+                              string="Additional Information">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Hospital pharmacy tree view-->
+    <record id="hospital_pharmacy_view_tree" model="ir.ui.view">
+        <field name="name">hospital.pharmacy.view.tree</field>
+        <field name="model">hospital.pharmacy</field>
+        <field name="arch" type="xml">
+            <tree string="hospital pharmacy">
+                <field name="name"/>
+                <field name="pharmacist_id"/>
+                <field name="phone"/>
+                <field name="mobile"/>
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Hospital pharmacy menu action-->
+    <record id="hospital_pharmacy_action" model="ir.actions.act_window">
+        <field name="name">Pharmacy</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.pharmacy</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create pharmacy
+            </p>
+            <p>
+                You can create pharmacy here.
+            </p>
+        </field>
+    </record>
+    <!--    Hospital pharmacy menu-->
+    <menuitem id="hospital_pharmacy_menu" name="Pharmacy"
+              parent="hospital_menu_infrastructure"
+              action="hospital_pharmacy_action"
+              sequence="1"/>
+</odoo>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_queue_job_form" model="ir.ui.view">
+        <field name="name">queue.job.form</field>
+        <field name="model">queue.job</field>
+        <field name="arch" type="xml">
+            <form string="Jobs" create="false" delete="false">
+                <header>
+                    <button
+                        name="requeue"
+                        states="failed"
+                        class="oe_highlight"
+                        string="Requeue Job"
+                        type="object"
+                        groups="queue_job.group_queue_job_manager"
+                    />
+                    <button
+                        name="button_done"
+                        states="wait_dependencies,pending,enqueued,failed"
+                        class="oe_highlight"
+                        string="Set to 'Done'"
+                        type="object"
+                        groups="queue_job.group_queue_job_manager"
+                    />
+                    <button
+                        name="button_cancelled"
+                        states="pending,enqueued,failed"
+                        class="oe_highlight"
+                        string="Cancel job"
+                        type="object"
+                        groups="queue_job.group_queue_job_manager"
+                    />
+                    <button name="open_related_action" string="Related" type="object" />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="wait_dependencies,pending,enqueued,started,done"
+                        statusbar_colors='{"failed":"red","done":"green","cancelled":"yellow"}'
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="open_graph_jobs"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-sitemap"
+                            attrs="{'invisible':[('graph_uuid', '=', False)]}"
+                        >
+                            <field
+                                name="graph_jobs_count"
+                                widget="statinfo"
+                                string="Graph Jobs"
+                            />
+                        </button>
+                    </div>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group>
+                        <field name="uuid" />
+                        <field name="graph_uuid" />
+                        <field name="func_string" groups="base.group_no_one" />
+                        <field name="job_function_id" />
+                        <field name="channel" />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="priority" />
+                            <field name="eta" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="user_id" />
+                            <field name="worker_pid" groups="base.group_no_one" />
+                        </group>
+                        <group>
+                            <field name="date_created" />
+                            <field name="date_enqueued" groups="base.group_no_one" />
+                            <field name="date_started" />
+                            <field name="date_done" />
+                            <!-- Do not use float_time as it does not work properly -->
+                            <field name="exec_time" string="Time (s)" />
+                        </group>
+                    </group>
+                    <group colspan="4">
+                        <div colspan="2">
+                            <label for="retry" string="Current try / max. retries" />
+                            <field name="retry" class="oe_inline" /> /
+                            <field name="max_retries" class="oe_inline" />
+                            <br />
+                            <span
+                                class="oe_grey oe_inline"
+                            > If the max. retries is 0, the number of retries is infinite.</span>
+                        </div>
+                    </group>
+                    <notebook>
+                      <page
+                            name="results"
+                            string="Results"
+                            attrs="{'invisible': [('result', '=', False), ('exc_info', '=', False)]}"
+                        >
+                        <group
+                                name="result"
+                                string="Result"
+                                attrs="{'invisible': [('result', '=', False)]}"
+                            >
+                            <field nolabel="1" name="result" />
+                        </group>
+                        <group
+                                name="exc_info"
+                                string="Exception Information"
+                                attrs="{'invisible': [('exc_info', '=', False)]}"
+                                colspan="4"
+                            >
+                            <div id="exc_name" colspan="4">
+                                <label for="exc_name" string="Exception:" />
+                                <field name="exc_name" class="oe_inline" />
+                            </div>
+                            <field colspan="4" nolabel="1" name="exc_info" />
+                        </group>
+                      </page>
+                      <page
+                            name="dependencies"
+                            string="Dependencies"
+                            attrs="{'invisible': [('graph_uuid', '=', False)]}"
+                        >
+                        <field
+                                nolabel="1"
+                                name="dependency_graph"
+                                widget="job_directed_graph"
+                            />
+                      </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_queue_job_tree" model="ir.ui.view">
+        <field name="name">queue.job.tree</field>
+        <field name="model">queue.job</field>
+        <field name="arch" type="xml">
+            <tree
+                create="false"
+                delete="false"
+                decoration-danger="state == 'failed'"
+                decoration-muted="state == 'done'"
+            >
+                <field name="name" />
+                <field name="model_name" />
+                <field name="state" />
+                <field name="date_created" />
+                <field
+                    name="eta"
+                    widget="remaining_days"
+                    string="Remaining days to execute"
+                    optional="hide"
+                />
+                <field name="date_done" />
+                <field name="exec_time" />
+                <field name="exc_name" />
+                <field name="exc_message" />
+                <field name="uuid" />
+                <field name="channel" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_queue_job_pivot" model="ir.ui.view">
+        <field name="name">queue.job.pivot</field>
+        <field name="model">queue.job</field>
+        <field name="arch" type="xml">
+            <pivot string="Jobs">
+                <field name="exec_time" type="measure" />
+                <field name="job_function_id" type="row" />
+                <field name="date_done" type="col" interval="week" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_queue_job_graph" model="ir.ui.view">
+        <field name="name">queue.job.graph</field>
+        <field name="model">queue.job</field>
+        <field name="arch" type="xml">
+            <graph string="Jobs">
+                <field name="job_function_id" type="row" />
+                <field name="exec_time" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_queue_job_search" model="ir.ui.view">
+        <field name="name">queue.job.search</field>
+        <field name="model">queue.job</field>
+        <field name="arch" type="xml">
+            <search string="Jobs">
+                <field name="uuid" />
+                <field name="graph_uuid" />
+                <field name="name" />
+                <field name="func_string" />
+                <field name="channel" />
+                <field name="job_function_id" />
+                <field name="model_name" />
+                <field name="exc_name" />
+                <field name="exc_message" />
+                <field name="exc_info" />
+                <field name="result" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    widget="selection"
+                />
+                <filter
+                    name="wait_dependencies"
+                    string="Wait Dependencies"
+                    domain="[('state', '=', 'wait_dependencies')]"
+                />
+                <filter
+                    name="pending"
+                    string="Pending"
+                    domain="[('state', '=', 'pending')]"
+                />
+                <filter
+                    name="enqueued"
+                    string="Enqueued"
+                    domain="[('state', '=', 'enqueued')]"
+                />
+                <filter
+                    name="started"
+                    string="Started"
+                    domain="[('state', '=', 'started')]"
+                />
+                <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+                <filter
+                    name="failed"
+                    string="Failed"
+                    domain="[('state', '=', 'failed')]"
+                />
+                <filter
+                    name="cancelled"
+                    string="Cancelled"
+                    domain="[('state', '=', 'cancelled')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_by_channel"
+                        string="Channel"
+                        context="{'group_by': 'channel'}"
+                    />
+                    <filter
+                        name="group_by_job_function_id"
+                        string="Job Function"
+                        context="{'group_by': 'job_function_id'}"
+                    />
+                    <filter
+                        name="group_by_state"
+                        string="State"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        name="group_by_model_name"
+                        string="Model"
+                        context="{'group_by': 'model_name'}"
+                    />
+                    <filter
+                        name="group_by_exc_name"
+                        string="Exception"
+                        context="{'group_by': 'exc_name'}"
+                    />
+                    <filter
+                        name="group_by_exc_message"
+                        string="Exception message"
+                        context="{'group_by': 'exc_message'}"
+                    />
+                    <filter
+                        name="group_by_graph"
+                        string="Graph"
+                        context="{'group_by': 'graph_uuid'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_queue_job" model="ir.actions.act_window">
+        <field name="name">Jobs</field>
+        <field name="res_model">queue.job</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_wait_dependencies': 1,
+                               'search_default_pending': 1,
+                               'search_default_enqueued': 1,
+                               'search_default_started': 1,
+                               'search_default_failed': 1}</field>
+        <field name="view_id" ref="view_queue_job_tree" />
+        <field name="search_view_id" ref="view_queue_job_search" />
+    </record>
+
+</odoo>

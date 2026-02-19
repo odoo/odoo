@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_date_range_tree" model="ir.ui.view">
+        <field name="name">date.range.tree</field>
+        <field name="model">date.range</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name" />
+                <field name="type_id" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <!-- pylint : oca-disable=duplicate-xml-fields -->
+                <field name="company_id" invisible="1" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    options="{'no_create': True}"
+                />
+                <field name="active" widget="boolean_toggle" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_date_range_form_view" model="ir.ui.view">
+        <field name="name">date.range.form</field>
+        <field name="model">date.range</field>
+        <field name="arch" type="xml">
+            <form>
+                <widget
+                    name="web_ribbon"
+                    title="Archived"
+                    bg_color="bg-danger"
+                    attrs="{'invisible': [('active', '=', True)]}"
+                />
+                <group col="4">
+                    <field name="name" />
+                    <field name="type_id" />
+                    <field name="date_start" />
+                    <field name="date_end" />
+                    <!-- pylint : oca-disable=duplicate-xml-fields -->
+                    <field name="company_id" invisible="1" />
+                    <field
+                        name="company_id"
+                        groups="base.group_multi_company"
+                        options="{'no_create': True}"
+                    />
+                    <field name="active" invisible="1" />
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_date_range_search" model="ir.ui.view">
+        <field name="model">date.range</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <separator />
+                <filter name="date_start" date="date_start" />
+                <separator />
+                <filter name="date_end" date="date_end" />
+                <separator />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+                <group name="groupby">
+                    <filter
+                        name="date_start_groupby"
+                        string="Start Date"
+                        context="{'group_by': 'date_start'}"
+                    />
+                    <filter
+                        name="date_end_groupby"
+                        string="End Date"
+                        context="{'group_by': 'date_end'}"
+                    />
+                    <filter
+                        name="company_groupby"
+                        string="Company"
+                        context="{'group_by': 'company_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_date_range_type_tree" model="ir.ui.view">
+        <field name="name">date.range.type.tree</field>
+        <field name="model">date.range.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="allow_overlap" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    options="{'no_create': True}"
+                />
+                <field name="active" widget="boolean_toggle" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_date_range_type_form_view" model="ir.ui.view">
+        <field name="name">date.range.type.form</field>
+        <field name="model">date.range.type</field>
+        <field name="arch" type="xml">
+            <form string="Date Range Type">
+                <widget
+                    name="web_ribbon"
+                    title="Archived"
+                    bg_color="bg-danger"
+                    attrs="{'invisible': [('active', '=', True)]}"
+                />
+                <notebook>
+                    <page name="main" string="Configuration">
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="allow_overlap" />
+                                <field
+                                    name="company_id"
+                                    groups="base.group_multi_company"
+                                    options="{'no_create': True}"
+                                />
+                                <field name="active" invisible="1" />
+                            </group>
+                        </group>
+                    </page>
+                    <page name="generation" string="Generation">
+                        <group>
+                            <group
+                                string="Defaults for generating date ranges"
+                                colspan="4"
+                            >
+                                <label for="duration_count" />
+                                <div>
+                                    <field
+                                        class="oe_inline"
+                                        name="duration_count"
+                                    />&amp;nbsp;
+                                    <field class="oe_inline" name="unit_of_time" />
+                                </div>
+                                <label for="name_prefix" />
+                                <div>
+                                    <field
+                                        name="name_prefix"
+                                        class="oe_inline"
+                                        attrs="{'required': [('unit_of_time', '!=', False), ('name_expr', '=', False)]}"
+                                    /> or enter a complex expression below
+                                </div>
+                                <field
+                                    name="name_expr"
+                                    attrs="{'required': [('unit_of_time', '!=', False), ('name_prefix', '=', False)]}"
+                                />
+                                <field name="range_name_preview" />
+                            </group>
+                            <group string="Auto-generation settings">
+                                <field name="date_ranges_exist" invisible="1" />
+                                <field
+                                    name="autogeneration_date_start"
+                                    attrs="{'invisible': [('date_ranges_exist', '=', True)]}"
+                                />
+                                <label for="autogeneration_count" string="Create" />
+                                <div>
+                                    <field
+                                        class="oe_inline"
+                                        name="autogeneration_count"
+                                    />&amp;nbsp;
+                                    <field
+                                        class="oe_inline"
+                                        name="autogeneration_unit"
+                                    /> in advance
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record id="view_date_range_type_search" model="ir.ui.view">
+        <field name="model">date.range.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <separator />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="date_range_action" model="ir.actions.act_window">
+        <field name="name">Date Ranges</field>
+        <field name="res_model">date.range</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_date_range_tree" />
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <record id="date_range_type_action" model="ir.actions.act_window">
+        <field name="name">Date Range Types</field>
+        <field name="res_model">date.range.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_date_range_type_tree" />
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <menuitem
+        id="menu_date_range"
+        name="Date ranges"
+        parent="base.menu_custom"
+        sequence="1"
+    />
+    <menuitem
+        action="date_range_action"
+        id="menu_date_range_action"
+        parent="menu_date_range"
+    />
+    <menuitem
+        action="date_range_type_action"
+        id="menu_date_range_type_action"
+        parent="menu_date_range"
+    />
+</odoo>

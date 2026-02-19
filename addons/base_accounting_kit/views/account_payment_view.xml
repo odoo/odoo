@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_check_printing.view_account_payment_form_inherited" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="after">
+                                    <widget name="web_ribbon" title="Sent"
+                                attrs="{'invisible': [('is_move_sent', '!=', True)]}"/>
+                </xpath>
+            <xpath expr="//button[@name='action_post']" position="before">
+                <button name="print_checks" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('payment_method_code', 'not in', ['check_printing','pdc']), ('state', '!=', 'posted')]}"
+                        string="Print Check" type="object"/>
+                <button name="unmark_as_sent"
+                        attrs="{'invisible': ['|', ('payment_method_code', 'not in', ['check_printing','pdc']), ('state', '!=', 'sent')]}"
+                        string="Unmark Sent" type="object"/>
+            </xpath>
+            <xpath expr="//div[@name='amount_div']" position="after">
+                <field name="check_amount_in_words"
+                       attrs="{'invisible': [('payment_method_code', 'not in', ['check_printing','pdc'])], 'readonly': [('state', '!=', 'draft')]}"
+                       groups="base.group_no_one"/>
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="check_manual_sequencing" invisible="1"/>
+                <field name="check_number"
+                       attrs="{'invisible': ['|', ('payment_method_code', 'not in', ['check_printing','pdc']), ('check_number', '=', 0)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="effective_date"
+                       attrs="{'invisible': [('payment_method_code', '!=', 'pdc')],
+                       'required': [('payment_method_code', '=', 'pdc')],
+                       'readonly': [('state', 'not in', ('draft'))]}"/>
+                <field name="bank_reference" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="cheque_reference" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_line_tree" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.tree</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="priority">8</field>
+        <field name="arch" type="xml">
+            <tree string="Statement lines" create="false"
+                  default_order="date desc, statement_id desc, sequence desc, id desc">
+                <!-- Invisible fields -->
+                <field name="state" invisible="1"/>
+                <field name="sequence" readonly="1" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="is_reconciled" invisible="1"/>
+                <field name="partner_bank_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+
+                <!-- Displayed fields -->
+                <field name="statement_id" optional="hide"/>
+                <field name="move_id"/>
+                <field name="date"/>
+                <field name="payment_ref"/>
+                <field name="partner_id"/>
+                <field name="ref" groups="base.group_no_one" optional="hidden"/>
+                <field name="narration" string="Notes" optional="hidden"/>
+                <field name="transaction_type" optional="hidden"/>
+                <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
+                <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
+                <field name="amount"/>
+                <field name="account_number" optional="hidden"/>
+
+                <!-- Buttons -->
+                <!--                    <button name="button_undo_reconciliation" type="object"-->
+                <!--                            attrs="{'invisible': [('is_reconciled', '=', False)]}"-->
+                <!--                            string="Revert reconciliation" icon="fa-undo"/>-->
+            </tree>
+        </field>
+    </record>
+    <!-- For multiple payments -->
+    <record model="ir.ui.view" id="view_account_reg_payment_form_check_pdc">
+        <field name="name">view.account.reg.payment.form.check.pdc</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_date']" position="after">
+                <field name="effective_date"/>
+                <field name="bank_reference"/>
+                <field name="cheque_reference"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

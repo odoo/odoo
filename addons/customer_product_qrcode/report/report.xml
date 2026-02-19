@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report id="customer_product_qrcode.print_qr"
+                model="res.partner"
+                name="customer_product_qrcode.customer_qr_template"
+                file="customer_product_qrcode.customer_qr_template"
+                string="Badge"
+                report_type="qweb-pdf"
+                menu="False"
+        />
+        <report id="customer_product_qrcode.print_qr1"
+                model="product.product"
+                name="customer_product_qrcode.customer_qr_template"
+                file="customer_product_qrcode.customer_qr_template"
+                string="Product Badge"
+                report_type="qweb-pdf"
+                menu="False"
+        />
+        <report id="customer_product_qrcode.print_qr2"
+                model="product.template"
+                name="customer_product_qrcode.customer_qr_template"
+                file="customer_product_qrcode.customer_qr_template"
+                string="Product Badge"
+                report_type="qweb-pdf"
+                menu="False"
+        />
+        <record id="customer_product_qrcode.print_qr" model="ir.actions.report">
+            <field name="paperformat_id"
+                   ref="customer_product_qrcode.customer_badge_paperformat"/>
+        </record>
+        <record id="customer_product_qrcode.print_qr1"
+                model="ir.actions.report">
+            <field name="paperformat_id"
+                   ref="customer_product_qrcode.customer_badge_paperformat"/>
+        </record>
+        <record id="customer_product_qrcode.print_qr2"
+                model="ir.actions.report">
+            <field name="paperformat_id"
+                   ref="customer_product_qrcode.customer_badge_paperformat"/>
+        </record>
+    </data>
+</odoo>

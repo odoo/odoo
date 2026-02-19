@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="cv_ir_cron_history_view_form" model="ir.ui.view">
+            <field name="name">cv.ir.cron.history.view.form</field>
+            <field name="model">cv.ir.cron.history</field>
+            <field name="arch" type="xml">
+                <form create="0" delete="0" edit="0">
+                    <sheet>
+                        <div class="oe_title mb-3" style="max-width: 100%;">
+                            <h1 class="d-flex flex-row">
+                                <field name="type" widget="cron_type_widget" class="me-3"/>
+                                <field name="display_name"/>
+                                <field name="state" class="ms-3" widget="badge"
+                                       decoration-warning="state == 'interruption'" decoration-primary="state == 'running'"
+                                       decoration-success="state == 'success'" decoration-danger="state == 'fail'"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="started_at" string="Planned Date"/>
+                                <div name="dates" class="o_row">
+                                    <field name="started_at"/>
+                                    <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('ended_at', '=', False)]}"/>
+                                    <field name="ended_at"/>
+                                </div>
+                                <field name="duration" widget="float_time"/>
+                            </group>
+                            <group>
+                                <field name="user_id" widget="many2one_avatar"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('error', '=', False)]}" string="Error" name="error">
+                            <field name="error" nolabel="1" colspan="2"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="cv_ir_cron_history_view_tree" model="ir.ui.view">
+            <field name="name">cv.ir.cron.history.view.tree</field>
+            <field name="model">cv.ir.cron.history</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0">
+                    <field name="type" widget="cron_type_widget" nolabel="1"/>
+                    <field name="display_name" string="Name"/>
+                    <field name="started_at"/>
+                    <field name="ended_at"/>
+                    <field name="duration" widget="float_time" avg="Average" string="Duration"/>
+                    <field name="user_id" widget="many2one_avatar"/>
+                    <field name="error"/>
+                    <field name="state" widget="badge"
+                           decoration-warning="state == 'interruption'" decoration-primary="state == 'running'"
+                           decoration-success="state == 'success'" decoration-danger="state == 'fail'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--        <record id="cv_ir_cron_history_view_kanban" model="ir.ui.view">-->
+        <!--            <field name="name">cv.ir.cron.history.view.kanban</field>-->
+        <!--            <field name="model">cv.ir.cron.history</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <kanban class="o_kanban_mobile" create="0" group_create="0">-->
+        <!--                    <field name="display_name"/>-->
+        <!--                    <field name="user_id"/>-->
+        <!--                    <field name="started_at"/>-->
+        <!--                    <field name="ended_at"/>-->
+        <!--                    <field name="state"/>-->
+        <!--                    <templates>-->
+        <!--                        <t t-name="kanban-box">-->
+        <!--                            <div t-attf-class="oe_kanban_global_click">-->
+        <!--                                <div class="o_kanban_primary_left">-->
+        <!--                                    <div class="o_primary">-->
+        <!--                                        <span class="o_text_overflow" t-att-title="record.display_name.value"><t t-esc="record.display_name.value"/></span>-->
+        <!--                                        <field name="user_id" widget="many2one_avatar" options='{"size": [13, 13]}'/>-->
+        <!--                                        <div t-if="record.ended_at.raw_value or record.started_at.raw_value" class="text-muted o_row">-->
+        <!--                                            <field name="started_at"/>-->
+        <!--                                            <i t-if="record.ended_at.raw_value and record.started_at.raw_value" class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow"/>-->
+        <!--                                            <field name="ended_at"/>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </div>-->
+        <!--                        </t>-->
+        <!--                    </templates>-->
+        <!--                </kanban>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <record id="cv_ir_cron_history_view_calendar" model="ir.ui.view">
+            <field name="name">cv.ir.cron.history.view.calendar</field>
+            <field name="model">cv.ir.cron.history</field>
+            <field name="arch" type="xml">
+                <calendar create="0" delete="0" mode="month" date_start="started_at" date_stop="ended_at">
+                    <field name="state" filters="1" widget="badge"
+                           decoration-warning="state == 'interruption'" decoration-primary="state == 'running'"
+                           decoration-success="state == 'success'" decoration-danger="state == 'fail'"/>
+                    <field name="type" filters="1"/>
+                    <field name="user_id" widget="many2one_avatar" filters="1"/>
+                    <field name="error" attrs="{'invisible': [('error', '=', False)]}"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="cv_ir_cron_history_view_pivot" model="ir.ui.view">
+            <field name="name">cv.ir.cron.history.view.pivot</field>
+            <field name="model">cv.ir.cron.history</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="state" type="col"/>
+                    <field name="started_at" interval="day" type="row"/>
+                    <field name="duration" string="Average Duration (seconds)" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="cv_ir_cron_history_view_graph" model="ir.ui.view">
+            <field name="name">cv.ir.cron.history.view.graph</field>
+            <field name="model">cv.ir.cron.history</field>
+            <field name="arch" type="xml">
+                <graph type="line">
+                    <field name="started_at" interval="day"/>
+                    <field name="duration" string="Average Duration (seconds)" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="cv_ir_cron_history_view_search" model="ir.ui.view">
+            <field name="name">cv.ir.cron.history.view.search</field>
+            <field name="model">cv.ir.cron.history</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="display_name"/>
+                    <separator/>
+                    <filter string="Success" name="state_success" domain="[('state', '=', 'success')]"/>
+                    <filter string="Fail" name="state_fail" domain="[('state', '=', 'fail')]"/>
+                    <filter string="Interruption" name="state_interruption" domain="[('state', '=', 'interruption')]"/>
+                    <separator/>
+                    <filter string="Automatic" name="type_automatic" domain="[('type', '=', 'automatic')]"/>
+                    <filter string="Manual" name="type_manual" domain="[('type', '=', 'manual')]"/>
+                    <group expand="0" string="Group By" colspan="16">
+                        <filter string="Date" name="date_day" context="{'group_by': 'started_at:day'}"/>
+                        <separator/>
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Type" name="type" context="{'group_by': 'type'}"/>
+                        <filter string="User" name="user" context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="cv_ir_cron_history_action" model="ir.actions.act_window">
+            <!-- Keep in sync with the open_history in ir_cron. -->
+            <field name="name">History</field>
+            <field name="res_model">cv.ir.cron.history</field>
+            <field name="view_mode">tree,pivot,graph,calendar,form</field>
+            <field name="context">{
+                'graph_groupbys': ['started_at:day', 'state'],
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">No history found!</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

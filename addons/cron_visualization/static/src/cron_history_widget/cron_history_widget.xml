@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- These widget templates are intended for read-only mode only -->
+
+    <t t-name="cron_history_widget" owl="1">
+        <span>
+            <div class="d-flex align-items-center">
+                <t t-foreach="getCronHistory" t-as="history" t-key="history.index">
+                    <div class="">
+                        <span class="cv_history_dot bg-success me-2" t-if="history['state'] === 'success'" t-att-data-tooltip="history['duration']"></span>
+                        <span class="cv_history_dot bg-danger me-2" t-if="history['state'] === 'fail'" t-att-data-tooltip="history['duration']"></span>
+                        <span class="cv_history_dot bg-warning me-2" t-if="history['state'] === 'interruption'"></span>
+                        <span class="cv_history_dot bg-primary me-2" t-if="history['state'] === 'running'"></span>
+                    </div>
+                </t>
+            </div>
+        </span>
+    </t>
+
+</templates>

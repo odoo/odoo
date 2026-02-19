@@ -1,0 +1,60 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_res_partner_woocommerce_form_view">
+        <field name="name">eg.res.partner.woocommerce.form.view</field>
+        <field name="model">eg.res.partner</field>
+        <field name="inherit_id" ref="eg_ecommerce_base.eg_res_partner_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group[1]" position="after">
+                <notebook attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <page string="Other Information">
+                        <group>
+                            <group>
+                                <field name="first_name"/>
+                                <field name="last_name"/>
+                                <field name="username"/>
+                                <field name="email"/>
+                                <field name="customer_role"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Billing Address">
+                        <group>
+                            <group>
+                                <field name="billing_first_name"/>
+                                <field name="billing_last_name"/>
+                                <field name="billing_company"/>
+                                <field name="billing_address_1"/>
+                                <field name="billing_address_2"/>
+                            </group>
+                            <group>
+                                <field name="billing_city"/>
+                                <field name="billing_postcode"/>
+                                <field name="billing_country"/>
+                                <field name="billing_state"/>
+                                <field name="billing_email"/>
+                                <field name="billing_phone"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Shipping Address">
+                        <group>
+                            <group>
+                                <field name="shipping_first_name"/>
+                                <field name="shipping_last_name"/>
+                                <field name="shipping_company"/>
+                                <field name="shipping_address_1"/>
+                                <field name="shipping_address_2"/>
+                            </group>
+                            <group>
+                                <field name="shipping_city"/>
+                                <field name="shipping_state"/>
+                                <field name="shipping_postcode"/>
+                                <field name="shipping_country"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

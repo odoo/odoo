@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_woo_attribute_term_form_view" model="ir.ui.view">
+        <field name="name">WooCommerce Attribute Term</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Attribute Term">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="slug" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="woo_id" string="WooCommerce ID" readonly="1"/>
+                            <field name="attribute_id"/>
+                            <field name="woo_instance_id" readonly="1"/>
+                            <field name="is_exported" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="description" invisible="1"/>
+                            <field name="woo_attr_val_description" string="Description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_woo_attribute_term_tree_view" model="ir.ui.view">
+        <field name="name">WooCommerce Attribute</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <tree js_class="woo_import_product_attribute_value_button">
+                <field name="name"/>
+                <field name="attribute_id"/>
+                <field name="woo_id" string="WooCommerce ID" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_attribute_term_action" model="ir.actions.act_window">
+        <field name="name">Imported Product Attribute Terms</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_product_attribute_value_search_view" model="ir.ui.view">
+        <field name="name">view.product.attribute.value.search.view</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Woo Synced Attribute Values" name="woo_imported_attribute_values"
+                        domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_product_attribute_term_woo" model="ir.actions.act_window">
+        <field name="name">Product Attribute Values</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_id" ref="pragtech_woo_commerce.product_woo_attribute_term_tree_view"/>
+        <field name="context">{'search_default_woo_imported_attribute_values': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
+

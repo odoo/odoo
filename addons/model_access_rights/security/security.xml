@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Add a group named Configure Model Access in res.groups-->
+<odoo>
+    <record id="model_access_rights_groups_configure_model_access" model="res.groups">
+        <field name="name">Configure Model Access</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>

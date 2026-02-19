@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_stock_barcodes_new_lot" model="ir.ui.view">
+        <field name="name">stock.barcodes.new.lot.form</field>
+        <field name="model">wiz.stock.barcodes.new.lot</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="alert alert-info text-center" role="alert">
+                        <p>1 - Scan or input product barcode</p>
+                        <p>2 - Scan or input product lot barcode</p>
+                    </div>
+                    <group>
+                        <field
+                            name="_barcode_scanned"
+                            widget="barcode_handler"
+                            invisible="0"
+                        />
+                        <field name="product_id" />
+                        <field name="lot_name" />
+                    </group>
+                    <div>
+                        <button
+                            string="Confirm"
+                            name="confirm"
+                            type="object"
+                            class="btn-primary oe_kanban_action_button"
+                        />
+                        <button
+                            string="Cancel"
+                            name="cancel"
+                            class="btn-default oe_kanban_action_button"
+                            type="object"
+                        />
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_stock_barcodes_new_lot" model="ir.actions.act_window">
+        <field name="res_model">wiz.stock.barcodes.new.lot</field>
+        <field name="name">New Lot</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="view_id" ref="view_stock_barcodes_new_lot" />
+        <field name="target">inline</field>
+    </record>
+</odoo>

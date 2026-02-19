@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="kw_api_kw_api_key" model="ir.ui.view">
+        <field name="name">kw.api.key.search (kw_api_key)</field>
+        <field name="model">kw.api.key</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="api_key"/>
+                <field name="is_ip_required"/>
+                <field name="allowed_ip_ids"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="kw_api_kw_api_key_form" model="ir.ui.view">
+        <field name="name">kw.api.key.form (kw_api_key)</field>
+        <field name="model">kw.api.key</field>
+        <field name="arch" type="xml">
+            <form name="API-key configuration.">
+                <header>
+                    <button type="object" attrs="{'invisible':[('api_key','=', False)]}" class="btn btn-primary float-right" name="update_api_key" string="Update API-key"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="is_ip_required"/>
+                        </group>
+                        <group>
+                            <field name="write_date"/>
+                            <field name="write_uid"/>
+                        </group>
+                    </group>
+                    <field name="api_key" widget="CopyClipboardText"/>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Allowed IPs">
+                            <field name="allowed_ip_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="ip" string="Allowed IP-address"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="kw_api_kw_api_key_tree" model="ir.ui.view">
+        <field name="name">kw.api.key.tree (kw_api_key)</field>
+        <field name="model">kw.api.key</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" optional="show"/>
+                <field name="code" optional="show"/>
+                <field name="write_date" optional="show"/>
+                <field name="write_uid" optional="show"/>
+                <field name="allowed_ip_ids" optional="show"/>
+                <field name="api_key" optional="show"/>
+                <field name="description" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kw_api_kw_api_key_act_window" model="ir.actions.act_window">
+        <field name="name">API keys</field>
+        <field name="res_model">kw.api.key</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="kw_api_kw_api_key_menu"
+              action="kw_api_kw_api_key_act_window"
+              parent="kw_api_main_menu"
+              name="API keys" sequence="600"/>
+</odoo>

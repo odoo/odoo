@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="salon_order_sequence" model="ir.sequence">
+            <field name="name">Salon Order Sequence</field>
+            <field name="code">salon.order.sequence</field>
+            <field name="prefix">SALON/%(range_year)s/</field>
+            <field eval="1" name="number_next" />
+            <field eval="1" name="number_increment" />
+            <field eval="True" name="use_date_range" />
+            <field name="padding">4</field>
+        </record>
+
+    </data>
+</odoo>

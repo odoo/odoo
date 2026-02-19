@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="last_sale_product_prices_view" model="ir.ui.view">
+        <field name="name">last.product.prices.view</field>
+        <field name="model">sale.order.line</field>
+        <field name="priority" eval="40"/>
+        <field name="arch" type="xml">
+            <tree string="Last Product Prices">
+                <field name="order_id"/>
+                <field name="order_partner_id"/>
+                <field name="sale_date"/>
+                <field name="product_id"/>
+                <field name="product_uom_qty"/>
+                <field name="price_unit"/>
+                <field name="price_subtotal"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="last_sale_product_purchase_prices_view" model="ir.ui.view">
+        <field name="name">last.product.purchase_prices.view</field>
+        <field name="model">purchase.order.line</field>
+        <field name="priority" eval="40"/>
+        <field name="arch" type="xml">
+            <tree string="Last Product Prices">
+                <field name="order_id"/>
+                <field name="partner_id"/>
+                <field name="purchase_date"/>
+                <field name="product_id"/>
+                <field name="product_qty"/>
+                <field name="price_unit"/>
+                <field name="price_subtotal"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_product_ext_form_view2">
+        <field name="name">product_extended.product.form.view</field>
+        <field name="model">product.product</field>
+        <field name="priority">3</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//page[2]" position="after">
+                <page string="Previous Price History" name="previous_sale_history">
+                    <group>
+                        <group>
+                            <field name="order_partner_id"/>
+                        </group>
+                    </group>
+                    <gruop>
+                        <group>
+                             <button name="action_sale_product_prices" string="Previous Sale Rates"
+                                help="Last Prices" type="object"/>
+                        </group>
+                        <group>
+                            <button name="action_purchase_product_prices" string="Previous Purchase Rates"
+                                help="Last Prices" type="object"/>
+                        </group>
+                    </gruop>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_line_history" model="ir.ui.view">
+        <field name="name">sale.order.line.history</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']"
+                   position="before">
+                <button name="get_product_form" type="object" title="Sale/Purchase History"
+                         icon="fa-external-link" string=""/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_line_history" model="ir.ui.view">
+        <field name="name">purchase.order.line.history</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']"
+                   position="before">
+                <button name="get_product_form" type="object" title="Sale/Purchase History"
+                         icon="fa-external-link" string=""/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

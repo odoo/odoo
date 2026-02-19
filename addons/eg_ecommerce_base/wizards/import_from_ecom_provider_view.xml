@@ -1,0 +1,31 @@
+<odoo>
+    <record model="ir.ui.view" id="import_from_ecom_provider_form_view">
+        <field name="name">import.from.ecom.provider.form.view</field>
+        <field name="model">import.from.ecom.provider</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ecom_instance_id"/>
+                            <field name="mapping_type"/>
+                            <field name="provider" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="import_from_ecom_provider" type="object" string="Import/Export" class="oe_highlight"
+                            context="{'active_id': id}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="import_from_ecom_provider_action">
+        <field name="name">Import/Export Operations</field>
+        <field name="res_model">import.from.ecom.provider</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem name="Import/Export Operations" id="import_from_ecom_provider_menu" action="import_from_ecom_provider_action"
+              parent="base_synchronization_menu"/>
+</odoo>

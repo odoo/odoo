@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- The object account.payment.method is defined in the account module
+but there are no view for this object in the account module... so we define it
+here. I hate the objects that don't have a view... -->
+    <record id="account_payment_method_form" model="ir.ui.view">
+        <field name="name">account_payment_method.form</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <form string="Payment Method">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <group name="main">
+                        <field name="name" />
+                        <field name="code" />
+                        <field name="payment_type" />
+                        <field name="bank_account_required" />
+                        <field name="active" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="account_payment_method_tree" model="ir.ui.view">
+        <field name="name">account_payment_method.tree</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="code" />
+                <field name="payment_type" />
+            </tree>
+        </field>
+    </record>
+    <record id="account_payment_method_search" model="ir.ui.view">
+        <field name="name">account_payment_method.search</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <search string="Search Payment Methods">
+                <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
+                    string="Name or Code"
+                />
+                <filter
+                    name="inbound"
+                    string="Inbound"
+                    domain="[('payment_type', '=', 'inbound')]"
+                />
+                <filter
+                    name="outbound"
+                    string="Outbound"
+                    domain="[('payment_type', '=', 'outbound')]"
+                />
+                <group string="Group By" name="groupby">
+                    <filter
+                        string="Payment Type"
+                        name="payment_type_groupby"
+                        context="{'group_by': 'payment_type'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="account_payment_method_action" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">account.payment.method</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="account_payment_method_menu"
+        action="account_payment_method_action"
+        parent="account.account_management_menu"
+        sequence="30"
+    />
+</odoo>

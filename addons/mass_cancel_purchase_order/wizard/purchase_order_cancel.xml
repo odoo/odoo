@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cancel_order" model="ir.ui.view">
+        <field name="name">Cancel Orders</field>
+        <field name="model">purchase.order.cancel</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p class="oe_grey">
+                        All Sleected Purchase Order will be going in cancel state.  Please review
+                        them before Confirm.
+                    </p>
+                    <footer>
+                        <button name="cancel_order" string="Confirm" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_purchase_order_cancel" model="ir.actions.act_window">
+        <field name="name">Cancel Purchase</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order.cancel</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

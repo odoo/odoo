@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Overwrite the templates "mail.ChatterContainer" to rearrange the view and added buttons-->
+<templates id="template" xml:space="preserve">
+    <t name="mail.ChatterContainerAdvanced"
+       t-inherit="mail.ChatterContainer"
+       t-inherit-mode="extension"
+       owl="1">
+            <xpath expr="//div[hasclass('o_ChatterContainer')]"
+                   position="replace">
+                <div class="o_ChatterContainer"
+                     t-att-class="{ 'o-isInFormSheetBg mx-auto': props.isInFormSheetBg }"
+                     t-attf-class="{{ props.className }}"
+                     data-command-category="mail" t-ref="root">
+                    <div class="o_ChatterContainer_class">
+                        <button class="cross btn-close d-none"
+                                style="margin-left: auto; width: 50px;"
+                                t-on-click="_onClickCross"/>
+                        <t t-if="chatter and chatter.thread">
+                <!--  button to view send message chatter-->
+                            <button class="chatter_icon  bi bi-chat-left-text"
+                                    id="send_message"
+                                    type="button" style="color: #FA035A;"
+                                    t-on-click="_onClickSendMessage"/>
+                            <div class="hide"
+                                 style="color: #FA035A;">Message</div>
+                            <!--   button to view log note chatter-->
+                            <button class="chatter_icon bi bi-journal-text"
+                                    id="log_note"
+                                    type="button" style="color: #24A72F;"
+                                    t-on-click="_onClickLogNote"/>
+                            <div class="hide"
+                                 style="color: #24A72F;">Log Note</div>
+                            <!-- button to view activity box-->
+                            <button class="chatter_icon bi bi-clock-history" id="active"
+                                    type="button" style="color: #0349F6;"
+                                    t-on-click="_onClickActive"/>
+                            <div class="hide"
+                                 style="color: #0349F6;">Activities</div>
+                            <Chatter record="chatter"/>
+            </t>
+                        <t t-else="">
+                <div class="o_ChatterContainer_noChatter flex-grow-1 align-items-center justify-content-center d-flex"><i class="o_ChatterContainer_noChatterIcon fa fa-circle-o-notch fa-spin me-2"/>
+                    Please wait...</div>
+            </t>
+                    </div>
+        </div>
+            </xpath>
+    </t>
+</templates>

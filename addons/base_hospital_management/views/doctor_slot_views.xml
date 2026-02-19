@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Doctor slot calender view-->
+    <record id="doctor_slot_view_calender" model="ir.ui.view">
+        <field name="name">doctor.slot.view.calendar</field>
+        <field name="model">doctor.slot</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date_start" string="Booking Slot"
+                      mode="week" quick_add="False">
+                <field name="doctor_id"/>
+                <field name="inpatient_id"  avatar_field="avatar_128"/>
+            </calendar>
+        </field>
+    </record>
+     <!--    Doctor slot tree view-->
+    <record id="doctor_slot_view_tree" model="ir.ui.view">
+        <field name="name">doctor.slot.view.tree</field>
+        <field name="model">doctor.slot</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="doctor_id"/>
+                <field name="inpatient_id"/>
+                <field name="hours_to_take" widget="float_time"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Doctor slot form view-->
+    <record id="doctor_slot_view_form" model="ir.ui.view">
+        <field name="name">doctor.slot.view.form</field>
+        <field name="model">doctor.slot</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="confirmed,cancel"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="doctor_id"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="inpatient_id" options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="hours_to_take" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date_start"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    Doctor slot menu action-->
+    <record id="doctor_slot_action" model="ir.actions.act_window">
+        <field name="name">Slots</field>
+        <field name="res_model">doctor.slot</field>
+        <field name="view_mode">calendar,list,form</field>
+    </record>
+    <!--    Doctor slot menu-->
+    <menuitem id="doctor_slot_menu"
+              name="Doctor Slot"
+              parent="hospital_menu_appointment"
+              action="doctor_slot_action"
+              sequence="3">
+    </menuitem>
+</odoo>

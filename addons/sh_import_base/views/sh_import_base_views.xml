@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_import_base_form" model="ir.ui.view">
+        <field name="name">sh.import.base.form</field>
+        <field name="model">sh.import.base</field>
+        <field name="arch" type="xml">
+            <form string="Import Base" create="false" delete="false">
+                <sheet>
+                    <group name="base_group">
+                        <field name="name" readonly="1" />
+                        <field name="import_limit" />
+                        <field name="on_error" widget="radio" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_import_base_kanban_view" model="ir.ui.view">
+        <field name="name">sh.import.base.kanban.view</field>
+        <field name="model">sh.import.base</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban" sample="1" create="false">
+                <field name="name" />
+                <field name="sh_image_name" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_record_has_image_fill o_res_partner_kanban">
+                            <style>
+                                .o_cp_bottom{
+                                    display:none !important;
+                                }
+                            </style>
+                            <div class="oe_kanban_details d-flex flex-column sh_kanban_record">
+                                <strong class="o_kanban_record_title oe_partner_heading">
+                                    <div style="display:flex;justify-content:space-between; flex-direction:column;">
+                                        <div class="sh_add_btn">
+                                            <a type="object" name="create_store_record"><span title="Create" class="fa fa-plus"></span></a>
+                                        </div>
+                                        <div class="sh_icon">
+                                            <t t-set='sh_icon_1' t-value='record.sh_image_name.value'></t>
+                                            <span t-attf-class="#{sh_icon_1}"></span>
+                                        </div>
+                                        <h2 class="sh_title">
+                                            <field name="name" />
+                                        </h2>
+                                        <button class="sh_dots" type="object" name="add_default_value"><span title="Setting" class="fa fa-ellipsis-v"></span></button>
+                                    </div>
+                                </strong>
+                                <div class="sh_btn_group">
+                                    <div class="sh_btn_1 btn btn_primary"><a type="object" name="view_Store_all">All</a></div>
+                                    <div class="sh_btn_2 btn btn_primary"><a type="object" name="view_Store_running">Running</a></div>
+                                    <div class="sh_btn_3 btn btn_primary"><a type="object" name="view_Store_error">Error</a></div>
+                                    <div class="sh_btn_4 btn btn_primary"><a type="object" name="view_Store_done">Done</a></div>                                    
+                                </div>                                
+                            </div>                            
+                        </div>                        
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="sh_import_base_action" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">sh.import.base</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">kanban,form</field>
+    </record>
+
+    <menuitem name="Schedule Import" id="sh_import_base" web_icon="sh_import_base,static/description/schedule_import.png" />
+    <menuitem name="Dashboard" action="sh_import_base_action" parent="sh_import_base" id="sh_dashboard_base" sequence="1" />
+</odoo>

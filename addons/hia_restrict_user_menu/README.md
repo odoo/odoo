@@ -1,0 +1,1 @@
+# odoo-restrict-user-menu

@@ -1,0 +1,60 @@
+.chatter_icon{
+    background-color: #F8F8F8;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 22px;
+    border-color: #F8F8F8;
+}
+
+.o_FormRenderer_chatterContainer.o-aside {
+    display: contents;
+}
+
+.o_ChatterContainer{
+    padding-bottom: 438px;
+    padding-top: 93px;
+}
+
+.hide {
+  display: none;
+}
+
+.icon:hover + .hide {
+  display: block;
+}
+.o_form_editable {
+    flex-direction: row!important;
+}
+.o_FormRenderer_chatterContainer.o-aside .o_ChatterContainer {
+    max-width: 40rem;
+}
+.o_ChatterTopbar.justify-content-between.d-flex.o_Chatter_topbar {
+    padding-right: 45px;
+}
+.o_ChatterContainer_class {
+    display: grid;
+    gap: 3rem;
+}
+
+
+@media(max-width:768px){
+    .o_form_editable {
+        flex-direction: column!important;
+    }
+    .o_FormRenderer_chatterContainer:not(.o-aside):not(.o-full-width) .o_ChatterContainer  {
+        display: flex;
+        margin-top: 22px;
+        padding-bottom: initial;
+    }
+    .icon {
+        margin-left: 48px;
+        width: 457px;
+    }
+    .hide {
+        display: flex;
+        margin-top: 62px;
+        margin-left: -53px;
+    }
+
+}

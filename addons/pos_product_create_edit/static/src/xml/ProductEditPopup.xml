@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="EditProductPopup" owl="1">
+		<div class="popup product-line-popup" style="max-width: 684px;">
+			<main class="body">
+				<div>
+					<header>
+						<h3>
+							<span t-esc="props.product.display_name"/>
+                            <i class="fa fa-times" style="float:right" t-on-click="cancel"/>
+                            <hr/>
+						</h3>
+                        <div class="product-img-edit-popup">
+							<img t-att-src="imageUrl" t-att-alt="props.product.display_name"
+                                 id="img_url_tag_edit"/>
+						</div>
+                        <div class="field_div" style="display:flex; margin-bottom: 15px;">
+							<label for="img_field" class="field_label" style="margin-right:10px; margin-top: 10px; width: 120px; display: inline-block; text-align: left;">Image</label>
+                            <input type="file" id="img_field" class="field_input" name="img_field"
+                                   accept="image/*"/>
+						</div>
+                        <div class="field_div" style="display:flex; margin-bottom: 15px;">
+							<label for="display_name" class="field_label" style="margin-right:10px; margin-top: 10px; width: 120px; display: inline-block; text-align: left;">Name</label>
+                            <input type="text" name="display_name" class="field_input" id="display_name"
+                                   t-att-value="props.product.display_name"/>
+						</div>
+                        <div class="field_div" style="display:flex; margin-bottom: 15px;">
+							<label for="list_price" class="field_label" style="margin-right:10px; margin-top: 10px; width: 120px; display: inline-block; text-align: left;">Price</label>
+                            <input type="text" name="list_price" class="field_input" id="list_price"
+                                   t-att-value="props.product.lst_price"/>
+						</div>
+						<div class="field_div" style="display:flex; margin-bottom: 15px;">
+							<label for="default_code" class="field_label" style="margin-right:10px; margin-top: 10px; width: 120px; display: inline-block; text-align: left;">Default Code</label>
+                            <input type="text" name="default_code" class="field_input" id="default_code"
+                                   t-att-value="props.product.default_code"/>
+						</div>
+						<div class="field_div" style="display:flex; margin-bottom: 15px;">
+							<label for="barcode" class="field_label" style="margin-right:10px; margin-top: 10px; width: 120px; display: inline-block; text-align: left;">Barcode</label>
+                            <input type="text" name="barcode" class="field_input" id="barcode"
+                                   t-att-value="props.product.barcode"/>
+						</div>
+                        <div class="field_div" style="display:flex; margin-bottom: 15px;">
+							<label for="category" class="field_label" style="margin-right:10px; margin-top: 10px; width: 120px; display: inline-block; text-align: left;">Category</label>
+                            <select name="category" class="form-control" id="product_category">
+								<t t-foreach="env.pos.db.category_by_id" t-as="category"
+                                   t-key="env.pos.db.category_by_id[category].id">
+									<option t-att-value="env.pos.db.category_by_id[category].id"
+                                            t-att-title="env.pos.db.category_by_id[category].name"
+                                            t-att-selected="env.pos.db.category_by_id[category] ? ((env.pos.db.category_by_id[category].id === props.product.pos_categ_id[0]) ? true : undefined):undefined">
+										<t t-esc="env.pos.db.category_by_id[category].name"/>
+									</option>
+								</t>
+							</select>
+						</div>
+					</header>
+
+				</div>
+			</main>
+            <footer class="footer cash-move">
+				<div class="button confirm disable highlight" t-on-click="confirm">
+                            Confirm
+                        </div>
+                <div class="button cancel" t-on-click="cancel">
+                            Cancel
+                        </div>
+			</footer>
+		</div>
+	</t>
+</templates>

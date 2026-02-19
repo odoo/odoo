@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="mis_budget_item_search_view">
+        <field name="name">mis.budget.item.search (in mis_builder_budget)</field>
+        <field name="model">mis.budget.item</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="kpi_expression_id" />
+                <field name="date_from" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="mis_budget_item_tree_view">
+        <field name="name">mis.budget.item.tree (in mis_builder_budget)</field>
+        <field name="model">mis.budget.item</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="budget_id" invisible="1" />
+                <field name="report_id" invisible="1" />
+                <field name="budget_date_from" invisible="1" />
+                <field name="budget_date_to" invisible="1" />
+                <field name="kpi_expression_id" />
+                <field name="date_range_id" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="amount" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="mis_budget_item_act_window">
+        <field name="name">MIS Budget Items (by KPIs)</field>
+        <field name="res_model">mis.budget.item</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('budget_id', '=', active_id)]</field>
+        <field name="context">{'default_budget_id': active_id}</field>
+    </record>
+</odoo>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_stock_barcodes_read_inventory_form" model="ir.ui.view">
+        <field name="name">stock.barcodes.read.inventory.form</field>
+        <field name="model">wiz.stock.barcodes.read.inventory</field>
+        <field name="inherit_id" ref="stock_barcodes.view_stock_barcodes_read_form" />
+        <field name="mode">primary</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="product_qty" position="after">
+                <field name="inventory_product_qty" invisible="1" />
+            </field>
+            <!-- hide result package from inventory -->
+            <group name="quant_package" position="replace">
+                <div class="mt4">
+                    <strong class="d-none d-sm-block">Package</strong>
+                    <span
+                        class="fa fa-inbox d-sm-none oe_span_small_icon"
+                        title="package"
+                    />
+                    <field
+                        name="package_id"
+                        options="{'no_create': True}"
+                        attrs="{'readonly': [('manual_entry', '=', False)]}"
+                        force_save="1"
+                        style="width:85%"
+                        class="h5"
+                    />
+                </div>
+            </group>
+            <field name="location_id" position="attributes">
+                <attribute
+                    name="domain"
+                >[('usage', 'in', ['internal', 'transit'])]</attribute>
+            </field>
+            <group name="scan_fields" position="after">
+                <group
+                    string="Inventory quants"
+                    attrs="{'invisible': [('inventory_quant_ids', '=', [])]}"
+                    col="2"
+                >
+                    <field
+                        name="inventory_quant_ids"
+                        options="{'no_open': True}"
+                        nolabel="1"
+                        colspan="2"
+                        mode="tree,kanban"
+                    >
+                        <tree>
+                            <field name="product_id" options="{'no_open': True}" />
+                            <field
+                                name="location_id"
+                                options="{'no_open': True}"
+                                groups="stock.group_stock_multi_locations"
+                                optional="show"
+                            />
+                            <field
+                                name="lot_id"
+                                groups="stock.group_production_lot"
+                                options="{'no_open': True}"
+                                optional="show"
+                            />
+                            <field
+                                name="package_id"
+                                groups="stock.group_tracking_lot"
+                                options="{'no_open': True}"
+                                optional="show"
+                            />
+                            <field name="inventory_quantity" />
+                            <field
+                                name="product_uom_id"
+                                groups="uom.group_uom"
+                                options="{'no_open': True}"
+                            />
+                            <button
+                                name="action_barcode_inventory_quant_edit"
+                                type="object"
+                                icon="fa-pencil"
+                                class="btn mt0"
+                                context="{'wiz_barcode_id': parent.id}"
+                            >
+                            </button>
+                            <button
+                                name="action_barcode_inventory_quant_unlink"
+                                type="object"
+                                class="btn"
+                                icon="fa-recycle"
+                                title="Remove quant"
+                                context="{'wiz_barcode_id': parent.id}"
+                            />
+                        </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id" />
+                            <field name="inventory_quantity" />
+                            <field name="product_uom_id" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <strong>
+                                                    <span>
+                                                        <field name="product_id" />
+                                                    </span>
+                                                </strong>
+                                            </div>
+                                            <div class="col-2">
+                                                <span
+                                                    class="float-end text-end fw-bold"
+                                                >
+                                                    <field name="inventory_quantity" />
+                                                </span>
+                                            </div>
+                                            <div class="col-3 text-end">
+                                                <button
+                                                    name="action_barcode_inventory_quant_edit"
+                                                    type="object"
+                                                    class="btn mt0"
+                                                    context="{'wiz_barcode_id': parent.id}"
+                                                >
+                                                    <i
+                                                        class="fa fa-pencil"
+                                                        title="Edit inventory quantity"
+                                                        style="font-size:1.5em"
+                                                    />
+                                                </button>
+                                                <button
+                                                    name="action_barcode_inventory_quant_unlink"
+                                                    type="object"
+                                                    icon="fa-recycle"
+                                                    title="Reset inventory quantity"
+                                                    class="btn mt0"
+                                                    context="{'wiz_barcode_id': parent.id}"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                Loc: <field name="location_id" />
+                                            </div>
+                                            <t t-if="record.lot_id.raw_value">
+                                                <div class="col-4">
+                                                    Lot: <field name="lot_id" />
+                                                </div>
+                                            </t>
+                                            <t t-if="record.package_id.raw_value">
+                                                <div class="col-4">
+                                                    Package: <field name="package_id" />
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </group>
+            </group>
+            <div name="manual_entry" position="after">
+                <div class="d-flex" name="display_read_quant">
+                    <field name="display_read_quant" widget="barcode_boolean_toggle" />
+                    <label for="display_read_quant" />
+                </div>
+            </div>
+            <button name="action_clean_values" position="before">
+                <button
+                    name="apply_inventory"
+                    type="object"
+                    class="btn-primary ms-auto oe_kanban_action_button btn-sm"
+                    attrs="{'invisible': ['|', ('display_menu', '=', True), ('inventory_quant_ids', '=', [])]}"
+                    data-hotkey="7"
+                    groups="stock.group_stock_manager"
+                >
+                    <span>Apply</span>
+                </button>
+            </button>
+        </field>
+    </record>
+    <!--
+     Open wizard in current target option to avoid that the wizard is
+     closed after any button click,
+    -->
+    <record id="action_stock_barcodes_read_inventory" model="ir.actions.act_window">
+        <field name="res_model">wiz.stock.barcodes.read.inventory</field>
+        <field name="name">Barcodes Read</field>
+        <field name="view_mode">form</field>
+        <field name="context">{"control_panel_hidden": True,
+                               "form_view_initial_mode": "edit",
+                               "inventory_mode": True,
+                               }
+        </field>
+        <field name="view_id" ref="view_stock_barcodes_read_inventory_form" />
+        <field name="target">current</field>
+    </record>
+</odoo>

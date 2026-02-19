@@ -1,0 +1,17 @@
+
+$o-form-lightsecondary: lighten($o-brand-secondary, 25%) !default;
+
+$o-tooltip-background-color: $o-view-background-color !default;
+$o-tooltip-color: $o-main-text-color !default;
+$o-tooltip-arrow-color: $o-main-text-color !default;
+
+// Needed for having no spacing between sheet and mail body in mass_mailing:
+// Different required cancel paddings between web and imazighen_theme
+$o-sheet-cancel-tpadding: $o-horizontal-padding !default;
+$o-sheet-cancel-bpadding: $o-horizontal-padding + $o-sheet-vpadding !default;
+
+// Side chatter
+$o-chatter-min-width: 530px !default;
+// Safest for the next value would be map-get($container-max-widths, lg) as it
+// is the minimal width of the default form view design for md/lg sizes
+$o-form-sheet-min-width: 990px !default;

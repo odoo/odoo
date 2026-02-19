@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_account_invoice_report_search" model="ir.ui.view">
+        <field name="inherit_id" ref="account.view_account_invoice_report_search" />
+        <field name="model">account.invoice.report</field>
+        <field name="arch" type="xml">
+            <filter name="user" position="before">
+                <filter
+                    string="Sale Order Type"
+                    name="sale_order_type"
+                    context="{'group_by':'sale_type_id'}"
+                />
+            </filter>
+        </field>
+    </record>
+
+</odoo>

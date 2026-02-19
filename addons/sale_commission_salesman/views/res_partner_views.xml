@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 Tecnativa - Pedro M. Baeza
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_partner_form_agent" model="ir.ui.view">
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="commission.view_partner_form_agent" />
+        <field name="arch" type="xml">
+            <field name="commission_id" position="after">
+                <field name="user_ids" invisible="1" />
+                <field
+                    name="salesman_as_agent"
+                    attrs="{'invisible': [('user_ids', '=', [])]}"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

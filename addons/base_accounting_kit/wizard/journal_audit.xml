@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_report_print_journal_view" model="ir.ui.view">
+        <field name="name">Journals Audit</field>
+        <field name="model">account.print.journal</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_common_report_view"/>
+        <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name='target_move']" position="after">
+            <field name="amount_currency" groups="base.group_multi_currency"/>
+            <field name="sort_selection" widget="radio"/>
+            <newline/>
+        </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="action_account_print_journal_menu" model="ir.actions.act_window">
+        <field name="name">Journals Audit</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.print.journal</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_print_journal_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_print_journal"
+              name="Journals Audit"
+              sequence="9"
+              action="action_account_print_journal_menu"
+              parent="base_accounting_kit.account_reports_audit"
+              groups="account.group_account_manager,account.group_account_user"/>
+
+</odoo>

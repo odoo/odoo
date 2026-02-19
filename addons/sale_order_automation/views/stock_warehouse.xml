@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+        <record model="ir.ui.view" id="sale_confirm_extended_for_warehouse">
+            <field name="name">stock.warehose.extended</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref = "stock.view_warehouse"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name= "is_delivery_set_to_done"/>
+                    <field name= "create_invoice" />
+                    <field name= "validate_invoice" />
+                </field>
+            </field>
+        </record>
+
+</data>
+</odoo>

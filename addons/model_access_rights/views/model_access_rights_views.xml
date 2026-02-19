@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Action for the menu Restrict Model Access-->
+    <record id="access_right_action" model="ir.actions.act_window">
+        <field name="name">Restrict Access Rights</field>
+        <field name="res_model">access.right</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+<!--    Tree view for the model access.right-->
+        <record id="access_right_view_tree" model="ir.ui.view">
+            <field name="name">access.right.view.tree</field>
+            <field name="model">access.right</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="model_id"/>
+                    <field name="groups_id"/>
+                    <field name="is_delete"/>
+                    <field name="is_export"/>
+                    <field name="is_create_or_update"/>
+                    <field name="is_archive"/>
+                </tree>
+            </field>
+        </record>
+<!--    Form view for the model access.right-->
+        <record id="access_right_view_form" model="ir.ui.view">
+            <field name="name">access.right.view.form</field>
+            <field name="model">access.right</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                    <group>
+                        <group>
+                           <field name="model_id"/>
+                             <field name="groups_id"/>
+                        </group>
+                        <group>
+                             <field name="is_delete"/>
+                             <field name="is_export"/>
+                             <field name="is_create_or_update"/>
+                             <field name="is_archive"/>
+                        </group>
+                    </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+                </form>
+            </field>
+        </record>
+<!--    Creating a menu named Restrict Model Access-->
+     <menuitem id="access_right_menu"
+          name="Restrict Access Rights"
+          parent="base.menu_administration"
+          action="access_right_action"
+          sequence="6"
+          groups="model_access_rights.model_access_rights_groups_configure_model_access"/>
+</odoo>

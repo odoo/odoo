@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2016-Today: GRAP (http://www.grap.coop)
+Copyright (C) 2016-Today La Louve (http://www.lalouve.net)
+@author Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <!-- Note: type should be 'price' or 'weight' but this keys are define in point_of_sale module
+        Not a big deal, this is just demo data, used for tests.
+    -->
+    <record id="rule_product_generated_barcode_manually" model="barcode.rule">
+        <field name="name">Rule - Generate Manually</field>
+        <field
+            name="barcode_nomenclature_id"
+            ref="barcodes.default_barcode_nomenclature"
+        />
+        <field name="type">product</field>
+        <field name="sequence">998</field>
+        <field name="encoding">ean13</field>
+        <field name="pattern">20.....{NNNDD}</field>
+        <field name="generate_type">manual</field>
+        <field name="generate_model" eval="'product.product'" />
+    </record>
+
+    <record id="rule_product_generated_barcode_sequence" model="barcode.rule">
+        <field name="name">Rule - Generate By Sequence</field>
+        <field
+            name="barcode_nomenclature_id"
+            ref="barcodes.default_barcode_nomenclature"
+        />
+        <field name="type">product</field>
+        <field name="sequence">999</field>
+        <field name="encoding">ean13</field>
+        <field name="pattern">21.....{NNNDD}</field>
+        <field name="generate_type">sequence</field>
+        <field name="generate_model" eval="'product.product'" />
+    </record>
+
+    <record id="seq_product_generated_barcode" model="ir.sequence">
+        <field name="name">Barcode Seq.</field>
+        <field name="code">bar.seq</field>
+        <field name="prefix">0</field>
+        <field name="padding">0</field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

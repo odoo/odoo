@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit res.partner view to add fields,add connector page and  Binding -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//h1//field[@id='company']/.." position="after">
+                <group attrs="{'invisible': [('is_company', '=', True)]}">
+                    <field name="firstname" />
+                    <field name="lastname" />
+                </group>
+            </xpath>
+            <xpath
+                expr="//field[@name='child_ids']/form//field[@name='name']"
+                position="after"
+            >
+                <div class="oe_edit_only" colspan="2">
+                    <field name="is_company" invisible="True" />
+                    <group attrs="{'invisible': [('is_company', '=', True)]}">
+                        <field
+                            name="firstname"
+                            attrs="{'required': [('lastname', '=', False),
+                                ('is_company', '=', False),
+                                ('type', '=', 'contact')]}"
+                        />
+                        <field
+                            name="lastname"
+                            attrs="{'required': [('firstname', '=', False),
+                                ('is_company', '=', False),
+                                ('type', '=', 'contact')]}"
+                        />
+                        <field name="hash_key" />
+                    </group>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page
+                    name="woo"
+                    string="WooCommerce Bindings"
+                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                    groups="connector.group_connector_manager"
+                >
+                    <field name="woo_bind_ids" nolabel="1" readonly="1">
+                        <tree
+                            string="WooCommerce Bindings"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </tree>
+                        <form
+                            name="woo_partner"
+                            string="WooCommerce Patner"
+                            delete="false"
+                            edit="false"
+                        >
+                            <group>
+                                <group>
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                    <field name="woo_data" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inheritred Partner Search to add search base on Binding -->
+    <record id="res_partner_view_woo_search" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.woo</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter
+                    string="Patner Binding"
+                    name="partner_binding"
+                    domain="[('woo_bind_ids', '!=', False)]"
+                />
+                <separator />
+            </xpath>
+        </field>
+    </record>
+</odoo>

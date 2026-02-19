@@ -1,0 +1,549 @@
+.r_dashButtonContainer {
+    height: fit-content;
+    justify-content: center;
+    display: flex;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    width: 100%;
+}
+
+.r_dashButton {
+    height: 100px;
+    border-radius: 10px;
+    box-shadow: 0px 1px 3px 3px #e1e1e1;
+    width: 388px;
+    display: grid;
+    margin: 16px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #2b8d72;
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 700;
+    display: flex;
+}
+.rd_buttons, .r_AppntBtn{
+    margin-left:0%
+}
+
+.row.r_Profile table td {
+    padding: 9px;
+    margin: auto;
+    display:block;
+}
+
+.patient_img{
+     justify-content: center;
+     padding-right:20px ;
+}
+.apnmnt_img{
+     justify-content: center;
+     padding-right:20px ;
+}
+.booking_img{
+    justify-content: center;
+     padding-right:20px ;
+}
+.room_ward_img{
+     justify-content: center;
+     padding-right:20px ;
+}
+.out_p_image{
+     justify-content: center;
+     padding-right:20px ;
+}
+.in_p_img{
+    justify-content: center;
+    padding-right:20px ;
+}
+.o_outpatient_button{
+    float:right;
+    height: 100px;
+    border-radius: 10px;
+    box-shadow: 0px 1px 3px 3px #e1e1e1;
+    width: 388px;
+    display: grid;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #2b8d72;
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 700;
+    display: flex;
+    }
+#op_table input[type="text"], input[type="tel"],input[type="date"], #op_table select, #patient-bloodgroup,#patient-m-status,#sl_patient_id,#admission_type,#attending_doctor_id,#reason_of_admission
+{
+    max-width:30rem;
+    min-height:4rem;
+    border-radius:5px;
+    margin-bottom:10px;
+}
+#op_table label{
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.o_inpatient_button{
+    height: 100px;
+    border-radius: 10px;
+    box-shadow: 0px 1px 3px 3px #e1e1e1;
+    width: 388px;
+    display: grid;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #2b8d72;
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 700;
+    display: flex;
+}
+
+.r_AppointmentBtn, .r_RoomWard{
+    height : 4vh;
+    border-radius: 10px;
+    box-shadow:0px 1px 3px 3px #c9c9c9;
+    width : inherit;
+    display: grid;
+    justify-content : center;
+    align-items : center;
+    padding: 5px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.o_room_button{
+    float:right;
+    height: 100px;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px 3px #e1e1e1;
+    width: 388px;
+    display: grid;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #2b8d72;
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 700;
+    display: flex;
+}
+
+.o_ward_button{
+    height: 100px;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px 3px #e1e1e1;
+    width: 388px;
+    display: grid;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #2b8d72;
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 700;
+    display: flex;
+
+}
+
+.r_AppointmentBtn:hover, .r_RoomWard:hover{
+   transition: 500ms;
+   background-color: rgb(215, 215, 215);
+}
+
+.r_dashButton:hover{
+   transition: 500ms;
+   background-color: rgb(215, 215, 215);
+}
+
+.r_active,.r_active1,.r_active2{
+   background-color: rgb(215, 215, 215);
+}
+
+#view_main{
+    padding-top: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px 3px #c9c9c9;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.r_Container {
+    padding: 10px;
+    min-height: 90vh;
+    margin-bottom: 10px;
+
+}
+
+.r_View {
+    margin-left: auto;
+    margin-bottom:10px;
+    padding: 10px;
+    height : 90vh;
+    justify-content : center;
+}
+
+.r_Profile{
+    padding: 20px;
+    margin-top: 10px;
+    margin-right: auto;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px 3px #c9c9c9;
+    height: max-content;
+}
+.r_ReportContainer {
+    height: 18vh;
+    margin: 10px;
+    margin-top: 25px;
+    margin-right: 27px;
+    border-radius: 10px;
+    box-shadow: 0px 1px 3px 3px #c9c9c9;
+}
+
+#r_patient-image {
+    width: 96px;
+    border-radius: 13px;
+}
+
+#view_patient_profile {
+    margin-left: -17px;
+}
+
+.patient_create, .outpatient_create, .allocation_create, .inpatient_create, .booking_create, .ward_create, .room_create{
+    width: 96px;
+    border-radius: 13px;
+    margin-left: auto;
+    border-radius: 0.25rem;
+}
+.save_patient{
+    width:200px;
+
+}
+.saveandnew_patient{
+    width:200px;
+}
+.o_patient_history_button{
+    color: #446e0d;
+    border: 0;
+    float:right;
+}
+.o_in_patient_history_button{
+    color: #446e0d;
+    border: 0;
+    float:right;
+}
+.o_out_patient_history_button{
+    color: #446e0d;
+    border: 0;
+    float:right;
+}
+.hsp_table {
+padding:1rem 0;
+margin-left:6%;
+width:40%;
+
+}
+.hsp_table input{
+max-width:30rem!important;
+padding: 0.8em;
+}
+
+select{
+background: transparent url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='4' viewBox='0 0 7 4'><polygon fill='%23495057' points='3.5 4 7 0 0 0'/></svg>") no-repeat 98% center !important;
+}
+
+<div class="d-flex align-items-center">
+    input class="mr-2"
+    label
+</div>
+
+@media (max-width: 575.98px) {
+    .o_patient_button{
+        FONT-SIZE: 12PX;
+    }
+}
+#p_radio {
+    padding:0 !important;
+    margin-right:8px;
+    }
+
+.radio {
+    padding: 3px 8px;
+}
+
+ .save_out_patient{
+        width:200px
+    }
+
+  .saveandnew_out_patient{
+      width: 200px;
+  }
+
+.save {
+    display:flex;
+    justify-content:center;
+    gap:30px;
+}
+
+.o_radio_input {
+    margin-left: 12px;
+}
+
+@media screen and (max-width:1800px) {
+    #ward_search,#room_search {
+        margin-left:7px !important;
+    }
+}
+
+@media (min-width: 1400px){
+
+.container{
+max-width:1320px !important;
+}
+
+#ward_search, #room_search{
+
+    margin-left:0px !important;
+}
+}
+@media screen and (max-width:1398px) {
+.search-container {
+    padding-left: 48px !important;
+}
+
+.dashButton{
+width:160px;
+}
+}
+
+@media screen and (max-width:1200px) {
+.PatientContainer{
+    width:82%;
+    margin:auto;
+}
+
+.dashButton{
+    width:113px;
+
+}
+
+
+   #ward_search,#room_search {
+        margin-left:7px !important;
+    }
+ .search-container{
+
+    padding-left:38px !important;
+
+ }
+
+    .o_room_button{
+
+    float:right;
+    width:75%;
+    }
+    .o_ward_button{
+
+    width:75%;
+    }
+
+    .r_Profile {
+        box-shadow:0px 0px 0px 0px #fff;
+    }
+
+    .hsp_table{
+
+        width:421px;
+        margin:auto;
+    }
+
+
+    .r_Container .row{
+        margin-left:0px !important;
+    }
+    .rd_buttons, .r_AppntBtn {
+        margin-left:0px  !important;
+    }
+
+    .o_outpatient_button{
+        margin-left:0px !important;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .o_inpatient_button{
+        width:280px !important;
+    }
+
+.PatientContainer{
+    width:82%;
+}
+
+.dashButton{
+    width:113px;
+}
+
+.search-container {
+    padding-left: 15px !important;
+}
+    .r_Container{
+
+    margin-left:0px;
+    padding-left:0px;
+    max-width:100% !important;
+
+    }
+
+    .r_AppntBtn{
+    margin:auto !important;
+    }
+
+    .r_AppntBtn .col{
+    padding-left:0px;
+    }
+
+    .o_outpatient_button{
+        width:280px !important;
+    }
+
+    .o_room_button {
+        min-width:-webkit-fill-available;
+        margin:8px;
+    }
+    .o_ward_button {
+       min-width:100%;
+       margin:8px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .o_outpatient_button {
+        width:100%;
+        margin:0px;
+    }
+
+.PatientContainer{
+
+    width:97%;
+    margin:auto;
+
+}
+.dashButton {
+    width: 184px;
+}
+
+    .o_inpatient_button{
+
+    width:100% !important;
+}
+
+.o_outpatient_button{
+
+    width:100%!important;
+}
+
+    .o_inpatient_button {
+        width:100%;
+        margin:0px;
+        margin-top:22px;
+    }
+    .rd_buttons {
+        margin:0px;
+    }
+
+    .r_AppntBtn{
+        margin-left:0px;
+        width:100%;
+    }
+
+    #view_main{
+    margin-top:31px;
+
+    }
+
+    #op_table{
+    margin-left:0px !important;
+    }
+
+    [type="text"], [type="password"], [type="number"], [type="email"], [type="tel"], textarea, select{
+    max-width:100% !important;
+
+    }
+     .hsp_table{
+        width:100%;
+    }
+
+}
+
+@media screen and (max-width: 545px) {
+    .hsp_table{
+        width:100%;
+    }
+
+ .r_AppntBtn .col{
+    padding-right:0px;
+
+ }
+ .r_AppntBtn{
+    width:95% !important;
+
+ }
+
+.dashButton {
+    width: 184px;
+}
+    .o_ward_button {
+    min-width: -webkit-fill-available;}
+
+   .saveandnew_out_patient{
+      width: 35% important!;
+   }
+
+   .tr_name {
+
+    display: contents;
+    width: 100%;
+   }
+
+    .td_name {
+       display: block;
+    }
+    .center {
+        padding-left:0px;
+        padding-right:0px;
+    }
+
+    .r_Profile{
+        padding: 0px;
+    }
+
+    o_room_button {
+        max-width:100%;
+    }
+
+    o_ward_button {
+        max-width:100%;
+    }
+}
+.search-container{
+    padding-left:0px;
+}
+
+html .o_web_client{
+
+overflow:auto !important;
+}
+
+html .o_web_client > .o_action_manager{
+
+    overflow:auto !important;
+}

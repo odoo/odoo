@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Adding the margin amount in the invoice pivot report-->
+    <record id="view_account_invoice_report_pivot" model="ir.ui.view">
+        <field name="name">
+            account.invoice.report.view.pivot.inherit.sale.invoice.margin
+        </field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id"
+               ref="account.view_account_invoice_report_pivot"/>
+        <field name="arch" type="xml">
+            <field name="price_subtotal" position="after">
+                <field name="margin_amount" type="measure"/>
+            </field>
+        </field>
+    </record>
+</odoo>

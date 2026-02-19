@@ -1,0 +1,19 @@
+<templates xml:space="preserve">
+
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='canCreate']" position="after">
+            <t t-if="!canEdit">
+                <button type="button" class="btn btn-outline-primary o_form_button_edit" t-on-click="edit" data-hotkey="a">Edit</button>
+            </t>
+            <div t-if="model.root.isInEdition" class="o_form_buttons_edit">
+                <button type="button" class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="s">
+                        <i class="fa fa-cloud-upload fa-fw"></i>
+                </button>
+                <button type="button" class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">
+                    <i class="fa fa-undo fa-fw"></i>
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

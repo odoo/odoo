@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="import_coupon_instance_form_view" model="ir.ui.view">
+        <field name="name">import.coupon.wizard.form.view</field>
+        <field name="model">import.coupon.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to import coupons from this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="import_coupon_instance" string="Import Coupon" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_woo_import_coupon_instance" model="ir.actions.act_window">
+        <field name="name">WooCommerce - Import Coupon</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">import.coupon.wizard</field>
+        <field name="view_id" ref="import_coupon_instance_form_view"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="export_coupon_instance_form_view" model="ir.ui.view">
+        <field name="name">export.coupon.wizard.form.view</field>
+        <field name="model">export.coupon.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to export products to this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="export_coupon_instance" string="Export Coupon" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_export_coupon" model="ir.actions.act_window">
+        <field name="name">WooCommerce - Export Coupon</field>
+        <field name="res_model">export.coupon.wizard</field>
+        <field name="binding_model_id" ref="model_loyalty_program"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="pragtech_woo_commerce.export_coupon_instance_form_view"/>
+    </record>
+</odoo>
+

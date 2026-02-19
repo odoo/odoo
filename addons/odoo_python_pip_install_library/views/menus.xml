@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>	
+	 	<record id="action_pip_command" model="ir.actions.act_window">
+			<field name="name">Pip Commands</field>
+			<field name="res_model">pip.command</field>
+			<field name="view_mode">form</field>
+            <field name="target">new</field>
+		</record>
+		<menuitem
+			id="pip_command"
+			name="Pip Command"
+			parent="base.menu_management"
+			action="action_pip_command"
+			sequence="100"/>
+</odoo>

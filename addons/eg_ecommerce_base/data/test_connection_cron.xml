@@ -1,0 +1,13 @@
+<odoo>
+    <record model="ir.cron" id="test_connection_ecommerce_cron">
+        <field name="name">Test Connection eCommerce</field>
+        <field name="model_id" ref="model_eg_ecom_instance"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_for_test_connection()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

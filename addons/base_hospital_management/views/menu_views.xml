@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Hospital management menu-->
+    <menuitem id="hospital_menu_root"
+              web_icon="base_hospital_management,static/description/icon.png"
+              groups="base_hospital_management.base_hospital_management_group_lab_assistant,base_hospital_management.base_hospital_management_group_pharmacist,base_hospital_management.base_hospital_management_group_nurse,base_hospital_management.base_hospital_management_group_doctor,base_hospital_management.base_hospital_management_group_receptionist,base_hospital_management.base_hospital_management_group_manager"
+              name="Hospital Management"/>
+    <!--    Appointment menu-->
+    <menuitem id="hospital_menu_appointment" name="Appointment"
+              parent="hospital_menu_root"
+              sequence="2"/>
+    <!--    Patient menu-->
+    <menuitem id="appointment_menu_patient" name="Patient"
+              parent="hospital_menu_appointment"
+              sequence="1"/>
+    <!--    Laboratory menu-->
+    <menuitem id="hospital_menu_laboratory" name="Laboratory"
+              parent="hospital_menu_root"
+              sequence="3"/>
+    <!--    Infrastructure menu-->
+    <menuitem id="hospital_menu_infrastructure" name="Infrastructure"
+              groups="base_hospital_management.base_hospital_management_group_manager"
+              parent="hospital_menu_root" sequence="4"/>
+    <menuitem name="Report" id="hospital_report" parent="hospital_menu_root"
+              sequence="6"/>
+    <!--    Configuration menu-->
+    <menuitem id="hospital_menu_configuration" name="Configuration" sequence="6"
+              groups="base_hospital_management.base_hospital_management_group_manager"
+              parent="hospital_menu_root"/>
+    <!--Reception dashboard action-->
+    <record id="reception_dashboard_action" model="ir.actions.client">
+        <field name="name">Reception Dashboard</field>
+        <field name="tag">reception_dashboard_tags</field>
+    </record>
+    <!--Reception dashboard menu-->
+    <menuitem name="Reception Dashboard" id="reception_dashboard_menu"
+              parent="hospital_menu_root" sequence="0"
+              groups="base_hospital_management.base_hospital_management_group_receptionist"
+              action="reception_dashboard_action"/>
+    <!--Lab dashboard action-->
+    <record id="lab_dashboard_action" model="ir.actions.client">
+        <field name="name">Laboratory Dashboard</field>
+        <field name="tag">lab_dashboard_tags</field>
+    </record>
+    <!--Lab dashboard menu-->
+    <menuitem id="lab_dashboard_menu" name="Laboratory Dashboard"
+              parent="hospital_menu_root" sequence="0"
+              groups="base_hospital_management.base_hospital_management_group_lab_assistant"
+              action="lab_dashboard_action"/>
+    <!--    Pharmacist dashboard action-->
+    <record id="pharmacist_dashboard_action" model="ir.actions.client">
+        <field name="name">Pharmacy Dashboard</field>
+        <field name="tag">pharmacy_dashboard_tags</field>
+    </record>
+    <!--    Pharmacist dashboard menu-->
+    <menuitem id="pharma_dashboard_menu" name="Pharmacist Dashboard"
+              parent="hospital_menu_root" sequence="0"
+              groups="base_hospital_management.base_hospital_management_group_pharmacist"
+              action="pharmacist_dashboard_action"/>
+    <!--    Doctor dashboard action-->
+    <record id="doctor_dashboard_action" model="ir.actions.client">
+        <field name="name">Doctor Dashboard</field>
+        <field name="tag">doctor_dashboard_tags</field>
+    </record>
+    <!--    Doctor dashboard menu-->
+    <menuitem id="doctor_dashboard_menu" name="Doctor Dashboard"
+              parent="hospital_menu_root" sequence="0"
+              groups="base_hospital_management.base_hospital_management_group_doctor"
+              action="doctor_dashboard_action"/>
+</odoo>

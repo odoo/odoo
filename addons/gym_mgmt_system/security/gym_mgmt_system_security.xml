@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--   multi-company rule-->
+    <record id="gym_management_exercise_rule" model="ir.rule">
+        <field name="name">Gym Management Exercise Rule</field>
+        <field name="model_id" ref="model_gym_exercise"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_management_exercise_for_rule" model="ir.rule">
+        <field name="name">Gym Management Exercise For Rule</field>
+        <field name="model_id" ref="model_exercise_for"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_management_measurement_history_rule" model="ir.rule">
+        <field name="name">Gym Management Measurement History Rule</field>
+        <field name="model_id" ref="model_measurement_history"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_managment_trainer_rule" model="ir.rule">
+        <field name="name">Gym Management Trainer  Rule</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_management_gym_member_rule" model="ir.rule">
+        <field name="name">Gym Management Gym Member Rule</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_managment_gym_membership_rule" model="ir.rule">
+        <field name="name">Gym Management Membership Rule</field>
+        <field name="model_id" ref="model_gym_membership"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_management_trainer_skill_rule" model="ir.rule">
+        <field name="name">Gym Management Trainer skill Rule</field>
+        <field name="model_id" ref="model_trainer_skill"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="gym_management_trainer_skill_rule" model="ir.rule">
+        <field name="name">Gym Management Trainer skill Rule</field>
+        <field name="model_id" ref="model_trainer_skill"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

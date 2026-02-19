@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="fo_visitor_form_view">
+            <field name="name">Visitors</field>
+            <field name="model">fo.visitor</field>
+            <field name="arch" type="xml">
+                <form string="Visitors">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button"
+                                    name="%(fo_visit_action)d" type="action"
+                                    icon="fa-arrows-v"
+                                    context="{'default_visitor': [active_id],'search_default_visitor': [active_id]}">
+                                <field name="visit_count" widget="statinfo"
+                                       string="Visits"
+                                       style="margin-right:50px"/>
+                            </button>
+                        </div>
+                        <field name="visitor_image" widget="image"
+                               class="oe_avatar" style="margin-right:50px"/>
+                        <div name="title_name" class="oe_title">
+                            <h1>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <field name="name"
+                                                   placeholder="FullName"
+                                                   style="padding-right:10px"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <field name="street"
+                                           placeholder="Street..."
+                                           class="o_address_street"/>
+                                    <field name="street2"
+                                           placeholder="Street 2..."
+                                           class="o_address_street"/>
+                                    <field name="city" placeholder="City"
+                                           class="o_address_city"/>
+                                    <field name="state_id"
+                                           class="o_address_state"
+                                           placeholder="State"
+                                           options='{"no_open": True}'/>
+                                    <field name="zip" placeholder="ZIP"
+                                           class="o_address_zip"/>
+                                    <field name="country_id"
+                                           placeholder="Country"
+                                           class="o_address_country"
+                                           options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                                <field name="company_info"/>
+                            </group>
+                            <group>
+                                <field name="phone"/>
+                                <field name="email"/>
+                                <field name="id_proof"/>
+                                <field name="id_proof_no"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="fo_visitor_kanban_view" model="ir.ui.view">
+            <field name="name">fo.visitor.kanban</field>
+            <field name="model">fo.visitor</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('fo.visitor', 'visitor_image', record.id.value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <ul>
+                                            <li>Name :
+                                                <field name="name"/>
+                                            </li>
+                                            <li>Phone:
+                                                <field name="phone"/>
+                                            </li>
+                                        </ul>
+                                    </strong>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="fo_visitor_tree_view">
+            <field name="name">Visitors</field>
+            <field name="model">fo.visitor</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string='Visitors'>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="company_info"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="fo_visitor_action" model="ir.actions.act_window">
+            <field name="name">Visitors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fo.visitor</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="fo_visitor_kanban_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to Create New Visitor.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="front_office_mgmnt_main"
+                  name="Front Office"
+                  sequence="2"/>
+        <menuitem id="visitor_mgmnt_menu"
+                  name="Visitor Management"
+                  parent="front_office_mgmnt_main"
+                  sequence="1"/>
+        <menuitem id="visitor_menu"
+                  name="Visitor"
+                  parent="visitor_mgmnt_menu"
+                  action="fo_visitor_action"
+                  groups="base.group_user"
+                  sequence="1"/>
+        <menuitem id="fo_visit_menu"
+                  name="Visits"
+                  parent="visitor_mgmnt_menu"
+                  action="fo_visit_action"
+                  sequence="2"/>
+        <menuitem id="fo_today_visit_menu"
+                  name="Today's Visits"
+                  parent="front_office_mgmnt_main"
+                  sequence="2"/>
+        <menuitem id="fo_today_visit_menu_child"
+                  name="Today's Visits"
+                  parent="fo_today_visit_menu"
+                  action="fo_today_visit_action"
+                  groups="base.group_user"
+                  sequence="2"/>
+    </data>
+</odoo>

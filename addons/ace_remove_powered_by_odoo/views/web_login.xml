@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="web_login_layout_inherit" inherit_id="web.login_layout" name="Web Login Layout">
+        <xpath expr="//div[@class='card-body']//div[last()]" position="replace">
+            <div class="text-center small mt-4 pt-3 login--footer" t-if="not disable_footer">
+            </div>
+        </xpath>
+    </template>
+</odoo>

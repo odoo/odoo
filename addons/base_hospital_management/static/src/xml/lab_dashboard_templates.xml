@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Lab dashboard template-->
+<template>
+    <t t-name="LabDashboard">
+        <div class="oh_dashboards">
+            <div class="container-fluid o_pj_dashboard">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="row">
+                        <div class="col-md-2 bg-white dashButtonContainer">
+                            <div class="row dashButton" id="test-create"
+                                 style="margin-top: 45px;">
+                                Tests to Confirm
+                            </div>
+                            <div class="row dashButton" id="all-test">
+                                Process Test
+                            </div>
+                            <div class="row dashButton" id="published-test">
+                                Published
+                            </div>
+                            <div class="row dashButton" id="vaccination">
+                                Vaccination
+                            </div>
+                        </div>
+                        <div class="col-md-9 bg-white PatientContainer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="d-flex" role="search"
+                                             style="max-height:40px; margin-top:10px;">
+                                            <input class="form-control me-2"
+                                                   style="width:275px;"
+                                                   type="search"
+                                                   id="patient_search"
+                                                   placeholder="Search"
+                                                   aria-label="Search"/>
+                                            <button class="btn btn-outline-success" id="btn_patient_search">
+                                                Search
+                                            </button>
+                                            <div id="create-button"/>
+                                        </div>
+                                        <div id="create-button"/>
+                                    </div>
+                                    <div class="row" id="main-div">
+                                        <div class="col" id="main-view">
+                                        </div>
+                                        <div class="col" id="form-view"
+                                             hidden="1">
+                                            <div class="col-md-12 bg-white LabReport"
+                                                 hidden="1">
+                                                <div class="row">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <h4 id="patient-name"/>
+                                                            </td>
+                                                            <td rowspan="3">
+                                                                <img id="patient-image"
+                                                                     width="30px"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Phone :</td>
+                                                            <td>
+                                                                <p id="patient-phone"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Email:</td>
+                                                            <td>
+                                                                <p id="patient-email"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Date of Birth
+                                                                :
+                                                            </td>
+                                                            <td>
+                                                                <p id="patient-age"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Blood Group :
+                                                            </td>
+                                                            <td>
+                                                                <p id="patient-blood"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                            <td>Doctor :</td>
+                                                            <td>
+                                                                <p id="patient-doctor"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Gender :</td>
+                                                            <td>
+                                                                <p id="patient-gender"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                            <td>Patient type
+                                                                :
+                                                            </td>
+                                                            <td>
+                                                                <p id="patient-patient_type"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Marital Status
+                                                                :
+                                                            </td>
+                                                            <td>
+                                                                <p id="patient-status"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                            <td>Slot :</td>
+                                                            <td>
+                                                                <p id="patient-slot"
+                                                                   style="margin:0"/>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div id="action-table"/>
+                                                    <div id="action-button"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="test-result-edit-modal"
+                                 tabindex="-1"
+                                 aria-labelledby="TestResultEdit"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5"
+                                                id="resultModalLabel">
+                                            </h1>
+                                            <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"/>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="normal-range"
+                                                       class="col-form-label">
+                                                    Normal Range
+                                                </label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="normal-range"/>
+                                                <input type="hidden"
+                                                       class="form-control"
+                                                       id="result-id"/>
+                                                <input type="hidden"
+                                                       class="form-control"
+                                                       id="result-index"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="result-unit"
+                                                       class="col-form-label">
+                                                    Units
+                                                </label>
+                                                <select name="uom_sl" class="form-control select_uom"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="result-result"
+                                                       class="col-form-label">
+                                                    Result Range
+                                                </label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="result-result"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="result-attachment"
+                                                       class="col-form-label">
+                                                    Result Attachment
+                                                </label>
+                                                <input type="file"
+                                                       data-file=""
+                                                       class="form-control"
+                                                       id="result-attachment"/>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button"
+                                                    id="modal-close"
+                                                    class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button type="button"
+                                                    id="update-result"
+                                                    class="btn btn-primary">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

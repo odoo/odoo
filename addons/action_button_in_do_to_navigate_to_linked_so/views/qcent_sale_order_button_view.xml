@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing Delivery Order (stock.picking) form view -->
+        <record id="view_sale_stock_delivery_order" model="ir.ui.view">
+            <field name="name">sale.stock.form.delivery.order</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <!-- Add new elements before the action_detailed_operations button -->
+                <xpath expr="//button[@name='action_picking_move_tree']" position="before">
+                    <!-- Hidden field to store the linked Sale Order -->
+                    <field name="sale_id" invisible="1"/>
+                    <!-- Button to navigate to the Sale Order form view, only visible if sale_id is set -->
+                    <button name="action_view_sale_order"
+                        class="oe_stat_button"
+                        icon="fa-usd"
+                        type="object"
+                        attrs="{'invisible': [('sale_id', '=', False)]}">
+                        <!-- Display the Sale Count as a statistic -->
+                        <field name="sale_count" widget="statinfo" string="Sale"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Modify product.product form view -->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">
+            product.product.form.view.inherit.product.combo.pack
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Add the 'is_pack' field to the 'options' div -->
+            <xpath expr="//div[@name='options']" position="inside">
+                <div modifiers="{}">
+                    <field name="is_pack" modifiers="{}"/>
+                    <label for="is_pack" modifiers="{}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <!-- Modify product.template form view -->
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">
+            product.template.form.view.inherit.product.combo.pack
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id"
+               ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <div modifiers="{}">
+                    <field name="is_pack" modifiers="{}"/>
+                    <label for="is_pack" modifiers="{}"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='variants']" position="attributes">
+                <attribute name="attrs">{'invisible':
+                    [('is_pack','=',True)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//page[@name='invoicing']" position="after">
+                <page string="Product Pack" name="product_pack"
+                      attrs="{'invisible' : [('is_pack','=',False)] }">
+                    <group name="pack_properties">
+                        <group string="Pack Price">
+                            <label for="pack_price"/>
+                            <div class="o_row">
+                                <field name="pack_price"/>
+                                <button name="update_price_product"
+                                        type="object"
+                                        string="Update Price"/>
+                            </div>
+                        </group>
+                        <group string="Pack Quantity"
+                               attrs="{'invisible' : [('type','!=','product')]}">
+                            <field name="pack_location_id"
+                                   attrs="{'required':[('is_pack','=',True)]}"/>
+                            <label for="pack_quantity"/>
+                            <div class="o_row">
+                                <field name="pack_quantity"/>
+                                <button name="get_quantity" type="object"
+                                        string="Get Quantity"
+                                        help='To get the quantity of Pack with respect to the quantity of pack products'/>
+                                <button name="update_quantity" type="object"
+                                        string="Update Quantity"/>
+                            </div>
+                        </group>
+                    </group>
+                    <field name="pack_products_ids"
+                           attrs="{'readonly':[('pack_location_id','=',False)]}">
+                        <tree editable="botttom">
+                            <field name="product_id" string="Product"
+                                   options='{"no_open":True}'/>
+                            <field name="quantity" string="Quantity"/>
+                            <field name="price"/>
+                            <field name="qty_available"/>
+                            <field name="total_available_quantity"
+                                   invisible="True"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Define an action for the Product Pack menu item -->
+    <record id="product_pack_action" model="ir.actions.act_window">
+        <field name="name">Product Pack</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[('is_pack','=',True)]</field>
+        <field name="context">{'default_is_pack' : True}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no product pack to show...!
+            </p>
+        </field>
+    </record>
+    <!-- Modify product.template search view -->
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">
+            product.template.search.view.inherit.product.combo.pack
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id"
+               ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Is a Pack" name="Is a Pack"
+                        domain="[('is_pack','=',True)]"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Add the Product Pack menu item -->
+    <menuitem id="pack_product_sale"
+              name="Product Pack"
+              parent="sale.product_menu_catalog"
+              sequence="3"
+              action="product_pack_action"/>
+</odoo>

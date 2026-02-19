@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <!--     View of seo attributes menu -->
+    <record id="website_seo_attribute_tree_view" model="ir.ui.view">
+        <field name="name">website.seo.attributes.view.tree</field>
+        <field name="model">website.seo.attributes</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="models"/>
+                <field name="product" attrs="{ 'invisible': [('models', '!=', 'product')] }"/>
+                <field name="category" attrs="{ 'invisible': [('models', '!=', 'product_category')] }"/>
+            </tree>
+        </field>
+    </record>
+    <!--     Action of seo attribute menu -->
+    <record id="action_website_attributes" model="ir.actions.act_window">
+        <field name="name">Website SEO</field>
+        <field name="res_model">website.seo.attributes</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_seo_attributes"
+            name="SEO Attributes"
+            sequence="60"
+            parent="website.menu_site"
+            action="action_website_attributes"
+            groups="website.group_website_designer"/>
+</odoo>

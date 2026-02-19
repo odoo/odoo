@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    Sending dashboard pdf to users -->
+    <record id="dashboard_mail_view_form" model="ir.ui.view">
+        <field name="name">dashboard.mail.view.form</field>
+        <field name="model">dashboard.mail</field>
+        <field name="arch" type="xml">
+            <form string="Sent Mail">
+                <group>
+                    <field name="user_ids" widget="many2many_tags"/>
+                    <field name="base64code" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="send_mail" string="SEND"
+                            class="btn-primary" type="object"/>
+                    <button string="Cancel" class="btn-secondary"
+                            name="cancel_mail" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

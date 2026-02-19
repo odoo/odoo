@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--Inherited form iew of product.public.category-->
+    <record id="product_public_category_form_view" model="ir.ui.view">
+        <field name="name">product.public.category.view.form.inherit.website.seo.kit</field>
+        <field name="model">product.public.category</field>
+        <field name="inherit_id"
+               ref="website_sale.product_public_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="SEO">
+                        <separator string="Meta Tags Editing"/>
+                        <group>
+                            <field name="is_auto_seo"/>
+                        </group>
+                        <div class="text-muted">
+                            Warning: If you un-check the option to Auto Update
+                            SEO then during Automatic Generation of SEO
+                            information, then seo information of such category
+                            will not be updated.
+                        </div>
+                    </page>
+                    <page string="Category Description" attrs="{'invisible': [('is_auto_seo','!=',True)]}">
+                        <field name="category_description"
+                               placeholder="Enter Category Description" required="True"/>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Override the product_product tree view -->
+    <record id="product_product_tree_view" model="ir.ui.view">
+        <field name="name">
+            product.product.view.tree.inherit.product.to.invoice
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <!-- Insert buttons before the default_code field -->
+            <xpath expr="//field[@name='default_code']" position="before">
+                <button class="o_field_cell" name="action_add_to_invoice"
+                        type="object" icon="fa-plus"
+                        attrs="{'invisible': [('add_to_invoice', '=', False)]}"/>
+                <button name="action_change_qty" type="object" icon="fa-list"
+                        attrs="{'invisible': [('add_to_invoice', '=', False)]}"/>
+                <field name="add_to_invoice" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Override the product_product kanban view -->
+    <record id="product_kanban_view" model="ir.ui.view">
+        <field name="name">
+            product.product.view.kanban.inherit.product.to.invoice
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_kanban_view"/>
+        <field name="arch" type="xml">
+            <!-- Insert custom div after the oe_kanban_details div -->
+            <xpath expr="//div[hasclass('oe_kanban_details')]"
+                   position="after">
+                <t t-if="context.add_to_invoice">
+                    <div class="o_kanban_record_bottom" style="width: 100%;">
+                        <div class="oe_kanban_bottom_left">
+                            <a name="action_add_to_invoice" type="object">
+                                <i class="fa fa-plus"/>Add to Invoice/Bill
+                            </a>
+                        </div>
+                        <div class="oe_kanban_bottom_right">
+                            <a name="action_change_qty" type="object">
+                                <i class="fa fa-list"/>Change Quantity
+                            </a>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </field>
+    </record>
+    <!-- Override the product_product form view -->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">
+            product.product.view.form.inherit.product.to.invoice
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Insert buttons inside the header section -->
+            <xpath expr="//header" position="inside">
+                <button name="action_add_to_invoice" type="object"
+                        string="Add to Invoice/Bill" class="oe_highlight"
+                        icon="fa-plus"
+                        invisible="not context.get('add_to_invoice')"/>
+                <button name="action_change_qty" type="object" icon="fa-list"
+                        help="Update Quantity"
+                        invisible="not context.get('add_to_invoice')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

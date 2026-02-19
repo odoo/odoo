@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--  To move quants directly from qants views  -->
+    <record id="wiz_stock_quant_location_action" model="ir.actions.act_window">
+        <field name="name">Move to location...</field>
+        <field name="res_model">wiz.stock.move.location</field>
+        <field name="binding_model_id" ref="stock.model_stock_quant" />
+        <field name="view_mode">form</field>
+        <field name="context" eval="{'origin_location_disable': True}" />
+        <field name="target">new</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
+    </record>
+</odoo>

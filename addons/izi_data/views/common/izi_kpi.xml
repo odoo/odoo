@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="izi_kpi_action">
+            <field name="name">Key Performance Indicator</field>
+            <field name="res_model">izi.kpi</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <!-- Tree view for the menuitem -->
+        <record id="izi_kpi_tree" model="ir.ui.view">
+            <field name="name">izi.kpi.tree</field>
+            <field name="model">izi.kpi</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name_with_sequence"/>
+                    <field name="category_id"/>
+                    <field name="period_ids" widget="many2many_tags"/>
+                    <field name="parent_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for the menuitem -->
+        <record id="izi_kpi_form" model="ir.ui.view">
+            <field name="name">izi.kpi.form</field>
+            <field name="model">izi.kpi</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_calculate_value" type="object" string="Calculate" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="parent_id"/>
+                                <field name="category_id" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                <field name="child_ids" invisible="1"/>
+                                <field name="child_count" invisible="1"/>
+                                <field name="summarize_childs" attrs="{'invisible': [('child_count', '=', 0)]}"/>
+                                <field name="calculation_method" attrs="{'invisible': [('child_count', '&gt;', 0)]}" required="1"/>
+                            </group>
+                            <group>
+                                <field name="interval" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                <field name="period_ids" force_save="1" widget="many2many_tags" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                <field name="success_criteria" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                            </group>
+                            
+                            <group string="Calculation" attrs="{'invisible': ['|', ('calculation_method', '!=', 'model'), '&amp;', ('summarize_childs', '=', True), ('child_count', '&gt;', 0)]}">
+                                <field name="table_model_id" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}" domain="[('is_query', '=', False), ('is_stored', '=', False), ('model_id', '!=', False)]"/>
+                                <field name="table_id" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}" invisible="1"/>
+                                <field name="measurement_field_id" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}" domain="[('table_id', '=', table_id)]"/>
+                                <field name="date_field_id" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}" domain="[('field_type', '=', ['date', 'datetime']), ('table_id', '=', table_id)]"/>
+                            </group>
+                            <group string="Domain" attrs="{'invisible': ['|', ('calculation_method', '!=', 'model'), '&amp;', ('summarize_childs', '=', True), ('child_count', '&gt;', 0)]}">
+                                <field name="model_id" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}" invisible="1"/>
+                                <field name="model_name" force_save="1" attrs="{'readonly': [('parent_id', '!=', False)]}" invisible="1"/>
+                                <field name="domain" widget="domain" options="{'model': 'model_name'}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Details">
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" readonly="1"/>
+                                        <field name="period_id" readonly="1"/>
+                                        <field name="date" readonly="1"/>
+                                        <field name="target"/>
+                                        <field name="value" attrs="{'readonly': [('parent.calculation_method', '!=', 'manual')]}"/>
+                                        <field name="achievement" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="izi_kpi_period_form" model="ir.ui.view">
+            <field name="name">izi.kpi.period.form</field>
+            <field name="model">izi.kpi.period</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div name="title" class="oe_left">
+                            <label class="oe_edit_only" for="name" string="Name"/>
+                            <h1><field name="name" required="1" class="oe_title" placeholder="Name" height="20px"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="start_date" required="1"/>
+                                <field name="end_date" required="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

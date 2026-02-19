@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_om_account_followup_print" model="ir.ui.view">
+            <field name="name">account.followup.print.form</field>
+            <field name="model">followup.print</field>
+            <field name="arch" type="xml">
+                <form string="Send follow-ups">
+                    <group col="4">
+                        <field name="date" groups="base.group_no_one"/>
+                        <field name="followup_id"
+                               groups="base.group_multi_company"/>
+                    </group>
+                    <p class="oe_grey">
+                        This action will send follow-up emails, print the
+                        letters and
+                        set the manual actions per customer, according to the
+                        follow-up levels defined.
+                    </p>
+                    <footer>
+                        <button name="do_process"
+                                string="Send emails and generate letters"
+                                type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_om_account_followup_print" model="ir.actions.act_window">
+            <field name="name">Send Follow-Ups</field>
+            <field name="res_model">followup.print</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_finance_followup" parent="account.menu_finance"
+                  name="Follow-Ups"
+                  groups="account.group_account_invoice"/>
+
+        <menuitem action="action_om_account_followup_print"
+                  id="om_account_followup_print_menu"
+                  parent="menu_finance_followup"
+                  name="Send Letters and Emails"
+                  groups="account.group_account_user,account.group_account_manager"
+                  sequence="2"/>
+
+    </data>
+</odoo>

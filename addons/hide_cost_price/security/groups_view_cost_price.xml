@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    access to the cost price-->
+    <data>
+        <record id="groups_view_cost_price" model="res.groups">
+            <field name="name">View Cost Price</field>
+            <field name="users"
+                   eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

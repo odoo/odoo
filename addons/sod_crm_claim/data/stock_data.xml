@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details) -->
+<odoo noupdate="1">
+
+	<record id="stock_location_RMA" model="stock.location">
+		<field name="name">RMA</field>
+		<field name="usage">internal</field>
+		<field name="return_location">1</field>
+		<!-- <field name="company_id"></field> -->
+	</record>
+
+	<record id="seq_picking_type_rma" model="ir.sequence">
+		<field name="name">RMAR</field>
+		<field name="prefix">RMAR/</field>
+		<field name="padding">5</field>
+		<field name="company_id" ref="base.main_company" />
+	</record>
+
+	<record id="picking_type_rma" model="stock.picking.type">
+		<field name="name">Return to RMA</field>
+		<field name="sequence_id" ref="sod_crm_claim.seq_picking_type_rma" />
+		<field name="code">incoming</field>
+		<field name="warehouse_id" ref="stock.warehouse0" />
+		<field name="sequence_code">RMA</field>
+		<field name="default_location_src_id" ref="stock.stock_location_customers" />
+		<field name="default_location_dest_id" ref="sod_crm_claim.stock_location_RMA" />
+	</record>
+
+</odoo>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     Copyright 2021 ITerra - Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dropdown" position="replace">
+            <!-- Same hotkey as in EE -->
+            <AppsMenu>
+                <AppsMenuSearchBar />
+                <DropdownItem
+                    t-foreach="apps"
+                    t-as="app"
+                    t-key="app.id"
+                    class="'o_app'"
+                    dataset="{ menuXmlid: app.xmlid, section: app.id }"
+                    href="getMenuItemHref(app)"
+                    onSelected="() => this.onNavBarDropdownItemSelection(app)"
+                >
+                        <img
+                        class="o-app-icon"
+                        draggable="false"
+                        t-att-src="getWebIconData(app)"
+                    />
+                        <div t-esc="app.name" />
+                </DropdownItem>
+            </AppsMenu>
+        </xpath>
+    </t>
+    <!-- Apps menu -->
+    <t t-name="web_responsive.AppsMenu" owl="1">
+        <div class="o-dropdown dropdown o-dropdown--no-caret o_navbar_apps_menu">
+            <button
+                class="dropdown-toggle"
+                title="Home Menu"
+                data-hotkey="a"
+                t-on-click.stop="() => this.setOpenState(!state.open,true)"
+            >
+                <i class="oi oi-apps" />
+            </button>
+            <div t-if="state.open" class="dropdown-menu-custom">
+                <t t-slot="default" />
+            </div>
+        </div>
+
+    </t>
+    <!-- Search bar -->
+    <t t-name="web_responsive.AppsMenuSearchResults" owl="1">
+        <div
+            class="search-container"
+            t-att-class="state.hasResults ? 'has-results' : ''"
+        >
+            <div class="search-input">
+                <span class="fa fa-search search-icon" />
+                <input
+                    type="search"
+                    t-ref="SearchBarInput"
+                    t-on-input="_searchMenus"
+                    t-on-keydown="_onKeyDown"
+                    autocomplete="off"
+                    placeholder="Search menus..."
+                    class="form-control"
+                    data-allow-hotkeys="true"
+                />
+            </div>
+            <div t-if="state.results.length" class="search-results">
+                <t t-foreach="state.results" t-as="result" t-key="result">
+                    <t t-set="menu" t-value="_menuInfo(result)" />
+                    <a
+                        t-attf-class="search-result {{result_index == state.offset ? 'highlight' : ''}}"
+                        t-att-style="menu.webIconData ? &quot;background-image:url(&quot; + menu.webIconData + &quot;);background-size:4%&quot; : ''"
+                        t-attf-href="#menu_id={{menu.id}}&amp;action={{menu.actionID}}"
+                        t-att-data-menu-id="menu.id"
+                        t-att-data-action-id="menu.actionID"
+                        draggable="false"
+                    >
+                        <span class="text-ellipsis" t-att-title="result.name">
+                          <t
+                                t-foreach="_splitName(result)"
+                                t-as="name"
+                                t-key="name_index"
+                            >
+                            <b
+                                    t-if="name_index % 2"
+                                    t-out="name"
+                                    style="text-primary"
+                                />
+                            <t t-else="" t-out="name" />
+                          </t>
+                        </span>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2014 ABF OSIELL <http://osiell.com>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+ -->
+<odoo>
+    <record id="view_res_users_form_inherit" model="ir.ui.view">
+        <field name="name">res.users.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="before">
+                <page string="Roles">
+                    <field name="role_ids" invisible="1" />
+                    <field name="role_line_ids" nolabel="1">
+                        <tree editable="bottom" decoration-muted="not is_enabled">
+                            <field
+                                name="role_id"
+                                domain="[('id', 'not in', parent.role_ids)]"
+                            />
+                            <field name="date_from" />
+                            <field name="date_to" />
+                            <field name="is_enabled" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+           <xpath expr="//page[@name='access_rights']/group" position="before">
+                <field name="show_alert" invisible="1" />
+                <div
+                    class="alert alert-info text-center o_form_header"
+                    attrs="{'invisible': [('show_alert', '!=', True)]}"
+                    role="alert"
+                >
+                    <div>
+                        <strong
+                        >The access rights of this user are managed by roles.</strong>
+                    </div>
+                    <div>
+                        <em
+                        >Any configuration changes made here will not be persistent.</em>
+                    </div>
+                    <a class="close" data-bs-dismiss="alert" href="#">x</a>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_res_users_search_inherit" model="ir.ui.view">
+        <field name="name">res.users.search.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_search" />
+        <field name="arch" type="xml">
+            <field name="company_ids" position="after">
+                <field
+                    name="role_ids"
+                    filter_domain="[('role_line_ids.role_id.name','ilike',self)]"
+                />
+            </field>
+        </field>
+    </record>
+    <record id="view_res_users_tree_inherit" model="ir.ui.view">
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_tree" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="role_ids" widget="many2many_tags" />
+            </field>
+        </field>
+    </record>
+</odoo>
