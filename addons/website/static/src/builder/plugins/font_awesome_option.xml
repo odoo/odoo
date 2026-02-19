@@ -3,11 +3,11 @@
 
 <t t-name="website.FontAwesomeOption">
     <BuilderRow label.translate="Color">
-        <BuilderColorPicker styleAction="'color'"/>
+        <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom', 'gradient']"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Background Color" t-if="this.state.showBackground">
-        <BuilderColorPicker styleAction="'background-color'"/>
+        <BuilderColorPicker styleAction="'background-color'" enabledTabs="['solid', 'custom', 'gradient']"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Size" t-if="this.state.showSize">
