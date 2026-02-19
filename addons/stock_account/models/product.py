@@ -316,8 +316,8 @@ class ProductProduct(models.Model):
         return std_price_by_product_id, value_by_product_id
 
     def _run_average_batch(self, at_date=None, lot=None, force_recompute=False):
-        std_price_by_product_id = {}
-        value_by_product_id = {}
+        std_price_by_product_id = {p.id: 0 for p in self}
+        value_by_product_id = {p.id: 0 for p in self}
         quantity_by_product_id = {}
 
         if not at_date and not force_recompute:
