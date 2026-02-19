@@ -25,7 +25,7 @@ class MrpProductionSerials(models.TransientModel):
             if lot_name in existing_lot_names:
                 continue
             if sequence and lot_name == sequence.get_next_char(sequence.number_next_actual):
-                sequence.number_next_actual += 1
+                sequence.sudo().number_next_actual += 1
             new_lots.append({
                 'name': lot_name,
                 'product_id': self.production_id.product_id.id
