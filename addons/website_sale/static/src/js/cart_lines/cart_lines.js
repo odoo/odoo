@@ -31,9 +31,6 @@ export class CartLines extends Component {
 
     async updateLines() {
         const data = await rpc('/shop/cart/lines');
-        if (!data.cart_lines.length) {
-            return redirect('/shop/cart');
-        }
         this.state.cartLines = data['cart_lines'];
         this.state.shopWarning = data['shop_warning'];
         this.state.isQuantityViewActive = data['is_quantity_view_active'];

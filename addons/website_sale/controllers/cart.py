@@ -537,7 +537,7 @@ class Cart(PaymentPortal):
             'is_quantity_view_active': request.env['website'].is_view_active('website_sale.product_quantity'),
             'is_wishlist_view_active': request.env['website'].is_view_active('website_sale.product_cart_lines'),
             'is_uom_feature_enabled': request.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price'),
-            'shop_warning': order_sudo._get_shop_warning(),
+            'shop_warning': order_sudo._get_shop_warning() if order_sudo else '',
         }
 
         for line in order_sudo.website_order_line:

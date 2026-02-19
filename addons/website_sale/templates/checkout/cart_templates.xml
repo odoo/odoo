@@ -3,22 +3,8 @@
 
     <!-- Lines that show items in the cart. Called in `website_sale.cart`. -->
     <template id="website_sale.cart_lines" name="Shopping Cart Lines">
-        <div
-            t-if="not website_sale_order or not website_sale_order.website_order_line"
-            class="js_cart_lines w-100"
-        >
-            <div class="mt-5 mb-3"><t t-call="website_sale.empty_cart_svg"/></div>
-            <h5 class="mb-3" style="text-align: center;">
-                Your cart is empty!
-            </h5>
-            <p style="text-align: center;">
-                <a href="/shop" class="btn btn-primary">
-                    Shop
-                </a>
-            </p>
-        </div>
         <!-- target tag for interaction to mount cart lines component -->
-        <div t-else="" id="cart_products"/>
+        <div id="cart_products"/>
     </template>
 
     <template id="website_sale.cart_product_price">
