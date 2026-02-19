@@ -235,6 +235,10 @@ export class SelectMenu extends Component {
                 "my-0": this.displayInputInToggler,
                 o_select_menu_menu: true,
                 o_select_menu_multi_select: this.props.multiSelect,
+                "p-0": true,
+                "overflow-hidden": true,
+                "d-flex": true,
+                "flex-column": true,
             },
             this.props.menuClass
         );
