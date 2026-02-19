@@ -38,6 +38,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'reconcile': True,
                 'non_trade': True,
             },
+            'l10n_ng_withholding_receivable': {
+                'name': _("Withholding Tax Payable"),
+                'code': '252004',
+                'account_type': 'asset_receivable',
+                'reconcile': True,
+                'non_trade': True,
+            },
         }
 
     @template('ng')
