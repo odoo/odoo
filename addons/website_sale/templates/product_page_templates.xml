@@ -731,20 +731,25 @@
             t-attf-class="o_product_tags o_field_tags {{ 'd-flex flex-wrap align-items-center gap-2 mb-2 mt-1' if visible_tags else '' }}"
         >
             <t t-foreach="visible_tags" t-as="tag">
-                <span t-if="tag.image"
-                      class="order-0"
-                      t-field="tag.image"
-                      t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
-                />
-                <span t-else="" class="position-relative order-1 py-1 px-2">
-                    <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
-                          t-attf-style="background-color: #{tag.color}; opacity: .2;"
+                <a
+                    t-att-href="keep(shop_path, tags=tag.id)"
+                    class="text-decoration-none d-inline-block"
+                >
+                    <span t-if="tag.image"
+                          class="order-0"
+                          t-field="tag.image"
+                          t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
                     />
-                    <span class="text-nowrap small"
-                          t-attf-style="color: #{tag.color}"
-                          t-field="tag.name"
-                    />
-                </span>
+                    <span t-else="" class="position-relative order-1 py-1 px-2">
+                        <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
+                              t-attf-style="background-color: #{tag.color}; opacity: .2;"
+                        />
+                        <span class="text-nowrap small"
+                              t-attf-style="color: #{tag.color}"
+                              t-field="tag.name"
+                        />
+                    </span>
+                </a>
             </t>
         </div>
     </template>
