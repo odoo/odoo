@@ -31,20 +31,10 @@ export class FeedbackScreen extends Component {
 
         useEffect(
             () => {
-                const waiter = async () => {
-                    try {
-                        if (this.props.waitFor) {
-                            await this.props.waitFor;
-                        }
-                    } finally {
-                        this.state.loading = false;
-                        this.timeout = setTimeout(() => {
-                            this.goNext();
-                        }, 5000);
-                    }
+                this.waiter();
+                return () => {
+                    clearTimeout(this.timeout);
                 };
-
-                waiter();
             },
             () => []
         );
@@ -52,6 +42,19 @@ export class FeedbackScreen extends Component {
         onWillUnmount(() => {
             clearTimeout(this.timeout);
         });
+    }
+
+    async waiter() {
+        try {
+            if (this.props.waitFor) {
+                await this.props.waitFor;
+            }
+        } finally {
+            this.state.loading = false;
+            this.timeout = setTimeout(() => {
+                this.goNext();
+            }, 5000);
+        }
     }
 
     scaleText() {
