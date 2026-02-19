@@ -6,7 +6,6 @@ import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("self_attribute_selector", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Desk Organizer"),
@@ -14,6 +13,7 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
             { name: "Size", value: "M" },
             { name: "Fabric", value: "Leather" },
         ]),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         CartPage.checkAttribute("Desk Organizer", [
             { name: "Size", value: "M" },
@@ -26,6 +26,7 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
             { name: "Size", value: "L" },
             { name: "Fabric", value: "Leather" },
         ]),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         CartPage.checkAttribute("Desk Organizer", [
             { name: "Size", value: "L" },
@@ -42,18 +43,25 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
 });
 
 registry.category("web_tour.tours").add("self_multi_attribute_selector", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Multi Check Attribute Product"),
-        ...ProductPage.setupAttribute(
-            [
-                { name: "Attribute 1", value: "Attribute Val 1" },
-                { name: "Attribute 1", value: "Attribute Val 2" },
-            ],
-            false
-        ),
-        ProductPage.verifyIsCheckedAttribute("Attribute 1", ["Attribute Val 1", "Attribute Val 2"]),
+        ...ProductPage.setupAttribute([
+            { name: "Attribute 1", value: "Attribute Val 1" },
+            { name: "Attribute 1", value: "Attribute Val 2" },
+        ]),
+        {
+            content: `Select value for attribute Attribute 1`,
+            trigger: `div h2:contains(Attribute 1)`,
+        },
+        {
+            content: "Check that there are 2 and only 2 attribute buttons",
+            trigger: `.self_order_attribute_selection:has(button:count(2))`,
+        },
+        {
+            content: "Check content attribute buttons",
+            trigger: `.self_order_attribute_selection:has(button:contains(Attribute val 1)):has(button:contains(Attribute val 2))`,
+        },
     ],
 });
 
@@ -63,12 +71,14 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
         ProductPage.waitProduct("Chair"),
         ProductPage.clickProduct("Chair"),
         ...ProductPage.setupAttribute([{ name: "Color", value: "White" }]),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Chair", "10", "1"),
         CartPage.checkAttribute("Chair", [{ name: "Color", value: "White" }]),
         CartPage.clickBack(),
         ProductPage.clickProduct("Chair"),
         ...ProductPage.setupAttribute([{ name: "Color", value: "Red" }]),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Chair", "15", "1"),
         CartPage.checkAttribute("Chair", [{ name: "Color", value: "Red" }]),
@@ -118,22 +128,19 @@ registry.category("web_tour.tours").add("test_self_order_multi_check_attribute_w
                 content: "Check no required badge for Add-ons attribute",
                 trigger: "h2:contains('Add-ons'):not(:has(.badge))",
             },
-            ProductPage.setupAttribute(
-                [
-                    { name: "Fabric", value: "Leather" },
-                    { name: "Add-ons", value: "Pen Holder" },
-                    { name: "Add-ons", value: "Mini Drawer" },
-                    { name: "Colour", value: "Blue" },
-                ],
-                false
-            ),
+            ProductPage.setupAttribute([
+                { name: "Fabric", value: "Leather" },
+                { name: "Add-ons", value: "Pen Holder" },
+                { name: "Add-ons", value: "Mini Drawer" },
+                { name: "Colour", value: "Blue" },
+            ]),
             Utils.checkMissingRequiredsExists(),
             Utils.clickMissingRequireds(),
             {
                 content: "Size attribute selection is visible",
                 trigger: "h2:contains('Size'):visible",
             },
-            ProductPage.setupAttribute([{ name: "Size", value: "M" }], false),
+            ProductPage.setupAttribute([{ name: "Size", value: "M" }]),
             negateStep(Utils.checkMissingRequiredsExists()),
             Utils.clickBtn("Add to Cart"),
             Utils.clickBtn("Checkout"),

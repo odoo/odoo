@@ -6,7 +6,6 @@ import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirma
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 
 registry.category("web_tour.tours").add("self_combo_selector", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Office Combo"),
@@ -18,6 +17,9 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                     { name: "Fabric", value: "Leather" },
                 ],
             },
+        ]),
+        Utils.clickBtn("Next"),
+        ...ProductPage.setupCombo([
             {
                 product: "Combo Product 5",
                 attributes: [],
@@ -27,6 +29,7 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                 attributes: [],
             },
         ]),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         {
             trigger: ".btn .oi-plus",
@@ -67,6 +70,7 @@ registry.category("web_tour.tours").add("self_combo_selector_category", {
                 attributes: [],
             },
         ]),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
