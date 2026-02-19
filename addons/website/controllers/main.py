@@ -150,6 +150,32 @@ class Website(Home):
 
         raise request.not_found()
 
+    def http_error_page_system_listing(self):
+        """
+        Listing of error pages for System Pages.
+        """
+        pages = []
+        for page in self['ir.ui.view'].search([('key', '=like', 'http_routing.%')]):
+            # we don't need templates like 'http_routing.http_error'
+            match = re.match(r'http_routing\.(\d{3})$', page.key)
+            if match:
+                route_title = page.key.removeprefix("http_routing.")
+                pages.append({
+                    'route_title': route_title,
+                    'route_url': f"/website/http_error/{match.group(1)}",
+                })
+        return pages
+
+    @http.route("/website/http_error/<int:status_code>", type="http", auth="public", website=True, list_as_website_content=http_error_page_system_listing)
+    def website_http_error_page(self, status_code, **kwargs):
+        """
+        Generic error page renderer for 400, 403, 404, 500, etc.
+        """
+        template = f"http_routing.{status_code}"
+        if not request.env.ref(template, raise_if_not_found=False):
+            template = "http_routing.404"
+        return request.render(template)
+
     @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, readonly=True)
     def website_force(self, website_id, path='/', isredir=False, **kw):
         """ To switch from a website to another, we need to force the website in

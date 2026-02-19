@@ -1509,7 +1509,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def system_page_extra_info(env):
         website = env['website'].get_current_website()
         if website.is_view_active('website_sale.extra_info'):
-            return _lt("Shop Checkout - Extra Information")
+            return [{
+                    'route_title': _lt("Shop Checkout - Extra Information"),
+                    'route_url': '/shop/extra_info',
+                }]
         return False
 
     @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False, list_as_website_content=system_page_extra_info)

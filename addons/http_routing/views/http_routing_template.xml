@@ -97,21 +97,29 @@
         </t>
     </template>
 
-    <template id="403">
+    <template id="403" name="Forbidden">
         <t t-call="web.frontend_layout">
             <div id="wrap">
-                <div class="container">
-                    <h1 class="mt-5">403: Forbidden</h1>
-                    <p>The page you were looking for could not be authorized.</p>
-                </div>
-                    <t t-if="editable or debug">
-                        <t t-call="http_routing.http_error_debug"/>
-                    </t>
-                    <t t-else="">
-                        <div class="container">
-                            <t t-call="http_routing.error_message"/>
+                <div class="oe_structure oe_empty" id="oe_structure_403_layout_1"/>
+                <section class="s_403_error oe_unremovable">
+                    <div class="container">
+                        <section class="s_text_block container oe_unremovable oe_unmovable px-3">
+                            <h1 class="mt-5">403: Forbidden</h1>
+                            <p>The page you were looking for could not be authorized.</p>
+                        </section>
+                        <div class="o_error_block">
+                            <t t-if="editable or debug">
+                                <t t-call="http_routing.http_error_debug"/>
+                            </t>
+                            <t t-else="">
+                                <div class="container">
+                                    <t t-call="http_routing.error_message"/>
+                                </div>
+                            </t>
                         </div>
-                    </t>
+                    </div>
+                </section>
+                <div class="oe_structure oe_empty" id="oe_structure_403_layout_2"/>
             </div>
         </t>
     </template>
