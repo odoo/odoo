@@ -26,7 +26,7 @@
     <template id="product_page_click_and_collect" inherit_id="website_sale.product">
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
             <owl-component
-                t-if="combination_info.get('show_click_and_collect_availability')"
+                t-if="combination_info.get('show_click_and_collect_availability') and not ('rent_ok' in product_variant and product_variant.rent_ok)"
                 name="website_sale_collect.ClickAndCollectAvailability"
                 t-att-props="json.dumps({
                     'productId': product_variant.id,
