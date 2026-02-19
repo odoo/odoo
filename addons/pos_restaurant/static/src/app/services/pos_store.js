@@ -161,7 +161,7 @@ patch(PosStore.prototype, {
             }
         }
     },
-    async mergeOrders(sourceOrder, destOrder) {
+    async _mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
 
@@ -240,7 +240,9 @@ patch(PosStore.prototype, {
                 });
             }
         }
-
+    },
+    async mergeOrders(sourceOrder, destOrder) {
+        await this._mergeOrders(sourceOrder, destOrder);
         await this.deleteOrders([sourceOrder], [], true);
         this.syncAllOrders({ orders: [destOrder] });
         return destOrder;

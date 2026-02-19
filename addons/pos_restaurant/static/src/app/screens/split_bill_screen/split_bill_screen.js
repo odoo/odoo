@@ -123,12 +123,7 @@ export class SplitBillScreen extends Component {
             await this.pos.applyDiscount(discountPercentage, newOrder);
         }
     }
-    async createSplittedOrder() {
-        const curOrderUuid = this.currentOrder.uuid;
-        const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
-        const originalOrderName = this._getOrderName(originalOrder);
-        const newOrderName = this._getSplitOrderName(originalOrderName);
-
+    async _createNewSplitOrder(originalOrder, newOrderName, curOrderUuid) {
         const newOrder = this.pos.createNewOrder();
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
@@ -204,6 +199,15 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
         await this.handleDiscountLines(originalOrder, newOrder);
+        return newOrder;
+    }
+    async createSplittedOrder() {
+        const curOrderUuid = this.currentOrder.uuid;
+        const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
+        const originalOrderName = this._getOrderName(originalOrder);
+        const newOrderName = this._getSplitOrderName(originalOrderName);
+
+        const newOrder = await this._createNewSplitOrder(originalOrder, newOrderName, curOrderUuid);
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });
