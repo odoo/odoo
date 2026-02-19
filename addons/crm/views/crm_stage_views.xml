@@ -25,7 +25,6 @@
                 <field name="is_won"/>
                 <field name="team_ids" widget="many2many_tags"/>
                 <field name="rotting_threshold_days" optional="hide"/>
-                <field name="color" optional="hide" widget="color_picker"/>
             </list>
         </field>
     </record>
@@ -56,7 +55,6 @@
                         </group>
                         <group>
                             <field name="fold" string="Fold by Default"/>
-                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
                     <separator string="Requirements"/>
