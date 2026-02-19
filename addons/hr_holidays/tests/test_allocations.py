@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from freezegun import freeze_time
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, users
 from odoo.tools import format_date
@@ -599,7 +599,7 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_3_days.state, 'validate')
 
         # Can't Refuse 5 days allocation
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(RedirectWarning):
             allocation_5_days.action_refuse()
         self.assertEqual(allocation_5_days.state, 'validate')
 
@@ -618,7 +618,7 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation_5_days.action_refuse()
         self.assertEqual(allocation_5_days.state, 'refuse')
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(RedirectWarning):
             allocation_3_days.action_refuse()
         self.assertEqual(allocation_3_days.state, 'validate')
 
@@ -627,3 +627,65 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_5_days.state, 'validate')
         allocation_3_days.action_refuse()
         self.assertEqual(allocation_3_days.state, 'refuse')
+
+    def test_change_date_to_when_leave_is_validated(self):
+        """
+        Setting date_to before validated leave must raise RedirectWarning.
+        But setting date_to on the validated leave end date is valid.
+        """
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Initial Allocation',
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'number_of_days': 20,
+            'employee_id': self.employee.id,
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 1, 30),
+        })
+        allocation.action_approve()
+
+        leave_request = self.env['hr.leave'].create({
+            'name': 'Leave Request',
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'request_date_from': date(2024, 1, 5),
+            'request_date_to': date(2024, 1, 10),
+            'employee_id': self.employee.id,
+        })
+        leave_request.action_approve()
+        allocation.write({'date_to': date(2024, 1, 10)})
+        self.assertEqual(allocation.date_to, date(2024, 1, 10))
+
+        with self.assertRaises(RedirectWarning):
+            allocation.write({'date_to': date(2024, 1, 9)})
+
+    def test_change_date_to_when_other_allocation_can_cover_leave(self):
+        first_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Primary Allocation',
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'number_of_days': 5,
+            'employee_id': self.employee.id,
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 1, 30),
+        })
+        second_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Secondary Allocation',
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'number_of_days': 20,
+            'employee_id': self.employee.id,
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 12, 31),
+        })
+        first_allocation.action_approve()
+        second_allocation.action_approve()
+
+        leave_request = self.env['hr.leave'].create({
+            'name': 'Leave Request',
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'request_date_from': date(2024, 1, 22),
+            'request_date_to': date(2024, 1, 23),
+            'employee_id': self.employee.id,
+        })
+        leave_request.action_approve()
+
+        # This remains valid because the second allocation still covers the approved leave.
+        first_allocation.write({'date_to': date(2024, 1, 10)})
+        self.assertEqual(first_allocation.date_to, date(2024, 1, 10))
