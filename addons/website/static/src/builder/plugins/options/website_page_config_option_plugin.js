@@ -309,13 +309,13 @@ export class SetWebsiteBreadcrumbVisibilityAction extends BaseWebsitePageConfigA
     isApplied({ value }) {
         return this.websitePageConfig.getVisibilityItem("breadcrumb") === value;
     }
-    apply({ value }) {
+    apply({ value, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("breadcrumb");
         this.history.applyCustomMutation({
             apply: () => this.breadcrumbVisibilityHandlers[value](),
             revert: () => this.breadcrumbVisibilityHandlers[lastValue](),
         });
-        this.websitePageConfig.setDirty();
+        this.websitePageConfig.setDirty(isPreviewing);
     }
 }
 export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
