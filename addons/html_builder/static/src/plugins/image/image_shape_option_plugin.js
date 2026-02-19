@@ -57,6 +57,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         "isTechnicalShape",
         "isAnimableShape",
         "isTogglableRatioShape",
+        "originalOrCurrentImageIsGif",
         "getShapeLabel",
         "loadShape",
     ];
@@ -394,6 +395,13 @@ export class ImageShapeOptionPlugin extends Plugin {
             return false;
         }
         return this.imageShapes[shape].togglableRatio;
+    }
+    originalOrCurrentImageIsGif(img) {
+        const originalSrc = img.dataset.originalSrc || "";
+        if (originalSrc) {
+            return originalSrc.toLowerCase().endsWith(".gif");
+        }
+        return img.src.toLowerCase().endsWith(".gif");
     }
     getImageShapeGroups() {
         return imageShapeDefinitions;
