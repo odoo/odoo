@@ -222,9 +222,12 @@ class StockWarehouseOrderpoint(models.Model):
         """ Confirm the productions only after all the orderpoints have run their
         procurement to avoid the new procurement created from the production conflict
         with them. """
-        self.env['mrp.production'].sudo().search([
-            ('orderpoint_id', 'in', self.ids),
-            ('move_raw_ids', '!=', False),
-            ('state', '=', 'draft'),
-        ]).action_confirm()
+        for orderpoint in self:
+            manufacture_rule = orderpoint.rule_ids.filtered(lambda r: r.action == 'manufacture')
+            if manufacture_rule and not manufacture_rule.draft_production:
+                self.env['mrp.production'].sudo().search([
+                    ('orderpoint_id', '=', orderpoint.id),
+                    ('move_raw_ids', '!=', False),
+                    ('state', '=', 'draft'),
+                ]).action_confirm()
         return super()._post_process_scheduler()

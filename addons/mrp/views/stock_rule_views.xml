@@ -9,6 +9,9 @@
                 <field name="location_dest_from_rule" position="attributes">
                     <attribute name="invisible">action not in ['pull', 'pull_push', 'manufacture']</attribute>
                 </field>
+                <field name="location_dest_from_rule" position="after">
+                    <field name="draft_production" invisible="action != 'manufacture'"/>
+                </field>
             </field>
         </record>
     </data>
