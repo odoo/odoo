@@ -180,6 +180,12 @@ class ProjectTask(models.Model):
             self._ensure_sale_order_linked([sol_id])
         return task
 
+    def _creation_message(self):
+        self.ensure_one()
+        if self.sale_order_id:
+            return ""
+        return super()._creation_message()
+
     # ---------------------------------------------------
     # Actions
     # ---------------------------------------------------
