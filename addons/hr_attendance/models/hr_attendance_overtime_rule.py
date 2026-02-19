@@ -448,6 +448,9 @@ class HrAttendanceOvertimeRule(models.Model):
                 intervals_by_timing_type['schedule'][calendar.id].update(
                     {employee: calendar_intervals for employee in employees}
                 )
+        if "leave" in timing_type_set:
+            for employee in employees:
+                intervals_by_timing_type["leave"][employee] = intervals_by_timing_type["leave"][employee] & schedules_intervals_by_employee["schedule"][employee]["work"]
         return intervals_by_timing_type
 
     def _get_all_overtime_intervals_for_timing_rule(self, min_check_in, max_check_out, attendances, schedules_intervals_by_employee):
