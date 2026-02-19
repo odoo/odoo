@@ -52,7 +52,7 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="picking_type_code_domain" invisible="1"/>
                                 <field name="action"/>
-                                <field name="picking_type_id"/>
+                                <field name="picking_type_id" options="{'no_quick_create': True}"/>
                                 <field name="location_src_id" options="{'no_create': True}" required="action in ['pull', 'push', 'pull_push']"/>
                                 <field name="location_dest_id" options="{'no_create': True}"/>
                                 <field name="location_dest_from_rule" invisible="action not in ['pull', 'pull_push']" groups="base.group_no_one"/>
