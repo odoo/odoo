@@ -122,6 +122,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
             'allocation_type': 'regular',
+            'multi_employee': True
         })
 
         department_allocation.action_validate()
@@ -137,6 +138,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
             'allocation_type': 'regular',
+            'multi_employee': True
         })
 
         category_allocation.action_validate()
