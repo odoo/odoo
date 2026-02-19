@@ -15,7 +15,7 @@
                     <field name="adyen_api_url_prefix" required="code == 'adyen' and state == 'enabled'"/>
                 </group>
             </group>
-            <group name="provider_config" position='before'>
+            <group name="payment_form" position='before'>
                 <div invisible="code != 'adyen' or not capture_manually"
                      class="alert alert-warning"
                      role="alert">

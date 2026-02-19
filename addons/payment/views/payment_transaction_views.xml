@@ -80,37 +80,17 @@
         <field name="arch" type="xml">
             <list string="Payment Transactions" create="false">
                 <field name="reference"/>
-                <field name="create_date"/>
-                <field name="payment_method_id"/>
-                <field name="provider_id"/>
                 <field name="partner_id"/>
-                <field name="partner_name"/>
                 <!-- Needed to display the currency of the amounts -->
                 <field name="currency_id" column_invisible="True"/>
                 <field name="amount"/>
+                <field name="provider_id"/>
+                <field name="payment_method_id"/>
                 <field name="state"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="create_date"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="is_live" optional="hide"/>
             </list>
-        </field>
-    </record>
-
-    <record id="payment_transaction_kanban" model="ir.ui.view">
-        <field name="name">payment.transaction.kanban</field>
-        <field name="model">payment.transaction</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="false">
-                <field name="currency_id"/>
-                <templates>
-                    <t t-name="card">
-                        <div class="d-flex">
-                            <field name="reference" class="fw-bolder"/>
-                            <field name="amount" class="ms-auto"/>
-                        </div>
-                        <field name="partner_name"/>
-                    </t>
-                </templates>
-            </kanban>
         </field>
     </record>
 
@@ -140,29 +120,6 @@
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>
-        </field>
-    </record>
-
-    <record id="payment_transaction_graph" model="ir.ui.view">
-        <field name="name">payment.transaction.graph</field>
-        <field name="model">payment.transaction</field>
-        <field name="arch" type="xml">
-            <graph string="Payment Transactions">
-                <field name="create_date" interval="month"/>
-                <field name="state"/>
-            </graph>
-        </field>
-    </record>
-
-    <record id="payment_transaction_pivot" model="ir.ui.view">
-        <field name="name">payment.transaction.pivot</field>
-        <field name="model">payment.transaction</field>
-        <field name="arch" type="xml">
-            <pivot string="Payment Transactions" display_quantity="1">
-                <field name="create_date" interval="month" type="row"/>
-                <field name="state" type="col"/>
-                <field name="amount" type="measure"/>
-            </pivot>
         </field>
     </record>
 

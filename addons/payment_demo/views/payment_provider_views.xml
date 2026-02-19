@@ -6,9 +6,9 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <page name="credentials" position="attributes">
+            <group name="provider_credentials" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'demo'"/>
-            </page>
+            </group>
         </field>
     </record>
 

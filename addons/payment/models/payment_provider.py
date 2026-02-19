@@ -178,6 +178,22 @@ class PaymentProvider(models.Model):
         compute='_compute_feature_support_fields',
     )
 
+    # Form view fields
+    payment_transaction_ids = fields.One2many(
+        string="Payment Transactions",
+        comodel_name='payment.transaction',
+        inverse_name='provider_id',
+    )
+    transaction_count = fields.Integer(compute='_compute_transaction_count')
+    txs_amount = fields.Monetary(
+        compute='_compute_transaction_amount', currency_field='main_currency_id'
+    )
+
+    payment_token_ids = fields.One2many(
+        string='Payment Tokens', comodel_name='payment.token', inverse_name='provider_id'
+    )
+    token_count = fields.Integer(compute='_compute_token_count')
+
     # Kanban view fields
     image_128 = fields.Image(string="Image", max_width=128, max_height=128)
     color = fields.Integer(
@@ -206,6 +222,26 @@ class PaymentProvider(models.Model):
                 provider.available_currency_ids = supported_currencies
             else:
                 provider.available_currency_ids = None
+
+    @api.depends('payment_transaction_ids')
+    def _compute_transaction_count(self):
+        for provider in self:
+            provider.transaction_count = (
+                provider.env['payment.transaction'].search_count([
+                    ('provider_id', '=', provider.id)
+                ])
+                or 0
+            )
+
+    @api.depends('payment_transaction_ids')
+    def _compute_transaction_amount(self):
+        #take currency into account
+        domain = [('provider_id', '=', self.id), ('state', '=', 'done')]
+        self.txs_amount = sum(self.env['payment.transaction'].search(domain).mapped('amount'))
+
+    @api.depends('payment_token_ids')
+    def _compute_token_count(self):
+        self.token_count = len(self.payment_transaction_ids)
 
     def _get_supported_currencies(self):
         """Return the supported currencies for the payment provider.
@@ -536,6 +572,28 @@ class PaymentProvider(models.Model):
         if self.state == 'disabled' and not self.is_published:
             raise UserError(_("You cannot publish a disabled provider."))
         self.is_published = not self.is_published
+
+    def action_view_payment_transactions(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Payment Transactions"),
+            'res_model': 'payment.transaction',
+            'view_mode': 'list,kanban,form',
+            'domain': [('id', 'in', self.with_context(active_test=False).payment_transaction_ids.ids)],
+            'context': {'active_test': False, 'create': False},
+        }\
+
+    def action_view_payment_tokens(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Payment Tokens"),
+            'res_model': 'payment.token',
+            'view_mode': 'list,kanban,form',
+            'domain': [('id', 'in', self.with_context(active_test=False).payment_token_ids.ids)],
+            'context': {'active_test': False, 'create': False},
+        }
 
     def action_view_payment_methods(self):
         self.ensure_one()

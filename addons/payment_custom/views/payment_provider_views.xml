@@ -11,15 +11,12 @@
             <field name="code" invisible="1" position="after">
                 <field name="custom_mode" invisible="1"/>
             </field>
-            <page name="credentials" position="attributes">
+            <page name="payment_methods" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </page>
-            <field name="payment_method_ids" position="attributes">
+            <group name="provider_credentials" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
-            </field>
-            <a name="action_view_payment_methods" position="attributes">
-                <attribute name="invisible" separator="or" add="code == 'custom'"/>
-            </a>
+            </group>
             <field name="capture_manually" position="after">
                 <field name="qr_code" invisible="code != 'custom'" />
             </field>
