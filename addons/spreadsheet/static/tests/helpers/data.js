@@ -89,7 +89,7 @@ export function getBasicServerData() {
  *
  * @returns { {definition: Object, columns: Array<Object>}}
  */
-export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
+export function generateListDefinition(model, columns, actionXmlId, orderBy = [], name = "List") {
     const cols = [];
     for (const name of columns) {
         const fieldName = name.split(".")[0]; // in case of property field (eg. partner_properties.my_property)
@@ -110,7 +110,7 @@ export function generateListDefinition(model, columns, actionXmlId, orderBy = []
                 context: {},
                 orderBy,
             },
-            name: "List",
+            name: name,
             actionXmlId,
         },
         columns: cols,
