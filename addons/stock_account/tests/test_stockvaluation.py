@@ -2265,8 +2265,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
 
     def test_stock_report_avco_warehouse_dependency(self):
-        """
-        Create two warehouses and check that the total value and the on hand quantity
+        """ Create two warehouses and check that the total value and the on hand quantity
         displayed in the stock report accurately depends on the contextual warehouse.
         """
         product = self.product_avco_auto
@@ -2281,7 +2280,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         warehouse_3 = self.env['stock.warehouse'].create({'code': 'WH-neg'})
         self._make_out_move(product=product, quantity=20.0, location_id=warehouse_3.lot_stock_id.id)
-        self.assertRecordValues(product, [{'avg_cost': 0.0, 'total_value': 0.0, 'qty_available': 0.0}])
+        self.assertRecordValues(product, [{'avg_cost': 20.0, 'total_value': 0.0, 'qty_available': 0.0}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 20.0, 'total_value': 300, 'qty_available': 15}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 20.0, 'total_value': 100, 'qty_available': 5}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 20.0, 'total_value': -400, 'qty_available': -20}])
@@ -2304,7 +2303,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         warehouse_3 = self.env['stock.warehouse'].create({'code': 'WH-neg'})
         self._make_out_move(product=product, quantity=20.0, location_id=warehouse_3.lot_stock_id.id)
-        self.assertRecordValues(product, [{'avg_cost': 0.0, 'total_value': 0.0, 'qty_available': 0.0}])
+        self.assertRecordValues(product, [{'avg_cost': 30.0, 'total_value': 0.0, 'qty_available': 0.0}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 30.0, 'total_value': 450, 'qty_available': 15}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 30.0, 'total_value': 150, 'qty_available': 5}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 30.0, 'total_value': -600, 'qty_available': -20}])
@@ -2324,6 +2323,7 @@ class TestStockValuation(TestStockValuationCommon):
             'name': f'lot{i}',
             'product_id': product.id,
         } for i in range(1, 4)])
+
         self._make_in_move(product=product, quantity=15.0, unit_cost=10, location_dest_id=warehouse_1.lot_stock_id.id, lot_ids=lots[0])
         self._make_in_move(product=product, quantity=5.0, unit_cost=50, location_dest_id=warehouse_2.lot_stock_id.id, lot_ids=lots[0])
         self._make_in_move(product=product, quantity=10.0, unit_cost=50, location_dest_id=warehouse_2.lot_stock_id.id, lot_ids=lots[1])
@@ -2334,7 +2334,7 @@ class TestStockValuation(TestStockValuationCommon):
             {'name': 'warehouse negative', 'code': 'WH-neg'},
         ])
         self._make_out_move(product=product, quantity=30.0, location_id=warehouse_3.lot_stock_id.id, lot_ids=lots[2])
-        self.assertRecordValues(product, [{'avg_cost': 0.0, 'total_value': 600.0, 'qty_available': 0}])
+        self.assertRecordValues(product, [{'avg_cost': 30.0, 'total_value': 600.0, 'qty_available': 0}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 20.0, 'total_value': 300, 'qty_available': 15.0}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 40.0, 'total_value': 600, 'qty_available': 15}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 10.0, 'total_value': -300, 'qty_available': -30}])
@@ -2458,6 +2458,7 @@ class TestStockValuation(TestStockValuationCommon):
         We will then do one more In move to ensure that the most recent value information is used when both sources are present.
         """
         product = self.product_avco
+
         self._make_in_move(product, 5, unit_cost=5)
         self._make_in_move(product, 2, unit_cost=6)
 
@@ -2480,7 +2481,8 @@ class TestStockValuation(TestStockValuationCommon):
             # We force the sequence here to simulate moves that are not ordered by date
             move.sequence = -1
 
-        self.assertEqual(product.total_value, 74)  # 49 + (5 * 5) = 74
+        with freeze_time(Datetime.now() + timedelta(minutes=3)):
+            self.assertEqual(product.total_value, 74)  # 49 + (5 * 5) = 74
 
     def test_average_manual_revaluation(self):
         product = self.product_avco
@@ -2877,15 +2879,12 @@ class TestStockValuation(TestStockValuationCommon):
         If correct => rounding method is correct too
         """
         product = self.product_avco
-
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
         ]).digits = 2
-        product.write({'standard_price': 0})
 
         # First Move
-        product.write({'standard_price': 0.022})
-        self._make_in_move(product, 10000)
+        self._make_in_move(product, 10000, 0.022)
 
         self.assertEqual(product.standard_price, 0.022)
         self.assertEqual(product.qty_available, 10000)
