@@ -169,7 +169,7 @@ const canEdit = () => [
     },
     {
         content: "Check that field becomes dirty",
-        trigger: ':iframe span[data-oe-expression="test_model.name"].o_dirty',
+        trigger: ':iframe span[data-oe-expression="test_model.name"][data-dirty-element]',
     },
     ...clickOnSave(),
     {

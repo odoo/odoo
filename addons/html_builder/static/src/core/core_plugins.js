@@ -35,6 +35,7 @@ import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin"
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
+import { DirtMarkPlugin } from "./dirt_mark_plugin";
 
 const mainEditorPluginsToRemove = [
     "PowerButtonsPlugin",
@@ -68,6 +69,7 @@ export const MAIN_PLUGINS = [
     CompositeActionPlugin,
     CoreBuilderActionPlugin,
     CustomizeTabPlugin,
+    DirtMarkPlugin,
     DisableSnippetsPlugin,
     DropZonePlugin,
     DropZoneSelectorPlugin,

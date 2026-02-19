@@ -139,7 +139,6 @@ class SocialMediaOptionPlugin extends Plugin {
         "newLinkElement",
         "getRecordedSocialMedia",
         "setRecordedSocialMedia",
-        "setRecordedSocialMediaAreEdited",
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
@@ -163,6 +162,7 @@ class SocialMediaOptionPlugin extends Plugin {
             AddSocialMediaLinkAction,
         },
         normalize_handlers: this.normalize.bind(this),
+        has_unsaved_data_predicates: () => this.changedRecordedSocialMedia().size,
         save_handlers: this.saveRecordedSocialMedia.bind(this),
         content_not_editable_selectors: [".s_share"],
         content_editable_selectors: [
@@ -183,16 +183,18 @@ class SocialMediaOptionPlugin extends Plugin {
 
     setup() {
         this.recordedSocialMedia = new Map();
+        this.savedRecordedSocialMedia = new Map();
     }
 
     getRecordedSocialMedia(key) {
         return this.recordedSocialMedia.get(key);
     }
     setRecordedSocialMedia(key, value) {
-        this.recordedSocialMedia.set(key, value);
-    }
-    setRecordedSocialMediaAreEdited(value) {
-        this.recordedSocialMediaAreEdited = value;
+        const oldValue = this.recordedSocialMedia.get(key);
+        this.dependencies.history.applyCustomMutation({
+            apply: () => this.recordedSocialMedia.set(key, value),
+            revert: () => this.recordedSocialMedia.set(key, oldValue),
+        });
     }
     async fetchRecordedSocialMedia() {
         if (this.hasStartedLoadingRecordedSocialMedia) {
@@ -216,32 +218,37 @@ class SocialMediaOptionPlugin extends Plugin {
                 this.recordedSocialMedia.set(name, res[0][key] || "");
             }
         }
+        this.savedRecordedSocialMedia = new Map(this.recordedSocialMedia);
         this.config.onChange({ isPreviewing: false });
     }
 
+    changedRecordedSocialMedia() {
+        return new Map(
+            this.recordedSocialMedia
+                .entries()
+                .filter(([k, v]) => v !== this.savedRecordedSocialMedia.get(k))
+        );
+    }
+
     async saveRecordedSocialMedia() {
-        if (!this.recordedSocialMediaAreEdited) {
+        const changed = this.changedRecordedSocialMedia();
+        if (!changed.size) {
             return;
         }
         await this.services.orm.write(
             "website",
             [this.services.website.currentWebsite.id],
-            Object.fromEntries(
-                this.recordedSocialMedia.entries().map(([name, value]) => [`social_${name}`, value])
-            )
+            Object.fromEntries(changed.entries().map(([name, link]) => [`social_${name}`, link]))
         );
-
-        this.recordedSocialMediaAreEdited = false;
+        this.savedRecordedSocialMedia = new Map(this.recordedSocialMedia);
     }
 
     normalize(root) {
         // Add https:// if needed, to the links from db, and the links from dom
-        if (this.recordedSocialMediaAreEdited) {
-            for (const [name, value] of this.recordedSocialMedia.entries()) {
-                const newValue = this.addHttpsIfNeeded(value);
-                if (value !== newValue) {
-                    this.recordedSocialMedia.set(name, newValue);
-                }
+        for (const [name, value] of this.changedRecordedSocialMedia()) {
+            const newValue = this.addHttpsIfNeeded(value);
+            if (value !== newValue) {
+                this.recordedSocialMedia.set(name, newValue);
             }
         }
         for (const element of selectElements(root, ".s_social_media > a[href]")) {
@@ -429,18 +436,7 @@ export class EditRecordedSocialMediaLinkAction extends BuilderAction {
         return this.dependencies.socialMediaOptionPlugin.getRecordedSocialMedia(mainParam);
     }
     apply({ params: { mainParam }, value }) {
-        this.dependencies.socialMediaOptionPlugin.setRecordedSocialMediaAreEdited(true);
-        const oldValue =
-            this.dependencies.socialMediaOptionPlugin.getRecordedSocialMedia(mainParam);
-        this.dependencies.history.applyCustomMutation({
-            apply: () =>
-                this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(mainParam, value),
-            revert: () =>
-                this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(
-                    mainParam,
-                    oldValue
-                ),
-        });
+        this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(mainParam, value);
     }
 }
 export class EditSocialMediaLinkAction extends BuilderAction {

@@ -129,7 +129,7 @@ test("undo hidden and come back to regular", async () => {
 });
 
 test("regular -> hidden -> regular", async () => {
-    await setupWebsiteBuilder("", {
+    const { getEditor } = await setupWebsiteBuilder("", {
         openEditor: true,
         beforeWrapwrapContent: `
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
@@ -146,5 +146,8 @@ test("regular -> hidden -> regular", async () => {
     await contains("[data-label='Header Position'] .dropdown").click();
     await contains(".o-overlay-container [data-action-value='regular']").click();
     const modifiedWrapwrap = queryOne(":iframe #wrapwrap");
+    getEditor()
+        .shared.dirtMark.queryDirtys("page-config")
+        .forEach(({ setClean }) => setClean());
     expect(modifiedWrapwrap).toHaveOuterHTML(precedentWrapwrap);
 });

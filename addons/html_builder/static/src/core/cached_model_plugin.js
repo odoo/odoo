@@ -15,6 +15,13 @@ export class CachedModelPlugin extends Plugin {
     static dependencies = ["history"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
+        has_unsaved_data_predicates: () => {
+            const inventory = {}; // model => { recordId => { field => value } }
+            for (const modelEdit of Object.values(this.modelEditCache.cache)) {
+                modelEdit.collect(inventory);
+            }
+            return Object.keys(inventory).length > 0;
+        },
         save_handlers: this.savePendingRecords.bind(this),
     };
     setup() {
@@ -44,8 +51,8 @@ export class CachedModelPlugin extends Plugin {
     ormSearchRead(model, domain, fields) {
         return this.ormSearchReadCache.read({ model, domain, fields });
     }
-    useModelEdit({ model, recordId, field }) {
-        const modelEdit = this.modelEditCache.read({ model, recordId, field });
+    useModelEdit({ model, recordId }) {
+        const modelEdit = this.modelEditCache.read({ model, recordId });
         // track el ?
         return modelEdit;
     }
@@ -55,26 +62,35 @@ export class CachedModelPlugin extends Plugin {
             modelEdit.collect(inventory);
         }
         // Save inventoried changes.
+        const proms = [];
         for (const [model, records] of Object.entries(inventory)) {
-            for (const [recordId, record] of Object.entries(records)) {
+            for (const [recordIdString, record] of Object.entries(records)) {
                 for (const [field, value] of Object.entries(record)) {
-                    // Currently only ids selection values are supported.
-                    const proms = value
-                        .filter((value) => typeof value.id === "string")
-                        .map((value) =>
-                            this.services.orm.create(value.model, [{ name: value.name }])
-                        );
-                    const createdIDs = (await Promise.all(proms)).flat();
-                    const ids = value
-                        .filter((value) => typeof value.id === "number")
-                        .map((value) => value.id)
-                        .concat(createdIDs);
-                    await this.services.orm.write(model, [parseInt(recordId)], {
-                        [field]: [[6, 0, ids]],
+                    const savePromise = Promise.all(
+                        value.map(async (v) => {
+                            if (typeof v.id === "string") {
+                                const [id] = await this.services.orm.create(value.model, [
+                                    { name: value.name },
+                                ]);
+                                return { ...value, id };
+                            } else {
+                                return v;
+                            }
+                        })
+                    ).then(async (newValue) => {
+                        const recordId = parseInt(recordIdString);
+                        // Currently only ids selection values are supported.
+                        await this.services.orm.write(model, [recordId], {
+                            [field]: [[6, 0, newValue.map((v) => v.id)]],
+                        });
+                        this.modelEditCache
+                            .read({ model, recordId })
+                            .updateSavedValue(field, newValue);
                     });
+                    proms.push(savePromise);
                 }
             }
         }
-        return !!inventory.length;
+        await Promise.all(proms);
     }
 }

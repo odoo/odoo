@@ -660,9 +660,9 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_no_dirty_lazy_image(self):
         website = self.env['website'].browse(1)
         # Enable multiple langs to reduce the chance of the test being silently
-        # broken by ensuring that it receives a lot of extra o_dirty elements.
+        # broken by ensuring that it receives a lot of extra dirty elements.
         # This is done to account for potential later changes in the number of
-        # o_dirty elements caused by legitimate modifications in the code.
+        # dirty elements caused by legitimate modifications in the code.
         # Perfs: `_activate_lang()` does not load .pot so it is perf friendly
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
         lang_es = self.env['res.lang']._activate_lang('es_AR')

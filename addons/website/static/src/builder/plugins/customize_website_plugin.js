@@ -81,24 +81,35 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
+        has_unsaved_data_predicates: () =>
+            this.viewsToEnableOnSave.difference(this.savedViewsEnabled).size > 0 ||
+            this.viewsToDisableOnSave.difference(this.savedViewsDisabled).size > 0,
         save_handlers: this.onSave.bind(this),
     };
 
     async onSave() {
-        if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
+        const toEnable = this.viewsToEnableOnSave.difference(this.savedViewsEnabled);
+        const toDisable = this.viewsToDisableOnSave.difference(this.savedViewsDisabled);
+        if (toEnable.size || toDisable.size) {
             await rpc("/website/theme_customize_data", {
                 is_view_data: true,
-                enable: [...this.viewsToEnableOnSave],
-                disable: [...this.viewsToDisableOnSave],
+                enable: [...toEnable],
+                disable: [...toDisable],
                 reset_view_arch: false,
             });
         }
+        this.viewsToEnableOnSave.clear();
+        this.viewsToDisableOnSave.clear();
+        this.savedViewsEnabled = this.savedViewsEnabled.union(toEnable).difference(toDisable);
+        this.savedViewsDisabled = this.savedViewsDisabled.union(toDisable).difference(toEnable);
     }
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
     viewsToEnableOnSave = new Set();
     viewsToDisableOnSave = new Set();
+    savedViewsEnabled = new Set();
+    savedViewsDisabled = new Set();
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     /**
@@ -894,7 +905,7 @@ class TemplatePreviewableWebsiteConfigAction extends WebsiteConfigAction {
         }
         // Wait one frame to get the proper fade-in animation effect.
         // The promise ensures this completes before continuing, avoiding a race
-        // that could mark the element o_dirty and trigger an unnecessary save.
+        // that could mark the element dirty and trigger an unnecessary save.
         if (params.previewClass) {
             params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
         }

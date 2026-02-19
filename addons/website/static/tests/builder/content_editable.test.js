@@ -16,9 +16,7 @@ import { setSelection } from "@html_editor/../tests/_helpers/selection";
 defineWebsiteModels();
 
 test("Check contenteditable attribute", async () => {
-    expect.assertions(8);
-
-    await setupWebsiteBuilder(`
+    const { getEditor } = await setupWebsiteBuilder(`
         <section>
             <div class="not_a_container_class">
                 <div class="container"></div>
@@ -50,10 +48,13 @@ test("Check contenteditable attribute", async () => {
         // Make sure the content is saved and doesn't contain "contenteditable"
         expect(args[1].includes("<section")).toBe(true);
         expect(args[1].includes("contenteditable")).toBe(false);
+        expect.step("save");
         return true;
     });
     queryOne(":iframe .o_container_small").textContent = "dirty for save";
+    getEditor().shared.history.addStep();
     await contains(".o-snippets-top-actions [data-action='save']").click();
+    await expect.waitForSteps(["save"]);
 });
 
 test("Check contenteditable on Parallax snippet", async () => {

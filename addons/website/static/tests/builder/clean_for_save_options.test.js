@@ -1,12 +1,14 @@
-import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { expect, test, describe } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 
-describe.current.tags("desktop");
+defineWebsiteModels();
 
 test("clean for save of option with selector that matches an element on the page", async () => {
+    onRpc("ir.ui.view", "save", () => true);
     addBuilderOption(
         class extends BaseOptionComponent {
             static selector = ".test-options-target";
@@ -20,7 +22,7 @@ test("clean for save of option with selector that matches an element on the page
             }
         }
     );
-    const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
     const editor = getEditor();
     await contains(":iframe .test-options-target").click();
     // Add an option to mark the document as 'dirty' and trigger a "clean for
@@ -31,6 +33,7 @@ test("clean for save of option with selector that matches an element on the page
 });
 
 test("clean for save of option with selector and exclude that matches an element on the page", async () => {
+    onRpc("ir.ui.view", "save", () => true);
     addBuilderOption(
         class extends BaseOptionComponent {
             static selector = ".test-options-target";
@@ -55,7 +58,7 @@ test("clean for save of option with selector and exclude that matches an element
                 `;
         }
     );
-    const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
     const editor = getEditor();
     await contains(":iframe .test-options-target").click();
     // Add an option to mark the document as 'dirty' and trigger a "clean for

@@ -1,4 +1,3 @@
-import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
@@ -17,6 +16,7 @@ function isSavable(el) {
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    static dependencies = ["savePlugin"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         get_options_container_top_buttons: withSequence(
@@ -39,29 +39,6 @@ export class SaveSnippetPlugin extends Plugin {
         ];
     }
 
-    /**
-     * Execute the `before_save_handlers` on {@link snippetEl},
-     * then execute {@link callback}, and finally execute the
-     * `after_save_handlers` on {@link snippetEl}.
-     * This is used, for example, to stop the interactions before cloning a
-     * snippet, and restarting them after cloning it.
-     *
-     * @param {HTMLElement} snippetEl
-     * @param {Function} callback
-     */
-    async wrapWithBeforeAfterSaveHandlers(snippetEl, callback) {
-        await Promise.all(
-            this.getResource("before_save_handlers").map((handler) => handler(snippetEl))
-        );
-        let node;
-        try {
-            node = callback();
-        } finally {
-            this.getResource("after_save_handlers").forEach((handler) => handler(snippetEl));
-        }
-        return node;
-    }
-
     async saveSnippet(el) {
         // When saving a parent handler, save the child snippet instead
         if (el.matches(BLOCKQUOTE_PARENT_HANDLERS)) {
@@ -70,15 +47,16 @@ export class SaveSnippetPlugin extends Plugin {
                 el = childBlockquote;
             }
         }
-        const cleanForSaveHandlers = [
-            ...this.getResource("clean_for_save_handlers"),
-            ({ root }) => escapeTextNodes(root),
-        ];
-        const savedName = await this.config.saveSnippet(
-            el,
-            cleanForSaveHandlers,
-            this.wrapWithBeforeAfterSaveHandlers.bind(this)
-        );
+        const savedName = await this.config.saveSnippet(el, async (el) => {
+            await Promise.all(
+                this.getResource("before_save_handlers").map((handler) => handler(el))
+            );
+            try {
+                return this.dependencies.savePlugin.prepareElementForSave(el);
+            } finally {
+                this.getResource("after_save_handlers").forEach((handler) => handler(el));
+            }
+        });
         if (savedName) {
             if (this.delegateTo("custom_snippets_notification_handlers", savedName)) {
                 return;

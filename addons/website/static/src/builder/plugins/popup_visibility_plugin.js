@@ -73,7 +73,8 @@ export class PopupVisibilityPlugin extends Plugin {
     cleanForSave({ root: rootEl }) {
         // Hide the popups manually, as we cannot rely on the `onTargetHide`
         // flow since the cleaned popup is a clone and is not in the DOM.
-        for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {
+        // Do not hide the popup if it is the root
+        for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show:not(:scope > *)")) {
             modalEl.parentElement.dataset.invisible = "1";
             // Do not call .hide() directly, because it is queued whereas
             // .dispose() is not.
