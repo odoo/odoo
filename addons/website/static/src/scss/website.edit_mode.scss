@@ -1,27 +1,27 @@
-$-editor-messages-margin-x: 2%;
-%o-editor-messages {
-    background: $o-we-dropzone-bg-color;
-    text-align: center;
-    color: #fff;
-    outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
-    outline-offset: -$o-we-dropzone-border-width;
+// $-editor-messages-margin-x: 2%;
+// %o-editor-messages {
+//     background: $o-we-dropzone-bg-color;
+//     text-align: center;
+//     color: #fff;
+//     outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
+//     outline-offset: -$o-we-dropzone-border-width;
 
-    &:before {
-        content: attr(data-editor-message);
-        display: block;
-        font-size: 20px;
-    }
-    // Show the default editor message only for "empty" elements
-    &:not(:empty) {
-        &[data-editor-message-default]:before {
-            content: none;
-        }
-    }
-    &:after {
-        content: attr(data-editor-sub-message);
-        display: block;
-    }
-}
+//     &:before {
+//         content: attr(data-editor-message);
+//         display: block;
+//         font-size: 20px;
+//     }
+//     // Show the default editor message only for "empty" elements
+//     &:not(:empty) {
+//         &[data-editor-message-default]:before {
+//             content: none;
+//         }
+//     }
+//     &:after {
+//         content: attr(data-editor-sub-message);
+//         display: block;
+//     }
+// }
 %o-disable-iframes {
     iframe {
         pointer-events: none;
@@ -88,52 +88,52 @@ $-editor-messages-margin-x: 2%;
         }
     }
 
-    // This style block is about the "editor message" which highlights the areas
-    // where the user can drag & drop snippets.
-    &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
-        // Base case (website.page (#wrap), t-field (product description), ..)
-        > .oe_drop_zone.oe_insert:not(.oe_vertical) {
-            @extend %o-editor-messages;
-            height: auto;
+    // // This style block is about the "editor message" which highlights the areas
+    // // where the user can drag & drop snippets.
+    // &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
+    //     // Base case (website.page (#wrap), t-field (product description), ..)
+    //     > .oe_drop_zone.oe_insert:not(.oe_vertical) {
+    //         @extend %o-editor-messages;
+    //         height: auto;
 
-            // Empty editable element during drag & drop
-            &:only-child {
-                margin: 20px $-editor-messages-margin-x;
-                width: 100% - $-editor-messages-margin-x * 2;
-                padding: 12px 0px;
-            }
+    //         // Empty editable element during drag & drop
+    //         &:only-child {
+    //             margin: 20px $-editor-messages-margin-x;
+    //             width: 100% - $-editor-messages-margin-x * 2;
+    //             padding: 12px 0px;
+    //         }
 
-            &:not(:only-child) {
-                &::before {
-                    font-size: 16px;
-                }
-                &[data-editor-message-default]::before {
-                    content: none;
-                }
-            }
-        }
+    //         &:not(:only-child) {
+    //             &::before {
+    //                 font-size: 16px;
+    //             }
+    //             &[data-editor-message-default]::before {
+    //                 content: none;
+    //             }
+    //         }
+    //     }
 
-        // Exception 1: empty wrap NOT during drag & drop
-        &#wrap:empty {
-            @extend %o-editor-messages;
-            padding: 112px 0px;
-            margin: 20px $-editor-messages-margin-x;
-            border-radius: $border-radius-lg;
-        }
+    //     // Exception 1: empty wrap NOT during drag & drop
+    //     &#wrap:empty {
+    //         @extend %o-editor-messages;
+    //         padding: 112px 0px;
+    //         margin: 20px $-editor-messages-margin-x;
+    //         border-radius: $border-radius-lg;
+    //     }
 
-        // Exception 2: empty wrap during drag & drop (override of base case)
-        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
-            padding: 112px 0px;
-            text-shadow: none;
-        }
+    //     // Exception 2: empty wrap during drag & drop (override of base case)
+    //     &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+    //         padding: 112px 0px;
+    //         text-shadow: none;
+    //     }
 
-        > p:empty:only-child {
-            color: #aaa;
-        }
-    }
-    &[data-oe-type=html].oe_empty:empty {
-        @extend %o-editor-messages;
-    }
+    //     > p:empty:only-child {
+    //         color: #aaa;
+    //     }
+    // }
+    // &[data-oe-type=html].oe_empty:empty {
+    //     @extend %o-editor-messages;
+    // }
 }
 .editor_enable [data-oe-readonly]:hover {
     cursor: default;
