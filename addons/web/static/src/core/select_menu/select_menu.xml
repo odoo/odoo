@@ -63,7 +63,7 @@
                 </t>
                 <t t-set-slot="content">
                     <button t-if="isBottomSheet and canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="onInputClear">Clear</button>
-                    <div class="o_select_menu_searchbox position-sticky start-0 d-empty-none" t-att-data-id="selectMenuId">
+                    <div class="o_select_menu_searchbox position-sticky start-0 d-empty-none z-1" t-att-data-id="selectMenuId">
                         <t t-if="displayInputInDropdown">
                             <t t-set="inputClass" t-value="'o_select_menu_input dropdown-item'"/>
                             <t t-call="web.SelectMenu.search" />
