@@ -679,8 +679,10 @@ test("When they are a lot of choices, not all are show at first and scrolling lo
     await open();
     expect(".o_select_menu_item, .o_select_menu_group").toHaveCount(scrollSettings.defaultCount);
 
-    queryOne(".o_select_menu_menu").scrollTo({
-        top: queryOne(".o_select_menu_menu").scrollHeight - scrollSettings.distanceBeforeReload,
+    queryOne(".o_select_menu_menu .o_select_menu-choices").scrollTo({
+        top:
+            queryOne(".o_select_menu_menu .o_select_menu-choices").scrollHeight -
+            scrollSettings.distanceBeforeReload,
     });
     await animationFrame();
 
