@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     removeClass,
-    removeStyle,
     toggleClass,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -10,7 +9,6 @@ import {
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
-    isElement,
     isEmptyBlock,
     isListElement,
     isListItemElement,
@@ -18,7 +16,6 @@ import {
     isProtected,
     isProtecting,
     isShrunkBlock,
-    isVisibleTextNode,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
@@ -37,7 +34,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
+import { getTextColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
@@ -45,7 +42,6 @@ import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
-import { isColorGradient } from "@web/core/utils/colors";
 
 const listSelectorItems = [
     {
@@ -391,6 +387,7 @@ export class ListPlugin extends Plugin {
     baseContainerToList(baseContainer, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
         const list = insertListAfter(this.document, baseContainer, mode, childNodes(baseContainer));
+        //same for color and fontsize as well?
         const textAlign = baseContainer.style.getPropertyValue("text-align");
         if (textAlign) {
             // Copy text-align style from base container to li.
@@ -769,15 +766,11 @@ export class ListPlugin extends Plugin {
             }
             // text color
             if (liColorStyle) {
-                const font = wrapChildren(block, "font");
-                if (liColorStyle.type === "style") {
-                    font.style.color = liColorStyle.value;
-                } else if (liColorStyle.type === "class") {
-                    font.classList.add(liColorStyle.value);
-                }
+                this.dependencies.color.colorElement(block, liColorStyle.value, "color");
             }
             // font-size
             if (liFontSizeStyle && !isEmptyBlock(block)) {
+                // see me once
                 const span = wrapChildren(block, "span");
                 if (liFontSizeStyle.type === "font-size") {
                     span.style.fontSize = liFontSizeStyle.value;
@@ -1107,65 +1100,6 @@ export class ListPlugin extends Plugin {
             pointerOffsetY >= checkboxPosition.top &&
             pointerOffsetY <= checkboxPosition.bottom
         );
-    }
-
-    applyColorToListItem(color, mode) {
-        this.dependencies.split.splitSelection();
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        const listItems = new Set(
-            targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
-        );
-        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
-            return;
-        }
-        const cursors = this.dependencies.selection.preserveSelection();
-        for (const listItem of listItems) {
-            if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
-                for (const node of [
-                    listItem,
-                    ...descendants(listItem).filter(
-                        (n) => isElement(n) && closestElement(n, "LI") === listItem
-                    ),
-                ]) {
-                    // Remove any color-related classes.
-                    const classesToRemove = [...node.classList].filter(
-                        (cls) => cls === "o_default_color" || TEXT_CLASSES_REGEX.test(cls)
-                    );
-                    removeClass(node, ...classesToRemove);
-
-                    if (node.style.color) {
-                        removeStyle(node, "color");
-                    }
-                }
-
-                if (color) {
-                    this.dependencies.color.colorElement(listItem, color, mode);
-                    const sublists = childNodes(listItem).filter(isListElement);
-                    for (const list of sublists) {
-                        list.classList.add("o_default_color");
-                    }
-                }
-            } else if (
-                color === "" &&
-                (listItem.style.color ||
-                    [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
-            ) {
-                const textNodes = targetedNodes.filter(
-                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
-                );
-                // Remove inline color from partial selection by
-                // wrapping in font with default color.
-                for (const node of textNodes) {
-                    const font = this.document.createElement("font");
-                    font.classList.add("o_default_color");
-                    node.before(font);
-                    cursors.update(callbacksForCursorUpdate.before(node, font));
-                    font.append(node);
-                    cursors.update(callbacksForCursorUpdate.append(font, node));
-                }
-            }
-        }
-        cursors.restore();
     }
 
     postColorAppliedOnList(coloredElement, color, mode) {

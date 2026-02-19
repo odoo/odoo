@@ -541,10 +541,8 @@ export class ColorPlugin extends Plugin {
         }
         if (color) {
             element.style[mode] = color;
-        } else if (!color && mode === "color") {
-            if (element.style[mode]) {
-                removeStyle(element, "color");
-            }
+        } else {
+            removeStyle(element, mode);
         }
     }
 }
