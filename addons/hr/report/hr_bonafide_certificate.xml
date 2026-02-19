@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_bonafide_certificate" model="ir.actions.report">
+        <field name="name">Bonafide Certificate</field>
+        <field name="model">hr.bonafide.certificate.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr.report_bonafide_certificate</field>
+        <field name="report_file">hr.report_bonafide_certificate</field>
+        <field name="print_report_name">'Bonafide Certificate - %s' % (object.employee_id.name)</field>
+    </record>
+
+    <template id="report_bonafide_certificate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center mt-5 mb-4">
+                            <h2 class="text-decoration-underline"><strong>BONAFIDE CERTIFICATE</strong></h2>
+                        </div>
+                        <div class="text-center mb-5">
+                            <h4>TO WHOMSOEVER IT MAY CONCERN</h4>
+                        </div>
+                        <div class="mt-5 lh-lg text-justify">
+                            <p class="ps-5">
+                                This is to certify that Mr./Ms. <strong><span t-field="o.employee_id.name"/></strong>
+                                is a bonafide employee of <strong><span t-field="o.employee_id.company_id.name"/></strong>,
+                                having its registered office at
+                                <strong>
+                                    <t t-if="o.employee_id.company_id.city"><span t-field="o.employee_id.company_id.city"/>, </t>
+                                    <t t-if="o.employee_id.company_id.state_id"><span t-field="o.employee_id.company_id.state_id.name"/>, </t>
+                                    <t t-if="o.employee_id.company_id.zip"><span t-field="o.employee_id.company_id.zip"/>, </t>
+                                    <t t-if="o.employee_id.company_id.country_id"><span t-field="o.employee_id.company_id.country_id.name"/></t>
+                                </strong>.
+                                He/She has been associated with our organization since
+                                <strong><span t-field="o.joining_date" t-options='{"format": "MMMM d, y"}'/></strong>
+                                and is currently working as a
+                                <strong>
+                                    <t t-if="o.employee_id.job_title"><span t-field="o.employee_id.job_title"/></t>
+                                    <t t-elif="o.employee_id.job_id"><span t-field="o.employee_id.job_id.name"/></t>
+                                    <t t-else="">Employee</t>
+                                </strong>.
+                            </p>
+                            <p class="ps-5 mt-3">
+                                This certificate is issued upon his/her request for the purpose of
+                                <strong><t t-out="o.get_reason_display()"/></strong>.
+                            </p>
+                        </div>
+                        <div class="mt-4 ps-5">
+                            <p><strong>Date:</strong> <span t-field="o.request_date" t-options='{"format": "MMMM d, y"}'/></p>
+                        </div>
+                        <div class="text-end pe-5 mt-5">
+                            <div class="d-inline-block border-bottom border-dark mb-2" style="width: 150px;"></div>
+                            <p><strong>Authorized Signature</strong></p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
