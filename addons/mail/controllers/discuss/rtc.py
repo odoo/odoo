@@ -177,22 +177,19 @@ class RtcController(Controller):
     # Recording / Transcription
     ##########
 
-    def _get_recording_destination(self, channel_id):
+    def _get_recording_destination(self, call_history):
         """Save the recording, to be overriden by (cloud) storage modules"""
 
-    def _handleAudioFile(self, channel_id, start_dt, end_dt, transcribe=False, main_media=False):
+    def _handleAudioFile(self, call_history, start_dt, end_dt, transcribe=False, main_media=False):
         """
         TODO move to call_history model
         Handle the audio file received from the SFU, to be overriden by the AI for transcription"""
         file_data = request.httprequest.get_data()
         if not file_data:
             raise BadRequest()
-        call_history = request.env["discuss.call.history"].sudo().create({
-            "channel_id": channel_id.id,
-            "start_dt": start_dt,
-            "end_dt": end_dt,
-        })
         content_type = request.httprequest.content_type or "audio/ogg"
+        # TODO: once https://github.com/odoo/odoo/pull/233836 is merged,
+        # this should be a call artifact.
         attachment = request.env["ir.attachment"].sudo().create({
             "name": f"audio_{call_history.id}",
             "type": "binary",
@@ -209,30 +206,30 @@ class RtcController(Controller):
         return attachment, call_history
 
     @route(
-        '/mail/rtc/recording/<model("discuss.channel"):channel>/audio',
+        '/mail/rtc/recording/<model("discuss.call.history"):call_history>/audio',
         type="http",
         auth="public",
         methods=["POST"],
         cors="*",
         csrf=False,
     )
-    def audio_recording(self, channel, start, end, transcribe=False, main_media=False):
-        _check_jwt(request, channel)
+    def audio_recording(self, call_history, start, end, transcribe=False, main_media=False):
+        _check_jwt(request, call_history.channel_id)
         if not start or not end:
             raise BadRequest()
         start_dt = datetime.fromtimestamp(int(start) / 1000)
         end_dt = datetime.fromtimestamp(int(end) / 1000)
-        attachment, call_history = self._handleAudioFile(channel, start_dt, end_dt, transcribe, main_media)
-        return request.make_json_response({"status": "OK", "channel_id": channel.id, "attachment_id": attachment.id, "call_history_id": call_history.id}, status=200)
+        attachment, call_history = self._handleAudioFile(call_history, start_dt, end_dt, transcribe, main_media)
+        return request.make_json_response({"status": "OK", "channel_id": call_history.channel_id.id, "attachment_id": attachment.id, "call_history_id": call_history.id}, status=200)
 
     @route(
-        '/mail/rtc/recording/<model("discuss.channel"):channel>/routing',
+        '/mail/rtc/recording/<model("discuss.call.history"):call_history>/routing',
         type="http",
         auth="public",
         cors="*",
     )
-    def get_routing(self, channel):
-        _check_jwt(request, channel)
+    def get_routing(self, call_history):
+        _check_jwt(request, call_history.channel_id)
         return request.make_json_response({
-            "destination": self._get_recording_destination(channel),
+            "destination": self._get_recording_destination(call_history),
         }, status=200)

@@ -514,8 +514,11 @@ class DiscussChannelMember(models.Model):
         }
 
     def _get_recording_address(self):
-        # return None (return route from the module that implements recording and transcription processing)
-        return f"{self.get_base_url()}/mail/rtc/recording/{self.channel_id.id}"
+        call_history = self.env["discuss.call.history"].sudo().search([
+            ("channel_id", "=", self.channel_id.id), ("end_dt", "=", False),
+        ], limit=1)
+        # TODO: move that logic to the right modules (should be in cloud)
+        return f"{self.get_base_url()}/mail/rtc/recording/{call_history.id}" if call_history else None
 
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
         sfu_channel_uuid = self.channel_id.sfu_channel_uuid
