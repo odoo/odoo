@@ -119,7 +119,7 @@ class PrinterDriverBase(Driver, ABC):
         width = int((im.width + 7) / 8)
 
         raster_send = b'\x1d\x76\x30\x00'
-        max_slice_height = 255
+        max_slice_height = 100
 
         raster_data = b''
         dots = im.tobytes()
@@ -255,7 +255,7 @@ class PrinterDriverBase(Driver, ABC):
             with self.escpos_lock, EscposIO(self.escpos_device, autocut=False) as esc:
                 esc.printer.open()
                 if not self._check_status_escpos(esc.printer, action_unique_id):
-                    return False
+                    raise EscposNotAvailableError
                 esc.printer._raw(data)
             self.send_status(status='success')
             return True
