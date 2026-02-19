@@ -1,15 +1,33 @@
-from odoo import fields, models
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import _, models
+
+TOTP_RATE_LIMITS = {
+    'totp_code_check': (5, 3600),
+    'totp_send_email': (5, 3600),
+}
+
+TOTP_RATE_LIMIT_MESSAGES = {
+    'totp_send_email': _(
+        'You reached the limit of authentication mails sent for your account,'
+        ' please try again later.'
+    ),
+    'totp_code_check': _(
+        'You reached the limit of code verifications for your account,'
+        ' please try again later.'
+    ),
+}
 
 
-class AuthTotpRateLimitLog(models.TransientModel):
-    _name = 'auth.totp.rate.limit.log'
-    _description = 'TOTP rate limit logs'
+class RateLimitLog(models.TransientModel):
+    _inherit = 'rate.limit.log'
 
-    _user_id_limit_type_create_date_idx = models.Index("(user_id, limit_type, create_date)")
+    def _rate_limit_get_config(self, scope):
+        if scope in TOTP_RATE_LIMITS:
+            return TOTP_RATE_LIMITS[scope]
+        return super()._rate_limit_get_config(scope)
 
-    user_id = fields.Many2one('res.users', required=True, readonly=True)
-    ip = fields.Char(readonly=True)
-    limit_type = fields.Selection([
-        ('send_email', 'Send Email'),
-        ('code_check', 'Code Checking'),
-    ], readonly=True)
+    def _rate_limit_get_error_message(self, scope):
+        if scope in TOTP_RATE_LIMIT_MESSAGES:
+            return TOTP_RATE_LIMIT_MESSAGES[scope]
+        return super()._rate_limit_get_error_message(scope)

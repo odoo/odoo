@@ -136,7 +136,8 @@ class ResUsers(models.Model):
 
     def _check_credentials(self, credentials, env):
         if credentials['type'] == 'totp_mail':
-            self._totp_rate_limit('code_check')
+            ip = request.httprequest.environ['REMOTE_ADDR']
+            self.env['rate.limit.log']._rate_limit_check('totp_code_check', ip, identity_key=str(self.id))
             user = self.sudo()
             key = user._get_totp_mail_key()
             match = TOTP(key).match(credentials['token'], window=3600, timestep=3600)
@@ -144,8 +145,8 @@ class ResUsers(models.Model):
                 _logger.info("2FA check (mail): FAIL for %s %r", user, user.login)
                 raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
             _logger.info("2FA check(mail): SUCCESS for %s %r", user, user.login)
-            self._totp_rate_limit_purge('code_check')
-            self._totp_rate_limit_purge('send_email')
+            self.env['rate.limit.log']._rate_limit_purge('totp_code_check', identity_key=str(self.id))
+            self.env['rate.limit.log']._rate_limit_purge('totp_send_email', identity_key=str(self.id))
             return {
                 'uid': self.env.user.id,
                 'auth_method': 'totp_mail',
@@ -175,7 +176,8 @@ class ResUsers(models.Model):
 
     def _send_totp_mail_code(self):
         self.ensure_one()
-        self._totp_rate_limit('send_email')
+        ip = request.httprequest.environ['REMOTE_ADDR']
+        self.env['rate.limit.log']._rate_limit_check('totp_send_email', ip, identity_key=str(self.id))
 
         if not self.email:
             raise UserError(_("Cannot send email: user %s has no email address.", self.name))

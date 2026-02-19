@@ -7,6 +7,7 @@ from . import ir_model
 from . import ir_ui_menu
 from . import ir_ui_view
 from . import models
+from . import rate_limit_log
 from . import base_document_layout
 from . import res_config_settings
 from . import res_partner
