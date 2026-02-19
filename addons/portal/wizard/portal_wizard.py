@@ -113,15 +113,17 @@ class PortalWizardUser(models.TransientModel):
             user = portal_wizard_user.partner_id.with_context(active_test=False).user_ids
             portal_wizard_user.user_id = user[0] if user else False
 
-    @api.depends('user_id', 'user_id.groups_id')
+    @api.depends('user_id', 'user_id.active', 'user_id.groups_id')
     def _compute_group_details(self):
         for portal_wizard_user in self:
             user = portal_wizard_user.user_id
 
+            # If a user was internal when archived, reusing
+            # their user for portal should be done via settings
             if user and user._is_internal():
                 portal_wizard_user.is_internal = True
                 portal_wizard_user.is_portal = False
-            elif user and user._is_portal():
+            elif user and user.active and user._is_portal():
                 portal_wizard_user.is_internal = False
                 portal_wizard_user.is_portal = True
             else:
@@ -153,26 +155,24 @@ class PortalWizardUser(models.TransientModel):
             company = self.partner_id.company_id or self.env.company
             user_sudo = self.sudo().with_company(company.id)._create_user()
 
-        if not user_sudo.active or not self.is_portal:
-            user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
-            # prepare for the signup process
-            user_sudo.partner_id.signup_prepare()
+        # users whose access was revoked used to be assigned to the public group
+        user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
+        # prepare for the signup process
+        user_sudo.partner_id.signup_prepare()
 
         self.with_context(active_test=True)._send_email()
 
         return self.action_refresh_modal()
 
     def action_revoke_access(self):
-        """Remove the user of the partner from the portal group.
+        """Archive the portal user of the partner.
 
-        If the user was only in the portal group, we archive it.
+        User is kept in `group_portal` as `group_public` should only be
+        used for automated tasks and guest interactions.
         """
         self.ensure_one()
         if not self.is_portal:
             raise UserError(_('The partner "%s" has no portal access or is internal.', self.partner_id.name))
-
-        group_portal = self.env.ref('base.group_portal')
-        group_public = self.env.ref('base.group_public')
 
         self._update_partner_email()
 
@@ -181,9 +181,8 @@ class PortalWizardUser(models.TransientModel):
 
         user_sudo = self.user_id.sudo()
 
-        # remove the user from the portal group
         if user_sudo and user_sudo._is_portal():
-            user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
+            user_sudo.write({'active': False})
 
         return self.action_refresh_modal()
 
