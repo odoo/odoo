@@ -2,12 +2,13 @@ import inspect
 import textwrap
 from datetime import datetime, timedelta
 from http import HTTPStatus
+from unittest.mock import patch
 
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 
 from .dummy_methods import DummyMethods
-from odoo.addons.api_doc.controllers.api_doc import parse_signature
+from odoo.addons.api_doc.controllers.api_doc import DocController, parse_signature
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -185,16 +186,42 @@ class TestDoc(HttpCaseWithUserDemo):
         self.assertEqual(cache_control, ['no-cache', 'private'])
         etag_demo = res.headers.get('ETag', '')
         self.assertTrue(etag_demo)
+        self.assertRegex(
+            res.headers.get('Content-Disposition', ''),
+            r'odoo-doc-index-\w+-%s\.json' % etag_demo.strip('"'),
+            "The document should have a unique name.",
+        )
 
         # request the document again, this time using the cache
-        res = self.url_open(
-            '/doc/index.json',
-            headers={'If-None-Match': etag_demo},
-            allow_redirects=False,
-        )
+        with patch.object(DocController, '_doc_index',
+              side_effect=DocController()._doc_index) as spy_doc_index:
+            res = self.url_open(
+                '/doc/index.json',
+                headers={'If-None-Match': etag_demo},
+                allow_redirects=False,
+            )
         res.raise_for_status()
         self.assertEqual(res.status_code, HTTPStatus.NOT_MODIFIED)
         self.assertFalse(res.content, "We should not have downloaded the document")
+        spy_doc_index.assert_not_called()
+
+        # request the document again, forcing no cache
+        with patch.object(DocController, '_doc_index',
+              side_effect=DocController()._doc_index) as spy_doc_index:
+            res = self.url_open(
+                '/doc/index.json',
+                headers={'If-None-Match': etag_demo,
+                         'Cache-Control': 'no-cache'},
+                allow_redirects=False,
+            )
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.content, "We should have downloaded the document")
+        cache_control = sorted(res.headers.get('Cache-Control', '').split(', '))
+        self.assertEqual(cache_control, ['no-store'])
+        self.assertRegex(res.headers.get('Content-Disposition', ''), r'\bodoo-doc-index\.json$',
+            "The document should not have a unique name.")
+        spy_doc_index.assert_called()
 
         # request the document again, this time as admin
         self.authenticate('admin', 'admin')
