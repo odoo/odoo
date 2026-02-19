@@ -310,6 +310,18 @@ export class TicketScreen extends Component {
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
+        //Check if the user tries to refund a product from another order. If so, reject.
+        const orderLineIds = order.get_orderlines().map((l) => l.id);
+        const existingRefundLines = destinationOrder.get_orderlines().filter(
+            (l) => l.refunded_orderline_id && !orderLineIds.includes(l.refunded_orderline_id)
+        );
+        if(existingRefundLines.some(refund => refund !== order.trackingNumber)){
+            this.popup.add(ErrorPopup, {
+                title: _t("Refund not possible"),
+                body: _t("You cannot refund a product from a different order."),
+            });
+            return;
+        }
         // Add orderline for each toRefundDetail to the destinationOrder.
         const originalToDestinationLineMap = new Map();
 
