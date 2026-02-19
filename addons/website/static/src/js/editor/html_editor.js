@@ -5,7 +5,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { patch } from "@web/core/utils/patch";
 import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
-import { useEffect } from "@odoo/owl";
+import { useEffect, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
@@ -62,6 +62,35 @@ patch(LinkPopover, {
 patch(LinkPopover.prototype, {
     setup() {
         super.setup();
+        this.currentRelValues = this.props.linkElement.rel.split(" ");
+        this.linkState = useState({
+            showAdvancedOptions: false,
+            linkTarget: this.props.linkElement.target === "_blank" ? "_blank" : "",
+            relAttributeOptions: {
+                nofollow: {
+                    label: "nofollow",
+                    description: _t("Tells search engines not to follow this link"),
+                    isChecked: this.currentRelValues.includes("nofollow"),
+                },
+                noreferrer: {
+                    label: "noreferrer",
+                    description: _t("Removes referrer information sent to the target site"),
+                    isChecked: this.currentRelValues.includes("noreferrer"),
+                },
+                sponsored: {
+                    label: "sponsored",
+                    description: _t("Indicates the link is sponsored or paid content"),
+                    isChecked: this.currentRelValues.includes("sponsored"),
+                },
+                noopener: {
+                    label: "noopener",
+                    description: _t(
+                        "Prevents the new page from accessing the original window (security)"
+                    ),
+                    isChecked: this.currentRelValues.includes("noopener"),
+                },
+            },
+        });
         this.urlRef = useChildRef();
         useEffect(
             (el) => {
@@ -71,6 +100,38 @@ patch(LinkPopover.prototype, {
             },
             () => [this.urlRef.el]
         );
+    },
+
+    toggleAdvancedOptions() {
+        this.linkState.showAdvancedOptions = !this.linkState.showAdvancedOptions;
+    },
+
+    toggleRelAttr(attr) {
+        const option = this.linkState.relAttributeOptions[attr];
+        option.isChecked = !option.isChecked;
+    },
+
+    onClickNewWindow(checked) {
+        this.linkState.linkTarget = checked ? "_blank" : "";
+        if (!checked) {
+            this.linkState.relAttributeOptions.noopener.isChecked = false;
+        }
+    },
+
+    onClickApply() {
+        const relOptions = this.linkState.relAttributeOptions;
+        const relValue = Object.keys(relOptions)
+            .filter((key) => relOptions[key].isChecked)
+            .join(" ");
+        const originalOnApply = this.props.onApply;
+        this.props.onApply = (...args) => {
+            originalOnApply(...args, this.linkState.linkTarget, relValue);
+        };
+        super.onClickApply();
+    },
+
+    get showGearIcon() {
+        return !!this.env.services.website.currentWebsiteId;
     },
 
     get sources() {

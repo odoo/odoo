@@ -387,6 +387,7 @@
         ],
         'html_editor.assets_link_popover': [
             'website/static/src/js/editor/html_editor.js',
+            'website/static/src/js/editor/link_plugin_website.js',
             'website/static/src/xml/html_editor.xml',
         ],
         'website.assets_wysiwyg': [

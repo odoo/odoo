@@ -11,39 +11,6 @@
                     </div>
                 </div>
                 <div t-else="" class="d-flex">
-                    <t t-if="state.showAdvancedOptions">
-                        <div class="o_advance_option_panel">
-                            <div class="o_advance_options_grid" style="width: 200px;">
-                                <button t-if="state.showAdvancedOptions" class="fa fa-angle-left btn btn-secondary border-10" t-on-click="toggleAdvancedOptions"/>
-                                    <t t-foreach="Object.values(state.relAttributeOptions)" t-as="opt" t-key="opt.label">
-                                        <t t-if="opt.label !== 'noopener'">
-                                            <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                                                <span t-att-title="opt.description"><t t-out="opt.label"/></span>
-                                                <CheckBox
-                                                    value="opt.isChecked"
-                                                    onChange="toggleRelAttr.bind(this, opt.label)"/>
-                                            </div>
-                                        </t>
-                                    </t>
-                                <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                                    <span>Open in new tab</span>
-                                    <CheckBox
-                                        value="state.linkTarget === '_blank'"
-                                        onChange="onClickNewWindow.bind(this)"
-                                        className="'target-blank-option'"/>
-                                </div>
-                                <t t-if="state.linkTarget === '_blank'">
-                                    <div class="o_seo_option_row o_seo_option_child d-flex justify-content-between align-items-center py-1 gap-2 ps-4">
-                                        <span>noopener</span>
-                                        <CheckBox
-                                            value="state.relAttributeOptions.noopener.isChecked"
-                                            onChange="toggleRelAttr.bind(this, 'noopener')"/>
-                                    </div>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
-                <t t-else="">
                     <div class="col p-2 o_link_popover_container">
                         <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
                             <input t-ref="label"
@@ -142,15 +109,11 @@
                                 <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="onClickRemove" title="Remove Link">
                                     <i class="fa fa-chain-broken"></i>
                                 </a>
-                                <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
-                                    <i class="fa fa-gear"/>
-                                </button>
                             </div>
                         </div>
                     </div>
-                </t>
+                </div>
             </div>
-        </div>
             <div t-else="" style="width: 274px;" data-prevent-closing-overlay="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">

@@ -460,6 +460,102 @@ export class LinkPlugin extends Plugin {
         );
     }
 
+    applyLinkCallback({
+        url,
+        label,
+        classes,
+        customStyle,
+        attachmentId,
+        selection,
+        selectionTextContent,
+        isImage,
+        commonAncestor,
+        cursorsToRestore,
+    }) {
+        if (this.linkInDocument) {
+            if (url) {
+                this.linkInDocument.href = url;
+            } else {
+                this.linkInDocument.removeAttribute("href");
+            }
+
+            if (!isImage) {
+                if (classes) {
+                    this.linkInDocument.className = classes;
+                } else {
+                    this.linkInDocument.removeAttribute("class");
+                }
+
+                if (customStyle) {
+                    this.linkInDocument.setAttribute("style", customStyle);
+                } else {
+                    this.linkInDocument.removeAttribute("style");
+                }
+
+                if (
+                    this.linkInDocument.childElementCount == 0 &&
+                    cleanZWChars(this.linkInDocument.innerText) !== label
+                ) {
+                    this.linkInDocument.innerText = label;
+                    cursorsToRestore = null;
+                }
+            }
+        } else if (url) {
+            // prevent the link creation if the url field was empty
+
+            // create a new link with current selection as a content
+            if ((selectionTextContent && selectionTextContent === label) || isImage) {
+                const link = this.createLink(url);
+                const image = isImage && findInSelection(selection, "img");
+                const figure =
+                    image?.parentElement?.matches("figure[contenteditable=false]") &&
+                    image.parentElement;
+                if (figure) {
+                    figure.before(link);
+                    link.append(figure);
+                    if (link.parentElement === this.editable) {
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        link.before(baseContainer);
+                        baseContainer.append(link);
+                    }
+                } else {
+                    const content = this.dependencies.selection.extractContent(selection);
+                    link.append(content);
+                    link.normalize();
+                    cursorsToRestore = null;
+                    selection = this.dependencies.selection.getEditableSelection();
+                    const anchorClosestElement = closestElement(selection.anchorNode);
+                    if (commonAncestor !== anchorClosestElement) {
+                        // We force the cursor after the anchorClosestElement
+                        // To be sure the link is inserted in the correct place in the dom.
+                        const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                        this.dependencies.selection.setSelection(
+                            { anchorNode, anchorOffset },
+                            { normalize: false }
+                        );
+                    }
+                    this.dependencies.dom.insert(link);
+                }
+                this.linkInDocument = link;
+            } else if (label) {
+                const link = this.createLink(url, label);
+                if (classes) {
+                    link.className = classes;
+                }
+                if (customStyle) {
+                    link.setAttribute("style", customStyle);
+                }
+                this.linkInDocument = link;
+                cursorsToRestore = null;
+                this.dependencies.dom.insert(link);
+            }
+        }
+        if (attachmentId) {
+            this.linkInDocument.dataset.attachmentId = attachmentId;
+        }
+        return cursorsToRestore;
+    }
+
     /**
      * open the Link popover to edit links
      *
@@ -474,7 +570,7 @@ export class LinkPlugin extends Plugin {
                 { type: "danger" }
             );
         }
-        let selection = this.dependencies.selection.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let cursorsToRestore = this.dependencies.selection.preserveSelection();
         const commonAncestor = closestElement(selection.commonAncestorContainer);
         linkElement = linkElement || findInSelection(selection, "a");
@@ -497,111 +593,29 @@ export class LinkPlugin extends Plugin {
 
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
-
         const applyCallback = (
             url,
             label,
             classes,
             customStyle,
-            linkTarget,
             attachmentId,
+            linkTarget,
             relValue
         ) => {
-            if (this.linkInDocument) {
-                if (url) {
-                    this.linkInDocument.href = url;
-                } else {
-                    this.linkInDocument.removeAttribute("href");
-                }
-                if (relValue) {
-                    this.linkInDocument.setAttribute("rel", relValue);
-                } else {
-                    this.linkInDocument.removeAttribute("rel");
-                }
-                if (linkTarget) {
-                    this.linkInDocument.setAttribute("target", linkTarget);
-                } else {
-                    this.linkInDocument.removeAttribute("target");
-                }
-                if (!isImage) {
-                    if (classes) {
-                        this.linkInDocument.className = classes;
-                    } else {
-                        this.linkInDocument.removeAttribute("class");
-                    }
-                    if (customStyle) {
-                        this.linkInDocument.setAttribute("style", customStyle);
-                    } else {
-                        this.linkInDocument.removeAttribute("style");
-                    }
-                    if (
-                        this.linkInDocument.childElementCount == 0 &&
-                        cleanZWChars(this.linkInDocument.innerText) !== label
-                    ) {
-                        this.linkInDocument.innerText = label;
-                        cursorsToRestore = null;
-                    }
-                }
-            } else if (url) {
-                // prevent the link creation if the url field was empty
-
-                // create a new link with current selection as a content
-                if ((selectionTextContent && selectionTextContent === label) || isImage) {
-                    const link = this.createLink(url);
-                    if (relValue) {
-                        link.setAttribute("rel", relValue);
-                    }
-                    const image = isImage && findInSelection(selection, "img");
-                    const figure =
-                        image?.parentElement?.matches("figure[contenteditable=false]") &&
-                        image.parentElement;
-                    if (figure) {
-                        figure.before(link);
-                        link.append(figure);
-                        if (link.parentElement === this.editable) {
-                            const baseContainer =
-                                this.dependencies.baseContainer.createBaseContainer();
-                            link.before(baseContainer);
-                            baseContainer.append(link);
-                        }
-                    } else {
-                        const content = this.dependencies.selection.extractContent(selection);
-                        link.append(content);
-                        link.normalize();
-                        cursorsToRestore = null;
-                        selection = this.dependencies.selection.getEditableSelection();
-                        const anchorClosestElement = closestElement(selection.anchorNode);
-                        if (commonAncestor !== anchorClosestElement) {
-                            // We force the cursor after the anchorClosestElement
-                            // To be sure the link is inserted in the correct place in the dom.
-                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                            this.dependencies.selection.setSelection(
-                                { anchorNode, anchorOffset },
-                                { normalize: false }
-                            );
-                        }
-                        this.dependencies.dom.insert(link);
-                    }
-                    this.linkInDocument = link;
-                } else if (label) {
-                    const link = this.createLink(url, label);
-                    if (classes) {
-                        link.className = classes;
-                    }
-                    if (customStyle) {
-                        link.setAttribute("style", customStyle);
-                    }
-                    if (linkTarget) {
-                        link.setAttribute("target", linkTarget);
-                    }
-                    this.linkInDocument = link;
-                    cursorsToRestore = null;
-                    this.dependencies.dom.insert(link);
-                }
-            }
-            if (attachmentId) {
-                this.linkInDocument.dataset.attachmentId = attachmentId;
-            }
+            cursorsToRestore = this.applyLinkCallback({
+                url,
+                label,
+                classes,
+                customStyle,
+                attachmentId,
+                linkTarget,
+                relValue,
+                selection,
+                selectionTextContent,
+                isImage,
+                commonAncestor,
+                cursorsToRestore,
+            });
         };
 
         this.restoreSavePoint = this.dependencies.history.makeSavePoint();
