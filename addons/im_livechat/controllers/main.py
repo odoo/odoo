@@ -10,7 +10,7 @@ from odoo.http import request
 from odoo.http.stream import Stream, content_disposition
 from odoo.tools import format_list
 
-from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
+from odoo.addons.mail.tools.discuss import add_guest_to_context, mail_route, Store
 
 
 class LivechatController(http.Controller):
@@ -81,8 +81,7 @@ class LivechatController(http.Controller):
     def _get_guest_name(self):
         return _("Visitor")
 
-    @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
-    @add_guest_to_context
+    @mail_route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     def get_session(self, channel_id, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         channel = request.env["discuss.channel"]
         country = request.env["res.country"]
@@ -195,8 +194,7 @@ class LivechatController(http.Controller):
             store.add(request.env.user.partner_id, ["email"])
         return {"store_data": store.get_result(), "channel_id": channel_id}
 
-    @http.route("/im_livechat/feedback", type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/im_livechat/feedback", type="jsonrpc", auth="public")
     def feedback(self, channel_id, rate, reason=None, **kwargs):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             return channel._apply_livechat_feedback(rate, reason, **kwargs)
@@ -252,8 +250,7 @@ class LivechatController(http.Controller):
         ]
         return request.make_response(pdf, headers=headers)
 
-    @http.route("/im_livechat/visitor_leave_session", type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/im_livechat/visitor_leave_session", type="jsonrpc", auth="public")
     def visitor_leave_session(self, channel_id):
         """Called when the livechat visitor leaves the conversation.
         This will clean the chat request and warn the operator that the conversation is over.

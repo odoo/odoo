@@ -1,3 +1,4 @@
+import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
@@ -206,30 +207,44 @@ export class Store extends Record {
      */
     insert(dataByModelName = {}, options = {}) {
         const store = this;
-        Record.MAKE_UPDATE(function storeInsert() {
-            const recordsDataToDelete = [];
-            for (const [modelName, data] of Object.entries(dataByModelName)) {
-                if (!store[modelName]) {
-                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
-                    continue;
-                }
-                const insertData = [];
-                for (const vals of Array.isArray(data) ? data : [data]) {
-                    if (vals._DELETE) {
-                        delete vals._DELETE;
-                        recordsDataToDelete.push([modelName, vals]);
-                    } else {
-                        insertData.push(vals);
+        if ("__store_version__" in dataByModelName) {
+            const versionMeta = dataByModelName.__store_version__;
+            delete dataByModelName.__store_version__;
+            this._.currentInsertVersion = {
+                ...versionMeta,
+                snapshot: new PgSnapshot(versionMeta.snapshot),
+            };
+        }
+        try {
+            Record.MAKE_UPDATE(function storeInsert() {
+                const recordsDataToDelete = [];
+                for (const [modelName, data] of Object.entries(dataByModelName)) {
+                    if (!store[modelName]) {
+                        console.warn(
+                            `store.insert() received data for unknown model “${modelName}”.`
+                        );
+                        continue;
                     }
+                    const insertData = [];
+                    for (const vals of Array.isArray(data) ? data : [data]) {
+                        if (vals._DELETE) {
+                            delete vals._DELETE;
+                            recordsDataToDelete.push([modelName, vals]);
+                        } else {
+                            insertData.push(vals);
+                        }
+                    }
+                    store[modelName].insert(insertData, options);
                 }
-                store[modelName].insert(insertData, options);
-            }
-            // Delete after all inserts to make sure a relation potentially registered before the
-            // delete doesn't re-add the deleted record by mistake.
-            for (const [modelName, vals] of recordsDataToDelete) {
-                store[modelName].get(vals)?.delete();
-            }
-        });
+                // Delete after all inserts to make sure a relation potentially registered before the
+                // delete doesn't re-add the deleted record by mistake.
+                for (const [modelName, vals] of recordsDataToDelete) {
+                    store[modelName].get(vals)?.delete();
+                }
+            });
+        } finally {
+            this._.currentInsertVersion = null;
+        }
     }
     onChange(record, name, cb) {
         return this._onChange(record, name, (observe) => {

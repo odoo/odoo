@@ -4,11 +4,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.http import request, route, Controller
+from odoo.http import request, Controller
+from odoo.addons.mail.tools.discuss import mail_route
 
 
 class DiscussSettingsController(Controller):
-    @route("/discuss/settings/mute", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/discuss/settings/mute", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_mute(self, minutes, channel_id):
         """Mute notifications for the given number of minutes.
         :param minutes: (integer) number of minutes to mute notifications, -1 means mute until the user unmutes
@@ -28,7 +29,7 @@ class DiscussSettingsController(Controller):
             member.mute_until_dt = False
         member._notify_mute()
 
-    @route("/discuss/settings/custom_notifications", methods=["POST"], type="jsonrpc", auth="user")
+    @mail_route("/discuss/settings/custom_notifications", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_custom_notifications(self, custom_notifications, channel_id=None):
         """Set custom notifications for the given channel or general user settings.
         :param custom_notifications: (false|all|mentions|no_notif) custom notifications to set

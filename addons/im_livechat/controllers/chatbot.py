@@ -2,12 +2,11 @@
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import mail_route, Store
 
 
 class LivechatChatbotScriptController(http.Controller):
-    @http.route("/chatbot/restart", type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/chatbot/restart", type="jsonrpc", auth="public")
     def chatbot_restart(self, channel_id, chatbot_script_id):
         discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         chatbot = request.env['chatbot.script'].browse(chatbot_script_id)
@@ -18,8 +17,7 @@ class LivechatChatbotScriptController(http.Controller):
         store = Store().add(message, "_store_message_fields")
         return {"message_id": message.id, "store_data": store.get_result()}
 
-    @http.route("/chatbot/answer/save", type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/chatbot/answer/save", type="jsonrpc", auth="public")
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
         discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         chatbot_message = request.env['chatbot.message'].sudo().search([
@@ -34,8 +32,7 @@ class LivechatChatbotScriptController(http.Controller):
         if selected_answer in chatbot_message.script_step_id.answer_ids:
             chatbot_message.write({'user_script_answer_id': selected_answer_id})
 
-    @http.route("/chatbot/step/trigger", type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/chatbot/step/trigger", type="jsonrpc", auth="public")
     def chatbot_trigger_step(self, channel_id, chatbot_script_id=None, data_id=None):
         chatbot_language = self.env["chatbot.script"]._get_chatbot_language()
         discuss_channel = request.env["discuss.channel"].with_context(lang=chatbot_language).search([("id", "=", channel_id)])
@@ -104,8 +101,7 @@ class LivechatChatbotScriptController(http.Controller):
         )
         store.bus_send()
 
-    @http.route("/chatbot/step/validate_contact_info", type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/chatbot/step/validate_contact_info", type="jsonrpc", auth="public")
     def chatbot_validate_contact_info(self, channel_id):
         discuss_channel = (
             request.env["discuss.channel"]

@@ -3,7 +3,7 @@
 from collections import defaultdict
 from odoo import models
 from odoo.addons.web.models.models import lazymapping
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import Store, store_version
 
 
 class BusSyncMixin(models.AbstractModel):
@@ -22,6 +22,7 @@ class BusSyncMixin(models.AbstractModel):
         :param res: list of field names that will be sync
         """
 
+    @store_version
     def write(self, vals):
         def get_field_value(record, field_description):
             """Get the value of a field based on its description."""

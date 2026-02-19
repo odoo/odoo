@@ -1,14 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _
-from odoo.http import route, request
+from odoo.http import request
 from odoo.addons.mail.controllers.attachment import AttachmentController
-from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.addons.mail.tools.discuss import mail_route
 
 
 class CloudAttachmentController(AttachmentController):
-    @route()
-    @add_guest_to_context
+    @mail_route()
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         is_cloud_storage = kwargs.get('cloud_storage')
         if (is_cloud_storage and not request.env['ir.config_parameter'].sudo().get_str('cloud_storage_provider')):

@@ -2,25 +2,22 @@
 
 from collections import defaultdict
 
-from odoo import http
 from odoo.http import request
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import mail_route, Store
 
 
 class WebclientController(ThreadController):
     """Routes for the web client."""
 
-    @http.route("/mail/action", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/action", methods=["POST"], type="jsonrpc", auth="public")
     def mail_action(self, fetch_params, context=None):
         """Execute actions and returns data depending on request parameters.
         This is similar to /mail/data except this method can have side effects.
         """
         return self._process_request(fetch_params, context=context)
 
-    @http.route("/mail/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    @add_guest_to_context
+    @mail_route("/mail/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     def mail_data(self, fetch_params, context=None):
         """Returns data depending on request parameters.
         This is similar to /mail/action except this method should be read-only.

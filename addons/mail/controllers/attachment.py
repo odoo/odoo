@@ -15,7 +15,7 @@ from odoo.tools.misc import file_open
 from odoo.tools.pdf import DependencyError, PdfReadError, extract_page
 
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context, mail_route
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +48,7 @@ class AttachmentController(ThreadController):
         ]
         return request.make_response(content, headers)
 
-    @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/attachment/upload", methods=["POST"], type="http", auth="public", make_json_response=True)
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
@@ -83,10 +82,9 @@ class AttachmentController(ThreadController):
             res = {"data": {"store_data": store.get_result(), "attachment_id": attachment.id}}
         except AccessError:
             res = {"error": _("You are not allowed to upload an attachment here.")}
-        return request.make_json_response(res)
+        return res
 
-    @http.route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment or not attachment._has_attachments_ownership([access_token]):
@@ -100,7 +98,7 @@ class AttachmentController(ThreadController):
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
         attachment.sudo()._delete_and_notify(message)
 
-    @http.route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
+    @mail_route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
     def mail_attachment_get_zip(self, file_ids, zip_name, **kw):
         """route to get the zip file of the attachments.
         :param file_ids: ids of the files to zip.
@@ -129,13 +127,12 @@ class AttachmentController(ThreadController):
         # sudo: ir.attachment: access check is done above, sudo necessary for guests
         return self._get_pdf_first_page_response(attachment.sudo())
 
-    @http.route(
+    @mail_route(
         "/mail/attachment/update_thumbnail",
         auth="public",
         methods=["POST"],
         type="jsonrpc",
     )
-    @add_guest_to_context
     def mail_attachement_update_thumbnail(self, attachment_id, thumbnail=None, access_token=None):
         """Updates the thumbnail of an attachment."""
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()

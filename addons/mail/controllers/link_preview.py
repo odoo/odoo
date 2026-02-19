@@ -2,12 +2,11 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.addons.mail.tools.discuss import mail_route
 
 
 class LinkPreviewController(http.Controller):
-    @http.route("/mail/link_preview", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/link_preview", methods=["POST"], type="jsonrpc", auth="public")
     def mail_link_preview(self, message_id):
         if not request.env["mail.link.preview"]._is_link_preview_enabled():
             return
@@ -21,8 +20,7 @@ class LinkPreviewController(http.Controller):
             message, request_url=request.httprequest.url_root
         )
 
-    @http.route("/mail/link_preview/hide", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
+    @mail_route("/mail/link_preview/hide", methods=["POST"], type="jsonrpc", auth="public")
     def mail_link_preview_hide(self, message_link_preview_ids):
         guest = request.env["mail.guest"]._get_guest_from_context()
         # sudo: access check is done below using message_id

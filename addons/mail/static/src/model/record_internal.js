@@ -71,6 +71,9 @@ export class RecordInternal {
     /** @type {string} */
     localId;
     gettingField = false;
+    /** @type {Map<string, import("@mail/model/field_version").SingleFieldVersion|import("@mail/model/field_version").ManyFieldVersion>} */
+    fieldsVersion = new Map();
+
     /**
      * For fields that use local storage, this map contains the "ls" object that eases interactions on the related
      * local storage entry. For instance, instead of having to write `browser.localStorage.setItem(EXACT_LOCAL_STORAGE_ENTRY_OF_FIELD, value)`,

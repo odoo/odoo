@@ -1419,8 +1419,15 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             self.assertEqual(self._new_msgs, done_msgs, 'Mail: invalid message creation (%s) / expected (%s)' % (len(self._new_msgs), len(done_msgs)))
             self.assertEqual(self._new_notifs, done_notifs, 'Mail: invalid notification creation (%s) / expected (%s)' % (len(self._new_notifs), len(done_notifs)))
 
+    def _pop_store_version(self, data):
+        if not isinstance(data, dict):
+            return
+        data.pop("__store_version__", False)
+        for value in data.values():
+            self._pop_store_version(value)
+
     @contextmanager
-    def assertBus(self, channels=None, message_items=None, get_params=None):
+    def assertBus(self, channels=None, message_items=None, get_params=None, show_store_versioning=False):
         """Check content of bus notifications.
         Params might not be determined in advance (newly created id, create_date, ...), in this case
         the `get_params` function can be given to return the expected values, called after the
@@ -1432,7 +1439,10 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             return f"{tuple(json.loads(notif.channel))},  # {json.loads(notif.message).get('type')}"
 
         def notif_to_string(notif):
-            return f"{format_notif(notif)}\n{notif.message}"
+            notification_message = json.loads(notif.message)
+            if not show_store_versioning:
+                self._pop_store_version(notification_message)
+            return f"{format_notif(notif)}\n{json.dumps(notification_message)}"
 
         self._reset_bus()
         try:
@@ -1441,7 +1451,11 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         finally:
             if get_params:
                 channels, message_items = get_params()
-            found_bus_notifs = self.assertBusNotifications(channels, message_items=message_items)
+            found_bus_notifs = self.assertBusNotifications(
+                channels,
+                message_items=message_items,
+                show_store_versioning=show_store_versioning,
+            )
             new_lines = "\n\n"
             self.assertEqual(
                 self._new_bus_notifs,
@@ -1729,7 +1743,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             "payload": Store().add(message, "_store_notification_fields").get_result(),
         }], check_unique=False)
 
-    def assertBusNotifications(self, channels, message_items=None, check_unique=True):
+    def assertBusNotifications(self, channels, message_items=None, check_unique=True, show_store_versioning=False):
         """ Check bus notifications content. Mandatory and basic check is about
         channels being notified. Content check is optional.
 
@@ -1753,7 +1767,10 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         new_lines = "\n\n"
 
         def notif_to_string(notif):
-            return f"{notif.channel}\n{notif.message}"
+            notification_message = json.loads(notif.message)
+            if not show_store_versioning:
+                self._pop_store_version(notification_message)
+            return f"{notif.channel}\n{json.dumps(notification_message)}"
 
         self.assertEqual(
             bus_notifs.mapped("channel"),
@@ -1763,11 +1780,17 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         )
         for expected in message_items or []:
             for notification in bus_notifs:
-                if json.loads(json_dump(expected)) == json.loads(notification.message):
+                notification_message = json.loads(notification.message)
+                if not show_store_versioning:
+                    self._pop_store_version(notification_message)
+                if json.loads(json_dump(expected)) == notification_message:
                     break
             else:
                 matching_notifs = [n for n in bus_notifs if json.loads(n.message).get("type") == expected.get("type")]
                 if len(matching_notifs) == 1:
+                    notification_message = json.loads(matching_notifs[0].message)
+                    if not show_store_versioning:
+                        self._pop_store_version(notification_message)
                     self.assertEqual(expected, json.loads(matching_notifs[0].message))
                 if not matching_notifs:
                     matching_notifs = bus_notifs

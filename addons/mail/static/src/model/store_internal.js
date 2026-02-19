@@ -1,12 +1,15 @@
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
-import { htmlEscape, markup, toRaw } from "@odoo/owl";
-import { RecordInternal } from "./record_internal";
-import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { IS_DELETED_SYM, isCommandList, isMany, normalizeManyCommands } from "./misc";
-import { browser } from "@web/core/browser/browser";
+import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
+import { IS_DELETED_SYM, isCommandList, isMany, normalizeManyCommands } from "@mail/model/misc";
+import { RecordInternal } from "@mail/model/record_internal";
 import { parseRawValue } from "@mail/utils/common/local_storage";
+
+import { htmlEscape, markup, toRaw } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
+import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
 const Markup = markup().constructor;
 
@@ -32,6 +35,13 @@ export class StoreInternal extends RecordInternal {
     RHD_QUEUE = new Map(); // record-hard-deletes
     ERRORS = [];
     UPDATE = 0;
+    /**
+     * Current version context used in the current store insert operation.
+     *
+     * The version data is provided by the server. If no version is provided,
+     * each field falls back to its last known version.
+     */
+    currentInsertVersion = null;
     /**
      * Map of local storage keys of fields synced with local storage to the record and field name.
      *
@@ -243,9 +253,31 @@ export class StoreInternal extends RecordInternal {
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
         for (const [fieldName, value] of fieldEntries) {
-            const valueNormalized = isMany(record.Model, fieldName)
-                ? normalizeManyCommands(value)
-                : value;
+            let version = record._.fieldsVersion.get(fieldName);
+            if (!version) {
+                version = isMany(record.Model, fieldName)
+                    ? new ManyFieldVersion(record.Model)
+                    : new SingleFieldVersion();
+                record._.fieldsVersion.set(fieldName, version);
+            }
+            // Always use the server version if provided, the last known version for the
+            // field otherwise.
+            const revision = this.currentInsertVersion
+                ? {
+                      snapshot: this.currentInsertVersion.snapshot,
+                      isWrite:
+                          this.currentInsertVersion.written_fields_by_record?.[
+                              record.Model.getName()
+                          ]?.[record.id]?.includes(fieldName),
+                  }
+                : version.lastRevision;
+            const toApply = version.resolveApply(
+                isMany(record.Model, fieldName) ? normalizeManyCommands(value) : value,
+                revision
+            );
+            if (toApply === SKIP_REVISION) {
+                continue;
+            }
             if (record.Model._.fieldsLocalStorage.has(fieldName)) {
                 // should immediately write in local storage, for immediately correct next compute
                 if (!this.isUpdatingFromStorageEvent) {
@@ -258,9 +290,9 @@ export class StoreInternal extends RecordInternal {
                 }
             }
             if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
-                this.updateAttr(record, fieldName, valueNormalized);
+                this.updateAttr(record, fieldName, toApply);
             } else {
-                this.updateRelation(record, fieldName, valueNormalized);
+                this.updateRelation(record, fieldName, toApply);
             }
         }
     }

@@ -3,15 +3,14 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import _
-from odoo.http import route, request
+from odoo.http import request
 from odoo.exceptions import AccessError
 from odoo.addons.mail.controllers.attachment import AttachmentController
-from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.addons.mail.tools.discuss import mail_route
 
 
 class LivechatAttachmentController(AttachmentController):
-    @route()
-    @add_guest_to_context
+    @mail_route()
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
