@@ -68,7 +68,11 @@ class PosPayment(models.Model):
         credit_line_ids = []
         change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
         payment_to_change = self.filtered(lambda p: not p.is_change and p.payment_method_id.type == 'cash')[:1]
-        for payment in self - change_payment:
+        payments = self
+        if change_payment and payment_to_change:
+            payments = self - change_payment
+
+        for payment in payments:
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
