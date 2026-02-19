@@ -13,7 +13,7 @@ declare module "plugins" {
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selector, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, pre_save_handlers, on_will_save_element_handlers, save_elements_overrides, on_will_reset_history_after_saving_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, on_will_save_element_handlers, save_elements_overrides, on_will_reset_history_after_saving_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
     import { default_shape_providers, image_shape_groups_providers, on_shape_computed_handlers } from "@html_builder/plugins/image/image_shape_option_plugin";
@@ -87,7 +87,6 @@ declare module "plugins" {
         on_will_clone_handlers: on_will_clone_handlers;
         on_will_remove_handlers: on_will_remove_handlers;
         on_shape_computed_handlers: on_post_compute_shape_handlers;
-        pre_save_handlers: pre_save_handlers;
         on_target_hidden_handlers: on_target_hidden_handlers;
         on_target_shown_handlers: on_target_shown_handlers;
         on_dom_updated_handlers: on_dom_updated_handlers;

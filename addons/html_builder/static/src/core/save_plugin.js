@@ -12,12 +12,9 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 
 /**
- * @typedef {(() => void)[]} on_saved_handlers
- * @typedef {((el?: HTMLElement) => Promise<void>)[]} on_will_save_handlers
- * Called at the very beginning of the save process.
- *
- * @typedef {((groupedEls: Object.<string, HTMLElement[]>) => Promise<void>)[]} pre_save_handlers
- * Called before the save process with the grouped dirty elements.
+ * @typedef {((el?: HTMLElement) => void)[]} on_saved_handlers
+ * @typedef {((el: HTMLElement) => Promise<void>, groupedEls?: Object.<string, HTMLElement[]>)[]} on_will_save_handlers
+ * Called before the save process.
  *
  * @typedef {((el: HTMLElement) => Promise<void>)[]} on_will_save_element_handlers
  * Called when saving an element (in parallel to saving the view).
@@ -77,8 +74,13 @@ export class SavePlugin extends Plugin {
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
-            await Promise.all(this.trigger("on_will_save_handlers"));
-            await this._save();
+            // Get elements to save, then group them if possible.
+            const dirtyEls = this.getResource("dirty_els_providers").flatMap((p) => [...p()]);
+            const groupedElements = this.groupElements(dirtyEls);
+            await Promise.all(
+                this.trigger("on_will_save_handlers", this.editable, groupedElements)
+            );
+            await this._save(groupedElements);
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } finally {
             if (!skipAfterSaveHandlers) {
@@ -86,18 +88,7 @@ export class SavePlugin extends Plugin {
             }
         }
     }
-    async _save() {
-        const dirtyEls = [];
-        for (const getDirtyEls of this.getResource("dirty_els_providers")) {
-            dirtyEls.push(...getDirtyEls());
-        }
-        // Group elements to save if possible
-        const groupedElements = this.groupElements(dirtyEls);
-        const preSaveHandlers = [];
-        for (const preSaveHandler of this.getResource("pre_save_handlers")) {
-            preSaveHandlers.push(preSaveHandler(groupedElements));
-        }
-        await Promise.all(preSaveHandlers);
+    async _save(groupedElements) {
         const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
             const cleanedEls = dirtyEls.map((dirtyEl) => {
                 dirtyEl.classList.remove("o_dirty");
