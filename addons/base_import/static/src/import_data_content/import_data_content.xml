@@ -82,7 +82,7 @@
                                         <div t-att-class="`${choice.data.value and choice.data.value.required ? 'fw-bolder text-decoration-underline' : ''}`">
                                             <i class="o_import_field_choice o_import_field_icon position-relative d-inline-block align-middle border-end me-2"
                                                 t-att-class="choice.data.iconClass"/>
-                                            <t t-esc="choice.data.label" />
+                                            <t t-out="choice.data.label" />
                                         </div>
                                     </t>
                                 </SelectMenu>
