@@ -129,7 +129,7 @@ class ResourceCalendar(models.Model):
     @api.depends('attendance_ids.date', 'attendance_ids.dayofweek', 'schedule_type')
     def _compute_days_per_week(self):
         for calendar in self:
-            attendances = calendar._get_global_attendances()
+            attendances = calendar._get_working_attendances()
             days = len(set(attendances.mapped('date' if calendar.schedule_type == 'variable' else 'dayofweek')))
             weeks = len({(att.date.toordinal() - 1) // 7 for att in attendances}) if calendar.schedule_type == 'variable' else 1
             calendar.days_per_week = float_round(days / weeks if weeks else 0.0, precision_digits=2)
@@ -139,7 +139,7 @@ class ResourceCalendar(models.Model):
         """ Compute the average hours per day.
             Cannot directly depend on hours_per_week because of rounding issues. """
         for calendar in self:
-            attendances = calendar._get_global_attendances()
+            attendances = calendar._get_working_attendances()
             hours = sum(attendances.mapped('duration_hours'))
             days = len(set(attendances.mapped('date' if calendar.schedule_type == 'variable' else 'dayofweek')))
             calendar.hours_per_day = float_round((hours / days) if days else 0.0, precision_digits=2)
@@ -148,7 +148,7 @@ class ResourceCalendar(models.Model):
     def _compute_hours_per_week(self):
         """ Compute the average hours per week """
         for calendar in self:
-            attendances = calendar._get_global_attendances()
+            attendances = calendar._get_working_attendances()
             hours = sum(attendances.mapped('duration_hours'))
             weeks = len({(att.date.toordinal() - 1) // 7 for att in attendances}) if calendar.schedule_type == 'variable' else 1
             calendar.hours_per_week = float_round(hours / weeks if weeks else 0.0, precision_digits=2)
@@ -242,15 +242,14 @@ class ResourceCalendar(models.Model):
             end = max(end, high.replace(tzinfo=UTC))
 
         domain = Domain.AND([
-            Domain('calendar_id', '=', self.id),
-            Domain('display_type', '=', False),
+            [('calendar_id', '=', self.id)],
             Domain(domain or Domain.TRUE),
         ])
 
         fetched_attendances = self.attendance_ids.with_prefetch()
-        duration_based_attendances = fetched_attendances.filtered_domain([('duration_based', '=', True), domain])
         all_duration_based_attendances = fetched_attendances.filtered('duration_based')
-        attendances_per_day = (self._get_working_hours(start.date(), end.date(), domain=domain) if self
+        duration_based_attendances = all_duration_based_attendances.filtered_domain(domain)
+        attendances_per_day = (self._get_attendances_by_date(start.date(), end.date(), domain=domain) if self
                                 else defaultdict(lambda: self.env['resource.calendar.attendance']))
 
         # Generate once with utc as timezone
@@ -258,8 +257,8 @@ class ResourceCalendar(models.Model):
         for day, attendances in attendances_per_day.items():
             # If all attendance lines are duration based, compute correct intervals
             if all(att.duration_based for att in attendances):
-                day_all_duration_based_attendances = all_duration_based_attendances._get_attendances_on_date(day)
-                day_duration_based_attendances = duration_based_attendances._get_attendances_on_date(day)
+                day_all_duration_based_attendances = all_duration_based_attendances._filter_by_date(day)
+                day_duration_based_attendances = duration_based_attendances._filter_by_date(day)
                 total_hours = sum(day_all_duration_based_attendances.mapped('duration_hours'))
                 hours_per_attendance = {}
                 current_hour_from = 12 - total_hours / 2
@@ -577,8 +576,11 @@ class ResourceCalendar(models.Model):
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
 
-    def _get_global_attendances(self):
-        return self.attendance_ids.filtered(lambda attendance: attendance.date if attendance.calendar_id.schedule_type == 'variable' else not attendance.date)
+    # TODO ZIRAH: Should we bring back the _is_work_period function (and its override) and use it here instead of overriding this funciton?
+    def _get_working_attendances(self):
+        # If the calendar is variable, we want all attendances that have a date.
+        # If the calendar is fixed, we want all attendances that don't have a date.
+        return self.attendance_ids.filtered(lambda attendance: bool(attendance.date) == (attendance.calendar_id.schedule_type == 'variable'))
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False, resource=None):
         if self:
@@ -604,36 +606,17 @@ class ResourceCalendar(models.Model):
         """ return a copy of the company's calendar attendance or default 40 hours/week """
         if company_id and (attendances := company_id.resource_calendar_id.attendance_ids):
             return [
-                Command.create(attendance._copy_attendance_vals())
+                Command.create(attendance._to_dict())
                 for attendance in attendances
             ]
         return [
-            Command.create({'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-            Command.create({'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-            Command.create({'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-            Command.create({'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-            Command.create({'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': str(dayofweek), 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0})
+            for dayofweek in range(5)
         ]
-
-    def _get_two_weeks_attendance(self):
-        final_attendances = []
-        for idx, att in enumerate(self.attendance_ids):
-            final_attendances.append(Command.create(dict(att._copy_attendance_vals(), week_type='0', sequence=idx + 1)))
-            final_attendances.append(Command.create(dict(att._copy_attendance_vals(), week_type='1', sequence=idx + 26)))
-        return final_attendances
 
     # --------------------------------------------------
     # External API
     # --------------------------------------------------
-
-    def get_attendances(self, target_date):
-        if isinstance(target_date, datetime):
-            target_date = target_date.date()
-        self.ensure_one()
-        weektype = False
-        if self.two_weeks_calendar:
-            weektype = str(self.env['resource.calendar.attendance'].get_week_type(target_date))
-        return self.attendance_ids.filtered(lambda a: a.week_type == weektype and a.dayofweek == str(target_date.weekday()))
 
     def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None):
         """
@@ -777,16 +760,18 @@ class ResourceCalendar(models.Model):
         return revert(day_dt)
 
     def _works_on_date(self, date):
-        return bool(self._get_global_attendances()._get_attendances_on_date(date))
+        return bool(self._get_working_attendances()._filter_by_date(date))
 
     def _is_duration_based_on_date(self, date):
         self.ensure_one()
-        return any(self.attendance_ids._get_attendances_on_date(date).mapped('duration_based'))
+        return any(self.attendance_ids._filter_by_date(date).mapped('duration_based'))
 
     def _get_duration_based_work_hours_on_date(self, date):
-        return sum(self.attendance_ids._get_attendances_on_date(date).mapped('duration_hours'))
+        return sum(self.attendance_ids._filter_by_date(date).mapped('duration_hours'))
 
-    def _get_working_hours(self, date_from, date_to, domain=None):
+    # TODO ZIRAH: Rename to _get_attendances_by_date
+    # Should we still filter by get_global_attendances here?
+    def _get_attendances_by_date(self, date_from, date_to, domain=None):
         """
         Get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
             - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
@@ -794,14 +779,14 @@ class ResourceCalendar(models.Model):
 
         :param date_from: start date of the period (included)
         :param date_to: end date of the period (included)
-        :param domain: optional domain to filter attendances, if not specified, _get_global_attendances() will be used.
+        :param domain: optional domain to filter attendances, if not specified, _get_working_attendances() will be used.
         """
         self.ensure_one()
         result = defaultdict(lambda: self.env['resource.calendar.attendance'])
 
-        attendances = (self.attendance_ids.filtered_domain(domain) if domain else self._get_global_attendances()).with_prefetch()
+        attendances = (self.attendance_ids.filtered_domain(domain) if domain else self._get_working_attendances()).with_prefetch()
         for day in rrule(DAILY, date_from, until=date_to):
-            result[day.date()] += attendances._get_attendances_on_date(day.date())
+            result[day.date()] = attendances._filter_by_date(day.date())
         return result
 
     def copy_from(self, date_from, date_to, force=False):
@@ -827,7 +812,7 @@ class ResourceCalendar(models.Model):
             target_date = source_date + timedelta(days=(target_start - source_start).days)
             for att in attendances:
                 vals_list.append({
-                    **att._copy_attendance_vals(),
+                    **att._to_dict(),
                     'calendar_id': self.id,
                     'date': target_date,
                     'dayofweek': str(target_date.weekday()),

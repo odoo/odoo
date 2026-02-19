@@ -45,10 +45,7 @@ class ResourceCalendarAttendance(models.Model):
                                                         hour_to=format_time(self.env, float_to_time(attendance.hour_to), time_format="short"),
                                                         work_entry_type=attendance.work_entry_type_id.display_name)
 
-    def _copy_attendance_vals(self):
-        res = super()._copy_attendance_vals()
+    def _to_dict(self):
+        res = super()._to_dict()
         res['work_entry_type_id'] = self.work_entry_type_id.id
         return res
-
-    def _is_work_period(self):
-        return self.work_entry_type_id.count_as == 'working_time' and super()._is_work_period()

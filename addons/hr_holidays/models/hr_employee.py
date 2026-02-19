@@ -744,7 +744,7 @@ class HrEmployee(models.Model):
             calendar = version.resource_calendar_id
 
         calendar_attendances = calendar.attendance_ids
-        init_attendances = [att._copy_attendance_vals() for att in calendar_attendances._get_attendances_on_date(target_date)]
+        init_attendances = [att._to_dict() for att in calendar_attendances._filter_by_date(target_date)]
 
         if day_period:
             attendances = [att for att in init_attendances if att['day_period'] == day_period]

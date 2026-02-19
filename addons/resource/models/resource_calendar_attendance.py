@@ -12,18 +12,8 @@ from odoo.tools.intervals import Intervals
 class ResourceCalendarAttendance(models.Model):
     _name = 'resource.calendar.attendance'
     _description = "Work Detail"
-    _order = 'sequence, week_type, dayofweek, hour_from'
+    _order = 'sequence, date, dayofweek, hour_from'
 
-    dayofweek = fields.Selection([
-        ('0', 'Monday'),
-        ('1', 'Tuesday'),
-        ('2', 'Wednesday'),
-        ('3', 'Thursday'),
-        ('4', 'Friday'),
-        ('5', 'Saturday'),
-        ('6', 'Sunday')
-        ], 'Day of Week', required=True, index=True, precompute=True,
-        compute="_compute_dayofweek", store=True, readonly=False)
     hour_from = fields.Float(string='Work from', default=0, required=True, index=True,
         help="Start and End time of working.\n"
              "A specific value of 24:00 is interpreted as 23:59:59.999999.")
@@ -38,13 +28,20 @@ class ResourceCalendarAttendance(models.Model):
         ('morning', 'Morning'),
         ('afternoon', 'Afternoon'),
         ('full_day', 'Full Day')], store=True, compute='_compute_day_period')
-    week_type = fields.Selection([
-        ('1', 'Second'),
-        ('0', 'First'),
-        ], 'Week Number', default=False)
-    two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the resource calendar.")
+
+    # Fixed
+    dayofweek = fields.Selection([
+        ('0', 'Monday'),
+        ('1', 'Tuesday'),
+        ('2', 'Wednesday'),
+        ('3', 'Thursday'),
+        ('4', 'Friday'),
+        ('5', 'Saturday'),
+        ('6', 'Sunday')
+        ], 'Day of Week', required=True, index=True, precompute=True,
+        compute="_compute_dayofweek", store=True, readonly=False)
 
     # Variable
     date = fields.Date()
@@ -194,7 +191,7 @@ class ResourceCalendarAttendance(models.Model):
                                                      hour_from=format_time(self.env, float_to_time(attendance.hour_from), time_format="short"),
                                                      hour_to=format_time(self.env, float_to_time(attendance.hour_to), time_format="short"))
 
-    def _copy_attendance_vals(self):
+    def _to_dict(self):
         self.ensure_one()
         return {
             'date': self.date,
@@ -203,21 +200,18 @@ class ResourceCalendarAttendance(models.Model):
             'duration_hours': self.duration_hours,
             'hour_from': self.hour_from,
             'hour_to': self.hour_to,
-            'week_type': self.week_type,
             'sequence': self.sequence,
         }
 
-    def _is_work_period(self):
-        return True
-
-    def _get_attendances_on_date(self, date_obj):
+    # TODO ZIRAH: We know they are attendances, maybe rename to _get_on_date(date)
+    def _filter_by_date(self, date_obj: date):
         """
         Get the attendances for a specific date. For variable schedule, it will return the attendances with the same date or with a recurrency rule matching the date. For fixed schedule, it will return the attendances with the same day of week as the date.
 
         :param date_obj: the date to get the attendances for (date object)
         """
-        assert isinstance(date_obj, date), "date_obj should be of type date"
 
+        # TODO ZIRAH: extract this function into its own method?
         def is_recurrent_attendance_today(a):
             return (a.calendar_id.schedule_type == 'variable' and a.recurrency and a.date and a.until
                     and a.date <= date_obj <= a.until and (

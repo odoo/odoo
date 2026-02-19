@@ -7,12 +7,10 @@
             <list string="Working Time" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="date" column_invisible="True"/>
-                <field name="display_type" column_invisible="True"/>
                 <field name="dayofweek"/>
                 <field name="duration_hours" sum="Hours per Week" force_save="1" widget="float_time"/>
                 <field name="hour_from" widget="float_time" optional="hidden" decoration-muted="hour_from == hour_to"/>
                 <field name="hour_to" widget="float_time" optional="hidden" decoration-muted="hour_from == hour_to"/>
-                <field name="week_type" readonly="1" force_save="1" optional="hide"/>
             </list>
         </field>
     </record>
@@ -25,7 +23,6 @@
                 <sheet>
                 <group>
                     <field name="dayofweek"/>
-                    <field name="week_type"/>
                     <label for="hour_from" string="Hours"/>
                     <div id="resource_attendance_hours" class="o_row">
                         <field name="hour_from" widget="float_time" decoration-muted="hour_from == hour_to"/> -

@@ -20,6 +20,6 @@ class ResourceCalendar(models.Model):
     def _compute_hours_per_day(self):
         super()._compute_hours_per_day()
 
-    def _get_global_attendances(self):
-        global_attendances = super()._get_global_attendances()
+    def _get_working_attendances(self):
+        global_attendances = super()._get_working_attendances()
         return global_attendances.filtered(lambda att: (not att.sudo().work_entry_type_id) or att.sudo().work_entry_type_id.count_as == 'working_time')
