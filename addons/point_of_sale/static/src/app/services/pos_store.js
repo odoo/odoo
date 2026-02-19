@@ -2656,8 +2656,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get isSelectedLineCombo() {
-        const selectedOrderline = this.selectedOrder.getSelectedOrderline();
-        return selectedOrderline && selectedOrderline.isPartOfCombo();
+        return Boolean(this.selectedOrder?.getSelectedOrderline()?.isPartOfCombo());
     }
 
     /**
