@@ -2662,9 +2662,7 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         # 1 more query on ir_mode_data from _is_studio_view() in apply_inheritance_specs
         # TODO: use key (actually empty for some view) instead of xml_id field
         addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)
-        with_sudio = 'web_studio' in addons
-
-        check(extend_view_2.id, "<div><div>Hello2</div><h1></h1><section></section></div>", queries=6 if with_sudio else 5, cachemiss=1)
+        check(extend_view_2.id, "<div><div>Hello2</div><h1></h1><section></section></div>", queries=5, cachemiss=1)
         check(first_view.id, "<div>Hello2</div>", queries=0)
 
         first_view.arch_db = '<div>Hello3</div>'
@@ -2672,9 +2670,9 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
 
         check(first_view.id, "<div>Hello3</div>", queries=2, cachemiss=1)
 
-        check(extend_view_2.id, "<div><div>Hello3</div><h1></h1><section></section></div>", queries=4 if with_sudio else 3)
+        check(extend_view_2.id, "<div><div>Hello3</div><h1></h1><section></section></div>", queries=3)
 
         extend_view_1.arch_db = '<xpath expr="//div" position="inside"><article/></xpath>'
         self.env.invalidate_all()
 
-        check(extend_view_2.id, "<div><div>Hello3</div><article></article><section></section></div>", queries=6 if with_sudio else 5, cachemiss=1)
+        check(extend_view_2.id, "<div><div>Hello3</div><article></article><section></section></div>", queries=5, cachemiss=1)
