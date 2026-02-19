@@ -44,6 +44,7 @@ export class AnimateOption extends BaseOptionComponent {
                     (i) => !i.check || i.check(editingElement)
                 ),
                 isInDropdown: editingElement.closest(".dropdown"),
+                hasSharedTiming: editingElement.matches(".s_animated_number"),
             };
         });
     }

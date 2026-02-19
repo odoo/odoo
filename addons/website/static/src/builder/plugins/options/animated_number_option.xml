@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AnimatedNumberOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Start / End">
+            <BuilderNumberInput title.translate="Start Value" dataAttributeAction="'startValue'"/>
+            <BuilderNumberInput title.translate="End Value" dataAttributeAction="'endValue'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Extra text">
+            <BuilderButton label.translate="Prefix" action="'toggleAnimatedNumberText'" actionParam="'prefix'"/>
+            <BuilderButton label.translate="Postfix" action="'toggleAnimatedNumberText'" actionParam="'postfix'"/>
+        </BuilderRow>
+    </BuilderContext>    
+    <BuilderRow label.translate="Title Position">
+        <BuilderButtonGroup action="'toggleTitleAnimatedNumber'" >
+            <BuilderButton
+                icon="'fa-eye-slash'"
+                title.translate="Hide"/>
+            <BuilderButton
+                classAction="'flex-column'"
+                actionValue="'top'"
+                iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
+                title.translate="Top"/>
+            <BuilderButton
+                classAction="'flex-row'"
+                actionValue="'left'"
+                iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"
+                title.translate="Left"/>
+            <BuilderButton
+                classAction="'flex-row-reverse'"
+                actionValue="'right'"
+                iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"
+                title.translate="Right"/>
+            <BuilderButton
+                classAction="'flex-column-reverse'"
+                actionValue="'bottom'"
+                iconImg="'/website/static/src/img/snippets_options/pos_bottom.svg'"
+                title.translate="Bottom"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderContext preview="false">
+        <BuilderRow 
+            label.translate="Start After" 
+            tooltip.translate="'On Appearance' animation will also use this value" 
+            styleAction="'animation-delay'"
+        >
+            <BuilderNumberInput 
+                unit="'s'"
+                default="0"
+                min="0" 
+                step="0.1"/>
+        </BuilderRow>
+        <BuilderRow 
+            label.translate="Duration" 
+            tooltip.translate="'On Appearance' animation will also use this value" 
+            styleAction="'animation-duration'"
+        >
+            <BuilderNumberInput 
+                unit="'s'"
+                default="1"
+                min="0.1" 
+                step="0.1"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>
