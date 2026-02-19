@@ -3803,7 +3803,16 @@ class SnippetsMenu extends Component {
                         dropped = true;
                     }
                 }
-                if (!dropped && y > 3 && x + helper.getBoundingClientRect().height < this.el.getBoundingClientRect().left) {
+                const elRect = this.el.getBoundingClientRect();
+                // Sidebar can be positioned on either side of the page:
+                // - Right side (typical LTR layout): elRect.x > 0
+                // - Left side (RTL layout): elRect.x = 0
+                // Check if drop position is outside sidebar bounds based on its position.
+                const isOutsideOfSidebar =
+                    elRect.x === 0
+                        ? elRect.width < x
+                        : x + helper.getBoundingClientRect().width < elRect.x;
+                if (!dropped && y > 3 && isOutsideOfSidebar) {
                     const point = { x, y };
                     let droppedOnNotNearest = touching(doc.body.querySelectorAll('.oe_structure_not_nearest'), point);
                     // If dropped outside of a dropzone with class oe_structure_not_nearest,
