@@ -719,7 +719,10 @@ export class PosOrder extends Base {
     }
 
     get_total_with_tax() {
-        return this.taxTotals.order_sign * this.taxTotals.order_total;
+        return roundPrecision(
+            this.taxTotals.order_sign * this.taxTotals.order_total,
+            this.currency.rounding
+        );
     }
 
     get_total_without_tax() {
@@ -893,7 +896,7 @@ export class PosOrder extends Base {
         if (this.config.cash_rounding) {
             remaining = this.getRoundedRemaining(this.config.rounding_method, remaining);
         }
-        return -order_sign * remaining;
+        return roundPrecision(-order_sign * remaining, this.currency.rounding);
     }
 
     get_due() {

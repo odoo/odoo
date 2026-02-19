@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -14,7 +14,7 @@ export class TableMenu extends Component {
         addRow: Function,
         removeRow: Function,
         resetTableSize: Function,
-        overlay: Object,
+        close: Function,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         direction: { type: String, optional: true },
@@ -23,6 +23,7 @@ export class TableMenu extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
+        this.dropdownRef = useRef("dropdown");
         if (this.props.type === "column") {
             this.isFirst = this.props.target.cellIndex === 0;
             this.isLast = !this.props.target.nextElementSibling;
@@ -32,6 +33,13 @@ export class TableMenu extends Component {
             this.isLast = !tr.nextElementSibling;
         }
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
+        onWillUpdateProps((newProps) => {
+            this.updatePosition(newProps);
+        });
+        onMounted(() => {
+            this.overlayEl = this.dropdownRef.el;
+            this.updatePosition(this.props);
+        });
     }
 
     get hasCustomSize() {
@@ -42,9 +50,34 @@ export class TableMenu extends Component {
         );
     }
 
+    updatePosition({ target, type, direction }) {
+        if (!this.overlayEl || !target) {
+            return;
+        }
+        const targetRect = target.getBoundingClientRect();
+        const container = this.overlayEl.parentElement;
+        const containerRect = container.getBoundingClientRect();
+        if (type === "column") {
+            Object.assign(this.overlayEl.style, {
+                top: `${targetRect.top - containerRect.top - this.overlayEl.offsetHeight}px`,
+                left: `${targetRect.left - containerRect.left}px`,
+                width: `${targetRect.width}px`,
+            });
+        } else {
+            const isLTR = direction === "ltr";
+            const inlineStartOffset = isLTR
+                ? targetRect.left - containerRect.left
+                : containerRect.right - targetRect.right;
+            Object.assign(this.overlayEl.style, {
+                top: `${targetRect.top - containerRect.top}px`,
+                insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
+                height: `${targetRect.height}px`,
+            });
+        }
+    }
     onSelected(item) {
         item.action(this.props.target);
-        this.props.overlay.close();
+        this.props.close();
     }
 
     colItems() {

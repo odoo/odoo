@@ -1,6 +1,15 @@
 from odoo import fields, models
 
 
+class AccountEdiXmlUBL21(models.AbstractModel):
+    _inherit = 'account.edi.xml.ubl_21'
+
+    def _get_customization_ids(self):
+        vals = super()._get_customization_ids()
+        vals['pint_jp'] = 'urn:peppol:pint:billing-1@jp-1'
+        return vals
+
+
 class AccountEdiXmlUBLPINTJP(models.AbstractModel):
     _inherit = "account.edi.xml.ubl_bis3"
     _name = 'account.edi.xml.pint_jp'
@@ -166,13 +175,14 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
             'cbc:EndDate': {'_text': invoice.invoice_date},
         }
 
-    def _get_address_node(self, vals):
-        address_node = super()._get_address_node(vals)
-        address_node['cbc:CountrySubentityCode'] = None
-        return address_node
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.ubl_bis3
+        super()._ubl_add_party_legal_entity_nodes(vals)
+        nodes = vals['party_node']['cac:PartyLegalEntity']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
 
-    def _get_party_node(self, vals):
-        party_node = super()._get_party_node(vals)
         # optional, if set: scheme_id should be taken from ISO/IEC 6523 list
-        party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = None
-        return party_node
+        if commercial_partner.country_code == 'JP':
+            for node in nodes:
+                node['cbc:CompanyID'] = None

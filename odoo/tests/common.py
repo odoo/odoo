@@ -29,6 +29,7 @@ import tempfile
 import threading
 import time
 import traceback
+import types
 import unittest
 import warnings
 from collections import defaultdict, deque
@@ -419,16 +420,12 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
     def patch(self, obj, key, val):
         """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
-        patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patch.object(obj, key, val))   # this is unittest.mock.patch
 
     @classmethod
     def classPatch(cls, obj, key, val):
         """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
-        patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
-        patcher.start()
-        cls.addClassCleanup(patcher.stop)
+        cls.startClassPatcher(patch.object(obj, key, val))   # this is unittest.mock.patch
 
     def startPatcher(self, patcher):
         mock = patcher.start()
@@ -831,6 +828,26 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 additional_tags.append('is_query_count')
         return additional_tags
 
+
+# maps a function name to a file in which it can exist for the setattr it
+# triggers to be allowed
+SETATTR_SOURCES = {
+    # model attributes being set from a patcher are fine
+    '__enter__': ('/unittest/mock.py',),
+    '__exit__': ('/unittest/mock.py',),
+    # lazy_classproperty sets an attribute for itself
+    '__get__': ('/odoo/tools/func.py',),
+    # mail overrides IrModel._instantiate to inject mail mixins
+    '_instanciate': ('/mail/models/ir_model.py',),
+    # account manipulates _template_register
+    '_template_register': ('/account/models/chart_template.py',),
+    '_setup_complete': ('/account/models/chart_template.py',),
+    # ...
+    'patch': ('/base_automation/models/base_automation.py',),
+    # .....
+    '_patch': ('/web_studio/models/studio_approval.py',),
+}
+
 class Like:
     """
         A string-like object comparable to other strings but where the substring
@@ -944,6 +961,35 @@ class TransactionCase(BaseCase):
         cls.registry_start_invalidated = cls.registry.registry_invalidated
         cls.registry_start_sequence = cls.registry.registry_sequence
         cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
+        cls.setattrs = {}
+
+        actual_setattr = odoo.models.MetaModel.__setattr__
+
+        def metamodel_setattr(model, key, value):
+            caller = inspect.currentframe().f_back
+            filename = inspect.getsourcefile(caller)
+
+            # special case / fastpath because this does model alterations everywhere
+            if filename.endswith('odoo/models.py'):
+                actual_setattr(model, key, value)
+                return
+
+            valid_paths = SETATTR_SOURCES.get(caller.f_code.co_name)
+            if not (valid_paths and filename.endswith(valid_paths)):
+                _logger.runbot(
+                    "%s:%s:%s setting %s.%s to %s",
+                    filename,
+                    caller.f_lineno,
+                    caller.f_code.co_name,
+                    model.__name__,
+                    key,
+                    value,
+                    stack_info=True,
+                )
+            cls.setattrs.setdefault(model._name, []).append((key, value, "".join(traceback.format_stack())))
+            actual_setattr(model, key, value)
+        cls.classPatch(odoo.models.MetaModel, '__setattr__', metamodel_setattr)
+        cls.addClassCleanup(cls.setattrs.clear)
 
         def reset_changes():
             if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
@@ -973,6 +1019,21 @@ class TransactionCase(BaseCase):
         cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
         cls.startClassPatcher(cls._signal_changes_patcher)
 
+        cls.attrs_before = {
+            model: {
+                *vars(model),
+                # __annotations__ pops up during testing on *some* models
+                '__annotations__',
+                # if model is transient & transient fields are accessed
+                '_transient_max_count',
+                '_transient_max_hours',
+                #
+                '_rec_name',
+            }
+            for model in cls.registry.values()
+        }
+        cls.addClassCleanup(cls.attrs_before.clear)
+
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
@@ -991,13 +1052,9 @@ class TransactionCase(BaseCase):
             traceback.print_stack()
             raise AssertionError('Cannot commit or rollback a cursor from inside a test, this will lead to a broken cursor when trying to rollback the test. Please rollback to a specific savepoint instead or open another cursor if really necessary')
 
-        cls.commit_patcher = patch.object(cls.cr, 'commit', forbidden)
-        cls.startClassPatcher(cls.commit_patcher)
-        cls.rollback_patcher = patch.object(cls.cr, 'rollback', forbidden)
-        cls.startClassPatcher(cls.rollback_patcher)
-        cls.close_patcher = patch.object(cls.cr, 'close', forbidden)
-        cls.startClassPatcher(cls.close_patcher)
-
+        cls.classPatch(cls.cr, 'commit', forbidden)
+        cls.classPatch(cls.cr, 'rollback', forbidden)
+        cls.classPatch(cls.cr, 'close', forbidden)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
@@ -1012,6 +1069,8 @@ class TransactionCase(BaseCase):
 
     def setUp(self):
         super().setUp()
+        self.setattrs.clear()
+        self.addCleanup(self.check_attrs)
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.transaction.envs
@@ -1040,6 +1099,59 @@ class TransactionCase(BaseCase):
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+
+    def check_attrs(self):
+        # has to be an instance level method in order to collaboratively
+        # report failures via Outcome / Result.
+
+        # If a model is patched via a classPatch, that patch is still active,
+        # ignore iff the patch is registered against class cleanup (to make
+        # it's not a patch without cleanup)
+        modelClassPatches = {
+            (patcher.target, patcher.attribute)
+            for patcher in _patch._active_patches
+            if isinstance(patcher.target, odoo.models.MetaModel)
+            if (patcher.stop, (), {}) in self._class_cleanups
+        }
+        with self._outcome.testPartExecutor(self, isTest=False):
+            # need defaults for custom models created during the test
+            default_attrs = self.attrs_before[self.registry['base']] | {'_rec_name', '_active_name'}
+            # TODO: maybe retrieve all abstractmodels and either create a big
+            #       set of mixin attributes to always remove or have a mapping
+            #       of mixin: attributes to remove on a per-model basis?
+            mtv = mt._fields.keys() if (mt := self.registry.get('mail.thread')) else ()
+            mav = ma._fields.keys() if (ma := self.registry.get('mail.activity.mixin')) else ()
+            for model in self.registry.values():
+                extras = {
+                    f for f in vars(model)
+                    if f not in mtv
+                    if f not in mav
+                    # creating a custom field in a test will update the
+                    # registry in place, adding fields on leaf classes
+                    if not (f.startswith('x_') and f in model._fields)
+                    if (model, f) not in modelClassPatches
+                }.difference(self.attrs_before.get(model, default_attrs))
+                if extras:
+                    sets = "\n\n".join(
+                        f"======== {k} ========\n{v}:\n{tb}\n"
+                        for k, v, tb in self.setattrs.get(model._name, ())
+                        if k in extras
+                    )
+                    self._outcome.success = False
+                    frame = inspect.currentframe()
+                    tb = None
+                    while frame is not None:
+                        tb = types.TracebackType(tb, frame, frame.f_lasti, frame.f_lineno)
+                        frame = frame.f_back
+                    self._outcome.result.addFailure(
+                        self, (
+                            AssertionError,
+                            AssertionError(
+                                f"Found unexpected attributes on {model._name}: {' '.join(extras)}\n{sets}"
+                            ).with_traceback(tb),
+                            tb,
+                        )
+                    )
 
 
 class SingleTransactionCase(BaseCase):

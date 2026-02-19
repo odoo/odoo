@@ -995,7 +995,7 @@ class HrExpense(models.Model):
 
         # expense account of the product then the product category
         if self.product_id:
-            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            account = self.product_id.with_company(self.company_id).product_tmpl_id._get_product_accounts()['expense']
         else:
             field = self.env['product.category']._fields['property_account_expense_categ_id']
             account = field.get_company_dependent_fallback(self.env['product.category'])
