@@ -62,8 +62,8 @@
                             <tr>
                                 <th><strong>Operation</strong></th>
                                 <th><strong>WorkCenter</strong></th>
-                                <th><strong>Duration (minutes)</strong></th>
-                                <th t-if="o.state in ('progress', 'to_close')"><strong>Actual Duration (minutes)</strong></th>
+                                <th><strong>Duration</strong></th>
+                                <th t-if="o.state in ('progress', 'to_close')"><strong>Actual Duration</strong></th>
                                 <th style="width:30%"><strong>Barcode</strong></th>
                             </tr>
                             <tr t-foreach="o.workorder_ids" t-as="line2">

@@ -64,7 +64,7 @@
             <field name="arch" type="xml">
                 <graph string="Workcenter Productivity" type="pie" sample="1">
                     <field name="loss_id"/>
-                    <field name="duration" type="measure" string="Duration (minutes)"/>
+                    <field name="duration" type="measure" string="Duration"/>
                 </graph>
             </field>
         </record>
@@ -540,7 +540,7 @@
                 <field name="workcenter_id"/>
                 <field name="user_id"/>
                 <field name="loss_id"/>
-                <field name="duration" string="Duration (minutes)" sum="Duration"/>
+                <field name="duration" string="Duration" sum="Duration"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
         </field>
@@ -553,7 +553,7 @@
             <graph string="Workcenter Productivity" sample="1">
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration" type="measure" string="Duration"/>
             </graph>
         </field>
     </record>
@@ -565,7 +565,7 @@
             <pivot string="Workcenter Productivity" sample="1">
                 <field name="date_start" type="row" interval="day"/>
                 <field name="loss_type" type="col"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration" type="measure" string="Duration"/>
             </pivot>
         </field>
     </record>

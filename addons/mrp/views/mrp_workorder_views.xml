@@ -334,7 +334,7 @@
         <field name="arch" type="xml">
             <graph string="Operations" stacked="0" sample="1">
                 <field name="production_id"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration" type="measure" string="Duration"/>
                 <field name="duration_unit" type="measure"/>
                 <field name="cost" type="measure"/>
                 <field name="duration_expected" type="measure" string="Expected Duration" widget="float_time" options="{'unit': 'minutes'}"/>
@@ -488,7 +488,7 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <pivot string="Work Center Loads" sample="1">
-                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
+                <field name="duration_expected" type="measure" string="Expected Duration"/>
                 <field name="workcenter_id" type="row"/>
                 <field name="production_date" type="row" interval="day"/>
             </pivot>
@@ -502,7 +502,7 @@
             <graph string="Work Center load" sample="1">
                 <field name="production_date" interval="day"/>
                 <field name="workcenter_id"/>
-                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
+                <field name="duration_expected" type="measure" string="Expected Duration"/>
             </graph>
         </field>
     </record>
