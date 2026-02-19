@@ -93,7 +93,7 @@
                     <field name="date_done" string="Effective Date" optional="hide"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
                     <field name="backorder_id" optional="hide"/>
-                    <field name="picking_type_id" optional="hide"/>
+                    <field name="picking_type_id" options="{'no_quick_create': True}" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="state" optional="show" widget="badge"
                            decoration-danger="state=='cancel'"
@@ -209,7 +209,7 @@
                                        invisible="picking_type_code in ['incoming', 'outgoing']"/>
                             </div>
                             <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']" placeholder="e.g. Lumber Inc"/>
-                            <field name="picking_type_id" options="{'no_open': True}"
+                            <field name="picking_type_id" options="{'no_open': True, 'no_quick_create': True}"
                                    readonly="state in ('done', 'cancel')"
                                    domain="[('code', 'in', ('incoming', 'outgoing', 'internal'))]" />
                             <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
