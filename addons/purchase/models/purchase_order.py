@@ -690,6 +690,16 @@ class PurchaseOrder(models.Model):
     def button_unlock(self):
         self.locked = False
 
+    def button_reset_date_order(self):
+        previous_date_order = self.date_order
+        self.date_order = fields.Datetime.now()
+        self.order_line._compute_price_unit_and_date_planned_and_name()
+        # If there's no seller i.e no lead time, we keep the same difference with the new deadline
+        for line in self.order_line:
+            if not line.selected_seller_id and line.date_planned:
+                diff = line.date_planned - previous_date_order
+                line.date_planned = self.date_order + diff if diff.days >= 0 else self.date_order
+
     def _confirmation_error_message(self):
         """ Return whether order can be confirmed or not if not then return error message. """
         self.ensure_one()
