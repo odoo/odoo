@@ -3496,6 +3496,46 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_customer_display_loyalty_points(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'test_customer_display_loyalty_points', login="pos_user")
 
+    def test_refund_order_deduct_loyalty_points(self):
+        """
+        Test workflow for refunding orders and deducting loyalty points.
+
+        Workflow:
+        ├── Setup & Award Points: Create program, customer, and simulate purchase (3.2 points awarded)
+        └── Refund & Verify: Execute refund and verify points deducted (0.0 points remaining)
+
+        This test verifies the complete lifecycle of loyalty point management during order refunds
+        in POS systems, ensuring points are correctly awarded on purchase and deducted on refund.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        loyalty_program = self.create_programs([('arbitrary_name', 'loyalty')])['arbitrary_name']
+        self.env['res.partner'].create({'name': 'AA Partner'})
+
+        self.start_pos_tour("PosOrderAwardLoyaltyPointsToCustomer")
+        coupon_ids = loyalty_program.coupon_ids
+        self.assertEqual(len(coupon_ids), 1, "Single coupon generated after first order.")
+        first_order_loyalty_card = coupon_ids[0]
+        self.assertEqual(
+            first_order_loyalty_card.points,
+            3.2,
+            "3.2 Loyalty points should have been awarded after first order."
+        )
+
+        self.start_pos_tour("PosOrderRefundLoyaltyPoints")
+        self.assertEqual(len(coupon_ids), 1, "Single coupon available after refund order.")
+        refund_order_loyalty_card = coupon_ids[0]
+        self.assertEqual(
+            first_order_loyalty_card.id,
+            refund_order_loyalty_card.id,
+            "Both sell order and refund order are linked to the same loyalty card."
+        )
+        self.assertEqual(
+            refund_order_loyalty_card.points,
+            0.0,
+            "Loyalty points were deducted correctly after refunding the order."
+        )
+
     def test_confirm_coupon_programs_one_by_one(self):
         """
         Sync from UI is now syncing orders one by one.

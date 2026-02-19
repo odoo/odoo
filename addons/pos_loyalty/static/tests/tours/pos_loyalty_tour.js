@@ -695,6 +695,44 @@ registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosOrderAwardLoyaltyPointsToCustomer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.pointsAwardedAre("+3.2"),
+            PosLoyalty.pointsTotalIs("3.2"),
+            PosLoyalty.orderTotalIs("3.2"),
+            PosLoyalty.finalizeOrder("Cash", "3.2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosOrderRefundLoyaltyPoints", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
+            ProductScreen.isShown(),
+            PosLoyalty.pointsAwardedAre("-3.2"),
+            PosLoyalty.pointsTotalIs("0"),
+            PosLoyalty.orderTotalIs("3.2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one", {
     steps: () =>
         [

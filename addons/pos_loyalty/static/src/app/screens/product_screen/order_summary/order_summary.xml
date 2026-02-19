@@ -19,7 +19,8 @@
                             <span class='value'><t t-esc='_loyaltyStat.points.balance'/></span>
                         </div>
                         <div t-if='_loyaltyStat.points.won' class="loyalty-points loyalty-points-won">
-                            <span class='value text-success'>+<t t-esc='_loyaltyStat.points.won'/></span>
+                            <span t-if="_loyaltyStat.points.won > 0" class="value text-success">+<t t-out="_loyaltyStat.points.won"/></span>
+                            <span t-else="" class="value text-danger"><t t-out="_loyaltyStat.points.won"/></span>
                         </div>
                         <div t-if='_loyaltyStat.points.spent' class="loyalty-points loyalty-points-spent">
                             <span class='value text-danger'>-<t t-esc='_loyaltyStat.points.spent'/></span>

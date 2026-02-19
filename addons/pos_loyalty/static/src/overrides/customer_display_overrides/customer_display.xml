@@ -14,7 +14,8 @@
                             <div class="d-flex align-items-center gap-1 fw-bold fs-4 flex-nowrap text-end">
                                 <span t-if="_loyaltyStat.points.balance" class="loyalty-points-balance" t-out="_loyaltyStat.points.balance"/>
                                 <span t-if="_loyaltyStat.points.won" class="loyalty-points-won text-success">
-                                    + <t t-out="_loyaltyStat.points.won"/>
+                                    <span t-if="_loyaltyStat.points.won > 0" class="text-success">+ <t t-out="_loyaltyStat.points.won"/></span>
+                                    <span t-else="" class="text-danger"><t t-out="_loyaltyStat.points.won"/></span>
                                 </span>
                                 <span t-if="_loyaltyStat.points.spent" class="loyalty-points-spent text-danger">
                                     - <t t-out="_loyaltyStat.points.spent"/>

@@ -505,6 +505,28 @@ patch(PosOrder.prototype, {
         // This method should be overriden in other modules
         return true;
     },
+    _getRefundedAmountForRule(rule) {
+        const validProducts = rule.validProductIds;
+        return this.refunded_order_id?.lines.reduce(
+            (acc, line) => {
+                const isValidForRule = rule.any_product || validProducts.has(line.product_id.id);
+                if (line.is_reward_line || !isValidForRule) {
+                    return acc;
+                }
+                const totalIncl = line.prices.total_included;
+                const totalExcl = line.prices.total_excluded;
+                const amount = rule.minimum_amount_tax_mode === "incl" ? totalIncl : totalExcl;
+                return {
+                    qty: acc.qty + line.getQuantity(),
+                    price: acc.price + amount,
+                };
+            },
+            {
+                qty: 0,
+                price: 0,
+            }
+        );
+    },
     /**
      * Computes how much points each program gives.
      *
@@ -575,8 +597,16 @@ patch(PosOrder.prototype, {
                             : line.prices.total_excluded),
                     0
                 );
-                const amountCheck =
-                    (rule.minimum_amount_tax_mode === "incl" && amountWithTax) || amountWithoutTax;
+                let amountCheck = 0;
+                let refundedLinesSummary = {};
+                if (program.program_type === "loyalty" && this.is_refund) {
+                    refundedLinesSummary = this._getRefundedAmountForRule(rule);
+                    amountCheck = refundedLinesSummary?.price || 0;
+                } else {
+                    amountCheck =
+                        (rule.minimum_amount_tax_mode === "incl" && amountWithTax) ||
+                        amountWithoutTax;
+                }
                 if (rule.minimum_amount > amountCheck) {
                     continue;
                 }
@@ -621,6 +651,10 @@ patch(PosOrder.prototype, {
                             totalProductQty += lineQty;
                         }
                     }
+                }
+
+                if (refundedLinesSummary?.qty) {
+                    totalProductQty = refundedLinesSummary.qty;
                 }
                 if (totalProductQty < rule.minimum_qty) {
                     // Should also count the points from negative quantities.

@@ -51,4 +51,8 @@ patch(TicketScreen.prototype, {
         }
         return false;
     },
+    async onDoRefund() {
+        await super.onDoRefund(...arguments);
+        await this.pos.updatePrograms();
+    },
 });
