@@ -6,19 +6,30 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("validateTip", async () => {
+async function setupScreen(inputTip = null, selectedPercentage = null) {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const cardPaymentMethod = store.models["pos.payment.method"].get(2);
     order.addPaymentline(cardPaymentMethod);
     await store.syncAllOrders();
-    TipScreen.prototype.printTipReceipt = async () => {};
+
     const screen = await mountWithCleanup(TipScreen, {
-        props: {
-            orderUuid: order.uuid,
-        },
+        props: { orderUuid: order.uuid },
     });
-    screen.state.inputTipAmount = "2";
+
+    if (inputTip !== null) {
+        screen.state.inputTipAmount = inputTip;
+    }
+    if (selectedPercentage !== null) {
+        screen.state.selectedPercentage = selectedPercentage;
+    }
+
+    return { store, order, screen };
+}
+
+test("validateTip", async () => {
+    const { store, order, screen } = await setupScreen("2");
+    TipScreen.prototype.printTipReceipt = async () => {};
     await screen.validateTip();
     expect(order.is_tipped).toBe(true);
     expect(order.tip_amount).toBe(2);
@@ -34,26 +45,57 @@ test("validateTip", async () => {
     });
     expect(Boolean(tipLine)).toBe(true);
     expect(tipLine.price_unit).toBe(2);
-    await store.removeOrder(order);
 });
 
-test("overallAmountStr", async () => {
-    const store = await setupPosEnv();
-    const order = await getFilledOrder(store);
-    const cardPaymentMethod = store.models["pos.payment.method"].get(2);
-    order.addPaymentline(cardPaymentMethod);
-    await store.syncAllOrders();
-    TipScreen.prototype.printTipReceipt = async () => {};
-    const screen = await mountWithCleanup(TipScreen, {
-        props: {
-            orderUuid: order.uuid,
-        },
-    });
-    screen.state.inputTipAmount = "2";
-    const result = screen.overallAmountStr;
-    const total = order.priceIncl;
-    const original = screen.env.utils.formatCurrency(total);
-    const tip = screen.env.utils.formatCurrency(2);
-    const overall = screen.env.utils.formatCurrency(total + 2);
-    expect(result).toBe(`${original} + ${tip} tip = ${overall}`);
+test("tipAmount", async () => {
+    const { screen } = await setupScreen();
+    screen.state.inputTipAmount = "5.50";
+    expect(screen.tipAmount).toBe(5.5);
+    screen.state.inputTipAmount = "invalid";
+    expect(screen.tipAmount).toBe(0);
+});
+
+test("overallAmount", async () => {
+    const { screen } = await setupScreen("5.50");
+    const expected = screen.env.utils.formatCurrency(screen.totalAmount + 5.5);
+    expect(screen.overallAmount).toBe(expected);
+});
+
+test("tipSubText", async () => {
+    const { screen } = await setupScreen(null, "15%");
+    expect(screen.tipSubText).toBe("Includes a 15% tip");
+
+    screen.state.selectedPercentage = null;
+    screen.state.inputTipAmount = "5.50";
+    expect(screen.tipSubText).toBe(
+        "With " + screen.env.utils.formatCurrency(5.5) + " tip Included"
+    );
+
+    screen.state.inputTipAmount = "";
+    expect(screen.tipSubText).toBe("");
+});
+
+test("canSettle", async () => {
+    const { screen } = await setupScreen(null, "15%");
+    expect(screen.canSettle).toBe(true);
+
+    screen.state.selectedPercentage = null;
+    screen.state.inputTipAmount = "5.50";
+    expect(screen.canSettle).toBe(true);
+
+    screen.state.inputTipAmount = "";
+    expect(screen.canSettle).toBe(false);
+});
+
+test("selectTip", async () => {
+    const { screen } = await setupScreen();
+    const tip = { percentage: "15%", amount: 5.5 };
+
+    screen.selectTip(tip);
+    expect(screen.state.selectedPercentage).toBe("15%");
+    expect(screen.state.inputTipAmount).toBe(screen.env.utils.formatCurrency(5.5, false));
+
+    screen.selectTip(null);
+    expect(screen.state.selectedPercentage).toBe(null);
+    expect(screen.state.inputTipAmount).toBe("0");
 });

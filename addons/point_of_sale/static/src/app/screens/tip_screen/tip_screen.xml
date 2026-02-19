@@ -8,50 +8,59 @@
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
                     <button class="button btn btn-lg btn-outline-primary" t-on-click="goPreviousScreen">
                         <i class="fa fa-angle-double-left me-2"/>
-                        <span>Back</span>
+                        <span class="d-none d-sm-inline">Back</span>
                     </button>
-                    <button class="button btn btn-lg btn-outline-primary" t-if="this.pos.config.default_receipt_printer_id" t-on-click="printTipReceipt">
-                        <i class="fa fa-print"></i>
-                        <span> </span>
-                        <span>Reprint receipts</span>
-                    </button>
-                    <div class="top-content-center flex-grow-1">
-                        <h2 class="mb-0">Add a tip</h2>
-                    </div>
-                    <div class="button highlight next btn btn-lg btn-primary" t-on-click="validateTip">
-                        Settle <i class="fa fa-angle-double-right"></i>
-                    </div>
+                    <h2 class="mb-0 position-absolute start-50 translate-middle-x text-center">
+                        Add a tip
+                    </h2>
                 </div>
-                <div class="tip-options">
-                    <div class="total-amount my-4 fs-2 text-center">
-                        <t t-esc="overallAmountStr" />
-                    </div>
-                    <div class="tip-amount-options d-flex flex-column gap-2 mx-4 p-3 rounded bg-view">
-                        <div class="percentage-amounts d-flex gap-2">
-                            <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
-                                <button class="button btn btn-lg btn-secondary flex-fill py-5" t-on-click="() => { state.inputTipAmount = env.utils.formatCurrency(tip.amount,false); }">
-                                    <div class="percentage fs-1 text-primary text-center">
-                                        <t t-esc="tip.percentage"></t>
-                                    </div>
-                                    <div class="amount text-muted">
-                                        <t t-esc="env.utils.formatCurrency(tip.amount)" />
-                                    </div>
-                                </button>
-                            </t>
-                        </div>
-                        <div class="no-tip d-grid">
-                            <button class="button btn btn-lg btn-secondary flex-fill py-5 fs-1 text-primary"  t-on-click="() => { state.inputTipAmount = '0'; }">No Tip</button>
-                        </div>
-                        <div class="custom-amount-form d-flex">
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-secondary">Tip Amount</span>
-                                <input type="text" class="item form-control fs-1" aria-label="Username" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount"/>
-                                <span class="input-group-text">
-                                    <div class="currency">
-                                        <t t-esc="pos.currency.symbol" />
-                                    </div>
-                                </span>
+                <div class="d-flex flex-column flex-lg-row flex-grow-1 overflow-hidden">
+                    <div class="flex-grow-1 w-100 w-lg-50 border-end border-bottom">
+                        <div class="d-flex flex-column h-100 justify-content-center align-items-center w-100">
+                            <div class="total-amount text-center fw-bold"
+                                style="font-size:clamp(50px, 12vmin, 125px);">
+                                <PriceFormatter price="overallAmount"/>
                             </div>
+                            <div class="text-primary text-center fw-bold mb-lg-5"
+                                style="font-size:clamp(22px, 4vmin, 48px); height:3em;"
+                                t-out="tipSubText"/>
+                        </div>
+                    </div>
+                    <div class="tip-options d-flex flex-column w-100 w-lg-50 p-2 justify-content-between">
+                        <div class="d-flex flex-column justify-content-center flex-grow-1">
+                            <div class="tip-amount-options rounded p-3 d-flex flex-column gap-3 w-100">
+                                <div class="percentage-amounts d-flex gap-2 flex-wrap">
+                                    <button t-foreach="percentageTips" t-as="tip" t-key="tip.percentage"
+                                            class="button btn btn-lg btn-secondary rounded-4 flex-fill py-4 fs-3"
+                                            t-attf-class="{{ state.selectedPercentage == tip.percentage ? 'border border-2 border-primary' : 'opacity-75' }}"
+                                            t-on-click="() => this.selectTip(tip)">
+                                        <div class="percentage fs-1 text-center fw-bold" t-out="tip.percentage"/>
+                                        <div class="amount text-primary fs-2 fw-semibold text-center">
+                                            <PriceFormatter price="env.utils.formatCurrency(tip.amount)"/>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="custom-amount-form d-flex input-group input-group-lg w-100">
+                                    <span class="input-group-text bg-secondary">Tip Amount</span>
+                                    <input type="number"
+                                           class="item form-control fs-3"
+                                           t-model="state.inputTipAmount"
+                                           t-att-data-amount="state.inputTipAmount"
+                                           t-on-input="() => { state.selectedPercentage = null; }"/>
+                                    <span class="input-group-text" t-out="pos.currency.symbol"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 p-2 mt-4">
+                              <button class="no-tip button btn btn-lg btn-secondary rounded-4 flex-fill py-4 fs-3"
+                                    t-on-click="noTip">
+                                No Tip
+                            </button>
+                            <button class="button highlight next btn btn-lg btn-primary rounded-4 flex-fill py-4 fs-3"
+                                    t-att-disabled="!canSettle"
+                                    t-on-click="validateTip">
+                                Settle <i class="fa fa-angle-double-right"/>
+                            </button>
                         </div>
                     </div>
                 </div>
