@@ -55,7 +55,7 @@ class PrinterDriver(PrinterDriverBase):
                         usb_device.serial_number == device['usb_serial_number']
                     )
 
-                self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher})
+                self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher}, timeout=5000)
             elif device.get('ip'):
                 self.escpos_device = printer.Network(device['ip'], timeout=5)
             else:
@@ -161,7 +161,7 @@ class PrinterDriver(PrinterDriverBase):
             try:
                 with EscposIO(self.escpos_device) as dev:
                     if not self._check_status_escpos(dev.printer, action_unique_id=None):
-                        return
+                        raise escpos.exceptions.Error("Printer is not ready")
                     dev.printer.set(align='center', double_height=True, double_width=True)
                     dev.printer.textln(title.decode())
                     dev.printer.set_with_default(align='center', double_height=False, double_width=False)
@@ -176,7 +176,7 @@ class PrinterDriver(PrinterDriverBase):
                 self.send_status(status='success')
                 return
             except (escpos.exceptions.Error, OSError, AssertionError, AttributeError):
-                _logger.warning("Failed to print QR status receipt, falling back to simple receipt")
+                _logger.warning("Failed to print status receipt with escpos, falling back to print_raw with CUPS")
 
         title = commands['title'] % title
         self.print_raw(commands['center'] + title + b'\n' + body + commands['cut'])
