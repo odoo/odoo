@@ -80,6 +80,9 @@
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-set="has_side_column" t-value="not is_public_user"/>
+    <t t-set="head">
+        <script t-if="course_list_json_ld" type="application/ld+json" t-out="course_list_json_ld"/>
+    </t>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
             <div class="oe_structure oe_empty"/>
