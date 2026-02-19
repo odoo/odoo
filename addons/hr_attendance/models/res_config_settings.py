@@ -1,17 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    # TODO: Remove in master
-    overtime_company_threshold = fields.Integer(
-        string="Tolerance Time In Favor Of Company", readonly=False)
-    # TODO: Remove in master
-    overtime_employee_threshold = fields.Integer(
-        string="Tolerance Time In Favor Of Employee", readonly=False)
     hr_attendance_display_overtime = fields.Boolean(related='company_id.hr_attendance_display_overtime', readonly=False)
     attendance_kiosk_mode = fields.Selection(related='company_id.attendance_kiosk_mode', readonly=False)
     attendance_barcode_source = fields.Selection(related='company_id.attendance_barcode_source', readonly=False)
@@ -23,32 +17,11 @@ class ResConfigSettings(models.TransientModel):
     auto_check_out = fields.Boolean(related="company_id.auto_check_out", readonly=False)
     single_check_in = fields.Boolean(related="company_id.single_check_in", readonly=False)
     auto_check_out_tolerance = fields.Float(related="company_id.auto_check_out_tolerance", readonly=False)
-    absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
-
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        company = self.env.company
-        res.update({
-            'overtime_company_threshold': company.overtime_company_threshold,
-            'overtime_employee_threshold': company.overtime_employee_threshold,
-        })
-        return res
 
     def set_values(self):
         super().set_values()
         company = self.env.company
-        # Done this way to have all the values written at the same time,
-        # to avoid recomputing the overtimes several times with
-        # invalid company configurations
-        fields_to_check = [
-            'overtime_company_threshold',
-            'overtime_employee_threshold',
-        ]
-        if any(self[field] != company[field] for field in fields_to_check):
-            company.write({field: self[field] for field in fields_to_check})
-
         # synchronize auto_check_out and single_check_in feature.
         if not company.auto_check_out and company.single_check_in:
             company.single_check_in = False

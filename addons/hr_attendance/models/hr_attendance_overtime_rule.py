@@ -93,6 +93,7 @@ class HrAttendanceOvertimeRule(models.Model):
         ],
         default='day',
     )
+    overtime_condition = fields.Selection([('greater', 'are greater than'), ('lower', 'are lower than')], default='greater')
     sequence = fields.Integer(default=10)
 
     ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset', required=True, index=True)
@@ -157,13 +158,14 @@ class HrAttendanceOvertimeRule(models.Model):
             expected_duration = sum_intervals(period_schedule)
 
         overtime_amount = sum_intervals(Intervals(attendances_interval)) - expected_duration
-        employee = attendances.employee_id
-        company = self.company_id or employee.company_id
-        if company.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
-            if not intervals_attendance_by_attendance:
-                return {}, {}
-            last_attendance = sorted(intervals_attendance_by_attendance.keys(), key=lambda att: att.check_out)[-1]
-            return {}, {last_attendance: [(overtime_amount, self)]}
+
+        if self.overtime_condition == 'lower':
+            if float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
+                if not intervals_attendance_by_attendance:
+                    return {}, {}
+                last_attendance = sorted(intervals_attendance_by_attendance.keys(), key=lambda att: att.check_out)[-1]
+                return {}, {last_attendance: [(overtime_amount, self)]}
+            return {}, {}
 
         if float_compare(overtime_amount, self.employer_tolerance, 5) != 1:
             return {}, {}

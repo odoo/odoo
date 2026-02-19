@@ -637,20 +637,25 @@ class HrAttendance(models.Model):
         Objective is to create technical attendances on absence days to have negative overtime created for that day
         """
         yesterday = datetime.today().replace(hour=0, minute=0, second=0) - relativedelta(days=1)
-        companies = self.env['res.company'].search([('absence_management', '=', True)])
-        if not companies:
-            return
 
         checked_in_employees = self.env['hr.attendance.overtime.line'].search([('date', '=', yesterday)]).employee_id
 
-        technical_attendances_vals = []
+        rulesets = self.env['hr.attendance.overtime.rule'].search([
+            ('overtime_condition', '=', 'lower')
+        ]).ruleset_id
+        if not rulesets:
+            return
+
         absent_employees = self.env['hr.employee'].search([
             ('id', 'not in', checked_in_employees.ids),
-            ('company_id', 'in', companies.ids),
             ('resource_calendar_id', '!=', False),
-            ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1))
+            ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1)),
+            ('ruleset_id', 'in', rulesets.ids),
         ])
+        if not absent_employees:
+            return
 
+        technical_attendances_vals = []
         for emp in absent_employees:
             local_day_start = yesterday.replace(tzinfo=ZoneInfo(emp._get_tz()))
             check_in_utc = local_day_start.astimezone(UTC)

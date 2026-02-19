@@ -17,22 +17,30 @@ class TestHrAttendanceUndertime(HttpCase):
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
             'attendance_overtime_validation': 'no_validation',
-            'absence_management': True,
             'tz': 'Europe/Brussels',
         })
         cls.ruleset = cls.env['hr.attendance.overtime.ruleset'].with_company(cls.company).create({
             'name': 'Ruleset schedule quantity',
-            'rule_ids': [Command.create({
-                    'name': 'Rule schedule quantity',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Undertime Rule',
                     'base_off': 'quantity',
                     'expected_hours_from_contract': True,
                     'quantity_period': 'day',
-                })],
+                    'overtime_condition': 'lower',
+                }),
+                Command.create({
+                    'name': 'Overtime Rule',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': True,
+                    'quantity_period': 'day',
+                    'overtime_condition': 'greater',
+                }),
+            ],
         })
 
         cls.company_1 = cls.env['res.company'].create({
             'name': 'Overtime Inc.',
-            'absence_management': True,
             'tz': 'Europe/Brussels',
         })
         cls.ruleset_1 = cls.env['hr.attendance.overtime.ruleset'].with_company(cls.company_1).create({
@@ -42,6 +50,7 @@ class TestHrAttendanceUndertime(HttpCase):
                     'base_off': 'quantity',
                     'expected_hours_from_contract': True,
                     'quantity_period': 'day',
+                    'overtime_condition': 'lower',
                 })],
         })
 
@@ -198,6 +207,7 @@ class TestHrAttendanceUndertime(HttpCase):
                     'expected_hours_from_contract': False,
                     'expected_hours': 8.0,
                     'quantity_period': 'day',
+                    'overtime_condition': 'lower',
                 }),
                 Command.create({
                     'name': 'Rule schedule quantity',
@@ -205,6 +215,7 @@ class TestHrAttendanceUndertime(HttpCase):
                     'expected_hours_from_contract': False,
                     'expected_hours': 10.0,
                     'quantity_period': 'day',
+                    'overtime_condition': 'lower',
                 })],
         })
         self.employee.ruleset_id = ruleset
@@ -231,6 +242,7 @@ class TestHrAttendanceUndertime(HttpCase):
                     'expected_hours_from_contract': False,
                     'expected_hours': 8.0,
                     'quantity_period': 'day',
+                    'overtime_condition': 'lower',
                 }),
                 Command.create({
                     'name': 'Rule schedule quantity',
@@ -238,6 +250,7 @@ class TestHrAttendanceUndertime(HttpCase):
                     'expected_hours_from_contract': False,
                     'expected_hours': 40.0,
                     'quantity_period': 'week',
+                    'overtime_condition': 'lower',
                 })],
         })
         self.employee.ruleset_id = ruleset
