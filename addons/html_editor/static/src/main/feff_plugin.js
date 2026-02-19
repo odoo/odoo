@@ -15,7 +15,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
  */
 
 /**
- * @typedef {((node: Node) => boolean | undefined)[]} legit_feff_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} would_feff_be_legit_predicates
  * @typedef {((root: EditorContext["editable"], cursors: Cursors) => Node[])[]} feff_providers
  * @typedef {(() => string)[]} selectors_for_feff_providers
  */
@@ -36,7 +36,7 @@ export class FeffPlugin extends Plugin {
     resources = {
         normalize_processors: this.updateFeffs.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        tangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) => {
+        is_char_tangible_for_keyboard_navigation_predicates: (ev, char, lastSkipped) => {
             // Skip first FEFF, but not the second one (unless shift is pressed).
             if (char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF")) {
                 return false;
@@ -77,7 +77,7 @@ export class FeffPlugin extends Plugin {
                 cursors,
                 (node) =>
                     node.hasAttribute("data-oe-zws-empty-inline") ||
-                    !(this.checkPredicates("removable_node_predicates", node) ?? true)
+                    !(this.checkPredicates("is_node_removable_predicates", node) ?? true)
             );
             restoreSpaces();
         }
@@ -164,7 +164,7 @@ export class FeffPlugin extends Plugin {
         this.removeFeffs(root, cursors, {
             exclude: (node) =>
                 feffNodesToKeep.has(node) ||
-                (this.checkPredicates("legit_feff_predicates", node) ?? false),
+                (this.checkPredicates("would_feff_be_legit_predicates", node) ?? false),
         });
         cursors.restore();
     }

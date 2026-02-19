@@ -21,12 +21,12 @@ export class CarouselSlidesOptionPlugin extends Plugin {
             SetSlideAnchorUrlAction,
         },
         clean_for_save_processors: this.cleanForSave.bind(this),
-        legit_empty_link_predicates: (linkEl) => {
+        is_empty_link_legit_predicates: (linkEl) => {
             if (linkEl.matches(".carousel-item a.slide-link")) {
                 return true;
             }
         },
-        show_overlay_buttons_of_ancestor_predicates: (el) => {
+        should_show_overlay_buttons_of_ancestor_predicates: (el) => {
             if (el.matches("div.carousel-item")) {
                 return true;
             }

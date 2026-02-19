@@ -27,7 +27,7 @@ import { childNodeIndex } from "@html_editor/utils/position";
  */
 
 /**
- * @typedef {((node: Node) => boolean | undefined)[]} valid_for_base_container_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_valid_for_base_container_predicates
  */
 
 export class BaseContainerPlugin extends Plugin {
@@ -50,7 +50,7 @@ export class BaseContainerPlugin extends Plugin {
             }
             this.cleanEmptyStructuralContainers();
         },
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             if (
                 node.nodeName === "DIV" &&
                 !this.isCandidateForBaseContainerAllowUnsplittable(node)
@@ -58,7 +58,7 @@ export class BaseContainerPlugin extends Plugin {
                 return false;
             }
         },
-        valid_for_base_container_predicates: [
+        is_valid_for_base_container_predicates: [
             (node) => {
                 if (
                     !node ||
@@ -74,7 +74,7 @@ export class BaseContainerPlugin extends Plugin {
             (element, options) => {
                 if (
                     !options?.allowUnsplittable &&
-                    !(this.checkPredicates("splittable_node_predicates", element) ?? true)
+                    !(this.checkPredicates("is_node_splittable_predicates", element) ?? true)
                 ) {
                     return false;
                 }
@@ -110,7 +110,7 @@ export class BaseContainerPlugin extends Plugin {
         const closestEditable = (n) =>
             isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
 
-        const isUnsplittable = !(this.checkPredicates("splittable_node_predicates", node) ?? true);
+        const isUnsplittable = !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
         const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
 
         if (isUnsplittable || !isCandidateForBase) {
@@ -121,7 +121,7 @@ export class BaseContainerPlugin extends Plugin {
         if (
             anchorNode === closestEditable(node) ||
             !this.config.baseContainers.includes(anchorNode.nodeName) ||
-            !(this.checkPredicates("removable_node_predicates", anchorNode) ?? true)
+            !(this.checkPredicates("is_node_removable_predicates", anchorNode) ?? true)
         ) {
             return;
         }
@@ -148,26 +148,26 @@ export class BaseContainerPlugin extends Plugin {
      * This function considers unsplittable and childNodes.
      */
     isCandidateForBaseContainer(element) {
-        return this.checkPredicates("valid_for_base_container_predicates", element) ?? true;
+        return this.checkPredicates("is_valid_for_base_container_predicates", element) ?? true;
     }
 
     /**
      * Evaluate if an element would be eligible to become a baseContainer
      * without considering unsplittable.
      *
-     * This function is only meant to be used during `splittable_node_predicates` to
+     * This function is only meant to be used during `is_node_splittable_predicates` to
      * avoid an infinite loop:
      * Considering a `DIV`,
-     * - During `splittable_node_predicates`, one predicate should return false
+     * - During `is_node_splittable_predicates`, one predicate should return false
      *   if the `DIV` is NOT a baseContainer candidate (Odoo specification),
-     *   therefore `valid_for_base_container_predicates` should be evaluated.
-     * - During `valid_for_base_container_predicates`, one predicate should
+     *   therefore `is_valid_for_base_container_predicates` should be evaluated.
+     * - During `is_valid_for_base_container_predicates`, one predicate should
      *   return false if the `DIV` is unsplittable, because a node has to be
      *   splittable to use the featureSet associated with paragraphs.
      * Each resource has to call the other. To avoid the issue, during
-     * `splittable_node_predicates`, the baseContainer predicate will execute
-     * all predicates for `valid_for_base_container_predicates` except the one
-     * using `splittable_node_predicates`, since it is already being evaluated.
+     * `is_node_splittable_predicates`, the baseContainer predicate will execute
+     * all predicates for `is_valid_for_base_container_predicates` except the one
+     * using `is_node_splittable_predicates`, since it is already being evaluated.
      *
      * In simpler terms:
      * A `DIV` is unsplittable by default;
@@ -177,7 +177,7 @@ export class BaseContainerPlugin extends Plugin {
      */
     isCandidateForBaseContainerAllowUnsplittable(element) {
         return (
-            this.checkPredicates("valid_for_base_container_predicates", element, {
+            this.checkPredicates("is_valid_for_base_container_predicates", element, {
                 allowUnsplittable: true,
             }) ?? true
         );
@@ -192,7 +192,7 @@ export class BaseContainerPlugin extends Plugin {
      */
     shallowIsCandidateForBaseContainer(element) {
         return (
-            this.checkPredicates("valid_for_base_container_predicates", element, {
+            this.checkPredicates("is_valid_for_base_container_predicates", element, {
                 shallow: true,
             }) ?? true
         );

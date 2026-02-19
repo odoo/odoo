@@ -51,7 +51,7 @@ export class GridLayoutPlugin extends Plugin {
         on_element_dropped_near_handlers: this.onElementDroppedNear.bind(this),
         on_element_dropped_handlers: this.onElementDropped.bind(this),
         // Ignore background grid in history
-        savable_mutation_record_predicates: this.ignoreBackgroundGrid.bind(this),
+        is_mutation_record_savable_predicates: this.ignoreBackgroundGrid.bind(this),
     };
 
     setup() {

@@ -63,7 +63,7 @@ export class AnimateOptionPlugin extends Plugin {
         },
         normalize_processors: this.normalize.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             if (node.classList?.contains("o_animated_text")) {
                 return false;
             }

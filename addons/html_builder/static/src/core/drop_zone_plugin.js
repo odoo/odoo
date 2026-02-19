@@ -25,7 +25,7 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {DropzoneSelector[]} dropzone_selector
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} valid_for_sibling_dropzone_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_valid_for_sibling_dropzone_predicates
  */
 
 export class DropZonePlugin extends Plugin {
@@ -41,7 +41,7 @@ export class DropZonePlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        savable_mutation_record_predicates: (record) => {
+        is_mutation_record_savable_predicates: (record) => {
             if (record.type === "childList") {
                 const addedOrRemovedNode = (record.addedTrees[0] || record.removedTrees[0]).node;
                 // Do not record the addition/removal of the dropzones.
@@ -50,12 +50,12 @@ export class DropZonePlugin extends Plugin {
                 }
             }
         },
-        selection_placeholder_container_predicates: (container) => {
+        can_contain_selection_placeholder_predicates: (container) => {
             if (container.classList.contains("oe_structure")) {
                 return false;
             }
         },
-        valid_for_sibling_dropzone_predicates: (el) => {
+        is_valid_for_sibling_dropzone_predicates: (el) => {
             if (
                 // Do not drop blocks into an image field.
                 el.parentNode.closest("[data-oe-type=image]") ||
@@ -281,7 +281,7 @@ export class DropZonePlugin extends Plugin {
     getSelectorSiblings(editableAreaEls, rootEl, { selector, excludeParent = false }) {
         const filterFct = (el) =>
             this.checkSelectors(el, rootEl) &&
-            (this.checkPredicates("valid_for_sibling_dropzone_predicates", el) ?? true) &&
+            (this.checkPredicates("is_valid_for_sibling_dropzone_predicates", el) ?? true) &&
             (excludeParent ? !el.parentNode.matches(excludeParent) : true);
 
         const dropAreaEls = [];

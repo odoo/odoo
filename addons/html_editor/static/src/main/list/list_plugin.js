@@ -200,7 +200,7 @@ export class ListPlugin extends Plugin {
         color_apply_overrides: this.applyColorToListItem.bind(this),
         triple_click_overrides: this.handleTripleClick.bind(this),
 
-        fully_selected_node_predicates: (node, selection, range) => {
+        is_node_fully_selected_predicates: (node, selection, range) => {
             if (node.nodeName === "LI") {
                 const nonListChildren = childNodes(node).filter(
                     (n) => !["UL", "OL"].includes(n.nodeName)

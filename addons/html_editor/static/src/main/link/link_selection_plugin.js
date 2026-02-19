@@ -27,8 +27,8 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  */
 
 /**
- * @typedef {((link: HTMLLinkElement) => boolean | void)[]} eligible_link_for_selection_indication_predicates
- * @typedef {((link: HTMLLinkElement) => boolean | void)[]} eligible_link_for_zwnbsp_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | void)[]} is_link_eligible_for_visual_indication_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | void)[]} is_link_eligible_for_zwnbsp_predicates
  */
 
 export class LinkSelectionPlugin extends Plugin {
@@ -47,7 +47,7 @@ export class LinkSelectionPlugin extends Plugin {
         feff_providers: this.addFeffsToLinks.bind(this),
 
         /** Predicates */
-        selection_placeholder_container_predicates: (container) => {
+        can_contain_selection_placeholder_predicates: (container) => {
             if (container.nodeName === "BUTTON" || container.nodeName === "A") {
                 // We sometimes have buttons or links that are blocks with
                 // contenteditable=true but we never want to insert a paragraph
@@ -81,14 +81,14 @@ export class LinkSelectionPlugin extends Plugin {
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
-            (this.checkPredicates("eligible_link_for_zwnbsp_predicates", link) ?? true)
+            (this.checkPredicates("is_link_eligible_for_zwnbsp_predicates", link) ?? true)
         );
     }
 
     isLinkEligibleForVisualIndication(link) {
         return (
             this.isLinkEligibleForZwnbsp(link) &&
-            (this.checkPredicates("eligible_link_for_selection_indication_predicates", link) ??
+            (this.checkPredicates("is_link_eligible_for_visual_indication_predicates", link) ??
                 true)
         );
     }

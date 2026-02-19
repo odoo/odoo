@@ -41,7 +41,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         attribute_change_processors: this.onChangeAttribute.bind(this),
 
         /** Predicates */
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
 
         /** Selectors */
         move_node_whitelist_selectors: "[data-embedded]",

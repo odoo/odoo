@@ -59,7 +59,7 @@ export class HighlightPlugin extends Plugin {
                 node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
             }
         },
-        format_class_predicates: (className) => {
+        is_format_class_predicates: (className) => {
             if (className.startsWith("o_text_highlight")) {
                 return true;
             }

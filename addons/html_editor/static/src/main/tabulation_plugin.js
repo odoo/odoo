@@ -76,7 +76,7 @@ export class TabulationPlugin extends Plugin {
         /** Overrides */
         delete_forward_overrides: this.handleDeleteForward.bind(this),
 
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             // avoid merge
             if (isEditorTab(node)) {
                 return false;

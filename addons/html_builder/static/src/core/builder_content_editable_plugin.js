@@ -23,7 +23,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             "section > .container-fluid",
             ".o_savable",
         ],
-        valid_contenteditable_predicates: this.isValidContentEditable.bind(this),
+        is_valid_contenteditable_predicates: this.isValidContentEditable.bind(this),
         content_editable_providers: this.getContentEditableEls.bind(this),
         content_not_editable_providers: this.getContentNotEditableEls.bind(this),
         contenteditable_to_remove_selector: "[contenteditable]",

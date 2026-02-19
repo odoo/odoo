@@ -8,7 +8,7 @@ class BootstrapOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        savable_mutation_record_predicates: this.filterBootstrapMutations.bind(this),
+        is_mutation_record_savable_predicates: this.filterBootstrapMutations.bind(this),
     };
 
     /**

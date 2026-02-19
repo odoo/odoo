@@ -7,7 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
 /**
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} valid_contenteditable_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_valid_contenteditable_predicates
  *
  * @typedef {((root: EditorContext["editable"]) => HTMLElement[])[]} content_editable_providers
  * @typedef {((root: EditorContext["editable"]) => HTMLElement[])[]} content_not_editable_providers
@@ -45,7 +45,7 @@ export class ContentEditablePlugin extends Plugin {
         }
         const filteredContentEditableEls = contentEditableEls.filter(
             (contentEditableEl) =>
-                this.checkPredicates("valid_contenteditable_predicates", contentEditableEl) ?? true
+                this.checkPredicates("is_valid_contenteditable_predicates", contentEditableEl) ?? true
         );
         for (const contentEditableEl of filteredContentEditableEls) {
             if (

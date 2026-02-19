@@ -688,7 +688,7 @@ describe("destroy", () => {
             static dependencies = ["history", "dom"];
             static id = "test";
             resources = {
-                savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+                is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
             };
             isMutationRecordSavable(record) {
                 if (

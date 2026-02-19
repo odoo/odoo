@@ -51,7 +51,7 @@ export class CaptionPlugin extends Plugin {
         delete_image_overrides: this.handleDeleteImage.bind(this),
         on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
-        splittable_node_predicates: [
+        is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
                 if (["FIGURE", "FIGCAPTION"].includes(node.nodeName)) {
@@ -59,7 +59,7 @@ export class CaptionPlugin extends Plugin {
                 }
             },
         ],
-        link_compatible_selection_predicates: () => {
+        is_link_allowed_on_selection_predicates: () => {
             if (this.isLinkAllowedOnSelection()) {
                 return true;
             }
@@ -67,7 +67,7 @@ export class CaptionPlugin extends Plugin {
         // Consider a <figure> element as empty if it only contains a
         // <figcaption> element (e.g. when its image has just been
         // removed).
-        empty_node_predicates: (el) => {
+        is_node_empty_predicates: (el) => {
             if (
                 el.matches?.("figure") &&
                 el.children.length === 1 &&

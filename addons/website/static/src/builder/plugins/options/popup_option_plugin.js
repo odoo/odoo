@@ -45,7 +45,7 @@ class PopupOptionPlugin extends Plugin {
             CopyAnchorAction,
             SetPopupDelayAction,
         },
-        empty_node_predicates: (el) => {
+        is_node_empty_predicates: (el) => {
             if (!el.matches?.(".s_popup")) {
                 return;
             }

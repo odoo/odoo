@@ -19,7 +19,7 @@ import { omit, pick } from "@web/core/utils/objects";
  */
 
 /**
- * @typedef {((selection: EditorSelection) => boolean)[]} power_buttons_visibility_predicates
+ * @typedef {((selection: EditorSelection) => boolean)[]} should_show_power_buttons_predicates
  */
 
 /**
@@ -138,7 +138,8 @@ export class PowerButtonsPlugin extends Plugin {
             !this.services.ui.isSmall &&
             !closestElement(documentSelection.anchorNode, "td, th, li") &&
             !block.style.textAlign &&
-            (this.checkPredicates("power_buttons_visibility_predicates", documentSelection) ?? true)
+            (this.checkPredicates("should_show_power_buttons_predicates", documentSelection) ??
+                true)
         ) {
             this.powerButtonsContainer.classList.remove("d-none");
             const direction = closestElement(block, "[dir]")?.getAttribute("dir");

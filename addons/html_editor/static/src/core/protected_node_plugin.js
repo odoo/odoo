@@ -26,7 +26,7 @@ export class ProtectedNodePlugin extends Plugin {
         normalize_processors: withSequence(0, this.normalize.bind(this)),
 
         /** Predicates */
-        splittable_node_predicates: [
+        is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
                 if (isProtecting(node)) {
@@ -39,7 +39,7 @@ export class ProtectedNodePlugin extends Plugin {
                 }
             },
         ],
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
 
         /** Providers */
         removable_descendants_providers: this.filterDescendantsToRemove.bind(this),

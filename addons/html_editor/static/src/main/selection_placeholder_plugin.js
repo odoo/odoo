@@ -37,7 +37,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        selection_blocker_predicates: (blocker) => {
+        is_selection_blocker_predicates: (blocker) => {
             if (
                 (blocker.nodeType === Node.ELEMENT_NODE &&
                     blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
@@ -48,14 +48,14 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        selection_placeholder_container_predicates: (container) => {
+        can_contain_selection_placeholder_predicates: (container) => {
             if (!container.isContentEditable || !allowsParagraphRelatedElements(container)) {
                 return false;
             } else if (container.getAttribute("contenteditable") === "true") {
                 return true;
             }
         },
-        power_buttons_visibility_predicates: ({ anchorNode }) => {
+        should_show_power_buttons_predicates: ({ anchorNode }) => {
             if (closestElement(anchorNode, PLACEHOLDER_SELECTOR)) {
                 return false;
             }
@@ -83,10 +83,10 @@ export class SelectionPlaceholderPlugin extends Plugin {
      */
     updatePlaceholders() {
         const isSelectionBlocker = (node) =>
-            this.checkPredicates("selection_blocker_predicates", node) ?? false;
+            this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
         const placeholderParents = selectElements(this.editable, "*").filter(
             (container) =>
-                this.checkPredicates("selection_placeholder_container_predicates", container) ??
+                this.checkPredicates("can_contain_selection_placeholder_predicates", container) ??
                 false
         );
 

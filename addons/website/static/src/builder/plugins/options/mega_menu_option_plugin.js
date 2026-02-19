@@ -25,7 +25,7 @@ export class MegaMenuOptionPlugin extends Plugin {
         on_will_reset_history_after_saving_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selector: ".o_mega_menu > section",
-        splittable_node_predicates: (node) => {
+        is_node_splittable_predicates: (node) => {
             //avoid merge
             if (node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link")) {
                 return false;

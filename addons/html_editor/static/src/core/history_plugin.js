@@ -153,8 +153,8 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @typedef {(() => void)[]} on_savepoint_restored_handlers
  * @typedef {((arg: { step: HistoryStep, stepCommonAncestor: HTMLElement, isPreviewing: boolean }) => void)[]} on_step_added_handlers
  *
- * @typedef {((record: HistoryMutationRecord) => boolean | undefined)[]} savable_mutation_record_predicates
- * @typedef {((step: HistoryStep) => boolean | undefined)[]} reversible_step_predicates
+ * @typedef {((record: HistoryMutationRecord) => boolean | undefined)[]} is_mutation_record_savable_predicates
+ * @typedef {((step: HistoryStep) => boolean | undefined)[]} is_step_reversible_predicates
  *
  * @typedef {((
  *    value: string,
@@ -750,7 +750,7 @@ export class HistoryPlugin extends Plugin {
     filterAndAdjustHistoryMutationRecords(records) {
         this.trigger("on_will_filter_mutation_record_handlers", records);
         const isRecordSavable = (record) =>
-            this.checkPredicates("savable_mutation_record_predicates", record) ?? true;
+            this.checkPredicates("is_mutation_record_savable_predicates", record) ?? true;
         const result = [];
         for (const record of records) {
             if (!this.isObservedNode(record.target)) {
@@ -1308,7 +1308,7 @@ export class HistoryPlugin extends Plugin {
         if (!step) {
             return false;
         }
-        return this.checkPredicates("reversible_step_predicates", step) ?? true;
+        return this.checkPredicates("is_step_reversible_predicates", step) ?? true;
     }
     /**
      * Get the step index in the history to redo.

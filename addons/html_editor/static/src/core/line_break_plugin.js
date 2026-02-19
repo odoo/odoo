@@ -26,7 +26,7 @@ export class LineBreakPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
-        legit_feff_predicates: (node) => {
+        would_feff_be_legit_predicates: (node) => {
             if (
                 node.previousSibling &&
                 !node.nextSibling &&
