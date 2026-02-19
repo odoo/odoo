@@ -2715,12 +2715,6 @@ class AccountMoveLine(models.Model):
                 "Entries don't belong to the same company: %s",
                 ", ".join(self.company_id.mapped('display_name')),
             ))
-        if not accounts.reconcile and accounts.account_type not in ('asset_cash', 'liability_credit_card'):
-            raise UserError(_(
-                "Account %s does not allow reconciliation. First change the configuration of this account "
-                "to allow it.",
-                accounts.display_name,
-            ))
 
     @api.model
     def _optimize_reconciliation_plan(self, reconciliation_plan, shadowed_aml_values=None):

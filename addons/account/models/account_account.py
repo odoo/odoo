@@ -88,7 +88,7 @@ class AccountAccount(models.Model):
         compute_sql='_compute_sql_internal_group',
         compute_sudo=True,
     )
-    reconcile = fields.Boolean(string='Allow Reconciliation', tracking=True,
+    reconcile = fields.Boolean(string='Show in Reconciliation', tracking=True,
         compute='_compute_reconcile', store=True, readonly=False, precompute=True,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
