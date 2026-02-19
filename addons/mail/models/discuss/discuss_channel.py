@@ -418,8 +418,7 @@ class DiscussChannel(models.Model):
         # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
-        if not self.env.context.get("install_mode") and not self.env.user._is_public():
-            Store(bus_channel=self.env.user).add(channels).bus_send()
+        channels._broadcast_on_create()
         return channels
 
     @api.ondelete(at_uninstall=False)
@@ -1104,6 +1103,10 @@ class DiscussChannel(models.Model):
                 Store(bus_channel=user).add(
                     self.with_user(user).with_context(allowed_company_ids=[]),
                 ).bus_send()
+
+    def _broadcast_on_create(self):
+        if not self.env.context.get("install_mode") and not self.env.user._is_public():
+            Store(bus_channel=self.env.user).add(self).bus_send()
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
