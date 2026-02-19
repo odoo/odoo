@@ -30,6 +30,18 @@
                         <span t-out="targetDays.nextWeek.displayDay" class="ms-2 text-muted"/>
                     </div>
                 </DropdownItem>
+                <DropdownItem closingMode="'none'">
+                    <div class="d-flex justify-content-between">
+                        <label for="date_picker">
+                            <i class="fa fa-calendar me-1"/>
+                        </label>
+                        <span class="ms-2 text-muted">
+                            <DateTimeInput type="'date'" id="'date_picker'" placeholder.translate="Select date"
+                                onApply="(value) => (value &amp;&amp; this.rescheduleActivity(false, targetDays.customDate.actionName, value))"
+                            />
+                        </span>
+                    </div>
+                </DropdownItem>
             </t>
         </Dropdown>
     </span>
