@@ -164,6 +164,8 @@ class SaleOrder(models.Model):
         ).coupon_id.sudo().unlink()
         # Add/remove the points to our coupons
         for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
+            if change < 0 and -change > coupon.points:
+                raise ValidationError(_("You don't have enough coupon points to proceed. Please check your applied rewards and coupon balance."))
             coupon.points += change
         res = super().action_confirm()
         # Prioritize any action from super()
