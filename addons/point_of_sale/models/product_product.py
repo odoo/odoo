@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models, fields, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProductProduct(models.Model):
@@ -69,3 +69,20 @@ class ProductProduct(models.Model):
     def action_archive(self):
         self.product_tmpl_id._ensure_unused_in_pos()
         return super().action_archive()
+
+    def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
+        if not self.env.context.get("is_pos_product_action"):
+            return super()._check_duplicated_product_barcodes(barcodes_within_company, company_id)
+
+        duplicated_barcodes = self._get_duplicated_barcodes(barcodes_within_company, company_id)
+
+        duplicates_as_str = "\n".join(_(
+                "Barcode \"%(barcode)s\" already assigned to \"%(product_list)s\"",
+                barcode=barcode, product_list=duplicate_products.mapped('display_name'),
+            )
+            for barcode, products in duplicated_barcodes
+            if (duplicate_products := products - self)
+        )
+
+        if duplicates_as_str:
+            raise ValidationError(duplicates_as_str)
