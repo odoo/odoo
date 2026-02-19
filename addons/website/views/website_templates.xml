@@ -1616,6 +1616,13 @@
     </xpath>
 </template>
 
+<!-- Use this to preserve the "Sub Menus" option state instead of disabling `header_hoverable_dropdown` -->
+<template id="disable_header_hover_dropdown" inherit_id="website.layout" name="Disable Header Hover Dropdown" active="False" priority="20">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" remove="o_hoverable_dropdown"/>
+    </xpath>
+</template>
+
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
