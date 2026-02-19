@@ -138,6 +138,7 @@ export class SelectMenu extends Component {
         });
         this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
+        this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
         this.debouncedOnInput = useDebounced((ev) => {
             if (!this.dropdownState.isOpen) {
@@ -236,6 +237,10 @@ export class SelectMenu extends Component {
                 "my-0": this.displayInputInToggler,
                 o_select_menu_menu: true,
                 o_select_menu_multi_select: this.props.multiSelect,
+                "p-0": true,
+                "overflow-hidden": true,
+                "d-flex": true,
+                "flex-column": true,
             },
             this.props.menuClass
         );
@@ -296,7 +301,7 @@ export class SelectMenu extends Component {
             if (this.displayInputInDropdown && !this.isBottomSheet) {
                 this.inputRef.el.focus();
             }
-            this.menuRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
+            this.choicesRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
             const selectedElement = this.menuRef.el?.querySelectorAll(".selected")[0];
             if (selectedElement) {
                 scrollTo(selectedElement);

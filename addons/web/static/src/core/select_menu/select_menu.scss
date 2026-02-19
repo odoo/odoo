@@ -44,8 +44,7 @@
 
     .o_select_menu_searchbox {
         background-color: $dropdown-bg;
-        position: sticky;
-        top: $dropdown-padding-y * -1;
+        position: relative;
         padding: 5px;
 
         input {
@@ -64,10 +63,7 @@
 
     .o_select_menu_group {
         background-color: $dropdown-bg;
-        top: $input-height;
-        &:not(.o_select_menu_searchable_group) {
-            top: $dropdown-padding-y * -1;
-        }
+        top: calc(var(--border-width) * -1);
     }
 
     &:not(.o_bottom_sheet) {
