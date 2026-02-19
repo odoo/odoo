@@ -504,7 +504,7 @@ class ResourceCalendar(models.Model):
         if domain is None:
             domain = [('time_type', '=', 'leave')]
         if not any_calendar:
-            domain = domain + [('calendar_id', 'in', [False, self.id])]
+            domain = domain + [('calendar_id', 'in', [False, self.id]), '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)]
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
         domain = domain + [
