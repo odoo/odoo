@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { EmojiPicker, loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
-import { _t } from "@web/core/l10n/translation";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { EmojiPicker, loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef { Object } EmojiShared
@@ -33,18 +33,27 @@ export class EmojiPlugin extends Plugin {
         ],
     };
 
-    async setup() {
-        await super.setup();
+    /** @type {Map<string, import("@web/core/emoji_picker/emoji_picker").Emoji>} */
+    emojiMap = new Map();
+    /** @type {string | undefined} */
+    match = undefined;
+
+    setup() {
         this.overlay = this.dependencies.overlay.createOverlay(EmojiPicker, {
             hasAutofocus: true,
             className: "popover",
         });
-        this.match = undefined;
-        await loadEmoji();
-    }
 
-    get emojiDict() {
-        return loader.loaded?.emojiSourceToEmoji ?? new Map();
+        loadEmoji().then(({ emojis }) => {
+            for (const emoji of emojis) {
+                for (const shortcode of emoji.shortcodes) {
+                    this.emojiMap.set(shortcode, emoji);
+                }
+                for (const emoticon of emoji.emoticons) {
+                    this.emojiMap.set(emoticon, emoji);
+                }
+            }
+        });
     }
 
     handleDeleteBackward() {
@@ -56,6 +65,10 @@ export class EmojiPlugin extends Plugin {
     }
 
     detect() {
+        if (!this.emojiMap.size) {
+            this.match = undefined;
+            return;
+        }
         const selection = this.dependencies.selection.getEditableSelection();
         if (
             !isTextNode(selection.startContainer) ||
@@ -70,7 +83,7 @@ export class EmojiPlugin extends Plugin {
 
         for (let candidatePosition = start - 1; candidatePosition >= 0; candidatePosition--) {
             let match = null;
-            for (const key of this.emojiDict.keys()) {
+            for (const key of this.emojiMap.keys()) {
                 if (text.substring(candidatePosition) === key) {
                     match = key;
                 }
@@ -84,7 +97,7 @@ export class EmojiPlugin extends Plugin {
                 continue;
             }
             // Replace the matched text with the emoji
-            const emoji = this.emojiDict.get(match);
+            const emoji = this.emojiMap.get(match);
             this.dependencies.selection.setSelection({
                 anchorNode: selection.anchorNode,
                 anchorOffset: candidatePosition,

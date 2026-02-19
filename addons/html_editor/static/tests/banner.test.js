@@ -197,7 +197,7 @@ test("Can change an emoji banner", async () => {
     await insertText(editor, "/bannerinfo");
     await press("enter");
     expect("i.o_editor_banner_icon").toHaveText("💡");
-    await loader.loadEmoji();
+    await loader.loadEmojiBundle();
     await click("i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await click(".o-EmojiPicker .o-Emoji");
@@ -219,7 +219,7 @@ test("toolbar should be closed when you open the emojipicker", async () => {
     setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 2 });
     await waitFor(".o-we-toolbar");
 
-    await loader.loadEmoji();
+    await loader.loadEmojiBundle();
     await click("i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await animationFrame();
@@ -240,7 +240,7 @@ test("toolbar should be closed when you open the emojipicker (iframe)", async ()
     setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 2 });
     await waitFor(".o-we-toolbar");
 
-    await loader.loadEmoji();
+    await loader.loadEmojiBundle();
     await click(":iframe i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await animationFrame();

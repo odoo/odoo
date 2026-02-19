@@ -6,7 +6,7 @@ import { url } from "@web/core/utils/urls";
 import { session } from "@web/session";
 
 patch(loader, {
-    loadEmoji: () =>
+    loadEmojiBundle: () =>
         loadJS(
             url("/im_livechat/emoji_bundle", undefined, {
                 origin: session.livechatData.serverUrl,

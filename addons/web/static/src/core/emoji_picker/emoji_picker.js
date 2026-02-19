@@ -35,58 +35,78 @@ import { range } from "@web/core/utils/numbers";
  * @property {string[]} keywords
  * @property {string} name
  * @property {string[]} shortcodes
+ *
+ * @typedef {{
+ *  name: string;
+ *  displayName: string;
+ *  title: string;
+ *  sortId: number;
+ * }} EmojiCategory
+ *
+ * @typedef {{
+ *  categories: EmojiCategory[];
+ *  emojis: Emoji[];
+ * }} EmojiBundleResult
+ *
+ * @typedef {EmojiBundleResult & {
+ *  emojiValueToShortcodes: Record<string, string[]>;
+ *  emojiRegex: RegExp;
+ * }} EmojiLoaderResult
  */
+
+async function _loadEmoji() {
+    /** @type {EmojiBundleResult} */
+    const result = {
+        categories: [],
+        emojis: [],
+    };
+    try {
+        await loader.loadEmojiBundle();
+        const { getCategories, getEmojis } = odoo.loader.modules.get(
+            "@web/core/emoji_picker/emoji_data"
+        );
+        result.categories = getCategories();
+        result.emojis = getEmojis();
+    } catch {
+        // Could be intentional (tour ended successfully while emoji still loading)
+    }
+    return result;
+}
 
 export function useEmojiPicker(...args) {
     return usePicker(EmojiPicker, ...args);
 }
 
-export const loader = reactive({
-    loadEmoji: () => loadBundle("web.assets_emoji"),
-    /** @type {{ emojiValueToShortcodes: Object<string, string[]>, emojiRegex: RegExp, emojiSourceToEmoji: Map<string, Emoji>} }} */
-    loaded: undefined,
-});
-
-/** @returns {Promise<{ categories: Object[], emojis: Emoji[] }>")} */
-export async function loadEmoji() {
-    const res = { categories: [], emojis: [] };
-    try {
-        await loader.loadEmoji();
-        const { getCategories, getEmojis } = odoo.loader.modules.get(
-            "@web/core/emoji_picker/emoji_data"
-        );
-        res.categories = getCategories();
-        res.emojis = getEmojis();
-        return res;
-    } catch {
-        // Could be intentional (tour ended successfully while emoji still loading)
-        return res;
-    } finally {
-        if (!loader.loaded) {
-            const emojiValueToShortcodes = {};
-            const emojiSourceToEmoji = new Map();
-            for (const emoji of res.emojis) {
-                emojiValueToShortcodes[emoji.codepoints] = emoji.shortcodes;
-                for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
-                    emojiSourceToEmoji.set(source, emoji);
-                }
-            }
-            loader.loaded = {
-                emojiValueToShortcodes,
-                emojiSourceToEmoji,
-                emojiRegex: new RegExp(
-                    Object.keys(emojiValueToShortcodes).length
-                        ? Object.keys(emojiValueToShortcodes)
-                              .map((c) => c.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"))
-                              .sort((a, b) => b.length - a.length) // Sort to get composed emojis first
-                              .join("|")
-                        : /(?!)/,
-                    "gu"
-                ),
-            };
+export function loadEmoji() {
+    loader.promise ||= _loadEmoji().then((result) => {
+        const emojiValueToShortcodes = {};
+        const regexKeys = [];
+        for (const emoji of result.emojis) {
+            emojiValueToShortcodes[emoji.codepoints] = emoji.shortcodes;
+            regexKeys.push(emoji.codepoints.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"));
         }
-    }
+        loader.loaded = Object.assign(result, {
+            emojiValueToShortcodes,
+            emojiRegex: new RegExp(
+                // Sort to get composed emojis first
+                regexKeys.length ? regexKeys.sort((a, b) => b.length - a.length).join("|") : /(?!)/,
+                "gu"
+            ),
+        });
+        return loader.loaded;
+    });
+    return loader.promise;
 }
+
+export const loader = reactive({
+    loadEmojiBundle() {
+        return loadBundle("web.assets_emoji");
+    },
+    /** @type {EmojiLoaderResult | null} */
+    loaded: null,
+    /** @type {Promise<EmojiLoaderResult> | null} */
+    promise: null,
+});
 
 export const PICKER_PROPS = [
     "PickerComponent?",
