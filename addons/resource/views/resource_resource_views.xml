@@ -59,7 +59,8 @@
         <field name="arch" type="xml">
             <list string="Resources" multi_edit="1" default_order="name">
                 <field name="company_id" column_invisible="True"/>
-                <field name="name" />
+                <field name="avatar_128" widget="resource_avatar" options="{'size': [24, 24], 'img_class': 'rounded-3'}" nolabel="1" width="30"/>
+                <field name="name"/>
                 <field name="user_id" />
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="calendar_id" optional="show" />

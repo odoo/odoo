@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="Resource.ResourceAvatarField">
+        <t t-if="props.isUserResource">
+            <t t-call="web.ImageField"/>
+        </t>
+        <t t-else="">
+            <div t-attf-class="d-flex o_material_resource align-items-center justify-content-center me-1 rounded bg-200 {{ props.backgroundClass }}">
+                <i class="fa fa-wrench"></i>
+            </div>
+        </t>
+    </t>
+</templates>
