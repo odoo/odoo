@@ -541,7 +541,7 @@
                 decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
                 decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                 <header>
-                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always"/>
+                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always" invisible="not context.get('show_certificate')"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="skill_id" string="Certification"/>
@@ -576,6 +576,15 @@
         </field>
     </record>
 
+    <record id="action_server_hr_employee_skill_certification" model="ir.actions.server">
+        <field name="name">Certifications</field>
+        <field name="model_id" ref="model_hr_employee_skill"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_hr_employee_skill_certification()
+        </field>
+    </record>
+
     <record id="action_hr_employee_skill_certification" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">hr.employee.skill</field>
@@ -607,7 +616,7 @@
             id="hr_certification_menu"
             name="Certifications"
             parent="hr_skill_learning_menu"
-            action="action_hr_employee_skill_certification"
+            action="action_server_hr_employee_skill_certification"
             sequence="94"/>
 
         <menuitem
