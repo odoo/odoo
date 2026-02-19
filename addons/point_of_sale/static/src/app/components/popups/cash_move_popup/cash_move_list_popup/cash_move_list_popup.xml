@@ -4,10 +4,10 @@
     <t t-name="point_of_sale.CashMoveListPopup">
         <Dialog title.translate="Cash move details" size="'md'" footer="false">
             <div class="cash-move-list overflow-y-auto flex-grow-1 rounded-bottom-3 bg-view">
-                <t t-if="props.cashMoves.length !== 0">
+                <t t-if="pos.cashMoves.length !== 0">
                     <table t-if="!ui.isSmall"  class="table table-striped table-hover">
                         <tbody>
-                            <t t-foreach="props.cashMoves" t-as="cm" t-key="cm.id">
+                            <t t-foreach="pos.cashMoves" t-as="cm" t-key="cm.id">
                                 <tr class="cash-move-row" >
                                     <td>
                                         <div class="cash-move-date fs-6 fw-bolder"><t t-esc="this.pos.getDate(cm.date)"></t></div>
@@ -38,7 +38,7 @@
                         </tbody>
 
                     </table>
-                    <t t-if="ui.isSmall" t-foreach="props.cashMoves" t-as="cm" t-key="cm.id">
+                    <t t-if="ui.isSmall" t-foreach="pos.cashMoves" t-as="cm" t-key="cm.id">
                         <div class="container">
                             <div class="cash-move-row row">
                                 <div class="col-2 align-self-center">

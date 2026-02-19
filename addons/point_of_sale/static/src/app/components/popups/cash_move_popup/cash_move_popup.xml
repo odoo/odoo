@@ -43,7 +43,7 @@
 
                     <!-- Second line of buttons -->
                     <div class=" d-flex gap-2">
-                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()">Details</button>
+                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()" t-att-disabled="!pos.cashMoves.length">Details</button>
                     </div>
                 </div>
             </t>

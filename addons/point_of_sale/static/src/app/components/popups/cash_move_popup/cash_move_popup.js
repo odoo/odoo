@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { parseFloat } from "@web/views/fields/parsers";
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -9,8 +9,6 @@ import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-
-const { DateTime } = luxon;
 
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
@@ -29,6 +27,9 @@ export class CashMovePopup extends Component {
         });
         this.confirm = useAsyncLockedMethod(this.confirm);
         this.ui = useService("ui");
+        onWillStart(async () => {
+            await this.pos.loadCashMoves();
+        });
     }
 
     get partnerId() {
@@ -99,16 +100,7 @@ export class CashMovePopup extends Component {
         return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
     }
     async openDetails() {
-        const cashMoves = await this.pos.data.call("pos.session", "get_cash_in_out_list", [
-            this.pos.session.id,
-        ]);
-        this.dialog.add(CashMoveListPopup, {
-            cashMoves: cashMoves.map((m) => ({
-                ...m,
-                date: DateTime.fromSQL(m.date, { zone: "UTC" }).setZone("local"),
-            })),
-            partnerId: this.partnerId,
-        });
+        this.dialog.add(CashMoveListPopup);
     }
     async openNumpadDialog() {
         if (!this.ui.isSmall) {

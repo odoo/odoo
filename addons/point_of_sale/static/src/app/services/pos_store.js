@@ -102,6 +102,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
         this.searchProductDBState = null;
+        this.cashMovesList = [];
 
         // Object mapping the order's name (which contains the uuid) to it's server_id after
         // validation (order paid then sent to the backend).
@@ -488,6 +489,32 @@ export class PosStore extends WithLazyGetterTrap {
 
         await this.processProductAttributes();
     }
+
+    async loadCashMoves() {
+        const cashMoves = await this.data.call("pos.session", "get_cash_in_out_list", [
+            this.session.id,
+        ]);
+        this.cashMovesList = cashMoves;
+    }
+
+    async deleteCashMove(cashMoveId) {
+        const cashMoves = await this.data.call(
+            "pos.session",
+            "delete_cash_in_out",
+            [[this.session.id], cashMoveId, this.user.partner_id.id],
+            {},
+            true
+        );
+        this.cashMovesList = cashMoves;
+    }
+
+    get cashMoves() {
+        return this.cashMovesList.map((m) => ({
+            ...m,
+            date: DateTime.fromSQL(m.date, { zone: "UTC" }).setZone("local"),
+        }));
+    }
+
     cashMove() {
         this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);

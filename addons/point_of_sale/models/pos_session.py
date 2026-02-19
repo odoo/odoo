@@ -1791,6 +1791,7 @@ class PosSession(models.Model):
         action = cashier_name + ': ' + str(amount)
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
+        return self.get_cash_in_out_list()
 
     def _get_invoice_total_list(self):
         invoice_list = []
