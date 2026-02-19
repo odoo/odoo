@@ -338,7 +338,12 @@ export function makeActionManager(env, router = _router) {
         if (currentController) {
             if (currentController.virtual) {
                 try {
-                    action = await _loadAction(currentController.action.id);
+                    // TODO: maybe do this more clean ?
+                    action = await _loadAction(
+                        currentController.action.id || {
+                            res_model: currentController.props.resModel,
+                        }
+                    );
                 } catch (error) {
                     if (
                         error.exceptionName ===
@@ -375,14 +380,19 @@ export function makeActionManager(env, router = _router) {
             };
         }
 
-        if (typeof actionRequest === "string" || typeof actionRequest === "number") {
-            // actionRequest is an id or an xmlid
+        const isOnlyModel =
+            typeof actionRequest === "object" &&
+            Object.keys(actionRequest).length === 1 &&
+            "res_model" in actionRequest;
+        if (typeof actionRequest === "string" || typeof actionRequest === "number" || isOnlyModel) {
+            // actionRequest is an id or an xmlid or juste the model name
             const ctx = makeContext([user.context, context]);
+            ctx.default_action_for_model = isOnlyModel;
             delete ctx.params;
             const action = await rpc(
                 "/web/action/load",
                 {
-                    action_id: actionRequest,
+                    action_id: isOnlyModel ? actionRequest.res_model : actionRequest,
                     context: ctx,
                 },
                 { cache: { type: "disk" } }
@@ -558,30 +568,30 @@ export function makeActionManager(env, router = _router) {
                     actionRequest = state.action;
                 }
             }
-            if ((state.resId && state.resId !== "new") || state.globalState) {
-                options.props = {};
-                if (state.resId && state.resId !== "new") {
-                    options.props.resId = state.resId;
-                }
-                if (state.globalState) {
-                    options.props.globalState = state.globalState;
-                }
-            }
         } else if (state.model) {
-            if (state.resId || state.view_type === "form") {
+            // This is a window action on a multi-record view => restores it from
+            // the session storage
+            if (!lastAction.res_id && lastAction.res_model === state.model) {
+                actionRequest = lastAction;
+                options.viewType = state.view_type;
+            } else {
                 actionRequest = {
                     res_model: state.model,
-                    res_id: state.resId === "new" ? undefined : state.resId,
-                    type: "ir.actions.act_window",
-                    views: [[state.view_id ? state.view_id : false, "form"]],
                 };
-            } else {
-                // This is a window action on a multi-record view => restores it from
-                // the session storage
-                if (lastAction.res_model === state.model) {
-                    actionRequest = lastAction;
-                    options.viewType = state.view_type;
-                }
+            }
+            //Maybe refactor to have the full context active_id also !
+            Object.assign(options, {
+                // additionalContext: context,
+                viewType: state.resId ? "form" : state.view_type,
+            });
+        }
+        if ((state.resId && state.resId !== "new") || state.globalState) {
+            options.props = {};
+            if (state.resId && state.resId !== "new") {
+                options.props.resId = state.resId;
+            }
+            if (state.globalState) {
+                options.props.globalState = state.globalState;
             }
         }
         if (!actionRequest) {

@@ -202,6 +202,11 @@ class ResPartner(models.Model):
                 values['type'] = None
         return values
 
+    @api.model
+    def get_default_action(self):
+        action = self.env.ref('base.action_partner_form')
+        return self.env['ir.actions.act_window'].sudo().browse([action.id])._get_action_dict()
+
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)

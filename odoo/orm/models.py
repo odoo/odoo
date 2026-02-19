@@ -3245,6 +3245,19 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_str('web.base.url')
 
+    def get_default_action(self):
+        """ Return the default action for the current model.
+        :return: action
+        """
+        model_string = self.env['ir.model']._get(self._name).name or self._description
+        return {
+            "type": "ir.actions.act_window",
+            "name": _(model_string),
+            "views": [(False, "list"), (False, "form")],
+            "res_model": self._name,
+            "view_mode": "list,form"
+        }
+
     def _check_company_domain(self, companies) -> Domain:
         """Domain to be used for company consistency between records regarding this model.
 
