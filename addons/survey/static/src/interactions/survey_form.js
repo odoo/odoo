@@ -592,28 +592,30 @@ export class SurveyForm extends Interaction {
             // prevent user from clicking on matrix options when form is submitted
             this.readonly = true;
         }
+        
+        try {
+            const submitPromise = rpc(
+                `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
+                params
+            );
 
-        const submitPromise = rpc(
-            `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
-            params
-        );
-
-        if (
-            !this.options.isStartScreen &&
-            this.options.scoringType === "scoring_with_answers_after_page"
-        ) {
-            const [correctAnswers] = await this.waitFor(submitPromise);
             if (
-                Object.keys(correctAnswers).length &&
-                this.el.querySelector(".o_survey_question")
+                !this.options.isStartScreen &&
+                this.options.scoringType === "scoring_with_answers_after_page"
             ) {
-                this.showCorrectAnswers(correctAnswers, submitPromise, options);
-                this.submitting = false;
-                return;
+                const [correctAnswers] = await this.waitFor(submitPromise);
+                if (
+                    Object.keys(correctAnswers).length &&
+                    this.el.querySelector(".o_survey_question")
+                ) {
+                    this.showCorrectAnswers(correctAnswers, submitPromise, options);
+                    return;
+                }
             }
+            await this.nextScreen(submitPromise, options);
+        } finally {
+            this.submitting = false;
         }
-        await this.nextScreen(submitPromise, options);
-        this.submitting = false;
     }
 
     /**
