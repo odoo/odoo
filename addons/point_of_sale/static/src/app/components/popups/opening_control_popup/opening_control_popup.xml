@@ -16,11 +16,15 @@
             <div class="opening-cash-section mb-3" t-if="this.cashMethodCount">
                 <label class="form-label">Opening cash</label>
                 <div t-att-class="{ 'w-50': !ui.isSmall }" class="cash-input-sub-section d-flex gap-1">
-                    <Input tModel="[state, 'openingCash']"
-                        isValid.bind="env.utils.isValidFloat"
-                        callback.bind="handleInputChange"
+                    <CashInput
+                        class="'flex-grow-1'"
+                        tModel="[state, 'openingCash']"
+                        isValid="(val) => env.utils.isValidFloat(val)"
                         autofocus="true"
-                        placeholder.translate="Opening Balance Eg: 123"/>
+                        placeholder="'Opening Balance Eg: 123'"
+                        onBlur="() => this.handleInputBlur()"
+                        getRef="(ref) => this.openingCashInput = ref"
+                    />
                     <div class="button icon btn btn-secondary btn-lg lh-lg" t-on-click="openDetailsPopup">
                         <i class="fa fa-money" role="img" title="Open the money details popup"/>
                     </div>

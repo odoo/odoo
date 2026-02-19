@@ -12,16 +12,18 @@
                         Cash Out
                     </button>
                 </div>
-                <div t-attf-class="{{this.ui.isSmall ? 'mw-50 h-50' : 'w-25'}}">
-                    <Input tModel="[state, 'amount']"
-                        icon="{type: 'string', value: pos.currency.symbol}"
-                        iconOnLeftSide="pos.currency.position === 'before'"
-                        isValid.bind="env.utils.isValidFloat"
-                        autofocus="true"
-                        getRef="(ref) => this.inputRef = ref"
-                        t-on-click="openNumpadDialog"
-                        readonly="ui.isSmall ? true : false" />
-                </div>
+                <CashInput
+                    class="this.ui.isSmall ? 'mw-50 h-50' : 'w-25'"
+                    tModel="[state, 'amount']"
+                    currencySymbol="pos.currency.symbol"
+                    currencyPosition="pos.currency.position"
+                    isValid="(val) => env.utils.isValidFloat(val)"
+                    autofocus="true"
+                    readonly="ui.isSmall"
+                    onBlur="() => this.handleAmountBlur()"
+                    onClick="() => this.openNumpadDialog()"
+                    getRef="(ref) => this.inputRef = ref"
+                />
             </div>
             <div class="form-floating">
                 <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />

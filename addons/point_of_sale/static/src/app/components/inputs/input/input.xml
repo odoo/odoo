@@ -22,7 +22,9 @@
                         t-ref="input"
                         t-att-value="getValue()"
                         t-on-input="(event) => this.setValue(event.target.value)"
-                        t-att-readonly="props.readonly" />
+                        t-att-readonly="props.readonly"
+                        t-on-blur="(ev) => props.onBlur?.(ev)"
+                        t-on-click="(ev) => props.onClick?.(ev)" />
                     <t t-if="!props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
                     <i t-att-class="{ 'invisible': !getValue() }" class="fa fa-times mx-2" t-on-click="() => this.setValue('')"/>
                 </div>

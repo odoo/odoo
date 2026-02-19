@@ -3,10 +3,10 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
 import { RPCError } from "@web/core/network/rpc";
+import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
 
 class CustomDialog extends Dialog {
     onEscape() {}
@@ -14,7 +14,7 @@ class CustomDialog extends Dialog {
 
 export class OpeningControlPopup extends Component {
     static template = "point_of_sale.OpeningControlPopup";
-    static components = { Input, Dialog: CustomDialog };
+    static components = { Dialog: CustomDialog, CashInput };
     static props = {
         close: Function,
     };
@@ -82,6 +82,9 @@ export class OpeningControlPopup extends Component {
             return;
         }
         this.state.notes = "";
+    }
+    handleInputBlur() {
+        this.state.openingCash = this.env.utils.parseAndFormatCurrency(this.state.openingCash);
     }
     get cashMethodCount() {
         return this.pos.config.payment_method_ids.filter((pm) => pm.is_cash_count).length;
