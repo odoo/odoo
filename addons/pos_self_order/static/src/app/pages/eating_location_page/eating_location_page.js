@@ -18,8 +18,9 @@ export class EatingLocationPage extends Component {
         this.router.navigate("default");
     }
 
-    selectPreset(preset) {
+    async selectPreset(preset) {
         this.selfOrder.currentOrder.setPreset(preset);
+        await this.selfOrder.ensureDeliveryLine(preset.service_at);
         this.router.navigate("product_list");
     }
 

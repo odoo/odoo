@@ -11,6 +11,19 @@
                         <group>
                             <field name="available_in_self" />
                             <field name="service_at" invisible="not available_in_self" />
+                            <field
+                                name="delivery_from_address"
+                                widget="google_address_autocomplete"
+                                invisible="not available_in_self or service_at != 'delivery'"
+                                options="{'street': 'delivery_from_address', 'city': 'delivery_from_city', 'zip': 'delivery_from_zip', 'state_id': 'delivery_from_state_id', 'country_id': 'delivery_from_country_id'}"
+                            />
+                            <field name="delivery_from_city" invisible="1" />
+                            <field name="delivery_from_zip" invisible="1" />
+                            <field name="delivery_from_country_id" invisible="1" />
+                            <field name="delivery_from_state_id" invisible="1" />
+                            <field name="delivery_product_price" invisible="not available_in_self or service_at != 'delivery'" />
+                            <field name="free_delivery_min_amount" invisible="not available_in_self or service_at != 'delivery'" />
+                            <field name="delivery_max_distance_km" invisible="not available_in_self or service_at != 'delivery'" />
                         </group>
                         <group>
                             <field name="mail_template_id" invisible="not available_in_self" />

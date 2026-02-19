@@ -214,6 +214,48 @@ export class SelfOrder extends Reactive {
         this.currentOrder.removeOrderline(line);
     }
 
+    _shouldDeliveryBeFree(deliveryTemplateId) {
+        const freeDeliveryMin = this.currentOrder?.preset_id?.free_delivery_min_amount || 0;
+        if (!freeDeliveryMin) {
+            return false;
+        }
+        const nonDeliveryLines = this.currentOrder.lines.filter(
+            (line) => line.product_id.product_tmpl_id?.id !== deliveryTemplateId
+        );
+        const totalData = this.currentOrder.getPriceWithOptions({ lines: nonDeliveryLines });
+        const orderTotal = this.currency.round(totalData.taxDetails.total_amount_no_rounding);
+        return orderTotal >= freeDeliveryMin;
+    }
+
+    async ensureDeliveryLine(serviceAt) {
+        const deliveryTemplate = this.models["product.template"].find(
+            (product) => product.default_code === "DELIVERY"
+        );
+        if (!deliveryTemplate || !this.currentOrder) {
+            return;
+        }
+        const existingLine = this.currentOrder.lines.find(
+            (line) => line.product_id.product_tmpl_id?.id === deliveryTemplate.id
+        );
+        if (existingLine) {
+            this.currentOrder.removeOrderline(existingLine);
+        }
+        if (serviceAt !== "delivery") {
+            return;
+        }
+        const newLine = this.models["pos.order.line"].create(
+            getOrderLineValues(this, deliveryTemplate, 1, "", {}, {}, {})
+        );
+        if (this._shouldDeliveryBeFree(deliveryTemplate.id)) {
+            newLine.setUnitPrice(0);
+        }
+        newLine.full_product_name = constructFullProductName(
+            newLine,
+            this.models["product.template.attribute.value"].getAllBy("id"),
+            deliveryTemplate.product_variant_ids[0].name
+        );
+    }
+
     async syncPresetSlotAvaibility(preset) {
         try {
             const presetAvailabilities = await rpc(`/pos-self-order/get-slots`, {
@@ -281,6 +323,9 @@ export class SelfOrder extends Reactive {
         if (lineToMerge) {
             lineToMerge.setQuantity(lineToMerge.qty + newLine.qty);
             newLine.delete();
+        }
+        if (this.currentOrder?.preset_id?.service_at === "delivery") {
+            await this.ensureDeliveryLine("delivery");
         }
     }
     async confirmationPage(screen_mode, device, access_token) {

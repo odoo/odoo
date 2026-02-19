@@ -1,5 +1,14 @@
 <odoo>
     <data noupdate="1">
+        <record id="product_delivery_template" model="product.template">
+            <field name="name">Delivery</field>
+            <field name="type">service</field>
+            <field name="sale_ok">True</field>
+            <field name="available_in_pos">True</field>
+            <field name="self_order_available">True</field>
+            <field name="list_price">0.0</field>
+            <field name="default_code">DELIVERY</field>
+        </record>
         <record model="pos.preset" id="pos_restaurant.pos_takein_preset">
             <field name="available_in_self">True</field>
             <field name="service_at">table</field>
@@ -13,6 +22,7 @@
         <record model="pos.preset" id="pos_restaurant.pos_delivery_preset">
             <field name="available_in_self">True</field>
             <field name="service_at">delivery</field>
+            <field name="delivery_product_id" ref="product_delivery_template" />
             <field name="mail_template_id" ref="delivery_email_template" />
             <field name="image_512" type="base64" file="pos_self_order/static/img/delivery.jpg"/>
         </record>

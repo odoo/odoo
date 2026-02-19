@@ -1,10 +1,43 @@
+from urllib.parse import urlparse, parse_qs
+import math
+import secrets
+
 from odoo import http, fields
+from odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete import AutoCompleteController
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.service.model import call_kw
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
 from odoo.tools import consteq
+
+
+def _haversine_distance(lat1, long1, lat2, long2):
+    """Compute the straight-line distance in km between two lat/long points."""
+    R = 6371
+    dlat = math.radians(lat2 - lat1)
+    dlong = math.radians(long2 - long1)
+    arcsin = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
+        * math.sin(dlong / 2) ** 2
+    )
+    return 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))
+
+
+class PosSelfOrderAutoCompleteController(AutoCompleteController):
+    """Extends AutoCompleteController to support POS config access tokens."""
+
+    def _get_api_key(self, use_employees_key):
+        parsed_url = urlparse(request.httprequest.referrer)
+        if not parsed_url.path.startswith('/pos-self'):
+            return super()._get_api_key(use_employees_key)
+        access_token = parse_qs(parsed_url.query).get('access_token', [None])[0]
+        pos_config_id = int(parsed_url.path.split('/')[2])
+        pos_config_sudo = request.env['pos.config'].sudo().browse(pos_config_id)
+        if secrets.compare_digest(pos_config_sudo.access_token, access_token):
+            return request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        return super()._get_api_key(use_employees_key)
 
 
 class PosSelfOrderController(http.Controller):
@@ -155,32 +188,53 @@ class PosSelfOrderController(http.Controller):
             child.price_unit = total_price
 
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
-    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
+    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None, preset_id=None):
         pos_config = self._verify_pos_config(access_token)
-        existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
+        preset = pos_config.env['pos.preset'].browse(int(preset_id)) if preset_id else False
+        partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
 
-        if existing_partner and existing_partner.exists():
-            return {
-                'res.partner': self.env['res.partner']._load_pos_self_data_read(existing_partner, pos_config),
-            }
+        if not partner:
+            partner = request.env['res.partner'].sudo().create({
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'street': street,
+                'zip': zip,
+                'city': city,
+                'country_id': country_id,
+                'state_id': state_id,
+                'company_id': pos_config.company_id.id,
+            })
 
-        state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
-        country_id = pos_config.env['res.country'].browse(int(country_id))
-        partner_sudo = request.env['res.partner'].sudo().create({
-            'name': name,
-            'email': email,
-            'phone': phone,
-            'street': street,
-            'zip': zip,
-            'city': city,
-            'country_id': country_id.id,
-            'state_id': state_id.id if state_id else False,
-            'company_id': pos_config.company_id.id,
-        })
+        if preset and preset.service_at == 'delivery':
+            error = self._check_delivery_address_for_partner(preset, partner)
+            if error:
+                return {'error': error}
 
         return {
-            'res.partner': self.env['res.partner']._load_pos_self_data_read(partner_sudo, pos_config),
+            'res.partner': self.env['res.partner']._load_pos_self_data_read(partner, pos_config),
         }
+
+    def _check_delivery_address_for_partner(self, preset, partner):
+        partner.geo_localize()
+        if partner.partner_latitude is False or partner.partner_longitude is False:
+            return {
+                'type': 'address',
+                'message': self.env._("We couldn't locate this address. Please enter a complete address with a street number."),
+            }
+        if not preset.delivery_from_latitude and not preset.delivery_from_longitude:
+            return None
+        distance_km = _haversine_distance(
+            partner.partner_latitude, partner.partner_longitude,
+            preset.delivery_from_latitude, preset.delivery_from_longitude,
+        )
+        max_distance_km = preset.delivery_max_distance_km or 0
+        if max_distance_km and distance_km > max_distance_km:
+            return {
+                'type': 'delivery',
+                'message': self.env._("Delivery isn't available for this address. You can still place your order using another method."),
+            }
+        return None
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
