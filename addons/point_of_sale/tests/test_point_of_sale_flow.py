@@ -55,6 +55,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertAlmostEqual(order.amount_total, order.amount_paid)
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
         self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count)
+        # refund lines should be positive
+        self.assertEqual(refund.lines[0].price_subtotal_incl, 10.0)
+        self.assertEqual(refund.lines[1].price_subtotal_incl, 20.0)
 
         current_session = self.pos_config_usd.current_session_id
         total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
