@@ -1,7 +1,7 @@
 // @ts-check
 
 import { astToFormula, helpers } from "@odoo/o-spreadsheet";
-import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
+import { getFirstListFunction, hasListFormula } from "./list_helpers";
 import { navigateTo } from "../actions/helpers";
 
 const { isMatrix } = helpers;
@@ -19,7 +19,7 @@ export const SEE_RECORD_LIST = async (position, env, newWindow) => {
     if (!cell || !cell.isFormula) {
         return;
     }
-    const { args } = getFirstListFunction(cell.compiledFormula.tokens);
+    const { args } = getFirstListFunction(cell.compiledFormula, env.model.getters);
     const evaluatedArgs = args
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
@@ -70,7 +70,7 @@ export const SEE_RECORD_LIST_VISIBLE = (position, getters) => {
         evaluatedCell.value !== "" &&
         cell &&
         cell.isFormula &&
-        getNumberOfListFormulas(cell.compiledFormula.tokens) === 1 &&
-        getFirstListFunction(cell.compiledFormula.tokens).functionName === "ODOO.LIST"
+        hasListFormula(cell.compiledFormula) &&
+        getFirstListFunction(cell.compiledFormula, getters).functionName === "ODOO.LIST"
     );
 };

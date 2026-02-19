@@ -695,15 +695,15 @@ test("pivot grouped by char field which represents numbers", async function () {
                 </pivot>`,
         pivotType: "static",
     });
-    expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"name","000111")');
-    expect(getCell(model, "A4").content).toBe('=PIVOT.HEADER(1,"name","111")');
-    expect(getCell(model, "A5").content).toBe('=PIVOT.HEADER(1,"name","14.0")');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"name","000111")');
+    expect(getCell(model, "A4").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"name","111")');
+    expect(getCell(model, "A5").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"name","14.0")');
     expect(getEvaluatedCell(model, "A3").value).toBe("000111");
     expect(getEvaluatedCell(model, "A4").value).toBe("111");
     expect(getEvaluatedCell(model, "A5").value).toBe("14.0");
-    expect(getCell(model, "B3").content).toBe('=PIVOT.VALUE(1,"probability:avg","name","000111")');
-    expect(getCell(model, "B4").content).toBe('=PIVOT.VALUE(1,"probability:avg","name","111")');
-    expect(getCell(model, "B5").content).toBe('=PIVOT.VALUE(1,"probability:avg","name","14.0")');
+    expect(getCell(model, "B3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.VALUE(1,"probability:avg","name","000111")');
+    expect(getCell(model, "B4").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.VALUE(1,"probability:avg","name","111")');
+    expect(getCell(model, "B5").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.VALUE(1,"probability:avg","name","14.0")');
     expect(getEvaluatedCell(model, "B3").value).toBe(15);
     expect(getEvaluatedCell(model, "B4").value).toBe(11);
     expect(getEvaluatedCell(model, "B5").value).toBe(16);

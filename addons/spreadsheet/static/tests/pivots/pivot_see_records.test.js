@@ -219,7 +219,9 @@ test("Can see records on PIVOT cells", async function () {
         // sheet where the pivot is made of a single PIVOT formula.
         for (const [xc, formula] of Object.entries(cells)) {
             // let's check the cell formula is what we expect
-            expect(getCell(model, xc, firstSheetId)?.content).toBe(formula, {
+            const cell = getCell(model, xc, firstSheetId);
+            const content = !cell.isFormula ? cell?.content : cell?.compiledFormula.toFormulaString(model.getters);
+            expect(content).toBe(formula, {
                 message: `${xc} on the first sheet is ${formula}`,
             });
 
