@@ -910,9 +910,11 @@ Versions:
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
 
-        # Unlink existing resource.calendar.leaves for validated time off
-        if 'state' in values and values['state'] != 'validate':
-            validated_leaves = self.filtered(lambda l: l.state == 'validate')
+        # If a leave changes state from validated or if the dates of a validated leave change
+        # unlink the corresponding resource calendar leave
+        date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to'}
+        validated_leaves = self.filtered(lambda l: l.state == 'validate')
+        if validated_leaves and (('state' in values and values['state'] != 'validate') or date_fields.intersection(values)):
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
