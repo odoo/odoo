@@ -7,6 +7,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Deferred, mockDate, animationFrame } from "@odoo/hoot-mock";
@@ -334,6 +335,25 @@ test("show notification when clicking on deleted thread", async () => {
     await contains(
         ".o_notification:has(.o_notification_bar.bg-danger):text('This thread is no longer available.')"
     );
+});
+
+test("thread creation notification displays current thread name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+
+    await click("button[title='Threads']");
+    await click("button[aria-label='Create Thread']");
+    await contains("input.o-mail-DiscussContent-threadName:value(New Thread)");
+    await insertText(".o-mail-DiscussContent-threadName:enabled", "Renamed Thread", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await animationFrame();
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+    await contains(".o-mail-NotificationMessage a:text('Renamed Thread')");
+    await contains(".o-mail-NotificationMessage a:text('Initial Thread Name')", { count: 0 });
 });
 
 test("Can delete channel thread as author of thread", async () => {
