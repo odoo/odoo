@@ -1989,7 +1989,7 @@ class HttpCase(TransactionCase):
             timeout = max(timeout*10, 3600)
             devtool_query_string = self.browser.dev_tools_frontend_url.partition('/inspector.html')[2]
             debug_front_end = f'http://127.0.0.1:{self.browser.devtools_port}/devtools/inspector.html{devtool_query_string}'
-            self.browser._chrome_without_limit([self.browser.executable, debug_front_end])
+            subprocess.Popen([self.browser.executable, debug_front_end], stderr=subprocess.DEVNULL, preexec_fn=_preexec)
             time.sleep(3)
         try:
             self.http_request_key = self.canonical_tag + '_browser_js'
