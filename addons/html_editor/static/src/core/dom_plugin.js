@@ -76,6 +76,8 @@ function getConnectedParents(nodes) {
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((arg: { nodeToInsert: Node, container: HTMLElement }) => nodeToInsert)[]} node_to_insert_processors
  *
+ * @typedef {((el: HTMLElement) => Promise<boolean>)[]} are_inlines_allowed_at_root_predicates
+ *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
  * @typedef {string[]} system_style_properties
@@ -424,7 +426,7 @@ export class DomPlugin extends Plugin {
         let insertedNodesParents = getConnectedParents(allInsertedNodes);
         for (const parent of insertedNodesParents) {
             if (
-                !this.config.allowInlineAtRoot &&
+                !this.areInlinesAllowedAtRoot(parent) &&
                 this.isEditionBoundary(parent) &&
                 allowsParagraphRelatedElements(parent)
             ) {
@@ -486,6 +488,16 @@ export class DomPlugin extends Plugin {
             return true;
         }
         return isContentEditableAncestor(node);
+    }
+
+    areInlinesAllowedAtRoot(node) {
+        const results = this.getResource("are_inlines_allowed_at_root_predicates")
+            .map((p) => p(node))
+            .filter((r) => r !== undefined);
+        if (!results.length) {
+            return this.config.allowInlineAtRoot;
+        }
+        return results.every((r) => r);
     }
 
     /**
