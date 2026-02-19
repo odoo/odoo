@@ -141,6 +141,28 @@ class TestUi(TestUICommon):
             location = self.parse_http_location(response.headers.get("Location"))
             self.assertEqual(location.path, "/web/login")
 
+    def test_review_link_redirection(self):
+        message = self.env["mail.message"].create(
+            {
+                "author_id": self.user_admin.partner_id.id,
+                "body": "Test",
+                "model": self.channel._name,
+                "res_id": self.channel.id,
+                "subtype_id": self.ref("mail.mt_comment"),
+            }
+        )
+        cases = [
+            ("admin", rf"^/odoo/slide.channel/.*highlight_message_id={message.id}"),
+            ("portal", rf"^/slides/.*highlight_message_id={message.id}"),
+            (None, rf"^/slides/.*highlight_message_id={message.id}"),
+        ]
+        for login, url_pattern in cases:
+            with self.subTest(user=login):
+                self.authenticate(login, login)
+                res = self.url_open(f"/mail/message/{message.id}")
+                self.assertEqual(res.status_code, 200)
+                self.assertRegex(res.request.path_url, url_pattern)
+
     def test_course_member_employee(self):
         user_demo = self.user_demo
         user_demo.write({
