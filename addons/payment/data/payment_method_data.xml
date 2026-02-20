@@ -2241,6 +2241,7 @@
         <field name="support_refund">none</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.om')])]" />
         <field name="supported_currency_ids" eval="[Command.set([ref('base.OMR')])]" />
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
     </record>
 
     <record id="payment_method_online_banking_czech_republic" model="payment.method">
@@ -4292,15 +4293,6 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/card.png"/>
-    </record>
-
-    <record id="payment_method_omannet" model="payment.method">
-        <field name="name">OmanNet</field>
-        <field name="code">omannet</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/omannet.png"/>
     </record>
 
     <record id="payment_method_presto" model="payment.method">
