@@ -113,8 +113,9 @@
         >
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div
+                id="order_confirmation_banner"
                 t-if="tx_sudo"
-                t-attf-class="alert px-3 pb-0 pt-3 #{
+                t-attf-class="alert #{
                     (tx_sudo.state == 'pending' and 'alert-info') or
                     (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
                     (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
@@ -135,7 +136,9 @@
                 </a>
                 <div>
                     <t t-if="tx_sudo.state == 'pending'">
-                        <t t-out="tx_sudo.provider_id.sudo().pending_msg"/>
+                        <div id="pending_tx_message">
+                            <t t-out="tx_sudo.provider_id.sudo().pending_msg"/>
+                        </div>
                     </t>
                     <t t-if="tx_sudo.state == 'done'">
                         <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>

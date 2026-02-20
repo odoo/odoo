@@ -108,11 +108,7 @@ class SaleOrder(models.Model):
         for the order. """
         default_pickup_locations = {}
         for dm in self._get_delivery_methods():
-            if (
-                dm.delivery_type == 'in_store'
-                and dm.id != self.carrier_id.id
-                and len(dm.warehouse_ids) == 1
-            ):
+            if dm.delivery_type == 'in_store' and len(dm.warehouse_ids) == 1:
                 pickup_location_data = dm.warehouse_ids[0]._prepare_pickup_location_data()
                 if pickup_location_data:
                     default_pickup_locations[dm.id] = {

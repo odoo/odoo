@@ -123,7 +123,7 @@
                         t-attf-class="{{not use_delivery_as_billing and not only_services and 'col'}}"
                     >
                         <t t-if="order.pickup_location_data">
-                            <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
+                            <p t-att-class="delivery_title_classes">Pickup point</p>
                             <div
                                 class="fw-bold" t-out="order.pickup_location_data.get('name', '')"
                             />
