@@ -66,6 +66,12 @@ class PaymentProvider(models.Model):
         copy=False,
         groups='base.group_system',
     )
+    oauth_supported = fields.Boolean(
+        string="Is OAuth supported?",
+        compute='_compute_oauth_supported',
+        store=True,
+        groups='base.group_system',
+    )
 
     # === COMPUTE METHODS === #
 
@@ -86,6 +92,13 @@ class PaymentProvider(models.Model):
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
         return supported_currencies
+
+    @api.depends('company_id.country_id')
+    def _compute_oauth_supported(self):
+        oauth_supported_countries = ['IN']
+        for provider in self:
+            country_code = provider.company_id.country_id.code
+            provider.oauth_supported = (provider.code == 'razorpay' and country_code in oauth_supported_countries)
 
     # === CONSTRAINT METHODS === #
 
