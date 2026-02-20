@@ -50,7 +50,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_tree"/>
         <field name="arch" type="xml">
             <field name="date_to" position="after">
-                <field name="work_entry_type_id"/>
+            <field name="work_entry_type_id" optional="hide"/>
             </field>
         </field>
     </record>
