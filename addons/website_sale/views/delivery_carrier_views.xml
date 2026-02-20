@@ -22,6 +22,46 @@
                     <field name="is_published" widget="website_publish_button"/>
                 </button>
             </button>
+            <group name="delivery_details" position="inside">
+                <label
+                    for="has_estimated_delivery"
+                    invisible="delivery_type not in ['fixed', 'base_on_rule']"
+                />
+                <div
+                    name="estimated_delivery_fields"
+                    class="d-flex align-items-baseline"
+                    invisible="delivery_type not in ['fixed', 'base_on_rule']"
+                >
+                    <field name="has_estimated_delivery"/>
+                    <div invisible="not has_estimated_delivery">
+                        from
+                        <field
+                            name="estimated_delivery_min_days"
+                            style="text-align: center; width:10% !important;"
+                        />
+                        to
+                        <field
+                            name="estimated_delivery_max_days"
+                            style="text-align: center; width:10% !important;"
+                        />
+                        working days
+                        <small
+                            class="text-muted"
+                            invisible="estimated_delivery_min_days == estimated_delivery_max_days"
+                        >
+                            (Selectable)
+                        </small>
+                        <p>
+                            based on
+                            <field
+                                class="oe_inline"
+                                name="opening_hours"
+                                required="has_estimated_delivery"
+                            />
+                        </p>
+                    </div>
+                </div>
+            </group>
         </field>
     </record>
 

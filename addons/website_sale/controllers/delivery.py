@@ -295,3 +295,13 @@ class Delivery(WebsiteSale):
                 else:
                     rate['price'] = taxes['total_included']
         return rate
+
+    @route('/website_sale/set_delivery_date', type='jsonrpc', auth='public', website=True)
+    def website_sale_set_delivery_date(self, delivery_date, **kwargs):
+        """ Fetch the order from the request and set the delivery date on the current order.
+
+        :param str delivery_date: The selected delivery date.
+        :return: None
+        """
+        order_sudo = request.cart
+        order_sudo.commitment_date = delivery_date
