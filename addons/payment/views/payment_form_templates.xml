@@ -422,7 +422,9 @@
                     role="button"
                     class="btn btn-primary me-2"
                 >
-                    CONNECT <t t-out="onboarding_provider.upper()"/>
+                    <t t-if="request.env.company._get_onboarding_payment_provider()">CONFIGURE</t>
+                    <t t-else="">CONNECT</t>
+                    <t t-out="onboarding_provider.upper()"/>
                 </a>
                 <a
                     t-if="availability_report"

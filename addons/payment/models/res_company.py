@@ -90,3 +90,19 @@ class ResCompany(models.Model):
             return False
 
         return provider.action_start_onboarding(menu_id=menu_id)
+
+    def action_view_onboarding_payment_provider(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'payment.provider',
+            'views': [[False, 'form']],
+            'res_id': self._get_onboarding_payment_provider().id,
+        }
+
+    def _get_onboarding_payment_provider(self):
+        return self.env['payment.provider'].search([
+            ('code', '=', self.onboarding_payment_module),
+            ('state', '!=', 'disabled'),
+            *self.env['payment.provider']._check_company_domain(self),
+        ], limit=1)
