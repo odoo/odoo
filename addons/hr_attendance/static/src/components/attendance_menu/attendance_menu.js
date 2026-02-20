@@ -1,4 +1,5 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -19,6 +20,7 @@ export class ActivityMenu extends Component {
         this.ui = useService("ui");
         this.lazySession = useService("lazy_session");
         this.notification = useService("notification");
+        this.dialogService = useService("dialog");
         this.employee = false;
         this.state = useState({
             checkedIn: false,
@@ -87,6 +89,15 @@ export class ActivityMenu extends Component {
         }
     };
 
+    confirmChecking() {
+        this.dialogService.add(ConfirmationDialog, {
+            body: _t("Unable to get a valid location. Do you want to proceed with your check-in/out anyway?"),
+            confirmLabel: _t("Proceed Anyway"),
+            confirm: async () => await this.checking(),
+            cancel: () => this._attendanceInProgress = false,
+        });
+    }
+
     async signInOut() {
         this.dropdown.close();
         if (this._attendanceInProgress) {
@@ -101,14 +112,16 @@ export class ActivityMenu extends Component {
                 async ({coords: {latitude, longitude}}) => {
                     await this.checking(latitude,longitude);
                 },
-                async () => {
-                    await this.checking();
+                () => {
+                    this.confirmChecking();
                 },
                 {
                     enableHighAccuracy: true,
                     timeout: 10000,
                 }
             );
+        } else if (trackingEnabled) {
+            this.confirmChecking();
         } else {
             await this.checking();
         }
