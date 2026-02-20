@@ -136,7 +136,7 @@ describe("Popup options: popup in page before edit", () => {
         await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
         expect(".o_add_snippet_dialog").toHaveCount(0);
         await contains(":iframe .s_cover").click();
-        await contains("button:contains(Grid)").click(); // arbitrary thing to undo
+        await contains("button:contains(Column)").click(); // arbitrary thing to undo
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
             contains(".o_we_invisible_entry .fa-eye-slash").click()
         );
