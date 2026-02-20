@@ -976,6 +976,36 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
+    def test_so_downpayment_percentage_rounding(self):
+        self.sale_order.order_line = self.env["sale.order.line"].create({
+            "name": self.company_data["product_order_no"].name,
+            "product_id": self.company_data["product_order_no"].id,
+            "product_uom_qty": 1,
+            "price_unit": 145.05,
+            "order_id": self.sale_order.id,
+        })
+        self.sale_order.action_confirm()
+        so_context = {
+            "active_model": "sale.order",
+            "active_ids": [self.sale_order.id],
+            "active_id": self.sale_order.id,
+            "default_journal_id": self.company_data["default_journal_sale"].id,
+        }
+        payment_params = {"advance_payment_method": "percentage", "amount": 30.0}
+        downpayment = (
+            self.env["sale.advance.payment.inv"].with_context(so_context).create(payment_params)
+        )
+        invoices_ids = [downpayment.create_invoices()["res_id"]]
+        self.env["account.move"].browse(invoices_ids).action_post()
+        payment_params = {"advance_payment_method": "percentage", "amount": 70.0}
+        downpayment = (
+            self.env["sale.advance.payment.inv"].with_context(so_context).create(payment_params)
+        )
+        invoices_ids = []
+        invoices_ids.append(downpayment.create_invoices()["res_id"])
+        self.env["account.move"].browse(invoices_ids).action_post()
+        self.assertEqual(self.sale_order.amount_invoiced, self.sale_order.amount_total)
+
     def test_so_downpayment_invoice_credited_reinvoiced(self):
         """
         Test that, after a downpayment, if the rest has been invoiced, credited and re-invoiced
