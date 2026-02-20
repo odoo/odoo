@@ -477,6 +477,7 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
                 default_lang_id: {
                     code: "en_US",
                 },
+                company_id: 1,
             };
         },
     });

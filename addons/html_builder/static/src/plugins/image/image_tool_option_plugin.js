@@ -10,11 +10,7 @@ import {
     IMAGE_TOOL,
     ALIGNMENT_STYLE_PADDING,
 } from "@html_builder/utils/option_sequence";
-import {
-    ReplaceMediaOption,
-    searchSupportedParentLinkEl,
-    socialMediaElementsSelector,
-} from "./replace_media_option";
+import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
@@ -24,6 +20,8 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 const IMAGE_LINK_ALIGN_CLASSES = ["mx-auto", "ms-auto", "me-auto"];
+
+export const socialMediaElementsSelector = ".s_social_media i.fa, .s_share i.fa, .social_media_img";
 
 export class ImageAndFaOption extends BaseOptionComponent {
     static template = "html_builder.ImageAndFaOption";

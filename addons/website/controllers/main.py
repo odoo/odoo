@@ -377,9 +377,11 @@ class Website(Home):
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
-        url = getattr(request.website, 'social_%s' % social, False)
+        url = getattr(request.website.company_id, 'social_%s' % social, False)
         if not url:
             raise werkzeug.exceptions.NotFound()
+        if not url.startswith(('http://', 'https://')):
+            url = f"https://{url}"
         return request.redirect(url, local=False)
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)

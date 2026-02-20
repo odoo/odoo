@@ -300,6 +300,7 @@ export const websiteService = {
                             language_ids: {},
                             default_lang_id: { fields: { code: {} } },
                             cookies_bar: {},
+                            company_id: {},
                         },
                     })
                 ).records;

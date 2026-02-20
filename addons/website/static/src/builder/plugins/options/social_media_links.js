@@ -4,17 +4,21 @@ import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class SocialMediaLinks extends BaseOptionComponent {
     static template = "website.SocialMediaLinks";
-    static dependencies = ["socialMediaOptionPlugin", "history"];
+    static dependencies = ["socialMediaOptionPlugin", "history", "operation"];
     static selector = ".s_social_media";
 
     setup() {
         super.setup();
 
-        const { getRecordedSocialMediaNames, reorderSocialMediaLink } =
+        const { reorderSocialMediaLink, prefillSocialMediaLinks } =
             this.dependencies.socialMediaOptionPlugin;
 
         onWillStart(async () => {
-            this.recordedSocialMediaNames = await getRecordedSocialMediaNames();
+            // Prefill placeholder social media links for existing static content
+            // (eg footer snippets) that are not added via drag and drop.
+            this.dependencies.operation.next(async () => {
+                await prefillSocialMediaLinks(this.env.getEditingElement());
+            });
         });
         this.rootRef = useRef("root");
         this.domState = useDomState((editingElement) => ({
@@ -30,8 +34,6 @@ export class SocialMediaLinks extends BaseOptionComponent {
         this.ids = [];
         this.elIdsMap = new Map();
         this.idsElMap = new Map();
-        this.idsMediaMap = new Map();
-        this.mediaIdsMap = new Map();
 
         // hack to trigger the rebuild
         this.reorderTriggered = useState({ trigger: 0 });
@@ -92,64 +94,24 @@ export class SocialMediaLinks extends BaseOptionComponent {
      * @returns { SocialMediaLinkItem[] }
      */
     computeItems() {
-        const missingRecordedSocialMediaNames = new Set(this.recordedSocialMediaNames);
-        const idsLookUp = new Map(this.ids.map((id, i) => [id, i]));
         const idsInDom = new Set();
-        const itemsFromDom = this.domState.presentLinks.map(({ element, media }, domPosition) => {
+        const items = this.domState.presentLinks.map(({ element, media }, domPosition) => {
             let id = this.elIdsMap.get(element);
-            if (!id) {
-                const idBasedOnMedia = this.mediaIdsMap.get(media);
-                if (!idsInDom.has(idBasedOnMedia)) {
-                    id = idBasedOnMedia;
-                }
-            }
             if (!id) {
                 id = this.nextId++;
             }
             idsInDom.add(id);
-            if (media) {
-                missingRecordedSocialMediaNames.delete(media);
-            }
             return { element, media, id, domPosition: domPosition + 1 };
         });
-        const items = [];
-        const addRecordedSocialMediaAtStartOfSlice = (slice) => {
-            for (const id of slice) {
-                if (idsInDom.has(id)) {
-                    break;
-                }
-                const media = this.idsMediaMap.get(id);
-                if (media) {
-                    items.push({ id, media });
-                    missingRecordedSocialMediaNames.delete(media);
-                }
-            }
-        };
-        addRecordedSocialMediaAtStartOfSlice(this.ids);
-        for (const item of itemsFromDom) {
-            items.push(item);
-            const start = idsLookUp.get(item.id);
-            if (start !== undefined) {
-                addRecordedSocialMediaAtStartOfSlice(this.ids.slice(start + 1));
-            }
-        }
-        for (const media of missingRecordedSocialMediaNames) {
-            items.push({ id: this.nextId++, media });
-        }
 
         this.ids = [];
         this.elIdsMap = new Map();
-        this.idsMediaMap = new Map();
 
         for (const item of items) {
             this.ids.push(item.id);
             if (item.element) {
                 this.elIdsMap.set(item.element, item.id);
                 this.idsElMap.set(item.id, item.element);
-            }
-            if (item.media) {
-                this.idsMediaMap.set(item.id, item.media);
-                this.mediaIdsMap.set(item.media, item.id);
             }
         }
         let elementAfter = null;
