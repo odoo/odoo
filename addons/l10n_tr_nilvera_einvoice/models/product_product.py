@@ -6,9 +6,26 @@ from odoo.exceptions import ValidationError
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    l10n_tr_ctsp_number = fields.Char(string="CTSP Number", copy=False, index="btree_not_null")
-    l10n_tr_seller_line_code = fields.Char(string="Seller Line Code", copy=False)
-    l10n_tr_customer_line_code = fields.Char(string="Customer Line Code", size=11, copy=False)
+    l10n_tr_ctsp_number = fields.Char(
+        string="CTSP Number",
+        copy=False,
+        index="btree_not_null",
+        help="This code is a unique identifier for the product in "
+        "Turkey's Centralized Trade and Stock Management System (CTSP).",
+    )
+    l10n_tr_seller_line_code = fields.Char(
+        string="Seller Line Code",
+        copy=False,
+        help="Within the scope of the IPAC, it refers to the reference line "
+             "number of the input (purchase/import) item on the document.",
+    )
+    l10n_tr_customer_line_code = fields.Char(
+        string="Customer Line Code",
+        size=11,
+        copy=False,
+        help="Within the scope of the IPAC, it refers to the reference line "
+        "number of the exported product item on the document.",
+    )
 
     @api.constrains("l10n_tr_ctsp_number")
     def _check_l10n_tr_ctsp_number(self):

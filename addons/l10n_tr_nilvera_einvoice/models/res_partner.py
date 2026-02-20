@@ -12,8 +12,16 @@ class ResPartner(models.Model):
         copy=False,
         store=True,
         readonly=False,
+        help="Specifies the alias provided by Nilvera, used when sending electronic invoices. \n"
+        "It helps make sure your customer is correctly recognized by the GİB when e-invoices are sent. \n"
+        "This ID is needed for your invoices to be processed correctly and comply with Turkish tax rules.",
     )
-    l10n_tr_tax_office_id = fields.Many2one("l10n_tr_nilvera_einvoice.tax.office", string="Turkish Tax Office")
+    l10n_tr_tax_office_id = fields.Many2one(
+        "l10n_tr_nilvera_einvoice.tax.office",
+        string="Turkish Tax Office",
+        help="Specifies the official Turkish Tax Office where this partner is registered. "
+             "This is required for generating valid e-Invoices for this partner.",
+    )
 
     @api.depends('l10n_tr_tax_office_id')
     def _compute_display_name(self):

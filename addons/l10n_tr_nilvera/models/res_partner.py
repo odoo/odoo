@@ -26,12 +26,16 @@ class ResPartner(models.Model):
         default='not_checked',
         readonly=True,
         tracking=True,
+        help="By clicking 'Verify', Odoo will check if this partner is compliant with e-Invoice or e-Archive system.",
     )
 
     # This field is only used technically for optimisation purposes. It's needed for _check_nilvera_customer.
     l10n_tr_nilvera_customer_alias_ids = fields.One2many(
         comodel_name='l10n_tr.nilvera.alias',
         inverse_name="partner_id",
+        help="Specifies the alias provided by Nilvera, used when sending electronic invoices. \n"
+        "It helps make sure your customer is correctly recognized by the GİB when e-invoices are sent. \n"
+        "This ID is needed for your invoices to be processed correctly and comply with Turkish tax rules.",
     )
 
     @api.depends('invoice_edi_format')

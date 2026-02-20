@@ -32,7 +32,8 @@ class AccountMove(models.Model):
         string="Nilvera Document UUID",
         copy=False,
         readonly=True,
-        help="Universally unique identifier of the Invoice",
+        help="This is the unique identifier (UUID) used to link this Odoo document with the Nilvera system. \n"
+        "This record ensures every new document has its own unique ID for tracking.",
     )
 
     l10n_tr_nilvera_send_status = fields.Selection(
@@ -48,6 +49,14 @@ class AccountMove(models.Model):
         readonly=True,
         copy=False,
         default='not_sent',
+        help="Tracks the real-time submission status of this invoice to the Nilvera. It is updated automatically based on"
+             "responses from Nilvera and GİB. \n"
+             "This field is read-only as it is updated automatically by the system "
+             "based on responses from Nilvera and GİB. \n"
+             "- Not sent: Default state before processing. \n"
+             "- Sent and waiting response: Sent to Nilvera, awaiting GİB confirmation. \n"
+             "- Successful: GİB has accepted the invoice. \n"
+             "- Error: The submission failed (check chatter for details).",
     )
     l10n_tr_gib_invoice_scenario = fields.Selection(
         selection=[
@@ -56,7 +65,10 @@ class AccountMove(models.Model):
         ],
         default='TEMELFATURA',
         string="Invoice Scenario",
-        help="The scenario of the invoice to be sent to GİB.",
+        help="Defines the official GİB (Turkish Revenue Administration) e-invoice "
+        "scenario. \n"
+        "Basic: Standard e-invoice that cannot be rejected by the recipient via the GİB portal. \n"
+        "Public Sector: Used specifically for invoices issued to public (government) institutions.",
     )
     l10n_tr_gib_invoice_type = fields.Selection(
         compute='_compute_l10n_tr_gib_invoice_type',
@@ -72,9 +84,20 @@ class AccountMove(models.Model):
             ('IADE', "Return"),
             ('TEVKIFATIADE', "Withholding Return"),
         ],
-        help="The type of invoice to be sent to GİB.",
+        help="Specifies the official GİB classification for the e-invoice/e-archive, which "
+        "determines its tax treatment and validation rules. \n"
+        "Sales: A standard sales invoice. \n"
+        "Withholding: An invoice where the buyer is responsible for "
+        "paying a portion of the VAT. \n"
+        "Registered for Export: Invoice for goods that will later be exported."
+        "If selected, an 'Exemption Reason' is required. \n"
+        "Tax Exempt: An invoice for goods/services exempt from VAT. "
+        "If selected, an 'Exemption Reason' is required.",
     )
-    l10n_tr_is_export_invoice = fields.Boolean(string="GİB Product Export Invoice")
+    l10n_tr_is_export_invoice = fields.Boolean(
+        string="GİB Product Export Invoice",
+        help="Check this box if this is a product export invoice.",
+    )
     l10n_tr_shipping_type = fields.Selection(
         selection=[
             ('1', "Sea Transportation"),
@@ -88,7 +111,7 @@ class AccountMove(models.Model):
             ('9', "Invalid Transportation Method"),
         ],
         string="Shipping Method",
-        help="The type of shipping.",
+        help="Specifies the method of transport using official GİB codes. ",
     )
     l10n_tr_exemption_code_id = fields.Many2one(
         comodel_name='l10n_tr_nilvera_einvoice.account.tax.code',
@@ -96,12 +119,20 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
         string="Exemption Reason",
-        help="The exception reason of the invoice.",
+        help="The official GİB tax exemption reason. \n"
+        "This field is mandatory if the 'GIB Invoice Type' is set to "
+        "'Registered for Export' or 'Tax Exempt'",
     )
-    l10n_tr_exemption_code_domain_list = fields.Json(compute='_compute_l10n_tr_exemption_code_domain_list')
+    l10n_tr_exemption_code_domain_list = fields.Json(
+        compute='_compute_l10n_tr_exemption_code_domain_list',
+        help="Technical field (not for users). Used to dynamically filter the "
+        "list of available exemption codes based on the selected "
+        "GIB Invoice Type or other criteria.",
+    )
     l10n_tr_nilvera_customer_status = fields.Selection(
         string="Partner Nilvera Status",
         related='partner_id.l10n_tr_nilvera_customer_status',
+        help="Shows the Nilvera status of the customer. ",
     )
     l10n_tr_nilvera_pdf_file = fields.Binary(
         attachment=True,
