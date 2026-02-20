@@ -4,6 +4,7 @@ import qrcode
 from io import BytesIO
 from odoo import models, api, _
 from odoo.tools.misc import format_datetime, format_date
+from odoo.tools.image import image_data_uri
 
 
 class PosOrderReceipt(models.AbstractModel):
@@ -134,7 +135,7 @@ class PosOrderReceipt(models.AbstractModel):
 
         use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url'
         company = self.company_id
-        config_logo = 'data:image/png;base64,' + base64.b64encode(base64.b64decode(self.config_id.logo)).decode('utf-8')
+        config_logo = image_data_uri(self.config_id.logo) if self.config_id.logo else False
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
 
         return {
