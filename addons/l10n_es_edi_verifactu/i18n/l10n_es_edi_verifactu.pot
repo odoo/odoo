@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:03+0000\n"
-"PO-Revision-Date: 2025-12-16 19:03+0000\n"
+"POT-Creation-Date: 2026-02-20 12:31+0000\n"
+"PO-Revision-Date: 2026-02-20 12:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -84,6 +84,13 @@ msgid "20_iva"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+msgid ""
+"<i class=\"o_button_icon oi oi-fw oi oi-arrow-right\"/>\n"
+"                                        Access Declaración Responsable"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.report_invoice_document
 msgid "<strong class=\"text-center\">QR tributario:</strong>"
 msgstr ""
@@ -122,16 +129,6 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.model,name:l10n_es_edi_verifactu.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model,name:l10n_es_edi_verifactu.model_account_move_reversal
-msgid "Account Move Reversal"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model,name:l10n_es_edi_verifactu.model_account_move_send
-msgid "Account Move Send"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -364,6 +361,11 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_move_reversal
+msgid "Journal Entry Reversal"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_resequence_wizard__l10n_es_edi_verifactu_required_in_prod
 msgid "L10N Es Edi Verifactu Required In Prod"
 msgstr ""
@@ -527,7 +529,7 @@ msgid "Remake the sequence of Journal Entries."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_move_form_inherit_l10n_es_edi_verifactu
+#: model:ir.actions.server,name:l10n_es_edi_verifactu.action_l10n_es_edi_verifactu_button_cancel
 msgid "Request Veri*Factu Cancellation"
 msgstr ""
 
@@ -543,9 +545,8 @@ msgid "See the 'Veri*Factu' tab for more information."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_show_cancel_button
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_show_cancel_button
-msgid "Show Veri*Factu Cancel Button"
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -820,6 +821,14 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.ui.menu,name:l10n_es_edi_verifactu.menu_l10n_es_edi_verifactu_root
 msgid "Veri*Factu (Spain)"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid ""
+"Veri*Factu Cancellation Request is only allowed for the invoice in either "
+"'Registered with Errors' or 'Accepted' Veri*Factu Status."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
