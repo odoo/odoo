@@ -678,3 +678,11 @@ class LoyaltyProgram(models.Model):
                 del vals['trigger_product_ids']
 
         return super().create(vals_list)
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for program, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", program.name)
+        return vals_list
