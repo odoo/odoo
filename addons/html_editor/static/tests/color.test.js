@@ -871,6 +871,13 @@ test("should not split unsplittable element when applying color (2)", async () =
             '<div style="color: rgb(255, 0, 0);"><p>t<font style="color: rgb(0, 0, 255);">[es]</font>t</p></div>',
     });
 });
+test("should not split unsplittable element when applying color (3)", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#">[a]bc</a></p>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter: '<p><a href="#"><font style="color: rgb(0, 0, 255);">[a]</font>bc</a></p>',
+    });
+});
 
 test("should be able to apply color on icon along with text", async () => {
     await testEditor({
@@ -948,31 +955,29 @@ test("should remove remove color from `td`", async () => {
     });
 });
 
-test("should be able to remove color applied by 'text-*' classes (1)", async () => {
-    await testEditor({
-        contentBefore: '<p><span class="text-muted">[a]</span></p>',
-        stepFunction: setColor("", "color"),
-        contentAfter: "<p>[a]</p>",
-    });
-});
-
-test("should be able to remove color applied by 'text-*' classes (2)", async () => {
+test("should not remove template coded style on a link", async () => {
     await testEditor({
         contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
-        contentBeforeEdit:
-            '<p>\ufeff<a href="#" class="text-muted o_link_in_selection">\ufeff[a]\ufeff</a>\ufeff</p>',
         stepFunction: setColor("", "color"),
-        contentAfterEdit:
-            '<p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[a]\ufeff</a>\ufeff</p>',
-        contentAfter: '<p><a href="#">[a]</a></p>',
+        contentAfter: '<p><a href="#" class="text-muted">[a]</a></p>',
     });
 });
 
-test("should be able to remove color from block element", async () => {
+test("should be able to add style on a link with template coded style", async () => {
     await testEditor({
-        contentBefore: '<p><a href="#" class="nav-link text-muted">[a]</a></p>',
+        contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
+        stepFunction: setColor("text-o-color-1", "color"),
+        contentAfter:
+            '<p><a href="#" class="text-muted"><font class="text-o-color-1">[a]</font></a></p>',
+    });
+});
+
+test("should be able to remove editor-added style on a link with template coded style", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><a href="#" class="text-muted"><font class="text-o-color-1">[a]</font></a></p>',
         stepFunction: setColor("", "color"),
-        contentAfter: '<p><a href="#" class="nav-link">[a]</a></p>',
+        contentAfter: '<p><a href="#" class="text-muted">[a]</a></p>',
     });
 });
 
