@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
+import contextlib
 import csv
 import io
+from itertools import chain
 from odoo.tools import float_is_zero, SQL
 from odoo import fields, models, api
-from odoo.tools.misc import get_lang
 from stdnum.fr import siren
+from odoo.modules.registry import Registry
 
 
 class L10n_FrFecExportWizard(models.TransientModel):
@@ -92,15 +94,8 @@ class L10n_FrFecExportWizard(models.TransientModel):
         else:
             return company.vat
 
-    def generate_fec(self):
-        # We choose to implement the flat file instead of the XML file for 2 reasons :
-        # 1) the XSD file impose to have the label on the account.move, but Odoo has the label on the account.move.line,
-        # so that's a  problem !
-        # 2) CSV files are easier to read/use for a regular accountant. So it will be easier for the accountant to check
-        # the file before sending it to the fiscal administration
+    def _get_fec_stream(self):
         company = self.env.company
-        company_legal_data = self._get_company_legal_data(company)
-
         header = [
             u'JournalCode',    # 0
             u'JournalLib',     # 1
@@ -122,28 +117,229 @@ class L10n_FrFecExportWizard(models.TransientModel):
             u'Idevise',        # 17
             ]
 
-        rows_to_write = [header]
-        # INITIAL BALANCE
-        unaffected_earnings_account = self.env['account.account'].search([
-            *self.env['account.account']._check_company_domain(company),
-            ('account_type', '=', 'equity_unaffected'),
-        ], limit=1)
-        unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
-        if unaffected_earnings_account:
-            #compute the benefit/loss of last year to add in the initial balance of the current year earnings account
-            unaffected_earnings_results = self._do_query_unaffected_earnings()
-            unaffected_earnings_line = False
-
         aa_name = self.env['account.account']._field_to_sql('account_move_line__account_id', 'name')
 
-        query = self.env['account.move.line']._search(self._get_base_domain() + [
-            ('date', '<', self.date_from),
-            ('account_id.include_initial_balance', '=', True),
-            ('account_id.account_type', 'not in', ['asset_receivable', 'liability_payable']),
-        ])
-        aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
-        sql_query = query.select(SQL(
+        def format_row(row):
+            with io.StringIO() as buf:
+                writer = csv.writer(buf, delimiter='|', lineterminator='\r\n')
+                writer.writerow(row)
+                return buf.getvalue().encode()
+
+        @contextlib.contextmanager
+        def get_cursor():
+            if self.env.context.get('fec_test_mode'):
+                yield self.env.cr
+            else:
+                with Registry(self.env.cr.dbname).cursor() as cr:
+                    yield cr
+
+        def stream_header():
+            yield format_row(header)
+
+        def stream_initial_balance(self):
+            with get_cursor() as cr:
+                self = self.with_env(self.env(cr=cr))
+                unaffected_earnings_account = self.env['account.account'].search([
+                    *self.env['account.account']._check_company_domain(company),
+                    ('account_type', '=', 'equity_unaffected'),
+                ], limit=1)
+                unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
+                if unaffected_earnings_account:
+                    # compute the benefit/loss of last year to add in the initial balance of the current year earnings account
+                    unaffected_earnings_results = self._do_query_unaffected_earnings()
+                    unaffected_earnings_line = False
+
+                query = self.env['account.move.line']._search(self._get_base_domain() + [
+                    ('date', '<', self.date_from),
+                    ('account_id.include_initial_balance', '=', True),
+                    ('account_id.account_type', 'not in', ['asset_receivable', 'liability_payable']),
+                ])
+                aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
+                sql_query = query.select(SQL(
+                    """
+                        'OUV' AS JournalCode,
+                        'Balance initiale' AS JournalLib,
+                        'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                        %(formatted_date_from)s AS EcritureDate,
+                        MIN(%(aa_code)s) AS CompteNum,
+                        replace(replace(MIN(%(aa_name)s), '|', '/'), '\t', '') AS CompteLib,
+                        '' AS CompAuxNum,
+                        '' AS CompAuxLib,
+                        '-' AS PieceRef,
+                        %(formatted_date_from)s AS PieceDate,
+                        '/' AS EcritureLib,
+                        replace(CASE WHEN sum(account_move_line.balance) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                        replace(CASE WHEN sum(account_move_line.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                        '' AS EcritureLet,
+                        '' AS DateLet,
+                        %(formatted_date_from)s AS ValidDate,
+                        '' AS Montantdevise,
+                        '' AS Idevise,
+                        MIN(account_move_line__account_id.id) AS CompteID
+                    """,
+                    formatted_date_year=self.date_from.year,
+                    formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+                    aa_code=aa_code,
+                    aa_name=aa_name,
+                ))
+                self._cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+
+                currency_digits = 2
+                for row in self._cr.fetchall():
+                    listrow = list(row)
+                    account_id = listrow.pop()
+                    if not unaffected_earnings_line:
+                        account = self.env['account.account'].browse(account_id)
+                        if account.account_type == 'equity_unaffected':
+                            # add the benefit/loss of previous fiscal year to the first unaffected earnings account found.
+                            unaffected_earnings_line = True
+                            current_amount = float(listrow[11].replace(',', '.')) - float(listrow[12].replace(',', '.'))
+                            unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
+                            listrow_amount = current_amount + unaffected_earnings_amount
+                            if float_is_zero(listrow_amount, precision_digits=currency_digits):
+                                continue
+                            if listrow_amount > 0:
+                                listrow[11] = str(listrow_amount).replace('.', ',')
+                                listrow[12] = '0,00'
+                            else:
+                                listrow[11] = '0,00'
+                                listrow[12] = str(-listrow_amount).replace('.', ',')
+                    yield format_row(listrow)
+
+                # if the unaffected earnings account wasn't in the selection yet: add it manually
+                if (not unaffected_earnings_line
+                    and unaffected_earnings_results
+                    and (unaffected_earnings_results[11] != '0,00'
+                        or unaffected_earnings_results[12] != '0,00')):
+                    # search an unaffected earnings account
+                    unaffected_earnings_account = self.env['account.account'].search([
+                        ('account_type', '=', 'equity_unaffected')
+                    ], limit=1)
+                    if unaffected_earnings_account:
+                        unaffected_earnings_results[4] = unaffected_earnings_account.code
+                        unaffected_earnings_results[5] = unaffected_earnings_account.name
+                    yield format_row(unaffected_earnings_results)
+
+                # INITIAL BALANCE - receivable/payable
+                query = self.env['account.move.line']._search(self._get_base_domain() + [
+                    ('date', '<', self.date_from),
+                    ('account_id.include_initial_balance', '=', True),
+                    ('account_id.account_type', 'in', ['asset_receivable', 'liability_payable']),
+                ])
+                query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')
+                aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
+                sql_query = query.select(SQL(
+                    """
+                        'OUV' AS JournalCode,
+                        'Balance initiale' AS JournalLib,
+                        'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                        %(formatted_date_from)s AS EcritureDate,
+                        MIN(%(aa_code)s) AS CompteNum,
+                        replace(MIN(%(aa_name)s), '|', '/') AS CompteLib,
+                        COALESCE(NULLIF(replace(account_move_line__partner_id.ref, '|', '/'), ''), account_move_line__partner_id.id::text) AS CompAuxNum,
+                        COALESCE(replace(account_move_line__partner_id.name, '|', '/'), '') AS CompAuxLib,
+                        '-' AS PieceRef,
+                        %(formatted_date_from)s AS PieceDate,
+                        '/' AS EcritureLib,
+                        replace(CASE WHEN sum(account_move_line.balance) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                        replace(CASE WHEN sum(account_move_line.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                        '' AS EcritureLet,
+                        '' AS DateLet,
+                        %(formatted_date_from)s AS ValidDate,
+                        '' AS Montantdevise,
+                        '' AS Idevise,
+                        MIN(account_move_line__account_id.id) AS CompteID
+                    """,
+                    formatted_date_year=self.date_from.year,
+                    formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+                    aa_code=aa_code,
+                    aa_name=aa_name,
+                ))
+                self._cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+
+                for row in self._cr.fetchall():
+                    listrow = list(row)
+                    listrow.pop()
+                    yield format_row(listrow)
+
+        def stream_lines(self):
+            with get_cursor() as cr:
+                self = self.with_env(self.env(cr=cr))
+                query_limit = int(self.env['ir.config_parameter'].sudo().get_param('l10n_fr_fec.batch_size', 500000))  # To prevent memory errors when fetching the results
+                query = self.env['account.move.line']._search(
+                    domain=self._get_base_domain() + [
+                        ('date', '>=', self.date_from),
+                        ('date', '<=', self.date_to),
+                    ],
+                    limit=query_limit + 1,
+                    order='date, move_name, id',
+                )
+                account_alias = query.join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')
+                aa_code = self.env['account.account']._field_to_sql(account_alias, 'code', query)
+
+                aj_name = self.env['account.journal']._field_to_sql('account_move_line__journal_id', 'name')
+                columns = SQL(
+                    """
+                        REGEXP_REPLACE(replace(%(journal_alias)s.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
+                        REGEXP_REPLACE(replace(%(aj_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
+                        REGEXP_REPLACE(replace(%(move_alias)s.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
+                        TO_CHAR(%(move_alias)s.date, 'YYYYMMDD') AS EcritureDate,
+                        %(aa_code)s AS CompteNum,
+                        REGEXP_REPLACE(replace(%(aa_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
+                        CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
+                        THEN
+                            CASE WHEN %(partner_alias)s.ref IS null OR %(partner_alias)s.ref = ''
+                            THEN %(partner_alias)s.id::text
+                            ELSE replace(%(partner_alias)s.ref, '|', '/')
+                            END
+                        ELSE ''
+                        END
+                        AS CompAuxNum,
+                        CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
+                            THEN COALESCE(REGEXP_REPLACE(replace(%(partner_alias)s.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
+                            ELSE ''
+                        END AS CompAuxLib,
+                        CASE WHEN %(move_alias)s.ref IS null OR %(move_alias)s.ref = ''
+                            THEN '-'
+                            ELSE REGEXP_REPLACE(replace(%(move_alias)s.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
+                        END AS PieceRef,
+                        TO_CHAR(COALESCE(%(move_alias)s.invoice_date, %(move_alias)s.date), 'YYYYMMDD') AS PieceDate,
+                        CASE WHEN account_move_line.name IS NULL OR account_move_line.name = '' THEN '/'
+                            WHEN account_move_line.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
+                            ELSE REGEXP_REPLACE(replace(account_move_line.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
+                        replace(CASE WHEN account_move_line.debit = 0 THEN '0,00' ELSE to_char(account_move_line.debit, '000000000000000D99') END, '.', ',') AS Debit,
+                        replace(CASE WHEN account_move_line.credit = 0 THEN '0,00' ELSE to_char(account_move_line.credit, '000000000000000D99') END, '.', ',') AS Credit,
+                        CASE WHEN %(full_alias)s.id IS NULL THEN ''::text ELSE %(full_alias)s.id::text END AS EcritureLet,
+                        CASE WHEN account_move_line.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(%(full_alias)s.create_date, 'YYYYMMDD') END AS DateLet,
+                        TO_CHAR(%(move_alias)s.date, 'YYYYMMDD') AS ValidDate,
+                        CASE
+                            WHEN account_move_line.amount_currency IS NULL OR account_move_line.amount_currency = 0 THEN ''
+                            ELSE replace(to_char(account_move_line.amount_currency, '000000000000000D99'), '.', ',')
+                        END AS Montantdevise,
+                        CASE WHEN account_move_line.currency_id IS NULL THEN '' ELSE %(currency_alias)s.name END AS Idevise
+                    """,
+                    currency_alias=SQL.identifier(query.left_join('account_move_line', 'currency_id', 'res_currency', 'id', 'currency_id')),
+                    full_alias=SQL.identifier(query.left_join('account_move_line', 'full_reconcile_id', 'account_full_reconcile', 'id', 'full_reconcile_id')),
+                    journal_alias=SQL.identifier(query.left_join('account_move_line', 'journal_id', 'account_journal', 'id', 'journal_id')),
+                    move_alias=SQL.identifier(query.left_join('account_move_line', 'move_id', 'account_move', 'id', 'move_id')),
+                    partner_alias=SQL.identifier(query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')),
+                    account_alias=SQL.identifier(account_alias),
+                    aj_name=aj_name,
+                    aa_code=aa_code,
+                    aa_name=aa_name,
+                )
+                has_more_results = True
+                while has_more_results:
+                    self._cr.execute(query.select(columns))
+                    query.offset += query_limit
+                    has_more_results = self._cr.rowcount > query_limit  # we load one more result than the limit to check if there is more
+                    query_results = self._cr.fetchall()
+                    for row in query_results[:query_limit]:
+                        yield format_row(row)
+
+        def remove_trailing_newline(rows_iterator):
             """
+<<<<<<< 8ef673d27481d17b83f93892e78b09b085738ca7
                 'OUV' AS JournalCode,
                 'Balance initiale' AS JournalLib,
                 'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
@@ -170,7 +366,38 @@ class L10n_FrFecExportWizard(models.TransientModel):
             aa_name=aa_name,
         ))
         self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+||||||| eedc4c4dfc9dc6e5547ee01f59c3f4de67a1ed0a
+                'OUV' AS JournalCode,
+                'Balance initiale' AS JournalLib,
+                'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                %(formatted_date_from)s AS EcritureDate,
+                MIN(%(aa_code)s) AS CompteNum,
+                replace(replace(MIN(%(aa_name)s), '|', '/'), '\t', '') AS CompteLib,
+                '' AS CompAuxNum,
+                '' AS CompAuxLib,
+                '-' AS PieceRef,
+                %(formatted_date_from)s AS PieceDate,
+                '/' AS EcritureLib,
+                replace(CASE WHEN sum(account_move_line.balance) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                replace(CASE WHEN sum(account_move_line.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                '' AS EcritureLet,
+                '' AS DateLet,
+                %(formatted_date_from)s AS ValidDate,
+                '' AS Montantdevise,
+                '' AS Idevise,
+                MIN(account_move_line__account_id.id) AS CompteID
+            """,
+            formatted_date_year=self.date_from.year,
+            formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            aa_code=aa_code,
+            aa_name=aa_name,
+        ))
+        self._cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+=======
+            Remove the trailing newline characters (\r\n) from the last row.
+>>>>>>> b56623e0fbfaac4a8b136b55de7069d53abb4746
 
+<<<<<<< 8ef673d27481d17b83f93892e78b09b085738ca7
         currency_digits = 2
         for row in self.env.cr.fetchall():
             listrow = list(row)
@@ -216,7 +443,60 @@ class L10n_FrFecExportWizard(models.TransientModel):
         query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')
         aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
         sql_query = query.select(SQL(
+||||||| eedc4c4dfc9dc6e5547ee01f59c3f4de67a1ed0a
+        currency_digits = 2
+        for row in self._cr.fetchall():
+            listrow = list(row)
+            account_id = listrow.pop()
+            if not unaffected_earnings_line:
+                account = self.env['account.account'].browse(account_id)
+                if account.account_type == 'equity_unaffected':
+                    #add the benefit/loss of previous fiscal year to the first unaffected earnings account found.
+                    unaffected_earnings_line = True
+                    current_amount = float(listrow[11].replace(',', '.')) - float(listrow[12].replace(',', '.'))
+                    unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
+                    listrow_amount = current_amount + unaffected_earnings_amount
+                    if float_is_zero(listrow_amount, precision_digits=currency_digits):
+                        continue
+                    if listrow_amount > 0:
+                        listrow[11] = str(listrow_amount).replace('.', ',')
+                        listrow[12] = '0,00'
+                    else:
+                        listrow[11] = '0,00'
+                        listrow[12] = str(-listrow_amount).replace('.', ',')
+            rows_to_write.append(listrow)
+
+        #if the unaffected earnings account wasn't in the selection yet: add it manually
+        if (not unaffected_earnings_line
+            and unaffected_earnings_results
+            and (unaffected_earnings_results[11] != '0,00'
+                 or unaffected_earnings_results[12] != '0,00')):
+            #search an unaffected earnings account
+            unaffected_earnings_account = self.env['account.account'].search([
+                ('account_type', '=', 'equity_unaffected')
+            ], limit=1)
+            if unaffected_earnings_account:
+                unaffected_earnings_results[4] = unaffected_earnings_account.code
+                unaffected_earnings_results[5] = unaffected_earnings_account.name
+            rows_to_write.append(unaffected_earnings_results)
+
+        # INITIAL BALANCE - receivable/payable
+        query = self.env['account.move.line']._search(self._get_base_domain() + [
+            ('date', '<', self.date_from),
+            ('account_id.include_initial_balance', '=', True),
+            ('account_id.account_type', 'in', ['asset_receivable', 'liability_payable']),
+        ])
+        query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')
+        aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
+        sql_query = query.select(SQL(
+=======
+            Each row in the iterator ends with '\r\n', but the FEC file format
+            requires no trailing newline after the final row. This function
+            yields all rows unchanged except the last one, which has its
+            trailing 2 characters (the \r\n) stripped.
+>>>>>>> b56623e0fbfaac4a8b136b55de7069d53abb4746
             """
+<<<<<<< 8ef673d27481d17b83f93892e78b09b085738ca7
                 'OUV' AS JournalCode,
                 'Balance initiale' AS JournalLib,
                 'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
@@ -243,79 +523,61 @@ class L10n_FrFecExportWizard(models.TransientModel):
             aa_name=aa_name,
         ))
         self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+||||||| eedc4c4dfc9dc6e5547ee01f59c3f4de67a1ed0a
+                'OUV' AS JournalCode,
+                'Balance initiale' AS JournalLib,
+                'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                %(formatted_date_from)s AS EcritureDate,
+                MIN(%(aa_code)s) AS CompteNum,
+                replace(MIN(%(aa_name)s), '|', '/') AS CompteLib,
+                COALESCE(NULLIF(replace(account_move_line__partner_id.ref, '|', '/'), ''), account_move_line__partner_id.id::text) AS CompAuxNum,
+                COALESCE(replace(account_move_line__partner_id.name, '|', '/'), '') AS CompAuxLib,
+                '-' AS PieceRef,
+                %(formatted_date_from)s AS PieceDate,
+                '/' AS EcritureLib,
+                replace(CASE WHEN sum(account_move_line.balance) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                replace(CASE WHEN sum(account_move_line.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                '' AS EcritureLet,
+                '' AS DateLet,
+                %(formatted_date_from)s AS ValidDate,
+                '' AS Montantdevise,
+                '' AS Idevise,
+                MIN(account_move_line__account_id.id) AS CompteID
+            """,
+            formatted_date_year=self.date_from.year,
+            formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            aa_code=aa_code,
+            aa_name=aa_name,
+        ))
+        self._cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+=======
+            try:
+                current_row = next(rows_iterator)
+            except StopIteration:
+                return
+>>>>>>> b56623e0fbfaac4a8b136b55de7069d53abb4746
 
+<<<<<<< 8ef673d27481d17b83f93892e78b09b085738ca7
         for row in self.env.cr.fetchall():
             listrow = list(row)
             listrow.pop()
             rows_to_write.append(listrow)
+||||||| eedc4c4dfc9dc6e5547ee01f59c3f4de67a1ed0a
+        for row in self._cr.fetchall():
+            listrow = list(row)
+            listrow.pop()
+            rows_to_write.append(listrow)
+=======
+            for next_row in rows_iterator:
+                yield current_row
+                current_row = next_row
+>>>>>>> b56623e0fbfaac4a8b136b55de7069d53abb4746
 
-        # LINES
-        query_limit = int(self.env['ir.config_parameter'].sudo().get_param('l10n_fr_fec.batch_size', 500000)) # To prevent memory errors when fetching the results
-        query = self.env['account.move.line']._search(
-            domain=self._get_base_domain() + [
-                ('date', '>=', self.date_from),
-                ('date', '<=', self.date_to),
-            ],
-            limit=query_limit + 1,
-            order='date, move_name, id',
-        )
-        account_alias = query.join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')
-        aa_code = self.env['account.account']._field_to_sql(account_alias, 'code', query)
+            yield current_row[:-2]
 
-        aj_name = self.env['account.journal']._field_to_sql('account_move_line__journal_id', 'name')
-        columns = SQL(
-            """
-                REGEXP_REPLACE(replace(%(journal_alias)s.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
-                REGEXP_REPLACE(replace(%(aj_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
-                REGEXP_REPLACE(replace(%(move_alias)s.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
-                TO_CHAR(%(move_alias)s.date, 'YYYYMMDD') AS EcritureDate,
-                %(aa_code)s AS CompteNum,
-                REGEXP_REPLACE(replace(%(aa_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
-                CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
-                THEN
-                    CASE WHEN %(partner_alias)s.ref IS null OR %(partner_alias)s.ref = ''
-                    THEN %(partner_alias)s.id::text
-                    ELSE replace(%(partner_alias)s.ref, '|', '/')
-                    END
-                ELSE ''
-                END
-                AS CompAuxNum,
-                CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
-                     THEN COALESCE(REGEXP_REPLACE(replace(%(partner_alias)s.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
-                     ELSE ''
-                END AS CompAuxLib,
-                CASE WHEN %(move_alias)s.ref IS null OR %(move_alias)s.ref = ''
-                     THEN '-'
-                     ELSE REGEXP_REPLACE(replace(%(move_alias)s.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
-                END AS PieceRef,
-                TO_CHAR(COALESCE(%(move_alias)s.invoice_date, %(move_alias)s.date), 'YYYYMMDD') AS PieceDate,
-                CASE WHEN account_move_line.name IS NULL OR account_move_line.name = '' THEN '/'
-                     WHEN account_move_line.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
-                     ELSE REGEXP_REPLACE(replace(account_move_line.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
-                replace(CASE WHEN account_move_line.debit = 0 THEN '0,00' ELSE to_char(account_move_line.debit, '000000000000000D99') END, '.', ',') AS Debit,
-                replace(CASE WHEN account_move_line.credit = 0 THEN '0,00' ELSE to_char(account_move_line.credit, '000000000000000D99') END, '.', ',') AS Credit,
-                CASE WHEN %(full_alias)s.id IS NULL THEN ''::text ELSE %(full_alias)s.id::text END AS EcritureLet,
-                CASE WHEN account_move_line.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(%(full_alias)s.create_date, 'YYYYMMDD') END AS DateLet,
-                TO_CHAR(%(move_alias)s.date, 'YYYYMMDD') AS ValidDate,
-                CASE
-                    WHEN account_move_line.amount_currency IS NULL OR account_move_line.amount_currency = 0 THEN ''
-                    ELSE replace(to_char(account_move_line.amount_currency, '000000000000000D99'), '.', ',')
-                END AS Montantdevise,
-                CASE WHEN account_move_line.currency_id IS NULL THEN '' ELSE %(currency_alias)s.name END AS Idevise
-            """,
-            currency_alias=SQL.identifier(query.left_join('account_move_line', 'currency_id', 'res_currency', 'id', 'currency_id')),
-            full_alias=SQL.identifier(query.left_join('account_move_line', 'full_reconcile_id', 'account_full_reconcile', 'id', 'full_reconcile_id')),
-            journal_alias=SQL.identifier(query.left_join('account_move_line', 'journal_id', 'account_journal', 'id', 'journal_id')),
-            move_alias=SQL.identifier(query.left_join('account_move_line', 'move_id', 'account_move', 'id', 'move_id')),
-            partner_alias=SQL.identifier(query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')),
-            account_alias=SQL.identifier(account_alias),
-            aj_name=aj_name,
-            aa_code=aa_code,
-            aa_name=aa_name,
-        )
-        with io.StringIO() as fecfile:
-            csv_writer = csv.writer(fecfile, delimiter='|', lineterminator='\r\n')
+        return remove_trailing_newline(chain(stream_header(), stream_initial_balance(self), stream_lines(self)))
 
+<<<<<<< 8ef673d27481d17b83f93892e78b09b085738ca7
             # Write header and initial balances
             csv_writer.writerows(rows_to_write)
 
@@ -328,6 +590,29 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 query_results = self.env.cr.fetchall()
                 csv_writer.writerows(query_results[:query_limit])
             content = fecfile.getvalue()[:-2].encode()
+||||||| eedc4c4dfc9dc6e5547ee01f59c3f4de67a1ed0a
+            # Write header and initial balances
+            csv_writer.writerows(rows_to_write)
+
+            # Write current period's data
+            has_more_results = True
+            while has_more_results:
+                self._cr.execute(query.select(columns))
+                query.offset += query_limit
+                has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
+                query_results = self._cr.fetchall()
+                csv_writer.writerows(query_results[:query_limit])
+            content = fecfile.getvalue()[:-2].encode()
+=======
+    def generate_fec(self):
+        # We choose to implement the flat file instead of the XML file for 2 reasons :
+        # 1) the XSD file impose to have the label on the account.move, but Odoo has the label on the account.move.line,
+        # so that's a  problem !
+        # 2) CSV files are easier to read/use for a regular accountant. So it will be easier for the accountant to check
+        # the file before sending it to the fiscal administration
+        company = self.env.company
+        company_legal_data = self._get_company_legal_data(company)
+>>>>>>> b56623e0fbfaac4a8b136b55de7069d53abb4746
 
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
@@ -340,8 +625,8 @@ class L10n_FrFecExportWizard(models.TransientModel):
             self.env.company.write({'fiscalyear_lock_date': self.date_to})
 
         return {
-            'file_name': f"{company_legal_data}FEC{end_date}{suffix}.txt",
-            'file_content': content,
+            'file_name': f"{company_legal_data}FEC{end_date}{suffix}.csv",
+            'file_content': self._get_fec_stream(),
             'file_type': 'txt'
         }
 
