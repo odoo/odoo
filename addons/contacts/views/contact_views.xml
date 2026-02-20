@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="res_partner_view_hierarchy" model="ir.ui.view">
+        <field name="name">res.partner.view.hierarchy</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <hierarchy child_field="child_ids" avatar_field="avatar_128" label="Contacts">
+                <field name="name" />
+                <field name="type" />
+                <field name="commercial_partner_id" />
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center o_hierarchy_node_color_{{record.commercial_partner_id.raw_value ? ((record.commercial_partner_id.raw_value - 1) % 11) + 1 : 0}}" t-att-title="record.type.value">
+                            <div class="mt-n4 rounded-circle overflow-hidden position-relative z-1" style="width:48px; height:48px;">
+                                <field name="avatar_128" widget="image" options="{'zoom': true, 'zoom_delay': 1000}" class="w-100 h-100 object-fit-cover"/>
+                            </div>
+                        </div>
+                        <div class="o_contact_hierarchy_card d-flex flex-column p-2">
+                            <div class="mb-1">
+                                <p class="mb-0">
+                                    <field name="name" invisible="not name" class="fw-bold"/>
+                                    <field name="type" invisible="name" class="fw-bold"/>
+                                    <i t-if="record.type.raw_value != 'contact'" t-att-data-tooltip="record.type.value" class="fa ms-2 text-muted" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img"/>
+                                </p>
+                            </div>
+                            <div>
+                                <div t-if="record.email.raw_value" class="text-truncate">
+                                    <i class="fa fa-fw me-1 fa-envelope text-muted" title="Email"/>
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.raw_value">
+                                    <i class="fa fa-fw me-1 fa-phone text-muted" title="Phone"/>
+                                    <field name="phone"/>
+                                </div>
+                                <div t-if="record.city.raw_value or record.country_id.raw_value">
+                                    <i class="fa fa-fw me-1 fa-map-marker" title="Location"/>
+                                    <field name="city"/>
+                                    <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                                    <field name="country_id"/>
+                                </div>
+                            </div>
+                            <field name="category_id" widget="many2many_tags" invisible="not category_id" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" class="m-0"/>
+                            <field name="properties" invisible="not properties" widget="properties"/>
+                            <field name="application_statistics" invisible="not application_statistics" widget="contact_statistics" class="pt-2"/>
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
     <record id="action_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="explanation">Opens the global Contacts directory. Use this as a general fallback for finding individuals or companies if a more specific action (like Customers or Vendors) is not requested.</field>
         <field name="path">contacts</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">list,kanban,form,activity</field>
+        <field name="view_mode">list,kanban,form,hierarchy,activity</field>
         <field name="search_view_id" ref="base.view_res_partner_filter"/>
         <field name="context">{'default_is_company': True}</field>
         <field name="help" type="html">

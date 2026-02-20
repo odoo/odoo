@@ -41,16 +41,14 @@
                 >
                     <t t-if="!this.props.node.nodes.length">
                         <span style="grid-column: 2;">
-                            Unfold
-                        </span>
-                        <span class="text-end" style="grid-column: 3;">
-                            <t t-out="this.props.node.childResIds.length"/>
-                            <i class="fa ps-1" t-att-class="this.props.archInfo.icon"/>
+                            <i class="fa fa-fw fa-caret-right"/>
+                            <t t-out="this.props.node.childResIds.length + ' ' + (this.props.archInfo.label || 'Unfold')"/>
                         </span>
                     </t>
                     <t t-else="">
                         <span style="grid-column: 2;">
-                            Fold
+                            <i class="fa fa-fw fa-caret-down"/>
+                            <t t-out="this.props.node.childResIds.length + ' ' + (this.props.archInfo.label || 'Fold')"/>
                         </span>
                     </t>
                 </button>

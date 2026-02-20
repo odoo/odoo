@@ -39,6 +39,7 @@ class Employee extends models.Model {
         relation: "hr.employee",
         relation_field: "parent_id",
     });
+    avatar_128 = fields.Image();
 
     _records = [
         { id: 1, name: "Albert", parent_id: false, child_ids: [2, 3] },
@@ -115,13 +116,12 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-primary.d-grid").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-primary.rounded-0").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-primary .fa-rotate-90.align-text-top").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-primary").toHaveText("Unfold\n1");
+    expect(".o_hierarchy_node_button.btn-primary").toHaveText("1 Unfold");
 
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node").toHaveCount(1);
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node_content").toHaveText("Albert");
     expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-secondary").toHaveText("Fold");
+    expect(".o_hierarchy_node_button.btn-secondary").toHaveText("2 Fold");
 });
 
 test("display child nodes", async () => {
@@ -151,7 +151,10 @@ test("display child nodes", async () => {
     expect(".o_hierarchy_node_button").toHaveCount(2);
     expect(".o_hierarchy_node_button.btn-primary").toHaveCount(0);
     expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(2);
-    expect(".o_hierarchy_node_button.btn-secondary").toHaveText("Fold");
+    expect(queryAllTexts(".o_hierarchy_node_button.btn-secondary")).toEqual([
+        "2 Fold",
+        "1 Fold",
+    ]);
     // check nodes in each row
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node").toHaveCount(1);
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node_content").toHaveText("Albert");
@@ -245,6 +248,20 @@ test("display the parent above the line when many records on the parent row", as
     expect(".o_hierarchy_line_right").toHaveCount(1);
     expect(".o_hierarchy_parent_node_container").toHaveCount(1);
     expect(".o_hierarchy_parent_node_container").toHaveText("Albert");
+});
+
+test("display the parent with avatar above the line when many records on the parent row", async () => {
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy avatar_field='avatar_128'>"
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    await contains(".o_hierarchy_node_button.btn-primary").click();
+    expect(".o_hierarchy_parent_node_container .o_avatar").toHaveCount(1);
 });
 
 test("Add a custom domain leaf on default state of the view with a globalDomain and search default filters", async () => {
@@ -1119,7 +1136,7 @@ test("drag node to scroll", async () => {
     expect(".o_hierarchy_node_container.o_hierarchy_dragged").toHaveCount(0);
 });
 
-test("check default icon is correctly used inside button to display child nodes", async () => {
+test("should display 'Unfold' button label when no label is provided", async () => {
     await mountView({
         type: "hierarchy",
         resModel: "hr.employee",
@@ -1129,38 +1146,7 @@ test("check default icon is correctly used inside button to display child nodes"
         1
     );
     expect(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").toHaveText(
-        "Unfold\n1"
-    );
-    expect(
-        ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-share-alt.fa-rotate-90.align-text-top"
-    ).toHaveCount(1, {
-        message:
-            "The default icon of the hierarchy view should be displayed inside the button to unfold the node.",
-    });
-});
-
-test("use other icon used next to Unfold string displayed inside the button", async () => {
-    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
-        "<hierarchy>",
-        "<hierarchy icon='fa-users'>"
-    );
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-    });
-
-    expect(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").toHaveCount(
-        1
-    );
-    expect(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").toHaveText(
-        "Unfold\n1"
-    );
-    expect(".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-users").toHaveCount(
-        1,
-        {
-            message:
-                "The icon defined in the attribute icon in hierarchy tag should be displayed inside the button to unfold the node instead of the default one.",
-        }
+        "1 Unfold"
     );
 });
 

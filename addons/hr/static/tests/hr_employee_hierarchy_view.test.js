@@ -12,6 +12,7 @@ class Employee extends models.Model {
         relation: "hr.employee",
         relation_field: "parent_id",
     });
+    image_128 = fields.Image();
 
     _records = [
         { id: 1, name: "Albert", parent_id: false, child_ids: [2, 3] },
@@ -26,7 +27,7 @@ class Employee extends models.Model {
 
     _views = {
         hierarchy: `
-            <hierarchy js_class="hr_employee_hierarchy">
+            <hierarchy js_class="hr_employee_hierarchy" label="people" avatar_field="image_128">
                 <templates>
                     <t t-name="hierarchy-box">
                         <div class="o_hierarchy_node_header">
@@ -74,12 +75,6 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_node").toHaveCount(3);
     expect(".o_hierarchy_node_button").toHaveCount(2);
     expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-primary.d-grid").toHaveCount(0, {
-        message: "'d-grid' class has been removed in that js_class",
-    });
-    expect(".o_hierarchy_node_button.btn-primary.rounded-0").toHaveCount(0, {
-        message: "'d-grid' class has been removed in that js_class",
-    });
     expect(".o_hierarchy_node_button.btn-primary .o_hierarchy_icon").toHaveCount(0, {
         message: "the icon has been replaced in that js_class",
     });
@@ -108,7 +103,7 @@ test("display the avatar of the parent when there is more than one node in the s
     expect(".o_hierarchy_node").toHaveCount(4);
     expect(".o_hierarchy_separator").toHaveCount(2);
     expect(".o_hierarchy_parent_node_container .o_avatar").toHaveCount(1);
-    expect(".o_avatar").toHaveText("Josephine");
+    expect(".o_hierarchy_parent_node_container").toHaveText("Josephine");
 });
 
 test("hierarchy with a self manager employee", async () => {

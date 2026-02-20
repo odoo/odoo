@@ -8,9 +8,12 @@
                     <t t-set="previousRow" t-value="!row_first ? this.rows[row_index - 1] : null"/>
                     <t t-if="!row_first">
                         <div t-if="row.parentNode and previousRow.nodes.length > 1"
-                            class="o_hierarchy_parent_node_container d-flex justify-content-center"
+                            class="o_hierarchy_parent_node_container d-flex justify-content-center align-items-center"
                         >
-                            <span t-out="row.parentNode.data.display_name || row.parentNode.data.name" />
+                            <img t-if="props.archInfo.avatarField"
+                                t-att-src="'/web/image/' + row.parentNode.model.resModel + '/' + row.parentNode.resId + '/' + props.archInfo.avatarField"
+                                t-on-error="(ev) => ev.target.style.display = 'none'" class="o_avatar rounded me-2"/>
+                            <span t-out="row.parentNode.data.display_name || row.parentNode.data.name"/>
                         </div>
                         <div class="o_hierarchy_separator d-flex">
                             <div class="o_hierarchy_line_part o_hierarchy_line_left"></div>
