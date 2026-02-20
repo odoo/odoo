@@ -44,12 +44,12 @@
                 <!-- overlay -->
                 <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-3" t-att-class="{ 'o-proportional-container w-50': isSmall }" t-att-data-connection-state="rtcSession.connectionState">
                     <span t-if="!props.minimized" class="rounded-3 text-truncate o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1 small': isSmall, 'o-px-1_5 py-1': !isSmall }" t-esc="name"/>
-                    <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
+                    <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center o-fw-600 p-1" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
                 <span t-if="showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
-                    <span class="fw-bolder p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
+                    <span class="o-fw-600 p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
                 </span>
                 <div t-if="!props.inset and !props.minimized" class="o-discuss-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex w-50 flex-row-reverse" t-att-class="{ 'o-proportional-container': isSmall, 'mw-25': props.isSidebarItem or props.inset }">
                     <span t-if="rtcSession.is_deaf" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': isSmall, 'p-2': !isSmall }" title="deaf" aria-label="deaf">
@@ -84,7 +84,7 @@
                     <span t-if="showConnectionState" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': isSmall, 'p-2': !isSmall }" t-att-title="rtcSession.connectionState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
-                    <span t-if="showLiveLabel" class="user-select-none rounded o-proportional-text text-bg-danger d-flex align-items-center py-1 px-2 fw-bolder" title="live" aria-label="live">
+                    <span t-if="showLiveLabel" class="user-select-none rounded o-proportional-text text-bg-danger d-flex align-items-center p-1 o-fw-600" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>

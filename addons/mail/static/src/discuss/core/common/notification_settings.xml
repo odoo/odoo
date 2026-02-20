@@ -34,7 +34,7 @@
                         <div class="d-flex flex-grow-1 align-items-center px-2 rounded">
                             <div class="d-flex flex-column align-items-start">
                                 <span class="fs-6 text-wrap text-start text-break">Use Default</span>
-                                <span class="fw-bolder o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
+                                <span class="o-fw-600 o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
                             </div>
                             <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
                             <input class="form-check-input shadow-sm" type="radio" t-att-checked="!props.channel.self_member_id?.custom_notifications"/>
