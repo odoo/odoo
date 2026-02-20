@@ -302,7 +302,7 @@ export class ToolbarPlugin extends Plugin {
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
-                    this.getResource("toolbar_visibility_predicates").every((p) => p(node)) &&
+                    (this.checkPredicates("toolbar_visibility_predicates", node) ?? true) &&
                     (!isTextNode(node) || (node.textContent.trim().length && !isZWS(node)))
             );
     }

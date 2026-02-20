@@ -292,6 +292,10 @@ export class FormatPlugin extends Plugin {
                 )
         );
 
+        const textNodesToFormat = selectedTextNodes.filter(
+            (n) => this.checkPredicates("is_formattable_node_predicates", n) ?? true
+        );
+
         const tagetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
@@ -299,7 +303,7 @@ export class FormatPlugin extends Plugin {
                 .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
         );
         const formatSpec = formatsSpecs[formatName];
-        for (const node of selectedTextNodes) {
+        for (const node of textNodesToFormat) {
             const inlineAncestors = [];
             /** @type { Node } */
             let currentNode = node;
