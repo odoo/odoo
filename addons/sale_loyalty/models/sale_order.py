@@ -253,6 +253,7 @@ class SaleOrder(models.Model):
                 quantity=line.product_uom_qty,
                 product=line.product_id,
                 partner=line.order_partner_id,
+                currency=line.currency_id,
             )
             # To compute the discountable amount we get the subtotal and add
             # non-fixed tax totals. This way fixed taxes will not be discounted
