@@ -3,6 +3,7 @@ import logging
 import re
 
 from markupsafe import Markup
+from stdnum.be import vat as be_vat
 
 from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
@@ -14,6 +15,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     UOM_TO_UNECE_CODE,
 )
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
+from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 
 _logger = logging.getLogger(__name__)
 
@@ -293,12 +295,14 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_add_values_company(self, vals, company):
         vals['company'] = company
-        vals['supplier'] = company.partner_id
 
     def _ubl_add_values_currency(self, vals, currency):
         vals['currency'] = currency
         # TODO: For retro-compatibility with previous code
         vals['currency_id'] = currency
+
+    def _ubl_add_values_supplier(self, vals, supplier):
+        vals['supplier'] = supplier
 
     def _ubl_add_values_customer(self, vals, customer):
         vals['customer'] = customer
@@ -1204,7 +1208,7 @@ class AccountEdiUBL(models.AbstractModel):
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
-            'cbc:AllowanceChargeReasonCode': {'_text': '95' if amount > 0.0 else 'ADK'},
+            'cbc:AllowanceChargeReasonCode': {'_text': 'ADK' if is_charge else '95'},
             'cbc:AllowanceChargeReason': {'_text': _("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -1293,7 +1297,15 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_line_period_nodes(self, vals):
-        vals['line_node']['cac:InvoicePeriod'] = []
+        nodes = vals['line_node']['cac:InvoicePeriod'] = []
+
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            base_line = vals['line_vals']['base_line']
+            if base_line.get('deferred_start_date') or base_line.get('deferred_end_date'):
+                nodes.append({
+                    'cbc:StartDate': {'_text': base_line['deferred_start_date']},
+                    'cbc:EndDate': {'_text': base_line['deferred_end_date']},
+                })
 
     def _ubl_add_line_pricing_reference_node(self, vals):
         vals['line_node']['cac:PricingReference'] = {}
@@ -1315,6 +1327,20 @@ class AccountEdiUBL(models.AbstractModel):
             '_text': None,
             'schemeID': None,
         }
+
+    def _ubl_add_party_identification_nodes_iso_6523_icd(self, vals):
+        nodes = vals['party_node']['cac:PartyIdentification']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        country_code = commercial_partner.country_code
+
+        if country_code == 'BE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': be_vat.compact(commercial_partner.company_registry),
+                    'schemeID': '0208',
+                },
+            })
 
     def _ubl_add_party_identification_nodes(self, vals):
         vals['party_node']['cac:PartyIdentification'] = []
@@ -1351,8 +1377,126 @@ class AccountEdiUBL(models.AbstractModel):
         partner = vals['party_vals']['partner']
         vals['party_node']['cac:PostalAddress'] = self._ubl_get_partner_address_node(vals, partner)
 
+    def _ubl_add_party_tax_scheme_nodes_vat_gst(self, vals):
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        country_code = commercial_partner.country_code
+        if not country_code:
+            return
+
+        if commercial_partner.vat and commercial_partner.vat != '/':
+            vat = commercial_partner.vat
+            country_code = commercial_partner.country_id.code
+            if country_code in GST_COUNTRY_CODES:
+                tax_scheme_id = 'GST'
+            else:
+                tax_scheme_id = 'VAT'
+
+            if country_code == 'HU' and not vat.upper().startswith('HU'):
+                vat = 'HU' + vat[:8]
+            elif country_code == 'DK' and not vat.upper().startswith('DK'):
+                vat = 'DK' + vat
+
+            nodes.append({
+                'cbc:CompanyID': {'_text': vat},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': tax_scheme_id},
+                },
+            })
+
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         vals['party_node']['cac:PartyTaxScheme'] = []
+
+    def _ubl_add_party_legal_entity_nodes_iso_6523_icd(self, vals):
+        nodes = vals['party_node']['cac:PartyLegalEntity']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        vat = commercial_partner.vat != '/' and commercial_partner.vat
+
+        if commercial_partner.peppol_eas in ('0106', '0190'):
+            nl_id = commercial_partner.peppol_endpoint
+        else:
+            nl_id = commercial_partner.company_registry
+
+        if commercial_partner.country_code == 'NL' and nl_id:
+            # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
+            # To implement a workaround on stable, company_registry field is used without recording whether
+            # the number is a KVK or OIN, and the length of the number (8 = KVK, 20 = OIN) is used to determine the type
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': nl_id,
+                    'schemeID': '0190' if len(nl_id) == 20 else '0106',
+                },
+            })
+        elif commercial_partner.country_code == 'LU' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': None,
+                },
+            })
+        elif commercial_partner.country_code == 'SE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': ''.join(char for char in commercial_partner.company_registry if char.isdigit()),
+                },
+            })
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': be_vat.compact(commercial_partner.company_registry),
+                    'schemeID': '0208',
+                },
+            })
+        elif (
+            commercial_partner.country_code == 'DK'
+            and commercial_partner.peppol_eas == '0184'
+            and commercial_partner.peppol_endpoint
+        ):
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': '0184',
+                },
+            })
+        elif commercial_partner.country_code == 'AU' and vat:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.vat,
+                    'schemeID': '0151',
+                },
+            })
+        elif commercial_partner.country_code == 'NZ' and vat:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.vat,
+                    'schemeID': '0088',
+                },
+            })
+        elif commercial_partner.vat and commercial_partner.vat != '/':
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.vat,
+                    'schemeID': None,
+                },
+            })
+        elif commercial_partner.peppol_endpoint:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': None,
+                },
+            })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         vals['party_node']['cac:PartyLegalEntity'] = []
@@ -1510,6 +1654,11 @@ class AccountEdiUBL(models.AbstractModel):
             node['cac:DeliveryLocation']['cbc:ID']['schemeID'] = '0088'
             node['cac:DeliveryLocation']['cbc:ID']['_text'] = delivery_partner.global_location_number
 
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            invoice = vals['invoice']
+            if invoice.delivery_date:
+                node['cbc:ActualDeliveryDate']['_text'] = invoice.delivery_date
+
         party_node = node['cac:DeliveryParty'] = {}
 
         sub_vals = {
@@ -1599,15 +1748,24 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_id_node(self, vals):
         vals['document_node']['cbc:ID'] = {'_text': None}
 
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            vals['document_node']['cbc:ID']['_text'] = vals['invoice'].name
+
     def _ubl_add_copy_indicator_node(self, vals):
         vals['document_node']['cbc:CopyIndicator'] = {'_text': None}
 
     def _ubl_add_issue_date_node(self, vals):
-        vals['document_node']['cbc:IssueDate'] = {'_text': None}
+        issue_date_node = vals['document_node']['cbc:IssueDate'] = {'_text': None}
         vals['document_node']['cbc:IssueTime'] = {'_text': None}
 
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            issue_date_node['_text'] = vals['invoice'].invoice_date
+
     def _ubl_add_due_date_node(self, vals):
-        vals['document_node']['cbc:DueDate'] = {'_text': None}
+        due_date_node = vals['document_node']['cbc:DueDate'] = {'_text': None}
+
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            due_date_node['_text'] = vals['invoice'].invoice_date_due
 
     def _ubl_add_invoice_type_code_node(self, vals):
         vals['document_node']['cbc:InvoiceTypeCode'] = {'_text': None}
@@ -1648,12 +1806,34 @@ class AccountEdiUBL(models.AbstractModel):
         vals['document_node']['cbc:BuyerReference'] = {'_text': None}
 
     def _ubl_add_order_reference_node(self, vals):
-        vals['document_node']['cac:OrderReference'] = {
+        order_ref_node = vals['document_node']['cac:OrderReference'] = {
             'cbc:ID': {'_text': None},
             'cbc:SalesOrderID': {
                 '_text': None,
             },
         }
+
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            invoice = vals['invoice']
+
+            # Purchase order reference
+            # An identifier of a referenced purchase order, issued by the Buyer.
+            # Suppose the following case:
+            # - Buyer does a RFQ to the Seller.
+            # - Seller confirms with a SO.
+            # - Buyer converts the RFQ to a PO.
+            # => There is no automatic tracking of this information.
+            # Instead, the user can encode this information on 'Customer Reference' a.k.a the 'ref' field.
+            # Since ID is required, the fallback is also fine and avoid to force the encoding of this
+            # manual information.
+            order_ref_node['cbc:ID']['_text'] = invoice.ref or invoice.name
+
+            # Sales order reference
+            # An identifier of a referenced sales order issued by the Seller.
+            if self.module_installed('sale'):
+                so_names = set(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+                if so_names:
+                    order_ref_node['cbc:SalesOrderID']['_text'] = ",".join(so_names)
 
     def _ubl_add_billing_reference_nodes(self, vals):
         vals['document_node']['cac:BillingReference'] = []
@@ -1711,7 +1891,12 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_payment_terms_nodes(self, vals):
-        vals['document_node']['cac:PaymentTerms'] = []
+        nodes = vals['document_node']['cac:PaymentTerms'] = []
+
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            invoice = vals['invoice']
+            if payment_terms_node := self._ubl_get_payment_terms_node_from_payment_term(vals, invoice.invoice_payment_term_id):
+                nodes.append(payment_terms_node)
 
     def _ubl_get_allowance_charge_early_payment_tax_category_node(self, vals, tax_category):
         return {
@@ -2177,6 +2362,25 @@ class AccountEdiUBL(models.AbstractModel):
             'currencyID': currency.name,
         }
 
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            invoice = vals['invoice']
+
+            if in_foreign_currency:
+                amount_total = invoice.amount_total
+                amount_residual = invoice.amount_residual
+            else:
+                amount_total = invoice.amount_total_signed * -invoice.direction_sign
+                amount_residual = invoice.amount_residual_signed * -invoice.direction_sign
+
+            node['cbc:PayableAmount']['_text'] = FloatFmt(
+                amount_residual,
+                min_dp=currency.decimal_places,
+            )
+            node['cbc:PrepaidAmount']['_text'] = FloatFmt(
+                amount_total - amount_residual,
+                min_dp=currency.decimal_places,
+            )
+
     def _ubl_add_legal_monetary_total_payable_rounding_amount_node_from_cash_rounding(self, vals, in_foreign_currency=True):
         # DEPRECATED: TO BE REMOVED
         pass
@@ -2229,6 +2433,146 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_allowance_charge_total_amount_node(sub_vals)
         self._ubl_add_legal_monetary_total_payable_rounding_amount_node(sub_vals)
         self._ubl_add_legal_monetary_total_prepaid_payable_amount_node(sub_vals)
+
+    def _fill_document_values_invoice(self, vals):
+        document_node = vals['document_node']
+        document_node['_template'] = Invoice
+        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+        self._ubl_add_version_id_node(vals)
+        self._ubl_add_customization_id_node(vals)
+        self._ubl_add_profile_id_node(vals)
+        self._ubl_add_id_node(vals)
+        self._ubl_add_issue_date_node(vals)
+        self._ubl_add_due_date_node(vals)
+        self._ubl_add_invoice_type_code_node(vals)
+        self._ubl_add_notes_nodes(vals)
+        self._ubl_add_document_currency_code_node(vals)
+        self._ubl_add_tax_currency_code_node(vals)
+        self._ubl_add_buyer_reference_node(vals)
+        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_accounting_supplier_party_node(vals)
+        self._ubl_add_accounting_customer_party_node(vals)
+        self._ubl_add_delivery_nodes(vals)
+        self._ubl_add_payment_means_nodes(vals)
+        self._ubl_add_payment_terms_nodes(vals)
+        self._ubl_add_allowance_charge_nodes(vals)
+        self._ubl_add_invoice_line_nodes(vals)
+        self._ubl_add_tax_totals_nodes(vals)
+        self._ubl_add_legal_monetary_total_node(vals)
+
+    def _fill_document_values_credit_note(self, vals):
+        document_node = vals['document_node']
+        document_node['_template'] = CreditNote
+        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+        self._ubl_add_version_id_node(vals)
+        self._ubl_add_customization_id_node(vals)
+        self._ubl_add_profile_id_node(vals)
+        self._ubl_add_id_node(vals)
+        self._ubl_add_issue_date_node(vals)
+        self._ubl_add_credit_note_type_code_node(vals)
+        self._ubl_add_notes_nodes(vals)
+        self._ubl_add_document_currency_code_node(vals)
+        self._ubl_add_tax_currency_code_node(vals)
+        self._ubl_add_buyer_reference_node(vals)
+        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_accounting_supplier_party_node(vals)
+        self._ubl_add_accounting_customer_party_node(vals)
+        self._ubl_add_delivery_nodes(vals)
+        self._ubl_add_payment_means_nodes(vals)
+        self._ubl_add_payment_terms_nodes(vals)
+        self._ubl_add_allowance_charge_nodes(vals)
+        self._ubl_add_credit_note_line_nodes(vals)
+        self._ubl_add_tax_totals_nodes(vals)
+        self._ubl_add_legal_monetary_total_node(vals)
+
+    def _fill_document_values_debit_note(self, vals):
+        document_node = vals['document_node']
+        document_node['_template'] = DebitNote
+        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+        self._ubl_add_version_id_node(vals)
+        self._ubl_add_customization_id_node(vals)
+        self._ubl_add_profile_id_node(vals)
+        self._ubl_add_id_node(vals)
+        self._ubl_add_issue_date_node(vals)
+        self._ubl_add_notes_nodes(vals)
+        self._ubl_add_document_currency_code_node(vals)
+        self._ubl_add_tax_currency_code_node(vals)
+        self._ubl_add_buyer_reference_node(vals)
+        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_accounting_supplier_party_node(vals)
+        self._ubl_add_accounting_customer_party_node(vals)
+        self._ubl_add_delivery_nodes(vals)
+        self._ubl_add_payment_means_nodes(vals)
+        self._ubl_add_payment_terms_nodes(vals)
+        self._ubl_add_allowance_charge_nodes(vals)
+        self._ubl_add_debit_note_line_nodes(vals)
+        self._ubl_add_tax_totals_nodes(vals)
+        self._ubl_add_requested_monetary_total_node(vals)
+
+    def _fill_document_values(self, vals):
+        document_node = vals['document_node']
+        document_node['_nsmap']['cac'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        document_node['_nsmap']['cbc'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+        document_node['_nsmap']['ext'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            self._fill_document_values_invoice(vals)
+        elif self._is_document(vals, 'credit_note', 'self_credit_note'):
+            self._fill_document_values_credit_note(vals)
+        elif self._is_document(vals, 'debit_note'):
+            self._fill_document_values_debit_note(vals)
+
+    def _export_document_node_constraints(self, vals):
+        return {}
+
+    def _export_document(self, vals):
+        vals['document_node'] = {
+            '_nsmap': {},
+            '_template': Invoice,
+        }
+        self._fill_document_values(vals)
+
+        vals['constraints'] = {
+            k: v
+            for k, v in self._export_document_node_constraints(vals).items()
+            if v
+        }
+        return vals
+
+    def _init_invoice_export_values(self, invoice):
+        vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
+        if invoice.move_type == 'out_invoice':
+            document_type = 'invoice'
+        elif invoice.move_type == 'out_refund':
+            document_type = 'credit_note'
+        elif invoice.move_type == 'in_invoice':
+            document_type = 'self_invoice'
+        elif invoice.move_type == 'in_refund':
+            document_type = 'self_credit_note'
+
+        self._ubl_add_values_company(vals, invoice.company_id)
+        self._ubl_add_values_currency(vals, invoice.currency_id)
+        if document_type in ('invoice', 'credit_note'):
+            customer = invoice.partner_id
+            supplier = invoice.company_id.partner_id
+            delivery = invoice.partner_shipping_id or customer
+        elif document_type in ('self_invoice', 'self_credit_note'):
+            customer = invoice.company_id.partner_id
+            supplier = invoice.partner_id
+            delivery = customer.child_ids.filtered(lambda p: p.type == 'delivery')[:1] or customer
+
+        self._ubl_add_values_supplier(vals, supplier)
+        self._ubl_add_values_customer(vals, customer)
+        self._ubl_add_values_delivery(vals, delivery)
+
+        vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+
+        self._define_document_type(vals, document_type)
+        return vals
+
+    def _export_invoice(self, invoice):
+        vals = self._init_invoice_export_values(invoice)
+        return self._export_document(vals)
 
     # -------------------------------------------------------------------------
     # IMPORT: INVOICE

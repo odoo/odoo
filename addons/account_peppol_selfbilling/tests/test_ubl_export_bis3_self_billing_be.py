@@ -5,7 +5,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
-class TestUblBis3SelfBilling(TestUblBis3Common, TestUblCiiBECommon):
+class TestUblExportBis3SelfInvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
     @classmethod
     def setUpClass(cls):
@@ -30,7 +30,6 @@ class TestUblBis3SelfBilling(TestUblBis3Common, TestUblCiiBECommon):
             'street': 'Chaussée de Namur 40',
             'city': 'Ramillies',
             'zip': '1367',
-            'global_location_number': '0123456789',
             'country_id': self.ref('base.be'),
         })
 
