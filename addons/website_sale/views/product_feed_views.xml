@@ -72,7 +72,7 @@
                     class="o_field_handle"
                     width="100px"
                     nolabel="1"
-                    options="{'btn_class': 'primary btn-sm'}"
+                    options="{'btn_class': 'primary btn-sm', 'save_on_copy': True}"
                 />
             </list>
         </field>
@@ -88,7 +88,12 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <div name="button_box">
-                        <field name="url" string="Copy URL" widget="CopyClipboardButton"/>
+                        <field
+                            name="url"
+                            string="Copy URL"
+                            widget="CopyClipboardButton"
+                            options="{'save_on_copy': True}"
+                        />
                     </div>
                     <group>
                         <field name="website_id"/>

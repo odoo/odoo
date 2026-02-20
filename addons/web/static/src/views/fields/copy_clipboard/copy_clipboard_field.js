@@ -16,7 +16,11 @@ class CopyClipboardField extends Component {
         ...standardFieldProps,
         string: { type: String, optional: true },
         disabledExpr: { type: String, optional: true },
+        saveOnCopy: { type: Boolean, optional: true },
     };
+    static defaultProps = {
+        saveOnCopy: false,
+    }
 
     setup() {
         this.copyText = this.props.string || _t("Copy");
@@ -27,7 +31,7 @@ class CopyClipboardField extends Component {
         return `o_btn_${this.type}_copy btn-sm`;
     }
     get fieldProps() {
-        return omit(this.props, "string", "disabledExpr");
+        return omit(this.props, "string", "disabledExpr", "saveOnCopy");
     }
     get type() {
         return this.props.record.fields[this.props.name].type;
@@ -39,6 +43,19 @@ class CopyClipboardField extends Component {
                   this.props.record.evalContextWithVirtualIds
               )
             : false;
+    }
+    get content() {
+        if (this.props.saveOnCopy) {
+            return async () => this.props.record.save()
+                .then(success => {
+                    if (!success) {
+                        return undefined;
+                    }
+                    this.props.record.switchMode("readonly");
+                    return this.props.record.data[this.props.name];
+                });
+        }
+        return this.props.record.data[this.props.name];
     }
 }
 
@@ -77,10 +94,11 @@ export class CopyClipboardURLField extends CopyClipboardField {
 
 // ----------------------------------------------------------------------------
 
-function extractProps({ string, attrs }) {
+function extractProps({ string, attrs, options }) {
     return {
         string,
         disabledExpr: attrs.disabled,
+        saveOnCopy: options.save_on_copy,
     };
 }
 

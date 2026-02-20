@@ -54,4 +54,10 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="product_feed_comp_rule" model="ir.rule">
+        <field name="name">Product feed (company rule)</field>
+        <field name="model_id" ref="website_sale.model_product_feed"/>
+        <field name="domain_force">[('website_id.company_id', 'in', company_ids)]</field>
+    </record>
+
 </odoo>
