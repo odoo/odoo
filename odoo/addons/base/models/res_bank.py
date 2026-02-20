@@ -126,8 +126,6 @@ class ResPartnerBank(models.Model):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)
-                if 'like' in op:
-                    value = '%' + value + '%'
                 args[pos] = ('sanitized_acc_number', op, value)
             pos += 1
         return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
