@@ -59,14 +59,17 @@ registry.category("web_tour.tours").add("test_combo_prices", {
             { product: "Green 1", attributes: [] },
             { product: "Green 2", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...ProductPage.setupCombo([
             { product: "Red 1", attributes: [] },
             { product: "Red 2", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...ProductPage.setupCombo([
             { product: "Purple 1", attributes: [] },
             { product: "Purple 2", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...commonSteps,
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Big Combo"),
@@ -74,6 +77,7 @@ registry.category("web_tour.tours").add("test_combo_prices", {
             { product: "Green 1", attributes: [] },
             { product: "Green 2", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...ProductPage.setupCombo([
             { product: "Red 1", attributes: [] },
             { product: "Red 1", attributes: [] },
@@ -81,6 +85,7 @@ registry.category("web_tour.tours").add("test_combo_prices", {
             { product: "Red 2", attributes: [] },
             { product: "Red 2", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...ProductPage.setupCombo([
             { product: "Purple 1", attributes: [] },
             { product: "Purple 1", attributes: [] },
@@ -93,6 +98,7 @@ registry.category("web_tour.tours").add("test_combo_prices", {
             { product: "Purple 2", attributes: [] },
             { product: "Purple 2", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...commonSteps,
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Big Combo"),
@@ -111,17 +117,22 @@ registry.category("web_tour.tours").add("test_combo_prices", {
         ...ProductPage.setupCombo([
             { product: "Red 1", attributes: [] },
             { product: "Red 1", attributes: [] },
+        ]),
+        ...ProductPage.setupCombo([
             {
                 product: "Red 3",
                 attributes: [
                     { name: "Size", value: "Big" },
                     { name: "Color", value: "Blue" },
                 ],
-                extraSteps: [Utils.clickBtn("Next")],
             },
+        ]),
+        Utils.clickBtn("Next"),
+        ...ProductPage.setupCombo([
             { product: "Red 3", attributes: [] },
             { product: "Red 3", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
         ...ProductPage.setupCombo([
             { product: "Purple 1", attributes: [] },
             { product: "Purple 1", attributes: [] },
@@ -131,16 +142,19 @@ registry.category("web_tour.tours").add("test_combo_prices", {
             { product: "Purple 2", attributes: [] },
             { product: "Purple 2", attributes: [] },
             { product: "Purple 2", attributes: [] },
+        ]),
+        ...ProductPage.setupCombo([
             {
                 product: "Purple 3",
-                extraSteps: [Utils.clickBtn("Next")],
                 attributes: [
                     { name: "Size", value: "Small" },
                     { name: "Color", value: "Red" },
                 ],
             },
-            { product: "Purple 3", attributes: [] },
         ]),
+        Utils.clickBtn("Next"),
+        ...ProductPage.setupCombo([{ product: "Purple 3", attributes: [] }]),
+        Utils.clickBtn("Next"),
         ...commonSteps,
     ],
 });

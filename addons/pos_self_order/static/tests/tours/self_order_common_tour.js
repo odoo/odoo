@@ -27,7 +27,6 @@ registry.category("web_tour.tours").add("self_order_landing_page_carousel", {
 });
 
 registry.category("web_tour.tours").add("self_order_pos_closed", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         LandingPage.isClosed(),
         // Normal product
@@ -37,43 +36,39 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         Utils.checkIsNoBtn("Checkout"),
         // Product with attributes
         ProductPage.clickProduct("Desk Organizer"),
-        ...ProductPage.setupAttribute(
-            [
-                { name: "Size", value: "M" },
-                { name: "Fabric", value: "Leather" },
-            ],
-            false
-        ),
+        ...ProductPage.setupAttribute([
+            { name: "Size", value: "M" },
+            { name: "Fabric", value: "Leather" },
+        ]),
         Utils.checkIsNoBtn("Add to cart"),
         ProductPage.clickDiscard(),
         // Combo product
         ProductPage.clickProduct("Office Combo"),
-        ...ProductPage.setupCombo(
-            [
-                {
-                    product: "Desk Organizer",
-                    attributes: [
-                        { name: "Size", value: "M" },
-                        { name: "Fabric", value: "Leather" },
-                    ],
-                },
-                {
-                    product: "Combo Product 5",
-                    attributes: [],
-                },
-                {
-                    product: "Combo Product 8",
-                    attributes: [],
-                },
-            ],
-            false
-        ),
+        ...ProductPage.setupCombo([
+            {
+                product: "Desk Organizer",
+                attributes: [
+                    { name: "Size", value: "M" },
+                    { name: "Fabric", value: "Leather" },
+                ],
+            },
+        ]),
+        Utils.clickBtn("Next"),
+        ...ProductPage.setupCombo([
+            {
+                product: "Combo Product 5",
+                attributes: [],
+            },
+            {
+                product: "Combo Product 8",
+                attributes: [],
+            },
+        ]),
         Utils.checkIsNoBtn("Add to cart"),
     ],
 });
 
 registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
@@ -85,38 +80,35 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
 
         // Product with attributes
         ProductPage.clickProduct("Desk Organizer"),
-        ...ProductPage.setupAttribute(
-            [
-                { name: "Size", value: "M" },
-                { name: "Fabric", value: "Leather" },
-            ],
-            false
-        ),
+        ...ProductPage.setupAttribute([
+            { name: "Size", value: "M" },
+            { name: "Fabric", value: "Leather" },
+        ]),
         Utils.checkIsNoBtn("Add to cart"),
         ProductPage.clickDiscard(),
         // Combo product
         ProductPage.clickCategory("Category 2"),
         ProductPage.clickProduct("Office Combo"),
-        ...ProductPage.setupCombo(
-            [
-                {
-                    product: "Desk Organizer",
-                    attributes: [
-                        { name: "Size", value: "M" },
-                        { name: "Fabric", value: "Leather" },
-                    ],
-                },
-                {
-                    product: "Combo Product 5",
-                    attributes: [],
-                },
-                {
-                    product: "Combo Product 8",
-                    attributes: [],
-                },
-            ],
-            false
-        ),
+        ...ProductPage.setupCombo([
+            {
+                product: "Desk Organizer",
+                attributes: [
+                    { name: "Size", value: "M" },
+                    { name: "Fabric", value: "Leather" },
+                ],
+            },
+        ]),
+        Utils.clickBtn("Next"),
+        ...ProductPage.setupCombo([
+            {
+                product: "Combo Product 5",
+                attributes: [],
+            },
+            {
+                product: "Combo Product 8",
+                attributes: [],
+            },
+        ]),
         Utils.checkIsNoBtn("Add to cart"),
     ],
 });

@@ -83,25 +83,12 @@ export function clickDiscard() {
     };
 }
 
-export function setupAttribute(attributes, addToCart = true) {
-    const steps = [];
-    if (addToCart) {
-        steps.push({
-            content: `Click on 'Add to cart' button`,
-            trigger: `.btn.btn-primary`,
-            run: "click",
-        });
-    }
-
-    for (const attr of attributes) {
-        steps.unshift({
-            content: `Select value ${attr.value} for attribute ${attr.name}`,
-            trigger: `h2:contains("${attr.name}") + div.row button:contains("${attr.value}")`,
-            run: "click",
-        });
-    }
-
-    return steps;
+export function setupAttribute(attributes) {
+    return attributes.map((attr) => ({
+        content: `Select value ${attr.value} for attribute ${attr.name}`,
+        trigger: `h2:contains("${attr.name}") + div.row button:contains("${attr.value}")`,
+        run: "click",
+    }));
 }
 
 export function attributeHasColorDot(attribute) {
@@ -118,49 +105,6 @@ export function attributeHasImage(attribute) {
     };
 }
 
-export function verifyIsCheckedAttribute(attribute, values = []) {
-    return {
-        content: `Select value for attribute ${attribute}`,
-        trigger: `div h2:contains("${attribute}")`,
-        run: () => {
-            const attributesValues = Array.from(document.querySelectorAll("div h2")).find((el) =>
-                el.textContent.includes(attribute)
-            );
-            if (!attributesValues) {
-                throw Error(`${attribute} not found.`);
-            }
-            const rowDiv = attributesValues.nextElementSibling;
-            if (!rowDiv || !rowDiv.matches("div.row")) {
-                throw Error("Sibling div.row not found or is incorrect.");
-            }
-
-            const selectedButtons = rowDiv.querySelectorAll(".border-primary");
-            // Extract text content of selected buttons
-            const selectedValues = Array.from(selectedButtons).map((btn) =>
-                btn.querySelector("span")?.textContent.trim()
-            );
-
-            // Check if all expected values are selected
-            for (const val of values) {
-                if (!selectedValues.includes(val)) {
-                    throw new Error(
-                        `Expected value "${val}" for attribute "${attribute}" is not selected.`
-                    );
-                }
-            }
-
-            // Optionally, verify that no unexpected values are selected
-            if (selectedValues.length !== values.length) {
-                throw new Error(
-                    `Mismatch in selected values for attribute "${attribute}". Expected: ${values.join(
-                        ", "
-                    )}, Found: ${selectedValues.join(", ")}`
-                );
-            }
-        },
-    };
-}
-
 export function clickComboProduct(productName) {
     return {
         content: `Click on combo product '${productName}'`,
@@ -169,7 +113,7 @@ export function clickComboProduct(productName) {
     };
 }
 
-export function setupCombo(products, addToCart = true) {
+export function setupCombo(products) {
     const steps = [];
 
     for (const product of products) {
@@ -180,18 +124,6 @@ export function setupCombo(products, addToCart = true) {
             steps.push(...setupAttribute(product.attributes));
             negateStep(Utils.checkMissingRequiredsExists());
         }
-
-        if (product.extraSteps?.length) {
-            steps.push(...product.extraSteps);
-        }
-    }
-
-    if (addToCart) {
-        steps.push({
-            content: `Click on 'Add to cart' button`,
-            trigger: `.btn.btn-primary`,
-            run: "click",
-        });
     }
 
     return steps;
