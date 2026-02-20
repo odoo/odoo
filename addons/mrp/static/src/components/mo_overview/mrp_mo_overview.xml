@@ -9,7 +9,7 @@
 
             <t t-set-slot="control-panel-buttons">
                 <button class="btn btn-primary" t-on-click="onPrint">Print</button>
-                <button class="btn btn-primary" t-on-click="onUnfold">Unfold</button>
+                <button class="btn btn-primary" t-on-click="onToggleFolded" t-out="foldButtonText"/>
             </t>
 
             <div class="overflow-auto border-bottom bg-view container-fluid">

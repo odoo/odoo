@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="paperformat_report_bom_overview" model="report.paperformat">
+            <field name="name">BOM Overview</field>
+            <field name="format">A4</field>
+            <field name="margin_top">12</field>
+            <field name="margin_bottom">12</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="disable_shrinking" eval="True"/>
+        </record>
         <record id="action_report_production_order" model="ir.actions.report">
             <field name="name">Production Order</field>
             <field name="model">mrp.production</field>
@@ -17,6 +26,7 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">mrp.report_bom_structure</field>
             <field name="report_file">mrp.report_bom_structure</field>
+            <field name="paperformat_id" ref="mrp.paperformat_report_bom_overview"/>
             <field name="print_report_name">'Bom Overview - %s' % object.display_name</field>
             <field name="binding_model_id" ref="model_mrp_bom"/>
             <field name="binding_type">report</field>

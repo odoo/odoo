@@ -66,6 +66,9 @@
         'web.assets_unit_tests': [
             'mrp/static/tests/**/*',
         ],
+        'web.report_assets_common': [
+            'mrp/static/src/scss/mrp_report_bom_structure.scss',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
