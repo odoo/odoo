@@ -91,7 +91,13 @@ const StorePatch = {
      * @param {number[]} resIds
      * @param {number|undefined} defaultActivityTypeId
      */
-    async scheduleActivity(resModel, resIds, defaultActivityTypeId = undefined) {
+    async scheduleActivity(
+        resModel,
+        resIds,
+        defaultActivityTypeId = undefined,
+        predifinedContext = undefined,
+        thread = undefined
+    ) {
         const context = {
             active_model: resModel,
             active_ids: resIds,
@@ -99,6 +105,7 @@ const StorePatch = {
             ...(defaultActivityTypeId !== undefined
                 ? { default_activity_type_id: defaultActivityTypeId }
                 : {}),
+            ...(predifinedContext !== undefined ? { ...predifinedContext } : {}),
         };
         await new Promise((resolve) =>
             this.env.services.action.doAction(
@@ -115,7 +122,10 @@ const StorePatch = {
                     context,
                 },
                 {
-                    onClose: resolve,
+                    onClose: () => {
+                        resolve();
+                        thread?.fetchThreadData(["activities", "messages"]);
+                    },
                     additionalContext: {
                         dialog_size: "large",
                     },

@@ -601,6 +601,7 @@ class MailActivity(models.Model):
                             'feedback': feedback,
                             'display_assignee': activity.user_id != self.env.user
                         },
+                        mail_activity_id=activity.id,
                         mail_activity_type_id=activity.activity_type_id.id,
                         subtype_xmlid='mail.mt_activities',
                     )

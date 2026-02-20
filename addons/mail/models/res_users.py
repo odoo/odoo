@@ -490,7 +490,7 @@ class ResUsers(models.Model):
             model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
             user_activities[model_name] = {
                 "id": model.id,
-                "name": model.name if model_name != "mail.activity" else _("Other activities"),
+                "name": model.name if model_name != "mail.activity" else _("Other Activities"),
                 "model": model_name,
                 "type": "activity",
                 "icon": icon,

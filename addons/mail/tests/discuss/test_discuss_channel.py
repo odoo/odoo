@@ -109,6 +109,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "id": message.id,
                                         "incoming_email_cc": False,
                                         "incoming_email_to": False,
+                                        "mail_activity_id": False,
                                         "message_link_preview_ids": [],
                                         "message_type": "notification",
                                         "model": "discuss.channel",

@@ -194,6 +194,7 @@ class MailMessage(models.Model):
     mail_activity_type_id = fields.Many2one(
         'mail.activity.type', 'Mail Activity Type',
         index='btree_not_null', ondelete='set null')
+    mail_activity_id = fields.Many2one('mail.activity')
     is_internal = fields.Boolean('Employee Only', help='Hide to public / portal users, independently from subtype configuration.')
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
@@ -1135,6 +1136,7 @@ class MailMessage(models.Model):
         res.attr("subject")
         # sudo: mail.message.subtype - reading subtype on accessible message is allowed
         res.one("subtype_id", ["description"], sudo=True)
+        res.one("mail_activity_id", ["activity_type_id", "summary", "note", "user_id"])
         res.attr("write_date")
         self._store_linked_messages_fields(res)
         self._store_message_link_previews_fields(res)

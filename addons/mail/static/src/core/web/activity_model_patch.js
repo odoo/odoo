@@ -65,8 +65,10 @@ patch(Activity.prototype, {
         });
         return action;
     },
-    remove({ broadcast = true } = {}) {
-        this.delete();
+    remove(deleteActivity = true, { broadcast = true } = {}) {
+        if (deleteActivity) {
+            this.delete();
+        }
         if (broadcast) {
             this.activityBroadcastChannel?.postMessage({
                 type: "DELETE",

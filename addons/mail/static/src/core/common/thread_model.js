@@ -55,7 +55,7 @@ export class Thread extends Record {
     autofocus = 0;
     activities = fields.Many("mail.activity", {
         sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
-        onDelete: (r) => r?.remove(),
+        onDelete: (r) => r?.remove(false),
     });
     create_uid = fields.One("res.users");
     /**

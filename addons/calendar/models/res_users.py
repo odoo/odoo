@@ -155,6 +155,10 @@ class ResUsers(models.Model):
             ['id', 'start', 'name', 'allday'],
             order='start')
         if meetings_lines:
+            all_day_meetings = [meeting_line for meeting_line in meetings_lines if meeting_line['allday']]
+            not_all_day_meetings = [meeting_line for meeting_line in meetings_lines if not meeting_line['allday']]
+            systray_meetings_lines = not_all_day_meetings[:2] + all_day_meetings[:1]
+
             meeting_label = _("Today's Meetings")
             meetings_systray = {
                 'id': self.env['ir.model']._get('calendar.event').id,
@@ -164,8 +168,9 @@ class ResUsers(models.Model):
                 'model': 'calendar.event',
                 'icon': modules.module.get_module_icon(EventModel._original_module),
                 'domain': [('active', 'in', [True, False])],
-                'meetings': meetings_lines,
+                'meetings': systray_meetings_lines,
                 "view_type": EventModel._systray_view,
+                "remaining_meetings":  len(meetings_lines) - len(systray_meetings_lines) if len(meetings_lines) - len(systray_meetings_lines) > 0 else 0
             }
             res.insert(0, meetings_systray)
         return res
