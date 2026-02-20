@@ -156,11 +156,9 @@ spirit. To be successful, you will have solid solving problem skills.''')
 
     def _to_structured_data(self):
         self.ensure_one()
-        identifier = None
-        # TODO: Add support for validThrough field
-        valid_through = None
         employement_type = None
-        if self.contract_type_id.sudo():
+        contract_type = self.contract_type_id.sudo()
+        if contract_type:
             employement_type = {
                 'Permanent': 'FULL_TIME',
                 'Temporary': 'TEMPORARY',
@@ -174,9 +172,10 @@ spirit. To be successful, you will have solid solving problem skills.''')
                 'Thesis': 'INTERN',
                 'Statutory': 'OTHER',
                 'Employee': 'FULL_TIME',
-            }.get(self.contract_type_id.sudo().name, 'OTHER')
+            }.get(contract_type.name, 'OTHER')
         hiring_organization = None
         job_location = None
+        identifier = None
         if self.department_id:
             department = self.department_id.sudo()
             department_company = department.company_id
@@ -185,7 +184,8 @@ spirit. To be successful, you will have solid solving problem skills.''')
                 name=department_company.name,
                 value=f"{department_company.id}-{self.id}",
             )
-            hiring_organization = self.website_id.organization_structured_data()
+            base_url = self.website_id.get_base_url()
+            hiring_organization = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
             address = self.address_id.sudo()
             job_location = SchemaBuilder(
                 "Place",
@@ -195,7 +195,6 @@ spirit. To be successful, you will have solid solving problem skills.''')
                     country_code=address.country_id.code,
                 ),
             )
-        base_salary = None  # TODO: Add support for baseSalary field
         return SchemaBuilder(
             "JobPosting",
             title=self.name,

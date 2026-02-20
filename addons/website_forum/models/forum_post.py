@@ -792,6 +792,7 @@ class ForumPost(models.Model):
         """
         self.ensure_one()
 
+        # TODO review this condition again
         # Not a question -> no QAPage
         if self.parent_id:
             return None

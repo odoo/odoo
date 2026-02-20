@@ -273,9 +273,10 @@ class WebsiteEventController(http.Controller):
     def event_register(self, event, **post):
         values = self._prepare_event_register_values(event, **post)
         event_schema = event._to_structured_data(request.website)
+        base_url = request.website.get_base_url()
         breadcrumb_list_schema = create_breadcrumbs([
-            (_('All Events'), '/events'),
-            (event.name, event.website_url),
+            (_('All Events'), f'{base_url}/events'),
+            (event.name, f'{base_url}{event.website_url}'),
         ])
         values['event_json_ld'] = SchemaBuilder.render_structured_data_list([event_schema, breadcrumb_list_schema])
         return request.render("website_event.event_description_full", values)

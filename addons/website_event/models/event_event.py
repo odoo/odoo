@@ -668,10 +668,13 @@ class EventEvent(models.Model):
         """ Generate structured data for the event. """
         self.ensure_one()
         base_url = website.get_base_url()
-
-        event_url = f"{base_url}{self.website_url}" if self.website_url else f"{base_url}/event/{self.id}"
+        event_url = self.website_absolute_url
         image_url = website.image_url(self, 'image_1920')
-        image_url = f"{base_url}{image_url}" if image_url else None
+
+        image = None
+        if image_url:
+            image_url = f"{base_url}{website.image_url(self, 'image_1920')}"
+            image = SchemaBuilder("ImageObject", url=image_url) if image_url else None
 
         location = None
         if self.address_id:
@@ -685,6 +688,12 @@ class EventEvent(models.Model):
                 country_state=address.country_id.code,
             )
             location = SchemaBuilder("Place", name=self.address_name).add_nested(address=address)
+        else:
+            # From google docs: Virtual experiences that have no real-world
+            # component aren't supported. Events must take place in a physical
+            # location. -> TODO i think it's better to take decision early and
+            # just not add this event schema
+            location = SchemaBuilder("VirtualLocation", url=self.event_url or event_url)
 
         description = self.subtitle
         if not description and self.description:
@@ -702,6 +711,8 @@ class EventEvent(models.Model):
             event_status = "EventOngoing"
         elif self.kanban_state == 'cancel':
             event_status = "EventCancelled"
+        elif self.is_done:
+            event_status = "EventCompleted"
 
         tickets = []
         currency = self.company_id.currency_id.name
@@ -723,17 +734,23 @@ class EventEvent(models.Model):
 
             tickets.append(offer)
 
-        # Build and return event schema
+        attendance_mode = (
+            "https://schema.org/OnlineEventAttendanceMode"
+            if not self.address_id
+            else "https://schema.org/OfflineEventAttendanceMode"
+        )
+
         return SchemaBuilder("Event",
             name=self.name,
             url=event_url,
             start_date=SchemaBuilder.datetime(self.date_begin),
             end_date=SchemaBuilder.datetime(self.date_end),
-            image=image_url,
             description=description,
             event_status=f"https://schema.org/{event_status}",
         ).add_nested(
+            image=image,
             location=location,
             organizer=organizer,
             offers=tickets,
+            event_attendance_mode=attendance_mode,
         )
