@@ -1,0 +1,23 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.OrderDetailsDialog" t-inherit="point_of_sale.OrderDetailsDialog" t-inherit-mode="extension">
+        <xpath expr="//div[div[text()='Origin']]" position="replace">
+            <div class="col-sm-6 d-flex field-details flex-column" t-if="order.source === 'pos' or order.source === 'mobile' or order.source === 'kiosk'">
+                <div class="text-muted small">Origin</div>
+                <div class="fw-medium" t-if="order.source === 'pos'">Point of Sale</div>
+                <div class="fw-medium" t-if="order.source === 'mobile'">Self-Order Mobile</div>
+                <div class="fw-medium" t-if="order.source === 'kiosk'">Self-Order Kiosk</div>
+            </div>
+        </xpath>
+        <xpath expr="//div[div[text()='Order Time']]" position="after">
+            <t t-set="table" t-value="order.getTable()"/>
+            <div class="col-sm-6 d-flex field-details flex-column" t-if="table">
+                <div class="text-muted small">Table</div>
+                <div class="fw-medium" t-esc="table.floor_id.name + ', Table ' + table.table_number"/>
+            </div>
+            <div class="col-sm-6 d-flex field-details flex-column" t-if="order.getCustomerCount()">
+                <div class="text-muted small">Guests</div>
+                <div class="fw-medium" t-esc="order.getCustomerCount()"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

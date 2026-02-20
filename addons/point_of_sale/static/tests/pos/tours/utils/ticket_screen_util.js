@@ -169,12 +169,15 @@ export function checkOrderDetailsDialog(orderRef, totalPayment, payments) {
             trigger: ".modal-content .field-details:contains('Origin')",
         },
         {
-            trigger: `.modal-content .card-header h5:contains("Payment Info"):contains(${totalPayment})`,
+            trigger: `.modal-content h5:contains("Payment Info")`,
+        },
+        {
+            trigger: `.modal-content .text-success:contains(${totalPayment})`,
         },
     ];
     for (const pm in payments) {
         steps.push({
-            trigger: `.modal-content table tr:contains("${pm}"):contains(${payments[pm]})`,
+            trigger: `.modal-content .row:has(.fw-medium:contains("${pm}")):has(.fw-medium:contains(${payments[pm]}))`,
         });
     }
     return steps;
