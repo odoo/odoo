@@ -31,7 +31,7 @@ export class ImageAndFaOption extends BaseOptionComponent {
     static exclude = `[data-oe-type='image'] > img, [data-oe-xpath], ${socialMediaElementsSelector}`;
     static name = "imageAndFaOption";
 }
-class ImageToolOptionPlugin extends Plugin {
+export class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
         "history",
@@ -41,7 +41,7 @@ class ImageToolOptionPlugin extends Plugin {
         "media",
         "builderOptions",
     ];
-    static shared = ["getCSSColorValue"];
+    static shared = ["getCSSColorValue", "onImageInfoLoaded"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [
@@ -73,34 +73,8 @@ class ImageToolOptionPlugin extends Plugin {
                             // the extra RPC that would occur if loadImageInfo was
                             // called before processImage as well. This flow can be
                             // simplified if image infos are somehow cached.
-                            onImageInfoLoaded: async (dataset) => {
-                                if (!dataset.originalSrc || !dataset.originalId) {
-                                    return true;
-                                }
-                                const original = await loadImage(dataset.originalSrc);
-                                const maxWidth = dataset.width
-                                    ? image.naturalWidth
-                                    : original.naturalWidth;
-                                const optimizedWidth = Math.min(
-                                    maxWidth,
-                                    computeMaxDisplayWidth(node || this.editable)
-                                );
-                                if (
-                                    !["image/gif", "image/svg+xml"].includes(
-                                        dataset.mimetypeBeforeConversion
-                                    )
-                                ) {
-                                    // Convert to recommended format and width.
-                                    dataset.resizeWidth = optimizedWidth;
-                                } else if (
-                                    dataset.shape &&
-                                    dataset.mimetypeBeforeConversion !== "image/gif"
-                                ) {
-                                    dataset.resizeWidth = optimizedWidth;
-                                } else {
-                                    return true;
-                                }
-                            },
+                            onImageInfoLoaded: (dataset) =>
+                                this.onImageInfoLoaded(image, dataset, node),
                         });
                     updateImageAttributes();
                 }
@@ -128,6 +102,28 @@ class ImageToolOptionPlugin extends Plugin {
         )) {
             el.dataset.formatMimetype = el.dataset.originalMimetype;
             delete el.dataset.originalMimetype;
+        }
+    }
+    /**
+     * @param {HTMLImageElement} imageEl - new image
+     * @param {Object} dataset
+     * @param {Node} [node] - original node
+     * @returns {Boolean}
+     */
+    async onImageInfoLoaded(imageEl, dataset, node) {
+        if (!dataset.originalSrc || !dataset.originalId) {
+            return true;
+        }
+        const original = await loadImage(dataset.originalSrc);
+        const maxWidth = dataset.width ? imageEl.naturalWidth : original.naturalWidth;
+        const optimizedWidth = Math.min(maxWidth, computeMaxDisplayWidth(node || this.editable));
+        if (!["image/gif", "image/svg+xml"].includes(dataset.mimetypeBeforeConversion)) {
+            // Convert to recommended format and width.
+            dataset.resizeWidth = optimizedWidth;
+        } else if (dataset.shape && dataset.mimetypeBeforeConversion !== "image/gif") {
+            dataset.resizeWidth = optimizedWidth;
+        } else {
+            return true;
         }
     }
     /**

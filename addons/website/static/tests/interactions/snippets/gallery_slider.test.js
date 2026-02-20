@@ -43,9 +43,18 @@ function getDefaultGallery(bsRide = false, bsInterval = 0, showPopup = false) {
                                 <span class="visually-hidden">Previous</span>
                             </button>
                             <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active" aria-label="Carousel indicator"/>
-                                <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                                <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                                <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="active">
+                                    <span class="visually-hidden">Carousel indicator</span>
+                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
+                                </button>
+                                <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1">
+                                    <span class="visually-hidden">Carousel indicator</span>
+                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
+                                </button>
+                                <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2">
+                                    <span class="visually-hidden">Carousel indicator</span>
+                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
+                                </button>
                             </div>
                             <button class="carousel-control-next o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"/>
@@ -91,12 +100,30 @@ const defaultLightbox = `
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <div class="carousel-indicators s_image_gallery_indicators_bars">
-                    <button type="button" aria-label="Carousel indicator" data-bs-target="#slideshow_3" data-bs-slide-to="0" class="active" style="background-image: url(/web/image/website.library_image_03)"></button>
-                    <button type="button" aria-label="Carousel indicator" data-bs-target="#slideshow_3" data-bs-slide-to="1" style="background-image: url(/web/image/website.library_image_10)"></button>
-                    <button type="button" aria-label="Carousel indicator" data-bs-target="#slideshow_3" data-bs-slide-to="2" style="background-image: url(/web/image/website.library_image_13)"></button>
-                    <button type="button" aria-label="Carousel indicator" data-bs-target="#slideshow_3" data-bs-slide-to="3" style="background-image: url(/web/image/website.library_image_05)"></button>
-                    <button type="button" aria-label="Carousel indicator" data-bs-target="#slideshow_3" data-bs-slide-to="4" style="background-image: url(/web/image/website.library_image_14)"></button>
-                    <button type="button" aria-label="Carousel indicator" data-bs-target="#slideshow_3" data-bs-slide-to="5" style="background-image: url(/web/image/website.library_image_16)"></button>
+                    <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="0" class="active">
+                        <span class="visually-hidden">Carousel indicator</span>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_03" aria-hidden="true"/>
+                    </button>
+                    <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="1">
+                        <span class="visually-hidden">Carousel indicator</span>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_10" aria-hidden="true"/>
+                    </button>
+                    <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="2">
+                        <span class="visually-hidden">Carousel indicator</span>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_13" aria-hidden="true"/>
+                    </button>
+                    <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="3">
+                        <span class="visually-hidden">Carousel indicator</span>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_05" aria-hidden="true"/>
+                    </button>
+                    <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="4">
+                        <span class="visually-hidden">Carousel indicator</span>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_14" aria-hidden="true"/>
+                    </button>
+                    <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="5">
+                        <span class="visually-hidden">Carousel indicator</span>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_16" aria-hidden="true"/>
+                    </button>
                 </div>
                 <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" data-bs-slide="next" aria-label="Next" title="Next" data-bs-target="#slideshow_3">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>

@@ -6,6 +6,7 @@ from lxml import etree, html
 
 from odoo import api, models
 from odoo.tools import xml_translate
+from odoo.tools.translate import is_attr_term_manually_translated
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
     _description = 'HTML Text Processor Abstract Model'
 
     @api.model
-    def _with_processing_context(self, IrQweb, cta_data, text_generation_target_lang, text_must_be_translated_for_openai=False):
+    def _with_processing_context(self, IrQweb, cta_data, text_generation_target_lang, text_must_be_translated_for_openai=False, with_user_translation=True):
         """
         Initialize HTML processing context similar to website.with_context() pattern
         :param IrQweb: QWeb rendering environment
@@ -39,6 +40,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
             html_translated_content={},
             html_hashes_to_tags_and_attributes={},
             html_string_to_wrapping_tags={},
+            with_user_translation=with_user_translation,
         )
 
     def _get_processing_cache(self, cache_key):
@@ -120,7 +122,8 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         text_generation_target_lang = self.env.context['html_text_generation_target_lang']
         text_must_be_translated_for_openai = self.env.context['html_text_must_be_translated_for_openai']
         terms = []
-        xml_translate(terms.append, snippet)
+
+        self._xml_translate(terms.append, snippet)
         placeholders = []
         updated_processor = self
         for term in terms:
@@ -213,9 +216,42 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         else:
             updated_processor = self
             render = snippet_html
-        render = xml_translate(lambda html_string: updated_processor._format_replacement(html_string, generated_content), render)
+
+        render = self._xml_translate(lambda html_string: updated_processor._format_replacement(html_string, generated_content), render)
         el = html.fromstring(render)
         return el
+
+    def _xml_translate(self, callback, value):
+        """
+        Translates an XML value, using `callback` to translate text appearing in
+        `value`.
+        :param callback: process the replace string value
+        :param value: str XML string
+        :return: str serialized xml
+        """
+        def processed_callback(translation_part):
+            replacement = self._get_translation_term(translation_part, value)
+            if replacement:
+                callback(replacement)
+
+        return xml_translate(processed_callback, value)
+
+    def _get_translation_term(self, translate_string, xml_string):
+        """
+        Returns the translation term only if it should be translated. In the
+        case of an automated text generation, this is not the case with
+        `MANUALLY_TRANSLATED_ATTRS` (e.g. `src`).
+        :param translate_string: The string that should be translated / replaced
+        :param xml_string: The XML string from which translate_string is
+        extracted.
+        :return: None or translate_string
+        """
+        if (
+            not self.env.context['with_user_translation']
+            and not is_attr_term_manually_translated(translate_string, xml_string)
+        ):
+            return
+        return translate_string
 
     def _compute_placeholder(self, html_string):
         """

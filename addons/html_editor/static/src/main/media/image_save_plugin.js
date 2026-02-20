@@ -13,9 +13,8 @@ import { rpc } from "@web/core/network/rpc";
  */
 
 /**
+ * @typedef {((arg: { imageEl: HTMLImageElement }) => void)[]} on_image_saved_handlers
  * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
- *
- * @typedef {((args: {imageEl: HTMLElement}) => void)[]} on_image_saved_handlers
  */
 
 export class ImageSavePlugin extends Plugin {

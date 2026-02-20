@@ -10,6 +10,7 @@ from __future__ import annotations
 import codecs
 import fnmatch
 import functools
+import html as htmllib
 import inspect
 import io
 import json
@@ -77,7 +78,15 @@ TRANSLATED_ATTRS = {
     'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label', 'confirm-title',
 }
 
-TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
+# These attributes must not be translated by automated tools. That means they
+# must not be exported to .po(t) files, `t-attf-` attributes should not be
+# translated, and AI translation should ignore them.
+MANUALLY_TRANSLATED_ATTRS = {'src', 'data-oe-expression'}
+
+TRANSLATED_ATTRS.update(
+    {f't-attf-{attr}' for attr in TRANSLATED_ATTRS},
+    MANUALLY_TRANSLATED_ATTRS,
+)
 
 # {column value of "ir_model_fields"."translate": orm field.translate}
 FIELD_TRANSLATE = {
@@ -406,6 +415,20 @@ def get_text_content(term):
 def is_text(term):
     """ Return whether the term has only text. """
     return len(html.fromstring(f"<_>{term}</_>")) == 0
+
+
+def is_attr_term_manually_translated(term, field_value):
+    """ Return `False` if the term is found within `field_value` and that it is
+        the content of an attribute that should only be translated if it was set
+        by a user (see `MANUALLY_TRANSLATED_ATTRS`).
+        :param term: The string to translate.
+        :param field_value: The value of the field to test.
+        :return bool: whether or not the field should be translated.
+    """
+    term_unescaped = htmllib.unescape(term)
+    field_value_unescaped = htmllib.unescape(field_value)
+    re_attr_no_export = r'\s(%s)\s*=\s*[\'"]' % '|'.join(MANUALLY_TRANSLATED_ATTRS) + re.escape(term_unescaped) + r'[\'"]'
+    return not re.search(re_attr_no_export, field_value_unescaped)
 
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
@@ -1259,6 +1282,9 @@ class TranslationReader:
                     _logger.exception("Failed to extract terms from %s %s", xml_name, name)
                     continue
                 for term_en, term_langs in translation_dictionary.items():
+                    if not is_attr_term_manually_translated(term_en, value_en):
+                        continue
+
                     term_lang = term_langs.get(self._lang)
                     self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
 

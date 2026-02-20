@@ -922,6 +922,7 @@ class Website(models.CachedModel):
             cta_data=cta_data,
             text_generation_target_lang=text_generation_target_lang,
             text_must_be_translated_for_openai=text_must_be_translated_for_openai,
+            with_user_translation=False,
         )
         generated_content = {}
         translated_content = {}
