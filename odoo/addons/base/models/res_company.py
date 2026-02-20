@@ -483,3 +483,7 @@ class ResCompany(models.Model):
                 'company_id': self.id,
                 'company_ids': [(6, 0, [self.id])],
             })
+
+    @ormcache()
+    def _get_company_partner_ids(self):
+        return tuple(self.env['res.company'].sudo().with_context(active_test=False).search([]).partner_id.ids)

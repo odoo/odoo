@@ -378,6 +378,10 @@ class TestCIIFR(TestUBLCommon):
     def test_import_and_create_partner_facturx(self):
         """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
         """
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'FR15001559627230',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
         partner_vals = {
             'name': "Buyer",
             'email': "buyer@yahoo.com",
@@ -444,6 +448,10 @@ class TestCIIFR(TestUBLCommon):
         )
 
     def test_import_fnfe_examples(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'FR76 1254 2547 2569 8542 5874 698',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
         # Source: official documentation of the FNFE (subdirectory: "5. FACTUR-X 1.0.06 - Examples")
         subfolder = 'tests/test_files/from_factur-x_doc'
         # the 2 following files have the same pdf but one is labelled as an invoice and the other as a refund
@@ -489,6 +497,10 @@ class TestCIIFR(TestUBLCommon):
         See the tests above to create these xml attachments ('test_export_with_fixed_taxes_case_[X]').
         NB: use move_type = 'out_invoice' s.t. we can retrieve the taxes used to create the invoices.
         """
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'FR15001559627230',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
         subfolder = "tests/test_files/from_odoo"
         kwargs = {
             'subfolder': subfolder,
