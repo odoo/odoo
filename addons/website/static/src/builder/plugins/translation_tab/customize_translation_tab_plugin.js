@@ -142,9 +142,65 @@ class TranslateToAction extends BuilderAction {
      *
      * @param {Array} translationChunks - List of chunks to translate
      * @param {string} language - Target language code
-     * @return {Promise<Array>} Server responses for each chunk
+     * @return {Array<string>} Server responses for each chunk
      */
     async runTranslationChunks(translationChunks, language) {
+        // Start with concurrency of 1 and increase it if successful, to find
+        // the optimal concurrency without overwhelming the server or hitting
+        // rate limits.
+        const MAX_CONCURRENCY = 5;
+        const MAX_RETRIES = 1;
+        let concurrency = 1;
+        let growthStopped = false;
+
+        const responses = new Array(translationChunks.length);
+        const queue = translationChunks.map((chunk, index) => ({
+            index,
+            chunk,
+            retries: 0,
+        }));
+
+        while (queue.length > 0) {
+            const batch = queue.splice(0, Math.min(concurrency, queue.length));
+            const settled = await Promise.all(
+                batch.map(async (item) => {
+                    try {
+                        const response = await this._createTranslationTask(item.chunk, language)();
+                        responses[item.index] = response;
+                        return { success: true };
+                    } catch {
+                        return { success: false, item };
+                    }
+                })
+            );
+            const failed = settled.filter((r) => !r.success);
+            const successCount = batch.length - failed.length;
+            if (failed.length === 0) {
+                if (!growthStopped) {
+                    concurrency = Math.min(concurrency + 1, MAX_CONCURRENCY);
+                }
+            } else {
+                growthStopped = true;
+                concurrency = Math.max(1, successCount);
+                for (const { item } of failed) {
+                    if (item.retries < MAX_RETRIES) {
+                        item.retries++;
+                        queue.push(item);
+                    } else {
+                        responses[item.index] = JSON.stringify(
+                            item.chunk.map(({ id }) => ({ id, text: "" }))
+                        );
+                    }
+                }
+            }
+        }
+        return responses;
+    }
+
+    /**
+     * Creates a single translation RPC task.
+     */
+    _createTranslationTask(chunk, language) {
         const systemMessage = {
             role: "system",
             content:
@@ -155,7 +211,7 @@ class TranslateToAction extends BuilderAction {
                 "- Do not add comments or extra fields.",
         };
 
-        const tasks = translationChunks.map((chunk) => async () => {
+        return async () => {
             const prompt = JSON.stringify(
                 chunk.map(({ id, originalText }) => ({ id, text: originalText }))
             );
@@ -166,28 +222,12 @@ class TranslateToAction extends BuilderAction {
             return rpc(
                 "/html_editor/generate_text",
                 {
-                    prompt: prompt,
+                    prompt,
                     conversation_history: conversation,
                 },
                 { silent: true }
             );
-        });
-
-        // Limit concurrency to avoid
-        // "Oops, it looks like our AI is unreachable!" error
-        // when too many requests are sent in a short time.
-        const concurrencyLimit = 5;
-        const allResults = [];
-        const executing = new Set();
-        for (const task of tasks) {
-            if (executing.size >= concurrencyLimit) {
-                await Promise.race(executing);
-            }
-            const promise = task().finally(() => executing.delete(promise));
-            executing.add(promise);
-            allResults.push(promise);
-        }
-        return Promise.all(allResults);
+        };
     }
 
     /**
