@@ -43,103 +43,103 @@
                             </div>
                         </div>
                     </t>
-                <t t-else="">
-                    <div class="col p-2 o_link_popover_container">
-                        <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
-                            <input t-ref="label"
-                                class="o_we_label_link border-dark-subtle form-control form-control-sm"
-                                t-model="state.label"
-                                title="Label"
-                                placeholder="Add a label for your link"
-                                t-on-input="onChange"/>
-                        </div>
-                        <div class="input-group mb-2">
-                            <input t-ref="url"
-                                name="o_linkpopover_url"
-                                class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
-                                t-model="state.url"
-                                title="URL"
-                                placeholder="e.g. https://www.odoo.com"
-                                t-on-keydown="onKeydownEnter"
-                                t-on-input="this.onChange"/>
-                            <span class="ms-1" t-if="props.canUpload and !state.url">
-                                or <button class="btn btn-light btn-sm" t-on-click="uploadFile"><i class="fa fa-upload"/></button>
-                            </span>
+                    <t t-else="">
+                        <div class="col p-2 o_link_popover_container">
+                            <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
+                                <input t-ref="label"
+                                    class="o_we_label_link border-dark-subtle form-control form-control-sm"
+                                    t-model="state.label"
+                                    title="Label"
+                                    placeholder="Add a label for your link"
+                                    t-on-input="onChange"/>
+                            </div>
+                            <div class="input-group mb-2">
+                                <input t-ref="url"
+                                    name="o_linkpopover_url"
+                                    class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
+                                    t-model="state.url"
+                                    title="URL"
+                                    placeholder="e.g. https://www.odoo.com"
+                                    t-on-keydown="onKeydownEnter"
+                                    t-on-input="this.onChange"/>
+                                <span class="ms-1" t-if="props.canUpload and !state.url">
+                                    or <button class="btn btn-light btn-sm" t-on-click="uploadFile"><i class="fa fa-upload"/></button>
+                                </span>
 
-                        </div>
-                        <div t-if="props.includeStyling" class="input-group mb-2">
-                            <Dropdown menuClass="'o-we-link-type-dropdown'">
-                                <button name="link_type" class="form-select form-select-sm border-dark-subtle text-start">
-                                    <t t-set="selectedItem" t-value="this.buttonTypesData.find(typeData => typeData.type === state.type)" />
-                                    <span t-att-class="selectedItem.className"
-                                        t-att-style="selectedItem.style"
-                                        t-out="selectedItem.label"/>
-                                </button>
-                                <t t-set-slot="content">
-                                    <div data-prevent-closing-overlay="true">
-                                        <DropdownItem
-                                            t-if="typeData.type !== 'custom'"
-                                            t-foreach="this.buttonTypesData"
-                                            t-as="typeData"
-                                            t-key="typeData.type"
-                                            onSelected="() => this.onSelectedLinkType(typeData.type)"
-                                            t-on-pointerdown.stop.prevent="() => {}"
-                                        >
-                                            <span t-att-class="typeData.className"
-                                                t-att-style="typeData.style"
-                                                t-out="typeData.label"/>
-                                        </DropdownItem>
-                                    </div>
+                            </div>
+                            <div t-if="props.includeStyling" class="input-group mb-2">
+                                <Dropdown menuClass="'o-we-link-type-dropdown'">
+                                    <button name="link_type" class="form-select form-select-sm border-dark-subtle text-start">
+                                        <t t-set="selectedItem" t-value="this.buttonTypesData.find(typeData => typeData.type === state.type)" />
+                                        <span t-att-class="selectedItem.className"
+                                            t-att-style="selectedItem.style"
+                                            t-out="selectedItem.label"/>
+                                    </button>
+                                    <t t-set-slot="content">
+                                        <div data-prevent-closing-overlay="true">
+                                            <DropdownItem
+                                                t-if="typeData.type !== 'custom'"
+                                                t-foreach="this.buttonTypesData"
+                                                t-as="typeData"
+                                                t-key="typeData.type"
+                                                onSelected="() => this.onSelectedLinkType(typeData.type)"
+                                                t-on-pointerdown.stop.prevent="() => {}"
+                                            >
+                                                <span t-att-class="typeData.className"
+                                                    t-att-style="typeData.style"
+                                                    t-out="typeData.label"/>
+                                            </DropdownItem>
+                                        </div>
+                                    </t>
+                                </Dropdown>
+                            </div>
+                            <div t-if="props.includeStyling and state.type !== 'link'" class="input-group mb-2">
+                                <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
+                                    <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size"
+                                        t-att-selected="state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
+                                </select>
+                                <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
+                                    <option t-foreach="this.buttonShapesData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
+                                        t-att-selected="state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
+                                </select>
+                            </div>
+
+                            <t t-if="props.allowTargetBlank">
+                                <t t-if="state.isDocument">
+                                    <CheckBox
+                                        value="state.directDownload"
+                                        onChange="onClickDirectDownload.bind(this)"
+                                        className="'direct-download-option'">
+                                        Direct download
+                                    </CheckBox>
                                 </t>
-                            </Dropdown>
-                        </div>
-                        <div t-if="props.includeStyling and state.type !== 'link'" class="input-group mb-2">
-                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
-                                <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size"
-                                    t-att-selected="state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
-                            </select>
-                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
-                                <option t-foreach="this.buttonShapesData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
-                                    t-att-selected="state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
-                            </select>
-                        </div>
-
-                        <t t-if="props.allowTargetBlank">
-                            <t t-if="state.isDocument">
+                            </t>
+                            <t t-if="props.allowStripDomain and isAbsoluteURLInCurrentDomain()">
                                 <CheckBox
-                                    value="state.directDownload"
-                                    onChange="onClickDirectDownload.bind(this)"
-                                    className="'direct-download-option'">
-                                    Direct download
+                                    value="state.stripDomain"
+                                    onChange="onClickStripDomain.bind(this)"
+                                    className="'strip-domain-option'">
+                                    Autoconvert to relative link
                                 </CheckBox>
                             </t>
-                        </t>
-                        <t t-if="props.allowStripDomain and isAbsoluteURLInCurrentDomain()">
-                            <CheckBox
-                                value="state.stripDomain"
-                                onChange="onClickStripDomain.bind(this)"
-                                className="'strip-domain-option'">
-                                Autoconvert to relative link
-                            </CheckBox>
-                        </t>
-                        <div class="d-flex justify-content-between align-items-center mt-1">
-                            <div>
-                                <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
-                                <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
-                            </div>
-                            <div class="d-flex align-items-center gap-1">
-                                <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="onClickRemove" title="Remove Link">
-                                    <i class="fa fa-chain-broken"></i>
-                                </a>
-                                <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
-                                    <i class="fa fa-gear"/>
-                                </button>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                <div>
+                                    <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
+                                    <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                    <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="onClickRemove" title="Remove Link">
+                                        <i class="fa fa-chain-broken"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
+                                        <i class="fa fa-gear"/>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </t>
+                    </t>
+                </div>
             </div>
-        </div>
             <div t-else="" class="o_we_link_preview" data-prevent-closing-overlay="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
