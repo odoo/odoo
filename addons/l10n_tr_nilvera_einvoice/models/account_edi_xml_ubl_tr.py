@@ -4,10 +4,13 @@ from collections import defaultdict
 from lxml import etree
 from num2words import num2words
 
-from odoo import api, models
+from odoo import _, Command, api, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, frozendict, html2plaintext
+from odoo.tools.misc import clean_context
 
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.l10n_tr_nilvera_einvoice.tools.clean_node_dict import clean_node_dict
 from odoo.addons.l10n_tr_nilvera_einvoice.tools.ubl_tr_invoice import TrInvoice
 
@@ -942,21 +945,375 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------
+    @api.model
+    def _l10n_tr_import_profile_id(self, tree):
+        return self._find_value(".//cbc:ProfileID", tree)
+
+    @api.model
+    def _l10n_tr_import_party_role(self, tree, move_category='sale'):
+        profile_id = self._l10n_tr_import_profile_id(tree)
+        suffix = 'Customer' if move_category == 'sale' else 'Supplier'
+        if profile_id == "IHRACAT":
+            return "Buyer" + suffix
+        return "Accounting" + suffix
+
+    @api.model
+    def _l10n_tr_import_invoice_type_code(self, tree):
+        return self._find_value(".//cbc:InvoiceTypeCode", tree)
 
     def _import_retrieve_partner_vals(self, tree, role):
-        # EXTENDS account.edi.xml.ubl_20
-        partner_vals = super()._import_retrieve_partner_vals(tree, role)
-        partner_vals.update({
-            'vat': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:PartyIdentification//cbc:ID[string-length(text()) > 5]', tree),
-        })
-        return partner_vals
+        # EXTENDS account_edi_ubl_cii
+        res = super()._import_retrieve_partner_vals(tree, role)
+        if self.env.context.get('parse_for_ubl_tr'):
+            res.update({
+                "vat": (
+                    self._find_value(
+                        f".//cac:{role}Party//cac:PartyLegalEntity//cbc:CompanyID[string-length(text()) > 5]",
+                        tree,
+                    )
+                    or self._find_value(
+                        f'.//cac:{role}Party//cac:PartyIdentification//cbc:ID[@schemeID="VKN"][string-length(text()) > 5]',
+                        tree,
+                    )
+                ),
+                "name": (
+                    self._find_value(f".//cac:{role}Party//cac:PartyName//cbc:Name", tree)
+                    or self._find_value(f".//cac:{role}Party//cbc:RegistrationName", tree)
+                ),
+            })
+        return res
 
-    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
-        # EXTENDS account.edi.xml.ubl_20
-        logs = super()._import_fill_invoice_form(invoice, tree, qty_factor)
+    def _get_postal_address(self, tree, role):
+        # EXTENDS account_edi_ubl_cii
+        res = super()._get_postal_address(tree, role)
+        res.update({
+                "city": self._find_value(f".//cac:{role}Party//cac:PostalAddress/cbc:CitySubdivisionName", tree),
+                "state_name": self._find_value(f".//cac:{role}Party//cac:PostalAddress/cbc:CityName", tree),
+                'country_name': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cac:Country/cbc:Name', tree),
+            })
+        return res
+
+    def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, postal_address={}, **kwargs):
+        # EXTENDS account_edi_ubl_cii
+        # For UBL TR we only match partner with VKN
+
+        if not self.env.context.get('parse_for_ubl_tr'):
+            return super()._import_partner(company_id, name, phone, email, vat, peppol_eas=peppol_eas, peppol_endpoint=peppol_endpoint, postal_address=postal_address, **kwargs)
+        logs = []
+        partner = self.env["res.partner"]._retrieve_partner(vat=vat, company=company_id)
+
+        country = self.env["res.country"]
+        if country_code := postal_address.get("country_code"):
+            country = country.search([("code", "=", country_code)], limit=1)
+        elif country_name := postal_address.get("country_name"):
+            country = country.search([("name", "=", country_name)], limit=1)
+
+        state = self.env["res.country.state"]
+        if country and (state_name := postal_address.get("state_name")):
+            state = state.search(
+                [("country_id", "=", country.id), ("name", "=", state_name)], limit=1
+            )
+        if not partner and name and vat:
+            partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
+            partner = self.env['res.partner'].create(partner_vals)
+            partner.l10n_tr_check_nilvera_customer()
+            if vat:
+                partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
+            logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
+        elif not partner and not logs:
+            logs.append(_("Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
+                  name=name, vat=vat, phone=phone, email=email))
+        if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
+            partner.write({
+                'country_id': country.id,
+                'street': postal_address.get('street'),
+                'street2': postal_address.get('additional_street'),
+                'city': postal_address.get('city'),
+                'zip': postal_address.get('zip'),
+                'state_id': state.id,
+            })
+        return partner, logs
+
+    @api.model
+    def _l10n_tr_resolve_delivery_details(self, tree, invoice_values):
+        delivery_tree = tree.find(".//cac:InvoiceLine/cac:Delivery", UBL_NAMESPACES)
+        if delivery_tree is None:
+            return
+
+        delivery_terms_id = self._find_value("cac:DeliveryTerms/cbc:ID", delivery_tree)
+        transport_mode_code = self._find_value("cac:Shipment/cac:ShipmentStage/cbc:TransportModeCode", delivery_tree)
+
+        invoice_values["l10n_tr_shipping_type"] = transport_mode_code
+        invoice_values["invoice_incoterm_id"] = (
+            self.env["account.incoterms"].search([("code", "=", delivery_terms_id)], limit=1).id
+        )
+
+    @api.model
+    def _l10n_tr_resolve_export_exemption(self, tree, invoice_values, logs):
+        invoice_type_code = self._l10n_tr_import_invoice_type_code(tree)
+        if invoice_type_code not in ["ISTISNA", "IHRACKAYITLI"]:
+            return
+        tax_category_node = tree.find("./cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory", UBL_NAMESPACES)
+        if tax_category_node is not None:
+            tax_exemption_reason_code = self._find_value("cbc:TaxExemptionReasonCode", tax_category_node)
+            tax_exemption_id = self.env["l10n_tr_nilvera_einvoice.account.tax.code"].search(
+                [("code", "=", tax_exemption_reason_code)],
+                limit=1,
+            )
+
+            if tax_exemption_id:
+                invoice_values["l10n_tr_exemption_code_id"] = tax_exemption_id.id
+            else:
+                logs.append(_("Could not find exemption code with reason '%s'", tax_exemption_reason_code))
+
+    @api.model
+    def _l10n_tr_resolve_basic_fields(self, tree, invoice_values, logs):
+        profile_id = self._l10n_tr_import_profile_id(tree)
+        if profile_id == "IHRACAT":
+            invoice_values["l10n_tr_is_export_invoice"] = True
+        elif profile_id in ["TEMELFATURA", "KAMU"]:
+            # EARSIVFATURA is ignored as it's not in the l10n_tr_gib_invoice_scenario field
+            invoice_values["l10n_tr_gib_invoice_scenario"] = profile_id
+
+        invoice_values["l10n_tr_gib_invoice_type"] = self._find_value(".//cbc:InvoiceTypeCode", tree)
+        invoice_values["currency_id"], currency_logs = self._import_currency(tree, ".//{*}DocumentCurrencyCode")
+        logs.extend(currency_logs)
+
+        invoice_values["invoice_date"] = self._find_value(".//cbc:IssueDate", tree)
+        invoice_values["invoice_date_due"] = self._find_value(".//cac:PaymentMeans/cbc:PaymentDueDate", tree)
+        invoice_values["ref"] = (
+            self._find_value("./cac:OrderReference/cbc:ID", tree)
+            or self._find_value("./cbc:ID", tree)
+        )
+        invoice_values["narration"] = self._import_description(tree, xpaths=["./{*}Note", "./{*}PaymentTerms/{*}Note"])
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        # EXTENDS account_edi_ubl_cii
+        res = super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor)
+        if self.env.context.get("parse_for_ubl_tr"):
+            res['product']["ctsp_number"] = ".//cac:Shipment//cbc:RequiredCustomsID"
+        return res
+
+    @api.model
+    def _l10n_tr_find_tax_id_by_percentage(self, amount, move_type):
+        return (
+            self.env["account.tax"]
+            .search(
+                [
+                    ("country_id.code", "=", "TR"),
+                    ("amount", "=", amount),
+                    ("amount_type", "=", "percent"),
+                    ("type_tax_use", "=", move_type),
+                ],
+                limit=1,
+                order="sequence",
+            )
+        )
+
+    @api.model
+    def _l10n_tr_find_tax_id_by_reason_code(self, withholding_code, move_type):
+        # There must be only one tax for each withholding code in Nilvera
+        # But based on model structure there can be multiple parent tax for each withholding code
+        return (
+            self.env["account.tax"]
+            .search(
+                [
+                    ("children_tax_ids.l10n_tr_tax_withholding_code_id.code", "=", withholding_code),
+                    ("country_id.code", "=", "TR"),
+                    ("type_tax_use", "=", move_type),
+                ],
+                order="sequence",
+                limit=1,
+            )
+        )
+
+    @api.model
+    def _l10n_tr_find_tax_id_by_tax_details(
+        self,
+        tax_details_list,
+        profile_id,
+        invoice_type,
+        move_type,
+    ):
+        """
+        Retrieve tax IDs for a list of tax details based on profile ID, invoice type, and account move type.
+
+        :param list[dict] tax_details_list: List of tax detail dictionaries.
+        :param str profile_id: ``ProfileID`` value from the XML.
+        :param str invoice_type: ``InvoiceTypeCode`` value from the XML.
+        :param str move_type: Account move type (``sale`` or ``purchase``).
+        :return list[list[int]]: Tax IDs grouped per tax detail entry.
+        """
+
+        result = []
+        for tax_details in tax_details_list:
+            if profile_id == "IHRACAT":
+                # this is a tax-exempt export
+                tax_id = self._l10n_tr_find_tax_id_by_percentage(0, move_type=move_type)
+            elif invoice_type == "TEVKIFAT":
+                tax_id = self._l10n_tr_find_tax_id_by_reason_code(
+                    tax_details["withholding_reason_code"],
+                    move_type=move_type,
+                )
+            else:
+                tax_id = self._l10n_tr_find_tax_id_by_percentage(
+                    tax_details["tax_percentage"],
+                    move_type=move_type,
+                )
+            result.append(tax_id)
+        return result
+
+    @api.model
+    def _l10n_tr_import_tax_details(self, line_tree):
+        tax_percentage = self._find_value(".//cac:TaxTotal//cac:TaxSubtotal//cbc:Percent", line_tree)
+        return {
+            "withholding_reason_code": self._find_value(
+                ".//cac:WithholdingTaxTotal//cac:TaxSubtotal//cac:TaxCategory//cbc:TaxTypeCode", line_tree,
+            ),
+            "tax_percentage": float(tax_percentage) if tax_percentage else 0.0,
+        }
+
+    def _get_tax_nodes(self, tree):
+        if not self.env.context.get("parse_for_ubl_tr"):
+            return super()._get_tax_nodes(tree)
+        return tree
+
+    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False):
+        # EXTENDS account_edi_ubl_cii
+        if not self.env.context.get("parse_for_ubl_tr"):
+            return super()._retrieve_taxes(record, line_values, tax_type, tax_exigibility)
+
+        logs = []
+        taxes = []
+
+        profile_id = self.env.context.get("ubl_tr_profile_id")
+        invoice_type_code = self.env.context.get("ubl_tr_invoice_type_code")
+        tax_data = self._l10n_tr_import_tax_details(line_values.pop("tax_nodes"))
+
+        tax_ids = self._l10n_tr_find_tax_id_by_tax_details(
+            [tax_data],
+            profile_id,
+            invoice_type_code,
+            "sale" if record.is_inbound() else "purchase",
+        )
+        if not tax_ids:
+            logs.append(
+                _(
+                    "Could not retrieve the tax for line '%(line)s'.",
+                    line=line_values["name"],
+                ),
+            )
+        else:
+            taxes.append(tax_ids[0].id)
+            if tax_ids[0].price_include:
+                line_values["price_unit"] *= 1 + tax_ids[0].amount / 100
+        return taxes, logs
+
+    @api.model
+    def _l10n_tr_resolve_bank_account(self, tree, partner, invoice_values, logs):
+        payment_means = tree.find(".//cac:PaymentMeans", UBL_NAMESPACES)
+        if payment_means is None:
+            logs.append(_("No bank details were found in the document."))
+            return
+
+        bank_account_vals = []
+        for acc in payment_means.findall(".//cac:PayeeFinancialAccount", UBL_NAMESPACES):
+            bank_account_vals.append({"account_id": sanitize_account_number(self._find_value("./cbc:ID", acc))})
+
+        if not bank_account_vals:
+            logs.append(_("No bank details were found in the document."))
+            return
+
+        account_numbers = [val["account_id"] for val in bank_account_vals if val["account_id"]]
+        existing_accounts = (
+            self.env["res.partner.bank"]
+            .with_context(active_test=False)
+            .search([("account_number", "in", account_numbers), ("partner_id", "=", partner.id)])
+        )
+
+        if existing_accounts:
+            invoice_values["partner_bank_id"] = existing_accounts[0].id
+
+            if not existing_accounts[0].active:
+                existing_accounts[0].active = True
+                logs.append(_("An existing bank account %s has been reactivated", existing_accounts[0].account_number))
+            return
+
+        ResPartnerBank = self.env["res.partner.bank"].with_env(self.env(context=clean_context(self.env.context)))
+        bank_account = ResPartnerBank.create(
+            {
+                "partner_id": partner.id,
+                "account_number": bank_account_vals[0]["account_id"],
+            },
+        )
+        logs.append(_("A new bank account %s has been created.", bank_account.account_number))
+        invoice_values["partner_bank_id"] = bank_account.id
+
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        # EXTENDS account_edi_ubl_cii
+        # Adding custom decoder for Nilvera's TR1.2 UBL format
+
+        if self._find_value(".//cbc:CustomizationID", tree) != "TR1.2":
+            return super()._import_fill_invoice(invoice, tree, qty_factor)
+
+        if qty_factor == -1:
+            # TODO: Support credit note for UBL TR1.2
+            return [_("Invoice/Bill return creation from XML is not supported for TR1.2 UBL format yet.")]
+
+        logs = []
+        invoice_values = {}
 
         # ==== Nilvera UUID ====
-        if uuid_node := tree.findtext('./{*}UUID'):
-            invoice.l10n_tr_nilvera_uuid = uuid_node
+        if uuid_node := self._find_value(".//cbc:UUID", tree):
+            invoice_values["l10n_tr_nilvera_uuid"] = uuid_node
 
+        # ==== Process partner ====
+        role = self._l10n_tr_import_party_role(tree, 'sale' if invoice.is_inbound() else 'purchase')
+        partner_vals = self.with_context(parse_for_ubl_tr=True)._import_retrieve_partner_vals(tree, role)
+        partner_id, partner_logs = (self.with_context(parse_for_ubl_tr=True)._import_partner(invoice.company_id, **partner_vals))
+
+        # Need to set partner before to compute bank and lines properly
+        invoice.partner_id = partner_id.id
+
+        # ==== Process Bank details ====
+        self._l10n_tr_resolve_bank_account(tree, partner_id, invoice_values, logs)
+
+        # ==== Basic invoice fields ====
+        self._l10n_tr_resolve_basic_fields(tree, invoice_values, logs)
+
+        # ==== invoice_incoterm_id ====
+        self._l10n_tr_resolve_delivery_details(tree, invoice_values)
+
+        # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines, Payable Rounding Amount ====
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)
+        logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
+        line_tag = (
+            'InvoiceLine'
+            if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+            else 'CreditNoteLine'
+        )
+        profile_id, invoice_type_code = self._l10n_tr_import_profile_id(tree), self._l10n_tr_import_invoice_type_code(tree)
+        invoice_line_vals, line_logs = (
+            self.with_context(
+                parse_for_ubl_tr=True,
+                ubl_tr_profile_id=profile_id,
+                ubl_tr_invoice_type_code=invoice_type_code,
+            )._import_lines(invoice, tree, './{*}' + line_tag, document_type=invoice.move_type, tax_type=invoice.journal_id.type, qty_factor=qty_factor))
+        rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', document_type=invoice.move_type, qty_factor=qty_factor)
+        line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
+
+        invoice_values = {
+            **invoice_values,
+            'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],
+        }
+
+        # ==== Exemption Details ====
+        self._l10n_tr_resolve_export_exemption(tree, invoice_values, logs)
+
+        invoice.write(invoice_values)
+
+        if not invoice.currency_id.active:
+            invoice.currency_id.active = True
+            logs.append(_("The currency %s has been reactivated.", invoice.currency_id.name))
+        logs += partner_logs + line_logs + allowance_charges_logs + rounding_logs
         return logs
