@@ -597,6 +597,8 @@ class MailThread(models.AbstractModel):
             tracked_fields, _tracking_value_ids = tracking.get(record_su.id, (None, None))
             record_su._message_track_post_template(tracked_fields)
 
+        # cleanup remaining data
+
     def _track_set_author(self, author: BaseModel):
         """ Set the author (res.partner) of the tracking message for `self`. """
         authors = self.env.cr.precommit.data.setdefault(f'mail.tracking.author.{self._name}', {})
