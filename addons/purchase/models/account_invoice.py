@@ -206,8 +206,9 @@ class AccountMove(models.Model):
         for po_line in purchase_order_lines:
             new_line_values = po_line._prepare_account_move_line(self)
             new_line_ids += self.env['account.move.line'].new(new_line_values)
-
-        self.invoice_line_ids += new_line_ids
+        
+        if new_line_ids:
+            self.invoice_line_ids += new_line_ids
 
     def _find_matching_subset_po_lines(self, po_lines_with_amount, goal_total, timeout):
         """Finds the purchase order lines adding up to the goal amount.

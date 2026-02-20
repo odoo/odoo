@@ -1276,3 +1276,81 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'quantity': 1,
             'product_id': pol.product_id.id,
         }])
+
+    def test_bill_matching_posted_bill_zero_residual(self):
+        """Test bill matching on a posted bill with zero residual lines.
+        
+        This test ensures that when matching a posted vendor bill with purchase order lines,
+        and there are no residual lines to add (all lines already match), the system does not
+        attempt to modify the readonly fields of the posted bill, which would cause an error.
+        
+        Steps:
+        1. Create and confirm a Purchase Order
+        2. Create a Vendor Bill manually (not from PO) with matching product/quantity
+        3. Post the Bill
+        4. Perform Bill Matching where all lines match (zero residual)
+        5. Verify no UserError is raised and the matching completes successfully
+        """
+        # Step 1: Create and confirm a Purchase Order
+        purchase_order = self.init_purchase(
+            partner=self.partner_a,
+            confirm=True,
+            products=[self.product_order]
+        )
+        po_line = purchase_order.order_line[0]
+        
+        # Step 2: Create a Vendor Bill manually with the exact same product and quantity
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_order.id,
+                'quantity': 1.0,
+                'price_unit': self.product_order.list_price,
+                'tax_ids': False,
+            })],
+        })
+        
+        # Step 3: Post the Bill
+        bill.action_post()
+        self.assertEqual(bill.state, 'posted', "Bill should be posted")
+        
+        # Step 4: Perform Bill Matching with exact match (zero residual)
+        # Get the matching lines for this partner
+        match_lines = self.env['purchase.bill.line.match'].search([
+            ('partner_id', '=', self.partner_a.id),
+            ('pol_id', '=', po_line.id),
+            ('aml_id', '=', bill.invoice_line_ids[0].id),
+        ])
+        
+        # If no match lines exist in the view, create them manually for the test
+        if not match_lines:
+            # This simulates the user selecting the PO line and Bill line in the matching view
+            match_lines = self.env['purchase.bill.line.match'].create({
+                'partner_id': self.partner_a.id,
+                'pol_id': po_line.id,
+                'aml_id': bill.invoice_line_ids[0].id,
+                'company_id': self.env.company.id,
+            })
+        
+        # Step 5: Trigger the match - this should NOT raise UserError
+        # Before the fix, this would fail with:
+        # "You cannot modify the following readonly fields on a posted move: invoice_line_ids"
+        try:
+            match_lines.action_match_lines()
+        except UserError as e:
+            if 'readonly fields' in str(e):
+                self.fail(f"Bill matching on posted bill with zero residual should not attempt to modify readonly fields. Error: {e}")
+            raise
+        
+        # Verify the purchase_line_id is correctly linked
+        self.assertEqual(
+            bill.invoice_line_ids[0].purchase_line_id,
+            po_line,
+            "Bill line should be linked to the purchase order line after matching"
+        )
+        
+        # Verify the bill remains posted and unchanged
+        self.assertEqual(bill.state, 'posted', "Bill should remain posted after matching")
+        self.assertEqual(len(bill.invoice_line_ids), 1, "Bill should still have exactly one line")
