@@ -138,6 +138,7 @@ class HrEmployee(models.Model):
 
         remaining = self.browse(min_dts)
         remaining.version_ids.fetch()  # prefetch data
+        remaining.resource_id.employee_id  # prefetch data
         lookahead_days = [7, 30, 90, 180, 365, 730]
 
         # get periods from calendar
@@ -163,7 +164,7 @@ class HrEmployee(models.Model):
                             continue
                         work_interval &= [(
                             datetime.combine(p[0], time.min, ctz),
-                            datetime.combine(p[1], time.min, ctz),
+                            datetime.combine(p[1], time.max, ctz),
                             p[2],
                         ) for p in period if p[2] == calendar]
                         if work_interval:
@@ -179,7 +180,10 @@ class HrEmployee(models.Model):
             ).items():
                 work_intervals = calendar._work_intervals_batch(
                     min_dt, min_dt + timedelta(days=lookahead_day), resources=employees.resource_id)
-                collect_employees(work_intervals)
+                collect_employees({
+                    self.env['resource.resource'].browse(resource_id).employee_id.id: interval
+                    for resource_id, interval in work_intervals.items()
+                })
             remaining = self.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result
