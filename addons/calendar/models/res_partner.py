@@ -47,8 +47,15 @@ class Partner(models.Model):
 
             # Add the events linked to the children of the partner
             for p in self.browse(meetings.keys()):
+                # Only process partners that were prefetched (hence visible to the current user).
+                # This avoids accessing `parent_id` for partners not present in `all_partners`
+                # (which would trigger a field fetch and possibly an AccessError).
+                if p.id not in all_partners._ids:
+                    continue
                 partner = p
-                while partner.parent_id:
+                # Climb the parent chain, but only through parents that are present in the
+                # prefetched `all_partners` (i.e. accessible to the user).
+                while partner.parent_id and partner.parent_id.id in all_partners._ids:
                     partner = partner.parent_id
                     if partner in self:
                         meetings[partner.id] = meetings.get(partner.id, set()) | meetings[p.id]
