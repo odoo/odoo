@@ -637,7 +637,7 @@ class HrVersion(models.Model):
     def _get_days_per_week(self):
         self.ensure_one()
         if self.resource_calendar_id:
-            return self.resource_calendar_id._get_days_per_week()
+            return self.resource_calendar_id.days_per_week
         return 5
 
     def _get_hours_per_week(self):

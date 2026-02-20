@@ -2,7 +2,6 @@
 
 from datetime import datetime, UTC
 
-from odoo.exceptions import ValidationError
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
 
@@ -80,29 +79,6 @@ class TestResource(TestResourceCommon):
         self.assertEqual(33, sum_work_intervals_jules, "Sum of the work intervals for the calendar of jules should be Wodd:15h+Wpair:16h = 31h")
         sum_work_intervals_patel = sum_intervals(calendars_intervals[self.calendar_patel.id])
         self.assertEqual(53, sum_work_intervals_patel, "Sum of the work intervals for the calendar of patel should be 4h+14h+35h = 53h")
-
-    def test_create_company_using_two_weeks_resource(self):
-        """
-            Check that we can create a new company
-            if the default company calendar is two weeks
-        """
-        self.env.company.resource_calendar_id = self.two_weeks_resource
-        self.env['res.company'].create({'name': 'New Company'})
-
-    def test_empty_working_hours_for_two_weeks_resource(self):
-        resource = self._define_calendar_2_weeks(
-            'Two weeks resource',
-            [],
-        )
-        with self.assertRaises(ValidationError):
-            self.env['resource.calendar.attendance'].create({
-                'calendar_id': resource.id,
-                'date': datetime(2026, 1, 28),
-                'hour_from': 0,
-                'hour_to': 0,
-            })
-        resource_hour = resource.hours_per_day
-        self.assertEqual(resource_hour, 0.0)
 
     def test_resource_without_calendar(self):
         resource = self.env['resource.resource'].create({

@@ -760,6 +760,7 @@ class HrEmployee(models.Model):
 
         default_start = min((att.hour_from for att in calendar_attendances), default=0.0)
         default_end = max((att.hour_to for att in calendar_attendances), default=0.0)
+
         hour_from = min((att['hour_from'] for att in attendances), default=default_start)
         hour_to = max((att['hour_to'] for att in attendances), default=default_end)
 
