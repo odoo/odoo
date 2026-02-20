@@ -7,7 +7,7 @@ from . import (
     test_decorators,
     test_cache,
     test_models_access,
-    test_company_checks,
+    test_models_company_checks,
     test_convert,
     test_create,
     test_convert_env,
