@@ -45,7 +45,8 @@ export class ContentEditablePlugin extends Plugin {
         }
         const filteredContentEditableEls = contentEditableEls.filter(
             (contentEditableEl) =>
-                this.checkPredicates("is_valid_contenteditable_predicates", contentEditableEl) ?? true
+                this.checkPredicates("is_valid_contenteditable_predicates", contentEditableEl) ??
+                true
         );
         for (const contentEditableEl of filteredContentEditableEls) {
             if (
