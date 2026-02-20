@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import List, Tuple
 import random
 
 from odoo import api, fields, models, _
@@ -12,6 +11,7 @@ class PosCategory(models.Model):
     _name = 'pos.category'
     _description = "Point of Sale Category"
     _inherit = ['pos.load.mixin']
+    _rec_name = 'complete_name'
     _order = "sequence, name"
 
     @api.constrains('parent_id')
@@ -22,10 +22,14 @@ class PosCategory(models.Model):
     def get_default_color(self):
         return random.randint(0, 10)
 
+    def _default_sequence(self):
+        return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
+
     name = fields.Char(string='Category Name', required=True, translate=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
-    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
+    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", default=_default_sequence)
     image_512 = fields.Image("Image", max_width=512, max_height=512)
     image_128 = fields.Image("Image 128", related="image_512", max_width=128, max_height=128, store=True)
     color = fields.Integer('Color', required=False, default=get_default_color)
@@ -48,15 +52,13 @@ class PosCategory(models.Model):
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence', 'hour_until', 'hour_after']
 
-    def _get_hierarchy(self) -> List[str]:
-        """ Returns a list representing the hierarchy of the categories. """
-        self.ensure_one()
-        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [(self.name or '')]
-
-    @api.depends('parent_id')
-    def _compute_display_name(self):
-        for cat in self:
-            cat.display_name = " / ".join(cat._get_hierarchy())
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for category in self:
+            if category.parent_id:
+                category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
+            else:
+                category.complete_name = category.name
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):
