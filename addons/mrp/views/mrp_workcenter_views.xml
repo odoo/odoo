@@ -64,7 +64,7 @@
             <field name="arch" type="xml">
                 <graph string="Workcenter Productivity" type="pie" sample="1">
                     <field name="loss_id"/>
-                    <field name="duration" type="measure" string="Duration (minutes)"/>
+                    <field name="duration" type="measure" string="Duration"/>
                 </graph>
             </field>
         </record>
@@ -328,11 +328,11 @@
                                         </div>
                                         <label for="time_start"/>
                                         <div>
-                                            <field name="time_start" widget="float_time" class="oe_inline"/> minutes
+                                            <field name="time_start" widget="float_time" options="{'unit': 'minutes'}" class="oe_inline"/>
                                         </div>
                                         <label for="time_stop"/>
                                         <div>
-                                            <field name="time_stop" widget="float_time" class="oe_inline"/> minutes
+                                            <field name="time_stop" widget="float_time" options="{'unit': 'minutes'}" class="oe_inline"/>
                                         </div>
                                     </group>
                                     <group string="Costing Information" name="costing">
@@ -351,8 +351,8 @@
                                         <field name="product_id" widget="stock.forced_placeholder" placeholder="All Products" decoration-it="not product_id"/>
                                         <field name="capacity"/>
                                         <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="product_id != False"/>
-                                        <field name="time_start" widget="float_time"/>
-                                        <field name="time_stop" widget="float_time"/>
+                                        <field name="time_start" widget="float_time" options="{'unit': 'minutes'}"/>
+                                        <field name="time_stop" widget="float_time" options="{'unit': 'minutes'}"/>
                                     </list>
                                 </field>
                             </page>
@@ -540,7 +540,7 @@
                 <field name="workcenter_id"/>
                 <field name="user_id"/>
                 <field name="loss_id"/>
-                <field name="duration" string="Duration (minutes)" sum="Duration"/>
+                <field name="duration" string="Duration" sum="Duration"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
         </field>
@@ -553,7 +553,7 @@
             <graph string="Workcenter Productivity" sample="1">
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration" type="measure" string="Duration"/>
             </graph>
         </field>
     </record>
@@ -565,7 +565,7 @@
             <pivot string="Workcenter Productivity" sample="1">
                 <field name="date_start" type="row" interval="day"/>
                 <field name="loss_type" type="col"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration" type="measure" string="Duration"/>
             </pivot>
         </field>
     </record>

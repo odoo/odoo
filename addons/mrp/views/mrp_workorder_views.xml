@@ -77,7 +77,7 @@
                 <field name="qty_ready" optional="hide" groups="base.group_no_one"/>
                 <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
-                <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
+                <field name="duration_expected" widget="float_time" options="{'unit': 'minutes'}" sum="expected duration" readonly="state in ['cancel', 'done']"/>
                 <field name="duration" widget="mrp_timer"
                   invisible="production_state == 'draft'"
                   readonly="is_user_working" sum="real duration"/>
@@ -204,8 +204,7 @@
                         </div>
                         <label for="duration_expected"/>
                         <div class="o_row">
-                            <field name="duration_expected" widget="float_time" readonly="state in ['cancel', 'done']"/>
-                            <span>minutes</span>
+                            <field name="duration_expected" widget="float_time" options="{'unit': 'minutes'}" readonly="state in ['cancel', 'done']"/>
                         </div>
                     </group>
                     <group>
@@ -217,7 +216,7 @@
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <list editable="bottom">
                                 <field name="user_id"/>
-                                <field name="duration" widget="float_time" readonly="id"/>
+                                <field name="duration" widget="float_time" options="{'unit': 'minutes'}" readonly="id"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="workcenter_id" column_invisible="True"/>
@@ -229,7 +228,7 @@
                                     <group>
                                         <field name="date_start"/>
                                         <field name="date_end"/>
-                                        <field name="duration" widget="float_time"/>
+                                        <field name="duration" widget="float_time" options="{'unit': 'minutes'}"/>
                                         <field name="company_id" invisible="1"/>
                                     </group>
                                     <group>
@@ -243,8 +242,7 @@
                         </field>
                         <div>
                             <label for="duration" class="pe-2"/>
-                            <field name="duration" widget="float_time" readonly="1"/>
-                            <span>&#160;(minutes)</span>
+                            <field name="duration" widget="float_time" options="{'unit': 'minutes'}" readonly="1"/>
                         </div>
                 </page>
                 <page string="Components" name="components">
@@ -270,7 +268,7 @@
                             <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                             <field name="date_start" readonly="1"/>
                             <field name="date_finished" readonly="1"/>
-                            <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
+                            <field name="duration_expected" widget="float_time" options="{'unit': 'minutes'}" sum="expected duration" readonly="state in ['cancel', 'done']"/>
                             <field name="production_state" column_invisible="True"/>
                             <field name="state" widget="mo_view_list_dropdown"
                                 options="{'no_open': True, 'display': 'badge'}"
@@ -336,10 +334,10 @@
         <field name="arch" type="xml">
             <graph string="Operations" stacked="0" sample="1">
                 <field name="production_id"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration" type="measure" string="Duration"/>
                 <field name="duration_unit" type="measure"/>
                 <field name="cost" type="measure"/>
-                <field name="duration_expected" type="measure" string="Expected Duration (minutes)" widget="float_time"/>
+                <field name="duration_expected" type="measure" string="Expected Duration" widget="float_time" options="{'unit': 'minutes'}"/>
                 <field name="qty_reported_from_previous_wo" invisible="1"/>
                 <field name="costs_hour" invisible="1"/>
                 <field name="qty_production" invisible="1"/>
@@ -354,10 +352,10 @@
             <pivot string="Operations" sample="1">
                 <field name="date_start"/>
                 <field name="operation_id"/>
-                <field name="duration" type="measure" string="Duration (minutes)" widget="float_time"/>
-                <field name="duration_unit" type="measure" widget="float_time"/>
+                <field name="duration" type="measure" string="Duration" widget="float_time" options="{'unit': 'minutes'}"/>
+                <field name="duration_unit" type="measure" widget="float_time" options="{'unit': 'minutes'}"/>
                 <field name="cost" type="measure"/>
-                <field name="duration_expected" type="measure" string="Expected Duration (minutes)" widget="float_time"/>
+                <field name="duration_expected" type="measure" string="Expected Duration" widget="float_time" options="{'unit': 'minutes'}"/>
                 <field name="qty_reported_from_previous_wo" invisible="1"/>
                 <field name="costs_hour" invisible="1"/>
                 <field name="qty_production" invisible="1"/>
@@ -490,7 +488,7 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <pivot string="Work Center Loads" sample="1">
-                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
+                <field name="duration_expected" type="measure" string="Expected Duration"/>
                 <field name="workcenter_id" type="row"/>
                 <field name="production_date" type="row" interval="day"/>
             </pivot>
@@ -504,7 +502,7 @@
             <graph string="Work Center load" sample="1">
                 <field name="production_date" interval="day"/>
                 <field name="workcenter_id"/>
-                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
+                <field name="duration_expected" type="measure" string="Expected Duration"/>
             </graph>
         </field>
     </record>

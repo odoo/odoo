@@ -209,8 +209,7 @@
                 </td>
                 <td t-if="data['show_replenishments']" class="text-center"/>
                 <td t-attf-class="text-end {{ data['get_color'](summary.get('quantity_decorator')) }}">
-                    <t t-if="summary.get('done')" t-out="summary['quantity']" t-options="{'widget': 'float', 'precision': operations[0].get('uom_precision', 0)}"/>
-                    <t t-else="" t-out="summary['quantity']" t-options="{'widget': 'float_time'}"/>
+                    <t t-out="summary['quantity']" t-options="{'widget': 'float_time'}"/>
                 </td>
                 <td t-if="data['show_uom']" class="text-start" t-out="summary['uom_name']"/>
                 <td t-if="data['show_availabilities']" class="text-end"/>
