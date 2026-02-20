@@ -15,14 +15,14 @@
         <record id="job_consultant" model="hr.job" forcecreate="1">
             <field name="name">Consultant</field>
             <field name="no_of_recruitment">5</field>
-            <field name="contract_type_id" ref="hr.contract_type_interim"/>
+            <field name="employee_type_id" ref="hr.contract_type_interim"/>
             <field name="description">We are currently looking for someone like that to join our Consultant team.</field>
         </record>
         <record id="job_developer" model="hr.job" forcecreate="1">
             <field name="name">Experienced Developer</field>
             <field name="department_id" ref="hr.dep_rd"/>
             <field name="no_of_recruitment">5</field>
-            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+            <field name="employee_type_id" ref="hr.contract_type_employee"/>
             <field name="description">We are currently looking for someone like that to join our Web team.
                 Someone who can snap out of coding and perform analysis or meet clients to explain the technical
                 possibilities that can meet their needs.</field>
@@ -52,7 +52,7 @@
                 Result driven.
                 Excellent analytical skills, ability to think logically and "out of the box"
             </field>
-            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+            <field name="employee_type_id" ref="hr.contract_type_employee"/>
         </record>
 
         <!-- Employee category -->
@@ -129,6 +129,7 @@
             <field name="work_phone">(555)-768-6230</field>
             <field name="mobile_phone">(555)-768-6235</field>
             <field name="work_contact_id" ref="work_contact_mw"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
         <record id="employee_eg" model="hr.employee" forcecreate="1">
             <field name="active">True</field>
@@ -151,6 +152,7 @@
             <field name="work_contact_id" ref="work_contact_eg"/>
             <field name="coach_id" ref="employee_mw"/>
             <field name="parent_id" ref="employee_mw"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
         <record id="employee_sj" model="hr.employee" forcecreate="1">
             <field name="active">True</field>
@@ -172,6 +174,7 @@
             <field name="work_contact_id" ref="work_contact_sj"/>
             <field name="coach_id" ref="employee_mw"/>
             <field name="parent_id" ref="employee_mw"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
     </data>
 </odoo>

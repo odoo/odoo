@@ -74,9 +74,9 @@
                                                         class="d-inline-flex align-items-center">
                                                     <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
                                                 </div>
-                                                <div t-if="job.contract_type_id"
+                                                <div t-if="job.employee_type_id"
                                                         class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.contract_type_id" class="fw-light"/>
+                                                    <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -117,7 +117,7 @@
         <!-- Content -->
         <div id="wrap" class="js_hr_recruitment">
             <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
-                <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
+                <meta t-if="job.employee_type_id" itemprop="employmentType" t-att-content="job.employee_type_id.sudo().name"/>
                 <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date and job.published_date.isoformat()"/>
                 <meta itemprop="title" t-att-content="job.name"/>
                 <meta itemprop="directApply" content="true"/>
@@ -365,9 +365,9 @@
                             <span class="text-muted small">Department</span>
                             <h6 t-field="job.department_id"/>
                         </div>
-                        <div t-if="job.contract_type_id" class="d-flex flex-column align-items-baseline">
+                        <div t-if="job.employee_type_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Employment Type</span>
-                            <h6 t-field="job.contract_type_id"/>
+                            <h6 t-field="job.employee_type_id"/>
                         </div>
                         <hr t-if="job.job_details" class="w-50 my-3"/>
                         <div t-field="job.job_details"/>
@@ -698,7 +698,7 @@
     <t t-set="current_country_param" t-value="'&amp;is_remote=1' if is_remote else ('&amp;country_id=%s' % country_id.id if country_id else '')"/>
     <t t-set="current_department_param" t-value="'&amp;department_id=%s' % department_id.id if department_id else '&amp;is_other_department=1' if is_other_department else ''"/>
     <t t-set="current_office_param" t-value="'' if is_remote else '&amp;office_id=%s' % office_id.id if office_id else ''"/>
-    <t t-set="current_employment_type_param" t-value="'&amp;is_untyped=1' if is_untyped else ('&amp;contract_type_id=%s' % contract_type_id.id if contract_type_id else '')"/>
+    <t t-set="current_employment_type_param" t-value="'&amp;is_untyped=1' if is_untyped else ('&amp;employee_type_id=%s' % employee_type_id.id if employee_type_id else '')"/>
     <t t-set="current_industry_param"
         t-value="'&amp;industry_id=%s' % industry_id.id if industry_id else '' or '&amp;is_industry_untyped=1' if is_industry_untyped else ''"/>
     <t t-set="opt_jobs_filter_countries" t-value="is_view_active('website_hr_recruitment.job_filter_by_countries')"/>
@@ -709,7 +709,7 @@
     <t t-set="opt_jobs_filter_industry" t-value="is_view_active('website_hr_recruitment.job_filter_by_industries')"/>
     <t t-set="opt_jobs_reset_filters" t-value="is_view_active('website_hr_recruitment.job_reset_filters')"/>
     <t t-set="opt_jobs_filter_count" t-value="sum([opt_jobs_filter_countries, opt_jobs_filter_departments, opt_jobs_filter_offices, opt_jobs_filter_employment_type, opt_jobs_filter_industry])"/>
-    <t t-set="opt_jobs_is_filter_applied" t-value="country_id or industry_id or office_id or department_id or contract_type_id or is_remote or is_industry_untyped or is_other_department or is_untyped"/>
+    <t t-set="opt_jobs_is_filter_applied" t-value="country_id or industry_id or office_id or department_id or employee_type_id or is_remote or is_industry_untyped or is_other_department or is_untyped"/>
     <!-- Search bar -->
     <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex w-100 w-lg-25">
         <button
@@ -986,9 +986,9 @@
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="before">
         <t t-call="website_hr_recruitment.job_filter_base"
             filter_label.translate="Types"
-            selected_filter="contract_type_id"
+            selected_filter="employee_type_id"
             is_unset_selected="is_untyped"
-            id_selected_arg.f="contract_type_id"
+            id_selected_arg.f="employee_type_id"
             all_arg.f="all_employment_types=1"
             unset_arg.f="is_untyped=1"
             non_filter_params.f="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"
@@ -998,9 +998,9 @@
     <xpath expr="//div[hasclass('accordion-flush')]" position="inside">
         <t t-call="website_hr_recruitment.job_filter_base_mobile"
             filter_label.translate="Types"
-            selected_filter="contract_type_id"
+            selected_filter="employee_type_id"
             is_unset_selected="is_untyped"
-            id_selected_arg.f="contract_type_id"
+            id_selected_arg.f="employee_type_id"
             all_arg.f="all_employment_types=1"
             unset_arg.f="is_untyped=1"
             non_filter_params.f="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"
@@ -1046,7 +1046,7 @@
             <input t-if="country_id" type="hidden" name="country_id" t-att-value="country_id.id"/>
             <input t-if="office_id" type="hidden" name="office_id" t-att-value="office_id.id"/>
             <input t-if="department_id" type="hidden" name="department_id" t-att-value="department_id.id"/>
-            <input t-if="contract_type_id" type="hidden" name="contract_type_id" t-att-value="contract_type_id.id"/>
+            <input t-if="employee_type_id" type="hidden" name="employee_type_id" t-att-value="employee_type_id.id"/>
             <input t-if="is_remote" type="hidden" name="is_remote" value="1"/>
             <input t-if="is_other_department" type="hidden" name="is_other_department" value="1"/>
         </t>

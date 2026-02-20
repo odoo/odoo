@@ -106,7 +106,7 @@ spirit. To be successful, you will have solid solving problem skills.''')
         country_id = options.get('country_id')
         department_id = options.get('department_id')
         office_id = options.get('office_id')
-        contract_type_id = options.get('contract_type_id')
+        employee_type_id = options.get('employee_type_id')
         is_remote = options.get('is_remote')
         is_other_department = options.get('is_other_department')
         is_untyped = options.get('is_untyped')
@@ -123,10 +123,10 @@ spirit. To be successful, you will have solid solving problem skills.''')
             domain.append([('address_id', '=', int(office_id))])
         elif is_remote:
             domain.append([('address_id', '=', None)])
-        if contract_type_id:
-            domain.append([('contract_type_id', '=', int(contract_type_id))])
+        if employee_type_id:
+            domain.append([('employee_type_id', '=', int(employee_type_id))])
         elif is_untyped:
-            domain.append([('contract_type_id', '=', None)])
+            domain.append([('employee_type_id', '=', None)])
 
         if requires_sudo and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
             # Rule must be reinforced because of sudo.

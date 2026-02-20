@@ -19,6 +19,7 @@
             <field name="address_id" ref="base.main_partner"/>
             <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
             <field name="structure_type_id" ref="hr.structure_type_employee"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <!-- Resource Calendar -->
@@ -99,7 +100,7 @@ Good knowledge of HTML and Javascript
 Knowledge of UML-like modeling
 Good language skills, other than English (Dutch and French preferred, others welcome)
             </field>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="job_consultant" model="hr.job">
@@ -107,7 +108,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
             <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_ps"/>
             <field name="no_of_recruitment">5</field>
-            <field name="contract_type_id" ref="contract_type_interim"/>
+            <field name="employee_type_id" ref="contract_type_interim"/>
             <field name="description">We are looking for a Consultant to provide expert advice and strategic solutions,
                 driving business growth. Strong analytical skills and a proven track record in delivering results are
                 essential.
@@ -119,7 +120,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
             <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_rd"/>
             <field name="no_of_recruitment">5</field>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="description">
                 We are looking for an experience developer to join our Web team.
                 Someone who can snap out of coding and perform analysis or meet clients to explain the technical
@@ -140,7 +141,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
                 to improve employee engagement and retention. Additionally, HR managers play a strategic role in
                 aligning the workforce with the organization's goals and objectives.
             </field>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="job_marketing" model="hr.job">
@@ -229,7 +230,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2020-01-01'"/>
             <field name="contract_date_start" eval="'2020-01-01'"/>
             <field name="contract_date_end" eval="False"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">7540.00</field>
             <field name="job_id" ref="hr.job_cto"/>
@@ -271,6 +272,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="wage" eval="6000"/>
             <field name="structure_type_id" ref="hr.structure_type_worker"/>
             <field name="hourly_cost">40</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="employee_qdp" model="hr.employee">
@@ -280,7 +282,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="base.partner_demo"/>
             <field name="date_version" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
             <field name="contract_date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">3750.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -315,7 +317,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4000.00</field>
             <field name="job_id" ref="hr.job_cto"/>
@@ -344,7 +346,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2015-01-01'"/>
             <field name="contract_date_start" eval="'2015-01-01'"/>
             <field name="contract_date_end" eval="'2018-02-01'"/>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4000.00</field>
             <field name="job_id" ref="hr.job_hrm"/>
@@ -386,6 +388,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="wage" eval="6500"/>
             <field name="structure_type_id" ref="hr.structure_type_worker"/>
             <field name="hourly_cost">10</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="work_contact_fpi" model="res.partner">
@@ -408,7 +411,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2014-01-01'"/>
             <field name="contract_date_start" eval="'2014-01-01'"/>
             <field name="contract_date_end" eval="'2014-12-31'"/>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">3700.00</field>
             <field name="job_id" ref="hr.job_consultant"/>
@@ -450,6 +453,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
             <field name="hourly_cost">35</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="work_contact_jod" model="res.partner">
@@ -472,6 +476,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="hourly_cost">55</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="work_contact_fme" model="res.partner">
@@ -490,7 +495,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2015-01-01'"/>
             <field name="contract_date_start" eval="'2015-01-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y-%m-%d')"/>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">3650.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -526,6 +531,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="sex">female</field>
             <field name="distance_home_work">13</field>
             <field name="hourly_cost">25</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="work_contact_jgo" model="res.partner">
@@ -548,6 +554,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
             <field name="hourly_cost">45</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="work_contact_jth" model="res.partner">
@@ -566,7 +573,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4200.00</field>
             <field name="job_id" ref="hr.job_consultant"/>
@@ -595,7 +602,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4500.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -627,7 +634,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4000.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -656,7 +663,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="time.strftime('%Y')+'-02-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-02-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4500.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -685,7 +692,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="(DateTime.today() - relativedelta(years=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(years=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">3750.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -713,7 +720,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">3950.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -740,7 +747,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-03-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-03-01'"/>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">4600.00</field>
             <field name="job_id" ref="hr.job_developer"/>
@@ -776,6 +783,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="sex">female</field>
             <field name="distance_home_work">50</field>
             <field name="hourly_cost">40</field>
+            <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
 
         <record id="work_contact_barty_mcbly" model="res.partner">
@@ -790,7 +798,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version">1885-09-02</field>
             <field name="contract_date_start">1885-09-02</field>
             <field name="contract_date_end">1885-09-07</field>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
             <field name="wage">15.00</field>
@@ -834,7 +842,7 @@ If you have development competencies, we can propose you specific traineeships</
         <!-- Contract Templates -->
         <record id="contract_template_hr_manager" model="hr.version">
             <field name="name">HR Manager</field>
-            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">2000.00</field>
             <field name="job_id" ref="hr.job_hrm"/>
