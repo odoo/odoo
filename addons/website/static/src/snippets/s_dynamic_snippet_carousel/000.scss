@@ -24,6 +24,42 @@
         width: auto;
     }
 
+    // Rounded arrows (default selected)
+    .oi-chevron-left, .oi-chevron-right {
+        background: $carousel-dark-indicator-active-bg;
+        border-radius: $border-radius-pill;
+    }
+
+    &.arrows_light, &.arrows_default {
+        .oi-chevron-left, .oi-chevron-right {
+            filter: $carousel-dark-control-icon-filter;
+        }
+    }
+
+    &.arrows_default {
+        .oi-chevron-left, .oi-chevron-right {
+            background: none;
+        }
+
+        &.arrows_light {
+            .oi-chevron-left, .oi-chevron-right {
+                filter: none;
+            }
+        }
+    }
+
+    &.arrows_boxed {
+        .oi-chevron-left, .oi-chevron-right {
+            border-radius: $border-radius;
+        }
+    }
+
+    &.arrows_hidden {
+        .oi-chevron-left, .oi-chevron-right {
+            display: none;
+        }
+    }
+
     &:where(:not(.o_carousel_multi_items)) > :where(:not(.container-fluid)) {
         .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
             .s_dynamic_snippet_arrows {

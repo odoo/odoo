@@ -12,6 +12,20 @@
                 <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_right'">Bottom Right</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow label.translate="Style" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'arrows_default'">Default</BuilderSelectItem>
+                <BuilderSelectItem classAction="'arrows_boxed'">Boxed</BuilderSelectItem>
+                <BuilderSelectItem classAction="''">Rounded</BuilderSelectItem>
+                <BuilderSelectItem classAction="'arrows_hidden'">Hidden</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Color" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'arrows_light'">Regular</BuilderSelectItem>
+                <BuilderSelectItem classAction="''">Inverted colors</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 	    <BuilderRow label.translate="Slider Speed" t-if="numberOfRecords > 1">
 	        <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false" id="'speed_opt'"/>
 	    </BuilderRow>
