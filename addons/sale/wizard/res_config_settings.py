@@ -81,6 +81,7 @@ class ResConfigSettings(models.TransientModel):
     module_sale_pdf_quote_builder = fields.Boolean("PDF Quote builder")
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_sale_shopee = fields.Boolean("Shopee Sync")
+    module_sale_lazada = fields.Boolean("Lazada Sync")
 
     #=== ONCHANGE METHODS ===#
 
