@@ -179,7 +179,7 @@ class IrUiView(models.Model):
                             string="View inheritance mode", default='primary', required=True,
                             help="""Only applies if this view inherits from an other one (inherit_id is not False/Null).
 
-* if extension (default), if this view is requested the closest primary view
+* if extension (default), if this view is requested, the closest primary view
 is looked up (via inherit_id), then all views inheriting from it with this
 view's model are applied
 * if primary, the closest primary view is fully resolved (even if it uses a

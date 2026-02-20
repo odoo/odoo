@@ -13,11 +13,11 @@
                     </div>
                     <group name="top_info">
                         <group name="top_info_left">
-                            <field name="job_id" groups="hr.group_hr_manager"/>
-                            <field name="department_id" groups="hr.group_hr_manager"/>
+                            <field name="job_id"/>
+                            <field name="department_id"/>
                         </group>
                         <group name="top_info_right">
-                            <field name="hr_responsible_id" widget="many2one_avatar_user" groups="hr.group_hr_user"/>
+                            <field name="hr_responsible_id" widget="many2one_avatar_user"/>
                         </group>
                     </group>
                     <notebook>
@@ -55,9 +55,9 @@
                 <field name="job_id"/>
                 <field name="department_id" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
-                <field name="wage" widget="monetary" optional="show"/>
-                <field name="contract_type_id" optional="show"/>
-                <field name="structure_type_id" optional="show"/>
+                <field name="wage" widget="monetary" optional="show" groups="hr.group_hr_manager"/>
+                <field name="contract_type_id" optional="show" groups="hr.group_hr_manager"/>
+                <field name="structure_type_id" optional="show" groups="hr.group_hr_manager"/>
                 <field name="resource_calendar_id" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
                 <field name="create_uid" optional="hidden"/>

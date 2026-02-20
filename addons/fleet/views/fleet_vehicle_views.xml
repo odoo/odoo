@@ -196,17 +196,17 @@
                 <field name="manager_id" optional="hide" widget="many2one_avatar_user"/>
                 <field name="driver_id" widget="many2one_avatar_user" readonly="1" optional="show"/>
                 <field name="future_driver_id"  widget="many2one_avatar_user" readonly="1" optional="show"/>
-                <field name="log_drivers" column_invisible="True"/>
+                <field name="log_drivers" column_invisible="True" groups="fleet.fleet_group_user"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions" optional="hide" readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1" groups="fleet.fleet_group_user"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
-                <field name="contract_renewal_due_soon" invisible="1"/>
-                <field name="contract_renewal_overdue" invisible="1"/>
+                <field name="contract_renewal_due_soon" invisible="1" groups="fleet.fleet_group_user"/>
+                <field name="contract_renewal_overdue" invisible="1" groups="fleet.fleet_group_user"/>
                 <field name="vehicle_properties"/>
                 <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
-                    decoration-danger="contract_state == 'expired'" optional="hide"/>
+                    decoration-danger="contract_state == 'expired'" optional="hide" groups="fleet.fleet_group_user"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>
@@ -223,7 +223,7 @@
                     ('log_drivers.driver_id', 'ilike', self),
                     ('driver_id', 'ilike', self),
                     ('future_driver_id', 'ilike', self),
-                ]"/>
+                ]" groups="fleet.fleet_group_user"/>
                 <field string="Model" name="model_id"/>
                 <field string="License Plate" name="license_plate"/>
                 <field name="tag_ids"/>
@@ -237,7 +237,7 @@
                 <filter string="Cars" name="cars" domain="[('vehicle_type', '=', 'car')]"/>
                 <filter string="Trailer Hook" name="trailer_hook" domain="[('trailer_hook', '=', True)]"/>
                 <separator/>
-                <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>
+                <filter groups="fleet.fleet_group_user" string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
@@ -374,9 +374,9 @@
         </field>
     </record>
 
-    <menuitem name="Fleet" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
+    <menuitem name="Fleet" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet.fleet_group_user"/>
     <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" name="Fleet"
-        id="fleet_vehicle_menu" groups="fleet_group_user" sequence="0"/>
+        id="fleet_vehicle_menu" groups="fleet.fleet_group_user" sequence="0"/>
 
    <record id='fleet_vehicle_odometer_view_form' model='ir.ui.view'>
         <field name="name">fleet.vehicle.odometer.form</field>
@@ -444,7 +444,7 @@
         </field>
     </record>
 
-    <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet_group_user" sequence="10"/>
+    <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet.fleet_group_user" sequence="10"/>
 
     <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
         <field name="name">fleet.service.type.list</field>
