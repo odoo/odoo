@@ -21,7 +21,6 @@ registerWebsitePreviewTour(
     "blog_posts_dynamic_snippet_options",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/?debug=1",
         edition: true,
     },
     () => [
