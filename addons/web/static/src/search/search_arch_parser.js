@@ -46,6 +46,7 @@ export class SearchArchParser {
         this.preSearchItems = [];
         this.searchPanelInfo = {
             className: "",
+            title: "Filters",
             viewTypes: DEFAULT_VIEWS_WITH_SEARCH_PANEL,
         };
         this.sections = [];
@@ -337,6 +338,9 @@ export class SearchArchParser {
 
         if (searchPanelNode.hasAttribute("class")) {
             this.searchPanelInfo.className = searchPanelNode.getAttribute("class");
+        }
+        if (searchPanelNode.hasAttribute("title")) {
+            this.searchPanelInfo.title = searchPanelNode.getAttribute("title");
         }
         if (searchPanelNode.hasAttribute("view_types")) {
             this.searchPanelInfo.viewTypes = searchPanelNode.getAttribute("view_types").split(",");

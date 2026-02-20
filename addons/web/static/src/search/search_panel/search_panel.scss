@@ -36,7 +36,7 @@
     }
 
     .list-group-item {
-        --list-group-item-padding-y: #{map-get($spacers, 1)};
+        --list-group-item-padding-y: #{map-get($spacers, 2)};
         --list-group-item-padding-x: 0;
     }
 }
@@ -59,6 +59,11 @@
     @include media-breakpoint-up(md) {
         border-right: $border-width solid $border-color;
     }
+
+    &:hover .o_search_panel_sidebar_button {
+        background-color: var(--btn-hover-bg);
+        color: var(--btn-hover-color);
+    }
 }
 
 .o_mobile_search_content {
@@ -76,5 +81,17 @@
 .o_search_panel_section {
     .o_bottom_sheet & .list-group {
         --#{$prefix}list-group-bg: transparent;
+    }
+}
+
+.o_search_panel_category_value {
+    .o_toggle_fold {
+        color: $text-muted;
+    }
+
+    header.active:hover {
+        .o_toggle_fold {
+            color: $black;
+        }
     }
 }
