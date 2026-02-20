@@ -83,6 +83,8 @@ export class CarouselOptionPlugin extends Plugin {
             SlideCarouselAction,
             ToggleControllersAction,
             ToggleCardImgAction,
+            SetCarouselTimespanAction,
+            SetCarouselSpeedAction,
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -393,6 +395,38 @@ export class ToggleCardImgAction extends BuilderAction {
         const carouselEl = editingElement.closest(".carousel");
         const cardImgEl = carouselEl.querySelector(".o_card_img_wrapper");
         return !!cardImgEl;
+    }
+}
+
+const getTransitionSpeed = (el) =>
+    parseInt(el.style.getPropertyValue("--transition-duration")) || 600;
+
+export class SetCarouselTimespanAction extends BuilderAction {
+    static id = "setCarouselTimespan";
+    apply({ editingElement, value }) {
+        const speed = getTransitionSpeed(editingElement);
+        const timespan = parseInt(value);
+        editingElement.dataset.bsInterval = timespan + speed;
+    }
+    getValue({ editingElement }) {
+        const speed = getTransitionSpeed(editingElement);
+        const timespan = parseInt(editingElement.dataset.bsInterval);
+        return timespan - speed;
+    }
+}
+
+export class SetCarouselSpeedAction extends BuilderAction {
+    static id = "setCarouselSpeed";
+    apply({ editingElement, value }) {
+        const speed = getTransitionSpeed(editingElement);
+        const timespan = parseInt(editingElement.dataset.bsInterval);
+        const newSpeed = parseInt(value);
+        editingElement.dataset.bsInterval = timespan + (newSpeed - speed);
+        editingElement.style.setProperty("--transition-duration", value);
+    }
+    getValue({ editingElement }) {
+        const speed = getTransitionSpeed(editingElement);
+        return speed;
     }
 }
 
