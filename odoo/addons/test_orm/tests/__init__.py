@@ -21,7 +21,7 @@ from . import (
     test_models,
     test_modules_db,
     test_one2many,
-    test_parent_store,
+    test_models_parent_store,
     test_performance,
     test_properties,
     test_query,
