@@ -9,6 +9,17 @@ export const MESSAGE_SOUND = "mail.user_setting.message_sound";
 
 export class Settings extends Record {
     id;
+    /** @returns {import("models").Settings} */
+    static new() {
+        const record = super.new(...arguments);
+        record.saveVoiceThresholdDebounce = debounce(() => {
+            browser.localStorage.setItem(
+                "mail_user_setting_voice_threshold",
+                record.voiceActivationThreshold.toString()
+            );
+        }, 2000);
+        return record;
+    }
 
     static new() {
         const record = super.new(...arguments);
@@ -19,12 +30,6 @@ export class Settings extends Record {
 
     setup() {
         super.setup();
-        this.saveVoiceThresholdDebounce = debounce(() => {
-            browser.localStorage.setItem(
-                "mail_user_setting_voice_threshold",
-                this.voiceActivationThreshold.toString()
-            );
-        }, 2000);
         this.hasCanvasFilterSupport =
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
         this._loadLocalSettings();

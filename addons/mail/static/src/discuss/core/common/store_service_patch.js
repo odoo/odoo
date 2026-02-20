@@ -17,10 +17,6 @@ const storeServicePatch = {
          * @type {string[]}
          */
         this.channel_types_with_seen_infos = [];
-        this.updateBusSubscription = debounce(
-            () => this.env.services.bus_service.forceUpdateChannels(),
-            0
-        );
     },
     get onlineMemberStatuses() {
         return ["away", "bot", "online"];
@@ -80,4 +76,14 @@ const storeServicePatch = {
     },
 };
 
+patch(Store, {
+    new() {
+        const record = super.new(...arguments);
+        record.updateBusSubscription = debounce(
+            () => record.env.services.bus_service.forceUpdateChannels(),
+            0
+        );
+        return record;
+    },
+});
 patch(Store.prototype, storeServicePatch);
