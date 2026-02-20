@@ -126,7 +126,7 @@ test("Basic keyboard navigation", async () => {
     ).dataset;
     triggerHotkey("Enter");
     await contains(".o-EmojiPicker", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: codepoints });
+    await contains(".o-mail-Composer-input", { value: codepoints + " " });
 });
 
 test("recent category (basic)", async () => {
@@ -223,7 +223,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await click(".o-EmojiPicker-content .o-Emoji:text('👺')", { shiftKey: true });
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(".o-EmojiPicker");
-    await contains(".o-mail-Composer-input", { value: "👺" });
+    await contains(".o-mail-Composer-input", { value: "👺 " });
 });
 
 test("shortcodes shown in emoji title in message", async () => {

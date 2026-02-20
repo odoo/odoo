@@ -95,7 +95,7 @@ test("add an emoji after a command", async () => {
     await contains(".o-mail-Composer-input", { value: "/who " });
     await click("button[title='Add Emojis']");
     await click(".o-Emoji:text('😊')");
-    await contains(".o-mail-Composer-input", { value: "/who 😊" });
+    await contains(".o-mail-Composer-input", { value: "/who 😊 " });
 });
 
 test.tags("html composer");
