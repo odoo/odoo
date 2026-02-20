@@ -23,6 +23,7 @@ class AccountMove(models.Model):
     timesheet_total_duration = fields.Integer("Timesheet Total Duration",
         compute='_compute_timesheet_total_duration', compute_sudo=True,
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+    display_timesheet_review_in_mail_template = fields.Boolean(compute="_compute_display_timesheet_review_in_mail_template")
 
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
@@ -55,6 +56,16 @@ class AccountMove(models.Model):
         mapped_data = dict(timesheet_data)
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice, 0)
+
+    @api.depends('timesheet_count', 'partner_id.user_id.state', 'partner_id.partner_share')
+    def _compute_display_timesheet_review_in_mail_template(self):
+        self.ensure_one()
+        auth_signup_uninvited = self.env['ir.config_parameter'].sudo().get_str('auth_signup.invitation_scope')
+        if not self.timesheet_count or (auth_signup_uninvited == 'b2b' and not self.partner_id.user_id.state):
+            self.display_timesheet_review_in_mail_template = False
+            return
+
+        self.display_timesheet_review_in_mail_template = auth_signup_uninvited == 'b2c' or self.partner_id.partner_share
 
     def action_view_timesheet(self):
         self.ensure_one()
