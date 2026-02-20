@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="0.55" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#ffb703"/>
+    </linearGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.22"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <rect width="1600" height="900" filter="url(#noise)" opacity="0.35"/>
+  <g opacity="0.22" fill="#000000">
+    <circle cx="280" cy="220" r="110"/>
+    <circle cx="1280" cy="300" r="160"/>
+    <circle cx="1120" cy="760" r="190"/>
+  </g>
+  <text x="50%" y="46%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Georgia, serif" font-size="88" fill="rgba(0,0,0,0.42)">RAM</text>
+  <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="30" fill="rgba(0,0,0,0.42)">Replace with your location photo</text>
+</svg>
+

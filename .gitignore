@@ -1,48 +1,99 @@
 # sphinx build directories
 _build/
 
-# dotfiles
+# ============================================
+# CRITICAL: Environment & Secrets
+# ============================================
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+.vault
+
+# ============================================
+# Dotfiles (except critical ones)
+# ============================================
 .*
 !.gitignore
 !.gitkeep
 !.github
+!.github/workflows
+!.dockerignore
 !.mailmap
 !.weblate.json
-# compiled python files
+!.editorconfig
+!.gitattributes
+
+# ============================================
+# Compiled Python & Virtual Environments
+# ============================================
 *.py[co]
+*.pyo
+*.pyd
 __pycache__/
-# setup.py egg_info
-*.egg-info
-# emacs backup files
+*.egg-info/
+.eggs/
+.Python
+
+# Virtual environments (important for Docker builds)
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================
+# IDE & Editor Files
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
 *~
-# hg stuff
-*.orig
-status
-# odoo filestore
-odoo/filestore
-# maintenance migration scripts
-odoo/addons/base/maintenance
-# windows installation config file
-/odoo.conf
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+.vim/
 
-# generated for windows installer?
-install/win32/*.bat
-install/win32/meta.py
+# ============================================
+# Documentation & Non-Essential
+# ============================================
+doc/
+*.md
+!README.md
+!CONTRIBUTING.md
+!SECURITY.md
+!LICENSE
+COPYRIGHT
+MANIFEST.in
+ruff.toml
 
-# needed only when building for win32
-setup/win32/static/less/
-setup/win32/static/wkhtmltopdf/
-setup/win32/static/postgresql*.exe
+# ============================================
+# Test & Debug Files
+# ============================================
+*.sql
+test_*.py
+webhook_test.py
+api_response*.txt
+inspect_db.sql
+update_sequences.sql
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 
-# js tooling
-node_modules
-jsconfig.json
-tsconfig.json
-package-lock.json
-package.json
-.husky
-
-# various virtualenv
+# ============================================
+# Build Artifacts & Dependencies
+# ============================================
 /bin/
 /build/
 /dist/
@@ -51,3 +102,62 @@ package.json
 /man/
 /share/
 /src/
+*.egg
+setup/win32/static/less/
+setup/win32/static/wkhtmltopdf/
+setup/win32/static/postgresql*.exe
+install/win32/*.bat
+install/win32/meta.py
+
+# ============================================
+# JavaScript/Node Tooling
+# ============================================
+node_modules/
+jsconfig.json
+tsconfig.json
+package-lock.json
+package.json
+.husky/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# Odoo Runtime Data
+# ============================================
+odoo/filestore/
+odoo/addons/base/maintenance/
+.odoo-data/
+# ============================================
+# Local Configuration (sensitive)
+# ============================================
+/odoo.conf
+/config/docker.conf
+/config/odoo.conf
+docker-compose.override.yml
+
+# ============================================
+# Platform-Specific
+# ============================================
+debian/
+setup/win32/
+install/win32/
+.gemini/
+
+# ============================================
+# Logs & Temporary Files
+# ============================================
+*.log
+*.log.*
+*.bak
+*.tmp
+*.temp
+*.swp
+.python-version
+
+# ============================================
+# OS-Specific
+# ============================================
+Thumbs.db
+.directory
+.vscode-server/

@@ -1,0 +1,94 @@
+# ====================================================================
+# Docker Build Ignore File - Aggressive for minimal image size
+# ====================================================================
+
+# VCS & GitHub (not needed in container)
+.git/
+.gitignore
+.gitattributes
+.github/
+.gitmodules
+
+# Python virtual environments (build only)
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+pip-log.txt
+.pytest_cache/
+.tox/
+.coverage
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Documentation (not needed in production)
+doc/
+*.md
+!README.md
+LICENSE
+COPYRIGHT
+CONTRIBUTING.md
+SECURITY.md
+MANIFEST.in
+ruff.toml
+*.rst
+
+# Test and debug files
+inspect_db.sql
+update_sequences.sql
+*.sql
+test_*.py
+webhook_test.py
+api_response*.txt
+
+# Build artifacts
+build/
+dist/
+setup/win32/
+install/win32/
+debian/
+
+# Configuration (will be mounted via volumes)
+config/
+odoo.conf
+docker-compose*.yml
+.env*
+*.pem
+*.key
+secrets/
+
+# Development tools
+.gemini/
+node_modules/
+package*.json
+.husky/
+npm-debug.log*
+
+# Odoo runtime data (will be mounted as volume)
+odoo/filestore/
+odoo/addons/base/maintenance/
+
+# Logs and temp files
+*.log
+*.bak
+*.tmp
+.python-version
+.vscode-server/

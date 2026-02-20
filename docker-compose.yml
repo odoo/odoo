@@ -1,0 +1,257 @@
+# =============================================================================
+# Docker Compose for Odoo 19 with Uber Eats Integration
+# HTTPS via Traefik for demo.primetek.in
+# HTTP fallback on IP (port 80)
+# Optimized for VPS with 1GB RAM and 1 CPU core
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # Traefik Reverse Proxy
+  # ===========================================================================
+  traefik:
+    image: traefik:v3.6.7
+    container_name: odoo_traefik
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    command:
+      # -------------------------------------------------------
+      # Dashboard & API (secured, no public exposure)
+      # -------------------------------------------------------
+      - --api.dashboard=true
+      - --api.insecure=false
+
+      # -------------------------------------------------------
+      # Healthcheck ping
+      # -------------------------------------------------------
+      - --ping=true
+      - --ping.entrypoint=web
+
+      # -------------------------------------------------------
+      # EntryPoints
+      # web       → HTTP  (port 80, IP + ACME challenge)
+      # websecure → HTTPS (port 443, hostname only)
+      # -------------------------------------------------------
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.odoo-ws.address=:8072
+
+      # -------------------------------------------------------
+      # Docker provider
+      # -------------------------------------------------------
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=odoo-network
+
+      # -------------------------------------------------------
+      # Let's Encrypt (ACME) configuration
+      # Uses HTTP-01 challenge on port 80
+      # -------------------------------------------------------
+      - --certificatesresolvers.le.acme.email=admin@primetek.in
+      - --certificatesresolvers.le.acme.storage=/etc/traefik/letsencrypt/acme.json
+      - --certificatesresolvers.le.acme.httpchallenge=true
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+
+      # -------------------------------------------------------
+      # Logging
+      # -------------------------------------------------------
+      - --log.level=DEBUG
+      - --accesslog=true
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8072:8072"
+      # Dashboard exposed only locally
+      - "127.0.0.1:8081:8080"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-ssl:/etc/traefik/letsencrypt
+
+    networks:
+      - odoo-network
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 100M
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ===========================================================================
+  # PostgreSQL Database
+  # ===========================================================================
+  db:
+    image: postgres:15.15-alpine3.22
+    container_name: odoo_db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+
+    networks:
+      - odoo-network
+
+    command:
+      - postgres
+      - -c
+      - shared_buffers=128MB
+      - -c
+      - effective_cache_size=256MB
+      - -c
+      - maintenance_work_mem=32MB
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: 256M
+
+  # ===========================================================================
+  # Odoo Application
+  # ===========================================================================
+  odoo:
+    image: ghcr.io/laxya911/custom-odoo:feature-odoo-uber
+    container_name: odoo_uber
+    restart: unless-stopped
+
+    depends_on:
+      - db
+      - traefik
+
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+      PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      WORKERS: 2
+      LOG_LEVEL: ${LOG_LEVEL}
+      ADMIN_PASSWD: ${ODOO_ADMIN_PASSWD}
+
+      # -------------------------------------------------------
+      # Uber configuration
+      # -------------------------------------------------------
+      # UBER_ENVIRONMENT: ${UBER_ENVIRONMENT}
+      # UBER_CLIENT_ID: ${UBER_CLIENT_ID}
+      # UBER_CLIENT_SECRET: ${UBER_CLIENT_SECRET}
+      # UBER_SCOPES: ${UBER_SCOPES}
+      # UBER_AUTH_URL: ${UBER_AUTH_URL}
+      # UBER_API_BASE_URL: ${UBER_API_BASE_URL}
+      # UBER_WEBHOOK_BASIC_USER: ${UBER_WEBHOOK_BASIC_USER}
+      # UBER_WEBHOOK_BASIC_PASSWORD: ${UBER_WEBHOOK_BASIC_PASSWORD}
+
+    labels:
+      # -------------------------------------------------------
+      # Enable Traefik for this container
+      # -------------------------------------------------------
+      - "traefik.enable=true"
+
+      # -------------------------------------------------------
+      # HTTPS Router (443) — DOMAIN ONLY
+      # https://demo.primetek.in
+      # -------------------------------------------------------
+      - "traefik.http.routers.odoo-https.rule=Host(`demo.primetek.in`)"
+      - "traefik.http.routers.odoo-https.entrypoints=websecure"
+      - "traefik.http.routers.odoo-https.tls=true"
+      - "traefik.http.routers.odoo-https.tls.certresolver=le"
+      - "traefik.http.routers.odoo-https.service=odoo"
+      - "traefik.http.routers.odoo-https.middlewares=odoo-headers,odoo-proxy-headers"
+
+      # -------------------------------------------------------
+      # HTTP Router (80) — IP & fallback
+      # http://SERVER_IP
+      # http://demo.primetek.in (also used for ACME)
+      # -------------------------------------------------------
+      - "traefik.http.routers.odoo-http.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.odoo-http.entrypoints=web"
+      - "traefik.http.routers.odoo-http.service=odoo"
+      - "traefik.http.routers.odoo-http.middlewares=odoo-headers,odoo-proxy-headers"
+
+      # -------------------------------------------------------
+      # Odoo service definition (HTTP only on 8069)
+      # Port 8072 is for websocket/longpolling, separate entrypoint
+      # -------------------------------------------------------
+      - "traefik.http.services.odoo.loadbalancer.server.port=8069"
+
+      # -------------------------------------------------------
+      # Proxy Headers Middleware (Critical for reverse proxy)
+      # Tells Odoo it's behind a proxy and forwards required headers
+      # -------------------------------------------------------
+      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-For={{ClientIP}}"
+      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-Host=demo.primetek.in"
+      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Script-Name=/"
+
+      # -------------------------------------------------------
+      # Basic security headers
+      # -------------------------------------------------------
+      - "traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN"
+      - "traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Content-Type-Options=nosniff"
+
+    expose:
+      - "8069"
+      - "8072"
+
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - odoo-sessions:/tmp/odoo-sessions
+      - ./odoo-extra-addons:/mnt/extra-addons
+
+
+    command:
+      - server
+      - --http-interface=0.0.0.0
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.55"
+          memory: 640M
+
+    networks:
+      - odoo-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8069/web/database/selector')\" || exit 1"]
+      interval: 20s
+      timeout: 15s
+      retries: 5
+      start_period: 180s
+
+# ===========================================================================
+# Volumes
+# ===========================================================================
+volumes:
+  odoo-db-data:
+    name: odoo-db-data
+  odoo-data:
+    name: odoo-data
+  odoo-sessions:
+    name: odoo-sessions
+  traefik-ssl:
+    name: traefik-ssl
+
+# ===========================================================================
+# Network
+# ===========================================================================
+networks:
+  odoo-network:
+    name: odoo-network
+    driver: bridge
