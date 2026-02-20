@@ -161,7 +161,11 @@ export class ComboConfiguratorPopup extends Component {
             return "";
         }
         const priceSign = comboItem.extra_price > 0 ? "+" : "-";
-        return priceSign + " " + this.env.utils.formatCurrency(comboItem.extra_price);
+        return (
+            priceSign +
+            " " +
+            this.env.utils.formatCurrency(comboItem.extra_price).replace(/\.?0+$/, "")
+        );
     }
 
     getSelectedComboItems() {

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ComboConfiguratorPopup">
         <Dialog t-if="this.hasMultipleChoices()" title="this.title" contentClass="'combo-configurator-popup'">
-            <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
+            <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column my-3 mb-4">
                 <div class="d-flex align-items-center mb-3">
                     <h3 class="mb-0" t-esc="combo.name"></h3>
                     <t t-if="combo.qty_free > 0">
