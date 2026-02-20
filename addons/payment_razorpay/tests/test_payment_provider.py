@@ -29,3 +29,14 @@ class TestPaymentProvider(RazorpayCommon):
             self.company_id, self.partner.id, self.amount, currency_id=self.env.ref('base.AFN').id
         )
         self.assertNotIn(self.provider, compatible_providers)
+
+    def test_razorpay_proxy_version_for_access_token(self):
+        """Ensure that RazorPay access-token related endpoints are routed
+        through proxy v2."""
+        url = self.provider._build_request_url('/get_access_token', is_proxy_request=True)
+        self.assertIn('/2/get_access_token', url)
+
+    def test_razorpay_proxy_version_for_other_endpoints(self):
+        """Ensure that non-token related RazorPay endpoints still use proxy v1."""
+        url = self.provider._build_request_url('/payments', is_proxy_request=True)
+        self.assertIn('/1/payments', url)
