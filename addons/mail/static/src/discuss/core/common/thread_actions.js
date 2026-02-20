@@ -94,21 +94,11 @@ registerThreadAction("notification-settings", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ channel, owner, store }) {
-        if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
-            store.env.services.dialog?.add(ChannelActionDialog, {
-                title: channel.displayName,
-                contentComponent: NotificationSettings,
-                contentProps: { channel },
-            });
-        } else {
-            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-                hasSizeConstraints: true,
-                channel,
-            });
-        }
-    },
-    actionPanelOuterClass: "bg-100 border border-secondary",
+    dropdown: true,
+    dropdownTemplate: "discuss.NotificationSettings",
+    dropdownComponent: NotificationSettings,
+    dropdownComponentProps: ({ channel }) => ({ channel }),
+    dropdownPosition: ({ owner }) => owner.isDiscussContent ? "bottom-end" : undefined,
     condition: ({ channel, owner, store }) =>
         channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     setup({ owner }) {
@@ -122,7 +112,7 @@ registerThreadAction("notification-settings", {
         }
     },
     icon: ({ channel }) =>
-        channel.self_member_id?.mute_until_dt
+        channel?.self_member_id?.mute_until_dt
             ? "fa fa-fw text-danger fa-bell-slash"
             : "fa fa-fw fa-bell",
     name: _t("Notification Settings"),
