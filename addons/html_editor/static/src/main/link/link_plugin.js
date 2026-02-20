@@ -1388,11 +1388,15 @@ export class LinkPlugin extends Plugin {
             ? findInSelection(selection, "a.btn")
             : closestElement(selection.anchorNode, "a.btn");
         if (buttonElement) {
+            // We need to ignore the feffs the boundaries otherwise the browser will
+            // add the character outside of the button in case we triple click and
+            // we type something.
+            const buttonDescendants = descendants(buttonElement).filter((node) => !isZwnbsp(node));
             this.dependencies.selection.setSelection({
-                anchorNode: buttonElement,
+                anchorNode: buttonDescendants[0],
                 anchorOffset: 0,
-                focusNode: buttonElement,
-                focusOffset: nodeSize(buttonElement),
+                focusNode: buttonDescendants.at(-1),
+                focusOffset: nodeSize(buttonDescendants.at(-1)),
             });
             ev.preventDefault();
             return true;
