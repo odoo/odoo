@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-10-24 10:59+0000\n"
 "Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/"
@@ -108,11 +108,6 @@ msgid "Barcode"
 msgstr "Triipkood"
 
 #. module: barcodes
-#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
-msgid "Barcode Event Mixin"
-msgstr "Triipkoodi sündmus Mixin"
-
-#. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
@@ -136,11 +131,6 @@ msgstr "Triipkoodi muster"
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
 msgstr "Triipkoodi reegel"
-
-#. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
-msgid "Barcode Scanned"
-msgstr "Triipkood loetud"
 
 #. module: barcodes
 #. odoo-javascript
@@ -168,7 +158,6 @@ msgstr "Loomise kuupäev"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 #: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
 #: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
@@ -208,21 +197,10 @@ msgstr "HTTP Routing"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 #: model:ir.model.fields,field_description:barcodes.field_ir_http__id
 #: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
 msgstr "ID"
-
-#. module: barcodes
-#. odoo-python
-#: code:addons/barcodes/models/barcode_events_mixin.py:0
-msgid ""
-"In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
-"must be implemented"
-msgstr ""
-"Selleks, et kasutada barcodes.barcode_events_mixin, method "
-"on_barcode_scanned peab olema rakendatud"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -412,11 +390,6 @@ msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 "Kasutatakse reeglite järjestamiseks, nii et väikse järjestusega reeglid "
 "vastavad kõigepealt"
-
-#. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
-msgid "Value of the last barcode scanned."
-msgstr "Viimase skaneeritud triipkoodi väärtus."
 
 #. module: barcodes
 #. odoo-python

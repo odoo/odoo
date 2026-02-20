@@ -27,20 +27,34 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 12:48+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/hr/tr/>\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"PO-Revision-Date: 2026-01-15 20:32+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/hr/tr/"
+">\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Weblate 5.14.3\n"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_do_archive_user
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__do_archive_user
+#: model:ir.model.fields,help:hr.field_hr_version__departure_do_archive_user
+msgid ""
+"\n"
+"            If checked, the related user will be removed from the system.\n"
+"            The user will however not be removed if they still have an "
+"employee in any other company after this departure.\n"
+"        "
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -93,9 +107,19 @@ msgid "'Badge - %s' % (object.name).replace('/', '')"
 msgstr "'Rozet - %s' % (object.name).replace('/', '')"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "/ day"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "/ month"
 msgstr "ayda"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "/ week"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -264,6 +288,13 @@ msgid "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Tags\"/>"
 msgstr "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Tags\"/>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<i class=\"oi oi-arrow-right ms-1\"/>\n"
+"                                                        Cancel Departure"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>AI</small>"
@@ -382,24 +413,6 @@ msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
 msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Gönderilen E-Postalar</span>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
-"Activities</span>"
-msgstr ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Kapanış "
-"Etkinlikleri</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</"
-"span>"
-msgstr ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Detaylı Sebep</"
-"span>"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "<span class=\"o_stat_text\">Contact</span>"
 msgstr "<span class=\"o_stat_text\">İletişim</span>"
@@ -473,6 +486,12 @@ msgstr ""
 "                                           </span>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Archive</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Contract Overview</span>"
 msgstr "<span>Sözleşmeye Genel Bakış</span>"
@@ -488,6 +507,16 @@ msgid "<span>Reporting</span>"
 msgstr "<span>Raporlama</span>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Set Contract End Date</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+msgid "<span>Set Contracts End Date</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>View</span>"
 msgstr "<span>Görünüm</span>"
@@ -498,120 +527,120 @@ msgid "<span>employees</span>"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
 msgstr "<strong class=\"s_rating_title\">Uyarlanabilirlik</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_rating:hr.job_consultant
+#: model_terms:hr.job,website_rating:hr.job_cto
+#: model_terms:hr.job,website_rating:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
 msgstr "<strong class=\"s_rating_title\">İdari İşler</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:hr.job,website_rating:hr.job_developer
+#: model_terms:hr.job,website_rating:hr.job_marketing
+#: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
 msgstr "<strong class=\"s_rating_title\">Özerklik</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
 msgstr "<strong class=\"s_rating_title\">Hevesli olun</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_rating:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
 msgstr "<strong class=\"s_rating_title\">Müşteri Etkileşimi</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_rating:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Collaboration</strong>"
 msgstr "<strong class=\"s_rating_title\">İşbirliği</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_rating:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
 msgstr "<strong class=\"s_rating_title\">Uyum ve Yönetmelikler</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_rating:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
 msgstr "<strong class=\"s_rating_title\">Çatışma Çözümü</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_rating:hr.job_consultant
+#: model_terms:hr.job,website_rating:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
 msgstr "<strong class=\"s_rating_title\">Müşteri İlişkileri</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_rating:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Cybersecurity</strong>"
 msgstr "<strong class=\"s_rating_title\">Siber Güvenlik</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_rating:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Diversity and Inclusion</strong>"
 msgstr "<strong class=\"s_rating_title\">Çeşitlilik ve Kapsayıcılık</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_rating:hr.job_consultant
 msgid "<strong class=\"s_rating_title\">Innovation</strong>"
 msgstr "<strong class=\"s_rating_title\">İnovasyon</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_rating:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Leadership</strong>"
 msgstr "<strong class=\"s_rating_title\">Liderlik</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Learning</strong>"
 msgstr "<strong class=\"s_rating_title\">Öğrenme</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_rating:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Management</strong>"
 msgstr "<strong class=\"s_rating_title\">Yönetim</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_rating:hr.job_consultant
+#: model_terms:hr.job,website_rating:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
 msgstr "<strong class=\"s_rating_title\">Kişisel Evrim</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
 msgstr "<strong class=\"s_rating_title\">Problem Çözme</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_rating:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
 msgstr "<strong class=\"s_rating_title\">Problem çözme</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_rating:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
 msgstr "<strong class=\"s_rating_title\">Beceri Geliştirme</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_rating:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Talent Acquisition</strong>"
 msgstr "<strong class=\"s_rating_title\">Yetenek Kazanımı</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_rating:hr.job_consultant
+#: model_terms:hr.job,website_rating:hr.job_hrm
+#: model_terms:hr.job,website_rating:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
 msgstr "<strong class=\"s_rating_title\">Teknik Uzmanlık</strong>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_rating:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
 msgstr "<strong class=\"s_rating_title\">Teknoloji Stratejisi</strong>"
 
@@ -693,7 +722,7 @@ msgid "Absent"
 msgstr "Mevcut Değil"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__acc_number
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__account_number
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Account Number"
 msgstr "Hesap Numarası"
@@ -712,6 +741,14 @@ msgid "Action Needed"
 msgstr "Aksiyon Gerekiyor"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_at_departure
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__action_at_departure
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_action_at_departure
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Action at"
+msgstr ""
+
+#. module: hr
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
@@ -721,6 +758,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
 #: model:ir.model.fields,field_description:hr.field_hr_job__active
@@ -787,7 +825,6 @@ msgstr "Aktivite Türü İmgesi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
 msgstr "Aktivite tarafından"
 
@@ -812,8 +849,16 @@ msgid "Activity schedule plan Wizard"
 msgstr "Aktivite zamanlama planı Sihirbazı"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"Add more details about the reason to end the collaboration with this "
+"employee."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_description
 msgid "Additional Information"
 msgstr "Ek Bilgi"
@@ -882,6 +927,12 @@ msgid "All activities"
 msgstr "Tüm faaliyetler"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "All selected actions have been executed on"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__allocation_ids
 msgid "Allocations"
 msgstr "Tahsisler"
@@ -891,11 +942,6 @@ msgstr "Tahsisler"
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
 msgstr "İzin Verilen Ülke Eyalet"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
-msgid "Allowed User"
-msgstr "İzin Verilen Kullanıcı"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
@@ -935,9 +981,30 @@ msgid "Application Settings"
 msgstr "Uygulama Ayarları"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 msgid "Apply"
 msgstr "Uygula"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_apply_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__apply_date
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_apply_date
+msgid "Apply Date"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_apply_immediately
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__apply_immediately
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_apply_immediately
+msgid "Apply Immediately"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_other_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__action_other_date
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_action_other_date
+msgid "Apply date"
+msgstr ""
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
@@ -961,12 +1028,27 @@ msgid "Archive"
 msgstr "Arşivle"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_archive_employee
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_archive_employee
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_archive_employee
+msgid "Archive Employee"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_archive_user
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_archive_user
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_archive_user
+msgid "Archive Related User"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__archive
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -975,290 +1057,6 @@ msgstr "Arşivle"
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
 msgstr "Arşivlendi"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid ""
-"As a Human Resources Manager at our company, you will<b>work closely with "
-"all\n"
-"                                departments to design and implement HR "
-"initiatives that align with our business\n"
-"                                objectives</b>. Join our expanding "
-"organization, which offers competitive benefits and\n"
-"                                ample opportunities for growth while "
-"collaborating with seasoned professionals.\n"
-"                                <br>\n"
-"                                This role is both <b>strategic and "
-"operational</b>, focusing on recruitment, employee\n"
-"                                engagement, and performance management. We "
-"seek a proactive leader who can effectively\n"
-"                                manage talent acquisition, develop training "
-"programs, and implement retention\n"
-"                                strategies. Success in this position "
-"requires strong analytical skills, in-depth\n"
-"                                knowledge of labor laws, and the ability to "
-"foster a diverse and inclusive workplace\n"
-"                                culture while enhancing employee "
-"satisfaction and productivity."
-msgstr ""
-"Şirketimizde İnsan Kaynakları Müdürü olarak, <b>tüm çalışanlarla yakın bir "
-"şekilde çalışacaksınız.\n"
-"                                İşimizle uyumlu İK girişimlerini tasarlamak "
-"ve uygulamak için departmanlar\n"
-"                                hedefler</b>. Rekabetçi avantajlar sunan ve "
-"genişleyen organizasyonumuza katılın\n"
-"                                deneyimli profesyonellerle işbirliği "
-"yaparken büyüme için geniş fırsatlar.\n"
-"                                <br>\n"
-"                                Bu rol hem <B>stratejik hem de operasyonel</"
-"B> bir rol olup işe alım, çalışan\n"
-"                                bağlılık ve performans yönetimi. Etkin bir "
-"şekilde çalışabilecek proaktif bir lider arıyoruz\n"
-"                                Yetenek kazanımını yönetmek, eğitim "
-"programları geliştirmek ve elde tutmayı sağlamak\n"
-"                                Stratejiler. Bu pozisyonda başarılı olmak "
-"için güçlü analitik beceriler, derinlemesine\n"
-"                                İş kanunları hakkında bilgi ve çeşitlilik "
-"içeren ve kapsayıcı bir işyerini teşvik etme becerisi\n"
-"                                kültürünü geliştirirken çalışan "
-"memnuniyetini ve üretkenliğini artırır."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid ""
-"As a consultant at our company, you will <b>collaborate with diverse "
-"departments to\n"
-"                                assess business needs, design tailored "
-"strategies, and drive successful implementation\n"
-"                                of solutions</b>. Join a forward-thinking "
-"organization that offers competitive benefits\n"
-"                                and opportunities for advancement, working "
-"alongside industry experts. We are looking\n"
-"                                for an accomplished consultant with a strong "
-"background in delivering measurable\n"
-"                                outcomes.\n"
-"                                <br>\n"
-"                                This role demands both <b>creative problem-"
-"solving and strategic analysis</b>,\n"
-"                                requiring you to think critically about "
-"client challenges. We expect candidates to be\n"
-"                                self-motivated, with a strong \"get it "
-"done\" mentality. To thrive in this position, you\n"
-"                                should possess excellent analytical skills, "
-"the ability to translate insights into\n"
-"                                actionable recommendations, and the talent "
-"for building rapport with stakeholders across\n"
-"                                all levels of the organization."
-msgstr ""
-"Şirketimizde bir danışman olarak, <B>çeşitli departmanlarla işbirliği "
-"yaparak\n"
-"                                İş ihtiyaçlarını değerlendirmek, özel "
-"stratejiler tasarlamak ve başarılı bir uygulama yürütmek\n"
-"                                çözümler</b>. Rekabetçi avantajlar sunan "
-"ileri görüşlü bir organizasyona katılın\n"
-"                                ve sektör uzmanlarıyla birlikte çalışarak "
-"ilerleme fırsatları. Biz arıyoruz\n"
-"                                ölçülebilir hizmetler sunma konusunda güçlü "
-"bir geçmişe sahip başarılı bir danışman için\n"
-"                                sonuçlar.\n"
-"                                <br>\n"
-"                                Bu rol hem <b>yaratıcı problem çözme hem de "
-"stratejik analiz</b> gerektirir,\n"
-"                                Müşteri zorlukları hakkında eleştirel "
-"düşünmenizi gerektirir. Adayların şu özelliklere sahip olmasını bekliyoruz\n"
-"                                Kendi kendini motive eden, güçlü bir "
-"\"hallet\" zihniyetine sahip. Bu pozisyonda başarılı olmak için\n"
-"                                Mükemmel analitik becerilere sahip olmalı, "
-"içgörüleri\n"
-"                                eyleme geçirilebilir öneriler ve farklı "
-"paydaşlarla yakınlık kurma yeteneği\n"
-"                                organizasyonun tüm seviyeleri."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid ""
-"As a developer at our company, you will <b>collaborate with product "
-"managers, designers,\n"
-"                                and other engineers to design, develop, and "
-"deploy innovative software solutions</b>.\n"
-"                                Join us at a rapidly growing organization "
-"that offers competitive benefits and\n"
-"                                opportunities for career advancement while "
-"working alongside industry leaders.\n"
-"                                We’re looking for a skilled developer with a "
-"passion for technology and innovation.\n"
-"                                <br>\n"
-"                                In this role, you will be responsible for "
-"<b>writing clean, maintainable code,\n"
-"                                participating in code reviews, and "
-"troubleshooting issues</b>. Your work will involve\n"
-"                                both creative <b>problem-solving and "
-"rigorous analysis</b>, requiring you to think\n"
-"                                outside the box to deliver effective "
-"solutions. We seek a proactive candidate with a\n"
-"                                strong \"get it done\" mentality. Success in "
-"this position hinges on your ability to\n"
-"                                tackle complex challenges and deliver high-"
-"quality results in a fast-paced environment."
-msgstr ""
-"Şirketimizde bir geliştirici olarak, <b>ürün yöneticileri, tasarımcılar ile "
-"işbirliği yapacaksınız,\n"
-"                                ve diğer mühendislerle birlikte yenilikçi "
-"yazılım çözümleri tasarlamak, geliştirmek ve dağıtmak</b>.\n"
-"                                Rekabetçi avantajlar sunan ve hızla büyüyen "
-"bir organizasyonda bize katılın\n"
-"                                Sektör liderleriyle birlikte çalışırken "
-"kariyer gelişimi için fırsatlar.\n"
-"                                Teknoloji ve yenilik tutkusu olan yetenekli "
-"bir geliştirici arıyoruz.\n"
-"                                <br>\n"
-"                                Bu rolde, <b>temiz, bakımı yapılabilir kod "
-"yazmaktan sorumlu olacaksınız,\n"
-"                                kod incelemelerine katılma ve sorunları "
-"giderme</b>. Çalışmalarınız şunları içerecektir\n"
-"                                Hem yaratıcı <b>problem çözme hem de titiz "
-"analiz</b>, düşünmenizi gerektirir\n"
-"                                etkili çözümler sunmak için kutunun dışında. "
-"Proaktif bir aday arıyoruz\n"
-"                                Güçlü bir \"hallet\" zihniyeti. Bu "
-"pozisyondaki başarı, aşağıdakileri yapabilme yeteneğinize bağlıdır\n"
-"                                Karmaşık zorlukların üstesinden gelebilir ve "
-"hızlı tempolu bir ortamda yüksek kaliteli sonuçlar sunabilirsiniz."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid ""
-"As a trainee at our company, you will <b>work with various departments to "
-"assist in\n"
-"                                creating and launching innovative products</"
-"b>. Join our growing team, offering\n"
-"                                excellent benefits and valuable learning "
-"opportunities alongside experienced\n"
-"                                professionals.\n"
-"                                <br>\n"
-"                                This role is both <b>creative and "
-"structured</b>, encouraging out-of-the-box thinking.\n"
-"                                We are looking for a proactive individual "
-"with a strong get it done mindset. Successful\n"
-"                                candidates will have the chance to grow "
-"within the company based on their fit and\n"
-"                                performance."
-msgstr ""
-"Şirketimizde bir stajyer olarak, aşağıdaki konularda yardımcı olmak için "
-"çeşitli departmanlarla birlikte çalışacaksınız\n"
-"                                yenilikçi ürünler yaratmak ve piyasaya "
-"sürmek</b>. Büyüyen ekibimize katılarak\n"
-"                                mükemmel yan haklar ve deneyimli "
-"çalışanlarla birlikte değerli öğrenme fırsatları\n"
-"                                profesyoneller.\n"
-"                                <br>\n"
-"                                Bu rol hem <b>yaratıcı hem de "
-"yapılandırılmış</b>, ezber bozan düşünmeyi teşvik ediyor.\n"
-"                                Güçlü bir iş bitirici zihniyete sahip "
-"proaktif bir birey arıyoruz. Başarılı\n"
-"                                adaylar, uyumlarına göre şirket içinde "
-"büyüme şansına sahip olacak ve\n"
-"                                performans."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"As an employee of our company, you will <b>collaborate with each department "
-"to create and deploy\n"
-"                                disruptive products.</b> Come work at a "
-"growing company that offers great benefits with opportunities to\n"
-"                                moving forward and learn alongside "
-"accomplished leaders. We're seeking an experienced and outstanding member of "
-"staff.\n"
-"                                <br><br>\n"
-"                                This position is both <b>creative and "
-"rigorous</b> by nature you need to think outside the box.\n"
-"                                We expect the candidate to be proactive and "
-"have a \"get it done\" spirit. To be successful,\n"
-"                                you will have solid solving problem skills."
-msgstr ""
-"Şirketimizin bir çalışanı olarak <b>ezber bozan ürünler yaratmak ve dağıtmak "
-"için\n"
-"                        her departmanla işbirliği yapacaksınız.</b> Gelin, "
-"size ilerleme ve başarılı \n"
-"                        liderlerden öğrenme fırsatı ile harika yan faydalar "
-"sağlayan, büyümekte olan  \n"
-"                        bir şirketin çalışanı olun. Deneyimli ve seçkin bir "
-"çalışan arıyoruz.\n"
-"                       <br><br> \n"
-"                        Bu pozisyon doğası gereği <b>hem yaratıcılık hem de "
-"titizlik ister</b>,  kalıpların dışında \n"
-"                        düşünmeniz gerekir. Adayın proaktif olmasını ve “bir "
-"yolunu bulurum” ruhuna sahip \n"
-"                        olmasını bekliyoruz. Başarılı olmak için sağlam "
-"problem çözme becerilerine sahip olmalısınız."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid ""
-"As our Chief Technology Officer, you will <b>work closely with product, "
-"marketing, and\n"
-"                                operations teams to create and launch "
-"innovative technology solutions that set us apart\n"
-"                                in the industry</b>. Join our fast-growing "
-"company, where you’ll enjoy competitive\n"
-"                                benefits and opportunities for professional "
-"growth while collaborating with top experts\n"
-"                                in the field.\n"
-"                                <br>\n"
-"                                In this role, you will <b>define and execute "
-"our technology strategy and roadmap</b>,\n"
-"                                ensuring it aligns with our business goals. "
-"This position is both <b>creative and\n"
-"                                analytical</b>, requiring you to think "
-"outside the box while implementing effective\n"
-"                                solutions. We are looking for a proactive "
-"leader with a strong \"get it done\" mentality\n"
-"                                who can tackle challenges head-on and drive "
-"projects to successful completion.\n"
-"                                <br>\n"
-"                                To excel in this position, you will need "
-"<b>extensive experience in software\n"
-"                                architecture, cloud computing, and data "
-"security</b>, along with a strong background in\n"
-"                                team leadership and agile project "
-"management. Your excellent communication skills will\n"
-"                                be vital for conveying complex technical "
-"ideas to non-technical stakeholders and\n"
-"                                fostering collaboration across all "
-"departments."
-msgstr ""
-"Baş Teknoloji Sorumlumuz olarak, <b>ürün, pazarlama ve müşteri hizmetleri "
-"ile yakın bir şekilde çalışacaksınız.\n"
-"                                operasyon ekipleri, bizi diğerlerinden "
-"ayıran yenilikçi teknoloji çözümleri oluşturmak ve piyasaya sürmek için\n"
-"                                sektörde</b>. Hızla büyüyen şirketimize "
-"katılın, burada rekabetçi\n"
-"                                En iyi uzmanlarla işbirliği yaparken "
-"profesyonel gelişim için avantajlar ve fırsatlar\n"
-"                                sahada.\n"
-"                                <br>\n"
-"                                Bu rolde, <b>teknoloji stratejimizi ve yol "
-"haritamızı tanımlayacak ve uygulayacaksınız</b>,\n"
-"                                iş hedeflerimizle uyumlu olmasını sağlamak. "
-"Bu pozisyon hem <b>yaratıcı hem de\n"
-"                                analitik</b>, etkili bir şekilde uygularken "
-"kalıpların dışında düşünmenizi gerektiren\n"
-"                                çözümler. Güçlü bir \"hallet\" zihniyetine "
-"sahip proaktif bir lider arıyoruz\n"
-"                                Zorlukların üstesinden gelebilen ve Proje "
-"Yönetimi becerileriyle projeleri başarıyla tamamlayabilen.\n"
-"                                <br>\n"
-"                                Bu pozisyonda başarılı olmak için <b>yazılım "
-"alanında kapsamlı deneyime ihtiyacınız olacak\n"
-"                                mimarisi, bulut bilişim ve veri güvenliği</"
-"b> konularında güçlü bir geçmişe sahip olmanın yanı sıra\n"
-"                                ekip liderliği ve çevik proje yönetimi. "
-"Mükemmel iletişim becerileriniz\n"
-"                                Karmaşık teknik fikirleri teknik olmayan "
-"paydaşlara aktarmak için hayati öneme sahip olmak ve\n"
-"                                Tüm departmanlar arasında işbirliğini teşvik "
-"etmek."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
@@ -1274,6 +1072,39 @@ msgstr "Şirket etkinliklerinin düzenlenmesine yardımcı olmak"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Assist with daily project tasks"
 msgstr "Günlük proje görevlerine yardımcı olmak"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_home
+msgid "At Home"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+msgid "At Home - Present"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_office
+msgid "At Office"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+msgid "At Office - Present"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_other
+msgid "At Other"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -1350,6 +1181,11 @@ msgid "Avatar 512"
 msgstr "Avatar 512"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Average Hours"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Bachelor"
@@ -1405,21 +1241,6 @@ msgstr "Banka Hesap Tahsisleri"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
 msgid "Bank Accounts"
 msgstr "Banka Hesapları"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
-msgid "Bank Address"
-msgstr "Banka Adresi"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
-msgid "Bank Information"
-msgstr "Banka Bilgileri"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
-msgid "Bank Name"
-msgstr "Banka Adı"
 
 #. module: hr
 #. odoo-python
@@ -1494,18 +1315,15 @@ msgid "Boolean display as radio field with translatable labels"
 msgstr "Çevrilebilir etiketlerle radyo alanı olarak Boolean gösterimi"
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/xml/contract_template_button.xml:0
-#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
-#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
-msgid "Cancel"
-msgstr "İptal"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Cancel Departure"
+msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
-msgstr "Bir çalışanın tek aktif kaydı arşivlenemiyor."
+msgid "Cannot archive all the active versions of an employee."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1519,9 +1337,15 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Cannot search or group by hr_presence state: too many employees (%s)"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
-msgstr "Bir çalışanın tek aktif kaydının ataması kaldırılamıyor."
+msgid "Cannot unassign all the active versions of an employee."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1575,11 +1399,8 @@ msgid "Citizenship"
 msgstr "Vatandaşlık"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_city
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_city
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "City"
 msgstr "Semt/İlçe"
 
@@ -1661,6 +1482,11 @@ msgid "Company Logo"
 msgstr "Şirket Logosu"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__company_tz
+msgid "Company Timezone"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
 msgstr "Şirket Çalışma Saatleri"
@@ -1732,7 +1558,6 @@ msgstr "Kontaklar"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1740,11 +1565,14 @@ msgid "Contract"
 msgstr "Sözleşme"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Contract End"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_date_end
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract End Date"
 msgstr "Sözleşme Bitiş Tarihi"
 
@@ -1765,10 +1593,19 @@ msgid "Contract Overview"
 msgstr "Sözleşmeye Genel Bakış"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
+msgid "Contract Period"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Contract Start"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_start
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_date_start
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract Start Date"
 msgstr "Sözleşme Başlama Tarihi"
 
@@ -1826,20 +1663,23 @@ msgid "Contractor"
 msgstr "Sözleşmeli"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_country
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+msgid "Contracts"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_id
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_country
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Country"
 msgstr "Ülke"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_code
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_version__country_code
@@ -1850,11 +1690,6 @@ msgstr "Ülke Kodu"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
 msgstr "Doğduğu Ülke"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
-msgid "Cover Image"
-msgstr "Kapak Resmi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
@@ -1937,9 +1772,10 @@ msgstr "Personel Oluştur"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__create_uid
@@ -1954,9 +1790,10 @@ msgstr "Tarafından oluşturuldu"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_date
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__create_date
@@ -1982,6 +1819,11 @@ msgid "Currency sign, to be used when printing amounts."
 msgstr "Para Birimi işareti, tutarları yazarken kullanılan."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__exceptional_location_id
+msgid "Current"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
 msgid "Current Date Employee Record"
 msgstr ""
@@ -2002,6 +1844,11 @@ msgid "Currently enrolled in final study years"
 msgstr "Şu anda son çalışma yıllarına kayıtlı"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__date
+msgid "Date"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_end
 msgid "Date End"
@@ -2012,6 +1859,33 @@ msgstr "Bitiş Tarihi"
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_start
 msgid "Date Start"
 msgstr "Başlangıç Tarihi"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
+#: model:ir.model.fields,help:hr.field_hr_version__departure_date
+msgid "Date at which the departure actually takes place."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__dismissal_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__dismissal_date
+#: model:ir.model.fields,help:hr.field_hr_version__dismissal_date
+msgid ""
+"Date at which the departure process starts. Differs from the actual "
+"departure date in case of a notice period."
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
+msgid "Date with Dynamic Minimum Value"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__day_week_string
+msgid "Day Week String"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2072,6 +1946,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_resource_resource__department_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -2109,21 +1984,22 @@ msgid "Departments"
 msgstr "Departmanlar"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_id
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Departure"
 msgstr "Ayrılış"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_date
 msgid "Departure Date"
 msgstr "Ayrılma Tarihi"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_reason
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_reason_id
 msgid "Departure Reason"
 msgstr "Ayrılma Nedeni"
 
@@ -2134,22 +2010,30 @@ msgid "Departure Reasons"
 msgstr "Ayrılma Nedenleri"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_departure_wizard
-msgid "Departure Wizard"
-msgstr "Ayrılma Sihirbazı"
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Departure date"
+msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/wizard/hr_departure_wizard.py:0
+#: code:addons/hr/models/hr_employee_departure.py:0
 msgid ""
-"Departure date can't be earlier than the start date of current contract."
-msgstr "Ayrılma tarihi, mevcut sözleşmenin başlangıç tarihinden önce olamaz."
+"Departure date is earlier than the start date of the current contract(s) of "
+"%s."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
 #: model:ir.model.fields,field_description:hr.field_hr_version__children
 msgid "Dependent Children"
 msgstr "Bağımlı Çocuklar"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Detailed Reason"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2202,7 +2086,9 @@ msgid "Directory"
 msgstr "Dizin"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+#. odoo-javascript
+#: code:addons/hr/static/src/xml/contract_template_button.xml:0
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 msgid "Discard"
 msgstr "Sil"
 
@@ -2222,15 +2108,23 @@ msgid "Discussion Channel"
 msgstr "Mesajlaşma Kanalı"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__dismissal_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__dismissal_date
+#: model:ir.model.fields,field_description:hr.field_hr_version__dismissal_date
+msgid "Dismissal Date"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__display_name
@@ -2344,6 +2238,7 @@ msgstr "Eğitim"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_version
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_version
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Effective Date"
 msgstr "Geçerlilik Tarihi"
 
@@ -2368,10 +2263,8 @@ msgid "Eligible Employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
 #: model:ir.model.fields,field_description:hr.field_hr_employee__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_email
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
 msgstr "E-Posta"
@@ -2403,6 +2296,8 @@ msgstr "Acil Durum Telefonu"
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
@@ -2414,8 +2309,10 @@ msgstr "Acil Durum Telefonu"
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__employee
 #: model:ir.ui.menu,name:hr.menu_config_employee
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2445,12 +2342,23 @@ msgid "Employee Count"
 msgstr "Personel Adedi"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_employee_departure
+msgid "Employee Departure"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Employee Image"
 msgstr "Personel Fotoğrafı"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_employee_location
+msgid "Employee Location"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__employee_name
 msgid "Employee Name"
 msgstr "Çalışan Adı"
 
@@ -2496,12 +2404,6 @@ msgid "Employee Tags"
 msgstr "Personel Etiketleri"
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/views/archive_employee_hook.js:0
-msgid "Employee Termination"
-msgstr "Çalışan Fesihi"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
 #: model:ir.model.fields,field_description:hr.field_hr_version__employee_type
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2534,9 +2436,13 @@ msgstr "Çalışanların Banka Hesapları"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr "Personel Adı"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee's Name (e.g. John Doe, ...)"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
@@ -2555,7 +2461,6 @@ msgstr "Personelin aylık brüt ücreti."
 #: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
@@ -2569,6 +2474,7 @@ msgstr "Personelin aylık brüt ücreti."
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2606,6 +2512,13 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_reason_id
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_reason_id
+msgid "End Reason"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_date_end
 #: model:ir.model.fields,help:hr.field_hr_version__contract_date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
@@ -2618,10 +2531,21 @@ msgid "End date of the trial period (if there is one)."
 msgstr "Deneme süresi bitiş tarihi (varsa)."
 
 #. module: hr
+#: model:ir.actions.server,name:hr.action_hr_employee_departure
+msgid "End of Collaboration"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__trial_date_end
 msgid "End of Trial Period"
 msgstr "Deneme Süresi Bitiş Tarihi"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "End of collaboration"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2813,12 +2737,6 @@ msgid "February"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_state
-msgid "Fed. State"
-msgstr "İl/Eyalet"
-
-#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__female
 msgid "Female"
 msgstr "Bayan"
@@ -2893,6 +2811,17 @@ msgid "Freelancer"
 msgstr "Serbest Çalışan"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__friday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__friday_location_id
+msgid "Friday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__friday_location_id
+msgid "Fridays"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -2933,11 +2862,6 @@ msgstr "Oluştur"
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
 msgid "Generate Export File"
 msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "Give more details about the reason of archiving the employee."
-msgstr "Çalışanın arşivlenme nedeni hakkında daha fazla ayrıntı verin."
 
 #. module: hr
 #. odoo-python
@@ -3010,6 +2934,11 @@ msgid "HR Responsible"
 msgstr "İK Sorumlusu"
 
 #. module: hr
+#: model:ir.actions.server,name:hr.ir_cron_apply_departure_ir_actions_server
+msgid "HR: Apply employee departures"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_country_contract_type
 msgid "Has Country Contract Type"
 msgstr ""
@@ -3033,6 +2962,13 @@ msgstr "Mesaj Var"
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
 msgstr "Birden Fazla Banka Hesabı Var"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_has_selected_actions
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__has_selected_actions
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_has_selected_actions
+msgid "Has Selected Actions"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3086,6 +3022,31 @@ msgid "Hourly Cost"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_day
+msgid "Hours Per Day"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_week
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Hours Per Week"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_day
+#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_day
+#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_day
+msgid "Hours per Day"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_week
+#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_week
+#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_week
+msgid "Hours per Week"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_resource_resource__hr_icon_display
@@ -3120,9 +3081,10 @@ msgstr "İnsan Kaynakları Yöneticisi"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__id
@@ -3168,7 +3130,9 @@ msgstr "Anlık İleti Durumu"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_exception_icon
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Icon"
 msgstr "Simge"
 
@@ -3204,11 +3168,6 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #: model:ir.model.fields,help:hr.field_hr_version__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
-msgid "If checked, the related user will be removed from the system."
-msgstr "İşaretlenirse ilgili kullanıcı sistemden kaldırılır."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3255,6 +3214,12 @@ msgstr "Görsel 256"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
 msgstr "Görsel 512"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Immediately"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -3401,6 +3366,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Job"
@@ -3416,6 +3382,7 @@ msgstr "İş Açıklaması"
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -3499,9 +3466,10 @@ msgstr "Son Güncelleme"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__write_uid
@@ -3516,9 +3484,10 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_date
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__write_date
@@ -3618,6 +3587,7 @@ msgid "Load sample data."
 msgstr "Örnek verileri yükleyin."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Location"
@@ -3627,6 +3597,11 @@ msgstr "Konum"
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
 msgstr "Konum Numarası"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_name
+msgid "Location name"
+msgstr ""
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
@@ -3736,6 +3711,10 @@ msgstr "Departman Üyesi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
+msgid "Member of Department"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_version__member_of_department
 msgid "Member of department"
 msgstr "Bölüm üyesi"
@@ -3767,6 +3746,12 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
+msgid "Minimum Date Field"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Mobile Phone"
@@ -3776,6 +3761,17 @@ msgstr "Cep Telefonu"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Modified on the Employee Record '%s'"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__monday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__monday_location_id
+msgid "Monday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__monday_location_id
+msgid "Mondays"
 msgstr ""
 
 #. module: hr
@@ -3813,21 +3809,11 @@ msgid "My Activity Deadline"
 msgstr "Aktivite Son Tarihim"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-msgid "My Department"
-msgstr "Departmanım"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-msgid "My Team"
-msgstr "Takımım"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
 #: model:ir.model.fields,field_description:hr.field_hr_version__name
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Name"
 msgstr "Adı"
 
@@ -3868,8 +3854,7 @@ msgstr "Yeni Çalışanların Zaman İçindeki İlerleyişi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__newly_hired
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 msgid "Newly Hired"
 msgstr "Yeni İşe Alınmış"
 
@@ -3956,6 +3941,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
 msgstr "Çalışmıyor"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Not limited"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
@@ -4069,15 +4059,17 @@ msgid "Onboarding / Offboarding"
 msgstr "İşe Alım / İşten Çıkarma"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-msgid "Ongoing Activity Plan"
-msgstr ""
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Only HR users can access first version date on an employee."
 msgstr "Bir çalışanın ilk sürüm tarihine yalnızca İK kullanıcıları erişebilir."
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_location_uniq_exceptional_per_day
+msgid ""
+"Only one default work location and one exceptional work location per day per "
+"employee."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -4125,6 +4117,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "Diğer"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Other date"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4282,10 +4280,8 @@ msgid "Personal information update."
 msgstr "Kişisel bilgi güncelleme."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_phone
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "Telefon"
@@ -4329,6 +4325,12 @@ msgid ""
 msgstr ""
 "Planlanan faaliyetler %(template_names)s yalnızca çalışan planları için "
 "kullanıldığından sorumlu olan koç, yönetici veya çalışanlardan faydalanamaz."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Planned Actions"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -4376,11 +4378,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
 msgid "Preferences"
 msgstr "Tercihler"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
-msgid "Presence"
-msgstr "Hazır Bulunma"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4603,11 +4600,12 @@ msgstr "Sebep"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Records"
 msgstr "Kayıtlar"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__recruiter_id
 msgid "Recruiter"
 msgstr "İşe Alan"
 
@@ -4617,10 +4615,10 @@ msgid "Recruitment"
 msgstr "İşe Alım"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid "Register Departure"
-msgstr "Ayrılma Kaydı"
+#. odoo-javascript
+#: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
+msgid "Reference another date/datetime field to use as minimum date"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -4648,10 +4646,9 @@ msgid "Related Partners Count"
 msgstr "İlgili Partner Sayısı"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__remove_related_user
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
 msgstr "İlgili Kullanıcı"
 
@@ -4760,12 +4757,6 @@ msgid "SMS Delivery error"
 msgstr "SMS İleti hatası"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
-#: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
-msgid "SSN No"
-msgstr "SGK Sicil No"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -4798,6 +4789,17 @@ msgid "Sales"
 msgstr "Satış"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__saturday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__saturday_location_id
+msgid "Saturday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__saturday_location_id
+msgid "Saturdays"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Save"
@@ -4805,6 +4807,7 @@ msgstr "Kaydet"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
 msgstr "Planla"
@@ -4813,6 +4816,12 @@ msgstr "Planla"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
 msgstr "Okul"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/views/fields/many2many_avatar_employee_field/many2many_avatar_employee_field.js:0
+msgid "Search employee..."
+msgstr ""
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
@@ -4846,20 +4855,26 @@ msgstr ""
 "değildir."
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.action_partner_mass_mail
+msgid "Send Email"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__9
 msgid "September"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
 msgstr "Sıralama"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__set_date_end
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_set_date_end
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_set_date_end
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_set_date_end
 msgid "Set Contract End Date"
 msgstr "Sözleşme Bitiş Tarihini Belirle"
 
@@ -4877,9 +4892,13 @@ msgstr ""
 "saatlerini ayarlayın"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_departure_wizard__set_date_end
-msgid "Set the end date on the current contract."
-msgstr "Geçerli sözleşmenin bitiş tarihini ayarlayın."
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_do_set_date_end
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__do_set_date_end
+#: model:ir.model.fields,help:hr.field_hr_version__departure_do_set_date_end
+msgid ""
+"Set the departure date as the contract end date and delete all future "
+"versions."
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -4923,12 +4942,6 @@ msgid "Skills Management"
 msgstr "Yetenek Yönetimi"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__ssnid
-#: model:ir.model.fields,help:hr.field_hr_version__ssnid
-msgid "Social Security Number"
-msgstr "Sosyal Güvenlik Numarası"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Some employee already have a work contact"
@@ -4969,7 +4982,6 @@ msgid "Start"
 msgstr "Başla"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Start Date"
 msgstr "Başlama Tarihi"
@@ -4986,7 +4998,6 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "State"
 msgstr "İl/Eyalet"
 
@@ -5012,30 +5023,16 @@ msgid "Statutory"
 msgstr "Yasal"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street
-msgid "Street"
-msgstr "Sokak/Cadde"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street 2..."
 msgstr "Adres 2..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street..."
 msgstr "Adres..."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street2
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street2
-msgid "Street2"
-msgstr "Adres2"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -5074,6 +5071,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Summary"
 msgstr "Özet"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__sunday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__sunday_location_id
+msgid "Sunday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__sunday_location_id
+msgid "Sundays"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__currency_symbol
@@ -5169,6 +5177,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__nationality_country_code
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__country_code
 #: model:ir.model.fields,help:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,help:hr.field_hr_version__country_code
 msgid ""
@@ -5204,7 +5213,7 @@ msgid "The PIN must be a sequence of digits."
 msgstr "PIN rakamlardan oluşmalıdır."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job__user_id
+#: model:ir.model.fields,help:hr.field_hr_job__recruiter_id
 msgid ""
 "The Recruiter will be the default value for all Applicants in this "
 "job             position. The Recruiter is automatically added to all "
@@ -5213,6 +5222,12 @@ msgstr ""
 "İşveren, bu iş pozisyonundaki tüm Başvuru Sahipleri için varsayılan "
 "değer              olacaktır. İşe Alım Görevlisi, Başvuru Sahibiyle yapılan "
 "tüm toplantılara otomatik olarak eklenir."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "The apply date isn't reached yet for the departure of %(emp)s."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
@@ -5248,6 +5263,12 @@ msgstr ""
 "sözleşmelerin dışında bir tarih seçin"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__legal_name
+msgid ""
+"The employee's official name as per government-issued or legal documents."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
 msgid "The expected number of new employees must be positive."
 msgstr "Beklenen yeni çalışan sayısı pozitif olmalıdır."
@@ -5270,13 +5291,13 @@ msgstr "Aşağıdaki alanlar %s tarafından değiştirildi"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/wizard/hr_departure_wizard.py:0
+#: code:addons/hr/models/hr_employee_departure.py:0
 msgid "The following users have been archived: %s"
 msgstr "Aşağıdaki kullanıcılar arşivlendi: %s"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/wizard/hr_departure_wizard.py:0
+#: code:addons/hr/models/hr_employee_departure.py:0
 msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
@@ -5328,9 +5349,22 @@ msgid "The work permit of %(employee_name)s is about to expire."
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "There is no valid version starting before the departure date for %s."
+msgstr ""
+
+#. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
 msgstr "Tez"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"This action will delete the departure entirely. Are you sure you want to "
+"proceed?"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5339,8 +5373,13 @@ msgid "This employee already has an user."
 msgstr "Bu personelin zaten bir kullanıcısı var."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
-#: model:ir.model.fields,help:hr.field_hr_version__tz
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
@@ -5349,10 +5388,17 @@ msgstr ""
 "kullanılır."
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__exceptional_location_id
+msgid "This is the exceptional, non-weekly, location set for today."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sex
 #: model:ir.model.fields,help:hr.field_hr_version__sex
-msgid "This is the legal sex recognized by the state."
-msgstr "Bu, devlet tarafından tanınan yasal cinsiyettir."
+msgid ""
+"This is the legal sex as recognized by the state, used for official and "
+"statutory purposes."
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -5366,9 +5412,21 @@ msgid "Those responsible types are limited to Employee plans."
 msgstr "Sorumlu türler, Çalışan planlarıyla sınırlıdır."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__thursday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__thursday_location_id
+msgid "Thursday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__thursday_location_id
+msgid "Thursdays"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
 #: model:ir.model.fields,field_description:hr.field_hr_version__tz
+#: model:ir.model.fields,field_description:hr.field_resource_resource__tz
 msgid "Timezone"
 msgstr "Saat Dilimi"
 
@@ -5399,6 +5457,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__today_location_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__today_location_name
+msgid "Today Location Name"
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -5456,6 +5520,17 @@ msgid "Trusted"
 msgstr "Güvenilir"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__tuesday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__tuesday_location_id
+msgid "Tuesday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__tuesday_location_id
+msgid "Tuesdays"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Type"
 msgstr "Tür"
@@ -5495,6 +5570,15 @@ msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Unspecified"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Untrust Bank Account"
 msgstr "Güvenilir Olmayan Banka Hesabı"
@@ -5520,7 +5604,7 @@ msgstr "Kullanıcı"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/wizard/hr_departure_wizard.py:0
+#: code:addons/hr/models/hr_employee_departure.py:0
 msgid "User Archive Notification"
 msgstr "Kullanıcı Arşiv Bildirimi"
 
@@ -5529,11 +5613,6 @@ msgstr "Kullanıcı Arşiv Bildirimi"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User Creation Notification"
 msgstr "Kullanıcı Oluşturma Bildirimi"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
-msgid "User Employee"
-msgstr "Kullanıcı Çalışan"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5553,6 +5632,90 @@ msgid "User already exists with the same email for Employees %s"
 msgstr "Çalışanlar için aynı e-postaya sahip kullanıcı zaten mevcut %s"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at home"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at home and busy"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at home and idle"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at home and offline"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at home and online"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at other location and busy"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at other location and idle"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at other location and offline"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at other location and online"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at the office"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at the office and busy"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at the office and idle"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at the office and offline"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/common/im_status_patch.js:0
+msgid "User is at the office and online"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
 msgstr "Kullanıcı aktif"
@@ -5568,6 +5731,11 @@ msgstr "Kullanıcının İş ortağı"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Users %s creation successful"
 msgstr "Kullanıcılar %s oluşturma başarılı"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Usual Work Location"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -5589,6 +5757,16 @@ msgstr "Geçerli IP adresleri"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Valid work permit for Belgium"
 msgstr "Belçika için geçerli çalışma izni"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Variable Hours"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+msgid "View"
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -5678,6 +5856,17 @@ msgid "Website communication history"
 msgstr "Websitesi iletişim geçmişi"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__wednesday_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__wednesday_location_id
+msgid "Wednesday"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__wednesday_location_id
+msgid "Wednesdays"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -5697,7 +5886,6 @@ msgid "What's great in the job?"
 msgstr "İşte harika olan nedir?"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_version__member_of_department
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
@@ -5767,6 +5955,7 @@ msgstr "İş E-postası"
 #: model:ir.model.fields,field_description:hr.field_resource_resource__work_location_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_form_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Work Location"
 msgstr "İş Yeri"
 
@@ -5848,6 +6037,11 @@ msgid "Work Phone"
 msgstr "İş Telefonu"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Work location"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__worker
 msgid "Worker"
 msgstr "İşçi"
@@ -5902,9 +6096,16 @@ msgstr "Bu mesajı alıyorsunuz çünkü bu çalışanın İK Sorumlusu sizsiniz
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/store_service_patch.js:0
+#: code:addons/hr/static/src/core/common/store_service_patch.js:0
 msgid "You can only chat with employees that have a dedicated user."
 msgstr "Yalnızca özel bir kullanıcısı olan personellerle yazışabilirsiniz."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You can't modify the departure of an employee that has already departed."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5929,6 +6130,12 @@ msgstr ""
 "Lütfen bunun yerine arşivleyin.\n"
 "\n"
 "Etkilenen kişi(ler): %(names)s"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_work_location.py:0
+msgid "You cannot delete locations that are being used by your employees"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -6040,14 +6247,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "ZIP"
-msgstr "PK"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_zip
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_zip
-msgid "Zip"
 msgstr "PK"
 
 #. module: hr
@@ -6143,12 +6343,6 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_mixin
 msgid "hr.mixin"
 msgstr "hr.mixin"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/res_partner.py:0
-msgid "id"
-msgstr "kimlik"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__kilometers

@@ -5,25 +5,27 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-18 12:20+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 12:41+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "spreadsheet_dashboard/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: spreadsheet_dashboard
 #. odoo-python
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
 msgid "%s (copy)"
 msgstr "%s (copie)"
 
@@ -32,6 +34,11 @@ msgstr "%s (copie)"
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
 msgid "(no result)"
 msgstr "(aucun résultat)"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+msgid "Access Groups"
+msgstr "Groupes d'accès"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__access_token
@@ -56,6 +63,11 @@ msgid "BACK"
 msgstr "RETOUR"
 
 #. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+msgid "Choose a dashboard section..."
+msgstr "Sélectionnez une section du tableau de bord..."
+
+#. module: spreadsheet_dashboard
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 msgid "Choose a dashboard...."
@@ -63,6 +75,7 @@ msgstr "Choisissez un tableau de bord..."
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_ids
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
 msgid "Companies"
 msgstr "Sociétés"
 
@@ -94,13 +107,19 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
 #: model:res.groups.privilege,name:spreadsheet_dashboard.res_groups_privilege_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__dashboard_group_id
-msgid "Dashboard Group"
-msgstr "Groupe du tableau de bord"
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+msgid "Dashboard Section"
+msgstr "Section du tableau de bord"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+msgid "Dashboard name"
+msgstr "Nom du tableau de bord"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -116,9 +135,10 @@ msgid "Dashboards"
 msgstr "Tableaux de bord"
 
 #. module: spreadsheet_dashboard
-#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
-msgid "Data"
-msgstr "Données"
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
+msgid "Discard"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__display_name
@@ -142,6 +162,12 @@ msgstr "FAVORIS"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
 msgid "Favorite Users"
 msgstr "Utilisateurs favoris"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
+msgid "Filter"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -254,9 +280,24 @@ msgstr "Aucun tableau de bord disponible"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
+msgid ""
+"Only chart figures are displayed in small screens but this dashboard doesn't "
+"contain any"
+msgstr ""
+"Seuls les chiffres du graphique sont affichés sur de petits écrans, mais ce "
+"tableau de bord n'en contient aucun"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/list/clickable_cell.js:0
 msgid "Open record"
 msgstr "Ouvrir l’enregistrement"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
+msgid "Published"
+msgstr "Publié"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__published_dashboard_ids
@@ -279,6 +320,18 @@ msgstr "Ventes"
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.xml:0
 msgid "Search..."
 msgstr "Rechercher…"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__dashboard_group_id
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
+msgid "Section"
+msgstr "Section"
+
+#. module: spreadsheet_dashboard
+#: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_group_action_configuration_sections
+#: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_group_menu_configuration_sections
+msgid "Sections"
+msgstr "Sections"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -317,13 +370,9 @@ msgstr "Nom du fichier de feuille de calcul"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__spreadsheet_binary_data
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__spreadsheet_binary_data
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
 msgid "Spreadsheet file"
 msgstr "Fichier de feuille de calcul"
-
-#. module: spreadsheet_dashboard
-#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_container_view_form
-msgid "Spreadsheets"
-msgstr "Feuilles de calcul"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
@@ -346,6 +395,11 @@ msgstr "URL"
 #: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
 msgid "Users who have favorited this dashboard"
 msgstr "Utilisateurs ayant ajouté ce tableau de bord aux favoris"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
+msgid "View"
+msgstr "Vue"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
@@ -376,6 +430,11 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_share.py:0
 msgid "You don't have access to this dashboard. "
 msgstr "Vous n'avez pas accès à ce tableau de bord. "
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+msgid "e.g. Sales operations"
+msgstr "Par ex. opérations commerciales"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript

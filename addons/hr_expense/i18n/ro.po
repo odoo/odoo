@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
 "PO-Revision-Date: 2025-12-09 14:04+0000\n"
 "Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -99,13 +99,18 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
-"'Cheltuială - %s - %s' % (object.employee_id.name, "
-"(object.name).replace('/', ''))"
+"'Cheltuială - %s - %s' % (object.employee_id.name, (object.name)."
+"replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "(incl"
 msgstr "(incl)"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "--<br/>"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -169,6 +174,16 @@ msgstr "<span>Plătit de:</span>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr "<span>Suma totală nu se potrivește cu suma inițială.</span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "<strong>expenses</strong> pending approval, from:"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "A new expense is waiting for your approval in Odoo."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -408,14 +423,6 @@ msgid "Can Reset"
 msgstr "Se poate reseta"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
-msgid "Cancel"
-msgstr "Anulează"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -531,7 +538,6 @@ msgstr "Cursul Valutar"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Dear"
 msgstr "Dragă"
 
@@ -570,17 +576,12 @@ msgid "Digitalize your receipts with OCR and Artificial Intelligence"
 msgstr "Digitalizați-vă chitanțele cu OCR și inteligență artificială"
 
 #. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/components/hr_expense_product_form_view.js:0
-msgid "Discard"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__display_name
@@ -732,7 +733,6 @@ msgstr "Duplicare aprobare cheltuieli"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_search_view
 msgid "Expense Approver"
 msgstr "Aprobator de cheltuieli"
 
@@ -981,6 +981,11 @@ msgid "Has Message"
 msgstr "Are mesaj"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Hi"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, bilet de avion, taxi, etc."
@@ -996,6 +1001,7 @@ msgstr "Domeniu alias cheltuieli HR"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__id
@@ -1141,6 +1147,11 @@ msgstr "Înregistrare jurnal resetată la ciornă"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
 msgstr "Etichetă Curs valutar"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__last_notification_date
+msgid "Last Notification Date"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1291,15 +1302,6 @@ msgid "New expense entries"
 msgstr "Noi intrări de cheltuieli"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
-msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
-msgstr ""
-"Noile cheltuieli așteaptă aprobarea dumneavoastră.\n"
-"                Le puteți consulta accesând acest link"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
@@ -1347,8 +1349,8 @@ msgstr "Nu s-au găsit categorii de cheltuieli. Să creăm una!"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
 msgstr ""
-"Nu a fost găsită nicio persoană de contact de serviciu pentru angajatul %"
-"(name)s. Vă rugăm să configurați una."
+"Nu a fost găsită nicio persoană de contact de serviciu pentru angajatul "
+"%(name)s. Vă rugăm să configurați una."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1399,6 +1401,7 @@ msgstr "Numere calculate din cheltuielile personale."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1506,6 +1509,11 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
 msgid "Payment"
 msgstr ""
@@ -1586,6 +1594,7 @@ msgstr "Postat"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Cu sprijinul"
 
@@ -1734,6 +1743,11 @@ msgstr "Utilizator responsabil"
 #: model_terms:product.template,description:hr_expense.expense_product_meal_product_template
 msgid "Restaurants, business lunches, etc."
 msgstr "Restaurants, business lunches, etc."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Review Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
@@ -1962,6 +1976,11 @@ msgstr "Taxe"
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
 msgstr "Aprobator de echipă"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Thanks,"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2200,11 +2219,6 @@ msgid "View Expense"
 msgstr "Vizualizați cheltuielile"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
-msgid "View expenses"
-msgstr "Vizualizare cheltuieli"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -2342,6 +2356,11 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
 msgstr "Nu puteți împărți o cheltuială care a fost deja înregistrată."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "You currently have"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

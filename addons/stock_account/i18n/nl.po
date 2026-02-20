@@ -8,16 +8,16 @@
 # Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-27 09:03+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:42+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_account/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -41,8 +41,8 @@ msgstr "%(lot)s prijsupdate van %(old_price)s naar %(new_price)s door %(user)s"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
-msgstr "%(quantity)s %(uom)s tegen de standaardprijs van het product %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
+msgstr "%(quantity)s %(uom)s tegen productkost"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -162,7 +162,7 @@ msgstr "Analytische rekeningboekingsregel"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Analytisch plan"
 
 #. module: stock_account
 #. odoo-javascript
@@ -211,6 +211,12 @@ msgid "Bacon"
 msgstr "Bacon"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
+#: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
+msgid "Closing Date"
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
@@ -242,7 +248,6 @@ msgstr "Bedrijf"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__company_currency_id
-#, fuzzy
 msgid "Company Currency"
 msgstr "Bedrijfsvaluta"
 
@@ -278,18 +283,17 @@ msgstr "Kostprijs"
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr "Methode voor kosten"
+msgstr "Kostprijsmethode"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
-#, fuzzy
 msgid "Cost of Production"
 msgstr "Productiekosten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
-msgstr "Kostprijsbepaling"
+msgstr "Kostprijsmethode"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_expense_id
@@ -440,6 +444,8 @@ msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
 msgstr ""
+"Kostenrekening die wordt gebruikt om producten die uit de voorraad zijn "
+"verwijderd en naar deze locatie zijn verzonden, opnieuw te kwalificeren"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -458,7 +464,7 @@ msgstr "Voor %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
 msgid "For Perpetual Continental Only"
-msgstr ""
+msgstr "Enkel voor permanente continentale methode"
 
 #. module: stock_account
 #. odoo-javascript
@@ -532,9 +538,15 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "Referentie/reden voor voorraadaanpassing"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
+#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
+msgid "Inventory Closing"
+msgstr "Voorraadafsluiting"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "Voorraadlocatie"
 
 #. module: stock_account
 #. odoo-javascript
@@ -548,7 +560,7 @@ msgstr "Voorraadverlies"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
 msgid "Inventory Period"
-msgstr "Voorraadwaarderringsperiode"
+msgstr "Voorraadwaarderingsperiode"
 
 #. module: stock_account
 #. odoo-python
@@ -590,6 +602,16 @@ msgid "Is valued outside the company"
 msgstr "Is gewaardeerd buiten het bedrijf"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
+msgstr ""
+"Er zijn afsluitboekingen na de geselecteerde datum. Annuleer deze voordat je "
+"een boeking vóór deze boekingen genereert"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "Boeking"
@@ -604,6 +626,11 @@ msgstr "Boekingsregel"
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Journal Items"
 msgstr "Boekingsregels"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr "Verantwoording"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -661,12 +688,27 @@ msgid "Move"
 msgstr "verplaatsing"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr "Nieuwe waarde"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
+"Alleen 'is ingesteld' (= True) wordt ondersteund bij het zoeken naar "
+"remaining_qty."
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
 msgstr ""
+"Alleen de waarden 'periodic' en 'real_time' worden geaccepteerd voor het "
+"zoeken in het waarderingsveld."
 
 #. module: stock_account
 #. odoo-javascript
@@ -690,13 +732,18 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Periodiek: De boekhoudkundige posten worden handmatig voorgesteld in het "
+"voorraadwaarderingsrapport.\n"
+"Permanent: Er wordt automatisch een boekhoudkundige post aangemaakt om de "
+"voorraad te waarderen wanneer een product wordt gefactureerd.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr "Continu (bij facturatie)"
+msgstr "Permanent (bij facturatie)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -787,12 +834,17 @@ msgstr "Productie WIP Overheadrekening"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "Hoeveelheid"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "Referentie"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr "Resterend"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -839,8 +891,8 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Vaste verreken prijs: De producten worden gewaardeerd tegen de kostprijs "
-"zoals ingesteld op het product\n"
+"Standaardkostprijs: De producten worden gewaardeerd tegen de kostprijs zoals "
+"ingesteld op het product\n"
 "Gemiddelde kostprijs (AVCO): De producten worden gewaardeerd tegen de "
 "gewogen gemiddelde waarde.\n"
 "First In First Out (FIFO): De producten worden gewaardeerd, waarbij ervan "
@@ -851,7 +903,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
-msgstr ""
+msgstr "Voorraad AVCO Justifier"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -914,7 +966,7 @@ msgstr "Voorraadmutatie"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
 msgid "Stock Variation Account"
-msgstr ""
+msgstr "Voorraadmutatierekening"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1005,7 +1057,7 @@ msgstr "Kostprijs per eenheid"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
 msgid "Unit Cost History"
-msgstr ""
+msgstr "Geschiedenis van kost per eenheid"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -1057,7 +1109,7 @@ msgstr "Waarde"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_justification
 msgid "Value Description"
-msgstr ""
+msgstr "Beschrijving van de waarde"
 
 #. module: stock_account
 #. odoo-javascript
@@ -1129,7 +1181,7 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
-"Bij continue waardering bevat deze rekening het prijsverschil tussen de "
+"Bij permanente waardering bevat deze rekening het prijsverschil tussen de "
 "standaardprijs en de factuurprijs."
 
 #. module: stock_account
@@ -1141,8 +1193,19 @@ msgstr "Je kan de waardering maar voor één verplaatsing tegelijk aanpassen."
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr ""
+"Je kunt de standaardprijs op een bepaalde datum enkel krijgen voor producten "
+"met 'Standaardprijs' als kostprijsmethode."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
+"Je kunt alleen de operator '=' gebruiken om te zoeken in het waarderingsveld."
 
 #. module: stock_account
 #. odoo-python
@@ -1156,7 +1219,6 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
-#, fuzzy
 msgid "stock_move_id"
 msgstr "stock_move_id"
 

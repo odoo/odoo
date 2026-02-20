@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-09-16 15:24+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -47,8 +47,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-"
-"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"            Please answer the interview for <t t-out=\"format_date(object."
+"deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            We wish you good luck! Thank you in advance for your "
@@ -77,8 +77,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            请于限期前完成面试问题 <t t-out=\"format_date(object.deadline)"
-"\">[截止日期]</t>。<br/><br/>\n"
+"            请于限期前完成面试问题 <t t-out=\"format_date(object."
+"deadline)\">[截止日期]</t>。<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            祝您好运！感谢您的参与。\n"
@@ -100,6 +100,11 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">咨询</span>\n"
 "                        <span class=\"o_stat_text\">访谈</span>"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.survey_survey_view_form
+msgid "<span class=\"o_stat_text\">Jobs</span>"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -339,6 +344,17 @@ msgid "Is Editor"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "Job"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__job_count
+msgid "Job Count"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
@@ -458,6 +474,12 @@ msgstr "招聘"
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
 msgid "Recruitment Form"
 msgstr "招聘表单"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "Related Jobs"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__render_model
@@ -641,3 +663,9 @@ msgid ""
 msgstr ""
 "您可以创建用于招聘的调查问卷。轻松设计您的面试问题、\n"
 "                发送邀请，并分析答案。"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "id"
+msgstr ""

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-09-16 08:11+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -23,6 +23,11 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: project_mrp
+#: model_terms:ir.ui.view,arch_db:project_mrp.mrp_production_form_view_inherit_project_mrp
+msgid "<span class=\"o_stat_text\">Project</span>"
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_bom
 msgid "Bill of Material"
 msgstr "物料清單"
@@ -32,6 +37,7 @@ msgstr "物料清單"
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials_dashboard
+#: model_terms:ir.ui.view,arch_db:project_mrp.project_view_form_inherit_project_mrp
 msgid "Bills of Materials"
 msgstr "用料清單"
 
@@ -70,10 +76,9 @@ msgid "Manufacturing Order"
 msgstr "製造訂單"
 
 #. module: project_mrp
-#. odoo-python
-#: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders_dashboard
+#: model_terms:ir.ui.view,arch_db:project_mrp.project_view_form_inherit_project_mrp
 msgid "Manufacturing Orders"
 msgstr "製造訂單"
 

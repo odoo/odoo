@@ -9,15 +9,15 @@
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-18 13:49+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-24 12:20+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_timesheet/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -91,11 +91,11 @@ msgstr "%(project_name)s (%(hours)s h)"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
-"(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project "
+"'%(project_name)s' linked to the timesheet."
 msgstr ""
-"'%(missing_plan_names)s' plan(s) analytique(s) requis pour le projet '%"
-"(project_name)s' lié à la feuille de temps."
+"'%(missing_plan_names)s' plan(s) analytique(s) requis pour le projet "
+"'%(project_name)s' lié à la feuille de temps."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -131,13 +131,6 @@ msgid "2021-09-01"
 msgstr "01-09-2021"
 
 #. module: hr_timesheet
-#: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
-msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr ""
-"<b class=\"tip_title\">Astuce : Encodez vos feuilles de temps plus "
-"rapidement</b>"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid ""
 "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
@@ -145,6 +138,22 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-clock-o\" title=\"Timesheets\" "
+"invisible=\"stat_success_rate\"/>\n"
+"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
+"success\" title=\"On Due\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt;= 80\"/>\n"
+"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
+"warning\" title=\"Warning\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
+"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
+"danger\" title=\"Over Due\" invisible=\"not stat_success_rate or "
+"stat_success_rate &lt;= 100\"/>"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -156,42 +165,6 @@ msgstr "<i class=\"fa fa-print\"/> Voir les détails"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
 msgstr "<span class=\"o_stat_text\">Feuilles de temps</span>"
-
-#. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-msgid ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        Uh-oh! The employee you’re trying to delete still "
-"has some timesheets hanging around and can’t be deleted.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            So here are your two options: either delete "
-"those timesheets or consider archiving the employee instead.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Please first delete all of their timesheets.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
-"                        Are you sure you want to delete these employees?\n"
-"                    </span>"
-msgstr ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        Oups ! L’employé que vous essayez de supprimer a "
-"encore des feuilles de temps en attente et ne peut pas être supprimé.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            Voici vos deux options : soit supprimer ces "
-"feuilles de temps, soit envisager d’archiver l’employé à la place.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Veuillez d’abord supprimer toutes leurs feuilles "
-"de temps.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
-"                        Êtes-vous sûr de vouloir supprimer ces employés ?\n"
-"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -229,27 +202,27 @@ msgid "<strong>Progress:</strong>"
 msgstr "<strong>Progrès :</strong>"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table_with_total
 msgid "<strong>Time Remaining: </strong>"
 msgstr "<strong>Temps restant : </strong>"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table_with_total
 msgid "<strong>Time recorded on sub-tasks: </strong>"
 msgstr "<strong>Temps enregistré pour les sous-tâches : </strong>"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table_with_total
 msgid "<strong>Total Days: </strong>"
 msgstr "<strong>Total des jours : </strong>"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table_with_total
 msgid "<strong>Total Hours: </strong>"
 msgstr "<strong>Total des heures : </strong>"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table_with_total
 msgid "<strong>Total Time Spent: </strong>"
 msgstr "<strong>Total du temps écoulé : </strong>"
 
@@ -322,11 +295,6 @@ msgid "Approver Reminder"
 msgstr "Rappel à l'approbateur"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-msgid "Archive Employees"
-msgstr "Archiver des employés"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Audrey Peterson"
 msgstr "Audrey Peterson"
@@ -384,25 +352,17 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/hr_employee.py:0
-msgid "Confirmation"
-msgstr "Confirmation"
-
-#. module: hr_timesheet
 #: model:ir.model,website_form_label:hr_timesheet.model_project_task
 msgid "Create a Task"
 msgstr "Créer une tâche"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__create_uid
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__create_date
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__create_date
 msgid "Created on"
 msgstr "Créé le"
 
@@ -452,16 +412,6 @@ msgstr ""
 "Définissez un 'coût horaire' sur l'employé pour suivre le coût de son temps."
 
 #. module: hr_timesheet
-#: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
-msgid "Delete"
-msgstr "Supprimer"
-
-#. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-msgid "Delete Employee"
-msgstr "Supprimer l'employé"
-
-#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__milestone_id
 #: model:ir.model.fields,help:hr_timesheet.field_timesheets_analysis_report__milestone_id
 msgid ""
@@ -493,16 +443,10 @@ msgid "Description"
 msgstr "Description"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-msgid "Discard"
-msgstr "Ignorer"
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__display_name
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_ir_http__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_ir_ui_menu__display_name
@@ -543,26 +487,9 @@ msgid "Employee"
 msgstr "Employé"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
-msgid "Employee Delete Wizard"
-msgstr "Assistant de suppression d'un employé"
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
 msgid "Employee Reminder"
 msgstr "Rappel aux employés"
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
-msgid "Employee Termination"
-msgstr "Fin de collaboration"
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
-msgid "Employees' Timesheets"
-msgstr "Feuilles de temps des employés"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
@@ -570,8 +497,7 @@ msgid "Encoding Method"
 msgstr "Méthode d'encodage"
 
 #. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/project_project.py:0
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Extra Time"
 msgstr "Temps supplémentaire"
 
@@ -607,7 +533,6 @@ msgstr "Heures / Minutes"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__id
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_ir_http__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_ir_ui_menu__id
@@ -655,13 +580,11 @@ msgstr "Le dernier trimestre"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__write_uid
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Mis à jour par"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__write_date
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_date
 msgid "Last Updated on"
 msgstr "Mis à jour le"
 
@@ -763,6 +686,14 @@ msgstr "Pas encore de données !"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+"Aucune feuille de temps créée : les employés ne travaillent pas aux dates "
+"sélectionnées"
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "Aucun"
@@ -773,14 +704,9 @@ msgid "Number of allocated hours minus the number of hours spent."
 msgstr "Nombre d'heures allouées moins le nombre d'heures passées."
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-msgid "Ok"
-msgstr "Ok"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Overrun Hours"
-msgstr ""
+msgstr "Heures de dépassement"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
@@ -868,15 +794,6 @@ msgid "Record a new activity"
 msgstr "Enregistrer une nouvelle activité"
 
 #. module: hr_timesheet
-#: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
-msgid ""
-"Record your timesheets in an instant by pressing Shift + the corresponding "
-"hotkey to add 15min to your projects."
-msgstr ""
-"Encodez vos feuilles de temps en un instant en cliquant sur Shift + le "
-"raccourci clavier correspondant pour ajouter 15 min à vos projets."
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Remaining Hours"
 msgstr "Heures restantes"
@@ -903,7 +820,7 @@ msgid "Research and Development/New Portal System"
 msgstr "Recherche & Développement/Nouveau système portail"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
+#: model:portal.entry,description:hr_timesheet.portal_timesheets
 msgid "Review all timesheets related to your projects"
 msgstr "Révisez toutes les feuilles de temps liées à vos projets"
 
@@ -936,11 +853,6 @@ msgstr "Chercher dans les projets"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Task"
 msgstr "Chercher dans tâche"
-
-#. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-msgid "See Timesheets"
-msgstr "Voir les feuilles de temps"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -981,6 +893,16 @@ msgid ""
 msgstr ""
 "Certaines entrées de feuille de temps empêchent la suppression de ces "
 "tâches. Veuillez les supprimer en premier lieu !"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
+"Certaines feuilles de temps n’ont pas été créées : les employés ne "
+"travaillent pas aux dates sélectionnées"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1183,7 +1105,7 @@ msgstr "Heures consacrées aux sous-tâches"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Spent on Sub-tasks:"
-msgstr ""
+msgstr "Temps consacré aux sous-tâches :"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1253,7 +1175,6 @@ msgstr "Temps de la feuille de temps"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#: code:addons/hr_timesheet/models/project_project.py:0
 #: code:addons/hr_timesheet/models/project_task.py:0
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -1267,10 +1188,10 @@ msgstr "Temps de la feuille de temps"
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
+#: model:portal.entry,name:hr_timesheet.portal_timesheets
 #: model:res.groups.privilege,name:hr_timesheet.res_groups_privilege_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_layout
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -1346,12 +1267,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "Il est impossible de créer des feuilles de temps sur une tâche privée."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr "Aucune feuille de temps n’a pu être créée pour les jours sélectionnés"
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1372,20 +1287,9 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
-msgid "Timesheets of %(name)s"
-msgstr "Feuilles de temps de %(name)s"
-
-#. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr "Feuilles de temps créées avec succès"
-
-#. module: hr_timesheet
-#: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
-msgid "Tip: Record your Timesheets faster"
-msgstr "Astuce : Encodez vos feuilles de temps plus rapidement"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1396,8 +1300,8 @@ msgid ""
 "timesheets feature."
 msgstr ""
 "Pour utiliser la fonction de feuilles de temps, vous devez disposer d'un "
-"compte analytique pour votre projet. Veuillez en créer un dans le plan '%"
-"(plan_name)s' ou désactiver la fonctionnalité de feuilles de temps."
+"compte analytique pour votre projet. Veuillez en créer un dans le plan "
+"'%(plan_name)s' ou désactiver la fonctionnalité de feuilles de temps."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1429,7 +1333,7 @@ msgstr "Nombre total de jours passés"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Hours Spent"
-msgstr ""
+msgstr "Total des heures passées"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1530,13 +1434,6 @@ msgid "You cannot access timesheets that are not yours."
 msgstr ""
 "Vous ne pouvez pas accéder à des feuilles de temps qui ne sont pas les "
 "vôtres."
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/hr_employee.py:0
-msgid "You cannot delete employees who have timesheets."
-msgstr ""
-"Vous ne pouvez pas supprimer des employés qui ont des feuilles de temps."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form

@@ -7,16 +7,16 @@
 # Sarah Park, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:51+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:42+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_account/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
 msgstr ""
 
 #. module: stock_account
@@ -130,7 +130,7 @@ msgstr "가치 조정: %(product)s"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
-msgstr ""
+msgstr "수정일 %(date)s 수정 작업자 %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -161,7 +161,7 @@ msgstr "분석 계정 내역"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "분석 계획"
 
 #. module: stock_account
 #. odoo-javascript
@@ -208,10 +208,16 @@ msgid "Bacon"
 msgstr "베이컨"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
+#: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
+msgid "Closing Date"
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
-msgstr ""
+msgstr "마감: 위치 재분류 - [%(account)s]"
 
 #. module: stock_account
 #. odoo-python
@@ -223,7 +229,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Stock Variation Over Period"
-msgstr ""
+msgstr "마감: 기간별 재고 세부 옵션"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
@@ -451,7 +457,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
 msgid "For Perpetual Continental Only"
-msgstr ""
+msgstr "대륙식 영구 재고법에만 적용"
 
 #. module: stock_account
 #. odoo-javascript
@@ -513,7 +519,7 @@ msgstr "기초 잔고"
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
-msgstr ""
+msgstr "잘못된 검색 연산자나 검색 값입니다"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
@@ -521,9 +527,15 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "재고 조정 참조 / 이유"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
+#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
+msgid "Inventory Closing"
+msgstr "재고 관리 마감"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "재고 위치"
 
 #. module: stock_account
 #. odoo-javascript
@@ -571,11 +583,19 @@ msgstr "계산 완료"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_internal
 msgid "Is valued inside the company"
-msgstr ""
+msgstr "회사 내 가치 평가 여부"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_external
 msgid "Is valued outside the company"
+msgstr "회사 외부 가치 평가 여부"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
 msgstr ""
 
 #. module: stock_account
@@ -593,6 +613,11 @@ msgstr "전표 항목"
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Journal Items"
 msgstr "전표 항목"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr "근거"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -648,6 +673,17 @@ msgstr "매월"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
 msgid "Move"
 msgstr "이동"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr "신규 가격"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -776,12 +812,17 @@ msgstr "프로덕션 WIP 간접비 계정"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "수량"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "참조"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr "잔여"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -847,7 +888,7 @@ msgstr "재고 계정"
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
 msgid "Stock Account: Inventory Valuation Closing"
-msgstr ""
+msgstr "재고 계정: 재고 가치 평가 마감"
 
 #. module: stock_account
 #. odoo-python
@@ -1113,6 +1154,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
 msgstr ""
 
 #. module: stock_account

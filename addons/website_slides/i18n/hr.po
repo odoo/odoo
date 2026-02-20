@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
 "PO-Revision-Date: 2025-11-08 19:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
@@ -200,13 +200,6 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
-msgid ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">Return to the course.</a>"
-msgstr ""
-
-#. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "<b>%s</b> is requesting access to this course."
@@ -246,8 +239,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
+"name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -271,8 +264,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -296,11 +289,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-"
-"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
+"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -425,11 +418,10 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
-"radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: {{object.user_id.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -1728,12 +1720,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/interactions/category_add.js:0
-#: code:addons/website_slides/static/src/interactions/category_delete.js:0
-#: code:addons/website_slides/static/src/interactions/enroll_email.js:0
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 #: code:addons/website_slides/static/src/js/public/components/slides_course_quiz_question_form/slides_course_quiz_question_form.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -2652,6 +2639,7 @@ msgstr ""
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Discard"
 msgstr "Odbaci"
 
@@ -3258,7 +3246,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/activity/activity_patch.xml:0
+#: code:addons/website_slides/static/src/core/web/activity_patch.xml:0
 msgid "Grant Access"
 msgstr "Dodjeli pristup"
 
@@ -3510,16 +3498,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 
 #. module: website_slides
@@ -4553,6 +4541,7 @@ msgstr "Pivot"
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
 msgstr "Molim"
 
@@ -4568,13 +4557,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/interactions/slide_like.js:0
 msgid "Please %(a_login_open)slogin%(a_login_close)s to vote for this lesson"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid ""
-"Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
-"class=\"fw-bold o_translate_inline\"> login </a> to share this"
 msgstr ""
 
 #. module: website_slides
@@ -4871,7 +4853,7 @@ msgstr "Primatelji"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/activity/activity_patch.xml:0
+#: code:addons/website_slides/static/src/core/web/activity_patch.xml:0
 msgid "Refuse Access"
 msgstr ""
 
@@ -4988,6 +4970,11 @@ msgstr "Dohvati s Google diska"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.xml:0
 msgid "Retry"
 msgstr "Pokušaj ponovo"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
+msgid "Return to the course."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -5168,7 +5155,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create a category"
 msgstr ""
 
@@ -5186,7 +5173,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create tags"
 msgstr ""
 
@@ -6942,6 +6929,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_join_popup/course_join_popup.xml:0
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "prijava"
 
@@ -7026,6 +7014,7 @@ msgstr ""
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to share this"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-06 08:43+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
@@ -28,31 +28,6 @@ msgstr "Åtkomstgrupper"
 #: model:ir.model,name:auth_timeout.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Autentiseringsenhet"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Authentication code"
-msgstr "Autentiseringskod"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Authentication code via email"
-msgstr "Autentiseringskod via e-post"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Confirm"
-msgstr "Bekräfta"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-#: model_terms:ir.ui.view,arch_db:auth_timeout.check_identity
-msgid "Confirm access"
-msgstr "Bekräfta åtkomst"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_auth_totp_device__display_name
@@ -78,20 +53,6 @@ msgstr ""
 "Aktivera tvåfaktorsautentisering när tidsgränsen för sessionen har uppnåtts."
 
 #. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Enter below the six-digit authentication code just sent to your email"
-msgstr ""
-"Ange nedan den sexsiffriga autentiseringskoden som just skickats till din e-"
-"post"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Forgot password?"
-msgstr "Har du glömt lösenordet?"
-
-#. module: auth_timeout
 #: model:ir.model,name:auth_timeout.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP-routning"
@@ -105,12 +66,6 @@ msgstr "Har tidsgräns för låsning"
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__has_lock_timeout_inactivity
 msgid "Has Lock Timeout Inactivity"
 msgstr "Har Lås Timeout Inaktivitet"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Having problems ?"
-msgstr "Har du problem?"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_auth_totp_device__id
@@ -172,28 +127,6 @@ msgid "Logout with two-factor authentication"
 msgstr "Logga ut med tvåfaktorsautentisering"
 
 #. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid ""
-"Open your two-factor authenticator (TOTP) app or browser extension to view "
-"your authentication code."
-msgstr ""
-"Öppna din tvåfaktorsautentiseringsapp (TOTP) eller webbläsartillägg för att "
-"visa din autentiseringskod."
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Passkey"
-msgstr "Passkey"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Password"
-msgstr "Lösenord"
-
-#. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_mfa
 msgid "Require MFA on inactivity timeout"
 msgstr "Kräv MFA vid timeout för inaktivitet"
@@ -235,12 +168,6 @@ msgid "Session timeout"
 msgstr "Timeout för session"
 
 #. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Signed in as"
-msgstr "Inloggad som"
-
-#. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_inactivity
 msgid ""
 "Time (in minutes) of user inactivity after which re-authentication is "
@@ -264,57 +191,9 @@ msgid "Timeouts"
 msgstr "Tidsfrister"
 
 #. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Use an authentication code sent by email"
-msgstr "Använd en autentiseringskod som skickas via e-post"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Use passkey"
-msgstr "Använd lösenkod"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Use your authenticator app"
-msgstr "Använd din autentiseringsapp"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Use your passkey"
-msgstr "Använd din passerkod"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Use your password"
-msgstr "Använd ditt lösenord"
-
-#. module: auth_timeout
 #: model:ir.model,name:auth_timeout.model_res_users
 msgid "User"
 msgstr "Användare"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "Verify"
-msgstr "Verifiera"
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "When you are ready, authenticate using the button below."
-msgstr "När du är klar, autentisera dig med hjälp av knappen nedan."
-
-#. module: auth_timeout
-#. odoo-javascript
-#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
-msgid "XXXXXX"
-msgstr "XXXXXX"
 
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form

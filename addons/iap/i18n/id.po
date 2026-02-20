@@ -7,22 +7,22 @@
 # Abe Manyo, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-14 07:54+0000\n"
+"PO-Revision-Date: 2026-02-14 12:11+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/iap/"
-"id/>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
+"iap/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -64,12 +64,12 @@ msgstr ""
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
 msgid "Auto-refill Pack"
-msgstr ""
+msgstr "Paket isi ulang otomatis"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_threshold
 msgid "Auto-refill Threshold"
-msgstr ""
+msgstr "Ambang batas isi ulang otomatis"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -79,7 +79,7 @@ msgstr "Saldo"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance_amount
 msgid "Balance Amount"
-msgstr ""
+msgstr "Jumlah Saldo"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
@@ -119,7 +119,7 @@ msgstr "Dibuat pada"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__credit
 msgid "Credit"
-msgstr ""
+msgstr "Kredit"
 
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
@@ -189,7 +189,7 @@ msgstr "Layanan IAP"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service_pack
 msgid "IAP Service Pack"
-msgstr ""
+msgstr "Paket Layanan IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -202,7 +202,7 @@ msgstr "ID"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__iap_service_pack_identifier
 msgid "Iap Service Pack Identifier"
-msgstr ""
+msgstr "Pengidentifikasi Paket Layanan IAP"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -214,7 +214,7 @@ msgstr ""
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "In-App Purchase Accounts"
-msgstr ""
+msgstr "Akun In-App Purchase"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_service_pack_view_tree
@@ -229,7 +229,7 @@ msgstr "Integer Balance"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__is_balance_below_warning_threshold
 msgid "Is Balance Below Warning Threshold"
-msgstr ""
+msgstr "Apakah Saldo Di Bawah Ambang Batas Peringatan"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -281,6 +281,9 @@ msgid ""
 "the following pack with your payment method on file. Set to 0 to disable "
 "auto-refill."
 msgstr ""
+"Apabila kredit Anda mencapai jumlah ini atau lebih sedikit dari jumlah ini, "
+"sistem akan secara otomatis membeli paket berikut dengan metode pembayaran "
+"Anda. Tetapkan menjadi 0 untuk menonaktifkan isi ulang otomatis."
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warning_threshold
@@ -288,6 +291,9 @@ msgid ""
 "Once you have this many credits or less, the system will automatically "
 "notify the following recipients by email. Set to 0 to disable email warnings."
 msgstr ""
+"Apabila kredit Anda mencapai jumlah ini atau lebih sedikit dari jumlah ini, "
+"sistem akan secara otomatis menotifikasi penerima berikut melalui email. "
+"Tetapkan menjadi 0 untuk menonaktifkan peringatan email."
 
 #. module: iap
 #. odoo-python
@@ -308,6 +314,7 @@ msgstr "Hanya satu layanan yang dapat tersedia dengan technical_name tertentu"
 msgid ""
 "Only one service pack can exist with a specific iap_service_pack_identifier"
 msgstr ""
+"Hanya satu paket layanan dapat tersedia dengan iap_service_pack_identifier"
 
 #. module: iap
 #. odoo-python
@@ -319,7 +326,7 @@ msgstr "Silakan tetapkan threshold peringatan email positif."
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_price_description
 #: model:ir.model.fields,field_description:iap.field_iap_service__price_description
 msgid "Price Description"
-msgstr ""
+msgstr "Deskripsi Harga"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -329,7 +336,7 @@ msgstr "Terdaftar"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__price
 msgid "Sales Price (EUR)"
-msgstr ""
+msgstr "Harga Sales (EUR)"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
@@ -345,7 +352,7 @@ msgstr "Layanan Dikunci"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__pack_ids
 msgid "Service Packs"
-msgstr ""
+msgstr "Paket Layanan"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
@@ -370,6 +377,8 @@ msgid ""
 "The IAP server is unreachable and the information may not be up to date.\n"
 "Please try again later."
 msgstr ""
+"Server IAP tidak dapat dicapai dan informasi mungkin tidak up to date.\n"
+"Silakan coba lagi nanti."
 
 #. module: iap
 #. odoo-python
@@ -383,6 +392,8 @@ msgid ""
 "The In-App Purchase pack the system will automatically buy when reaching "
 "your refill threshold."
 msgstr ""
+"Paket IAP yang sistem akan secara otomatis beli saat mencapai ambang batas "
+"isi ulang Anda."
 
 #. module: iap
 #. odoo-python

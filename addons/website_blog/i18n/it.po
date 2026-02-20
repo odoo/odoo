@@ -8,15 +8,15 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 13:11+0000\n"
+"POT-Creation-Date: 2026-02-04 18:37+0000\n"
+"PO-Revision-Date: 2026-01-31 12:46+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_blog/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_blog
 #. odoo-python
@@ -45,12 +45,12 @@ msgstr "'. Mostrare risultati per '"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "-- Scheduled"
-msgstr ""
+msgstr "-- Programmato"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "-- Unpublished"
-msgstr ""
+msgstr "-- Non pubblicato"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -547,12 +547,12 @@ msgstr "Nome autore"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Pubblicazione automatica il"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Pubblica automaticamente la pagina nella data e nell'ora selezionate."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_avatar
@@ -643,13 +643,14 @@ msgstr "Al di là degli occhi"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog"
 msgstr "Blog"
 
 #. module: website_blog
 #: model:res.groups,name:website_blog.group_website_blog_manager
 msgid "Blog Manager"
-msgstr ""
+msgstr "Responsabile del blog"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__name
@@ -720,6 +721,11 @@ msgid "Blog Tags"
 msgstr "Etichette blog"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
+msgid "Blog Teaser"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Blog Title"
 msgstr "Titolo blog"
@@ -769,7 +775,7 @@ msgstr "Percorso di navigazione"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "Percorso visibile"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1915,7 +1921,7 @@ msgstr "Data di pubblicazione"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publish on"
-msgstr ""
+msgstr "Pubblica il"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -1937,7 +1943,7 @@ msgstr "Articolo pubblicato"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Data pubblicazione"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -2027,12 +2033,12 @@ msgstr "Satelliti"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 msgid "Scheduled"
-msgstr ""
+msgstr "Programmato"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Scheduled ("
-msgstr ""
+msgstr "Programmato ("
 
 #. module: website_blog
 #. odoo-javascript
@@ -2055,7 +2061,7 @@ msgstr "Vedere il mondo dall'alto"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_form_add
 msgid "Select Blog"
-msgstr "Seleziona un blog"
+msgstr "Scegli blog"
 
 #. module: website_blog
 #. odoo-javascript
@@ -2114,6 +2120,11 @@ msgstr "Condividere link"
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "Share this post"
 msgstr "Condividi articolo"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
+msgid "Shown as a preview on the /blog page"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -2764,7 +2775,7 @@ msgstr "Non pubblicato ("
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Unschedule"
-msgstr ""
+msgstr "Annulla"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_heading

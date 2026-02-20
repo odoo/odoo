@@ -13,22 +13,23 @@
 # Jiří Podhorecký, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 10:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/portal/cs/"
-">\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-16 06:55+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/portal/"
+"cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -40,6 +41,11 @@ msgstr "\" pro potvrzení vaší akce."
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "%s days overdue"
 msgstr "%s dny po splatnosti"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_docs_entry
+msgid "'Icon for %s' % entry.name"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -116,16 +122,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Dokumentace\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Země...</option>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Stát / Oblast...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -254,7 +250,7 @@ msgid "Add extra content to display in the email"
 msgstr "Přidat další obsah, který chcete zobrazit v e-mailu"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model:portal.entry,description:portal.portal_entry_addresses
 msgid "Add, remove or modify your addresses"
 msgstr "Přidávejte, spravujte nebo odstraňujte vaše adresy"
 
@@ -269,8 +265,8 @@ msgid "Address Management"
 msgstr ""
 
 #. module: portal
+#: model:portal.entry,name:portal.portal_entry_addresses
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Addresses"
 msgstr "Adresy"
 
@@ -307,10 +303,9 @@ msgid "Billing address"
 msgstr "Fakturační adresa"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
-msgid "Cancel"
-msgstr "Zrušit"
+#: model:ir.model.fields,field_description:portal.field_portal_entry__category
+msgid "Category"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -367,12 +362,17 @@ msgid "Company Name"
 msgstr "Název společnosti"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
+msgid "Config Card"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurační nastavení"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model:portal.entry,description:portal.portal_entry_base
 msgid "Configure your connection parameters"
 msgstr "Nastavte si vaše možnosti přihlášení"
 
@@ -389,7 +389,11 @@ msgid "Confirm Password"
 msgstr "Potvrzení hesla"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model:portal.entry,name:portal.portal_entry_base
+msgid "Connection & Security"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Connection &amp; Security"
 msgstr "Účet &amp; bezpečnost"
@@ -425,11 +429,17 @@ msgid "Country"
 msgstr "Země"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "Country..."
+msgstr ""
+
+#. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
 msgid "Create a Customer"
 msgstr "Vytvořit zákazníka"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
@@ -437,6 +447,7 @@ msgid "Created by"
 msgstr "Vytvořeno uživatelem"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
@@ -491,6 +502,11 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__description
+msgid "Description of Card"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Details"
 msgstr "Podrobnosti"
@@ -518,11 +534,17 @@ msgstr ""
 "                                        </b>"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Discard"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
 #: model:ir.model.fields,field_description:portal.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:portal.field_mail_message__display_name
 #: model:ir.model.fields,field_description:portal.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
@@ -636,6 +658,7 @@ msgstr "Domovská stránka"
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:portal.field_mail_message__id
 #: model:ir.model.fields,field_description:portal.field_mail_thread__id
+#: model:ir.model.fields,field_description:portal.field_portal_entry__id
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
 #: model:ir.model.fields,field_description:portal.field_portal_share__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
@@ -661,6 +684,11 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__image
+msgid "Image"
 msgstr ""
 
 #. module: portal
@@ -728,6 +756,7 @@ msgstr ""
 "                a kompletní,"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -735,6 +764,7 @@ msgid "Last Updated by"
 msgstr "Naposledy upraveno uživatelem"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
@@ -776,11 +806,11 @@ msgstr "Zpráva"
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 msgid ""
-"Model %(model_name)s does not support token signature, as it does not have %"
-"(field_name)s field."
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
 msgstr ""
-"Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá %"
-"(field_name)s pole."
+"Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá "
+"%(field_name)s pole."
 
 #. module: portal
 #. odoo-python
@@ -870,6 +900,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__placeholder_count
+msgid "Placeholder Count"
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Please enter your password to confirm you own this account"
@@ -886,6 +921,11 @@ msgstr "Správa přístupu k portálu"
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
 msgstr "URL portálového přístupu"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_entry
+msgid "Portal Entry"
+msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -1041,6 +1081,11 @@ msgid "Show As Optional Inherit"
 msgstr "Zobrazit jako volitelně zděděné"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__show_in_portal
+msgid "Show in Portal"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
 msgid "Sign in"
 msgstr "Přihlásit se"
@@ -1071,6 +1116,11 @@ msgid "State / Province"
 msgstr "Stát / provincie"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "State / Province..."
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
 msgid "Status"
 msgstr "Stav"
@@ -1079,6 +1129,11 @@ msgstr "Stav"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Street and Number"
 msgstr "Ulice a číslo popisné"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__url
+msgid "Target URL"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -1216,6 +1271,11 @@ msgid "This text is included in the email sent to new users of the portal."
 msgstr "Tento text je přidán do emailu odesílaného novým uživatelům portálu."
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__name
+msgid "Title of Card"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Přepnout filtry"
@@ -1282,9 +1342,9 @@ msgstr "Zobrazení"
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_main_attachment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_subject_suggested__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_tracking_duration_mixin__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
@@ -1320,9 +1380,9 @@ msgstr "Webové zprávy"
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_main_attachment__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_subject_suggested__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_tracking_duration_mixin__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
@@ -1357,7 +1417,7 @@ msgstr "Napište zprávu..."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/chatter/core/composer_patch.js:0
+#: code:addons/portal/static/src/chatter/portal_project/composer_patch.js:0
 msgid "Write a message…"
 msgstr "Napište zprávu…"
 
@@ -1453,6 +1513,11 @@ msgstr "přihlášen"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
 msgstr "odoo"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__sequence
+msgid "sequence"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript

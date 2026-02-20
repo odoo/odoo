@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-28 07:26+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -46,14 +46,17 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's %(action_name)s"
-msgstr "%(name)s %(action_name)s"
+msgid "%(name)s's Actual Margins"
+msgstr ""
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Sales Order Items"
-msgstr "%(name)s Elemente din comanda de vânzare"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-dollar text-success\" "
+"invisible=\"actual_margin &lt; 0\" title=\"On Track\"/>\n"
+"                    <i class=\"fa fa-fw o_button_icon fa-dollar text-"
+"danger\" invisible=\"actual_margin &gt;= 0\" title=\"Off Track\"/>"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -127,6 +130,11 @@ msgstr "<span class=\"o_stat_text\"> Sarcini</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "<span class=\"o_stat_text\">Actual Margin</span>"
+msgstr ""
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
 msgstr "<span class=\"o_stat_text\">Previzualizare</span>"
 
@@ -136,27 +144,6 @@ msgstr "<span class=\"o_stat_text\">Previzualizare</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Comandă de vânzare</span>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
-msgid ""
-"<span name=\"rating_status_helper\">\n"
-"                    <span invisible=\"rating_status == 'periodic'\">A rating "
-"request will be sent as soon as a task reaches this stage, provided the "
-"project is billable.</span>\n"
-"                    <span invisible=\"rating_status == 'stage'\">Rating "
-"requests will be sent as long as the task remains in this stage, provided "
-"the project is billable.</span>\n"
-"                </span>"
-msgstr ""
-"<span name=\"rating_status_helper\">\n"
-"                    <span invisible=\"rating_status == 'periodic'\">O "
-"solicitare de evaluare va fi trimisă imediat ce o sarcină ajunge în această "
-"etapă, cu condiția ca proiectul să fie facturabil.</span>\n"
-"                    <span invisible=\"rating_status == "
-"'stage'\">Solicitările de evaluare vor fi trimise atâta timp cât sarcina "
-"rămâne în această etapă, cu condiția ca proiectul să fie facturabil.</span>\n"
-"                </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -169,13 +156,13 @@ msgstr "<span>)</span>"
 msgid ""
 "A project must be defined on the quotation %(order)s or on the form of "
 "products creating a task on order.\n"
-"The following product need a project in which to put its task: %"
-"(product_name)s"
+"The following product need a project in which to put its task: "
+"%(product_name)s"
 msgstr ""
 "Un proiect trebuie definit în cotația %(order)s sau în formularul produselor "
 "care creează o sarcină la comandă.\n"
-"Următorul produs are nevoie de un proiect în care să-și pună sarcina: %"
-"(product_name)s"
+"Următorul produs are nevoie de un proiect în care să-și pună sarcina: "
+"%(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -210,6 +197,17 @@ msgstr ""
 "  - Mișcări de stoc: cantitatea provine din preluările confirmate\n"
 
 #. module: sale_project
+#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
+#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
+msgid "Actual Margins"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
@@ -227,6 +225,31 @@ msgstr "Bazat pe repere importante"
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__allow_billable
 msgid "Billable"
 msgstr "Facturabil"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
+msgid "Billable Type"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
+msgid "Billed Manually"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
+msgid "Billed at a Fixed price"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
+msgid "Billed on Milestones"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
+msgid "Billed on Timesheets"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
@@ -248,18 +271,6 @@ msgid ""
 msgstr ""
 "Convertirea acestui șablon într-un proiect obișnuit îl va deconecta de la "
 "produsele sale asociate."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Cost of Goods Sold"
-msgstr "Costul bunurilor vândute"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Cost of Goods Sold Items"
-msgstr "Elemente ale costului bunurilor vândute"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -361,22 +372,9 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Customer Invoices"
-msgstr "Facturi Clienți"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
 msgstr "Definit în cotație"
-
-#. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
-msgid "Delivered"
-msgstr "Livrat"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
@@ -384,12 +382,7 @@ msgid "Digital Marketing Campaign (project)"
 msgstr "Campanie de marketing digital (proiect)"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
-msgid "Discard"
-msgstr "Renunță"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
 #: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
@@ -399,7 +392,6 @@ msgstr "Renunță"
 #: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
 #: model:ir.model.fields,field_description:sale_project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__display_name
-#: model:ir.model.fields,field_description:sale_project.field_project_update__display_name
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
@@ -420,12 +412,6 @@ msgid "Done"
 msgstr "Efectuat"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Down Payments"
-msgstr "Avansuri"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
 msgstr "Proiect gol"
@@ -436,7 +422,7 @@ msgid "Flooring Services"
 msgstr "Servicii de pardoseli"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_account_move__id
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:sale_project.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_project.field_product_product__id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__id
@@ -446,7 +432,6 @@ msgstr "Servicii de pardoseli"
 #: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
 #: model:ir.model.fields,field_description:sale_project.field_project_task_type__id
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__id
-#: model:ir.model.fields,field_description:sale_project.field_project_update__id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
@@ -462,12 +447,6 @@ msgid "In Progress"
 msgstr "În desfășurare"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-msgid "Internal link"
-msgstr "Link intern"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
@@ -480,17 +459,11 @@ msgid "Invoice your time and material to customers"
 msgstr "Facturează timpul și materialele către clienți"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
-msgid "Invoiced"
-msgstr "Facturat"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices_dashboard
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoices"
 msgstr "Facturi"
 
@@ -500,20 +473,9 @@ msgid "Invoicing Policy"
 msgstr "Politica de facturare"
 
 #. module: sale_project
-#: model:ir.model,name:sale_project.model_account_move
-msgid "Journal Entry"
-msgstr "Notă contabilă"
-
-#. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
 msgid "Journal Item"
 msgstr "Element jurnal"
-
-#. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-msgid "Load more"
-msgstr "Încarcă mai mult"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -532,12 +494,6 @@ msgstr ""
 "pontaj aferentă.\n"
 "Creează o sarcină și urmărește orele: Creează o sarcină la validarea "
 "comenzii de vânzare și urmărește orele de lucru."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Materials"
-msgstr "Materiale"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -564,6 +520,11 @@ msgid "New project"
 msgstr "Proiect nou"
 
 #. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
+msgid "Non-Billable"
+msgstr ""
+
+#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -581,10 +542,14 @@ msgid "Office Furniture Set (task)"
 msgstr "Set mobilier de birou (sarcină)"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Other Services"
-msgstr "Alte servicii"
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_other_costs
+msgid "Other Costs"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__11_other_revenues
+msgid "Other Revenues"
+msgstr ""
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -686,11 +651,6 @@ msgid "Project Template create Wizard"
 msgstr "Asistent de creare a șablonului de proiect"
 
 #. module: sale_project
-#: model:ir.model,name:sale_project.model_project_update
-msgid "Project Update"
-msgstr "Actualizare proiect"
-
-#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
 msgstr "Comanda de vânzare a proiectului"
@@ -710,6 +670,26 @@ msgstr "Cantitate (%)"
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
 msgstr "Linie șablon cotație"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
+msgid "Revenues Fixed Price"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
+msgid "Revenues Manual"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
+msgid "Revenues Milestones"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__03_timesheet_revenues
+msgid "Revenues Timesheets"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
@@ -779,13 +759,11 @@ msgstr ""
 "vânzare a fiecărei înregistrări de fișă de pontaj individual."
 
 #. module: sale_project
-#. odoo-javascript
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items_dashboard
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales Order Items"
 msgstr "Linii comandă de vânzare"
 
@@ -795,8 +773,6 @@ msgid "Sales Order Line"
 msgstr "Linie comandă de vânzare"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders_dashboard
 msgid "Sales Orders"
@@ -853,11 +829,9 @@ msgid "Service Invoicing Policy"
 msgstr "Politica de facturare a serviciilor"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
-msgid "Sold"
-msgstr "Vândut"
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__10_service_revenues
+msgid "Service Revenues"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
@@ -1003,6 +977,7 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Vendor Bills"
 msgstr "Facturi furnizori"
 

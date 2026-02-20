@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-11-12 13:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
@@ -141,12 +141,6 @@ msgstr "Але ви можете використовувати також фа�
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "Скасувати"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr "Натисніть 'Продовжити' щоб продовжити імпорт, з рядка %s."
@@ -161,11 +155,11 @@ msgstr "Колонка %(column)s містить невірні значення
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr ""
-"Колонка %(column)s містить невірні значення. Помилка в рядку %(line)d: %"
-"(error)s"
+"Колонка %(column)s містить невірні значення. Помилка в рядку %(line)d: "
+"%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -190,8 +184,8 @@ msgstr "Коментарі"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Не вдалося отримати URL: %(url)s [%(field_name)s: L%(line_number)d]: %"
-"(error)s"
+"Не вдалося отримати URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -255,6 +249,12 @@ msgid "Delay after each batch"
 msgstr "Затримка після кожного групового платежу"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
@@ -312,8 +312,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Помилка під час імпорту записів: усі рядки мають бути однакового розміру, "
 "але рядок заголовка має записи %(title_row_entries)d у той час як перший "
@@ -379,8 +379,8 @@ msgstr "Розмір файлу перевищує налаштований ма
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Файл для перевірки та/або імпорту, бінарний файл (не base64)"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

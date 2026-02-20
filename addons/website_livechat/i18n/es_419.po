@@ -3,44 +3,28 @@
 # * website_livechat
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-10 17:18+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-15 23:13+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/website_livechat/es_419/>\n"
+"odoo-s19-1/website_livechat/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
 msgid "# Sessions"
 msgstr "Número de sesiones"
-
-#. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/models/discuss_channel.py:0
-msgid ""
-"%(visitor)s started a conversation with %(operator)s.\n"
-"The chat request has been cancelled"
-msgstr ""
-"%(visitor)s inició una conversación con %(operator)s.\n"
-" Se canceló la solicitud de chat."
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
-msgid "(closed on: %(date)s)"
-msgstr "(fecha de cierre: %(date)s)"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -51,6 +35,11 @@ msgstr "Disponible"
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
 msgstr "Canal"
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_discuss_channel_member
+msgid "Channel Member"
+msgstr "Miembro del canal"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.im_livechat_channel_view_form_add
@@ -92,15 +81,9 @@ msgstr "Ajustes de configuración"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
-msgid "Country"
-msgstr "País"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
-msgid "Country & Language"
-msgstr "País e idioma"
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+msgid "Conversation ongoing"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
@@ -111,6 +94,7 @@ msgstr "Canal de conversaciones"
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel_member__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
@@ -129,6 +113,7 @@ msgstr "Enrutamiento HTTP"
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__id
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__id
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel_member__id
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
@@ -144,10 +129,12 @@ msgid "In Conversation"
 msgstr "En conversación"
 
 #. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
-msgid "Language"
-msgstr "Idioma"
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid ""
+"Live chat conversation closed automatically: the visitor started a new "
+"conversation with another agent."
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -173,24 +160,19 @@ msgid "Operator Avatar"
 msgstr "Avatar del operador"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
-msgid "Operator Name"
-msgstr "Nombre del operador"
-
-#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website_page
 msgid "Page"
 msgstr "Página"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent conversations"
 msgstr "Conversaciones recientes"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent page views"
 msgstr "Vistas recientes a la página"
 
@@ -220,7 +202,7 @@ msgid "Speaking With"
 msgstr "Hablando con"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_id
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__current_livechat_agent_ids
 msgid "Speaking with"
 msgstr "Hablando con"
 
@@ -231,9 +213,9 @@ msgstr "Prueba"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "The visitor"
-msgstr "El visitante"
+#: code:addons/website_livechat/controllers/chatbot.py:0
+msgid "Test %s"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
@@ -276,7 +258,7 @@ msgstr "Visitantes"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
 msgstr "Sitio web"
@@ -306,9 +288,3 @@ msgid ""
 msgstr ""
 "Cuando se crea a partir de un operador, si el visitante todavía debe abrir "
 "el canal."
-
-#. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "an operator"
-msgstr "un operador"

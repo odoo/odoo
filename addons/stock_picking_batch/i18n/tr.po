@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-28 12:49+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -50,6 +50,11 @@ msgstr "%s partiden çıkarıldı, işlenen miktar yok"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "2023-08-20"
 msgstr "20-08-2023"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -372,9 +377,7 @@ msgid "Calendar View"
 msgstr "Takvimi Göster"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Cancel"
 msgstr "İptal"
 
@@ -765,6 +768,11 @@ msgid "Next Activity Type"
 msgstr "Sonraki Aktivitie Türü"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__0
+msgid "Normal"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Aksiyon Sayısı"
@@ -866,6 +874,11 @@ msgstr "Yazdır"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Print Labels"
 msgstr "Etiketleri Yazdır"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__priority
+msgid "Priority"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
@@ -1182,6 +1195,7 @@ msgstr "Bugünkü Aktiviteler"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfer"
 msgstr "Aktarım"
 
@@ -1209,6 +1223,7 @@ msgstr "Transfer Eden:"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "Transferler"
 
@@ -1227,6 +1242,11 @@ msgstr "Atanmamış sorumlu %s"
 #: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
 msgid "Unreserve"
 msgstr "Rezervasyonu Kaldır"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__1
+msgid "Urgent"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form

@@ -8,23 +8,23 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-11-14 08:18+0000\n"
+"POT-Creation-Date: 2026-02-04 18:37+0000\n"
+"PO-Revision-Date: 2026-01-24 12:40+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_blog/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_blog
 #. odoo-python
@@ -45,12 +45,12 @@ msgstr "'. Resultaten weergeven voor '"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "-- Scheduled"
-msgstr ""
+msgstr "-- Ingepland"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "-- Unpublished"
-msgstr ""
+msgstr "-- Niet gepubliceerd"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -209,11 +209,13 @@ msgid ""
 "<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
 "Demo</span> • <span>Mar 13, 2025</span> •"
 msgstr ""
+"<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
+"Demo</span> • <span>13 maart, 2025</span> •"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 msgid "<small class=\"text-muted\">Mar 13, 2025</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">13 maart, 2025</small>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -259,11 +261,19 @@ msgid ""
 "long-arrow-right\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
+"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"                    <span class=\"badge text-bg-primary\">NIEUW</span>\n"
+"                    <strong>Sierra Tarahumara</strong>\n"
+"                    <span class=\"text-muted\">Marc Demo in Reizen</span>\n"
+"                    <span class=\"text-primary\">Nu lezen <i class=\"fa fa-"
+"long-arrow-right\" role=\"presentation\"/></span>\n"
+"                </span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
 msgid "<span class=\"text-muted\">Mar 13, 2025</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">13 maart 2025</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_badge
@@ -271,6 +281,8 @@ msgid ""
 "<span class=\"text-primary text-nowrap\">Read Now <i class=\"fa fa-long-"
 "arrow-right\"/></span>"
 msgstr ""
+"<span class=\"text-primary text-nowrap\">Nu lezen <i class=\"fa fa-long-"
+"arrow-right\"/></span>"
 
 #. module: website_blog
 #: model_terms:web_tour.tour,rainbow_man_message:website_blog.blog
@@ -286,6 +298,8 @@ msgid ""
 "<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc "
 "Demo</span>"
 msgstr ""
+"<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc "
+"Demo</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
@@ -294,6 +308,9 @@ msgid ""
 "Demo</span>\n"
 "                    <span class=\"text-muted\"> • Mar 13, 2025</span>"
 msgstr ""
+"<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/>Marc "
+"Demo</span>\n"
+"                    <span class=\"text-muted\"> • 13 maart 2025</span>"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_2
@@ -528,12 +545,12 @@ msgstr "Naam auteur"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Automatisch publiceren op"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "De pagina automatisch publiceren op de gekozen datum en tijd."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_avatar
@@ -624,13 +641,14 @@ msgstr "Voorbij het oog"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog"
 msgstr "Blog"
 
 #. module: website_blog
 #: model:res.groups,name:website_blog.group_website_blog_manager
 msgid "Blog Manager"
-msgstr ""
+msgstr "Blogbeheerder"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__name
@@ -701,6 +719,11 @@ msgid "Blog Tags"
 msgstr "Bloglabels"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
+msgid "Blog Teaser"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Blog Title"
 msgstr "Titel blog"
@@ -750,7 +773,7 @@ msgstr "Kruimelpad"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "Breadcrumb zichtbaar"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -795,6 +818,9 @@ msgid ""
 "is a big next step in the development of your passion for the stars. In many "
 "ways, it is a big step from someone..."
 msgstr ""
+"De juiste telescoop kopen om je liefde voor astronomie naar een hoger niveau "
+"te tillen, is een belangrijke stap in de ontwikkeling van je passie voor de "
+"sterren. In veel opzichten is het een grote stap voor iemand..."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
@@ -802,6 +828,8 @@ msgid ""
 "Buying the right telescope to take your love of astronomy to the next level "
 "is a big next step in the development..."
 msgstr ""
+"De juiste telescoop kopen om je liefde voor astronomie naar een hoger niveau "
+"te tillen, is een belangrijke volgende stap in de ontwikkeling..."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__can_publish
@@ -1103,6 +1131,9 @@ msgid ""
 "bodies begins when we saw our first full moon in the sky. It is truly a "
 "magnificent view even to the naked eye...."
 msgstr ""
+"Voor velen van ons begint onze allereerste ervaring met hemellichamen "
+"wanneer we voor het eerst de volle maan aan de hemel zien. Het is zelfs met "
+"het blote oog een werkelijk schitterend gezicht..."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -1357,6 +1388,9 @@ msgid ""
 "has that moment when we are suddenly stunned when we come face to face with "
 "the enormity of the universe that we..."
 msgstr ""
+"Ieder van ons heeft ooit het moment meegemaakt waarop je plotseling versteld "
+"staat als je oog in oog komt te staan met de enorme omvang van het universum "
+"dat we..."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -1507,6 +1541,8 @@ msgid ""
 "Maui helicopter tours are a great way to see the island from a different "
 "perspective and have a fun adventure..."
 msgstr ""
+"Helikoptervluchten boven Maui zijn een geweldige manier om het eiland vanuit "
+"een ander perspectief te bekijken en een leuk avontuur te beleven..."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1885,7 +1921,7 @@ msgstr "Publicatiedatum"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publish on"
-msgstr ""
+msgstr "Publiceren op"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -1907,7 +1943,7 @@ msgstr "Gepubliceerde post"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Publicatiedatum"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -1917,7 +1953,7 @@ msgstr "Publicatie opties"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.sidebar_blog_index
 msgid "RSS"
-msgstr ""
+msgstr "RSS"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__rating_ids
@@ -1930,6 +1966,7 @@ msgstr "Beoordelingen"
 msgid ""
 "Read Now <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 msgstr ""
+"Nu lezen <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_aside
@@ -1937,7 +1974,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_full
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
 msgid "Read Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
-msgstr ""
+msgstr "Nu lezen <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1996,12 +2033,12 @@ msgstr "Satellieten"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 msgid "Scheduled"
-msgstr ""
+msgstr "Ingepland"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Scheduled ("
-msgstr ""
+msgstr "Ingepland ("
 
 #. module: website_blog
 #. odoo-javascript
@@ -2084,6 +2121,11 @@ msgid "Share this post"
 msgstr "Deel deze post"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
+msgid "Shown as a preview on the /blog page"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
@@ -2118,6 +2160,9 @@ msgid ""
 "The area is a favorite destination among those seeking an adventurous "
 "vacation. Copper Canyon is one of the six gorges in the..."
 msgstr ""
+"Sierra Tarahumara, in de volksmond bekend als Copper Canyon, ligt in Mexico. "
+"Het gebied is een geliefde bestemming voor mensen die op zoek zijn naar een "
+"avontuurlijke vakantie. Copper Canyon is een van de zes kloven in de..."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
@@ -2126,6 +2171,9 @@ msgid ""
 "The area is a favorite destination among those seeking an adventurous "
 "vacation. Copper Canyon is one of the six gorges..."
 msgstr ""
+"Sierra Tarahumara, in de volksmond bekend als Copper Canyon, ligt in Mexico. "
+"Het gebied is een geliefde bestemming voor mensen die op zoek zijn naar een "
+"avontuurlijke vakantie. Copper Canyon is een van de zes kloven..."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
@@ -2133,6 +2181,8 @@ msgid ""
 "Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. "
 "The area is a favorite destination among those..."
 msgstr ""
+"Sierra Tarahumara, in de volksmond bekend als Copper Canyon, ligt in Mexico. "
+"Het gebied is een geliefde bestemming voor mensen..."
 
 #. module: website_blog
 #. odoo-javascript
@@ -2218,6 +2268,10 @@ msgid ""
 "choose a hotel. Ten years ago, you'd have probably visited your local travel "
 "agent and trusted the face-to-face advice you we..."
 msgstr ""
+"Je gaat naar het buitenland, je hebt je bestemming gekozen en nu moet je een "
+"hotel kiezen. Tien jaar geleden zou je waarschijnlijk naar je plaatselijke "
+"reisbureau zijn gegaan en zou je vertrouwen hebben gehad in het persoonlijke "
+"advies dat je..."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
@@ -2226,6 +2280,10 @@ msgid ""
 "choose a hotel. Ten years ago, you'd have probably visited your local travel "
 "agent and trusted the face-to-face advice..."
 msgstr ""
+"Je gaat naar het buitenland, je hebt je bestemming gekozen en nu moet je een "
+"hotel kiezen. Tien jaar geleden zou je waarschijnlijk naar je plaatselijke "
+"reisbureau zijn gegaan en zou je vertrouwen hebben gehad in het persoonlijke "
+"advies..."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
@@ -2233,6 +2291,8 @@ msgid ""
 "So you're going abroad, you've chosen your destination and now you have to "
 "choose a hotel. Ten years ago, you'd have..."
 msgstr ""
+"Je gaat naar het buitenland, je hebt je bestemming gekozen en nu moet je een "
+"hotel kiezen. Tien jaar geleden zou je..."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -2715,7 +2775,7 @@ msgstr "Niet gepubliceerd ("
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Unschedule"
-msgstr ""
+msgstr "Inplannen annuleren"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_heading
@@ -2799,7 +2859,7 @@ msgstr "Website URL"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_message_ids
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_description

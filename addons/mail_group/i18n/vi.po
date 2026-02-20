@@ -3,15 +3,15 @@
 # * mail_group
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-12-02 14:56+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 12:30+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "mail_group/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -23,12 +23,12 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "#Thành viên"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "#Tin nhắn"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -74,8 +74,8 @@ msgstr ""
 "                Bạn đã yêu cầu được đăng ký vào danh sách liên hệ này "
 "<strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                Để xác nhận, hãy đi tới liên kết sau: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                Để xác nhận, hãy đi tới liên kết sau: <strong t-if=\"ctx."
+"get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
 "                Nếu đây là nhầm lẫn hoặc bạn không yêu cầu đăng ký, vui lòng "
@@ -105,8 +105,8 @@ msgstr ""
 "                Bạn đã yêu cầu ngừng đăng ký vào danh sách liên hệ này "
 "<strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                Để xác nhận, hãy truy cập liên kết sau: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx."
+"get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
 "                Nếu đây là nhầm lẫn hoặc bạn không yêu cầu ngừng đăng ký, "
@@ -119,8 +119,8 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-"
-"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object."
+"mail_group_id.name\"/> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
@@ -129,8 +129,8 @@ msgstr ""
 "<div>\n"
 "                <p>Xin chào <t t-out=\"object.partner_id.name or ''\"/>,</"
 "p>\n"
-"                <p>Vui lòng xem hướng dẫn của <t t-"
-"out=\"object.mail_group_id.name\"/> danh sách gửi thư dưới đây.</p>\n"
+"                <p>Vui lòng xem hướng dẫn của <t t-out=\"object."
+"mail_group_id.name\"/> danh sách gửi thư dưới đây.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
@@ -561,11 +561,6 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-msgid "Discard"
-msgstr "Huỷ bỏ"
-
-#. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
@@ -669,7 +664,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "Nhóm"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -955,7 +950,7 @@ msgstr "Tin nhắn cần tác vụ"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "Trung bình"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1285,7 +1280,7 @@ msgstr "Xóa tin nhắn với giải thích"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "Người phụ trách"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1629,7 +1624,7 @@ msgstr "đã được"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "thành viên<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

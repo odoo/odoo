@@ -18,16 +18,16 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-16 05:47+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "purchase_stock/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -38,8 +38,8 @@ msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "% On-Time Delivery"
-msgstr "% Toimitusvarmuus"
+msgid "% On Time"
+msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
@@ -75,7 +75,12 @@ msgstr "+ %s päivä(ä)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<small class=\"text-muted\"> / month</small>"
+msgid "<small class=\"text-muted ms-1\"> / month</small>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<small class=\"text-muted\">Demand: </small>"
 msgstr ""
 
 #. module: purchase_stock
@@ -100,23 +105,8 @@ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Ehdottaa</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<span class=\"text-info fw-bold fs-5 me-1\">units</span>"
-msgstr "<span class=\"text-info fw-bold fs-5 me-1\">yksikköä</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small ms-1\">Forecasted</span>"
 msgstr "<span class=\"text-muted small ms-1\">Ennustettu</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<span class=\"text-muted small\">Monthly Demand:</span>"
-msgstr ""
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No data yet</span>"
-msgstr "<span invisible=\"on_time_rate &gt;= 0\">Ei vielä tietoja</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -317,7 +307,8 @@ msgstr "Päivää ostamiseen"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,help:purchase_stock.field_res_users__group_rfq
 msgid ""
-"Define if RFQ should be grouped         together based on expected arrival.\n"
+"Define if RFQ should be grouped         together based on expected arrival, "
+"except for dropship operations.\n"
 "         On Order: Replenishment needs will be grouped together except for "
 "MTO.\n"
 "         Daily: Replenishment needs will be grouped if the expected arrival "
@@ -326,15 +317,6 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
-"Määritä, pitäisikö tarjouspyynnöt ryhmitellä         odotetun "
-"saapumisajankohdan perusteella.\n"
-"         Tilauksessa: Täydennystarpeet ryhmitellään yhteen, paitsi "
-"tilauksesta valmistettaessa.\n"
-"         Päivittäin: Täydennystarpeet ryhmitellään, jos odotettu "
-"saapumisaika on samana päivänä\n"
-"         Viikoittain: Täydennystarpeet ryhmitellään, jos odotettu saapuminen "
-"on samalla viikolla tai viikonpäivänä\n"
-"         Aina: Täydennystarpeet ryhmitellään aina."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -475,11 +457,6 @@ msgstr "Ennustettu liikkeeseenlasku"
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__5
 msgid "Friday"
 msgstr "Perjantai"
-
-#. module: purchase_stock
-#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
-msgid "Fully Received"
-msgstr "Täysin vastaanotettu"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -655,6 +632,12 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimivarastosääntö"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+msgid "Missing products in receipt"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
 msgid "Monday"
 msgstr "Maanantai"
@@ -691,11 +674,6 @@ msgstr "Ei kuittia vielä! Automatisoi ne ostotilauksilla."
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No supplier has been found to replenish"
 msgstr "Yhtään toimittajaa ei löytynyt täydentämään"
-
-#. module: purchase_stock
-#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
-msgid "Not Received"
-msgstr "Ei vastaanotettu"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -744,6 +722,11 @@ msgid "On-time Rate"
 msgstr "Ajanmukaisuusaste"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "Only"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Order Deadline"
@@ -760,8 +743,8 @@ msgstr "Tilauspiste"
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
 "Over the past x days; the number of products received on time divided by the "
-"number of ordered products.x is either the System Parameter "
-"purchase_stock.on_time_delivery_days or the default 365"
+"number of ordered products.x is either the System Parameter purchase_stock."
+"on_time_delivery_days or the default 365"
 msgstr ""
 "Viimeisten x päivän aikana; ajallaan vastaanotettujen tuotteiden määrä "
 "jaettuna tilattujen tuotteiden määrällä. Muuttuja x on joko "
@@ -771,11 +754,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "PO Lines"
 msgstr "Ostotilauksen rivit"
-
-#. module: purchase_stock
-#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
-msgid "Partially Received"
-msgstr "Osittain vastaanotettu"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -883,11 +861,6 @@ msgid "Receipt Date"
 msgstr "Vastaanottopäivä"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
-msgid "Receipt Status"
-msgstr "Vastaanoton tila"
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive"
 msgstr "Vastaanota"
@@ -902,6 +875,11 @@ msgstr "Vastaanota tilatut tuotteet."
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
 msgstr "Vastaanotettu määrä Menetelmä"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "Received quantity is less than the expected quantity for transfer"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -1068,6 +1046,11 @@ msgid "Sunday"
 msgstr "Sunnuntai"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__partner_id
+msgid "Supplier"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id_placeholder
 msgid "Supplier Id Placeholder"
 msgstr "Toimittajatunnuksen paikkamerkki"
@@ -1118,9 +1101,9 @@ msgid ""
 "location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"Toimintatyypin (%(operation_type)s) varasto on ristiriidassa tuotteen %"
-"(product)s uudelleenjärjestämissäännön (%(reordering_rule)s) sijainnin (%"
-"(location)s) kanssa. Vaihda toimintatyyppiä tai peruuta tarjouspyyntö."
+"Toimintatyypin (%(operation_type)s) varasto on ristiriidassa tuotteen "
+"%(product)s uudelleenjärjestämissäännön (%(reordering_rule)s) sijainnin "
+"(%(location)s) kanssa. Vaihda toimintatyyppiä tai peruuta tarjouspyyntö."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1326,12 +1309,18 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr "Sinun on asetettava toimittajan fyysinen paikka tälle kumppanille %s"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "and no backorder is planned. Manual action may be needed."
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "day(s)"
 msgstr "päivä(ä)"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
 msgstr "of"
@@ -1342,7 +1331,17 @@ msgid "ordered instead of"
 msgstr "tilattu sen sijasta"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "received in contrast to the expected"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "tämä tuote tulee täydentää manuaalisesti."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "units"
+msgstr ""

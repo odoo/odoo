@@ -8,16 +8,16 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 09:04+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-02-07 12:38+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_forum/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -66,8 +66,8 @@ msgstr "# Weergaven"
 msgid ""
 "%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s"
 msgstr ""
-"%(link_start)sLees de richtlijnen om te weten hoe je karma kunt verdienen.%"
-"(link_end)s"
+"%(link_start)sLees de richtlijnen om te weten hoe je karma kunt verdienen."
+"%(link_end)s"
 
 #. module: website_forum
 #. odoo-javascript
@@ -249,24 +249,6 @@ msgstr ""
 "web/login\">Aanmelden</a>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.404
-msgid ""
-"<a class=\"btn-link o_translate_inline\" t-attf-href=\"/forum\"><i "
-"class=\"oi oi-arrow-right display-inline-block\"/> Return to questions list</"
-"a>"
-msgstr ""
-"<a class=\"btn-link o_translate_inline\" t-attf-href=\"/forum\"><i "
-"class=\"oi oi-arrow-right display-inline-block\"/>Terug naar vragenlijst</a>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
-msgid ""
-"<a class=\"mb-2 o_translate_inline\" t-attf-href=\"/profile/users\" data-bs-"
-"original-title=\"\" title=\"\" target=\"_blank\">Meet our community members</"
-"a>"
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid ""
 "<b class=\"d-block \">This answer has been flagged</b>\n"
@@ -409,12 +391,12 @@ msgid ""
 "<b>don't forget to vote</b>\n"
 "            - it really helps to select the best questions and answers!"
 msgstr ""
-"<b>Probeer alsjeblieft een substantieel antwoord te geven.</b> Als je wou "
-"reageren op de vraag of het antwoord, <b>gebruik daarvoor de community tool."
-"</b> Denk er aan dat je je <b>antwoorden altijd kan herzien</b>\n"
-"- geen nood om dezelfde vraag twee keer te beantwoorden. <b>Vergeet ook niet "
-"om te stemmen</b>\n"
-"- Het helpt de beste vragen en antwoorden te selecteren!"
+"<b>Probeer alsjeblieft een substantieel antwoord te geven.</b> Als je wilde "
+"reageren op de vraag of het antwoord, <b>gebruik dan de opmerkingstool.</b> "
+"Je kunt <b>je antwoorden altijd aanpassen</b>.\n"
+"- Je hoeft dezelfde vraag niet twee keer te beantwoorden. <b>Vergeet ook "
+"niet om te stemmen</b>\n"
+"- Dat helpt om de beste vragen en antwoorden te selecteren!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -667,6 +649,13 @@ msgstr "<i class=\"fa fa-users fa-fw opacity-50\"/> Personen"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<i class=\"oi oi-arrow-right d-inline-block\"/> Go to Forums"
 msgstr "<i class=\"oi oi-arrow-right d-inline-block\"/> Ga naar Forums"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
+msgid ""
+"<i class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
+"list"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
@@ -1608,7 +1597,7 @@ msgstr "Verwijderen"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
 msgid "Delete all comments"
-msgstr "Verwijder alle reacties"
+msgstr "Alle opmerkingen verwijderen"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
@@ -2461,6 +2450,11 @@ msgid "Mark as spam"
 msgstr "Markeer als spam"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid "Meet our community members"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
@@ -2610,7 +2604,7 @@ msgstr "Nog geen posts"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "No results."
-msgstr ""
+msgstr "Geen resultaten."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
@@ -3149,7 +3143,7 @@ msgstr "SMS fout bij versturen"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Save Changes"
-msgstr "Save veranderingen"
+msgstr "Wijzigingen opslaan"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -3166,12 +3160,12 @@ msgstr "Zoek"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Search Answers..."
-msgstr ""
+msgstr "Antwoorden zoeken..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Search Questions..."
-msgstr ""
+msgstr "Vragen zoeken..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
@@ -3436,6 +3430,8 @@ msgstr "Het aanvaard antwoord is verwijderd"
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
 msgstr ""
+"De volledige absolute URL om toegang te krijgen tot het document via de "
+"website."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_url
@@ -3443,6 +3439,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_url
 msgid "The full relative URL to access the document through the website."
 msgstr ""
+"De volledige relatieve URL om toegang te krijgen tot het document via de "
+"website."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3569,12 +3567,12 @@ msgstr "Deze vraag is gerapporteerd"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "This user hasn't answered any questions yet."
-msgstr ""
+msgstr "Deze gebruiker heeft nog geen vragen beantwoord."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "This user hasn't posted any questions yet."
-msgstr ""
+msgstr "Deze gebruiker heeft nog geen vragen geplaatst."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3841,7 +3839,7 @@ msgstr "Website / Forum"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_absolute_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "Absolute URL van de website"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
@@ -3862,7 +3860,7 @@ msgstr "Website URL"
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -3969,12 +3967,12 @@ msgstr "Je hebt een post in behandeling"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "You have not answered any questions yet."
-msgstr ""
+msgstr "Je hebt nog geen vragen beantwoord."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "You have not posted any questions yet."
-msgstr ""
+msgstr "Je hebt nog geen vragen geplaatst."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes

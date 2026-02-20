@@ -9,15 +9,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Camille Dantinne <cmd@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-02 14:54+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:39+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_event/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -480,8 +480,7 @@ msgid "All"
 msgstr "Tous"
 
 #. module: website_event
-#. odoo-python
-#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All Countries"
 msgstr "Tous les pays"
 
@@ -492,11 +491,6 @@ msgstr "Tous les pays"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "All Events"
 msgstr "Tous les événements"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_location
-msgid "All countries"
-msgstr "Tous les pays"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -535,14 +529,14 @@ msgstr "Auteur"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Publication automatique le"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag_category__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Publier automatiquement la page à la date et à l’heure choisies."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
@@ -563,7 +557,7 @@ msgstr "Article de blog"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "Breadcrumb visible"
 
 #. module: website_event
 #. odoo-python
@@ -583,12 +577,6 @@ msgstr "Liens calendrier"
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "Peut publier"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Cancel"
-msgstr "Annuler"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -729,8 +717,15 @@ msgid "Description"
 msgstr "Description"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Discard"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -842,6 +837,11 @@ msgid "Event Registrations"
 msgstr "Inscriptions à l'événement"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr "Créneau de l'événement"
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
@@ -883,7 +883,7 @@ msgstr "Événement publié"
 #: model:mail.message.subtype,description:website_event.mt_event_scheduled
 #: model:mail.message.subtype,name:website_event.mt_event_scheduled
 msgid "Event scheduled"
-msgstr ""
+msgstr "Événement planifié"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -895,7 +895,7 @@ msgstr "Événement non publié"
 #: model:mail.message.subtype,description:website_event.mt_event_unscheduled
 #: model:mail.message.subtype,name:website_event.mt_event_unscheduled
 msgid "Event unscheduled"
-msgstr ""
+msgstr "Événement non planifié"
 
 #. module: website_event
 #. odoo-javascript
@@ -1068,6 +1068,7 @@ msgstr "Comment avez-vous découvert cet événement ?"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1078,6 +1079,21 @@ msgstr "Comment avez-vous découvert cet événement ?"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid ""
+"If enabled, online events will be included when user filters by country."
+msgstr ""
+"Si activé, les événements en ligne seront inclus lorsque l’utilisateur "
+"filtre par pays."
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid "Include online"
+msgstr "Inclure en ligne"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -1372,7 +1388,7 @@ msgstr "Publier"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Publish on"
-msgstr ""
+msgstr "Publier le"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1386,7 +1402,7 @@ msgstr "Publié"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__published_date
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Date de publication"
 
 #. module: website_event
 #. odoo-javascript
@@ -1573,7 +1589,7 @@ msgstr "Échantillon"
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_tree_view
 msgid "Scheduled"
-msgstr ""
+msgstr "Planifié"
 
 #. module: website_event
 #. odoo-python
@@ -1585,7 +1601,7 @@ msgstr "Événements planifiés"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Scheduled for"
-msgstr ""
+msgstr "Planifié pour"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -1783,7 +1799,7 @@ msgstr "Filtre barre supérieure"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Unschedule"
-msgstr ""
+msgstr "Déprogrammer"
 
 #. module: website_event
 #. odoo-python
@@ -2017,6 +2033,11 @@ msgstr "disponible)"
 #: code:addons/website_event/models/event_event.py:0
 msgid "date_end"
 msgstr "date_end"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates

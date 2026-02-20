@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
 "PO-Revision-Date: 2025-11-16 22:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/fleet/"
@@ -36,6 +36,11 @@ msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
 msgid ""
 "<span class=\"o_stat_value\">New</span>\n"
 "                                <span class=\"o_stat_text\">Vehicle</span>"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_kanban
+msgid "<span class=\"text-muted\"> - </span>"
 msgstr ""
 
 #. module: fleet
@@ -418,7 +423,7 @@ msgid "Can Edit Body"
 msgstr "Можна редагувати тіло"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -450,9 +455,22 @@ msgid "Cars"
 msgstr "Автівки"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_res_partner__partner_cars_count
+#: model:ir.model.fields,field_description:fleet.field_res_users__partner_cars_count
+msgid "Cars Count"
+msgstr ""
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:fleet.view_partner_form
+msgid "Cars History"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
-msgid "Catalog Value (VAT Incl.)"
-msgstr "Значення каталогу (з ПДВ)"
+msgid "Catalog Value (Tax Incl.)"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -554,6 +572,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__company_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__company_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__company_id
 msgid "Company"
 msgstr "Компанія"
 
@@ -567,6 +586,11 @@ msgstr "Налаштування"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "Configuration"
 msgstr "Налаштування"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_res_partner
+msgid "Contact"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
@@ -676,6 +700,11 @@ msgid "Country Code"
 msgstr "Код країни"
 
 #. module: fleet
+#: model:ir.model,website_form_label:fleet.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid "Create a new category"
 msgstr "Створити нову категорію"
@@ -772,9 +801,9 @@ msgstr "Щодня"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__date_start
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__recorded_date
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 msgid "Date"
@@ -787,7 +816,7 @@ msgstr "Дата реєстрації автотранспорту"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date_from
 msgid "Date when the cost has been executed"
 msgstr "Дата, коли вартість була виконана"
 
@@ -858,6 +887,7 @@ msgstr "Дизель"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
 #: model:ir.model.fields,field_description:fleet.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -995,6 +1025,16 @@ msgid "End Date Contract Alert"
 msgstr "Кінцева дата сповіщення контракту"
 
 #. module: fleet
+#: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_log_services_check_service_dates
+msgid "End date must be on or after the start date."
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date_to
+msgid "End of Service"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Engine"
@@ -1024,6 +1064,11 @@ msgstr "Запис в податок на обслуговування"
 #: model:fleet.service.type,name:fleet.type_service_21
 msgid "Exhaust Manifold Replacement"
 msgstr "Заміна вихлопних колекторів"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+msgid "Expiration Date"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__expired
@@ -1281,6 +1326,7 @@ msgstr "Водень"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
 #: model:ir.model.fields,field_description:fleet.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:fleet.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -1857,11 +1903,6 @@ msgid "Odometer Value"
 msgstr "Значення одометра"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
-msgid "Odometer Values Per Vehicle"
-msgstr "Значення одометра  кожного транспортного засобу"
-
-#. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
 msgstr "Журнал одометру для автомобіля"
@@ -1925,6 +1966,11 @@ msgid "Ordered"
 msgstr "Замовлено"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__other
+msgid "Other"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_33
 msgid "Other Maintenance"
 msgstr "Інше технічне обслуговування"
@@ -1940,14 +1986,9 @@ msgid "Oxygen Sensor Replacement"
 msgstr "Заміна датчика кисню"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_bike
-msgid "Plan To Change Bike"
-msgstr "План для зміни велосипеда"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
-msgid "Plan To Change Car"
-msgstr "Запланувати змінити авто"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_vehicle
+msgid "Plan To Change Vehicle"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -2035,6 +2076,11 @@ msgid ""
 msgstr ""
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Reactivate"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
 msgstr "Готові ефективніше керувати своїм автопарком?"
@@ -2081,8 +2127,8 @@ msgstr "Модель рендеру"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
-msgid "Rent (Excluding VAT)"
-msgstr "Оренда (без ПДВ)"
+msgid "Rent (Excluding Tax)"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_7
@@ -2116,8 +2162,8 @@ msgstr "Залишкова сума"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_14
-msgid "Residual value (Excluding VAT)"
-msgstr "Залишкова вартість (без ПДВ)"
+msgid "Residual value (Excluding Tax)"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
@@ -2308,8 +2354,14 @@ msgstr "Стадія"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Start Date"
 msgstr "Початкова дата"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date_from
+msgid "Start of Service"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_42
@@ -2483,8 +2535,8 @@ msgstr "Разом"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
-msgid "Total expenses (Excluding VAT)"
-msgstr "Загальні витрати (без ПДВ)"
+msgid "Total expenses (Excluding Tax)"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -2569,6 +2621,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit"
 msgstr "Одиниці"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Unregistered"
+msgstr ""
 
 #. module: fleet
 #. odoo-python
@@ -2700,6 +2757,7 @@ msgstr "Постачальники"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Visible to all"
 msgstr ""
@@ -2814,7 +2872,6 @@ msgid "e.g. Model S"
 msgstr "наприклад Модель S"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form_quick_create
 msgid "e.g. PAE 326"
 msgstr "наприклад, PAE 326"

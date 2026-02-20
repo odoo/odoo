@@ -7,16 +7,16 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:15+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "purchase_stock/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -28,8 +28,8 @@ msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "% On-Time Delivery"
-msgstr "% Fiabilité des livraisons"
+msgid "% On Time"
+msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
@@ -64,8 +64,13 @@ msgstr "+ %s jour(s)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<small class=\"text-muted\"> / month</small>"
+msgid "<small class=\"text-muted ms-1\"> / month</small>"
 msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<small class=\"text-muted\">Demand: </small>"
+msgstr "<small class=\"text-muted\">Demande : </small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -89,23 +94,8 @@ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Suggérer</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<span class=\"text-info fw-bold fs-5 me-1\">units</span>"
-msgstr "<span class=\"text-info fw-bold fs-5 me-1\">unités</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small ms-1\">Forecasted</span>"
 msgstr "<span class=\"text-muted small ms-1\">Prévisionnel</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<span class=\"text-muted small\">Monthly Demand:</span>"
-msgstr ""
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No data yet</span>"
-msgstr "<span invisible=\"on_time_rate &gt;= 0\">Pas encore de données</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -226,12 +216,12 @@ msgstr "Acheter pour réapprovisionner"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Entreprise"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the last receipt order."
-msgstr ""
+msgstr "Date de finalisation de la dernière réception."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -275,6 +265,8 @@ msgid ""
 "Date promised by the vendor for at least 1 or more products to be delivered "
 "by."
 msgstr ""
+"Date promise par le fournisseur pour la livraison d’au moins un ou plusieurs "
+"produits."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
@@ -306,7 +298,8 @@ msgstr "Jours pour acheter"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,help:purchase_stock.field_res_users__group_rfq
 msgid ""
-"Define if RFQ should be grouped         together based on expected arrival.\n"
+"Define if RFQ should be grouped         together based on expected arrival, "
+"except for dropship operations.\n"
 "         On Order: Replenishment needs will be grouped together except for "
 "MTO.\n"
 "         Daily: Replenishment needs will be grouped if the expected arrival "
@@ -316,14 +309,14 @@ msgid ""
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
 "Définissez si les demandes de prix doivent être regroupées en fonction de la "
-"date d’arrivée prévue.\n"
-"Sur commande : Les besoins de réapprovisionnement seront regroupés, sauf "
-"pour les besoins en MTO.\n"
-"Quotidien : Les besoins de réapprovisionnement seront regroupés si la date "
-"d’arrivée prévue est le même jour.\n"
-"Hebdomadaire : Les besoins de réapprovisionnement seront regroupés si la "
-"date d’arrivée prévue tombe la même semaine ou le même jour de la semaine.\n"
-"Toujours : Les besoins de réapprovisionnement seront toujours regroupés."
+"date d’arrivée prévue, à l’exception des opérations en dropshipping.\n"
+"À la commande : les besoins de réapprovisionnement seront regroupés, sauf "
+"pour les produits en MTO.\n"
+"Quotidiennement : les besoins de réapprovisionnement seront regroupés si la "
+"date d’arrivée prévue est le même jour.\n"
+"Hebdomadairement : les besoins de réapprovisionnement seront regroupés si la "
+"date d’arrivée prévue est la même semaine ou le même jour de la semaine.\n"
+"Toujours : les besoins de réapprovisionnement seront toujours regroupés."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -341,6 +334,8 @@ msgid ""
 "Delivery Date promised by the vendor. If the vendor delivers products after "
 "this date, their On-Time rate will be negatively impacted."
 msgstr ""
+"Date de livraison promise par le fournisseur. Si le fournisseur livre les "
+"produits après cette date, son taux de ponctualité sera impacté négativement."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -466,11 +461,6 @@ msgid "Friday"
 msgstr "Vendredi"
 
 #. module: purchase_stock
-#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
-msgid "Fully Received"
-msgstr "Entièrement reçu"
-
-#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Generate the draft vendor bill."
@@ -562,7 +552,7 @@ msgstr "Lieu Incoterm"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Route d’inventaire"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -645,6 +635,12 @@ msgid "Minimum Inventory Rule"
 msgstr "Règle d'inventaire minimum"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+msgid "Missing products in receipt"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
 msgid "Monday"
 msgstr "Lundi"
@@ -681,11 +677,6 @@ msgstr "Pas encore de reçu ! Automatisez-les avec des bons de commande."
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No supplier has been found to replenish"
 msgstr "Aucun fournisseur n'a été trouvé pour le réapprovisionnement"
-
-#. module: purchase_stock
-#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
-msgid "Not Received"
-msgstr "Non reçu"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -734,6 +725,11 @@ msgid "On-time Rate"
 msgstr "Taux dans les temps"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "Only"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Order Deadline"
@@ -750,8 +746,8 @@ msgstr "Point de commande"
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
 "Over the past x days; the number of products received on time divided by the "
-"number of ordered products.x is either the System Parameter "
-"purchase_stock.on_time_delivery_days or the default 365"
+"number of ordered products.x is either the System Parameter purchase_stock."
+"on_time_delivery_days or the default 365"
 msgstr ""
 "Au cours des x derniers jours, le nombre de produits reçus à temps divisé "
 "par le nombre de produits commandés. x est soit le paramètre système "
@@ -761,11 +757,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "PO Lines"
 msgstr "Lignes de bon de commande"
-
-#. module: purchase_stock
-#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
-msgid "Partially Received"
-msgstr "Partiellement reçu"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -803,7 +794,7 @@ msgstr "Variante de produit"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__date_promised
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__date_promised
 msgid "Promised Date"
-msgstr ""
+msgstr "Date promise"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
@@ -873,11 +864,6 @@ msgid "Receipt Date"
 msgstr "Date de réception"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
-msgid "Receipt Status"
-msgstr "Statut de la réception"
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive"
 msgstr "Recevoir"
@@ -892,6 +878,11 @@ msgstr "Recevoir les produits commandés."
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
 msgstr "Méthode de la quantité reçue"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "Received quantity is less than the expected quantity for transfer"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -1058,6 +1049,11 @@ msgid "Sunday"
 msgstr "Dimanche"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__partner_id
+msgid "Supplier"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id_placeholder
 msgid "Supplier Id Placeholder"
 msgstr "Placeholder id fournisseur"
@@ -1108,8 +1104,8 @@ msgid ""
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
 "L'entrepôt du type d'opération (%(operation_type)s) n'est pas compatible "
-"avec la localisation (%(location)s) de la règle de réapprovisionnement (%"
-"(reordering_rule)s) pour le produit %(product)s. Modifiez le type "
+"avec la localisation (%(location)s) de la règle de réapprovisionnement "
+"(%(reordering_rule)s) pour le produit %(product)s. Modifiez le type "
 "d'opération ou annulez la demande de prix."
 
 #. module: purchase_stock
@@ -1316,12 +1312,18 @@ msgstr ""
 "Vous devez définir un emplacement fournisseur adresse pour ce partenaire %s."
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "and no backorder is planned. Manual action may be needed."
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "day(s)"
 msgstr "jour(s)"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
 msgstr "de"
@@ -1332,7 +1334,17 @@ msgid "ordered instead of"
 msgstr "commandés au lieu de"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
+msgid "received in contrast to the expected"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "Ce produit doit être réapprovisionné manuellement."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "units"
+msgstr ""

@@ -6,17 +6,17 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-04 17:50+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-16 17:15+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-19/barcodes/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s19-1/barcodes/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,11 +106,6 @@ msgid "Barcode"
 msgstr "Código de barras"
 
 #. module: barcodes
-#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
-msgid "Barcode Event Mixin"
-msgstr "Mixin de evento de código de barras"
-
-#. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
@@ -136,11 +131,6 @@ msgid "Barcode Rule"
 msgstr "Regra de código de barras"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
-msgid "Barcode Scanned"
-msgstr "Código de barras escaneado"
-
-#. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
@@ -149,7 +139,7 @@ msgstr "Código de barras: %(barcode)s"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -166,7 +156,6 @@ msgstr "Criado em"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 #: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
 #: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
@@ -206,21 +195,10 @@ msgstr "Roteamento HTTP"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 #: model:ir.model.fields,field_description:barcodes.field_ir_http__id
 #: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
 msgstr "ID"
-
-#. module: barcodes
-#. odoo-python
-#: code:addons/barcodes/models/barcode_events_mixin.py:0
-msgid ""
-"In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
-"must be implemented"
-msgstr ""
-"Para usar barcodes.barcode_events_mixin, o método on_barcode_scanned deve "
-"ser implementado"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -414,11 +392,6 @@ msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 "Usado para ordenar regras de tal modo que as regras com um número de "
 "sequência menor correspondam primeiro"
-
-#. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
-msgid "Value of the last barcode scanned."
-msgstr "Valor do último código de barras escaneado."
 
 #. module: barcodes
 #. odoo-python

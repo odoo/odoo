@@ -25,16 +25,16 @@
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-11 15:56+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-16 09:48+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/portal/pl/"
-">\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/portal/"
+"pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,13 +47,18 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr "\", aby zweryfikować swoje działanie."
+msgstr "\", aby potwierdzić swoje działanie."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "%s days overdue"
-msgstr "%szaległych dni."
+msgstr "%s dni po upłynięciu terminu"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_docs_entry
+msgid "'Icon for %s' % entry.name"
+msgstr "„Ikona dla %s ” % entry.name"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -76,16 +81,20 @@ msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
 "Account"
 msgstr ""
+"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> Moje "
+"konto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-sign-out small text-primary-emphasis\"/> Logout"
 msgstr ""
+"<i class=\"fa fa-fw fa-sign-out small text-primary-emphasis\"/> Wyloguj się"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
 msgstr ""
+"<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Aplikacje"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -108,8 +117,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Wstecz\" "
+"title=\"Wstecz\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -117,13 +126,13 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
-"title=\"Next\"/>"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Dalej\" "
+"title=\"Dalej\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Dodaj adres"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -131,16 +140,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Dokumentacja\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Kraj...</option>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Stan / województwo...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -153,6 +152,12 @@ msgid ""
 "                            operation.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Zmiana numeru VAT nie jest dozwolona po "
+"wystawieniu dokumentów\n"
+"                            dla Twojego konta. W tej sprawie prosimy o "
+"bezpośredni kontakt z nami.\n"
+"                       </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -162,6 +167,10 @@ msgid ""
 "company account.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Numer VAT można aktualizować wyłącznie na koncie "
+"firmowym.\n"
+"                       </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -173,6 +182,12 @@ msgid ""
 "                    operation.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Zmiana kraju nie jest dozwolona po wystawieniu "
+"dokumentów\n"
+"                    dla Twojego konta. W sprawie przeprowadzenia tej "
+"operacji prosimy o bezpośredni kontakt z nami.\n"
+"               </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -180,6 +195,8 @@ msgid ""
 "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Wstecz\" "
+"title=\"Wstecz\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -187,6 +204,8 @@ msgid ""
 "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Dalej\" "
+"title=\"Dalej\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -250,7 +269,7 @@ msgstr "Dodaj notatkę"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Add an address"
-msgstr ""
+msgstr "Dodaj adres"
 
 #. module: portal
 #. odoo-javascript
@@ -269,7 +288,7 @@ msgid "Add extra content to display in the email"
 msgstr "Dodaj dodatkową treść do wyświetlenia w wiadomości e-mail"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model:portal.entry,description:portal.portal_entry_addresses
 msgid "Add, remove or modify your addresses"
 msgstr "Dodawanie, usuwanie lub modyfikowanie adresów"
 
@@ -281,11 +300,11 @@ msgstr "Dodano"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Zarządzanie adresem"
 
 #. module: portal
+#: model:portal.entry,name:portal.portal_entry_addresses
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Addresses"
 msgstr "Adresy"
 
@@ -322,10 +341,9 @@ msgid "Billing address"
 msgstr "Adres rozliczeniowy"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
-msgid "Cancel"
-msgstr "Anuluj"
+#: model:ir.model.fields,field_description:portal.field_portal_entry__category
+msgid "Category"
+msgstr "Kategoria"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -349,6 +367,8 @@ msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Zmiana kraju nie jest możliwa po wystawieniu dokumentów dla Twojego konta. W "
+"tej sprawie skontaktuj się z nami bezpośrednio."
 
 #. module: portal
 #. odoo-javascript
@@ -365,7 +385,7 @@ msgstr "Miasto"
 #. odoo-javascript
 #: code:addons/portal/static/src/signature_form/signature_form.xml:0
 msgid "Click here to see your document."
-msgstr "Kliknij tutaj aby zobaczyć swoje dokumenty"
+msgstr "Kliknij tutaj aby zobaczyć swoje dokumenty."
 
 #. module: portal
 #. odoo-javascript
@@ -382,12 +402,17 @@ msgid "Company Name"
 msgstr "Nazwa firmy"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
+msgid "Config Card"
+msgstr "Karta konfiguracji"
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ustawienia konfiguracji"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model:portal.entry,description:portal.portal_entry_base
 msgid "Configure your connection parameters"
 msgstr "Konfiguracja parametrów połączenia"
 
@@ -404,7 +429,11 @@ msgid "Confirm Password"
 msgstr "Potwierdź hasło"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model:portal.entry,name:portal.portal_entry_base
+msgid "Connection & Security"
+msgstr "Połączenie i bezpieczeństwo"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Connection &amp; Security"
 msgstr "Połączenie &amp; Bezpieczeństwo"
@@ -432,7 +461,7 @@ msgstr "Kontakty"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
-msgstr ""
+msgstr "Nie można zapisać pliku %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -440,11 +469,17 @@ msgid "Country"
 msgstr "Kraj"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "Country..."
+msgstr ""
+
+#. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
 msgid "Create a Customer"
 msgstr "Utwórz klienta"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
@@ -452,6 +487,7 @@ msgid "Created by"
 msgstr "Utworzył(a)"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
@@ -506,6 +542,11 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__description
+msgid "Description of Card"
+msgstr "Opis karty"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Details"
 msgstr "Szczegóły"
@@ -532,11 +573,17 @@ msgstr ""
 "</b>"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Discard"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
 #: model:ir.model.fields,field_description:portal.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:portal.field_mail_message__display_name
 #: model:ir.model.fields,field_description:portal.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
@@ -595,7 +642,7 @@ msgstr "Data ważności"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Forgot password?"
-msgstr "Zapomniałeś hasła?"
+msgstr "Nie pamiętasz hasła?"
 
 #. module: portal
 #. odoo-javascript
@@ -606,12 +653,12 @@ msgstr "Podaj czas ważności klucza"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Go Back"
-msgstr "Wróć"
+msgstr "Z powrotem"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr "Daj Dostęp"
+msgstr "Przyznaj dostęp"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -642,7 +689,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
-msgstr "Dom"
+msgstr "Strona główna"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__id
@@ -650,6 +697,7 @@ msgstr "Dom"
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:portal.field_mail_message__id
 #: model:ir.model.fields,field_description:portal.field_mail_thread__id
+#: model:ir.model.fields,field_description:portal.field_portal_entry__id
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
 #: model:ir.model.fields,field_description:portal.field_portal_share__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
@@ -676,13 +724,18 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Jeśli chcesz je zmodyfikować, zaktualizuj"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__image
+msgid "Image"
+msgstr "Obraz"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Important:"
-msgstr "Ważne:"
+msgstr "Ważny:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -743,6 +796,7 @@ msgstr ""
 "i kompletny,"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -750,6 +804,7 @@ msgid "Last Updated by"
 msgstr "Ostatnio aktualizowane przez"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
@@ -770,17 +825,17 @@ msgstr "Zostaw komentarz"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr "Odnośnik"
+msgstr "Link"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Log out from all devices"
-msgstr "Wyloguj się ze wszystkich urządzeń"
+msgstr "Wylogowanie ze wszystkich urządzeń"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Main Address"
-msgstr ""
+msgstr "Główny adres"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -791,11 +846,11 @@ msgstr "Wiadomość"
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 msgid ""
-"Model %(model_name)s does not support token signature, as it does not have %"
-"(field_name)s field."
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
 msgstr ""
-"Model %(model_name)s nie obsługuje tokena, ponieważ nie ma pola %"
-"(field_name)s."
+"Model %(model_name)s nie obsługuje tokena, ponieważ nie ma pola "
+"%(field_name)s."
 
 #. module: portal
 #. odoo-python
@@ -811,13 +866,13 @@ msgstr "Moje konto"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Moje adresy"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Name your key"
-msgstr "Nazwij swój klucz"
+msgstr "Nazwa Twojego klucza"
 
 #. module: portal
 #. odoo-javascript
@@ -863,7 +918,7 @@ msgstr "Ups! Coś poszło nie tak. Spróbuj odświeżyć stronę i się zalogowa
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
 msgid "Partners"
-msgstr "Kontrahenci"
+msgstr "Partnerzy"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -886,6 +941,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__placeholder_count
+msgid "Placeholder Count"
+msgstr "Liczba znaków zastępczych"
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Please enter your password to confirm you own this account"
@@ -902,6 +962,11 @@ msgstr "Zarządzanie dostępem do portalu"
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
 msgstr "Adres URL dostępu do portalu"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_entry
+msgid "Portal Entry"
+msgstr "Wejście do portalu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -960,7 +1025,7 @@ msgstr "Powiązany dokument"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
 msgid "Related Document ID"
-msgstr "ID dokumentu związanego"
+msgstr "ID powiązanego dokumentu"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
@@ -970,7 +1035,7 @@ msgstr "Powiązany model dokumentu"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Remove this address"
-msgstr ""
+msgstr "Usuń ten adres"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -980,7 +1045,7 @@ msgstr "Cofnij dostęp"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Revoke All Sessions"
-msgstr "Cofnij wszystkie sesje"
+msgstr "Cofnięcie wszystkich sesji"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
@@ -990,7 +1055,7 @@ msgstr "Taki sam jak adres dostawy"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Zapisz adres"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1016,7 +1081,7 @@ msgstr "Kontrola bezpieczeństwa"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
 msgid "Security Token"
-msgstr "Token uprawnień"
+msgstr "Token bezpieczeństwa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1030,8 +1095,8 @@ msgstr ""
 "Wybierz z poniższej listy kontakty dla portalu.\n"
 "                        Adres mailowy każdego wybranego kontaktu musi być "
 "poprawny i unikalny.\n"
-"                        Jeśli trzeba, to popraw adresy mailowe bezpośrednio "
-"w tej liście."
+"                        Jeśli trzeba, popraw adresy mailowe bezpośrednio w "
+"tej liście."
 
 #. module: portal
 #. odoo-javascript
@@ -1057,6 +1122,11 @@ msgid "Show As Optional Inherit"
 msgstr "Pokaż jako opcjonalne dziedziczenie"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__show_in_portal
+msgid "Show in Portal"
+msgstr "Pokaż w portalu"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
 msgid "Sign in"
 msgstr "Zaloguj się"
@@ -1064,7 +1134,7 @@ msgstr "Zaloguj się"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Skip to Content"
-msgstr ""
+msgstr "Przejdź do zawartości"
 
 #. module: portal
 #. odoo-javascript
@@ -1088,6 +1158,11 @@ msgid "State / Province"
 msgstr "Województwo"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "State / Province..."
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
 msgid "Status"
 msgstr "Status"
@@ -1096,6 +1171,11 @@ msgstr "Status"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Street and Number"
 msgstr "Ulica oraz numer budynku"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__url
+msgid "Target URL"
+msgstr "Docelowy URL"
 
 #. module: portal
 #. odoo-javascript
@@ -1107,13 +1187,13 @@ msgstr "Dziękujemy!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "Pole %(field_name)s jest zarządzane na koncie Twojej firmy."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "Pole %(field_name)s jest zarządzane na głównym adresie Twojego konta."
 
 #. module: portal
 #. odoo-python
@@ -1142,6 +1222,7 @@ msgstr "Załącznik nie istnieje lub nie masz uprawnień dostępu do niego."
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
+"Nazwa firmy i numer VAT mogą być aktualizowane wyłącznie na koncie głównym."
 
 #. module: portal
 #. odoo-python
@@ -1179,7 +1260,7 @@ msgstr "Nowe hasło i jego potwierdzenie muszą być jednakowe."
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
 msgstr ""
-"Poprzednie hasło wprowadziłeś niepoprawnie. Hasło nie zostało zmienione."
+"Poprzednie wprowadzone hasło jest niepoprawne. Hasło nie zostało zmienione."
 
 #. module: portal
 #. odoo-python
@@ -1237,6 +1318,11 @@ msgstr ""
 "Ten tekst będzie częścią maila wysłanego do nowych użytkowników portalu."
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__name
+msgid "Title of Card"
+msgstr "Tytuł karty"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Przełącz filtry"
@@ -1250,7 +1336,7 @@ msgstr "Użytkownik"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "User Dashboard"
-msgstr ""
+msgstr "Konsola użytkownika"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -1276,7 +1362,7 @@ msgstr "Poprawny adres e-mail"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr "Potwierdź nowe hasło:"
+msgstr "Powtórz nowe hasło:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1303,9 +1389,9 @@ msgstr "Widok"
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_main_attachment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_subject_suggested__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_tracking_duration_mixin__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
@@ -1341,9 +1427,9 @@ msgstr "Wiadomości"
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_main_attachment__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_subject_suggested__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_tracking_duration_mixin__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
@@ -1363,7 +1449,7 @@ msgstr "Historia komunikacji"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "What's this key for?"
-msgstr "Do czego służy ten klucz?"
+msgstr "Po co ten klucz?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1378,9 +1464,9 @@ msgstr "Napisz wiadomość..."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/chatter/core/composer_patch.js:0
+#: code:addons/portal/static/src/chatter/portal_project/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Napisz wiadomość…"
 
 #. module: portal
 #. odoo-javascript
@@ -1391,19 +1477,19 @@ msgstr "Zapisz swój klucz"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr "Nieprawidłowe hasło."
+msgstr "Błędne hasło."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Nie możesz zarchiwizować swojego głównego adresu"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot leave any password empty."
-msgstr "Hasło nie może być puste"
+msgstr "Hasło nie może być puste."
 
 #. module: portal
 #. odoo-javascript
@@ -1427,7 +1513,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "Twoje konto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1477,6 +1563,11 @@ msgid "odoo"
 msgstr "odoo"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_entry__sequence
+msgid "sequence"
+msgstr "sekwencja"
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
@@ -1493,4 +1584,4 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
-msgstr ""
+msgstr "szczegóły Twojego konta"

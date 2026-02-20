@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-11-08 19:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -79,6 +79,11 @@ msgstr "Contact"
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Country"
 msgstr "Țară"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__country_code
+msgid "Country Code"
+msgstr ""
 
 #. module: base_address_extended
 #: model:ir.model,website_form_label:base_address_extended.model_res_partner
@@ -162,6 +167,7 @@ msgstr "Ultima actualizare pe"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
+#: model_terms:ir.ui.view,arch_db:base_address_extended.res_city_view_form
 msgid "Name"
 msgstr "Nume"
 
@@ -198,7 +204,15 @@ msgid "Street..."
 msgstr "Strada..."
 
 #. module: base_address_extended
+#: model:ir.model.fields,help:base_address_extended.field_res_city__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.res_city_view_form
 msgid "ZIP"
 msgstr "Cod poștal"
 
@@ -206,3 +220,8 @@ msgstr "Cod poștal"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
 msgid "Zip"
 msgstr "Cod postal"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.res_city_view_form
+msgid "e.g. London"
+msgstr ""

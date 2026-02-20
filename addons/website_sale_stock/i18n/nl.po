@@ -8,15 +8,15 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-02 14:54+0000\n"
+"POT-Creation-Date: 2026-02-04 18:37+0000\n"
+"PO-Revision-Date: 2026-01-31 12:50+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale_stock/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -38,12 +38,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "%(product_name)s is back in stock"
+msgstr "%(product_name)s is weer op voorraad"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_wishlist
+msgid ""
+"<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
+"                    Out of stock"
 msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
 msgstr "<span invisible=\"not default_show_availability\">eenheden</span>"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "Add to wishlist"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "Added to your wishlist"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -69,7 +88,7 @@ msgstr "Meldingen Terug in voorraad"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Below"
-msgstr ""
+msgstr "Onder"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -79,7 +98,7 @@ msgstr "Configuratie-instellingen"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Continue Selling"
-msgstr "Verkoop hervatten"
+msgstr "Doorgaan met verkopen"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
@@ -104,11 +123,16 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"Bepaalt hoe dit lint aan producten wordt toegewezen:\n"
+"- Handmatig: Je wijst het lint handmatig toe aan producten.\n"
+"- Uitverkoop: Toegewezen wanneer een product zichtbaar in uitverkoop is.\n"
+"- Nieuw: Toegewezen op basis van de 'Nieuwe periode' die je instelt.\n"
+"- Niet op voorraad: Toegewezen wanneer het product niet op voorraad is."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Desk Combination"
-msgstr ""
+msgstr "Bureaucombinatie"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
@@ -116,6 +140,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_wishlist__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
@@ -123,11 +148,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
 msgid "Display Name"
 msgstr "Weergavenaam"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Ecommerce Inventory"
-msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -138,7 +158,7 @@ msgstr "Ontvang een bericht wanneer er opnieuw voorraad is"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Hello"
-msgstr ""
+msgstr "Hallo"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
@@ -146,6 +166,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_wishlist__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
@@ -167,6 +188,11 @@ msgid "Invalid email"
 msgstr "Ongeldige e-mail"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Inventory"
+msgstr "Voorraad"
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
 msgstr "Standaard voorraadinstellingen"
@@ -174,12 +200,12 @@ msgstr "Standaard voorraadinstellingen"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -225,7 +251,7 @@ msgstr "Productcombinatie"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_feed
 msgid "Product Feed"
-msgstr ""
+msgstr "Productfeed"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -233,14 +259,19 @@ msgid "Product Variant"
 msgstr "Productvariant"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_wishlist
+msgid "Product Wishlist"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Product image"
-msgstr ""
+msgstr "Productafbeelding"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "Productlint"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -298,9 +329,14 @@ msgstr ""
 "bijgewerkt. Onze excuses voor het ongemak."
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_wishlist__stock_notification
+msgid "Stock Notification"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The product you were waiting for is now back in stock!"
-msgstr ""
+msgstr "Het product waar je op zat te wachten is nu weer op voorraad!"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -358,7 +394,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "e.g. 'Will be back soon'"
-msgstr ""
+msgstr "bv. 'Komt binnenkort terug'"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -380,7 +416,7 @@ msgstr "alleen als onder de"
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
 msgid "when out of stock"
-msgstr ""
+msgstr "wanneer het niet op voorraad is"
 
 #. module: website_sale_stock
 #. odoo-javascript

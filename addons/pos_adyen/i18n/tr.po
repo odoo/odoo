@@ -8,21 +8,22 @@
 # Levent Karakaş <levent@mektup.at>, 2022
 # Halil, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 01:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-16 05:43+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_adyen/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -44,6 +45,11 @@ msgstr "Adyen Hatası"
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
 msgstr "Adyen Son Yanıt"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_merchant_account
+msgid "Adyen Merchant Account"
+msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
@@ -106,6 +112,8 @@ msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__display_name
 msgid "Display Name"
@@ -118,6 +126,8 @@ msgstr "Etkinlik URL'si"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__id
 msgid "ID"
@@ -148,6 +158,16 @@ msgstr ""
 #: model:ir.model,name:pos_adyen.model_pos_config
 msgid "Point of Sale Configuration"
 msgstr "Satış Noktası Yapılandırması"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_order
+msgid "Point of Sale Order"
+msgstr ""
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_payment
+msgid "Point of Sale Payment"
+msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
@@ -182,6 +202,11 @@ msgid ""
 msgstr ""
 "Terminal %(terminal)s, ödeme yöntemi %(payment_method)s zaten "
 "kullanılmaktadır."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_merchant_account
+msgid "The POS merchant account code used in Adyen"
+msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_event_url

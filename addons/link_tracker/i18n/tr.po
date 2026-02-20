@@ -19,21 +19,22 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-11-21 14:45+0000\n"
-"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-16 05:41+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
 "link_tracker/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
@@ -96,15 +97,11 @@ msgstr "Kodlar"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid ""
-"Combinations of Link Tracker values (URL, campaign, medium, source, and "
-"label) must be unique.\n"
+"Combinations of Link Tracker values (URL, campaign, medium, source, "
+"reference, and label) must be unique.\n"
 "The following combinations are already used: \n"
 "- %(error_lines)s"
 msgstr ""
-"Bağlantı İzleyici değerlerinin kombinasyonları (URL, kampanya, ortam, kaynak "
-"ve etiket) benzersiz olmalıdır.\n"
-"Aşağıdaki kombinasyonlar halihazırda kullanılmaktadır: \n"
-"- %(error_lines)s"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
@@ -151,6 +148,11 @@ msgstr "URL olmadan bir Bağlantı İzleyici oluşturmak mümkün değildir"
 #: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "İsim Göster"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "Download QR Code"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
@@ -247,6 +249,11 @@ msgid "Medium"
 msgstr "Aracı:"
 
 #. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "New Link Tracker"
+msgstr ""
+
+#. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
 msgid "No data yet!"
 msgstr "Henüz veri yok!"
@@ -267,9 +274,20 @@ msgid "Page Title"
 msgstr "Sayfa Başlığı"
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "Please enter valid short URL code."
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url
 msgid "Redirected URL"
 msgstr "Yönlendirilmiş URL"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "Reference"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__code
@@ -351,6 +369,11 @@ msgstr "UTM"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__campaign_id
 msgid "UTM Campaign"
 msgstr "UTM Kampanyası"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__utm_reference
+msgid "UTM Reference"
+msgstr ""
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form

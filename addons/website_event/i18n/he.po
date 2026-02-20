@@ -16,14 +16,15 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # or balmas <or@laylinetech.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 21:57+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-13 13:10+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_event/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +32,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -432,8 +433,7 @@ msgid "All"
 msgstr "הכל"
 
 #. module: website_event
-#. odoo-python
-#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All Countries"
 msgstr "כל הארצות"
 
@@ -444,11 +444,6 @@ msgstr "כל הארצות"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "All Events"
 msgstr "כל האירועים"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_location
-msgid "All countries"
-msgstr "כל הארצות"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -533,12 +528,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "יכול לפרסם"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Cancel"
-msgstr "בטל"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -675,8 +664,15 @@ msgid "Description"
 msgstr "תיאור"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Discard"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -783,6 +779,11 @@ msgstr "קישור הרשמה לאירוע"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
 msgstr "הרשמות לאירוע"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -1007,6 +1008,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1017,6 +1019,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr "מזהה"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid ""
+"If enabled, online events will be included when user filters by country."
+msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid "Include online"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -1938,6 +1953,11 @@ msgstr "זמינים)"
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 msgid "date_end"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "events"
 msgstr ""
 
 #. module: website_event

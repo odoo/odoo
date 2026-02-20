@@ -9,42 +9,27 @@
 # Hanna Kheradroosta, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-13 13:13+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-16 07:00+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_livechat/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
 msgid "# Sessions"
 msgstr "# جلسات"
-
-#. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/models/discuss_channel.py:0
-msgid ""
-"%(visitor)s started a conversation with %(operator)s.\n"
-"The chat request has been cancelled"
-msgstr ""
-"%(visitor)s شروع به گفتگو با . %(operator)s.\n"
-"درخواست چت لغو شده است"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
-msgid "(closed on: %(date)s)"
-msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -55,6 +40,11 @@ msgstr "در دسترس"
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
 msgstr "کانال"
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_discuss_channel_member
+msgid "Channel Member"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.im_livechat_channel_view_form_add
@@ -96,14 +86,8 @@ msgstr "تنظیمات پیکربندی"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
-msgid "Country"
-msgstr "کشور"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
-msgid "Country & Language"
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+msgid "Conversation ongoing"
 msgstr ""
 
 #. module: website_livechat
@@ -115,6 +99,7 @@ msgstr "کانال گفتگو"
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel_member__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
@@ -133,6 +118,7 @@ msgstr "مسیریابی HTTP"
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__id
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__id
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel_member__id
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
@@ -148,10 +134,12 @@ msgid "In Conversation"
 msgstr "در گفتگو"
 
 #. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
-msgid "Language"
-msgstr "زبان"
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid ""
+"Live chat conversation closed automatically: the visitor started a new "
+"conversation with another agent."
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -177,24 +165,19 @@ msgid "Operator Avatar"
 msgstr "اپراتور آواتار"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
-msgid "Operator Name"
-msgstr "نام اپراتور"
-
-#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website_page
 msgid "Page"
 msgstr "صفحه"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent conversations"
 msgstr ""
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent page views"
 msgstr ""
 
@@ -224,7 +207,7 @@ msgid "Speaking With"
 msgstr "در حال صحبت با"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_id
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__current_livechat_agent_ids
 msgid "Speaking with"
 msgstr "در حال صحبت با"
 
@@ -235,9 +218,9 @@ msgstr "تست"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "The visitor"
-msgstr "بازدیدکننده"
+#: code:addons/website_livechat/controllers/chatbot.py:0
+msgid "Test %s"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
@@ -280,7 +263,7 @@ msgstr "بازدید کنندگان"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+#: code:addons/website_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
 msgstr "تارنما"
@@ -308,9 +291,3 @@ msgid ""
 "When created from an operator, whether the channel is yet to be opened on "
 "the visitor side."
 msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "an operator"
-msgstr "یک اپراتور"

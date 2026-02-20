@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-12-03 08:36+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -30,6 +30,19 @@ msgid "%(available_qty)s/%(line_qty)s available at this location"
 msgstr ""
 
 #. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "<i class=\"fa fa-fw fa-heart\"/> In wishlist"
+msgstr ""
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid ""
+"<i class=\"fa fa-fw fa-heart-o\" role=\"presentation\" aria-label=\"Add to "
+"Wishlist\"/>\n"
+"                                    Wishlist"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
 "<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
@@ -37,9 +50,19 @@ msgid ""
 msgstr "<i>Ваш заказ подтвержден.</i><br>Ждем вас в магазине для оплаты."
 
 #. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "<span class=\"small\">|</span>"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
 msgstr "<span class=\"text-muted\"> (Самовывоз из магазина)</span>"
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "Add to Wishlist"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -222,6 +245,12 @@ msgid "Select store"
 msgstr ""
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Selected country:"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
 msgstr "Некоторые товары недоступны в"
@@ -257,6 +286,12 @@ msgstr "Способ доставки и склад должны принадл�
 msgid "The delivery method must have at least one warehouse to be published."
 msgstr ""
 "Чтобы опубликовать этот способ доставки, укажите как минимум один склад."
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "This address may require to recompute taxes."
+msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning

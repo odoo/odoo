@@ -3,22 +3,23 @@
 # * link_tracker
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-30 17:04+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:11+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/link_tracker/es_419/>\n"
+"odoo-s19-1/link_tracker/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
@@ -81,15 +82,11 @@ msgstr "Códigos"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid ""
-"Combinations of Link Tracker values (URL, campaign, medium, source, and "
-"label) must be unique.\n"
+"Combinations of Link Tracker values (URL, campaign, medium, source, "
+"reference, and label) must be unique.\n"
 "The following combinations are already used: \n"
 "- %(error_lines)s"
 msgstr ""
-"Las combinaciones de valores del rastreador de enlaces (URL, campaña, medio, "
-"origen y etiqueta) deben ser únicas.\n"
-"Las siguientes combinaciones ya están en uso: \n"
-"- %(error_lines)s"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
@@ -136,6 +133,11 @@ msgstr "No puedes crear un rastreador de enlaces sin una URL"
 #: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "Download QR Code"
+msgstr "Descargar código QR"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
@@ -232,6 +234,11 @@ msgid "Medium"
 msgstr "Medio"
 
 #. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "New Link Tracker"
+msgstr "Nuevo rastreador de enlaces"
+
+#. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
 msgid "No data yet!"
 msgstr "Todavía no hay información"
@@ -252,9 +259,20 @@ msgid "Page Title"
 msgstr "Título de la página"
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "Please enter valid short URL code."
+msgstr "Ingresa un código corto de URL válido."
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url
 msgid "Redirected URL"
 msgstr "URL de redirección"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "Reference"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__code
@@ -338,6 +356,11 @@ msgstr "UTM"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__campaign_id
 msgid "UTM Campaign"
 msgstr "Campaña UTM"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__utm_reference
+msgid "UTM Reference"
+msgstr ""
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form

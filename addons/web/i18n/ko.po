@@ -10,16 +10,17 @@
 # Sarah Park, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-02 14:52+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-02-14 12:23+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/web/ko/>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/web/ko/"
+">\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +55,13 @@ msgstr "%s 레코드"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
+msgid "%s to schedule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/l10n/dates.js:0
 msgid "'%s' is not a correct date or datetime"
 msgstr "'%s' 은(는) 올바른 날짜나 일시가 아닙니다"
@@ -62,7 +70,7 @@ msgstr "'%s' 은(는) 올바른 날짜나 일시가 아닙니다"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 msgid "'Oh snap!'"
-msgstr ""
+msgstr "'잠시만요!'"
 
 #. module: web
 #. odoo-javascript
@@ -89,13 +97,7 @@ msgid "(create)"
 msgstr "(생성 완료)"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 msgid "(document name)"
 msgstr "(문서명)"
 
@@ -475,25 +477,18 @@ msgid "<i class=\"fa fa-repeat\"/> Reset"
 msgstr "<i class=\"fa fa-repeat\"/> 재설정"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
-"id=\"profile_aggregation_mode\">\n"
-"                                        <option value=\"tabs\">Separated "
-"(one per tab)</option>\n"
-"                                        <option value=\"temporal\">Temporal "
-"(experimental)</option>\n"
-"                                    </select>\n"
-"                                    <span id=\"temporal_warning\" "
-"class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> "
-"Temporal mode will merge all samples.<br/>It can lead to partially invalid "
-"result in case of concurrent profiles.<br/>Use with caution </span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">$ 3,613.50</span>"
+msgstr "<span class=\"text-nowrap\">$ 3,613.50</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
-msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
+msgid ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">1,400.00</"
+"span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">1,400.00</"
+"span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -502,6 +497,15 @@ msgid ""
 "span></span>"
 msgstr ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
+"span></span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">240.00</"
+"span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">240.00</"
 "span></span>"
 
 #. module: web
@@ -520,8 +524,18 @@ msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">12.00</span>"
+msgstr "<span class=\"text-nowrap\">12.00</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
 msgstr "<span class=\"text-nowrap\">2,350.00</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">70.00</span>"
+msgstr "<span class=\"text-nowrap\">70.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -533,7 +547,7 @@ msgstr "<span class=\"text-nowrap\">세율 15%</span>"
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                               Rd<br/>Pleasant Hill CA 94523<br/>United "
+"                                Rd<br/>Pleasant Hill CA 94523<br/>United "
 "States</span>"
 msgstr ""
 
@@ -543,14 +557,58 @@ msgid "<span id=\"line_tax_ids\">15%</span>"
 msgstr "<span id=\"line_tax_ids\">15%</span>"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span itemprop=\"name\">Deco Addict</span>"
-msgstr "<span itemprop=\"name\">Deco Addict</span>"
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid ""
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgid "<span itemprop=\"name\">Acme Corporation</span>"
+msgstr "<span itemprop=\"name\">Acme Corporation</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>\n"
+"                                        Chair floor protection<br/>\n"
+"                                        Office chairs can harm your floor: "
+"protect it\n"
+"                                    </span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>\n"
+"                                        [FURN_7777] Office Chair<br/>\n"
+"                                        Comfortable yellow chair for daily "
+"work\n"
+"                                    </span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>\n"
+"                                        [FURN_8999] Three-Seat Sofa<br/>\n"
+"                                        Three Seater Sofa with Lounger in "
+"Steel Grey Colour\n"
+"                                    </span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>$ <span class=\"oe_currency_value\">24,090.00</span></span>"
+msgstr "<span>$ <span class=\"oe_currency_value\">24,090.00</span></span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>20.00</span>"
+msgstr "<span>20.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -571,8 +629,10 @@ msgstr "<span>설명</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"               <span>INV/2023/00003</span>"
+"                <span>INV/2023/00003</span>"
 msgstr ""
+"<span>청구서</span>\n"
+"                <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -598,33 +658,18 @@ msgstr "<span>단가</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>[FURN_8220] Four Person Desk<br/>\n"
-"                                       Four person modern office "
-"workstation</span>"
+"                                    Four person modern office workstation</"
+"span>"
 msgstr ""
-"<span>[FURN_8220] 4인용 책상<br/>\n"
-"                                       4인용 모던 오피스 워크스테이션</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
-"<span>[FURN_8999] Three-Seat Sofa<br/>\n"
-"                                       Three Seater Sofa with Lounger in "
-"Steel Grey Colour</span>"
+"<strong class=\"text-nowrap\">\n"
+"                                                    $ <span "
+"class=\"oe_currency_value\">27,703.50</span>\n"
+"                                                </strong>"
 msgstr ""
-"<span>[FURN_8999] 3인용 소파<br/>\n"
-"                                       안락 의자가 포함된 스틸 그레이 색상 3"
-"인용 소파</span>"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       22,137.50</span></"
-"strong>"
-msgstr ""
-"<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       22,137.50</span></"
-"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -632,24 +677,12 @@ msgid "<strong>Address block</strong>"
 msgstr "<strong>주소 차단</strong>"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "<strong>Company address block</strong>"
 msgstr "<strong>회사 주소 차단</strong>"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "<strong>Company details block</strong>"
 msgstr "<strong>회사 정보 차단</strong>"
 
@@ -894,6 +927,7 @@ msgstr "사진 추가"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
 msgstr "영역 추가"
@@ -1147,12 +1181,6 @@ msgstr "이 레코드를 보관 하시겠습니까?"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
-msgid "Are you sure that you want to duplicate all the selected records?"
-msgstr "선택한 모든 레코드를 복제할까요?"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Are you sure that you want to remove this embedded action?"
 msgstr "이 임베디드 작업을 제거하시겠습니까?"
@@ -1324,16 +1352,6 @@ msgstr "“%s”로 돌아가기"
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s” form"
 msgstr "“%s” 형식으로 돌아가기"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "Background"
-msgstr "배경"
-
-#. module: web
-#: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
-msgid "Background Image"
-msgstr "배경 이미지"
 
 #. module: web
 #. odoo-javascript
@@ -1576,11 +1594,13 @@ msgstr "값 편집 가능"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
+msgid "Can't remove that search"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
-#: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: code:addons/web/static/src/webclient/share_target/share_target_dialog.xml:0
 msgid "Cancel"
 msgstr "취소"
@@ -1739,8 +1759,26 @@ msgstr "모두 지우기"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
+msgid "Clear search"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/offline/offline_systray.xml:0
 msgid "Click to check connection"
+msgstr "연결 상태 확인"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.xml:0
+msgid "Click to collapse all groups"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.xml:0
+msgid "Click to expand all groups"
 msgstr ""
 
 #. module: web
@@ -1798,7 +1836,7 @@ msgstr "색상 선택"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_color_dot/many2many_tags_color_dot_field.js:0
 msgid "Color dot tags"
-msgstr ""
+msgstr "색상 물방울 태그"
 
 #. module: web
 #. odoo-javascript
@@ -1863,12 +1901,10 @@ msgid "Company name"
 msgstr "회사명"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
+#: model_terms:ir.ui.view,arch_db:web.external_layout_center
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Company tagline"
 msgstr "회사 슬로건"
@@ -1909,10 +1945,17 @@ msgstr "문서 레이아웃 설정"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Confirm"
 msgstr "승인"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+#: model_terms:ir.ui.view,arch_db:web.check_identity
+msgid "Confirm access"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1939,24 +1982,12 @@ msgid "Contact Statistics"
 msgstr "연락처 통계"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "Contains the company address."
 msgstr "회사 주소가 포함되어 있습니다."
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "Contains the company details."
 msgstr "회사 정보가 포함되어 있습니다."
 
@@ -2114,7 +2145,7 @@ msgstr "%s 생성"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "Create New"
-msgstr ""
+msgstr "새로 만들기"
 
 #. module: web
 #: model:ir.model,website_form_label:web.model_res_partner
@@ -2308,7 +2339,7 @@ msgstr "날짜 범위"
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Date range"
-msgstr ""
+msgstr "날짜 범위"
 
 #. module: web
 #. odoo-javascript
@@ -2431,7 +2462,7 @@ msgstr "확대된 이미지의 모양을 밀리초 단위의 값으로 지연"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tags_list/avatar_tag.xml:0
-#: code:addons/web/static/src/core/tags_list/badge_tag.xml:0
+#: code:addons/web/static/src/core/tags_list/badge_tag.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
@@ -2535,18 +2566,21 @@ msgstr "읽기 전용 비활성화"
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
+#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
-#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
+#: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/view_button/view_button.js:0
 #: code:addons/web/static/src/views/view_components/multi_create_popover.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Discard"
 msgstr "취소"
 
@@ -2596,12 +2630,6 @@ msgstr "카드에 표시"
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Display presets"
 msgstr "디스플레이 사전 설정"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
-msgid "Display seconds"
-msgstr "초 단위 표시"
 
 #. module: web
 #. odoo-javascript
@@ -2705,7 +2733,7 @@ msgstr "아직 떠나지 마십시오,"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_color_dot/many2many_tags_color_dot_field.js:0
 msgid "Dot color field"
-msgstr ""
+msgstr "물방울 색상 필드"
 
 #. module: web
 #. odoo-javascript
@@ -2747,17 +2775,30 @@ msgstr "그리기"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
+msgid "Drop here to unschedule"
+msgstr "여기에 끌어다 놓아서 예약을 취소합니다"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record.xml:0
 msgid "Dropdown menu"
 msgstr "드롭다운 메뉴"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Duplicate"
 msgstr "복사"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+msgid "Duplicate Records"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2831,7 +2872,7 @@ msgstr "속셩 편집"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Edit color"
-msgstr ""
+msgstr "색상 편집"
 
 #. module: web
 #. odoo-javascript
@@ -3239,6 +3280,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Forgot password?"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/integer/integer_field.js:0
 msgid "Format number"
@@ -3399,6 +3446,12 @@ msgid "Handle"
 msgstr "핸들"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Having problems ?"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "모든 보고서의 상단에 표시되는 머리말 문구입니다."
@@ -3482,6 +3535,12 @@ msgstr "홈 메뉴"
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
 msgstr "시간"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Hours"
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -3645,7 +3704,7 @@ msgstr "다음에서 구현"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/share_target/share_target_item.xml:0
 msgid "In Company"
-msgstr ""
+msgstr "회사"
 
 #. module: web
 #. odoo-javascript
@@ -3888,8 +3947,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -4213,11 +4272,6 @@ msgid "Layout"
 msgstr "배치"
 
 #. module: web
-#: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background
-msgid "Layout Background"
-msgstr "레이아웃 배경 설정"
-
-#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Leave Debug Mode"
@@ -4249,9 +4303,21 @@ msgstr "선형 차트"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Link copied to clipboard"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
 msgstr "불러오기"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.xml:0
+msgid "Load More"
+msgstr "더 불러오기"
 
 #. module: web
 #. odoo-javascript
@@ -4294,7 +4360,7 @@ msgstr "불러오는 중..."
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/loading_indicator/loading_indicator.xml:0
 msgid "Loading…"
-msgstr ""
+msgstr "로딩 중…"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -4315,16 +4381,17 @@ msgstr "로그아웃"
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
+#: model_terms:ir.ui.view,arch_db:web.login
 msgid "Login"
 msgstr "로그인"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
+#: model_terms:ir.ui.view,arch_db:web.external_layout_center
+#: model_terms:ir.ui.view,arch_db:web.external_layout_dual
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
+#: model_terms:ir.ui.view,arch_db:web.external_layout_lines
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -4345,7 +4412,7 @@ msgstr "로고 2차 색상"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "Logout"
-msgstr ""
+msgstr "로그아웃"
 
 #. module: web
 #. odoo-javascript
@@ -4420,6 +4487,12 @@ msgstr "Many2one"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Match"
 msgstr "일치"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max tooltip"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4528,6 +4601,18 @@ msgstr "최소 정밀도"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/float/float_field.js:0
+msgid "Minimum Digits"
+msgstr "최소 자릿수"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Minutes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/timezone_mismatch/timezone_mismatch_field.js:0
 msgid "Mismatch title"
 msgstr "제목 불일치"
@@ -4548,14 +4633,14 @@ msgstr "누락된 레코드"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_processor.js:0
 msgid "Missing record"
-msgstr ""
+msgstr "누락된 레코드"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/record_selectors/multi_record_selector.js:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor_autocomplete.js:0
 msgid "Missing record (ID: %s)"
-msgstr ""
+msgstr "레코드 누락 (ID: %s)"
 
 #. module: web
 #. odoo-python
@@ -4675,6 +4760,7 @@ msgstr "메뉴 더보기"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 msgid "More..."
@@ -4936,6 +5022,12 @@ msgid "No data to display"
 msgstr "표시할 데이터가 없습니다"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr "내보낼 데이터가 없습니다"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "No debug command found"
@@ -5047,7 +5139,7 @@ msgstr "%s가 유효하지 않음"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid ""
 "Not possible to create monetary field because there is no currency on "
 "current model."
@@ -5055,9 +5147,22 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
+msgid "Nothing to schedule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 msgid "Number of files"
 msgstr "파일 수"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Numeric"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5225,7 +5330,7 @@ msgstr "확인"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "On tag click"
-msgstr ""
+msgstr "태그 클릭 시"
 
 #. module: web
 #. odoo-python
@@ -5253,8 +5358,8 @@ msgstr "처음 %(count)s개의 레코드만 삭제되었습니다. (총 %(total)
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
 "해당 범주는 %(supported_types)s 유형만 지원됩니다. (발견 유형 %(field_type)s)"
 
@@ -5262,8 +5367,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
 "해당 필터는 %(supported_types)s 유형만 지원됩니다. (발견 유형 %(field_type)s)"
 
@@ -5336,7 +5441,7 @@ msgstr "개발자 도구 열기"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Open form"
-msgstr ""
+msgstr "양식 열기"
 
 #. module: web
 #. odoo-javascript
@@ -5432,13 +5537,12 @@ msgid "PDF file"
 msgstr "PDF 파일"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
+msgid "Page 1 / 1"
+msgstr "페이지 1 / 1"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 msgid "Page <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "페이지 <span class=\"page\"/> / <span class=\"topage\"/>"
 
@@ -5459,6 +5563,8 @@ msgid "Partner"
 msgstr "협력사"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Password"
 msgstr "비밀번호"
@@ -5740,9 +5846,22 @@ msgstr "속성 기본 정의"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
+msgid "Properties Definition"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Property %s"
 msgstr "속성 %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
+msgid "Property 1"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5964,7 +6083,7 @@ msgstr "제거"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Remove Cover"
-msgstr ""
+msgstr "표지 제거"
 
 #. module: web
 #. odoo-javascript
@@ -6001,7 +6120,7 @@ msgstr "전환기에서 사용자 제거"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 msgid "Replace current file"
-msgstr ""
+msgstr "현재 파일 교체"
 
 #. module: web
 #. odoo-javascript
@@ -6044,6 +6163,12 @@ msgstr "필수 항목:"
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Reset"
 msgstr "초기화"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/offline_action_helper.xml:0
+msgid "Reset Filters"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6199,7 +6324,7 @@ msgstr "저장 및 새로 만들기"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 msgid "Save Properties"
-msgstr ""
+msgstr "속성 저장"
 
 #. module: web
 #. odoo-javascript
@@ -6307,6 +6432,7 @@ msgstr "사용자 검색.."
 #: code:addons/web/static/src/core/commands/command_palette.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
@@ -6331,6 +6457,12 @@ msgstr "SearchView"
 #: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
 msgid "Secondary Color"
 msgstr "2차 색상"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Seconds"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6482,6 +6614,11 @@ msgid "Send Email"
 msgstr "이메일 보내기"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid "Separated (one per tab)"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid "Separator"
@@ -6560,8 +6697,20 @@ msgstr "샤카"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Share"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 msgid "Share URL"
+msgstr "URL 공유하기"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Share the current view"
 msgstr ""
 
 #. module: web
@@ -6569,6 +6718,12 @@ msgstr ""
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 msgid "Shared"
 msgstr "공유됨"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_model.js:0
+msgid "Shared filters couldn't be applied"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6603,6 +6758,7 @@ msgstr "옵션 보기"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Show seconds"
 msgstr "초 표시"
 
@@ -6628,13 +6784,19 @@ msgstr "주말 표시"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid "Signature"
+msgstr "서명"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Signed in as"
 msgstr ""
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Single date"
-msgstr ""
+msgstr "하루"
 
 #. module: web
 #. odoo-javascript
@@ -6877,6 +7039,16 @@ msgid "TV"
 msgstr "TV"
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__report_tables_id
+msgid "Table Design"
+msgstr "테이블 디자인"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "Tables"
+msgstr "표"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Tagline"
 msgstr "태그 라인"
@@ -6927,13 +7099,7 @@ msgstr "황소자리"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "Tax ID"
 msgstr "사업자등록번호"
 
@@ -6948,6 +7114,11 @@ msgstr "틸 블루"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "Template:"
 msgstr "서식 :"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid "Temporal (experimental)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7035,8 +7206,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7066,8 +7237,8 @@ msgstr "선택한 필드는 서명을 미리 입력하는 데 사용됩니다"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
 "선택한 파일(%(size)sB)이 허용된 최대 파일 크기(%(maxSize)sB)보다 큽니다."
 
@@ -7097,14 +7268,20 @@ msgid ""
 "There are too many rows (%(count)s rows, limit: %(limit)s) to export as "
 "Excel 2007-2013 (.xlsx) format. Consider splitting the export."
 msgstr ""
-"Excel 2007-2013(.xlsx) 형식으로 내보낼 행이 너무 많아 %(count)s의 행, 제한: %"
-"(limit)s의 행) 내보낼 수 없습니다. 내보내기를 나누는 것이 좋습니다."
+"Excel 2007-2013(.xlsx) 형식으로 내보낼 행이 너무 많아 %(count)s의 행, 제한: "
+"%(limit)s의 행) 내보낼 수 없습니다. 내보내기를 나누는 것이 좋습니다."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "There is no available image to be set as cover."
 msgstr "표지로 설정 가능한 이미지가 없습니다."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/offline_action_helper.xml:0
+msgid "There is no data to display offline for the given filters"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7252,6 +7429,7 @@ msgstr "토글"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
 msgstr "검색 패널 토글"
@@ -7432,13 +7610,7 @@ msgid "URL"
 msgstr "URL"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "US12345671"
 msgstr "US12345671"
 
@@ -7452,8 +7624,8 @@ msgstr "카메라에 액세스할 수 없습니다."
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/reports/utils.js:0
 msgid ""
-"Unable to find Wkhtmltopdf on this system. The report will be shown in html.%"
-"(link)s"
+"Unable to find Wkhtmltopdf on this system. The report will be shown in html."
+"%(link)s"
 msgstr ""
 "시스템에서 Wkhtmltopdf를 감지할 수 없습니다. 대신 보고서가 HTML 형식으로 표시"
 "됩니다.%(link)s"
@@ -7485,6 +7657,12 @@ msgstr "미지정"
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 msgid "Unfold"
 msgstr "펼치기"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Unit"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7551,13 +7729,12 @@ msgstr "최신 버전으로 업그레이드"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Upload New"
-msgstr ""
+msgstr "신규 업로드"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
-#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Upload your file"
 msgstr "파일 업로드"
 
@@ -7629,8 +7806,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -7672,6 +7849,12 @@ msgstr ""
 "위아래 화살표 키를 이용하여 밝기를 조절하고, 좌우 화살표 키를 사용하여 채도"
 "를 조절할 수 있습니다. Ctrl 키와 Command 키를 동시에 누르면 더욱 정교하게 조"
 "정할 수 있습니다."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Use your password"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7864,6 +8047,18 @@ msgid "Warning for future dates"
 msgstr "향후 날짜에 대한 경고"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Warning: Link copied to clipboard might be too long for some browsers"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_model.js:0
+msgid "Warning: Not all shared filters applied"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid "Warnings"
@@ -7945,7 +8140,7 @@ msgstr "위젯 :"
 #. odoo-javascript
 #: code:addons/web/static/src/core/offline/offline_systray.xml:0
 msgid "Working offline"
-msgstr ""
+msgstr "오프라인 작업"
 
 #. module: web
 #. odoo-javascript
@@ -8017,6 +8212,14 @@ msgid "Yes"
 msgstr "예"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+msgid ""
+"You are about to create a copy of every selected record.\n"
+"Are you sure you want to proceed?"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "You are logged in."
 msgstr "로그인되었습니다."
@@ -8042,6 +8245,15 @@ msgstr "브라우저 메뉴에서 앱을 설치할 수 있습니다."
 #. odoo-python
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid ""
+"You can use the link below to share the current view with its filters: \n"
+"\n"
+" %(url)s"
 msgstr ""
 
 #. module: web
@@ -19191,7 +19403,7 @@ msgstr "옴"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_currency_popover.xml:0
 msgid "on"
-msgstr ""
+msgstr "-"
 
 #. module: web
 #. odoo-javascript
@@ -22261,6 +22473,7 @@ msgstr "해산물"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 msgid "search"
 msgstr "검색"
@@ -26068,7 +26281,7 @@ msgstr "반시계 방향 화살표"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_currency_popover.xml:0
 msgid "without currency"
-msgstr ""
+msgstr "통화 없이"
 
 #. module: web
 #. odoo-javascript
@@ -26806,7 +27019,7 @@ msgstr "엔 지폐"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "yet, let's create some!"
-msgstr ""
+msgstr "바로 생성해 보겠습니다!"
 
 #. module: web
 #. odoo-javascript

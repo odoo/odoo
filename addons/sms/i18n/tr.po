@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-28 12:49+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/sms/tr/"
@@ -304,10 +304,7 @@ msgid "Buy credits."
 msgstr "Kredi satın alın."
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
-#: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
-#: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
 msgstr "İptal"
@@ -432,12 +429,6 @@ msgstr "Sayın {{ object.display_name }} bu otomatik bir SMS'tir."
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
 msgid "Delivered"
 msgstr "Teslim Edilen"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "Discard"
-msgstr "Sil"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__display_name
@@ -592,9 +583,9 @@ msgstr "ID"
 #: model:ir.model.fields,help:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_blacklist__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_main_attachment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_thread_subject_suggested__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_tracking_duration_mixin__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
@@ -646,8 +637,8 @@ msgstr "Geçersiz Hedef"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
-"Invalid phone number. Please make sure to follow the international format, "
-"i.e. a plus sign (+), then country code, city code, and local phone number. "
+"Invalid phone number. Please make sure to follow the international format, i."
+"e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
 "Geçersiz telefon numarası. Lütfen uluslararası formatı takip ettiğinizden "
@@ -834,8 +825,8 @@ msgid ""
 msgstr ""
 "Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
 "Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
-"sağlayan bir yer tutucu ifade olmalıdır, örneğin "
-"{{ object.partner_id.lang }}."
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin {{ object.partner_id."
+"lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -1046,9 +1037,9 @@ msgstr "SMS Hesap Doğrulama Kodu Sihirbazı"
 #: model:ir.model.fields,field_description:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_blacklist__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_main_attachment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_thread_subject_suggested__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_tracking_duration_mixin__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error

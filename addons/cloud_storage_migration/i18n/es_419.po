@@ -1,0 +1,315 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * cloud_storage_migration
+#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-04 14:22+0000\n"
+"PO-Revision-Date: 2026-01-24 12:49+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-s19-1/cloud_storage_migration/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
+msgid "All Attachments"
+msgstr "Todos los archivos adjuntos"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
+msgid "All Attachments Migration"
+msgstr "Migración de todos los archivos adjuntos"
+
+#. module: cloud_storage_migration
+#: model:ir.model,name:cloud_storage_migration.model_ir_attachment
+msgid "Attachment"
+msgstr "Archivos adjuntos"
+
+#. module: cloud_storage_migration
+#. odoo-python
+#: code:addons/cloud_storage_migration/models/ir_attachment.py:0
+msgid ""
+"Attachment (%s) does not have a stored filename and cannot be migrated to "
+"cloud storage."
+msgstr ""
+"El archivo adjunto (%s) no tiene un nombre de archivo almacenado y no se "
+"puede migrar al almacenamiento en la nube."
+
+#. module: cloud_storage_migration
+#. odoo-python
+#: code:addons/cloud_storage_migration/models/ir_attachment.py:0
+msgid ""
+"Attachment (%s) is not a binary attachment and cannot be migrated to cloud "
+"storage."
+msgstr ""
+"El archivo adjunto (%s) no es un archivo binario y no se puede migrar al "
+"almacenamiento en la nube."
+
+#. module: cloud_storage_migration
+#: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
+msgid "Attachments Report"
+msgstr "Reporte de archivos adjuntos"
+
+#. module: cloud_storage_migration
+#: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
+msgid "Cloud Storage Migration"
+msgstr "Migración a almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_models
+msgid "Cloud Storage Migration All Models"
+msgstr "Migración a almacenamiento en la nube de todos los modelos"
+
+#. module: cloud_storage_migration
+#: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_cron
+msgid "Cloud Storage Migration Cron"
+msgstr "Cron de migración a almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_models
+msgid "Cloud Storage Migration Message Models"
+msgstr "Migración a almacenamiento en la nube de mensajes de modelos"
+
+#. module: cloud_storage_migration
+#: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_report
+#: model:ir.model,name:cloud_storage_migration.model_cloud_storage_migration_report
+#: model_terms:ir.ui.view,arch_db:cloud_storage_migration.view_cloud_storage_migration_report_list
+msgid "Cloud Storage Migration Report"
+msgstr "Reporte de migración de almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#. odoo-python
+#: code:addons/cloud_storage_migration/models/ir_attachment.py:0
+msgid "Cloud storage provider is not configured"
+msgstr "El proveedor de almacenamiento en la nube no está configurado"
+
+#. module: cloud_storage_migration
+#: model:ir.model,name:cloud_storage_migration.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: cloud_storage_migration
+#: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
+msgid "Cron Job"
+msgstr "Tarea del cron"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__display_name
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: cloud_storage_migration
+#. odoo-python
+#: code:addons/cloud_storage_migration/models/ir_attachment.py:0
+msgid "Failed to upload attachment %(id)s to cloud storage: %(code)s"
+msgstr ""
+"Ocurrió un error al subir el archivo adjunto %(id)s al almacenamiento en la "
+"nube: %(code)s"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
+msgid "Has Attachment Field"
+msgstr "Tiene campo de archivo adjunto"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__id
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
+msgid ""
+"Indicates whether all attachments associated with this model are scheduled "
+"for cloud storage migration"
+msgstr ""
+"Indica si todos los archivos adjuntos asociados a este modelo están "
+"programados para su migración al almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
+msgid ""
+"Indicates whether attachments linked to mail messages for this model are "
+"scheduled for cloud storage migration"
+msgstr ""
+"Indica si los archivos adjuntos vinculados a los mensajes de correo de este "
+"modelo están programados para su migración al almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
+msgid ""
+"Indicates whether this model has a relational field linking to ir.attachment "
+"model"
+msgstr ""
+"Indica si este modelo tiene un campo relacional que vincula con el modelo ir."
+"attachment"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
+msgid "Largest Attachment (MB)"
+msgstr "Archivo adjunto más grande (MB)"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
+msgid "Message Attachments"
+msgstr "Archivos adjuntos de mensajes"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_count
+msgid "Message Attachments Count"
+msgstr "Número de archivos adjuntos en los mensajes"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
+msgid "Message Attachments Migration"
+msgstr "Migración de archivos adjuntos de los mensajes"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
+msgid "Message Attachments Size (MB)"
+msgstr "Tamaño de los archivos adjuntos al mensaje (MB)"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
+msgid "Message Largest Attachment (MB)"
+msgstr "Archivo adjunto más grande del mensaje (MB)"
+
+#. module: cloud_storage_migration
+#: model:ir.actions.server,name:cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage_ir_actions_server
+msgid "Migrate Local Attachment Binaries to Cloud Storage"
+msgstr ""
+"Migrar binarios de archivos adjuntos locales al almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
+msgid "Migrate Models' All Attachments"
+msgstr "Migrar todos los archivos adjuntos de los modelos"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
+msgid "Migrate Models' Message Attachments"
+msgstr "Migrar los archivos adjuntos de los mensajes de los modelos"
+
+#. module: cloud_storage_migration
+#: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
+msgid "Migrate local attachments to cloud storage"
+msgstr "Migrar archivos adjuntos locales al almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
+msgid "Migration Progress"
+msgstr "Progreso de migración"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model
+msgid "Model"
+msgstr "Modelo"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model_name
+msgid "Model Name"
+msgstr "Nombre del modelo"
+
+#. module: cloud_storage_migration
+#: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
+msgid "No attachment data found"
+msgstr "No se encontraron datos de archivos adjuntos"
+
+#. module: cloud_storage_migration
+#. odoo-python
+#: code:addons/cloud_storage_migration/models/ir_attachment.py:0
+msgid "No model for cloud storage migration"
+msgstr "No existe un modelo para migración al almacenamiento en la nube"
+
+#. module: cloud_storage_migration
+#: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
+msgid "Parameters"
+msgstr "Parámetros"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
+msgid "Shows the progress of cloud storage migration (current/total)"
+msgstr ""
+"Muestra el progreso de la migración al almacenamiento en la nube (actual/"
+"total)"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
+msgid ""
+"Size in megabytes of the largest attachment associated with any record of "
+"this model"
+msgstr ""
+"Tamaño en megabytes del archivo adjunto más grande asociado a cualquier "
+"registro de este modelo"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
+msgid ""
+"Size in megabytes of the largest attachment linked to mail messages for this "
+"model"
+msgstr ""
+"Tamaño en megabytes del archivo adjunto más grande vinculado a los mensajes "
+"de correo para este modelo"
+
+#. module: cloud_storage_migration
+#: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
+msgid ""
+"This report shows statistics about attachments that could be migrated to "
+"cloud storage."
+msgstr ""
+"Este reporte muestra estadísticas sobre los archivos adjuntos que podrían "
+"migrarse al almacenamiento en la nube."
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_count
+msgid "Total Attachments Count"
+msgstr "Número total de archivos adjuntos"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
+msgid "Total Attachments Size (MB)"
+msgstr "Tamaño total de los archivos adjuntos (MB)"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_count
+msgid "Total number of attachments associated with all records of this model"
+msgstr ""
+"Número total de archivos adjuntos asociados a todos los registros de este "
+"modelo"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_count
+msgid "Total number of attachments linked to mail messages for this model"
+msgstr ""
+"Número total de archivos adjuntos vinculados a mensajes de correo para este "
+"modelo"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
+msgid ""
+"Total size in megabytes of all attachments associated with records of this "
+"model"
+msgstr ""
+"Tamaño total en megabytes de todos los archivos adjuntos asociados con los "
+"registros de este modelo"
+
+#. module: cloud_storage_migration
+#: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
+msgid ""
+"Total size in megabytes of all attachments linked to mail messages for this "
+"model"
+msgstr ""
+"Tamaño total en megabytes de todos los archivos adjuntos vinculados a los "
+"mensajes de correo para este modelo"

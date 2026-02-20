@@ -7,14 +7,15 @@
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-14 21:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-24 12:17+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "event_sale/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
@@ -57,6 +58,11 @@ msgstr "<span>Modificación de la inscripción para el asistente:</span>"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "Add"
 msgstr "Añadir"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__additional_product_ids
+msgid "Additional Products"
+msgstr ""
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -289,7 +295,7 @@ msgstr "Informe de ventas de eventos"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr "Espacio del evento"
+msgstr "Franja horaria"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -350,16 +356,16 @@ msgstr "ID"
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
 msgstr ""
-"Selección de espacio “%(slot_name)s” inválida para el evento “%"
-"(event_name)s”."
+"Selección de espacio “%(slot_name)s” inválida para el evento "
+"“%(event_name)s”."
 
 #. module: event_sale
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
 msgstr ""
-"Elección de entrada no válida \"%(ticket_name)s\" para el evento \"%"
-"(event_name)s\"."
+"Elección de entrada no válida \"%(ticket_name)s\" para el evento "
+"\"%(event_name)s\"."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
@@ -574,6 +580,13 @@ msgstr "Comercial"
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Select an Event"
 msgstr "Seleccione un evento"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_event_configurator__additional_product_ids
+msgid ""
+"Select products to include with each registration. They will also show up "
+"separately on Sale Orders."
+msgstr ""
 
 #. module: event_sale
 #. odoo-python

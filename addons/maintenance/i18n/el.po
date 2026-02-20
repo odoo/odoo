@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
 "PO-Revision-Date: 2025-10-01 02:30+0000\n"
 "Last-Translator: Dionysis Zacharioudakis <d.zacharioudakis@dileanity.com>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/"
@@ -25,11 +25,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "<span class=\"badge text-bg-warning float-end\">Cancelled</span>"
-msgstr "<span class=\"badge text-bg-warning float-end\">Ακυρωμένη</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -76,7 +71,6 @@ msgstr "Απαιτείται Ενέργεια"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__active
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__active
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Active"
 msgstr "Σε Ισχύ"
 
@@ -205,9 +199,10 @@ msgid "Another asset already exists with this serial number!"
 msgstr "Υπάρχει ήδη καταχώρηση με αυτό το σειριακό αριθμό!"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__archive
-msgid "Archive"
-msgstr "Αρχειοθέτηση"
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__state__approved
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Approved"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -246,20 +241,14 @@ msgid "Attachment Count"
 msgstr "Αριθμός Συνημμένων"
 
 #. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__blocked
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "Blocked"
-msgstr "Μπλοκαρισμένο"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__state__cancelled
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Cancelled"
 msgstr "Ακυρωμένες"
 
@@ -276,6 +265,13 @@ msgstr "Κατηγορία"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
 msgid "Category Name"
 msgstr "Όνομα Κατηγορίας"
+
+#. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__state__changes_requested
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Changes Requested"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__close_date
@@ -398,11 +394,6 @@ msgid "Dashboard"
 msgstr "Επισκόπηση"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__request_date
-msgid "Date requested for the maintenance to happen"
-msgstr "Ημερομηνία αίτησης για την εκτέλεση της συντήρησης"
-
-#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__schedule_date
 msgid ""
 "Date the maintenance team plans the maintenance.  It should not differ much "
@@ -450,6 +441,7 @@ msgid "Display Name"
 msgstr "Εμφανιζόμενο Όνομα"
 
 #. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__state__done
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
@@ -487,12 +479,6 @@ msgstr "Ψευδώνυμο Email"
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
 msgid "Email alias for this maintenance team."
 msgstr "Ψευδώνυμο email γι' αυτή την ομάδα συντήρησης."
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Email cc"
-msgstr "Email προώθησης"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
@@ -645,17 +631,6 @@ msgid "Future Activities"
 msgstr "Μελλοντικές Δραστηριότητες"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_google_slide
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__google_slide
-msgid "Google Slide"
-msgstr "Διαφάνειες Google"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Google Slide Link"
-msgstr "Σύνδεσμος Διαφάνειας Google"
-
-#. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_printer1
 msgid "HP Inkjet printer"
 msgstr "Εκτυπωτής HP"
@@ -739,16 +714,11 @@ msgstr ""
 "εξουσιοδοτημένους χρήστες αντί του προεπιλεγμένου μηνύματος."
 
 #. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__normal
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__state__normal
 #: model:maintenance.stage,name:maintenance.stage_1
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "In Progress"
 msgstr "Σε εξέλιξη"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_type
-msgid "Instruction"
-msgstr "Οδηγίες"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -771,11 +741,6 @@ msgstr "Εσωτερικές Σημειώσεις"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_is_follower
 msgid "Is Follower"
 msgstr "Είναι Ακόλουθος"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__kanban_state
-msgid "Kanban State"
-msgstr "Κατάσταση Kanban"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__write_uid
@@ -851,11 +816,6 @@ msgstr "MTTR"
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
 msgid "Maintenance"
 msgstr "Συντήρηση"
-
-#. module: maintenance
-#: model:ir.ui.menu,name:maintenance.menu_m_request_calendar
-msgid "Maintenance Calendar"
-msgstr "Ημερολόγιο Συντηρήσεων"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_count
@@ -1104,11 +1064,6 @@ msgid "Number of Requests"
 msgstr "Αριθμός Αιτημάτων"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_block
-msgid "Number of Requests Blocked"
-msgstr "Αριθμός Μπλοκαρισμένων Αιτημάτων"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_date
 msgid "Number of Requests Scheduled"
 msgstr "Αριθμός Προγραμματισμένων Αιτημάτων"
@@ -1122,6 +1077,11 @@ msgstr "Αριθμός Μη Προγραμματισμένων Αιτημάτω�
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_high_priority
 msgid "Number of Requests in High Priority"
 msgstr "Αριθμός Αιτημάτων σε Υψηλή Προτεραιότητα"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_changes_requested
+msgid "Number of Requests with Changes Requested"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
@@ -1143,6 +1103,12 @@ msgstr "Αριθμός μηνυμάτων που απαιτούν ενέργει
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Αριθμός μηνυμάτων με σφάλμα παράδοσης"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Open"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_force_thread_id
@@ -1169,12 +1135,6 @@ msgid "Owner"
 msgstr "Ιδιοκτήτης"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_pdf
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__pdf
-msgid "PDF"
-msgstr "PDF"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_model_id
 msgid "Parent Model"
 msgstr "Γονικό Μοντέλο"
@@ -1194,15 +1154,6 @@ msgstr ""
 "Γονικό μοντέλο κρατώντας το ψευδώνυμο. Το μοντέλο που κρατά το ψευδώνυμο "
 "αναφοράς δεν είναι απαραίτητο το μοντέλο να δίνεται από alias_model_id "
 "(παράδειγμα: Έργο (parent_model) και Εργασία (μοντέλο))"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__instruction_google_slide
-msgid ""
-"Paste the url of your Google Slide. Make sure the access to the document is "
-"public."
-msgstr ""
-"Κάντε επικόλληση τον σύνδεσμο της Διαφάνειας Google. Σιγουρευτείτε ότι η "
-"πρόσβαση στο αρχείο έχει οριστεί ως δημόσια."
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -1250,16 +1201,6 @@ msgstr "Πληροφορίες Εξοπλισμού"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Properties"
 msgstr "Ιδιότητες"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "Ready"
-msgstr "Έτοιμη"
-
-#. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__done
-msgid "Ready for next stage"
-msgstr "Έτοιμο για επόμενο στάδιο"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -1314,23 +1255,6 @@ msgstr "Αίτηση"
 #: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
 msgstr "Αίτημα Δημιουργήθηκε"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__request_date
-msgid "Request Date"
-msgstr "Ημερομηνία Αίτησης"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__done
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__done
-msgid "Request Done"
-msgstr "Επισκευασμένη Αίτηση"
-
-#. module: maintenance
-#. odoo-python
-#: code:addons/maintenance/models/maintenance.py:0
-msgid "Request planned for %s"
-msgstr "Αίτημα προγραμματισμένο για %s"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1410,14 +1334,6 @@ msgid "Serial Number"
 msgstr "Σειριακός Αριθμός"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__archive
-msgid ""
-"Set archive to true to hide the maintenance request without deleting it."
-msgstr ""
-"Ορίστε την αρχειοθέτηση ως ενεργή, ώστε το αίτημα συντήρησης να κρυφτεί "
-"χωρίς να διαγραφεί."
-
-#. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.action_maintenance_configuration
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_config
 msgid "Settings"
@@ -1446,6 +1362,11 @@ msgstr "Στάδιο"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
 msgid "Stages"
 msgstr "Στάδια"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__state
+msgid "State"
+msgstr ""
 
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
@@ -1513,7 +1434,6 @@ msgstr "Τεχνικός"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_text
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__text
 msgid "Text"
 msgstr "Κείμενο"
 
@@ -1558,7 +1478,6 @@ msgstr ""
 "των Βλαβλών (MTBF)."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
 msgstr "Προς υλοποίηση"
@@ -1619,11 +1538,6 @@ msgstr "Μη προγραμματισμένη"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__until
 msgid "Until"
 msgstr "Μέχρι"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Upload your PDF file."
-msgstr "Φορτώστε το αρχείο PDF."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id

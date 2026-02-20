@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Samkhann Seang <seangsamkhann@gmail.com>, 2018\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
@@ -18,6 +18,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_maintenance
+#. odoo-python
+#: code:addons/hr_maintenance/models/hr_employee_departure.py:0
+msgid ""
+"%(equipments_count)s equipments have been unassigned from %(employee_name)s"
+msgstr ""
+
+#. module: hr_maintenance
+#. odoo-python
+#: code:addons/hr_maintenance/models/hr_employee_departure.py:0
+msgid "1 equipment has been unassigned from %s"
+msgstr ""
+
+#. module: hr_maintenance
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
+msgid "<span>Unassign Equipment</span>"
+msgstr ""
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__assign_date
@@ -54,14 +73,10 @@ msgid "Department"
 msgstr "ដេប៉ាតឺម៉ង់"
 
 #. module: hr_maintenance
-#: model:ir.model,name:hr_maintenance.model_hr_departure_wizard
-msgid "Departure Wizard"
-msgstr ""
-
-#. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__display_name
 msgid "Display Name"
@@ -78,9 +93,20 @@ msgid "Employee"
 msgstr "បុគ្គលិក"
 
 #. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_version
+msgid "Employee Contract"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_employee_departure
+msgid "Employee Departure"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.actions.act_window,name:hr_maintenance.equipment_action
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
 msgid "Equipment"
@@ -93,14 +119,23 @@ msgid "Equipment Count"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__unassign_equipment
+#. odoo-python
+#: code:addons/hr_maintenance/models/hr_employee_departure.py:0
+msgid "Equipment unassigned due to the end of collaboration with %s"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__departure_do_unassign_equipment
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__do_unassign_equipment
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__departure_do_unassign_equipment
 msgid "Free Equiments"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__id
 msgid "ID"
@@ -137,7 +172,9 @@ msgid "Public Employee"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.model.fields,help:hr_maintenance.field_hr_departure_wizard__unassign_equipment
+#: model:ir.model.fields,help:hr_maintenance.field_hr_employee__departure_do_unassign_equipment
+#: model:ir.model.fields,help:hr_maintenance.field_hr_employee_departure__do_unassign_equipment
+#: model:ir.model.fields,help:hr_maintenance.field_hr_version__departure_do_unassign_equipment
 msgid "Unassign Employee from Equipments"
 msgstr ""
 

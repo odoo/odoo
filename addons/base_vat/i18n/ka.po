@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
@@ -33,7 +33,14 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
 
 #. module: base_vat
@@ -71,14 +78,6 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -107,6 +106,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
 msgstr ""
 
 #. module: base_vat
@@ -195,8 +200,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
 
 #. module: base_vat
@@ -219,21 +224,7 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
 
 #. module: base_vat

@@ -10,15 +10,15 @@
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 12:33+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"PO-Revision-Date: 2026-01-31 12:26+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_expense/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -103,6 +103,11 @@ msgid "(incl"
 msgstr "(bao gồm"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "--<br/>"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
@@ -165,6 +170,16 @@ msgstr "<span>Thanh toán bởi:</span>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr "<span>Tổng số tiền không khớp với số tiền ban đầu.</span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "<strong>expenses</strong> pending approval, from:"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "A new expense is waiting for your approval in Odoo."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -349,7 +364,7 @@ msgstr "Đã lưu trữ"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Receipt"
-msgstr "Đính kèm biên nhận"
+msgstr "Đính kèm biên lai"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -402,14 +417,6 @@ msgstr "Có thể phê duyệt"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_reset
 msgid "Can Reset"
 msgstr "Có thể đặt lại"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
-msgid "Cancel"
-msgstr "Hủy"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
@@ -526,7 +533,6 @@ msgstr "Tỷ giá"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Dear"
 msgstr "Thân gửi"
 
@@ -566,17 +572,12 @@ msgid "Digitalize your receipts with OCR and Artificial Intelligence"
 msgstr "Số hóa biên lai của bạn với OCR và Trí tuệ nhân tạo"
 
 #. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/components/hr_expense_product_form_view.js:0
-msgid "Discard"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__display_name
@@ -657,7 +658,7 @@ msgstr "Nhân viên"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (to reimburse)"
-msgstr "Nhân viên (để bồi hoàn)"
+msgstr "Nhân viên (cần hoàn trả)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -727,7 +728,6 @@ msgstr "Duyệt chi phí trùng lặp"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_search_view
 msgid "Expense Approver"
 msgstr "Người phê duyệt chi phí"
 
@@ -777,17 +777,17 @@ msgstr "Hình ảnh báo cáo chi phí"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr "Chia sẻ chi phí"
+msgstr "Tách chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_split_line_ids
 msgid "Expense Split Line"
-msgstr "Chi tiết Chia sẻ chi phí"
+msgstr "Chi tiết Tách chi phí"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split_wizard
 msgid "Expense Split Wizard"
-msgstr "Tính năng chia sẻ chi phí"
+msgstr "Tính năng tách chi phí"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -835,7 +835,7 @@ msgstr "Chi phí được đặt lại thành nháp"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense split"
-msgstr "Chia sẻ chi phí"
+msgstr "Tách chi phí"
 
 #. module: hr_expense
 #. odoo-python
@@ -977,6 +977,11 @@ msgid "Has Message"
 msgstr "Có tin nhắn"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Hi"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Khách sạn, vé máy bay, taxi, v.v."
@@ -992,6 +997,7 @@ msgstr "Miền bí danh chi phí HR"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__id
@@ -1039,7 +1045,7 @@ msgstr "Thanh toán"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr "Đã bao gồm thuế"
+msgstr "Thuế đã bao gồm"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1137,6 +1143,11 @@ msgstr "Đặt lại bút toán thành nháp"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
 msgstr "Nhãn tỷ giá tiền tệ"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__last_notification_date
+msgid "Last Notification Date"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1286,15 +1297,6 @@ msgid "New expense entries"
 msgstr "Bút toán chi phí mới"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
-msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
-msgstr ""
-"Chi phí mới đang chờ bạn phê duyệt.\n"
-"Bạn có thể xem lại chúng bằng cách bấm vào liên kết này"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
@@ -1394,6 +1396,7 @@ msgstr "Số được tính từ chi phí cá nhân của bạn."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1490,7 +1493,7 @@ msgstr "Đã thanh toán"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 msgid "Paid By"
-msgstr "Thanh toán bằng"
+msgstr "Thanh toán bởi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1508,9 +1511,14 @@ msgid "Partner"
 msgstr "Đối tác"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
 msgid "Payment"
-msgstr ""
+msgstr "Thanh toán"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1590,6 +1598,7 @@ msgstr "Đã vào sổ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Được hỗ trợ bởi"
 
@@ -1739,6 +1748,11 @@ msgid "Restaurants, business lunches, etc."
 msgstr "Nhà hàng, bữa trưa với khách, vv."
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Review Expenses"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Lỗi gửi SMS"
@@ -1843,7 +1857,7 @@ msgstr "Tách"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split Expense"
-msgstr "Chia sẻ chi phí"
+msgstr "Tách chi phí"
 
 #. module: hr_expense
 #. odoo-python
@@ -1894,7 +1908,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Submit to Manager"
-msgstr "Trình cho Người Quản lý"
+msgstr "Gửi cho quản lý"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__submitted
@@ -1962,6 +1976,11 @@ msgstr "Thuế"
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
 msgstr "Người phê duyệt của bộ phận"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Thanks,"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2115,7 +2134,7 @@ msgstr "Tổng tiền trước thuế theo loại tiền tệ"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr "Tổng số tiền của Chi phí ban đầu mà chúng tôi đang chia"
+msgstr "Tổng số tiền của Chi phí ban đầu mà chúng tôi đang tách"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2201,11 +2220,6 @@ msgstr "Nhà cung cấp"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr "Xem chi phí"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
-msgid "View expenses"
 msgstr "Xem chi phí"
 
 #. module: hr_expense
@@ -2351,6 +2365,11 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
 msgstr "Bạn không thể tách một chi phí đã được ghi sổ."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "You currently have"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

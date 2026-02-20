@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-11-20 16:09+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -29,7 +29,6 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
 #: model:ir.model.fields,help:hr_work_entry.field_hr_version__work_entry_source
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__work_entry_source
 msgid ""
 "\n"
 "        Defines the source for work entries generation\n"
@@ -52,65 +51,6 @@ msgstr ""
 "        Planificación: las entradas de trabajo se generarán a partir de la "
 "planificación del empleado. (Se requiere de la aplicación Planificación)\n"
 "    "
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "%(employee)s does not have a contract on %(date)s."
-msgstr ""
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_employee.py:0
-msgid "%s work entries"
-msgstr "%s entradas de trabajo"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid ""
-"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
-"red will be skipped because they have at least one validated work entry."
-msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
-msgid ""
-"<span class=\"o_stat_text\">\n"
-"                            Work Entries\n"
-"                            </span>"
-msgstr ""
-"<span class=\"o_stat_text\">\n"
-"                            Entradas de trabajo\n"
-"                            </span>"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid ""
-"<span class=\"text-muted fw-medium\" invisible=\"not is_manual\">Source</"
-"span>\n"
-"                            <span class=\"o_row mw-50 mw-sm-25\" "
-"invisible=\"not is_manual\">Manual</span>"
-msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid ""
-"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
-"all manual changes on the selected period.</span>"
-msgstr ""
-"<span class=\"text-muted\">Advertencia: la regeneración de entradas de "
-"trabajo eliminará automáticamente todos los cambios manuales en el periodo "
-"seleccionado.</span>"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "<span>Hours</span>"
-msgstr "<span>Horas</span>"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -138,7 +78,7 @@ msgid "AVL"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__category__absence
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__absence
 msgid "Absence"
 msgstr ""
 
@@ -149,16 +89,11 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
 msgstr "Activo"
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__shortcut_behavior__add
 msgid "Add"
 msgstr "Añadir"
@@ -166,12 +101,6 @@ msgstr "Añadir"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
 msgid "Added to Monthly Pay"
-msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "Additional Description..."
 msgstr ""
 
 #. module: hr_work_entry
@@ -185,6 +114,11 @@ msgid "Adoption leave and foster parent leave not paid by the employer"
 msgstr ""
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "All Countries"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
 msgid "Ancillary and Defence Leave"
 msgstr "Permiso ancilar y de defensa"
@@ -192,12 +126,37 @@ msgstr "Permiso ancilar y de defensa"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Archived"
 msgstr "Archivado"
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_attendance
 msgid "Attendance"
 msgstr "Asistencia"
 
@@ -207,8 +166,8 @@ msgid "Availability time not considered as working time"
 msgstr ""
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid "Available Everywhere"
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
+msgid "BER"
 msgstr ""
 
 #. module: hr_work_entry
@@ -223,6 +182,7 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 msgid "Bereavement Leave"
 msgstr "Permiso por fallecimiento"
 
@@ -292,19 +252,35 @@ msgid "CRU"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_compensatory
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_compensatory
 msgid "CTO"
 msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
-msgid "Cancelled"
-msgstr "Cancelado"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_caring_leave
@@ -315,12 +291,6 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
 msgid "Cash Out of Leave in Service"
 msgstr "Pago en efectivo de permisos durante el servicio"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__category
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__category
-msgid "Category"
-msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_extra_hours
@@ -345,13 +315,12 @@ msgid "Code used in manual exports"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
 msgid "Color"
 msgstr "Color"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
+#: model:ir.model,name:hr_work_entry.model_res_company
 msgid "Company"
 msgstr "Compañía"
 
@@ -361,7 +330,33 @@ msgid "Compassionate Leave"
 msgstr "Permiso por fallecimiento"
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_compensatory
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_compensatory
 msgid "Compensatory Time Off"
 msgstr "Ausencias compensatorias"
 
@@ -399,14 +394,14 @@ msgid "Computation"
 msgstr ""
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Conflicting"
-msgstr "Contradictorio"
+#: model:ir.model,name:hr_work_entry.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
-msgid "Conflicts"
-msgstr "Conflictos"
+#: model:ir.ui.menu,name:hr_work_entry.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -419,7 +414,11 @@ msgid "Corona Unemployment"
 msgstr "Desempleo por el coronavirus"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__count_as
+msgid "Count As"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Country"
@@ -437,16 +436,12 @@ msgstr "Crear un nuevo tipo de entrada de trabajo"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
 msgstr "Creado el"
@@ -457,41 +452,23 @@ msgid "Credit Time"
 msgstr "Tiempo de crédito"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Current Month"
-msgstr "Mes actual"
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_death
+msgid "Death Leave"
+msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Date"
-msgstr "Fecha"
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_attendance_view_tree
+msgid "Default: Attendance"
+msgstr ""
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
-msgid "Delete"
-msgstr "Eliminar"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Department"
-msgstr "Departamento"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__description
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 msgid "Description"
 msgstr "Descripción"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__category
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__category
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__count_as
 msgid "Determines if the entry counts as working time or absence."
 msgstr ""
 
@@ -501,20 +478,12 @@ msgid "Disability due to illness (IMSS)"
 msgstr "Incapacidad por enfermedad (IMSS)"
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
-msgid "Discard"
-msgstr ""
-
-#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Display"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
 msgid "Display Code"
 msgstr ""
@@ -523,9 +492,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__display_name
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
@@ -536,16 +505,6 @@ msgstr "Nombre para mostrar"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
 msgid "Double Time Hours"
 msgstr "Horas a doble tiempo"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Draft"
-msgstr "Borrador"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
-msgid "Duration"
-msgstr "Duración"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -564,18 +523,9 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_excuse_leave
 msgid "EXC"
 msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
-msgid "Earliest Available Date Message"
-msgstr "Mensaje de fecha más temprana disponible"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date
-msgid "Earliest date"
-msgstr "Fecha más temprana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -595,8 +545,6 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_employee
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Employee"
 msgstr "Empleado"
 
@@ -604,16 +552,6 @@ msgstr "Empleado"
 #: model:ir.model,name:hr_work_entry.model_hr_version
 msgid "Employee Contract"
 msgstr "Contrato del empleado"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
-msgid "Employee Record"
-msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
-msgid "Employees"
-msgstr "Empleados"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -631,6 +569,11 @@ msgid "Examination Leave"
 msgstr "Permiso por estudios"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_excuse_leave
+msgid "Excuse Leave"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption
 msgid "Exemption from end-of-career benefits"
 msgstr ""
@@ -646,8 +589,10 @@ msgid "External"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_company__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_config_settings__external_code
 msgid "External Code"
 msgstr "Código externo"
 
@@ -692,8 +637,18 @@ msgid "FSJ"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
+msgid "FVS"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
 msgid "Family Reason Time Off"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
+msgid "Fictitious Variable Salary"
 msgstr ""
 
 #. module: hr_work_entry
@@ -712,64 +667,137 @@ msgid "Foster care"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_from
-msgid "From"
-msgstr "Desde"
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_social_judge
 msgid "Function of social judge"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_leave
 msgid "GTO"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
-msgid "Generate Missing Work Entries"
-msgstr "Generar entradas de trabajo faltantes"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_from
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_from
-msgid "Generated From"
-msgstr "Generado desde"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_to
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_to
-msgid "Generated To"
-msgstr "Generado hasta"
-
-#. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_leave
 msgid "Generic Time Off"
 msgstr "Ausencia genérica"
 
 #. module: hr_work_entry
-#: model:ir.model,name:hr_work_entry.model_hr_work_entry
-msgid "HR Work Entry"
-msgstr "Entrada de trabajo de RR. HH."
-
-#. module: hr_work_entry
-#: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
-msgid "HR Work Entry Type"
-msgstr "Tipo de entrada de trabajo de RR. HH."
-
-#. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_home_working
 msgid "HW"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
-msgid "Has Work Entries"
-msgstr "Tiene entradas de trabajo"
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_hajj
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_hajj
+msgid "Hajj Leave"
+msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_home_working
 msgid "Home Working"
 msgstr "Trabajando en casa"
 
@@ -802,9 +830,9 @@ msgstr "Salario por hora en caso de permiso militar"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__id
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_company__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
@@ -839,6 +867,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity
 msgid "IWM"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_iddah
+msgid "Iddah Leave"
 msgstr ""
 
 #. module: hr_work_entry
@@ -884,24 +917,6 @@ msgid "Imperative leave with maintained salary"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
-msgid "In Conflict"
-msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
-msgid "In Payslip"
-msgstr ""
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
-msgid ""
-"In order to regenerate the work entries, you need to provide the wizard with "
-"an employee_id, a date_from and a date_to."
-msgstr ""
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_sickness_credit
 msgid ""
 "Incapacity for work paid by the employer until the sickness credit is "
@@ -937,24 +952,9 @@ msgid "Interruption of Work"
 msgstr "Interrupción del trabajo"
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_source_field/work_entry_source_field.js:0
-msgid ""
-"Invalid option: For fully flexible calendars, the work entry source cannot "
-"be 'Working Hours'."
-msgstr ""
-"La opción no es válida: si se trata de calendarios completamente flexibles, "
-"el origen de la entrada de trabajo no puede ser “Horas laborales”."
-
-#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
 msgid "Is Checked"
 msgstr "Está marcado"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__is_manual
-msgid "Is Manual"
-msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
@@ -982,36 +982,16 @@ msgid "LTS"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__last_generation_date
-msgid "Last Generation Date"
-msgstr "Fecha de la última generación"
-
-#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date_message
-msgid "Latest Available Date Message"
-msgstr "Mensaje de última fecha disponible"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date
-msgid "Latest date"
-msgstr "Última fecha"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
@@ -1040,6 +1020,8 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_maternity
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_maternity
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_maternity_leave
 msgid "MAT"
 msgstr ""
 
@@ -1059,13 +1041,10 @@ msgid "MLC"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__is_manual
-msgid "Marks if the work entry came from manual creation or split"
-msgstr ""
-
-#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_marriage
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_marriage_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_marriage_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_marriage
 msgid "Marriage Leave"
 msgstr "Permiso por matrimonio"
 
@@ -1075,10 +1054,13 @@ msgid "Maternity (IMSS)"
 msgstr "Maternidad (IMSS)"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_maternity
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_maternity
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_maternity
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_maternity_leave
 msgid "Maternity Leave"
 msgstr "Permiso de maternidad"
 
@@ -1162,29 +1144,6 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
-msgid "New"
-msgstr "Nuevo"
-
-#. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
-msgid "New Work Entry"
-msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
-msgid "No data to display"
-msgstr "Sin datos que mostrar"
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
-msgid ""
-"No work entry can be regenerated in this range of dates and these employees."
-msgstr ""
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
 msgid "Non-taxable service for political representatives"
 msgstr ""
@@ -1193,11 +1152,6 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_normal_inactivity
 msgid "Normal days of inactivity in the employment schedule"
 msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "Note: Validated work entries cannot be modified."
-msgstr "Nota: las entradas de trabajo validadas no se pueden modificar."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
@@ -1215,7 +1169,33 @@ msgid "OSC"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_overtime
 msgid "OT"
 msgstr ""
 
@@ -1225,7 +1205,33 @@ msgid "Occupational Disease (Unpaid)"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_hr_work_entry_type_out_of_contract
 msgid "OoC"
 msgstr ""
 
@@ -1240,7 +1246,33 @@ msgid "Other services not declared under another code"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.au_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.bd_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.be_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.ch_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.eg_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.fr_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.generic_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.hk_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.id_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.in_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.it_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.jo_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.ke_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.lt_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.lu_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.ma_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.mx_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.my_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.nl_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.pk_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.pl_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.ro_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.sa_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.sk_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.tr_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.uae_hr_work_entry_type_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.us_hr_work_entry_type_out_of_contract
 msgid "Out of Contract"
 msgstr "Fuera de contrato"
 
@@ -1260,7 +1292,33 @@ msgid "Overtime 125%"
 msgstr "Horas extraordinarias 125 %"
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_overtime
 msgid "Overtime Hours"
 msgstr "Horas extraordinarias"
 
@@ -1332,6 +1390,12 @@ msgid "PAR"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_paternity
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_paternity_leave
+msgid "PAT"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_bank_holiday
 msgid "PH"
 msgstr ""
@@ -1339,6 +1403,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_phc
 msgid "PHC"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
+msgid "PIL"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1367,7 +1436,33 @@ msgid "PTL"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_hk_work_entry_type_annual_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_annual_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_legal_leave
 msgid "PTO"
 msgstr ""
 
@@ -1387,8 +1482,34 @@ msgid "Paid Sick Time off"
 msgstr "Permiso por enfermedad remunerado"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_legal_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_paid_time_off
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_annual_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_annual_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_legal_leave
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_legal_leave
 msgid "Paid Time Off"
 msgstr "Ausencia pagada"
 
@@ -1406,6 +1527,9 @@ msgstr "Incapacidad parcial (por enfermedad)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_paternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_paternity
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_paternity
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_paternity_leave
 msgid "Paternity Leave"
 msgstr "Permiso de paternidad"
 
@@ -1425,25 +1549,25 @@ msgid "Paternity Time Off (Paid by Company)"
 msgstr "Tiempo libre de paternidad (pagado por la empresa)"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
-msgid "Pay rate"
+#: model:ir.ui.menu,name:hr_work_entry.menu_hr_payroll_root
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Payroll"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
 msgstr "Código de nómina"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid "Period"
-msgstr "Periodo"
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
 msgid "Personal Leave"
 msgstr "Permiso de carácter personal"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
+msgid "Pilgrimage Leave"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off
@@ -1506,35 +1630,9 @@ msgid "Recovery Bank Holiday"
 msgstr "Feriado bancario de recuperación"
 
 #. module: hr_work_entry
-#: model:ir.model,name:hr_work_entry.model_hr_work_entry_regeneration_wizard
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid "Regenerate Employee Work Entries"
-msgstr "Volver a generar entradas de trabajo del empleado"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
-msgid "Regenerate Work Entries"
-msgstr "Volver a generar entradas de trabajo"
-
-#. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__shortcut_behavior__replace
 msgid "Replace"
 msgstr "Reemplazar"
-
-#. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
-msgid "Reset"
-msgstr "Restablecer"
-
-#. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
-msgid "Reset Selected Work Entries"
-msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -1577,11 +1675,6 @@ msgid "SGS"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
-msgid "SHP"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
 msgid "SOL"
 msgstr ""
@@ -1592,13 +1685,44 @@ msgid "SPT"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_sick_leave
 msgid "STO"
 msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_strike
 msgid "STR"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_study
+msgid "STU"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1632,30 +1756,9 @@ msgid "Salary in case of Military Leave"
 msgstr "Salario en caso de permiso militar"
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
-msgid "Save"
-msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
-msgid "Search Criteria Completed"
-msgstr "Criterios de búsqueda completados"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Search Work Entry"
-msgstr "Buscar entrada de trabajo"
-
-#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
 msgstr "Buscar tipo de entrada de trabajo"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
-msgid "Select a work entry"
-msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -1670,35 +1773,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
-msgid "Set"
-msgstr "Establecer"
-
-#. module: hr_work_entry
-#: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
-msgid "Set to Draft"
-msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__shortcut_behavior
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__shortcut_behavior
 msgid "Shortcut Behavior"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
-msgid "Sick Leave (100% Paid)"
-msgstr ""
-
-#. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
-msgid "Sick Leave (75% Paid)"
-msgstr "Permiso por enfermedad (pagado al 75 %)"
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
-#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
 msgid "Sick Leave (Unpaid)"
 msgstr ""
 
@@ -1708,7 +1788,33 @@ msgid "Sick Leave 80%"
 msgstr "Permiso de enfermedad 80 %"
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_sick_leave
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_sick_leave
 msgid "Sick Time Off"
 msgstr "Ausencias por enfermedad"
 
@@ -1749,11 +1855,6 @@ msgid "Sick Time off (Unpaid)"
 msgstr "Permiso por enfermedad (no remunerado)"
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
-msgid "Simple Holiday Pay - Variable Salary"
-msgstr "Pago Simple de Vacaciones - Salario Variable"
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
 msgid "Situational Unemployment"
 msgstr "Desempleo situacional"
@@ -1774,36 +1875,6 @@ msgid "Solicitation Time Off"
 msgstr "Tiempo libre de solicitud"
 
 #. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-msgid "Solve conflicts first"
-msgstr "Resolver conflictos primero"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "Source"
-msgstr ""
-
-#. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
-msgid "Split"
-msgstr "Dividir"
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid ""
-"Split work entry duration has to be less than the existing work entry "
-"duration."
-msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
-msgid "State"
-msgstr "Estado"
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
 msgid "Statutory Holiday"
 msgstr "Día festivo reglamentario"
@@ -1811,6 +1882,12 @@ msgstr "Día festivo reglamentario"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_strike
 msgid "Strike / Lock-out"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_study
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_study
+msgid "Study Leave"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1937,7 +2014,6 @@ msgstr ""
 "Puede utilizar este campo para una búsqueda rápida."
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
 msgid ""
 "The code is used as a reference in salary rules. Careful, changing an "
@@ -1945,34 +2021,26 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__color
 msgid ""
-"The from date must be >= '%(earliest_available_date)s' and the to date must "
-"be <= '%(latest_available_date)s', which correspond to the generated work "
-"entries time interval."
+"The color selected here will be used in every screen with the time off type."
 msgstr ""
-"La fecha de inicio debe ser >= '%(earliest_available_date)s' y la fecha "
-"final debe ser <= '%(latest_available_date)s', lo que corresponde con el "
-"intervalo de tiempo de las entradas de trabajo generadas."
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
-msgid "The same code cannot be associated to multiple work entry types (%s)"
+msgid ""
+"The same code cannot be associated to multiple work entry types for the same "
+"company (%s)"
 msgstr ""
-"El mismo código no puede asociarse a múltiples tipos de entradas de trabajo "
-"(%s)"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__display_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__shortcut_behavior
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__shortcut_behavior
 msgid ""
 "This field decides the behavior of the shortcut in the gantt view of the "
@@ -1980,24 +2048,6 @@ msgid ""
 "existing work entries while replace will simply replace all work entries of "
 "that day"
 msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "This work entry cannot be validated. The work entry type is undefined."
-msgstr ""
-"Esta entrada de trabajo no se puede validar. El tipo de entrada de trabajo "
-"no está definida."
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "This work entry is validated. You can't delete it."
-msgstr "Esta entrada de trabajo está validada y no puede eliminarla."
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_to
-msgid "To"
-msgstr "A"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
@@ -2008,20 +2058,6 @@ msgstr "Formación"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_training
 msgid "Training with the exception of social promotion and educational leave"
 msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
-msgid ""
-"Try to add some records, or make sure that there is no active filter in the "
-"search bar."
-msgstr ""
-"Intente añadir algunos registros o asegúrese de que no haya ningún filtro "
-"activo en la barra de búsqueda."
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Type"
-msgstr "Tipo"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
@@ -2045,7 +2081,33 @@ msgid "UMU"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.id_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_unpaid_leave
 msgid "UN"
 msgstr ""
 
@@ -2070,7 +2132,33 @@ msgid "Unjustified Reason"
 msgstr "Motivo injustificado"
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.id_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_unpaid_leave
 msgid "Unpaid"
 msgstr "No retribuido"
 
@@ -2097,8 +2185,10 @@ msgid "Unused Leave on Termination"
 msgstr "Permiso no utilizado a la finalización del contrato"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_employee__external_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_res_company__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_res_config_settings__external_code
 msgid "Use this code to export your data to a third party"
 msgstr "Utilice este código para exportar sus datos a terceros."
 
@@ -2125,16 +2215,6 @@ msgid ""
 "Vacation that a worker was unable to take due to certain suspensions and "
 "which is taken during the second year following the vacation year"
 msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__valid
-msgid "Valid"
-msgstr "Válido"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "Validated"
-msgstr "Validado"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
@@ -2177,11 +2257,6 @@ msgid "Welcome Leave"
 msgstr ""
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "With Description"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_unpaid
 msgid "Work Accident (Unpaid)"
 msgstr ""
@@ -2197,7 +2272,7 @@ msgid "Work Detail"
 msgstr "Detalle del trabajo"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
+#: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_configuration
 msgid "Work Entries"
 msgstr "Entradas de trabajo"
 
@@ -2207,23 +2282,8 @@ msgid "Work Entries Employee"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
-#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action_conflict
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "Work Entry"
-msgstr "Entrada de trabajo"
-
-#. module: hr_work_entry
-#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_regeneration_wizard_action
-msgid "Work Entry Regeneration"
-msgstr "Regeneración de entrada de trabajo"
-
-#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
 msgstr "Origen de entrada de trabajo"
 
@@ -2234,7 +2294,7 @@ msgid "Work Entry Source Calendar Invalid"
 msgstr "El origen de la entrada de trabajo del calendario no es válido"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__work_entry_type_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -2249,6 +2309,7 @@ msgstr "Nombre del tipo de entrada de trabajo"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
+#: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view
 msgid "Work Entry Types"
 msgstr "Tipos de entradas de trabajo"
 
@@ -2282,17 +2343,17 @@ msgid "Workers Compensation"
 msgstr "Compensación laboral"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__resource_calendar_id
-msgid "Working Hours"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
 msgid "Working Schedule"
 msgstr "Horario de trabajo"
 
 #. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__category__working_time
+#: model:ir.ui.menu,name:hr_work_entry.menu_resource_calendar_view
+msgid "Working Schedules"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__working_time
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Working Time"
 msgstr "Horario de trabajo"
@@ -2318,36 +2379,6 @@ msgid "YSO"
 msgstr ""
 
 #. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
-msgid ""
-"You can't change the Country of this work entry type cause it's currently "
-"used by the system. You need to delete related working entries first."
-msgstr ""
-"No puede cambiar el país de este tipo de entrada de trabajo porque el "
-"sistema la utiliza, primero debe eliminar las entradas de trabajo "
-"relacionadas."
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
-msgid "You can't change the country of this specific work entry type."
-msgstr ""
-"No puede cambiar el país de este tipo de entrada de trabajo en específico."
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "You can't split a work entry with less than 1 hour."
-msgstr ""
-
-#. module: hr_work_entry
-#. odoo-javascript
-#: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
-msgid "You cannot edit a validated work entry"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
 msgstr "No puede tener el mismo empleado dos veces."
@@ -2366,8 +2397,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. WORK100, LEAVE210, OUT, ..."
 msgstr ""
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
-msgid "hours"
-msgstr "horas"

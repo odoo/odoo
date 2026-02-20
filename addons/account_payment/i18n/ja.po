@@ -11,16 +11,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Sayaka Yamada <sayaka@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-05 06:18+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-24 12:15+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_payment/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -157,6 +157,11 @@ msgid "A token is required to create a new payment transaction."
 msgstr "新しい支払いトランザクションを作成するには、トークンが必要です。"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
+msgid "All Pricelists"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Amount"
@@ -171,6 +176,11 @@ msgstr "返金可能額"
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
 msgid "Amount Due"
 msgstr "請求残高"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Amount of"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -312,7 +322,8 @@ msgstr "ID"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr "すべて同じ通貨でなければ、すべての滞納請求書を支払うことはできません。"
+msgstr ""
+"すべて同じ通貨でなければ、すべての期限超過請求書を支払うことはできません。"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -352,7 +363,7 @@ msgid "Invoices Count"
 msgstr "請求書カウント"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+#: model:portal.entry,name:account_payment.portal_entry_overdue_invoices
 msgid "Invoices to pay"
 msgstr "未払顧客請求書"
 
@@ -411,22 +422,29 @@ msgid "Online payment option is not enabled in Configuration."
 msgstr "オンライン支払オプションが設定で無効になっています。"
 
 #. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_payment_provider__available_pricelist_ids
+msgid ""
+"Only allow this payment provider when the partner's pricelist matches one of "
+"these."
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
-msgstr "滞納請求書は同一の会社を共有している必要があります"
+msgstr "期限超過請求書は同一の会社を共有している必要があります"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same currency."
-msgstr "滞納請求書では、同じ通貨を使用する必要があります。"
+msgstr "期限超過請求書では、同じ通貨を使用する必要があります。"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same partner."
-msgstr "滞納請求書では、同じ取引先である必要があります。"
+msgstr "期限超過請求書では、同じ取引先である必要があります。"
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
@@ -463,7 +481,7 @@ msgstr "今すぐ支払う"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
 msgid "Pay overdue"
-msgstr "支払滞納"
+msgstr "支払期限超過"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment
@@ -485,12 +503,12 @@ msgstr "支払仕訳帳"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "支払方法"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Method Line"
-msgstr ""
+msgstr "支払方法明細"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_method_menu
@@ -535,7 +553,12 @@ msgstr "支払取引"
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
-msgstr "滞納請求書を支払うにはログインして下さい。"
+msgstr "期限超過請求書を支払うにはログインして下さい。"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__available_pricelist_ids
+msgid "Pricelists"
+msgstr ""
 
 #. module: account_payment
 #. odoo-python
@@ -780,6 +803,17 @@ msgid "has been applied."
 msgstr "適用されました。"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "is already paid on this invoice, please make sure to not pay twice."
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
-msgstr "滞納"
+msgstr "期限超過"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid "pricelist not allowed"
+msgstr ""

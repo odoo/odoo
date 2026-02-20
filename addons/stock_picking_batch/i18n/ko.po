@@ -7,22 +7,22 @@
 # Sarah Park, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-10-22 02:31+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-24 12:35+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_picking_batch/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -34,6 +34,11 @@ msgstr "%s 항목이 배치에서 제거되었으며 처리된 수량이 없습�
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "2023-08-20"
 msgstr "2023-08-20"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -142,7 +147,7 @@ msgstr "활동 예외 장식"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "활동 계획"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -291,7 +296,7 @@ msgstr "일괄 이송 작업"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Line"
-msgstr ""
+msgstr "배치 이동 항목"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
@@ -351,9 +356,7 @@ msgid "Calendar View"
 msgstr "일정표 화면"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Cancel"
 msgstr "취소"
 
@@ -744,6 +747,11 @@ msgid "Next Activity Type"
 msgstr "다음 활동 유형"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__0
+msgid "Normal"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
 msgid "Number of Actions"
 msgstr "작업 수"
@@ -767,12 +775,12 @@ msgstr "전송 오류가 발생한 메시지 수입니다."
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move.py:0
 msgid "Open: Stock Move"
-msgstr ""
+msgstr "열기: 재고 이동"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
 msgid "Operation Category"
-msgstr ""
+msgstr "작업 카테고리"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
@@ -845,6 +853,11 @@ msgstr "인쇄"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Print Labels"
 msgstr "라벨 인쇄"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__priority
+msgid "Priority"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
@@ -1155,6 +1168,7 @@ msgstr "오늘 활동"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfer"
 msgstr "전송"
 
@@ -1171,7 +1185,7 @@ msgstr "이송 이름"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_stock_move_operations
 msgid "Transfer:"
-msgstr ""
+msgstr "이송:"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1182,6 +1196,7 @@ msgstr "다음에서 이송됨"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "이동"
 
@@ -1200,6 +1215,11 @@ msgstr "%s에서 담당자가 지정되지 않음"
 #: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
 msgid "Unreserve"
 msgstr "예약 해제"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__1
+msgid "Urgent"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -1230,7 +1250,7 @@ msgstr "웨이브 이송"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Line"
-msgstr ""
+msgstr "웨이브 이동 항목"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave

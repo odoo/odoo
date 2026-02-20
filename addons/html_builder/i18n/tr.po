@@ -6,14 +6,15 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-28 12:48+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-15 23:10+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
 "html_builder/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -58,6 +59,14 @@ msgstr "Resmi gezdirdiğinizde 'Başlık etiketi' araç ipucu olarak gösterilir
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/operation_plugin.js:0
+msgid ""
+"A technical issue occurred in the builder, you should save or discard your "
+"changes."
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "Active"
 msgstr ""
@@ -71,7 +80,7 @@ msgstr "Ekle"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/plugins/add_product_option.xml:0
+#: code:addons/html_builder/static/src/plugins/add_product_option.js:0
 msgid "Add Product"
 msgstr "Ürün Ekle"
 
@@ -198,10 +207,28 @@ msgstr "Alta Hizala"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Align Center"
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Align Left"
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/vertical_alignment_option.xml:0
 #: code:addons/html_builder/static/src/plugins/vertical_justify_option.xml:0
 msgid "Align Middle"
 msgstr "Ortaya Hizala"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Align Right"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -213,6 +240,7 @@ msgstr "Üste Hizala"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
 msgid "Alignment"
@@ -234,8 +262,8 @@ msgstr "Alt etiketi"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
 msgid ""
-"Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%"
-"(close_span)s"
+"Anchor copied to clipboard%(br)s%(open_span)sLink: "
+"%(anchor_link)s%(close_span)s"
 msgstr ""
 "Panoya kopyalanan çapa%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s"
 
@@ -695,6 +723,7 @@ msgstr "Bold 12"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 #: code:addons/html_builder/static/src/plugins/cta_badge_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 msgid "Border"
@@ -775,13 +804,8 @@ msgstr "Buton"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/custom_inner_snippet.xml:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
 msgid "Center"
@@ -1095,6 +1119,7 @@ msgstr "Görüntüyü kırp"
 #: code:addons/html_builder/static/src/core/select_number_column.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Custom"
 msgstr "Özel Plan"
 
@@ -1237,7 +1262,7 @@ msgstr "Elmas (R)"
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.xml:0
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_position_overlay.xml:0
-#: code:addons/html_builder/static/src/snippets/snippet_viewer.js:0
+#: code:addons/html_builder/static/src/sidebar/custom_inner_snippet.xml:0
 msgid "Discard"
 msgstr "Vazgeç"
 
@@ -1353,6 +1378,7 @@ msgstr "Erken Kuş"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
 #: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Edit"
 msgstr "Düzenle"
 
@@ -1400,6 +1426,12 @@ msgstr "Dışlama"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
+msgid "Fill"
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Filter"
@@ -1416,6 +1448,12 @@ msgstr "Bayrak"
 #: code:addons/html_builder/static/src/core/drop_zone_plugin.js:0
 msgid "For technical reasons, this block cannot be dropped here"
 msgstr "Teknik nedenlerden dolayı, bu blok buraya bırakılamaz"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/utils/utils.js:0
+msgid "Form"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -1731,12 +1769,6 @@ msgstr "Görünmez Elemanlar"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/core/building_blocks/builder_list.js:0
-msgid "Item"
-msgstr "Öğe"
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Kayak"
 msgstr "Kayık"
@@ -1756,6 +1788,8 @@ msgstr "Labirent"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Large"
 msgstr "Geniş"
 
@@ -1768,6 +1802,7 @@ msgstr "Katmanlı"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
@@ -1863,6 +1898,7 @@ msgstr "Medya"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Medium"
 msgstr "Aracı:"
 
@@ -1993,6 +2029,7 @@ msgstr "Parçacık bulunamadı"
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.js:0
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option_plugin.js:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "None"
@@ -2001,6 +2038,7 @@ msgstr "Hiçbiri"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Normal"
 msgstr "Normal"
 
@@ -2063,6 +2101,12 @@ msgstr "Organik Hat"
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Outset"
 msgstr "Başlangıç"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
+msgid "Outset/Inset"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -2384,6 +2428,7 @@ msgstr "Dönüşümü sıfırla"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
 msgid "Right"
@@ -2509,6 +2554,7 @@ msgstr "Gölge"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.xml:0
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
 msgid "Shape"
 msgstr "Şekil"
@@ -2557,9 +2603,11 @@ msgstr "Şuriken (R)"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_size.xml:0
 #: code:addons/html_builder/static/src/plugins/image/media_size_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Size"
 msgstr "Boyut"
 
@@ -2573,6 +2621,8 @@ msgstr "Eğimli"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/font/font_plugin.js:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Small"
 msgstr "Küçük"
 
@@ -2836,6 +2886,7 @@ msgstr "Tetris"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 msgid "Text"
 msgstr "Metin"
 
@@ -2976,8 +3027,15 @@ msgstr "Üçlü Hap"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/alert_option.xml:0
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 msgid "Type"
 msgstr "Tür"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Unalign"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -3170,11 +3228,23 @@ msgstr "WebP sıkıştırması bu tarayıcıda desteklenmiyor"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/utils/utils.js:0
+msgid "Website"
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_position_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/width_option.xml:0
 msgid "Width"
 msgstr "Genişlik"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
+msgid "Will remove the crop factor"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript

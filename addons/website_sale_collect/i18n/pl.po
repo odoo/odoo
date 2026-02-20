@@ -3,15 +3,15 @@
 # * website_sale_collect
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-10-21 14:24+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-13 13:15+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale_collect/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -19,12 +19,25 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "%(available_qty)s/%(line_qty)s available at this location"
+msgstr ""
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "<i class=\"fa fa-fw fa-heart\"/> In wishlist"
+msgstr ""
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid ""
+"<i class=\"fa fa-fw fa-heart-o\" role=\"presentation\" aria-label=\"Add to "
+"Wishlist\"/>\n"
+"                                    Wishlist"
 msgstr ""
 
 #. module: website_sale_collect
@@ -35,8 +48,18 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "<span class=\"small\">|</span>"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
+msgstr ""
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "Add to Wishlist"
 msgstr ""
 
 #. module: website_sale_collect
@@ -161,7 +184,7 @@ msgstr ""
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
-msgstr "Dostawca Płatności"
+msgstr "Operator płatności"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_transaction
@@ -220,6 +243,12 @@ msgid "Select store"
 msgstr ""
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Selected country:"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
 msgstr ""
@@ -253,6 +282,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "This address may require to recompute taxes."
 msgstr ""
 
 #. module: website_sale_collect

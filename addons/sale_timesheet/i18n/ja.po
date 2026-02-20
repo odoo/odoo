@@ -8,16 +8,16 @@
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:48+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-02-07 12:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "sale_timesheet/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -216,37 +216,37 @@ msgid "<span class=\"text-muted small\">Time to Answer</span>"
 msgstr "<span class=\"text-muted small\">回答までの時間</span>"
 
 #. module: sale_timesheet
-#: model_terms:hr.job,website_description:sale_timesheet.job_engineer
-#: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
-#: model_terms:hr.job,website_description:sale_timesheet.job_labour
+#: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_interior_designer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
 msgstr "<strong class=\"s_rating_title\">事務作業</strong>"
 
 #. module: sale_timesheet
-#: model_terms:hr.job,website_description:sale_timesheet.job_engineer
-#: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
-#: model_terms:hr.job,website_description:sale_timesheet.job_labour
+#: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_interior_designer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
 msgstr "<strong class=\"s_rating_title\">自律性</strong>"
 
 #. module: sale_timesheet
-#: model_terms:hr.job,website_description:sale_timesheet.job_engineer
-#: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
-#: model_terms:hr.job,website_description:sale_timesheet.job_labour
+#: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_interior_designer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
 msgstr "<strong class=\"s_rating_title\">顧客関係</strong>"
 
 #. module: sale_timesheet
-#: model_terms:hr.job,website_description:sale_timesheet.job_engineer
-#: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
-#: model_terms:hr.job,website_description:sale_timesheet.job_labour
+#: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_interior_designer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
 msgstr "<strong class=\"s_rating_title\">個人の成長</strong>"
 
 #. module: sale_timesheet
-#: model_terms:hr.job,website_description:sale_timesheet.job_engineer
-#: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
-#: model_terms:hr.job,website_description:sale_timesheet.job_labour
+#: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_interior_designer
+#: model_terms:hr.job,website_rating:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
 msgstr "<strong class=\"s_rating_title\">技術的専門知識</strong>"
 
@@ -271,7 +271,7 @@ msgid "<strong>Sales Order:</strong>"
 msgstr "<strong>販売オーダ:</strong>"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_with_total_inherit
 msgid "<strong>Time Remaining on SO: </strong>"
 msgstr "<strong>販売オーダの残時間: </strong>"
 
@@ -301,11 +301,6 @@ msgstr ""
 "  - タイムシート：数量は、この売上明細にリンクされたタスクに記録された時間の"
 "合計です\n"
 "  - 在庫移動： 数量は確定したピッキングに由来します\n"
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_move_reversal
-msgid "Account Move Reversal"
-msgstr "仕訳の取消"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -344,45 +339,32 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: sale_timesheet
-#: model_terms:hr.job,website_description:sale_timesheet.job_engineer
-#: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
-#: model_terms:hr.job,website_description:sale_timesheet.job_labour
+#: model_terms:hr.job,description:sale_timesheet.job_engineer
+#: model_terms:hr.job,description:sale_timesheet.job_interior_designer
+#: model_terms:hr.job,description:sale_timesheet.job_labour
 msgid ""
 "As an employee of our company, you will <b>collaborate with each department\n"
-"                        to create and deploy disruptive products.</b> Come "
-"work at a growing company\n"
-"                        that offers great benefits with opportunities to "
-"moving forward and learn\n"
-"                        alongside accomplished leaders. We're seeking an "
-"experienced and outstanding\n"
-"                        member of staff.\n"
-"                        <br><br>\n"
-"                        This position is both <b>creative and rigorous</b> "
-"by nature you need to think\n"
-"                        outside the box. We expect the candidate to be "
-"proactive and have a \"get it done\"\n"
-"                        spirit. To be successful, you will have solid "
-"solving problem skills."
+"to create and deploy disruptive products.</b> Come work at a growing "
+"company\n"
+"that offers great benefits with opportunities to moving forward and learn\n"
+"alongside accomplished leaders. We're seeking an experienced and "
+"outstanding\n"
+"member of staff.\n"
+"<br><br>\n"
+"This position is both <b>creative and rigorous</b> by nature you need to "
+"think\n"
+"outside the box. We expect the candidate to be proactive and have a \"get it "
+"done\"\n"
+"spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
-"当社の社員として、<b>各部門と協力して革新的な製品を生み出し展開して\n"
-"　　　　　　　いただきます。</b> 成長中の企業で働きませんか？実績のあるリー"
-"ダー達の側で学びながら前進するチャンスと、素晴らしい待遇を提供します。経験の"
-"ある優秀な\n"
-"　　　　　　スタッフを募集しています。\n"
-"                            <br><br>\n"
-"                         この職位では<b>創造性と厳密さ</b>の両方が必要で、枠"
-"にとらわれない発想が求められます。積極的に行動し、「やり遂げる」精神を持った"
-"応募者の方を\n"
-"　　　　　　お待ちしています。\n"
-"                        また、優れた問題解決能力をお持ちの方を採用致します。"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -399,49 +381,42 @@ msgstr "タイムシートに基づく"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__allow_billable
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable"
-msgstr "請求可能"
+msgstr "請求対象"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Time"
-msgstr "請求可能時間"
+msgstr "請求対象時間"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
-#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__billable_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
-msgstr "請求可能タイプ"
+msgstr "請求対象タイプ"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_manual
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_manual
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
 msgid "Billed Manually"
 msgstr "手動による請求"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
-msgid "Billed at a Fixed Price"
-msgstr "固定価格で請求"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_fixed
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
 msgid "Billed at a Fixed price"
 msgstr "固定価格で請求"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_milestones
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_milestones
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
 msgid "Billed on Milestones"
 msgstr "マイルストンによる請求"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_time
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
 msgid "Billed on Timesheets"
 msgstr "タイムシートによる請求"
 
@@ -606,6 +581,7 @@ msgstr "エレベータ設置"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "Employee"
 msgstr "従業員"
 
@@ -730,8 +706,7 @@ msgstr "インテリアデザイン"
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
-#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_account_move
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -750,8 +725,7 @@ msgid "Invoice based on timesheets (delivered quantity)."
 msgstr "タイムシート(納品数量)に基づく顧客請求書。"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
-#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
+#: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__reinvoice_move_id
 msgid "Invoice created from the timesheet"
 msgstr "タイムシートから作成された請求書"
 
@@ -780,6 +754,11 @@ msgstr "販売オーダアイテムが手動で編集されましたか？"
 #: model:ir.model,name:sale_timesheet.model_account_move
 msgid "Journal Entry"
 msgstr "仕訳"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_reversal
+msgid "Journal Entry Reversal"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
@@ -848,12 +827,6 @@ msgid "Master demos of our software"
 msgstr "当社ソフトウェアのマスターデモ"
 
 #. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Materials"
-msgstr "マテリアル"
-
-#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
 msgstr "納品数量を更新する方法"
@@ -869,6 +842,21 @@ msgstr "マイルストーンサービス"
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Must Have"
 msgstr "必須"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
+msgid "My Department"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
+msgid "My Projects"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
+msgid "My Team"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -920,11 +908,11 @@ msgid ""
 msgstr "企業プロセス、真の責任、自律性に無駄はありません"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__non_billable
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non-Billable"
-msgstr "請求不可"
+msgstr "非請求対象"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -936,17 +924,24 @@ msgstr "請求不可"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "Non-billable"
-msgstr "請求不可"
+msgstr "非請求対象"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Time"
-msgstr "請求不可時間"
+msgstr "非請求対象時間"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Not Billed"
 msgstr "未請求"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
+msgid ""
+"Notify the salesperson about an upsell opportunity when completed work "
+"exceeds"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -978,21 +973,14 @@ msgstr ""
 "場合は検証済の)すべてのタイムシートが区別なく請求されます。"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
-msgid "Order Reference"
-msgstr "オーダ参照"
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_other_costs
+msgid "Other Costs"
+msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
-msgid "Other costs"
-msgstr "他の原価"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
-msgid "Other revenues"
-msgstr "他の収益"
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__11_other_revenues
+msgid "Other Revenues"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1060,6 +1048,7 @@ msgstr "プロダクトバリアント"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__project_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "Project"
 msgstr "プロジェクト"
 
@@ -1113,11 +1102,32 @@ msgid "Responsibilities"
 msgstr "責任"
 
 #. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
+msgid "Revenues Fixed Price"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
+msgid "Revenues Manual"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
+msgid "Revenues Milestones"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
+msgid "Revenues Timesheets"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
 msgstr ""
-"請求タイプ別にタイムシートをレビューし、タイムシートが請求可能であることを確"
+"請求タイプ別にタイムシートをレビューし、タイムシートが請求対象であることを確"
 "認してください。"
 
 #. module: sale_timesheet
@@ -1205,7 +1215,7 @@ msgid ""
 "entry to be non-billable."
 msgstr ""
 "顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエン"
-"トリーを請求不可にするには、販売オーダ項目を削除して下さい。"
+"トリーを非請求対象にするには、販売オーダ項目を削除して下さい。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1235,8 +1245,7 @@ msgid "Senior Architect (Invoice on Timesheets)"
 msgstr "シニア開発者（タイムシート請求）"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__service_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__10_service_revenues
 msgid "Service Revenues"
 msgstr "サービス収益"
 
@@ -1298,6 +1307,7 @@ msgstr "強い分析スキル"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "Task"
 msgstr "タスク"
 
@@ -1354,12 +1364,6 @@ msgid ""
 "employee's HR Settings"
 msgstr ""
 "この原価は、従業員の人事設定にある従業員のデフォルト時給を上書きします。"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "This project is current linked to timesheet."
-msgstr "このプロジェクトは現在タイムシートにリンクされています。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1423,8 +1427,6 @@ msgstr "タイムシートレポート"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__timesheet_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__timesheet_revenues
 msgid "Timesheet Revenues"
 msgstr "タイムシート収益"
 
@@ -1447,36 +1449,6 @@ msgstr "タイムシートの合計時間"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheets"
 msgstr "タイムシート"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Timesheets (Billed Manually)"
-msgstr "タイムシート（手動による請求）"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Timesheets (Billed on Milestones)"
-msgstr "タイムシート(マイルストーンで請求済)"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Timesheets (Billed on Timesheets)"
-msgstr "タイムシート (タイムシートで請求)"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Timesheets (Fixed Price)"
-msgstr "タイムシート (定額)"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Timesheets (Non-Billable)"
-msgstr "タイムシート(請求不可)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1513,12 +1485,6 @@ msgstr "%s のタイムシート"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
 msgstr "プロジェクトのタイムシート(販売オーダ/プロジェクトごとに1価格)"
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/models/project_project.py:0
-msgid "Timesheets revenues"
-msgstr "タイムシート収益"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
@@ -1627,11 +1593,6 @@ msgid "View Timesheets"
 msgstr "タイムシートを表示"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
-msgid "Warn the salesperson for an upsell when work done exceeds"
-msgstr "作業量が超過した場合、販売担当者に追加請求するよう注意する"
-
-#. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
@@ -1652,8 +1613,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
-"請求可能なプロジェクトを、経費や仕入先請求に由来する販売オーダ項目にリンクす"
-"ることはできません。"
+"請求対象プロジェクトを、経費や仕入先請求に由来する販売オーダ項目にリンクする"
+"ことはできません。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1662,20 +1623,20 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
-"請求可能なプロジェクトを、サービスではない販売オーダ項目にリンクすることはで"
-"きません。"
+"請求対象プロジェクトを、サービスではない販売オーダ項目にリンクすることはでき"
+"ません。"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
-msgid "You cannot modify timesheets that are already invoiced."
-msgstr "すでに請求済のタイムシートを修正することはできません。"
+msgid "You cannot modify timsheets that are already invoiced."
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
-msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "既に請求済のタイムシートを削除することはできません。"
+msgid "You cannot remove timsheets that are already invoiced."
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
@@ -1691,12 +1652,12 @@ msgstr "残日数"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__not_billable
 msgid "not billable"
-msgstr "請求不可"
+msgstr "非請求対象"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
-msgid "of hours sold."
-msgstr "(販売済時間のうち)"
+msgid "of the hours sold."
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
