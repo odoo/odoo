@@ -13,7 +13,7 @@
                         <div class="w-100 mt-3">
                             <table t-foreach="lines" t-as="line" style="width:100%" t-att-class="{'mt-2': not line['combo_parent_id'], 'mt-1': line['combo_parent_id']}">
                                 <tbody>
-                                    <t t-call="point_of_sale.pos_orderline_receipt" />
+                                    <t t-call="point_of_sale.pos_orderline_receipt" t-if="not (line['product_id'] == config['discount_product_id'] and conditions['basic_receipt'])"/>
                                 </tbody>
                             </table>
                         </div>
