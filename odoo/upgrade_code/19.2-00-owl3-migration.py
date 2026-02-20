@@ -1,8 +1,6 @@
 import re
-import sys
-import os
 
-from tools_js_expressions import aggregate_vars, update_template
+from odoo.upgrade_code.tools_js_expressions import aggregate_vars, update_template
 
 EXCLUDED_FILES = (
     'addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -303,7 +301,7 @@ EVENT_WHITELIST = {
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
     "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
 }
-THIS_TARGETS = ["web", "mail"]
+THIS_TARGETS = ["sale"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
@@ -329,7 +327,7 @@ def upgrade_this(file_manager, log_info, log_error):
     for fileno, file in enumerate(all_files, start=1):
         try:
             file.content = update_template(file.path._str, file.content, THIS_TARGETS, all_vars, t_call_inner, t_call_outer)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
 
 
@@ -351,9 +349,6 @@ def upgrade_this_in_js(file_manager, log_info, log_error):
         ):
             continue
         try:
-            with open(file.path, "r", encoding="utf-8") as f:
-                content = f.read()
-
             def process_match(match):
                 prefix = match.group(1)   # The "xml`" part
                 raw_xml = match.group(2)  # The content inside backticks
@@ -368,13 +363,13 @@ def upgrade_this_in_js(file_manager, log_info, log_error):
 
                 return f"{prefix}{inner_xml}{suffix}"
 
-            new_content = pattern.sub(process_match, content)
+            new_content = pattern.sub(process_match, file.content)
 
-            if new_content != content:
+            if new_content != file.content:
                 file.content = new_content
 
-        except Exception as e:
-            print(f"Error processing {file.path}: {e}")
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
 
 
 def upgrade(file_manager) -> str:

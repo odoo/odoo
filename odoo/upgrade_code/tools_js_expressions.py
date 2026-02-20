@@ -1,4 +1,4 @@
-from tools_etree import get_indentation, update_etree
+from odoo.upgrade_code.tools_etree import update_etree
 from lxml import etree
 from collections import defaultdict
 
@@ -265,6 +265,7 @@ class TemplateCompiler:
                 self.current_template = template.attrib.get("t-name") or "Unknown"
                 bound_variables = self._collect_bound_variables(template)
                 bound_variables |= set(self.t_call_inner.get(template.attrib["t-name"], {}))
+                bound_variables |= set(self.allVars.get(template.attrib["t-name"], {}))
 
                 self.fix_template(template, bound_variables)
 
@@ -465,7 +466,7 @@ class TemplateCompiler:
                 )
             ):
                 if tok.value in warning_variables:
-                    print("WARNING in template " + self.current_template + " : t-call-outer variable" + expr)
+                    print("WARNING in template " + self.current_template + " : t-call-outer variable" + expr)  # noqa: T201
                 if (
                     group_type == "LEFT_BRACE"
                     and prev_tok
@@ -552,23 +553,18 @@ class TemplateCompiler:
             if expr and COMP_REGEXP.match(expr):
                 return True
             # t-component selection: //t[@t-component='...']
-            if expr and ("@t-component" in expr or "t-component" in expr):
-                return True
-            return False
+            return expr and ("@t-component" in expr or "t-component" in expr)
 
         if not attr_name:
             return False
 
-        if attr_name in DIRECTIVES or attr_name.startswith("t-on-") or attr_name.startswith("t-att-"):
+        if attr_name in DIRECTIVES or attr_name.startswith(("t-on-", "t-att-")):
             return True
 
         if attr_name in SKIP_XPATH_ATTRS:
             return False
 
-        if is_component_xpath_expr(xp_expr):
-            return True
-
-        return False
+        return is_component_xpath_expr(xp_expr)
 
 
 def update_template(path: str, content: str, modules: list[str], all_vars, t_call_inner, t_call_outer):
@@ -691,7 +687,7 @@ def aggregate_vars(content: str, vars={}, inside_vars={}):
 
 
 def run_tests_main(test):
-    return update_template("", test["content"], [], {}, {},  {})
+    return update_template("", test["content"], [], {}, {}, {})
 
 
 tests = [
@@ -1817,7 +1813,7 @@ WHITELIST = []
 def run_test_group(name, tests, func):
     success = 0
     fail = 0
-    print(f"running suite '{name}' ({len(tests)} tests)")
+    print(f"running suite '{name}' ({len(tests)} tests)")  # noqa: T201
 
     for test in tests:
         name = test.get("name")
@@ -1829,11 +1825,11 @@ def run_test_group(name, tests, func):
 
         if output != test["expected"]:
             fail += 1
-            print(f"{name}: fail")
-            print("Expected:")
-            print(test["expected"])
-            print("Output:")
-            print(output)
+            print(f"{name}: fail")  # noqa: T201
+            print("Expected:")  # noqa: T201
+            print(test["expected"])  # noqa: T201
+            print("Output:")  # noqa: T201
+            print(output)  # noqa: T201
         else:
             success += 1
 
@@ -1855,4 +1851,4 @@ if __name__ == "__main__":
         total_fail += f
 
     if not total_fail:
-        print(f"Yep, {total_success} tests passed")
+        print(f"Yep, {total_success} tests passed")  # noqa: T201
