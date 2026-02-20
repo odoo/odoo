@@ -481,6 +481,9 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         await super.sortDrop(dataRowId, dataGroupId, options);
 
         const record = this.props.list.records.find(r => r.id === dataRowId);
+        if (!record) {
+            return;
+        }
         const parentSection = getParentSectionRecord(this.props.list, record);
         const commands = [];
 
