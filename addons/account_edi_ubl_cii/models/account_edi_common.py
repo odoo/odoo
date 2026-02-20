@@ -1,9 +1,10 @@
 import re
 from collections import defaultdict
 from markupsafe import Markup
+from lxml import etree
 
 from odoo import _, api, models
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
+from odoo.addons.account.tools import dict_to_xml
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_is_zero, float_repr
@@ -290,6 +291,22 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    def _vals_to_etree(self, vals):
+        document_node = vals['document_node']
+        return dict_to_xml(document_node, nsmap=document_node['_nsmap'], template=document_node['_template'])
+
+    def _etree_to_string(self, tree):
+        return etree.tostring(tree, xml_declaration=True, encoding='UTF-8')
+
+    def _define_document_type(self, vals, document_type):
+        vals['_document_type'] = {
+            'name': document_type,
+            'model': self,
+        }
+
+    def _is_document(self, vals, *document_types):
+        return vals.get('_document_type', {}).get('name') in document_types
 
     def module_installed(self, module_name):
         return self.env['ir.module.module']._get(module_name).state == 'installed'
