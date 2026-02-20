@@ -197,14 +197,14 @@ class ResPartner(models.Model):
             try:
                 vies_valid = check_vies(partner.vat, timeout=10)
                 partner.vies_valid = vies_valid['valid']
-            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
+            except (OSError, InvalidComponent, zeep.exceptions.Error) as e:
                 if partner._origin.id:
                     msg = ""
                     if isinstance(e, OSError):
                         msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vat)
                     elif isinstance(e, InvalidComponent):
                         msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vat)
-                    elif isinstance(e, zeep.exceptions.Fault):
+                    elif isinstance(e, zeep.exceptions.Error):
                         msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
                     partner._origin.message_post(body=msg)
                 _logger.warning("The VAT number %s failed VIES check.", partner.vat)
