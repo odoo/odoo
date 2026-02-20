@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -11,7 +12,9 @@ from datetime import datetime
 class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
     def test_purchase_order_download_edi(self):
         self.env.company.vat = 'BE0477472701'
+        self.partner_a.country_id = self.env.ref('base.nl')
         self.partner_a.vat = 'NL123456782B90'
+        tax = self.company_data['default_tax_sale']
 
         po = self.env['purchase.order'].create({
             'name': 'My PO',
@@ -24,12 +27,14 @@ class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
                     'product_qty': 10.0,
                     'price_unit': 50.0,
                     'discount': 10.0,
+                    'tax_ids': [Command.set(tax.ids)],
                 }),
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'name': 'Product A description',
                     'product_qty': 1.0,
                     'price_unit': 10.0,
+                    'tax_ids': [Command.set(tax.ids)],
                 }),
             ],
         })

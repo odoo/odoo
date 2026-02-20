@@ -142,8 +142,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         super()._ubl_add_notes_nodes(vals)
         document_node = vals['document_node']
 
-        if note := len(document_node['cbc:Note']) == 1 and document_node['cbc:Note'][0].get('_text'):
-            document_node['cbc:Note'][0]['_text'] = note[:300]
+        if note := document_node['cbc:Note'].get('_text'):
+            document_node['cbc:Note']['_text'] = note[:300]
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
