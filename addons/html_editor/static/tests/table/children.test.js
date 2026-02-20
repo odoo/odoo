@@ -6,17 +6,17 @@ import { unformat } from "../_helpers/format";
 import { undo } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 
-function addRow(position) {
+function addRow(position, rowsToAdd = 1) {
     return (editor) => {
         const selection = editor.shared.selection.getEditableSelection();
-        editor.shared.table.addRow(position, findInSelection(selection, "tr"));
+        editor.shared.table.addRow(position, findInSelection(selection, "tr"), rowsToAdd);
     };
 }
 
-function addColumn(position) {
+function addColumn(position, columnsToAdd = 1) {
     return (editor) => {
         const selection = editor.shared.selection.getEditableSelection();
-        editor.shared.table.addColumn(position, findInSelection(selection, "td, th"));
+        editor.shared.table.addColumn(position, findInSelection(selection, "td, th"), columnsToAdd);
     };
 }
 
@@ -213,6 +213,89 @@ describe("row", () => {
                     "<td>cd</td>" +
                     "<td>ef[]</td>" +
                     "</tr></tbody></table>",
+            });
+        });
+
+        test("should add two rows above the top row and preserve widths", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef[]</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addRow("before", 2),
+                contentAfter:
+                    "<table><tbody>" +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 20px;"><p><br></p></td>' +
+                    '<td style="width: 25px;"><p><br></p></td>' +
+                    '<td style="width: 30px;"><p><br></p></td>' +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+            });
+        });
+        test("should add two rows below the bottom row", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl[]</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addRow("after", 2),
+                contentAfter:
+                    "<table><tbody>" +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    "</tbody></table>",
             });
         });
     });
@@ -541,6 +624,78 @@ describe("column", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr></tbody></table>",
+            });
+        });
+
+        test("should add two columns before the leftmost column and preserve table width", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody>' +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 40px;">ab[]</td>' +
+                    '<td style="width: 50px;">cd</td>' +
+                    '<td style="width: 60px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addColumn("before", 2),
+                contentAfter:
+                    '<table style="width: 150px;"><tbody>' +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 27px;"><p><br></p></td>' +
+                    '<td style="width: 27px;"><p><br></p></td>' +
+                    '<td style="width: 27px;">ab[]</td>' +
+                    '<td style="width: 33px;">cd</td>' +
+                    '<td style="width: 35px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+            });
+        });
+
+        test("should add two columns after the rightmost column and preserve table width", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody>' +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 40px;">ab</td>' +
+                    '<td style="width: 50px;">cd</td>' +
+                    '<td style="width: 60px;">ef[]</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addColumn("after", 2),
+                contentAfter:
+                    '<table style="width: 150px;"><tbody>' +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 23px;">ab</td>' +
+                    '<td style="width: 28px;">cd</td>' +
+                    '<td style="width: 32px;">ef[]</td>' +
+                    '<td style="width: 32px;"><p><br></p></td>' +
+                    '<td style="width: 34px;"><p><br></p></td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    "</tbody></table>",
             });
         });
     });

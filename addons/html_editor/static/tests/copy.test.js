@@ -44,6 +44,32 @@ describe("range not collapsed", () => {
     });
 
     test.tags("focus required");
+    test("should copy a single selected table cell as text/plain, text/html and application/vnd.odoo.odoo-editor", async () => {
+        await setupEditor(
+            `<table class="o_selected_table"><tbody><tr><td class="o_selected_td">[ab]</td></tr><tr><td>ab</td></tr></tbody></table>`,
+            // Exclude the selection placeholder plugin so we have a DOM that
+            // really starts with a table.
+            { config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") } }
+        );
+
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+
+        // Plain text should still be copied
+        expect(clipboardData.getData("text/plain")).toBe("ab");
+
+        // HTML should preserve table structure (1×1 table)
+        expect(clipboardData.getData("text/html")).toBe(
+            `<table class="o_selected_table"><tbody><tr><td class="o_selected_td">ab</td></tr></tbody></table>`
+        );
+
+        // Editor-specific format should also preserve the table
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            `<table class="o_selected_table"><tbody><tr><td class="o_selected_td">ab</td></tr></tbody></table>`
+        );
+    });
+
+    test.tags("focus required");
     test("should copy a selection as text/plain, text/html and application/vnd.odoo.odoo-editor in table", async () => {
         const { el } = await setupEditor(
             `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`,

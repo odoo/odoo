@@ -5,6 +5,7 @@ import {
     fillEmpty,
     fillShrunkPhrasingParent,
     removeClass,
+    removeStyle,
 } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
@@ -32,6 +33,7 @@ import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/t
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -133,6 +135,8 @@ export class TablePlugin extends Plugin {
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
         color_apply_overrides: this.applyTableColor.bind(this),
+        paste_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
+        paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
         unremovable_node_predicates: isUnremovableTableComponent,
         unsplittable_node_predicates: (node) =>
@@ -180,6 +184,107 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
+    }
+
+    handlePasteTableIntoExistingTable(selection, clipboardRoot) {
+        // Clipboard must contain exactly one table.
+        const sourceTable = clipboardRoot.firstChild;
+        if (clipboardRoot.childNodes.length !== 1 || sourceTable?.nodeName !== "TABLE") {
+            return false;
+        }
+
+        // Source table size.
+        const sourceRows = sourceTable.rows;
+        const sourceRowCount = sourceRows.length;
+        const sourceColumnCount = sourceRows[0]?.cells.length || 0;
+        if (!sourceRowCount || !sourceColumnCount) {
+            return false;
+        }
+
+        // Selection must be fully inside the same target table.
+        const targetTable = closestElement(selection.anchorNode, "table");
+        if (!targetTable || closestElement(selection.focusNode, "table") !== targetTable) {
+            return false;
+        }
+
+        const anchorCell =
+            targetTable.querySelector(".o_selected_td") ||
+            closestElement(selection.anchorNode, isTableCell);
+        const anchorRowIndex = getRowIndex(anchorCell);
+        const anchorColumnIndex = getColumnIndex(anchorCell);
+
+        // Ensure target table has enough rows.
+        const targetRows = targetTable.rows;
+        const rowsToAdd = anchorRowIndex + sourceRowCount - targetRows.length;
+
+        if (rowsToAdd > 0) {
+            this.addRow("after", targetRows[targetRows.length - 1], rowsToAdd);
+        }
+
+        // Ensure target table has enough columns.
+        const targetCells = targetRows[0].cells;
+        const columnsToAdd = anchorColumnIndex + sourceColumnCount - targetCells.length;
+
+        if (columnsToAdd > 0) {
+            this.addColumn("after", targetCells[targetCells.length - 1], columnsToAdd);
+        }
+
+        for (let sourceRowIndex = 0; sourceRowIndex < sourceRowCount; sourceRowIndex++) {
+            const sourceCells = sourceRows[sourceRowIndex].cells;
+            const targetCells = targetTable.rows[anchorRowIndex + sourceRowIndex].cells;
+            for (
+                let sourceColumnIndex = 0;
+                sourceColumnIndex < sourceColumnCount;
+                sourceColumnIndex++
+            ) {
+                const sourceCell = sourceCells[sourceColumnIndex];
+                const targetCell = targetCells[anchorColumnIndex + sourceColumnIndex];
+                const clonedCell = sourceCell.cloneNode(true);
+                targetCell.replaceChildren(...clonedCell.childNodes);
+                // Remove any existing bg-* classes on the target cell.
+                const targetBgClasses = [...targetCell.classList].filter((cls) =>
+                    BG_CLASSES_REGEX.test(cls)
+                );
+                if (targetBgClasses.length) {
+                    removeClass(targetCell, ...targetBgClasses);
+                }
+                // Apply bg-* classes from the source cell.
+                const sourceBgClasses = [...sourceCell.classList].filter((cls) =>
+                    BG_CLASSES_REGEX.test(cls)
+                );
+                if (sourceBgClasses.length) {
+                    targetCell.classList.add(...sourceBgClasses);
+                }
+                // Apply source background if any else remove target background
+                const { backgroundColor, backgroundImage } = sourceCell.style;
+                if (backgroundColor) {
+                    targetCell.style.backgroundColor = backgroundColor;
+                } else {
+                    removeStyle(targetCell, "background-color");
+                }
+                if (backgroundImage) {
+                    targetCell.style.backgroundImage = backgroundImage;
+                } else {
+                    removeStyle(targetCell, "background-image");
+                }
+            }
+        }
+
+        const selectionStartNode =
+            targetTable.rows[anchorRowIndex].cells[anchorColumnIndex].firstChild;
+        const selectionEndNode =
+            targetTable.rows[anchorRowIndex + sourceRowCount - 1].cells[
+                anchorColumnIndex + sourceColumnCount - 1
+            ].lastChild;
+        // Select from the first source cell to the last source cell.
+        this.dependencies.selection.setSelection({
+            anchorNode: selectionStartNode,
+            anchorOffset: 0,
+            focusNode: selectionEndNode,
+            focusOffset: nodeSize(selectionEndNode),
+        });
+
+        return true;
     }
 
     handleTab() {
@@ -253,97 +358,99 @@ export class TablePlugin extends Plugin {
     /**
      * @param {'before'|'after'} position
      * @param {HTMLTableCellElement} reference
+     * @param {number} [columnsToAdd=1]
      */
-    addColumn(position, reference) {
-        const columnIndex = getColumnIndex(reference);
+    addColumn(position, reference, columnsToAdd = 1) {
         const table = closestElement(reference, "table");
         const tableWidth = table.style.width && parseFloat(table.style.width);
-        const referenceColumn = table.querySelectorAll(
-            `tr :is(td, th):nth-of-type(${columnIndex + 1})`
-        );
-        const referenceCellWidth = reference.style.width
-            ? parseFloat(reference.style.width)
-            : reference.clientWidth;
-        // Temporarily set widths so proportions are respected.
-        const firstRow = table.querySelector("tr");
-        const firstRowCells = [...firstRow.children].filter(
-            (child) => child.nodeName === "TD" || child.nodeName === "TH"
-        );
-        let totalWidth = 0;
-        if (tableWidth) {
-            for (const cell of firstRowCells) {
-                const width = parseFloat(cell.style.width);
-                cell.style.width = width + "px";
-                // Spread the widths to preserve proportions.
-                // -1 for the width of the border of the new column.
-                const newWidth = Math.max(
-                    Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
-                    13
-                );
-                cell.style.width = newWidth + "px";
-                totalWidth += newWidth;
+        for (let columnOffset = 0; columnOffset < columnsToAdd; columnOffset++) {
+            const columnIndex = getColumnIndex(reference);
+            const referenceCellWidth = reference.style.width
+                ? parseFloat(reference.style.width)
+                : reference.clientWidth;
+
+            // Temporarily set widths so proportions are respected.
+            const firstRowCells = [...table.rows[0].cells];
+            let totalWidth = 0;
+            if (tableWidth) {
+                for (const cell of firstRowCells) {
+                    const width = parseFloat(cell.style.width);
+                    cell.style.width = width + "px";
+                    // Spread the widths to preserve proportions.
+                    // -1 for the width of the border of the new column.
+                    const newWidth = Math.max(
+                        Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
+                        13
+                    );
+                    cell.style.width = newWidth + "px";
+                    totalWidth += newWidth;
+                }
             }
-        }
-        referenceColumn.forEach((cell, rowIndex) => {
-            const newCell = this.document.createElement(cell.tagName);
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
-            newCell.append(baseContainer);
-            cell[position](newCell);
-            // If the first row is a header, ensure the new column's
-            // first cell is also marked as a header (<th>).
-            if (rowIndex === 0 && cell.classList.contains("o_table_header")) {
-                newCell.classList.add("o_table_header");
+
+            for (let rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
+                const row = table.rows[rowIndex];
+                const cell = row.cells[columnIndex];
+                const newCell = this.document.createElement(cell.tagName);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                fillEmpty(baseContainer);
+                newCell.append(baseContainer);
+                cell[position](newCell);
+
+                if (rowIndex === 0) {
+                    // If the first row is a header, ensure the new column's
+                    // first cell is also marked as a header (<th>).
+                    if (cell.classList.contains("o_table_header")) {
+                        newCell.classList.add("o_table_header");
+                    }
+                    if (tableWidth) {
+                        newCell.style.width = cell.style.width;
+                        totalWidth += parseFloat(cell.style.width);
+                    }
+                }
             }
-            if (rowIndex === 0 && tableWidth) {
-                newCell.style.width = cell.style.width;
-                totalWidth += parseFloat(cell.style.width);
+
+            if (tableWidth) {
+                if (totalWidth !== tableWidth - 1) {
+                    // -1 for the width of the border of the new column.
+                    firstRowCells[firstRowCells.length - 1].style.width =
+                        parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
+                        (tableWidth - totalWidth - 1) +
+                        "px";
+                }
+                // Fix the table and row's width so it doesn't change.
+                table.style.width = tableWidth + "px";
             }
-        });
-        if (tableWidth) {
-            if (totalWidth !== tableWidth - 1) {
-                // -1 for the width of the border of the new column.
-                firstRowCells[firstRowCells.length - 1].style.width =
-                    parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
-                    (tableWidth - totalWidth - 1) +
-                    "px";
-            }
-            // Fix the table and row's width so it doesn't change.
-            table.style.width = tableWidth + "px";
         }
     }
     /**
      * @param {'before'|'after'} position
      * @param {HTMLTableRowElement} reference
+     * @param {number} [rowsToAdd=1]
      */
-    addRow(position, reference) {
+    addRow(position, reference, rowsToAdd = 1) {
         const referenceRowHeight = reference.style.height && parseFloat(reference.style.height);
-        const newRow = this.document.createElement("tr");
-        if (referenceRowHeight) {
-            newRow.style.height = referenceRowHeight + "px";
-        }
-        const cells = reference.querySelectorAll("td, th");
-        const referenceRowWidths = [...cells].map((cell) => cell.style.width);
-        newRow.append(
-            ...Array.from(cells).map(() => {
+        for (let rowOffset = 0; rowOffset < rowsToAdd; rowOffset++) {
+            const newRow = this.document.createElement("tr");
+            if (referenceRowHeight) {
+                newRow.style.height = referenceRowHeight + "px";
+            }
+
+            for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
                 const td = this.document.createElement("td");
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.append(this.document.createElement("br"));
+                fillEmpty(baseContainer);
                 td.append(baseContainer);
-                return td;
-            })
-        );
-        reference[position](newRow);
-        if (referenceRowHeight) {
-            newRow.style.height = referenceRowHeight + "px";
-        }
-        // Preserve the width of the columns (applied only on the first row).
-        if (getRowIndex(newRow) === 0) {
-            let columnIndex = 0;
-            for (const column of newRow.children) {
-                column.style.width = referenceRowWidths[columnIndex];
-                cells[columnIndex].style.width = "";
-                columnIndex++;
+                newRow.append(td);
+            }
+            reference[position](newRow);
+
+            // Preserve the width of the columns (applied only on the first row).
+            if (getRowIndex(newRow) === 0) {
+                for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
+                    newRow.cells[columnIndex].style.width =
+                        reference.cells[columnIndex].style.width;
+                    reference.cells[columnIndex].style.width = "";
+                }
             }
         }
     }
@@ -1359,9 +1466,9 @@ export class TablePlugin extends Plugin {
      * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
      */
     processContentForClipboard(clonedContents, selection) {
-        if (clonedContents.firstChild.nodeName === "TR" || isTableCell(clonedContents.firstChild)) {
+        const table = closestElement(selection.commonAncestorContainer, "table");
+        if (table) {
             // We enter this case only if selection is within single table.
-            const table = closestElement(selection.commonAncestorContainer, "table");
             const tableClone = table.cloneNode(true);
             // A table is considered fully selected if it is nested inside a
             // cell that is itself selected, or if all its own cells are
