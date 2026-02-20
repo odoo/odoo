@@ -129,7 +129,7 @@ export class Composer extends Component {
                 this.props.dropzoneRef,
                 this.onDropFile,
                 "o-mail-Composer-dropzone",
-                () => this.allowUpload
+                () => this.allowUpload && (this.thread.model == 'discuss.channel' || this.thread.canPostMessage),
             );
         }
         if (this.props.messageEdition) {

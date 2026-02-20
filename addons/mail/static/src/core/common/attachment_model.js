@@ -35,7 +35,7 @@ export class Attachment extends FileModelMixin(Record) {
     create_date;
 
     get isDeletable() {
-        return true;
+        return Boolean(this.message) || this.originThread.hasWriteAccess;
     }
 
     get monthYear() {
