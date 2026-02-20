@@ -7550,7 +7550,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             return !shapeImgSquareWidget.isActive();
         }
         if (widgetName === "toggle_stretch_opt") {
-            return this._isCropRequired();
+            return this._isCropRequired() && !this._originalOrCurrentImageIsGif(this._getImg());
         }
         return this._super(...arguments);
     },
@@ -7753,6 +7753,18 @@ registry.ImageTools = ImageHandlerOption.extend({
             return !isGif(this._getImageMimetype(this._getImg()));
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @param {HTMLImageElement} [img]
+     * @returns {boolean}
+     */
+    _originalOrCurrentImageIsGif(img) {
+        const originalSrc = img.dataset.originalSrc || "";
+        if (originalSrc) {
+            return originalSrc.toLowerCase().endsWith(".gif");
+        }
+        return img.src.toLowerCase().endsWith(".gif");
     },
     /**
      * Flips the image shape (vertically or/and horizontally).
