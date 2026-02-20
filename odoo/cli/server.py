@@ -17,6 +17,7 @@ import sys
 
 from psycopg2.errors import InsufficientPrivilege
 
+from odoo import sql_db
 from odoo.release import author as __author__  # noqa: F401
 from odoo.release import version as __version__  # noqa: F401
 from odoo.service import server
@@ -35,13 +36,20 @@ def check_root_user():
 
 
 def check_postgres_user():
-    """ Exit if the configured database user is 'postgres'.
+    """ Warn if the configured database user is a super-user.
 
+    Also exit if the configured database user is 'postgres'
     This function assumes the configuration has been initialized.
     """
     if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
-        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
+        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.\n")
         sys.exit(1)
+    with sql_db.db_connect("postgres").cursor() as cr:
+        cr.execute("SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER")
+        is_superuser, = cr.fetchone()
+    if is_superuser:
+        server_logger = logging.getLogger(__name__)
+        server_logger.warning("Using a PostgreSQL super-user is a security risk.")
 
 def report_configuration():
     """ Log the server version and some configuration values.
