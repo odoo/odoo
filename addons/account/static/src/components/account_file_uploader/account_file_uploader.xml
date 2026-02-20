@@ -2,7 +2,7 @@
 
     <t t-name="account.AccountFileUploader" t-inherit="account.DocumentFileUploader" t-inherit-mode="primary">
         <xpath expr="//t[@t-slot='toggler']" position="replace">
-            <t t-if="props.togglerTemplate" t-call="{{ props.togglerTemplate }}"/>
+            <t t-if="this.props.togglerTemplate" t-call="{{ this.props.togglerTemplate }}"/>
             <t t-else="" t-slot="toggler"/>
          </xpath>
     </t>
@@ -18,12 +18,12 @@
     </t>
 
     <t t-name="account.JournalUploadLink">
-        <a t-att-class="props.btnClass" href="#" draggable="false">
+        <a t-att-class="this.props.btnClass" href="#" draggable="false">
             <div class="d-sm-none">
                 <i class="fa fa-upload"></i>
             </div>
             <div class="d-none d-sm-block">
-                <t t-out="props.linkText"/>
+                <t t-out="this.props.linkText"/>
             </div>
         </a>
     </t>

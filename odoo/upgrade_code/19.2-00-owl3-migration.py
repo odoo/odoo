@@ -94,9 +94,9 @@ MAIL_WHITELIST = {
 }
 EVENT_WHITELIST = {
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
-    # "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+    "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
 }
-THIS_TARGETS = ["event"]
+THIS_TARGETS = ["account"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
@@ -110,6 +110,7 @@ def upgrade_this(file_manager, log_info, log_error):
     white_vars = {
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
+        "sale.ListRenderer.RecordRow": {'record'},  # nested inherits under dynamic t-call
     }  # vars defined inside template, eg. using t-set
     white_vars = white_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
 

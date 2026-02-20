@@ -8,14 +8,14 @@
     </t>
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
-            <t t-if="suggest.suggestToggle.isOn">
+            <t t-if="this.suggest.suggestToggle.isOn">
                 <attribute name="class">o_search_panel_sections mt-4</attribute>
             </t>
         </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
-            <t t-if="displaySuggest">
+            <t t-if="this.displaySuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-                <t t-if="suggest.suggestToggle.isOn">
+                <t t-if="this.suggest.suggestToggle.isOn">
                     <div class="o_suggest_feature">
                         <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
                         <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>

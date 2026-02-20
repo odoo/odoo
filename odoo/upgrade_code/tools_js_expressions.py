@@ -478,7 +478,6 @@ class TemplateCompiler:
     def _get_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
         """ If inside a t-inherit subtree, merge target template locals into the vars. """
         if is_inside_inherit(node):
-            print("inherits")
             target = is_inside_inherit(node)[0].get("t-inherit")
             node_vars = base_vars | (self.all_vars.get(target, set())) | self.t_call_vars.get(target, set())
 
