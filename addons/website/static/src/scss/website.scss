@@ -378,9 +378,9 @@ h1, h2, h3, h4, h5, h6,
                 > header #o_main_nav {
                     padding-left: 0;
                     padding-right: 0;
-                    
+
                     @if ($-header-template == "search") {
-                        & > div, 
+                        & > div,
                         & > .o_header_hide_on_scroll > .container {
                             padding-left: 0;
                             padding-right: 0;
@@ -1299,6 +1299,14 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         position: absolute;
     }
 
+    .carousel-control-prev, .carousel-control-next {
+        &:focus-visible {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+            }
+        }
+    }
+
     // Allow clicks to pass through the carousel control's wrapper, while
     // keeping the control indicators clickable.
     .carousel-indicators {
@@ -1853,7 +1861,7 @@ header {
             // When the header should only have a bottom border, only take the
             // first value of the variable 'menu-border-width' to behave as if
             // the input only accepted one number.
-            $-menu-border-bottom-width: nth($-menu-border-width, 1); 
+            $-menu-border-bottom-width: nth($-menu-border-width, 1);
             border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
             border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
