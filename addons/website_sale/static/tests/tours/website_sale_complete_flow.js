@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 import { pay } from "@website_sale/js/tours/tour_utils";
 
-    registry.category("web_tour.tours").add('website_sale_tour_1', {
+registry.category("web_tour.tours").add('website_sale_tour_1', {
         url: '/shop?search=Storage Box Test',
         steps: () => [
     // Testing b2c with Tax-Excluded Prices
@@ -73,6 +73,10 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         trigger: 'a[name="website_sale_main_button"]',
         run: "click",
         expectUnloadPage: true,
+    },
+    {
+        content: "Wait for interaction to be ready",
+        trigger: `body[is-ready=true]`,
     },
     {
         content: "Billing address is not same as delivery address",
