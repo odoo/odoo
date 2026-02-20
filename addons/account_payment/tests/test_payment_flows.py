@@ -134,7 +134,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         tx_sudo = self._get_tx(processing_values['reference'])
         tx_sudo._set_done()
 
-        url = self._build_url('/payment/status/poll')
+        url = self._build_url('/payment/post_process')
         resp = self.make_jsonrpc_request(url, {})
         self.assertTrue(tx_sudo.is_post_processed)
 
@@ -199,7 +199,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         # Validate the transaction amount is equal to the invoice amount
         self.assertEqual(tx_sudo.amount, invoice.amount_total)
 
-        url = self._build_url('/payment/status/poll')
+        url = self._build_url('/payment/post_process')
         resp = self.make_jsonrpc_request(url, {})
         self.assertTrue(tx_sudo.is_post_processed)
 

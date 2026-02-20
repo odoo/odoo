@@ -183,10 +183,6 @@ registry.category("web_tour.tours").add("donation_snippet_use_2", {
             content: "Verify that the amount displayed is 67",
             trigger:
                 'body:contains(Your payment has been processed.) span.oe_currency_value:contains("67.00")',
-            expectUnloadPage: true,
-        },
-        {
-            trigger: "[name=o_payment_status_alert]:contains(thank you!)",
         },
     ],
 });

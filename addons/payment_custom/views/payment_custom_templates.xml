@@ -21,13 +21,6 @@
 
     <template id="custom_state_header" inherit_id="payment.state_header">
 
-        <xpath expr="//div[@name='o_payment_status_alert']" position="before">
-            <h1 t-if=" tx.provider_id.sudo().code == 'custom' and tx.state == 'pending'"
-                class="mb-3">
-                Finalize your payment
-            </h1>
-        </xpath>
-
         <xpath expr="//div[@name='o_payment_status_alert']" position="inside">
             <t t-set="qr_code"
                t-value="tx.provider_id.sudo().qr_code and tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx._get_communication(), None, tx.currency_id, tx.partner_id)"

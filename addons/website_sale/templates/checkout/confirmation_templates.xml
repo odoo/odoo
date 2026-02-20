@@ -114,7 +114,7 @@
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div
                 t-if="tx_sudo"
-                t-attf-class="alert px-3 pb-0 pt-3 #{
+                t-attf-class="alert pb-0 #{
                     (tx_sudo.state == 'pending' and 'alert-info') or
                     (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
                     (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
@@ -122,41 +122,9 @@
                     'alert-danger'}"
                 role="alert"
             >
-                <a
-                    title="Edit"
-                    class="btn btn-sm btn-link text-dark float-end"
-                    role="button"
-                    groups="base.group_system"
-                    target="_blank"
-                    aria-label="Edit"
-                    t-attf-href="/odoo/action-payment.action_payment_provider/{{tx_sudo.provider_id.id}}"
-                >
-                    <i class="fa fa-pencil"/>
-                </a>
-                <div>
-                    <t t-if="tx_sudo.state == 'pending'">
-                        <t t-out="tx_sudo.provider_id.sudo().pending_msg"/>
-                    </t>
-                    <t t-if="tx_sudo.state == 'done'">
-                        <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>
-                    </t>
-                    <t t-if="tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount">
-                        <span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.
-                        Please contact the responsible of the shop for more information.</span>
-                    </t>
-                    <t t-if="tx_sudo.state == 'cancel'">
-                        <t t-out="tx_sudo.provider_id.sudo().cancel_msg"/>
-                    </t>
-                    <t t-if="tx_sudo.state == 'authorized'">
-                        <t t-if="tx_sudo.provider_id.sudo().auth_msg" t-out="tx_sudo.provider_id.sudo().auth_msg"/>
-                        <span t-else="">Your payment has been authorized.</span>
-                    </t>
-                    <t t-if="tx_sudo.state == 'error'">
-                        <span t-out="tx_sudo.state_message"/>
-                    </t>
-                </div>
+                <t t-out="tx_sudo._get_transaction_status_message(order=order)"/>
                 <t t-if="tx_sudo.provider_code == 'custom'">
-                    <div id="order_reference" t-if="order.reference" class="mt-2">
+                    <div id="order_reference" t-if="order.reference" class="mt-2 mb-3">
                         <b>Communication: </b><span t-out='order.reference'/>
                     </div>
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
