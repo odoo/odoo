@@ -338,7 +338,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             # updated for messages using another transaction. Without a commit
             # before updating the progress, we would have a serialization error.
             self.env.cr.commit()
-            if not self.env['ir.cron']._commit_progress(remaining=total_remaining):
+            if not self.env['ir.cron'].with_context(cron_end_time=float("inf"))._commit_progress(remaining=total_remaining):
                 break
         return result_exception
 
