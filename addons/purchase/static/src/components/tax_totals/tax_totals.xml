@@ -2,9 +2,9 @@
 <templates>
     <t t-inherit="account.TaxTotalsField" t-inherit-mode="extension" owl="1">
         <xpath expr="//tr[2]" position="after">
-            <tr t-if="totals.amount_total_cc">
+            <tr t-if="this.totals.amount_total_cc">
                 <td colspan="2">
-                    <span t-out="totals.amount_total_cc" style="font-size: 1.1em;"/>
+                    <span t-out="this.totals.amount_total_cc" style="font-size: 1.1em;"/>
                 </td>
             </tr>
         </xpath>

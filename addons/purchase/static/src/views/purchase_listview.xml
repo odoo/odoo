@@ -1,7 +1,7 @@
 <templates>
     <t t-name="purchase.ListRenderer" t-inherit="account.FileUploadListRenderer" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
-            <PurchaseDashBoard list="props.list"/>
+            <PurchaseDashBoard list="this.props.list"/>
         </xpath>
     </t>
 

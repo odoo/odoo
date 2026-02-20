@@ -6,23 +6,23 @@
 
             <div class="p-2 border-bottom bg-light d-flex justify-content-between align-items-center">
                 <span class="fw-bold">Tax Distribution</span>
-                <button type="button" class="btn-close" t-on-click="props.close" tabindex="-1"/>
+                <button type="button" class="btn-close" t-on-click="this.props.close" tabindex="-1"/>
             </div>
 
             <div class="p-3 o_invoice_tax_summary">
 
-                <t t-if="props.description">
+                <t t-if="this.props.description">
                     <span class="text-capitalize d-block mb-3 fs-6">
-                        <t t-esc="props.description"/>
+                        <t t-esc="this.props.description"/>
                     </span>
                 </t>
 
-                <div t-if="props.invoiceLines.length > 0" class="mb-2 fs-6">
+                <div t-if="this.props.invoiceLines.length > 0" class="mb-2 fs-6">
                     <div class="d-flex align-items-start">
                         <div class="fw-bold me-2">Invoice :</div>
 
                         <div class="d-flex flex-wrap align-items-center">
-                            <t t-foreach="props.invoiceLines" t-as="group" t-key="group.type">
+                            <t t-foreach="this.props.invoiceLines" t-as="group" t-key="group.type">
                                 <t t-if="group.lines.map(line => line.tag_names).flat().length">
                                     <div class="d-flex align-items-center me-2 mb-2">
                                         <span class="text-capitalize me-2">
@@ -46,12 +46,12 @@
                     </div>
                 </div>
 
-                <div t-if="props.refundLines.length" class="mb-2 fs-6">
+                <div t-if="this.props.refundLines.length" class="mb-2 fs-6">
                     <div class="d-flex align-items-start">
                         <div class="fw-bold me-2">Credit Note :</div>
 
                         <div class="d-flex flex-wrap align-items-center">
-                            <t t-foreach="props.refundLines" t-as="group" t-key="group.type">
+                            <t t-foreach="this.props.refundLines" t-as="group" t-key="group.type">
                                 <t t-if="group.lines.map(line => line.tag_names).flat().length">
                                     <div class="d-flex align-items-center me-2 mb-2">
                                         <span class="text-capitalize me-2">
