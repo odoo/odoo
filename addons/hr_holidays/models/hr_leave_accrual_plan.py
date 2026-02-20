@@ -31,7 +31,11 @@ class HrLeaveAccrualPlan(models.Model):
         ("end", "At the end of the accrual period")],
         export_string_translation=False,
         default="end", required=True)
-    can_be_carryover = fields.Boolean(export_string_translation=False)
+    accrued_gain_action = fields.Selection([
+        ('lost', 'They should be lost (reset)'),
+        ('carryover', 'They should be carried over')],
+        export_string_translation=False,
+        required=True, default='lost')
     carryover_date = fields.Selection([
         ("year_start", "At the start of the year"),
         ("allocation", "At the allocation date"),
@@ -121,7 +125,7 @@ class HrLeaveAccrualPlan(models.Model):
             'context': dict(
                 self.env.context,
                 new=True,
-                default_can_be_carryover=self.can_be_carryover,
+                default_accrued_gain_action=self.accrued_gain_action,
                 default_accrued_gain_time=self.accrued_gain_time,
                 default_can_modify_value_type=not self.level_ids,
                 default_added_value_type=self.added_value_type,

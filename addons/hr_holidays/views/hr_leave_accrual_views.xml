@@ -63,13 +63,13 @@
                                 </span>
                             </span>
                         </group>
-                        <group class="o_accrual" invisible="not can_be_carryover" string="Carry Over Options">
-                            <label class="fw-bold" for="action_with_unused_accruals" string="After a year, unused time off will be :"/>
+                        <group class="o_accrual" invisible="accrued_gain_action == 'lost'" string="Carry Over Options">
+                            <label class="fw-bold" for="action_with_unused_accruals" string="After a year, unused accrued time will be :"/>
                             <span>
                                 <span name="unused_accruals">
                                     <field nolabel="1" class="ms-1" name="action_with_unused_accruals"
                                            widget="radio"
-                                           readonly="not can_be_carryover"/>
+                                           readonly="accrued_gain_action == 'lost'"/>
                                 </span>
                             </span>
                             <label class="fw-bold" invisible="action_with_unused_accruals == 'lost'" for="carryover_options" string="How much time can be carried over :"/>
@@ -179,14 +179,11 @@
                                         <template id="is_based_on_worked_time_no">No, always consider the entire accrual period (whole calendar days).
                                         </template>
                                     </span>
-                                    <label class="fw-bold" for="can_be_carryover"
-                                           string="Do you need a carry-over of the accrued days from one year to another?"/>
-                                    <span>
-                                        <field class="ms-1" name="can_be_carryover"/>
-                                    </span>
-                                    <label class="fw-bold" invisible="not can_be_carryover" for="carryover_date"
-                                           string="When do you want the accrued time left to be carried-over?"/>
-                                    <span name="carryover" invisible="not can_be_carryover">
+                                    <label class="fw-bold" for="accrued_gain_action" string="What should happen to the unused accrued time?"/>
+                                    <field nolabel="1" class="ms-1" name="accrued_gain_action" widget="radio"/>
+                                    <label class="fw-bold" for="carryover_date"
+                                           string="When should unused accrued time be reset/carried over?"/>
+                                    <span name="carryover">
                                         <field class="ms-1" name="carryover_date"
                                                widget="radio_followed_by_element"
                                                options="{'links': {'other': 'carryover_custom_date'}, 'observe': 'carryover'}"/>
