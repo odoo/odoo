@@ -39,3 +39,33 @@ class TestTheme(common.TransactionCase):
         ThemeUtils.enable_view(key)
         self.assertEqual(_get_header_template_key(), key,
                          "Ensuring it works also for non default template.")
+
+    def test_theme_cleanup_preserves_cow_views(self):
+        """Ensure _theme_cleanup does not delete user-modified COW views.
+
+        COW views are created when users edit generic views
+        from the website. These views have no theme_template_id
+        (because theme_template_id has copy=False), but they should NOT be
+        deleted as orphans because their generic parent still exists.
+        """
+        website = self.env['website'].get_current_website()
+        View = self.env['ir.ui.view']
+
+        generic = View.search([
+            ('key', '=', 'website.footer_custom'),
+            ('website_id', '=', False),
+        ], limit=1)
+        self.assertTrue(generic, "Need generic footer view for test")
+
+        cow = generic.copy({'website_id': website.id, 'key': generic.key})
+        cow_id = cow.id
+
+        self.assertFalse(cow.theme_template_id,
+            "COW view should not have theme_template_id (copy=False)")
+
+        website_module = self.env['ir.module.module'].search([('name', '=', 'website')])
+        website_module._theme_cleanup('ir.ui.view', website)
+
+        self.assertTrue(View.browse(cow_id).exists(),
+            "_theme_cleanup incorrectly deleted COW view. "
+            "Views with existing generic parents should not be deleted.")
