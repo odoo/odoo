@@ -764,3 +764,8 @@ class TestConfigManager(TransactionCase):
             _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
         self.assertIsNone(options['db_replica_host'])
         self.assertEqual(options['dev_mode'], ['replica'])
+
+    def test_14_st_for_stop(self):
+        # Remove this test once there's a new option that also start with --st
+        _, options = self.parse_reset(['--st'])
+        self.assertTrue(options['stop_after_init'])

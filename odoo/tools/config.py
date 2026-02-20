@@ -37,6 +37,23 @@ class _Empty:
 EMPTY = _Empty()
 
 
+class OdooOptionParser(optparse.OptionParser):
+    def _match_long_opt(self, opt):
+        # --st is an "ambigous" prefix for --stop and --stop-after-init
+        # which actually are the same option, make it return that single
+        # option.
+        possibilities = [
+            (long_opt, option)
+            for long_opt, option
+            in self._long_opt.items()
+            if long_opt.startswith(opt)
+        ]
+        possible_targets = set(p[1] for p in possibilities)
+        if len(possible_targets) == 1:
+            return possibilities[0][0]
+        return super()._match_long_opt(opt)
+
+
 class _OdooOption(optparse.Option):
     config = None  # must be overriden
 
@@ -192,7 +209,7 @@ class configmanager:
         PosixOnlyOption = type('PosixOnlyOption', (_PosixOnlyOption, OdooOption), {})
 
         version = "%s %s" % (release.description, release.version)
-        parser = optparse.OptionParser(version=version, option_class=OdooOption)
+        parser = OdooOptionParser(version=version, option_class=OdooOption)
 
         parser.add_option(FileOnlyOption(dest='admin_passwd', my_default='admin'))
         parser.add_option(FileOnlyOption(dest='bin_path', type='path', my_default='', file_exportable=False))
