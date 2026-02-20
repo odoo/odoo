@@ -183,7 +183,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "share": False},
+                                {"id": self.test_user.id, "share": False, "active": True},
                             ),
                         },
                     },
@@ -232,7 +232,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "employee_ids": [], "share": False},
+                                {"id": self.test_user.id, "employee_ids": [], "share": False, "active": True},
                             ),
                         },
                     },

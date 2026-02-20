@@ -53,9 +53,14 @@ registerChannelMemberAction("remove-member", {
     name: _t("Remove Member"),
     onSelected: ({ member, store }) => {
         store.env.services.dialog.add(ConfirmationDialog, {
-            body: _t('Do you want to remove "%(member_name)s" from this channel?', {
-                member_name: member.name,
-            }),
+            body: _t(
+                "Are you sure you want to remove %(member_name)s from the members of '%(channel_name)s'? \n\nDon't worry, they can rejoin later or be invited back at any time.",
+                {
+                    member_name: member.name,
+                    channel_name: member.channel_id.displayName,
+                }
+            ),
+            confirmLabel: _t("Remove Member"),
             cancel: () => {},
             confirm: () => {
                 rpc("/discuss/channel/remove_member", {

@@ -19,7 +19,7 @@ class ResUsers(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if "active" in vals and not vals["active"]:
-            self._unsubscribe_from_non_public_channels()
+            self._unsubscribe_from_non_public_channels(reset_role=True)
         if vals.get("group_ids"):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_group_ids = [command[1] for command in vals["group_ids"] if command[0] == 4]
@@ -32,13 +32,15 @@ class ResUsers(models.Model):
         self._unsubscribe_from_non_public_channels()
         return super().unlink()
 
-    def _unsubscribe_from_non_public_channels(self):
+    def _unsubscribe_from_non_public_channels(self, reset_role=False):
         """This method un-subscribes users from group restricted channels. Main purpose
         of this method is to prevent sending internal communication to archived / deleted users.
         """
         domain = [("partner_id", "in", self.partner_id.ids)]
         # sudo: discuss.channel.member - removing member of other users based on channel restrictions
         current_cm = self.env["discuss.channel.member"].sudo().search(domain)
+        if reset_role:
+            current_cm.filtered("channel_role").write({"channel_role": False})
         current_cm.filtered(
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()

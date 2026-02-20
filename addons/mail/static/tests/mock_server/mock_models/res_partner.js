@@ -329,7 +329,7 @@ export class ResPartner extends webModels.ResPartner {
             "email",
             "active",
             "is_company",
-            mailDataHelpers.Store.one("main_user_id", ["share"]),
+            mailDataHelpers.Store.one("main_user_id", ["active", "share"]),
             ...this._get_store_im_status_fields(),
         ];
     }

@@ -428,6 +428,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.user_root.id,
                     "share": False,
                     "employee_ids": [],
+                    "active": False,
                 },
                 {
                     "id": self.users[0].id,
@@ -1859,21 +1860,21 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _res_for_user(self, user, only_inviting=False):
         if user == self.users[0]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False, "active": True}
         if user == self.users[1]:
             return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
         if user == self.users[2]:
             if only_inviting:
                 return {"id": user.id, "employee_ids": user.employee_ids.ids}
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False, "active": True}
         if user == self.users[3]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False, "active": True}
         if user == self.users[12]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False, "active": True}
         if user == self.users[14]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False, "active": True}
         if user == self.users[15]:
-            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False}
+            return {"id": user.id, "employee_ids": user.employee_ids.ids, "share": False, "active": True}
         if user == self.user_root:
             return {"id": user.id, "share": False}
         return {}
