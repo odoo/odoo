@@ -182,18 +182,20 @@ class AccountAnalyticLine(models.Model):
                 )
             else:
                 minutes = round(line.unit_amount * 60)
-                hours, minutes = divmod(minutes, 60)
+                hours, minutes = divmod(abs(round(minutes)), 60)
                 if minutes:
                     line.calendar_display_name = self.env._(
-                        "%(project_name)s (%(hours)sh%(minutes)s)",
+                        "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)",
                         project_name=line.project_id.display_name,
+                        sign='-' if line.unit_amount < 0 else '',
                         hours=hours,
                         minutes=minutes,
                     )
                 else:
                     line.calendar_display_name = self.env._(
-                        "%(project_name)s (%(hours)sh)",
+                        "%(project_name)s (%(sign)s%(hours)sh)",
                         project_name=line.project_id.display_name,
+                        sign='-' if line.unit_amount < 0 else '',
                         hours=hours,
                     )
 
