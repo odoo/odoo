@@ -398,7 +398,13 @@ describe("pos_store.js", () => {
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); // Only one group
         expect(grouped[0][0]).toBe("0");
+<<<<<<< 16bd8f4f7740ccebe67a27dbaf806cf6fe4bcb47
         expect(grouped[0][1].length).toBe(16); // 16 products in same group
+||||||| ae9fd7cc7d434d4b222c81aa58515c57d7426b65
+        expect(grouped[0][1].length).toBe(14);
+=======
+        expect(grouped[0][1].length).toBe(15);
+>>>>>>> a27c751430219fcac74a2b6f73b593dca2a5e789
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
