@@ -875,7 +875,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             'cbc:ItemClassificationCode': {
                 '_text': unspsc_code.code,
-                'listID': 'UNSPSC',
+                'listID': 'TST',
                 'listVersionID': None,
             }
         }
