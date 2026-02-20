@@ -1,8 +1,9 @@
-import { test, describe, expect } from "@odoo/hoot";
+import { test, describe, expect, beforeEach } from "@odoo/hoot";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 definePosSelfModels();
 
@@ -392,4 +393,154 @@ test("resetCategorySelection", async () => {
     expect(store.currentCategory.id).toBe(ctg2.id);
     await store.confirmOrder();
     expect(store.currentCategory.id).toBe(ctg1.id);
+});
+
+describe("printOrderChanges", () => {
+    beforeEach(async () => {
+        const store = await setupSelfPosEnv();
+
+        store.config.self_ordering_mode = "kiosk";
+        for (const relPrinter of store.models["pos.printer"].getAll()) {
+            relPrinter.delete();
+        }
+
+        this.posPrinter = store.models["pos.printer"].create({
+            product_categories_ids: [],
+            pos_config_ids: [store.config],
+            printer_type: "epson_epos",
+        });
+
+        store.config.preparation_printer_ids = [this.posPrinter];
+        await store.ticketPrinter.initPrinters();
+
+        const printedData = [];
+        patchWithCleanup(store.ticketPrinter, {
+            async generateIframe(template, data) {
+                printedData.push(data.changes.data.map((line) => line.name));
+                return document.createElement("iframe");
+            },
+            async generateImage() {
+                return "fake_image_data";
+            },
+            print() {
+                return { successful: true };
+            },
+        });
+
+        this.printedData = printedData;
+        this.getPrintedOrderLines = () => {
+            expect(this.printedData.length).toBe(1);
+            return this.printedData[0];
+        };
+
+        const cat1 = store.models["pos.category"].get(1);
+        const cat2 = store.models["pos.category"].get(2);
+        const cat3 = store.models["pos.category"].get(3);
+
+        const comboTemplate = store.models["product.template"].get(7);
+        comboTemplate.pos_categ_ids = [cat3];
+        comboTemplate.product_variant_ids[0].pos_categ_ids = [cat3];
+
+        const comboItem1 = comboTemplate.combo_ids[1].combo_item_ids[0];
+        const comboItem2 = comboTemplate.combo_ids[0].combo_item_ids[0];
+
+        comboItem1.product_id.pos_categ_ids = [cat1];
+        comboItem1.product_id.product_tmpl_id.pos_categ_ids = [cat1];
+
+        comboItem2.product_id.pos_categ_ids = [cat2];
+        comboItem2.product_id.product_tmpl_id.pos_categ_ids = [cat2];
+
+        const testProduct1 = store.models["product.template"].get(5);
+        testProduct1.pos_categ_ids = [cat1];
+        testProduct1.product_variant_ids[0].pos_categ_ids = [cat1];
+
+        const testProduct2 = store.models["product.template"].get(6);
+        testProduct2.pos_categ_ids = [cat2, cat3];
+        testProduct2.product_variant_ids[0].pos_categ_ids = [cat2, cat3];
+
+        const comboValues = [
+            {
+                combo_item_id: comboItem1,
+                qty: 1,
+            },
+            {
+                combo_item_id: comboItem2,
+                qty: 1,
+            },
+        ];
+        store.addToCart(comboTemplate, 1, "", {}, {}, comboValues);
+        store.addToCart(testProduct1, 1);
+        store.addToCart(testProduct2, 1);
+
+        const orderLines = store.currentOrder.lines;
+        expect(orderLines[0].product_id.pos_categ_ids[0]).toBe(cat3);
+        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat1);
+        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[3].product_id.pos_categ_ids[0]).toBe(cat1);
+        expect(orderLines[4].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[4].product_id.pos_categ_ids[1]).toBe(cat3);
+
+        this.store = store;
+        this.cat1 = cat1;
+        this.cat2 = cat2;
+        this.comboTemplateCat = cat3;
+
+        this.comboTemplate = comboTemplate;
+        this.comboProduct1 = comboItem1.product_id;
+        this.comboProduct2 = comboItem2.product_id;
+
+        this.testProduct1 = testProduct1;
+        this.testProduct2 = testProduct2;
+    });
+
+    test("all matching lines", async () => {
+        this.posPrinter.product_categories_ids = [this.cat1, this.cat2];
+        await this.store.ticketPrinter.printOrderChanges({ order: this.store.currentOrder });
+        const orderLines = this.getPrintedOrderLines();
+        expect(orderLines.length).toBe(5);
+        expect(orderLines[0]).toInclude(this.comboTemplate.name);
+        expect(orderLines[1]).toInclude(this.comboProduct1.name);
+        expect(orderLines[2]).toInclude(this.comboProduct2.name);
+        expect(orderLines[3]).toInclude(this.testProduct1.name);
+        expect(orderLines[4]).toInclude(this.testProduct2.name);
+    });
+
+    test("combo lines and other lines are filtered cat1", async () => {
+        this.posPrinter.product_categories_ids = [this.cat1];
+        await this.store.ticketPrinter.printOrderChanges({ order: this.store.currentOrder });
+        const orderLines = this.getPrintedOrderLines();
+        expect(orderLines.length).toBe(3);
+        expect(orderLines[0]).toInclude(this.comboTemplate.name);
+        expect(orderLines[1]).toInclude(this.comboProduct1.name);
+        expect(orderLines[2]).toInclude(this.testProduct1.name);
+    });
+
+    test("combo lines and other lines are filtered cat2", async () => {
+        this.posPrinter.product_categories_ids = [this.cat2];
+        await this.store.ticketPrinter.printOrderChanges({ order: this.store.currentOrder });
+        const orderLines = this.getPrintedOrderLines();
+        expect(orderLines.length).toBe(3);
+        expect(orderLines[0]).toInclude(this.comboTemplate.name);
+        expect(orderLines[1]).toInclude(this.comboProduct2.name);
+        expect(orderLines[2]).toInclude(this.testProduct2.name);
+    });
+
+    test("no category matches", async () => {
+        const cat = this.store.models["pos.category"].create({
+            id: 999,
+            name: "Unmatched Category",
+        });
+        this.posPrinter.product_categories_ids = [cat];
+        await this.store.ticketPrinter.printOrderChanges({ order: this.store.currentOrder });
+        expect(this.printedData.length).toBe(0);
+    });
+
+    test("ignores combo root category", async () => {
+        // The combo root category is not taken into account for printing, only the categories of the combo items are.
+        this.posPrinter.product_categories_ids = [this.comboTemplateCat];
+        await this.store.ticketPrinter.printOrderChanges({ order: this.store.currentOrder });
+        const orderLines = this.getPrintedOrderLines();
+        expect(orderLines.length).toBe(1);
+        expect(orderLines[0]).toInclude(this.testProduct2.name);
+    });
 });
