@@ -16,22 +16,27 @@ export class PosPaymentProviderCards extends Component {
         this.action = useService("action");
         this.state = useState({
             providers: [],
+            type: this.props.record.data.payment_method_type,
             disabled: false,
         });
 
         onWillStart(async () => {
             const res = await this.orm.call("pos.payment.method", "get_provider_status", [
-                providers.map((p) => p[1]),
+                providers.map((p) => p.module),
             ]);
 
             this.state.providers = providers
-                .filter((prov) => res.state.some((moduleState) => moduleState.name === prov[1]))
+                .filter(
+                    (prov) =>
+                        res.state.some((moduleState) => moduleState.name === prov.module) &&
+                        prov.type === this.state.type
+                )
                 .map((prov) => {
-                    const status = res.state.find((p) => p.name === prov[1]);
+                    const status = res.state.find((p) => p.name === prov.module);
                     return Object.assign(
                         {
-                            selection: prov[0],
-                            provider: prov[2],
+                            selection: prov.selection,
+                            provider: prov.name,
                         },
                         status
                     );
@@ -66,7 +71,7 @@ export class PosPaymentProviderCards extends Component {
         const provider = this.state.providers.find((p) => p.id === moduleId);
         if (provider) {
             this.props.record.update({
-                payment_method_type: "terminal",
+                payment_method_type: this.state.type,
                 use_payment_terminal: provider.selection,
                 name: provider.provider,
             });
@@ -74,21 +79,23 @@ export class PosPaymentProviderCards extends Component {
     }
 }
 
-// Selection, module_name, friendly name
+// prettier-ignore
+/** @type {{ type: "terminal" | "cash_machine", selection: string, module: string, name: string }} */
 const providers = [
-    ["axepta_bnpp", "pos_iot_worldline", "Axepta BNP Paribas"],
-    ["six_iot", "pos_iot_six", "SIX"],
-    ["adyen", "pos_adyen", "Adyen"],
-    ["mercado_pago", "pos_mercado_pago", "Mercado Pago"],
-    ["razorpay", "pos_razorpay", "Razorpay"],
-    ["stripe", "pos_stripe", "Stripe"],
-    ["viva_com", "pos_viva_com", "Viva.com"],
-    ["worldline", "pos_iot_worldline", "Worldline"],
-    ["tyro", "pos_tyro", "Tyro"],
-    ["pine_labs", "pos_pine_labs", "Pine Labs"],
-    ["qfpay", "pos_qfpay", "QFPay"],
-    ["dpopay", "pos_dpopay", "DPO Pay"],
-    ["mollie", "pos_mollie", "Mollie"],
+    { type: "terminal", selection: "axepta_bnpp", module: "pos_iot_worldline", name: "Axepta BNP Paribas" },
+    { type: "terminal", selection: "six_iot", module: "pos_iot_six", name: "SIX" },
+    { type: "terminal", selection: "adyen", module: "pos_adyen", name: "Adyen" },
+    { type: "terminal", selection: "mercado_pago", module: "pos_mercado_pago", name: "Mercado Pago" },
+    { type: "terminal", selection: "razorpay", module: "pos_razorpay", name: "Razorpay" },
+    { type: "terminal", selection: "stripe", module: "pos_stripe", name: "Stripe" },
+    { type: "terminal", selection: "viva_com", module: "pos_viva_com", name: "Viva.com" },
+    { type: "terminal", selection: "worldline", module: "pos_iot_worldline", name: "Worldline" },
+    { type: "terminal", selection: "tyro", module: "pos_tyro", name: "Tyro" },
+    { type: "terminal", selection: "pine_labs", module: "pos_pine_labs", name: "Pine Labs" },
+    { type: "terminal", selection: "qfpay", module: "pos_qfpay", name: "QFPay" },
+    { type: "terminal", selection: "dpopay", module: "pos_dpopay", name: "DPO Pay" },
+    { type: "terminal", selection: "mollie", module: "pos_mollie", name: "Mollie" },
+    { type: "cash_machine", selection: "glory", module: "pos_glory_cash", name: "Glory" },
 ];
 
 export const PosPaymentProviderCardsParams = {

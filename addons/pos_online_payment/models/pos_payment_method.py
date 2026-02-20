@@ -110,13 +110,6 @@ class PosPaymentMethod(models.Model):
             return []
         return super()._get_payment_terminal_selection()
 
-    @api.depends('type')
-    def _compute_hide_use_payment_terminal(self):
-        opm = self.filtered(lambda pm: pm.type == 'online')
-        if opm:
-            opm.hide_use_payment_terminal = True
-        super(PosPaymentMethod, self - opm)._compute_hide_use_payment_terminal()
-
     @api.model
     def _get_or_create_online_payment_method(self, company_id, pos_config_id):
         """ Get the first online payment method compatible with the provided pos.config.

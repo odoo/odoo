@@ -11,8 +11,14 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return []
 
+    def _get_cash_machine_selection(self):
+        return []
+
+    def _get_electronic_payment_selection(self):
+        return self._get_payment_terminal_selection() + self._get_cash_machine_selection()
+
     def _get_payment_method_type(self):
-        selection = [('none', self.env._("None required")), ('terminal', self.env._("Terminal"))]
+        selection = [('none', self.env._("None required")), ('terminal', self.env._("Terminal")), ('cash_machine', self.env._("Cash Machine"))]
         if self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
             selection.append(('qr_code', self.env._("Bank App (QR Code)")))
         return selection
@@ -52,13 +58,13 @@ class PosPaymentMethod(models.Model):
     config_ids = fields.Many2many('pos.config', string='Point of Sale')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     default_pos_receivable_account_name = fields.Char(related="company_id.account_default_pos_receivable_account_id.display_name", string="Default Receivable Account Name")
-    use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
-    # used to hide use_payment_terminal when no payment interfaces are installed
-    hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
+    use_payment_terminal = fields.Selection(selection=lambda self: self._get_electronic_payment_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
+    available_payment_integrations = fields.Json(compute='_compute_available_payment_integrations')
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
     image = fields.Image("Image", max_width=50, max_height=50)
     payment_method_type = fields.Selection(selection=lambda self: self._get_payment_method_type(), string="Integration", default='none', required=True)
+    available_payment_method_types = fields.Json(compute='_compute_available_payment_method_types')
     default_qr = fields.Char(compute='_compute_qr')
     qr_code_method = fields.Selection(
         string='QR Code Format', copy=False,
@@ -80,12 +86,6 @@ class PosPaymentMethod(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
-
-    @api.depends('type', 'payment_method_type')
-    def _compute_hide_use_payment_terminal(self):
-        no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
-        for payment_method in self:
-            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type in ('cash', 'pay_later') or payment_method.payment_method_type != 'terminal'
 
     @api.depends('payment_method_type')
     def _compute_hide_qr_code_method(self):
@@ -120,6 +120,45 @@ class PosPaymentMethod(models.Model):
             else:
                 pm.type = 'pay_later'
 
+    @api.depends('type')
+    def _compute_available_payment_method_types(self):
+        all_types = [selection[0] for selection in self._get_payment_method_type()]
+        for payment_method in self:
+            if payment_method.type == "cash":
+                payment_method.available_payment_method_types = [
+                    payment_type for payment_type in all_types
+                    if payment_type in {'cash_machine', 'none'}
+                ]
+            elif payment_method.type == "bank":
+                payment_method.available_payment_method_types = [
+                    payment_type for payment_type in all_types
+                    if payment_type != 'cash_machine'
+                ]
+            else:
+                payment_method.available_payment_method_types = []
+
+    @api.depends('type', 'payment_method_type')
+    def _compute_available_payment_integrations(self):
+        for payment_method in self:
+            if payment_method.type == "cash" and payment_method.payment_method_type == "cash_machine":
+                payment_method.available_payment_integrations = [selection[0] for selection in self._get_cash_machine_selection()]
+            elif payment_method.type == "bank" and payment_method.payment_method_type == "terminal":
+                payment_method.available_payment_integrations = [selection[0] for selection in self._get_payment_terminal_selection()]
+            else:
+                payment_method.available_payment_integrations = []
+
+    @api.onchange('available_payment_method_types')
+    def _onchange_available_payment_method_types(self):
+        for payment_method in self:
+            if payment_method.payment_method_type not in (payment_method.available_payment_method_types or []):
+                payment_method.payment_method_type = 'none'
+
+    @api.onchange('available_payment_integrations')
+    def _onchange_available_payment_integrations(self):
+        for payment_method in self:
+            if payment_method.use_payment_terminal not in (payment_method.available_payment_integrations or []):
+                payment_method.use_payment_terminal = False
+
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
         for pm in self:
@@ -128,8 +167,6 @@ class PosPaymentMethod(models.Model):
             if pm.journal_id and pm.journal_id.type == 'bank':
                 chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
                 pm.outstanding_account_id = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.company_id.transfer_account_id
-        if self.is_cash_count:
-            self.use_payment_terminal = False
 
     @api.depends('type')
     def _compute_is_cash_count(self):
@@ -175,7 +212,7 @@ class PosPaymentMethod(models.Model):
 
     @staticmethod
     def _force_payment_method_type_values(vals, payment_method_type, if_present=False):
-        if payment_method_type == 'terminal':
+        if payment_method_type in {'terminal', 'cash_machine'}:
             disabled_fields_name = ['qr_code_method']
         elif payment_method_type == 'qr_code':
             disabled_fields_name = ['use_payment_terminal']
