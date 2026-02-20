@@ -1250,3 +1250,23 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'name': attachments_data[0][2]['name'],
                 'raw': attachments_data[0][2]['raw'],
             }])
+
+    def test_invoice_send_reply_to_persistence(self):
+        """ Test that the reply_to set on the mail template is correctly
+        propagated through the wizard to the final mail message. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        custom_reply_to = "custom_reply_address@example.com"
+
+        template = self.env.ref('account.email_template_edi_invoice')
+        template.reply_to = custom_reply_to
+
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            template_id=template.id
+        )
+
+        wizard.action_send_and_print()
+
+        message = self._get_mail_message(invoice)
+        self.assertEqual(message.reply_to, custom_reply_to)
