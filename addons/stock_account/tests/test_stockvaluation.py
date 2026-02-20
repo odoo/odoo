@@ -2505,42 +2505,12 @@ class TestStockValuation(TestStockValuationCommon):
         other_categ = product.categ_id.copy({
             'property_cost_method': 'average',
         })
-        move1 = self.env['stock.move'].create({
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-            'product_id': product.id,
-            'product_uom_qty': 10.0,
-            'price_unit': 7.2,
-        })
-        move2 = self.env['stock.move'].create({
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-            'product_id': product.id,
-            'product_uom_qty': 20.0,
-            'price_unit': 15.3,
-        })
-        (move1 + move2)._action_confirm()
-        (move1 + move2)._action_assign()
-        move1.quantity = 10
-        move2.quantity = 20
-        (move1 + move2).picked = True
-        (move1 + move2)._action_done()
-        move1.value_manual = 72.0
-        move2.value_manual = 306.0
-        move3 = self.env['stock.move'].create({
-            'product_id': product.id,
-            'product_uom_qty': 100,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        })
-        move3._action_confirm()
-        move3._action_assign()
-        move3.quantity = 100
-        move3.picked = True
-        move3._action_done()
+        self._make_in_move(product, 10, 7.2)
+        self._make_in_move(product, 20, 15.3)
+        self._make_out_move(product, 100)
         product.product_tmpl_id.categ_id = other_categ
 
-        closing_move = self.env['account.move'].browse(move3.company_id.action_close_stock_valuation()['res_id'])
+        closing_move = self._close()
         valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
         variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
 

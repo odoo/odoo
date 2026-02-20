@@ -76,16 +76,16 @@ class ProductTemplate(models.Model):
         product_to_update = set()
         if 'categ_id' in vals:
             category = self.env['product.category'].browse(vals['categ_id'])
-            valuation = category.property_valuation if category else self.env.company.inventory_valuation
+            cost_method = category.property_cost_method if category else self.env.company.cost_method
             for product in self:
-                if product.valuation != valuation:
+                if product.cost_method != cost_method:
                     product_to_update.update(product.product_variant_ids.ids)
         res = super().write(vals)
         if 'lot_valuated' in vals:
             self.env['stock.lot'].search([
                 ('product_id', 'in', self.product_variant_ids.ids),
             ])._update_standard_price()
-        if 'product_to_update':
+        if product_to_update:
             self.env['product.product'].browse(product_to_update)._update_standard_price()
         return res
 
