@@ -12,7 +12,7 @@ from collections import defaultdict, OrderedDict
 from werkzeug.exceptions import InternalServerError
 
 from odoo import http
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.http import content_disposition, request
 from odoo.tools import osutil
 
@@ -321,10 +321,15 @@ class Export(http.Controller):
                 field_to_get = Model._field_to_sql(Model._table, definition_record, self_subquery)
                 domain_definition.append(('id', 'in', self_subquery.subselect(field_to_get)))
 
-            definition_records = target_model.search_fetch(
-                domain_definition, [definition_record_field, 'display_name'],
-                order='id',  # Avoid complex order
-            )
+            try:
+                definition_records = target_model.search_fetch(
+                    domain_definition, [definition_record_field, 'display_name'],
+                    order='id',  # Avoid complex order
+                )
+
+            except AccessError:
+                # Skip property fields from models the user cannot access
+                continue
 
             for record in definition_records:
                 for definition in record[definition_record_field]:
