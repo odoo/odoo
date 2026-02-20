@@ -79,6 +79,21 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
                 delivery.button_validate()
             return delivery
 
+    def test_purchase_order_suggest_access_error_non_admin(self):
+        """ Test that non-admin users can use the suggest feature without access errors """
+        self.env = self.env(user=self.res_users_purchase_user)
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_1.id,
+        })
+        po.with_context(
+            suggest_days=12,
+            suggest_based_on='last_year_m_plus_1',
+            suggest_percent=42,
+        ).action_purchase_order_suggest()
+        self.assertRecordValues(self.partner_1, [
+            {'suggest_days': 12, 'suggest_based_on': 'last_year_m_plus_1', 'suggest_percent': 42}
+        ])
+
     def test_purchase_order_suggest_quantities(self):
         """ Checks the suggest wizard adds right products with right quantities.
         Also checks some values, like the products' quantity demand or the
