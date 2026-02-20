@@ -45,7 +45,7 @@ export const DEFAULT_IMAGE_QUALITY = "92";
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static dependencies = ["style"];
-    static shared = ["processImage", "getProcessedImageSize"];
+    static shared = ["processImage", "updateImageAttributes", "getProcessedImageSize"];
 
     /**
      * Applies data-attributes modifications to an img tag and returns a dataURL
