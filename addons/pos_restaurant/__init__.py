@@ -11,3 +11,7 @@ def _auto_install_pos_urban_piper_with_demo(env):
     module_pos_restaurant = env['ir.module.module']._get('pos_restaurant')
     if module_pos_restaurant.demo and module_pos_urban_piper and module_pos_urban_piper.state == 'uninstalled':
         module_pos_urban_piper.button_install()
+
+
+def uninstall_hook(env):
+    env['pos.config'].search([('module_pos_restaurant', '=', True)]).module_pos_restaurant = False
