@@ -1,6 +1,7 @@
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BlogNavSheet } from "./blog_nav_sheet";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -10,6 +11,9 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 export class WebsiteBlog extends Interaction {
     static selector = ".website_blog";
     dynamicContent = {
+        ".o_wblog_sheet_trigger": {
+            "t-on-click": this.onBlogSheetTriggerClick,
+        },
         ".o_wblog_next_button": {
             "t-on-click.prevent": this.onNextBlogClick,
             "t-on-keydown": this.onNextBlogKeydown,
@@ -21,7 +25,33 @@ export class WebsiteBlog extends Interaction {
             {
                 "t-on-click.prevent.withTarget": this.onShareArticleClick,
             },
+        ".o_sticky_reactive":
+            {
+                "t-att-style": () => ({
+                    "top": `${this.position || this.defaultPosition}px`,
+                }),
+            }
     };
+
+    onBlogSheetTriggerClick() {
+        const navEl = this.el.querySelector(".o_wblog_category");
+        const blogs = [...navEl.querySelectorAll("a")].map((a) => ({
+            name: a.textContent.trim(),
+            href: a.getAttribute("href"),
+            active: a.classList.contains("active"),
+        }));
+        this.services.bottom_sheet.add(this.el, BlogNavSheet, { blogs });
+    }
+
+    setup() {
+        this.defaultPosition = this._isCompactListOrSplitGridView() ? 0 : 16;
+        this.position = this.defaultPosition;
+    }
+
+    start() {
+        this._adaptToHeaderChange();
+        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+    }
 
     /**
      * @param {MouseEvent} ev
@@ -108,6 +138,37 @@ export class WebsiteBlog extends Interaction {
     async forumScrollAction(el, duration, callback) {
         await this.waitFor(scrollTo(el, { duration }));
         callback();
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptToHeaderChange() {
+        let position = this.defaultPosition;
+
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            position += el.offsetHeight;
+        }
+
+        if (this.position !== position) {
+            this.position = position;
+            this.updateContent();
+        }
+    }
+
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _isCompactListOrSplitGridView() {
+        // Check if the layout is compact list view or split grid view by looking for specific elements
+        // that are only present in these views (which require zero top position)
+        return this.el.querySelector(".o_wblog_compact_list_month_header") !== null ||
+               this.el.querySelector(".o_wblog_split_grid_view_container") !== null;
     }
 }
 

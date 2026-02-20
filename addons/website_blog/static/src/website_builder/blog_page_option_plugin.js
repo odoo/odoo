@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 export class BlogPageOption extends BaseOptionComponent {
     static template = "website_blog.BlogPageOption";
     static selector = "main:has(#o_wblog_post_main)";
-    static title = _t("Blog Page");
+    static title = _t("Blog Post Design");
     static groups = ["website.group_website_designer"];
     static editableOnly = false;
 }

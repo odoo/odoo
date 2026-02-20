@@ -8,7 +8,7 @@ registerWebsitePreviewTour(
     () => [
         {
             content: "Click on the 'Nature' blog category to filter blog posts.",
-            trigger: ":iframe b:contains('Nature')",
+            trigger: ":iframe a:contains('Nature')",
             run: "click",
         },
         {
@@ -29,7 +29,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Space' blog category to switch filters.",
-            trigger: ":iframe b:contains('Space')",
+            trigger: ":iframe a:contains('Space')",
             run: "click",
         },
         {

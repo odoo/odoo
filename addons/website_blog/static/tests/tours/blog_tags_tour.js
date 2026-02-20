@@ -73,7 +73,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe .h1:contains(our latest posts)",
+            trigger: ":iframe html[data-view-xmlid='website_blog.blog_post_short']",
         },
         {
             content: "Click on the adventure tag",

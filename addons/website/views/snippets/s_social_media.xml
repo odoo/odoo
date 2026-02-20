@@ -6,31 +6,31 @@ For the moment we hack the contenteditable system so that the social media
 title stay editable after a save (see SOCIAL_MEDIA_TITLE_CONTENTEDITABLE).
 -->
 <template id="s_social_media" name="Social Media">
-    <div class="s_social_media text-start o_not_editable" contenteditable="false">
-        <h4 class="s_social_media_title d-none" contenteditable="true">Social Media</h4>
-        <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
-            <i class="fa fa-facebook rounded shadow-sm o_editable_media small_social_icon"/>
+    <div t-attf-class="s_social_media text-start o_not_editable #{_classes}" contenteditable="false" t-attf-style="#{_style}">
+        <h4 t-if="not _no_title" class="s_social_media_title d-none" contenteditable="true">Social Media</h4>
+        <a t-if="not _exclude_social_links or not 'facebook' in _exclude_social_links" href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+            <i t-attf-class="fa fa-facebook #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="X">
-            <i class="fa fa-twitter rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'twitter' in _exclude_social_links" href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="X">
+            <i t-attf-class="fa fa-twitter #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
-            <i class="fa fa-linkedin rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'linkedin' in _exclude_social_links" href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
+            <i t-attf-class="fa fa-linkedin #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
-            <i class="fa fa-youtube-play rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'youtube' in _exclude_social_links" href="/website/social/youtube" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
+            <i t-attf-class="fa fa-youtube-play #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
-            <i class="fa fa-instagram rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'instagram' in _exclude_social_links" href="/website/social/instagram" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
+            <i t-attf-class="fa fa-instagram #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/github" class="s_social_media_github" target="_blank" aria-label="GitHub">
-            <i class="fa fa-github rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'github' in _exclude_social_links" href="/website/social/github" class="s_social_media_github" target="_blank" aria-label="GitHub">
+            <i t-attf-class="fa fa-github #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/tiktok" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
-            <i class="fa fa-tiktok rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'tiktok' in _exclude_social_links" href="/website/social/tiktok" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
+            <i t-attf-class="fa fa-tiktok #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
-        <a href="/website/social/discord" class="s_social_media_discord" target="_blank" aria-label="Discord">
-            <i class="fa fa-discord rounded shadow-sm o_editable_media small_social_icon"/>
+        <a t-if="not _exclude_social_links or not 'discord' in _exclude_social_links" href="/website/social/discord" class="s_social_media_discord" target="_blank" aria-label="Discord">
+            <i t-attf-class="fa fa-discord #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon"/>
         </a>
     </div>
 </template>
