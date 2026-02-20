@@ -675,6 +675,18 @@ class AccountTestInvoicingCommon(ProductCommon):
         return Command.create(invoice_line_args)
 
     @classmethod
+    def _prepare_entry_line(cls, account_id=None, debit=0.0, credit=0.0, **line_args):
+        assert account_id, "`account_id` must be provided for an entry line."
+        entry_line_args = {
+            'account_id': account_id,
+            'debit': debit,
+            'credit': credit,
+            **line_args,
+        }
+        cls._prepare_record_kwargs('account.move.line', entry_line_args)
+        return Command.create(entry_line_args)
+
+    @classmethod
     def _prepare_order_line(cls, price_unit=None, product_id=None, product_uom_qty=1.0, tax_ids=None, **line_args):
         assert price_unit is not None or product_id is not None, "Either `price_unit` or `product_id` must be filled!"
         cls.ensure_installed('sale')
