@@ -323,3 +323,21 @@ class TestEditableQuant(TransactionCase):
         self.assertEqual(len(move_lines), 2, "Two inventory adjustment move lines should have been created")
         move_lines.action_revert_inventory()
         self.assertEqual(self.product.qty_available, 0, "After revert multi inventory adjustment qty is not zero")
+
+    def test_set_inventory_quant_to_zero(self):
+        """Try to set inventory quantity to zero and check that the quant is deleted after unlinking zero quants"""
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 100,
+        })
+        quant.action_apply_inventory()
+        self.assertEqual(quant.quantity, 100)
+        self.assertEqual(quant.user_id.id, False)
+        quant.with_context(inventory_report_mode=True).action_set_inventory_quantity_zero()
+        self.assertEqual(quant.inventory_quantity, 0)
+        self.assertEqual(quant.user_id.id, False)
+        quant._unlink_zero_quants()
+        self.assertFalse(quant.exists(), "After unlinking zero quants, the quant should be deleted")
