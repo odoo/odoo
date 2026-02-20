@@ -3,15 +3,12 @@
 from base64 import b64decode
 from threading import Lock
 from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO, Connection
-from escpos import printer
-from escpos.escpos import EscposIO
-import escpos.exceptions
 import logging
 import netifaces as ni
 import time
 
 from odoo.addons.iot_drivers.connection_manager import connection_manager
-from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import EscposNotAvailableError, PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.tools import helpers, system, wifi
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
@@ -37,31 +34,7 @@ class PrinterDriver(PrinterDriverBase):
         else:
             self.device_subtype = "office_printer"
 
-        if self.device_subtype == "receipt_printer" and self.receipt_protocol == 'escpos':
-            self._init_escpos(device)
-
         self.status()
-
-    def _init_escpos(self, device):
-        try:
-            if device.get('usb_product'):
-                def usb_matcher(usb_device):
-                    return (
-                        usb_device.manufacturer and usb_device.manufacturer.lower() == device['usb_manufacturer'] and
-                        usb_device.product == device['usb_product'] and
-                        usb_device.serial_number == device['usb_serial_number']
-                    )
-
-                self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher}, timeout=5)
-            elif device.get('ip'):
-                self.escpos_device = printer.Network(device['ip'], timeout=5)
-            else:
-                return
-            self.escpos_device.open()
-            self.escpos_device.close()
-        except (escpos.exceptions.Error, ValueError) as e:
-            _logger.info("%s - Could not initialize escpos class: %s", self.device_name, e)
-            self.escpos_device = None
 
     @classmethod
     def supported(cls, device):
@@ -77,12 +50,6 @@ class PrinterDriver(PrinterDriverBase):
         :param data: The data to print
         :param action_unique_id: The unique identifier of the action triggering the print
         """
-        if self.escpos_device:
-            try:
-                return self.print_raw_escpos(data, action_unique_id)
-            except EscposNotAvailableError:
-                _logger.warning("Failed to print via python-escpos, falling back to CUPS")
-
         try:
             with self.cups_lock:
                 job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
@@ -154,27 +121,6 @@ class PrinterDriver(PrinterDriverBase):
             title = b""
             body = b"Test print for " + data['printer_name'].encode()
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
-        if self.escpos_device:
-            try:
-                with EscposIO(self.escpos_device) as dev:
-                    if not self._check_status_escpos(dev.printer, action_unique_id=None):
-                        return
-                    dev.printer.set(align='center', double_height=True, double_width=True)
-                    dev.printer.textln(title.decode())
-                    dev.printer.set_with_default(align='center', double_height=False, double_width=False)
-                    dev.writelines(body.decode())
-                    ip = system.get_ip()
-                    if ip:
-                        dev.printer.qr(f"http://{ip}", size=6)
-                    else:
-                        wifi_qr = wifi.get_qr_data_for_wifi()
-                        if wifi_qr:
-                            dev.printer.qr(wifi_qr, size=6)
-                self.send_status(status='success')
-                return
-            except (escpos.exceptions.Error, OSError, AssertionError, AttributeError):
-                _logger.warning("Failed to print QR status receipt, falling back to simple receipt")
-
         title = commands['title'] % title
         self.print_raw(commands['center'] + title + b'\n' + body + commands['cut'])
 
