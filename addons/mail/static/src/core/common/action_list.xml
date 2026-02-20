@@ -89,7 +89,7 @@
         'o-p-1_5':       props.inline   and  !env.inMeetingView and hasBtnBg and isInlineCircleButton and !env.inChatWindow,
         'o-px-0_5':      props.inline   and  !env.inMeetingView and !hasBtnBg and !action.icon,
         'p-1':           props.inline   and  hasBtnBg and isInlineCircleButton and env.inChatWindow,
-        'o-p-0_5':       props.inline   and  !env.inMeetingView and !hasBtnBg and !env.inComposer,
+        'o-p-0_5':       props.inline   and  (!env.inMeetingView and !hasBtnBg and !env.inComposer) or env.inMessage,
         'px-3 py-2':     props.dropdown and   ui.isSmall,
         'px-2 py-1':     props.dropdown and  !ui.isSmall,
     })"/>
