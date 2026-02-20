@@ -11,6 +11,7 @@ import {
     highlightPre,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
 import { CodeToolbar } from "./code_toolbar";
+import { SYNTAX_HIGHLIGHTING_LIMITS } from "../../plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 
 export class EmbeddedSyntaxHighlightingComponent extends Component {
     static template = "html_editor.EmbeddedSyntaxHighlighting";
@@ -21,6 +22,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         languageId: { type: String },
         onTextareaFocus: { type: Function },
         convertToParagraph: { type: Function },
+        convertSyntaxHighlightingToPre: { type: Function },
         host: { type: Object },
     };
 
@@ -42,10 +44,17 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             this.highlight();
         });
 
-        useEffect(this.highlight.bind(this), () => [
-            this.embeddedState.value,
-            this.embeddedState.languageId,
-        ]);
+        useEffect(
+            () => {
+                // If the text content grows beyond supported limit, convert
+                // syntax-highlighted component back to a plain <pre>.
+                if (this.embeddedState?.value?.length > SYNTAX_HIGHLIGHTING_LIMITS.maxTextLength) {
+                    this.props.convertSyntaxHighlightingToPre({ target: this.pre });
+                }
+                this.highlight();
+            },
+            () => [this.embeddedState.value, this.embeddedState.languageId]
+        );
     }
 
     /**
