@@ -814,7 +814,7 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected and the selection
             // is fully contained in the image parent link.
-            const imageNode = findInSelection(selection, "img");
+            const imageNode = findInSelection(selection, "img, .fa");
             const parentElement = imageNode?.parentElement;
             const linkContainingImage = imageNode && closestElement(imageNode, "a");
             if (
