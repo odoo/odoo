@@ -313,7 +313,7 @@
                                                 </td>
                                                 <td name="td_quantity_grouped"
                                                     colspan="1"
-                                                    t-if="hide_details or (hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection'))"
+                                                    t-if="hide_details or (hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection', 'line_note'))"
                                                     class="o_td_quantity text-end">
                                                     <!-- If line is hide composition, always show 1 unit -->
                                                     <div t-if="hide_details">
