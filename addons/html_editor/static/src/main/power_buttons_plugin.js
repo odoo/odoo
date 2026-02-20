@@ -77,6 +77,7 @@ export class PowerButtonsPlugin extends Plugin {
             const btn = this.document.createElement("button");
             btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${icon}`;
             btn.title = title;
+            this.addDomListener(btn, "pointerdown", (ev) => ev.preventDefault());
             this.addDomListener(btn, "click", () => this.applyCommand(run));
             return btn;
         };
