@@ -103,6 +103,13 @@ $o-cw-filter-avatar-size: 20px;
     border-right: $border-width solid $border-color;
 }
 
+.o_calendar_sync {
+    .btn {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+}
+
 //  Print
 @include media-only(print) {
     html:has(.o_action_manager .o_calendar_view.o_view_controller.o_action) {

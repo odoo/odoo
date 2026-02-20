@@ -4,12 +4,13 @@
 from datetime import timedelta
 
 
-from odoo import api, fields, models, _
+from odoo import fields, models
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    microsoft_calendar_email = fields.Char("Microsoft Calendar Email", copy=False, groups='base.group_system')
     microsoft_calendar_rtoken = fields.Char('Microsoft Refresh Token', copy=False, groups="base.group_system")
     microsoft_calendar_token = fields.Char('Microsoft User token', copy=False, groups="base.group_system")
     microsoft_calendar_token_validity = fields.Datetime('Microsoft Token Validity', copy=False)
@@ -19,4 +20,9 @@ class ResUsers(models.Model):
             'microsoft_calendar_rtoken': refresh_token,
             'microsoft_calendar_token': access_token,
             'microsoft_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl) if ttl else False,
+        })
+
+    def _set_microsoft_email(self, email):
+        self.write({
+            'microsoft_calendar_email': email,
         })
