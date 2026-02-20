@@ -299,7 +299,7 @@ class HrExpense(models.Model):
             if expense.state != 'draft':
                 continue
             product_id = expense.product_id
-            if product_id and expense.product_has_cost and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+            if product_id and expense.product_has_cost and (not expense.attachment_number or (expense.attachment_number and not expense.unit_amount)):
                 expense.unit_amount = product_id.price_compute(
                     'standard_price',
                     uom=expense.product_uom_id,

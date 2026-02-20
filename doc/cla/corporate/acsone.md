@@ -36,3 +36,4 @@ Maxime Franco maxime.franco@acsone.eu https://github.com/FrancoMaxime
 Marie Lejeune marie.lejeune@acsone.eu https://github.com/marielejeune
 Justine Doutreloux justine.doutreloux@acsone.eu https://github.com/jdoutreloux
 Laurent Stukkens laurent.stukkens@acsone.eu https://github.com/it-ideas
+Zina Rasoamanana zina.rasoamanana@acsone.eu https://github.com/AnizR
