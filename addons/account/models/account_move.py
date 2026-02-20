@@ -4549,7 +4549,7 @@ class AccountMove(models.Model):
         :param common_domain: a search domain that will be included in the returned domain in any case
         :param force_hash: if True, we'll check all moves posted, independently of journal settings
         """
-        domain = Domain(common_domain or Domain.TRUE) & Domain('state', '=', 'posted')
+        domain = Domain(common_domain or Domain.TRUE) & (Domain('state', '=', 'posted') | Domain('sequence_number', '!=', False))
         if force_hash:
             return domain
         return domain & Domain('restrict_mode_hash_table', '=', True)
