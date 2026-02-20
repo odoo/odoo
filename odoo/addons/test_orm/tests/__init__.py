@@ -32,9 +32,9 @@ from . import (
     test_registry_signaling,
     test_related_translation,
     test_schema,
-    test_search,
-    test_search_order,
-    test_sort,
+    test_models_search,
+    test_models_search_order,
+    test_models_sorted,
     test_timeit,
     test_transactions,
     # test_uninstall  # Cannot be handled by the runbot. Makes Odoo loop forever when done during an installation.
