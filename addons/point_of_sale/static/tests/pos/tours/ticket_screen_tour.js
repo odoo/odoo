@@ -477,6 +477,7 @@ registry.category("web_tour.tours").add("test_lot_refund_lower_qty", {
             },
         ].flat(),
 });
+<<<<<<< 3c6bbb27085b9628b8a342acaab71cea1d6360c0
 
 registry.category("web_tour.tours").add("test_refund_line_keep_attributes", {
     steps: () =>
@@ -501,3 +502,24 @@ registry.category("web_tour.tours").add("test_refund_line_keep_attributes", {
             }),
         ].flat(),
 });
+||||||| de1d67cdf8da80a41ee12612de28ffde4a5329a3
+=======
+
+registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.addOrderline("Desk Pad", "2", "3"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Customer"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+>>>>>>> 3c3e7295b82d655348bfc03536f724b4819bbd8a
