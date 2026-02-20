@@ -18,6 +18,14 @@ class PosOrderLine(models.Model):
         ml_product_to_consider = (product.bom_ids and [comp[0].product_id.id for comp in components]) or [product.id]
         return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and (ml.bom_line_id.id in bom_line_ids))
 
+    def _get_product_cost_with_moves(self, moves):
+        self.ensure_one()
+        product = self.product_id
+        if any(bom.type == 'phantom' for bom in product.bom_ids):
+            bom = self.env['mrp.bom']._bom_find(product, company_id=self.company_id.id, bom_type='phantom')[product]
+            return moves._get_kit_price_unit(product, bom, self.qty)
+        return super()._get_product_cost_with_moves(moves)
+
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
