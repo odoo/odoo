@@ -11,7 +11,7 @@ export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
 export class PopupOption extends BaseOptionComponent {
     static template = "website.PopupOption";
     static selector = ".s_popup";
-    static exclude = "#website_cookies_bar";
+    static exclude = "#website_cookies_bar, .s_age_verification_popup";
     static applyTo = ".modal";
 }
 

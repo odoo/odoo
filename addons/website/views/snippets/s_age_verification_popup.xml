@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_age_verification_popup" name="Age Verification Popup">
+    <div class="s_popup s_age_verification_popup o_snippet_invisible" data-vcss="001" data-age-verification-pending="true">
+        <div class="modal fade s_popup_middle" style="background-color: var(--black-50) !important;"
+            tabindex="-1" role="dialog" aria-label="Age Verification Popup"
+            data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false"
+            data-min-age="18" data-blur-background="true" data-show-after="0" data-display="afterDelay" data-consents-duration="30">
+            <div class="modal-dialog d-flex">
+                <div class="modal-content oe_structure">
+                    <section class="s_text_block pt48 pb48 oe_unremovable oe_unmovable" data-snippet="s_text_block" data-name="Text">
+                        <div class="container">
+                            <div id="verification_error" class="s_alert s_alert_md alert alert-danger w-100 clearfix d-none oe_unremovable oe_unmovable" data-snippet="s_alert" data-name="Alert" role="alert" data-vcss="001">
+                                <i class="fa fa-exclamation-circle fa-stack d-flex align-items-center justify-content-center me-2 rounded-1 s_alert_icon oe_unremovable"/>
+                                <div class="s_alert_content">
+                                    <p>You are not old enough to access this page!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container text-center">
+                            <span class="fa fa-check-circle-o fa-5x mb-2 rounded-circle text-primary"/>
+                            <h2>Are you 18 years or older?</h2>
+                            <p>Our services are available only to adults of legal age.</p>
+                            <div id="age_confirmation_block" class="row">
+                                <!-- Keep this section in sync with the rendering of the `website.age_confirmation.yes_or_no` client template -->
+                                <div class="d-flex justify-content-center gap-2 col-lg-12 pt16 pb16 oe_unremovable oe_unmovable">
+                                    <a href="#" class="o_age_verification_yes_btn btn btn-primary flex-fill oe_unremovable">Yes</a>
+                                    <a href="#" class="o_age_verification_no_btn btn btn-secondary flex-fill oe_unremovable">No</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<asset id="website.s_age_verification_popup_001_scss" name="Age Verification Popup 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_age_verification_popup/001.scss</path>
+</asset>
+
+</odoo>

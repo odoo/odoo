@@ -1,0 +1,27 @@
+.s_age_verification_popup[data-vcss='001'] {
+    .modal {
+        // always appear on top in case of multiple popups
+        z-index: $zindex-modal + 2;
+    }
+}
+
+@mixin age-popup-blur-overlay {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(black, 0.15);
+    backdrop-filter: blur(16px);
+    z-index: $zindex-modal + 1;
+}
+
+body:not(.editor_enable) {
+    #wrapwrap:has([data-age-verification-pending="true"]):has([data-blur-background="true"])::before {
+        @include age-popup-blur-overlay;
+    }
+}
+
+.editor_enable {
+    #wrapwrap:has(.show[data-blur-background="true"])::before {
+        @include age-popup-blur-overlay;
+    }
+}
