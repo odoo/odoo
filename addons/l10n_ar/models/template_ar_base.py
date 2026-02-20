@@ -77,8 +77,8 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
-        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', cash_prefix='', code_digits=0):
+        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, cash_prefix=cash_prefix, code_digits=code_digits)
         if company.account_fiscal_country_id.code == 'AR':
             accounts_data['default_cash_difference_expense_account_id'].update({
                 'description': self.env._('Cash count differences recognized as loss.'),

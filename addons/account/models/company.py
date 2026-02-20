@@ -120,6 +120,7 @@ class ResCompany(models.Model):
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income", check_company=True)
     default_cash_difference_expense_account_id = fields.Many2one('account.account', string="Cash Difference Expense", check_company=True)
     account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account', check_company=True)
+    account_journal_cash_suspense_account_id = fields.Many2one('account.account', string='Journal Cash Suspense Account', check_company=True)
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Gain Account', check_company=True)
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Loss Account', check_company=True)
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')

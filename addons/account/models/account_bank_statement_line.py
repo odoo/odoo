@@ -412,7 +412,7 @@ class AccountBankStatementLine(models.Model):
         self.env.remove_to_compute(self.env['account.move']._fields['narration'], st_lines.move_id)
 
         # No need for the user to manage their status (from 'Draft' to 'Posted')
-        st_lines.move_id.action_post()
+        st_lines.filtered(lambda st_line: st_line.journal_id.type != "cash").move_id.action_post()
         return st_lines.with_env(self.env)  # clear the context
 
     def write(self, vals):
