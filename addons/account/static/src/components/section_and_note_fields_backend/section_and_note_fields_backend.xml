@@ -30,20 +30,20 @@
                             <DropdownItem
                                 t-if="props.hidePrices"
                                 onSelected="() => this.toggleCollapse(record, 'collapse_prices')"
-                                attrs="{ 'class': disablePricesButton ? 'disabled' : '' }"
+                                attrs="{ 'class': this.disablePricesButton(record) ? 'disabled' : '' }"
                             >
-                                <i class="me-1 fa fa-fw" t-att-class="hidePrices ? 'fa-eye' : 'fa-eye-slash'"/>
-                                <span t-if="hidePrices">Show Prices</span>
+                                <i class="me-1 fa fa-fw" t-att-class="this.hidePrices(record) ? 'fa-eye' : 'fa-eye-slash'"/>
+                                <span t-if="this.hidePrices(record)">Show Prices</span>
                                 <span t-else="">Hide Prices</span>
                             </DropdownItem>
                             <t t-name="composition_button">
                                 <DropdownItem
                                     t-if="props.hideComposition"
                                     onSelected="() => this.toggleCollapse(record, 'collapse_composition')"
-                                    attrs="{ 'class': disableCompositionButton ? 'disabled' : '' }"
+                                    attrs="{ 'class': this.disableCompositionButton(record) ? 'disabled' : '' }"
                                 >
-                                    <i class="me-1 fa fa-fw" t-att-class="hideComposition ? 'fa-expand' : 'fa-compress'"/>
-                                    <span t-if="hideComposition">Show Composition</span>
+                                    <i class="me-1 fa fa-fw" t-att-class="this.hideComposition(record) ? 'fa-expand' : 'fa-compress'"/>
+                                    <span t-if="this.hideComposition(record)">Show Composition</span>
                                     <span t-else="">Hide Composition</span>
                                 </DropdownItem>
                             </t>
