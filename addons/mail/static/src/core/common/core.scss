@@ -278,6 +278,16 @@ $o-mail-utilities: map-merge(
     scrollbar-color: $gray-400 transparent;
 }
 
+// Improved version of .text-truncate that works more reliably
+// .text-truncate uses white-space: nowrap that has negative side-effect to force a minimum width,
+// which could be as big as max-width of container...
+.o-text-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .o-text-white {
     color: #FFF !important;
 }
