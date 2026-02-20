@@ -2447,7 +2447,6 @@ class CrmLead(models.Model):
         # - avoid blocking the table for too long with a too big transaction
         transactions_count, transactions_failed_count = 0, 0
         cron_update_lead_start_date = datetime.now()
-        auto_commit = not modules.module.current_test
         self.flush_model()
         for probability, probability_lead_ids in probability_leads.items():
             for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
@@ -2455,7 +2454,7 @@ class CrmLead(models.Model):
                 try:
                     self.env.cr.execute(update_sql, (probability, probability, tuple(lead_ids_current)))
                     # auto-commit except in testing mode
-                    if auto_commit:
+                    if self.env._can_commit():
                         self.env.cr.commit()
                 except Exception as e:
                     _logger.warning("Predictive Lead Scoring : update transaction failed. Error: %s" % e)

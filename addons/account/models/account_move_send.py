@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, models, modules, tools
+from odoo import Command, _, api, models, tools
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -684,13 +684,6 @@ class AccountMoveSend(models.AbstractModel):
                 email_from=email_from,
                 **mail_params,
             )
-
-    @api.model
-    def _can_commit(self):
-        """ Helper to know if we can commit the current transaction or not.
-        :return: True if commit is accepted, False otherwise.
-        """
-        return not (tools.config['test_enable'] or modules.module.current_test)
 
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):

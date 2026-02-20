@@ -126,5 +126,5 @@ class AccountMoveSend(models.AbstractModel):
                     addendum.mer_document_status = '20'
                     log_message = self.env._('The document has been sent to MojEracun service provider for processing')
                     invoice._message_log(body=log_message)
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()

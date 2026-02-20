@@ -728,7 +728,7 @@ class AccountMove(models.Model):
                 else:
                     move._l10n_gr_edi_create_sent_document(document_values)
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     def _l10n_gr_edi_send_invoices(self):
@@ -767,7 +767,7 @@ class AccountMove(models.Model):
 
                 # Simulate the error handling behavior on invoice's send and print wizard.
                 # If we're only sending one bill, raise the warning error immediately.
-                if len(self) == 1 and self._can_commit():
+                if len(self) == 1 and self.env._can_commit():
                     self.env.cr.commit()
                     raise UserError(error_message)
             else:

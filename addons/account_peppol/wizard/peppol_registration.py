@@ -372,7 +372,7 @@ class PeppolRegistration(models.TransientModel):
             'refresh_token': response['refresh_token'],
         })
         company.account_peppol_proxy_state = response['peppol_state']
-        if self.env['account.move']._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
         if company.account_peppol_proxy_state == 'sender':
             company._account_peppol_send_welcome_email()

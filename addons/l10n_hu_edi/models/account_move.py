@@ -214,7 +214,7 @@ class AccountMove(models.Model):
             formatted_message = self.env['account.move.send']._format_error_html(invoice.l10n_hu_edi_messages)
             invoice.message_post(body=formatted_message)
 
-        if self.env['account.move.send']._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
         # If blocking errors, raise UserError, or log if we are in a cron.

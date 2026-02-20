@@ -430,7 +430,7 @@ class AccountMove(models.Model):
             ), attachment_ids=[request_attachment.id, attachment.id] if attachment else [request_attachment.id])
             self.l10n_in_edi_status = 'cancelled'
             self.button_cancel()
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
         return True
 

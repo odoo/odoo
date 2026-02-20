@@ -16,6 +16,7 @@ from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
+from odoo.modules import module
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
@@ -558,6 +559,9 @@ class Environment(Mapping[str, "BaseModel"]):
             {column.name: row[index] for index, column in enumerate(description)}
             for row in rows
         ]
+
+    def _can_commit(self) -> bool:
+        return not (module.current_test or self.context.get('commit_forbidden', False))
 
 
 class Transaction:

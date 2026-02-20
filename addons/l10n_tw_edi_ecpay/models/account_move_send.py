@@ -109,7 +109,7 @@ class AccountMoveSend(models.AbstractModel):
                         "errors": errors,
                     }
             if 'tw_ecpay_send' in invoice_data['extra_edis'] or 'tw_ecpay_issue_allowance' in invoice_data['extra_edis']:
-                if self._can_commit():
+                if self.env._can_commit():
                     self._cr.commit()
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
@@ -125,7 +125,7 @@ class AccountMoveSend(models.AbstractModel):
                     "errors": errors,
                 }
             # We commit again if possible, to ensure that the invoice status is set in the database in case of errors later.
-            if self._can_commit():
+            if self.env._can_commit():
                 self._cr.commit()
 
     @api.model

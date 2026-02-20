@@ -196,7 +196,7 @@ class AccountMove(models.Model):
     def l10n_es_tbai_send_bill(self):
         for bill in self:
             error = bill._l10n_es_tbai_post()
-            if self.env['account.move.send']._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()
             if error:
                 raise UserError(error)
@@ -221,7 +221,7 @@ class AccountMove(models.Model):
                 invoice.button_cancel()
                 invoice._l10n_es_tbai_post_document_in_chatter(edi_document.response_message, cancel=True)
 
-            if self.env['account.move.send']._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()
 
             if edi_document.state != 'accepted':

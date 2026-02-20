@@ -13,7 +13,7 @@ from lxml import etree
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config, date_utils, split_every
+from odoo.tools import date_utils, split_every
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.account.tools import dict_to_xml
@@ -564,14 +564,6 @@ class MyInvoisDocument(models.Model):
 
         return error_map.get(error['reference'], self.env._("An unexpected error has occurred."))
 
-    @staticmethod
-    def _can_commit():
-        """ Helper to know if we can commit the current transaction or not.
-
-        :returns: True if commit is acceptable, False otherwise.
-        """
-        return not config['test_enable'] and not modules.module.current_test
-
     def _get_mail_thread_data_attachments(self):
         res = super()._get_mail_thread_data_attachments()
         # else, attachments with 'res_field' get excluded
@@ -944,7 +936,7 @@ class MyInvoisDocument(models.Model):
 
                         record.write(updated_values)
 
-                if self._can_commit():
+                if self.env._can_commit():
                     self.env.cr.commit()
 
         if success_messages:
@@ -1005,7 +997,7 @@ class MyInvoisDocument(models.Model):
                     # While unlikely, if we end up with too many documents we will start by getting all the info.
                     if result['document_count'] > 100:
                         for page in range(2, (result['document_count'] // 100) + 1):
-                            if self._can_commit():  # avoid the sleep in tests.
+                            if modules.module.current_test:  # avoid the sleep in tests.
                                 time.sleep(0.3)
                             page_result = proxy_user._l10n_my_edi_contact_proxy(
                                 endpoint='api/l10n_my_edi/1/get_submission_statuses',
@@ -1021,7 +1013,7 @@ class MyInvoisDocument(models.Model):
                         if record:
                             results[submission_uid]['statuses'][record] = status
 
-                if self._can_commit():  # avoid the sleep in tests.
+                if modules.module.current_test:  # avoid the sleep in tests.
                     time.sleep(0.3)
         return results
 
@@ -1041,7 +1033,7 @@ class MyInvoisDocument(models.Model):
                     "errors": results['error'],
                 })
                 records._myinvois_log_message(bodies={document.id: message for document in self})
-                if with_commit and self._can_commit():
+                if with_commit and self.env._can_commit():
                     self.env.cr.commit()
                 continue
 
@@ -1052,7 +1044,7 @@ class MyInvoisDocument(models.Model):
 
                 # If the status did not change, we do not need to do anything more.
                 if record.myinvois_state == status['status']:
-                    if with_commit and self._can_commit():
+                    if with_commit and self.env._can_commit():
                         self.env.cr.commit()
                     continue
 
@@ -1068,7 +1060,7 @@ class MyInvoisDocument(models.Model):
                 record._myinvois_set_state(status["status"], message)
                 record._myinvois_set_validation_fields(status)
 
-            if with_commit and self._can_commit():
+            if with_commit and self.env._can_commit():
                 self.env.cr.commit()
 
     def _validate_taxes(self):
@@ -1112,7 +1104,7 @@ class MyInvoisDocument(models.Model):
 
         # When sending an individual document, we can raise once we are sure we logged the errors.
         if len(self) == 1 and errors:
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()  # Save the error logged in the chatter.
             raise UserError(errors[self.id]['plain_text_error'])
 
@@ -1121,7 +1113,7 @@ class MyInvoisDocument(models.Model):
             self._myinvois_submission_statuses_update()
             if not any(document.myinvois_state == 'in_progress' for document in self):
                 break
-            if self._can_commit():  # avoid the sleep in tests.
+            if modules.module.current_test:  # avoid the sleep in tests.
                 time.sleep(1)
 
     def _myinvois_check_can_update_status(self):
@@ -1200,7 +1192,7 @@ class MyInvoisDocument(models.Model):
                 message=self.env._('This document has been %(status)s for reason: %(reason)s', status=status, reason=reason),
             )
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     def _myinvois_set_state(self, state, message=None):
@@ -1304,13 +1296,13 @@ class MyInvoisDocument(models.Model):
 
             processed_documents += len(documents)
             # Commit if we can, in case an issue arises later.
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env['ir.cron']._commit_progress(processed=processed_documents, remaining=document_count - processed_documents)
 
                 # Avoid sleeping on the last loop and in tests (due to the commit check)
                 if index != (len(grouped_documents) - 1):
                     time.sleep(0.3)  # There is a limit of how many calls we can do, so we spread them out a bit.
-        if self._can_commit():
+        if self.env._can_commit():
             self.env['ir.cron']._commit_progress(processed=processed_documents, remaining=document_count - processed_documents)
 
     @api.model

@@ -5,7 +5,7 @@ import ast
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, modules
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import _, split_every
@@ -107,7 +107,6 @@ class Data_RecycleModel(models.Model):
     def _recycle_records(self, batch_commits=False):
         self.env.flush_all()
         records_to_clean = []
-        is_test = modules.module.current_test
 
         existing_recycle_records = self.env['data_recycle.record'].with_context(
             active_test=False).search([('recycle_model_id', 'in', self.ids)])
@@ -136,7 +135,7 @@ class Data_RecycleModel(models.Model):
             if recycle_model.recycle_mode == 'automatic':
                 for records_to_create_batch in split_every(DR_CREATE_STEP_AUTO, records_to_create):
                     self.env['data_recycle.record'].create(records_to_create_batch).action_validate()
-                    if batch_commits and not is_test:
+                    if batch_commits and self.env._can_commit():
                         # Commit after each batch iteration to avoid complete rollback on timeout as
                         # this can create lots of new records.
                         self.env.cr.commit()
@@ -144,7 +143,7 @@ class Data_RecycleModel(models.Model):
                 records_to_clean = records_to_clean + records_to_create
         for records_to_clean_batch in split_every(DR_CREATE_STEP_MANUAL, records_to_clean):
             self.env['data_recycle.record'].create(records_to_clean_batch)
-            if batch_commits and not is_test:
+            if batch_commits and self.env._can_commit():
                 self.env.cr.commit()
 
     @api.model

@@ -8,7 +8,7 @@ from lxml import etree
 from markupsafe import Markup
 from struct import error as StructError
 
-from odoo import api, models, modules
+from odoo import api, models
 from odoo.exceptions import RedirectWarning
 from odoo.tools import groupby
 from odoo.tools.mimetypes import guess_mimetype
@@ -17,16 +17,8 @@ from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 _logger = logging.getLogger(__name__)
 
 
-def _can_commit():
-    """ Helper to know if we can commit the current transaction or not.
-
-    :returns: True if commit is acceptable, False otherwise.
-    """
-    return not modules.module.current_test
-
-
 @contextmanager
-def rollbackable_transaction(cr):
+def rollbackable_transaction(env):
     """ A savepoint-less commit/rollback context manager.
 
     Commits the cursor, then executes the code inside the context manager, then tries to commit again.
@@ -41,14 +33,14 @@ def rollbackable_transaction(cr):
 
     :raise: an Exception if an error was caught and the transaction was rolled back.
     """
-    if not _can_commit():
+    if not env._can_commit():
         yield
         return
 
     # We start by committing so that if we do a rollback in the except block, we don't lose all the progress that
     # was done before this method was called. If a SerializationError occurs here, no problem - nothing will be
     # committed and the whole request will be restarted by the `retrying` mechanism.
-    cr.commit()
+    env.cr.commit()
     try:
         # This may trigger both database errors (e.g. SQL constraints)
         # and Python exceptions (e.g. UserError / ValidationError).
@@ -56,10 +48,10 @@ def rollbackable_transaction(cr):
         yield
 
         # Commit in order to trigger any SerializationError right now, while we can still rollback.
-        cr.commit()
+        env.cr.commit()
 
     except Exception:
-        cr.rollback()
+        env.cr.rollback()
         raise
 
 
@@ -336,7 +328,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
             return
 
         try:
-            with rollbackable_transaction(self.env.cr):
+            with rollbackable_transaction(self.env):
                 reason_cannot_decode = file_data['decoder_info']['decoder'](self, file_data, new)
                 if reason_cannot_decode:
                     self.message_post(

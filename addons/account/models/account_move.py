@@ -7423,14 +7423,6 @@ class AccountMove(models.Model):
 
         return self.invoice_line_ids.filtered(show_line).sorted('sequence')
 
-    @staticmethod
-    def _can_commit():
-        """ Helper to know if we can commit the current transaction or not.
-
-        :returns: True if commit is acceptable, False otherwise.
-        """
-        return not modules.module.current_test
-
     @api.model
     def get_import_templates(self):
         move_type = self.env.context.get('default_move_type')

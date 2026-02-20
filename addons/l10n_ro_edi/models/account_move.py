@@ -146,7 +146,7 @@ class AccountMove(models.Model):
                 "SPV failed to return with an index on time, synchronize this invoice to recover the index and the status."
             ))
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
         return None
 
@@ -226,7 +226,7 @@ class AccountMove(models.Model):
 
         self.env['l10n_ro_edi.document'].sudo().browse(document_ids_to_delete).unlink()
         self.env['l10n_ro_edi.document'].sudo().create(documents_to_create)
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     @api.model
@@ -279,7 +279,7 @@ class AccountMove(models.Model):
 
         self.env['l10n_ro_edi.document'].sudo().browse(document_ids_to_delete).unlink()
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     @api.model

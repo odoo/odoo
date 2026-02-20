@@ -232,9 +232,7 @@ class MailMail(models.Model):
 
         res = None
         try:
-            # auto-commit except in testing mode
-            auto_commit = not modules.module.current_test
-            res = self.browse(send_ids).send(auto_commit=auto_commit, post_send_callback=post_send_callback)
+            res = self.browse(send_ids).send(auto_commit=self.env._can_commit(), post_send_callback=post_send_callback)
         except Exception:
             _logger.exception("Failed processing mail queue")
 

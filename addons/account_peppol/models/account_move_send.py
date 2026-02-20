@@ -274,7 +274,7 @@ class AccountMoveSend(models.AbstractModel):
                         })
                 self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     def action_what_is_peppol_activate(self, moves):
