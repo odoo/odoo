@@ -1040,8 +1040,8 @@ class AccountPayment(models.Model):
                 continue
             liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
 
-            if 'amount' in changed_fields and len(liquidity_lines) > 1:
-                raise UserError(_("You cannot change the amount of a payment with multiple liquidity lines."))
+            # if 'amount' in changed_fields and len(liquidity_lines) > 1:
+            #     raise UserError(_("You cannot change the amount of a payment with multiple liquidity lines."))
 
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
