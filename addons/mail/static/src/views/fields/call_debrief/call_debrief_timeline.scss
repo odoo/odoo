@@ -1,0 +1,87 @@
+.o-CallDebriefTimeline-container {
+    text-align: center;
+    margin: 0.2em;
+}
+.o-CallDebriefTimeline-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    color: #666;
+    font-size: 0.9rem;
+}
+.o-CallDebriefTimeline {
+    position: relative;
+    height: 38px;
+    padding-top: 15px;
+}
+.o-CallDebriefTimeline-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #e5e7eb;
+    border-radius: 9999px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.o-CallDebriefTimeline-media-segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #94a3b8; // Darker slate for visibility
+    opacity: 0.6;
+    z-index: 3;
+}
+
+.o-CallDebriefTimeline-transcript-marker {
+    position: absolute;
+    bottom: 3px;
+    height: 8px;
+    width: 1px;
+    background: #9ca3af;
+    opacity: 0.8;
+    border-radius: 9999px; // Make it a pill shape
+    transition: background 0.15s ease, height 0.15s ease;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.o-CallDebriefTimeline-playhead {
+  position: absolute;
+  top: -26px;
+  left: var(--progress, 50%);
+  transform: translateX(-50%);
+  width: 50px;
+  height: 24px;
+  background: #a855f7;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 0 6px rgba(168, 85, 247, 0.6);
+  user-select: none;
+  cursor: grab;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    width: 1px;
+    height: 30px;
+    background: #a955f7c3;
+    z-index: -1;
+  }
+}
+
+.o-CallDebriefTimeline-playhead-timestamp {
+    font-size: 0.7rem;
+    color: white;
+    white-space: nowrap;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+

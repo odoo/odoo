@@ -133,6 +133,7 @@ For more specific needs, you may also assign custom-defined actions
         'demo/discuss_channel_demo.xml',
         'demo/discuss/public_channel_demo.xml',
         "demo/discuss/readonly_channel_demo.xml",
+        'demo/discuss/call_debrief_discuss_demo.xml',
         "demo/mail_poll_demo.xml",
         "demo/mail_canned_response_demo.xml",
     ],

@@ -397,4 +397,22 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="False"/>
         </record>
+
+        <record id="call_artifact_rule_user" model="ir.rule">
+            <field name="name">Call Artifact: User Access</field>
+            <field name="model_id" ref="model_call_artifact"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('discuss_call_history_id.channel_id.channel_member_ids.partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="call_artifact_rule_admin" model="ir.rule">
+            <field name="name">Call Artifact: Admin Full Access</field>
+            <field name="model_id" ref="model_call_artifact"/>
+            <field name="groups" eval="[Command.link(ref('base.group_erp_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
 </odoo>

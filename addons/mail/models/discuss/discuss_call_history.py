@@ -9,6 +9,7 @@ class DiscussCallHistory(models.Model):
     _description = "Keep the call history"
 
     channel_id = fields.Many2one("discuss.channel", index=True, required=True, ondelete="cascade")
+    artifact_ids = fields.One2many("call.artifact", "discuss_call_history_id", string="Artifacts")
     duration_hour = fields.Float(compute="_compute_duration_hour")
     start_dt = fields.Datetime(index=True, required=True)
     end_dt = fields.Datetime()

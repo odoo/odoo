@@ -74,6 +74,7 @@ from . import res_users
 from . import update
 
 # after mail specifically as discuss module depends on mail
+from . import call_artifact
 from . import discuss
 
 # discuss_channel_member must be loaded first

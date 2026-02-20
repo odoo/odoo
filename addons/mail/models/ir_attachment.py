@@ -11,6 +11,11 @@ from odoo.addons.mail.tools.discuss import Store
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
+    _call_artifact_uniq = models.UniqueIndex(
+        "(res_id) WHERE res_model = 'call.artifact'",
+        message="Only one attachment per call artifact is allowed.",
+    )
+
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
 

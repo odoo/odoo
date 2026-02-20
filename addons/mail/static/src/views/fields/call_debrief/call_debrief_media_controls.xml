@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CallDebriefMediaControls" owl="1">
+        <div class="o-CallDebrief-media-controls d-flex align-items-center p-2 border-top">
+            <div class="o_feedback_indicator">
+                <span t-if="props.feedback" t-key="props.feedback.id" class="o_animate_fade" t-esc="props.feedback.text"/>
+            </div>
+
+            <div class="o_media_controls_spacer"/>
+
+            <div class="d-flex align-items-center">
+                <button t-on-click="() => this.props.onSeek(-5)" class="btn btn-secondary btn-sm py-0 rounded-pill me-1" title="Skip backward (j, ←)">
+                    <small>-5s</small>
+                </button>
+                <button t-on-click="this.props.onTogglePlay" class="btn btn-primary btn-sm py-0 rounded-pill me-1" style="width: 32px;" title="Play/Pause (k, space)">
+                    <i t-att-class="props.isPlaying ? 'fa fa-pause' : 'fa fa-play'"/>
+                </button>
+                <button t-on-click="() => this.props.onSeek(5)" class="btn btn-secondary btn-sm py-0 rounded-pill me-2" title="Skip forward (l, →)">
+                    <small>+5s</small>
+                </button>
+                <div class="position-relative d-flex align-items-center" t-on-mouseenter="showVolumeSlider" t-on-mouseleave="hideVolumeSlider">
+                    <button t-on-click="this.props.onToggleMute" class="btn btn-secondary btn-sm py-0 rounded-pill o_volume_button" title="Mute (m)">
+                        <i t-att-class="this.volumeIconClass"/>
+                    </button>
+                    <div t-if="state.isVolumeSliderVisible" class="position-absolute o_volume_slider_container">
+                        <input type="range" class="form-range" min="0" max="1" step="0.05" t-att-value="props.volume" t-on-input="(ev) => this.props.onSetVolume(ev)"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="o_media_controls_spacer d-flex justify-content-end">
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-sm py-0 rounded-pill ms-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-ellipsis-h"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-2">
+                        <div class="o_speed_selector_group">
+                            <label for="playbackRateSelect" class="form-label small">Speed</label>
+                            <select id="playbackRateSelect" class="form-select form-select-sm" t-on-change="(ev) => this.props.onSetPlaybackRate(ev)">
+                                <t t-foreach="props.playbackRates" t-as="rate" t-key="rate">
+                                    <option t-att-value="rate" t-att-selected="props.playbackRate === rate ? 'selected' : null">
+                                        <t t-esc="rate"/>x
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div t-if="props.media">
+                            <a t-att-href="props.media.mediaUrl + '?download=1'" download="download" class="btn btn-secondary btn-sm w-100 py-1 rounded-pill">
+                                <i class="fa fa-download"/> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
