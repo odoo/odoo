@@ -4,7 +4,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
-class TestUblExportBis3InvoiceSelfBillingBE(TestUblBis3Common, TestUblCiiBECommon):
+class TestUblExportBis3SelfInvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
     @classmethod
     def setUpClass(cls):

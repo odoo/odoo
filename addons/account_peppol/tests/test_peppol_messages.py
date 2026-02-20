@@ -547,7 +547,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
         This needs to be reflected as an error and put the move in Peppol Error state.
         """
-        def mocked_export_invoice_constraints(self, invoice, vals):
+        def mocked_export_document_node_constraints(self, vals):
             return {'test_error_key': 'test_error_description'}
 
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
@@ -560,8 +560,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard.action_send_and_print()
         with (
             patch(
-                'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUBL20._export_invoice_constraints',
-                mocked_export_invoice_constraints,
+                'odoo.addons.account_edi_ubl_cii.models.account_edi_ubl.AccountEdiUBL._export_document_node_constraints',
+                mocked_export_document_node_constraints,
             ),
             self.enter_registry_test_mode(),
         ):
