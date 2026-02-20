@@ -289,6 +289,10 @@ export class ImportAction extends Component {
         this.model.setColumnField(column, fieldInfo);
     }
 
+    onFieldLanguageChanged(column, language) {
+        this.model.setColumnLanguage(column, language);
+    }
+
     isFieldSet(column) {
         return column.fieldInfo != null;
     }

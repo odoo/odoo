@@ -12,6 +12,8 @@ import { BinaryFileManager } from "./binary_file_manager";
 
 const mainComponentRegistry = registry.category("main_components");
 
+export const IMPORT_LANGUAGE_SEPARATOR = `@`;
+
 const strftimeFormatTable = {
     d: "w",
     DD: "d",
@@ -149,6 +151,8 @@ export class BaseImportModel {
 
         this.fieldsToHandle = {};
 
+        this.languagesInstalled = [];
+
         this.notificationService = useService("notification");
     }
 
@@ -234,12 +238,21 @@ export class BaseImportModel {
     }
 
     async init() {
-        [this.importTemplates, this.id] = await Promise.all([
+        [this.importTemplates, this.id, this.languagesInstalled] = await Promise.all([
             this.orm.call(this.resModel, "get_import_templates", [], {
                 context: this.context,
             }),
             this.orm.call("base_import.import", "create", [{ res_model: this.resModel }]),
+            this.orm.call("res.lang", "get_installed", []),
         ]);
+    }
+
+    getFinalFieldName(field) {
+        let name = Boolean(field.fieldInfo) && field.fieldInfo.fieldPath;
+        if (name && field.language) {
+            name += `${IMPORT_LANGUAGE_SEPARATOR}${field.language}`;
+        }
+        return name;
     }
 
     async executeImport(isTest = false, totalSteps, importProgress) {
@@ -250,7 +263,7 @@ export class BaseImportModel {
         const startRow = this.importOptions.skip;
         const importRes = {
             ids: [],
-            fields: this.columns.map((e) => Boolean(e.fieldInfo) && e.fieldInfo.fieldPath),
+            fields: this.columns.map((e) => this.getFinalFieldName(e)),
             columns: this.columns.map((e) => e.name.trim().toLowerCase()),
             hasError: false,
         };
@@ -363,6 +376,11 @@ export class BaseImportModel {
 
     setColumnField(column, fieldInfo) {
         column.fieldInfo = fieldInfo;
+        this._updateComments(column);
+    }
+
+    setColumnLanguage(column, language) {
+        column.language = language;
         this._updateComments(column);
     }
 
@@ -621,7 +639,8 @@ export class BaseImportModel {
                     header,
                     index,
                     res.preview[index],
-                    res.preview[index][0]
+                    res.preview[index][0],
+                    res.languages[index]
                 )
             );
         } else if (res.preview && res.preview.length >= 2) {
@@ -639,7 +658,7 @@ export class BaseImportModel {
         return [];
     }
 
-    _createColumn(res, id, name, index, previews, preview) {
+    _createColumn(res, id, name, index, previews, preview, language = null) {
         const fields = this._getFields(res, index);
         return {
             id,
@@ -647,6 +666,7 @@ export class BaseImportModel {
             preview,
             previews,
             fields,
+            language,
             fieldInfo: this._findField(fields, id),
             comments: [],
             errors: [],
@@ -756,7 +776,10 @@ export class BaseImportModel {
                 // If multiple columns are mapped on the same field, inform
                 // the user that they will be concatenated.
                 const samefieldColumns = this.columns.filter(
-                    (col) => col.fieldInfo && col.fieldInfo.fieldPath === column.fieldInfo.fieldPath
+                    (col) =>
+                        col.fieldInfo &&
+                        col.fieldInfo.fieldPath === column.fieldInfo.fieldPath &&
+                        (this.languagesInstalled.length === 1 || col.language === column.language)
                 );
                 if (samefieldColumns.length >= 2) {
                     column.comments.push({

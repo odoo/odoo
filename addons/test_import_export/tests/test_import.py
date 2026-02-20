@@ -569,7 +569,7 @@ class test_convert_import_data(TransactionCase):
             'file_type': 'text/csv'
 
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _ = import_wizard._convert_import_data(
             ['name', 'somevalue', 'othervalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -663,7 +663,7 @@ class test_convert_import_data(TransactionCase):
             'float_thousand_separator': '.',
             'has_headers': True
         }
-        data, import_fields = import_wizard._convert_import_data(
+        data, import_fields, _ = import_wizard._convert_import_data(
             ['name', 'parent_id/.id', 'parent_id/d', 'parent_id/f'],
             options
         )
@@ -708,7 +708,7 @@ class test_convert_import_data(TransactionCase):
             'file': base64.b64encode(content),
             'file_type': 'text/csv'
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _ = import_wizard._convert_import_data(
             ['name', False, 'othervalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -735,7 +735,7 @@ class test_convert_import_data(TransactionCase):
             'file': base64.b64encode(content),
             'file_type': 'text/csv'
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _ = import_wizard._convert_import_data(
             ['name', False, 'othervalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -760,7 +760,7 @@ class test_convert_import_data(TransactionCase):
             'file': base64.b64encode(content),
             'file_type': 'text/csv'
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _ = import_wizard._convert_import_data(
             ['name', 'somevalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -818,7 +818,7 @@ class test_convert_import_data(TransactionCase):
             'file': base64.b64encode(output.getvalue().encode()),
             'file_type': 'text/csv',
         })
-        data, _ = import_wizard._convert_import_data(
+        data, _, _ = import_wizard._convert_import_data(
             ['name', 'somevalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -1129,6 +1129,130 @@ foo3,Invalid Country\n"""),
                 datetime.date(2025, 7, 1).strftime(DEFAULT_SERVER_DATE_FORMAT),
             ],
         )
+
+    def test_extract_translation(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.base.translation',
+            'file': b'.id,name,name@fr_FR,name@it_IT,description,description@fr_FR\n'
+                    b'1,Test,Test,Prova,Desc 1,Desc 1 Fr\n'
+                    b'2,Yes,Oui,Si,Desc 2,Desc 2 Fr\n'
+                    b'3,No,Non,No,Desc 3,Desc 3 Fr\n',
+            'file_type': 'text/csv'
+        })
+        data, fields, translation = import_wizard._convert_import_data(
+            ['.id', 'name', 'name@fr_FR', 'name@it_IT', 'description', 'description@fr_FR'],
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
+        )
+
+        self.assertEqual(fields, ['.id', 'name', 'description'])
+        self.assertEqual(data, [
+            ['1', 'Test', 'Desc 1'],
+            ['2', 'Yes', 'Desc 2'],
+            ['3', 'No', 'Desc 3'],
+        ])
+
+        expected_result = {
+            'name': [
+                {
+                    'fr_FR': 'Test',
+                    'it_IT': 'Prova',
+                },
+                {
+                    'fr_FR': 'Oui',
+                    'it_IT': 'Si',
+                },
+                {
+                    'fr_FR': 'Non',
+                    'it_IT': 'No',
+                },
+            ],
+            'description': [
+                {'fr_FR': 'Desc 1 Fr'},
+                {'fr_FR': 'Desc 2 Fr'},
+                {'fr_FR': 'Desc 3 Fr'},
+            ],
+        }
+        self.assertCountEqual(translation.keys(), expected_result.keys())
+        for field, values in expected_result.items():
+            self.assertCountEqual(translation[field], values)
+            for index, value in enumerate(values):
+                self.assertDictEqual(dict(translation[field][index]), value)
+
+    def test_extract_translation_concat(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.base.translation',
+            'file': b'.id,name,name@fr_FR,name@fr_FR\n'
+                    b'1,Test,Test,Sup\n'
+                    b'2,Yes,Oui,Bien sur\n'
+                    b'3,No,Non,Non\n',
+            'file_type': 'text/csv'
+        })
+        data, fields, translation = import_wizard._convert_import_data(
+            ['.id', 'name', 'name@fr_FR', 'name@fr_FR'],
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
+        )
+
+        self.assertEqual(fields, ['.id', 'name'])
+        self.assertEqual(data, [
+            ['1', 'Test'],
+            ['2', 'Yes'],
+            ['3', 'No'],
+        ])
+
+        expected_result = {
+            'name': [
+                {'fr_FR': 'Test Sup'},
+                {'fr_FR': 'Oui Bien sur'},
+                {'fr_FR': 'Non Non'},
+            ],
+        }
+        self.assertCountEqual(translation.keys(), expected_result.keys())
+        for field, values in expected_result.items():
+            self.assertCountEqual(translation[field], values)
+            for index, value in enumerate(values):
+                self.assertDictEqual(dict(translation[field][index]), value)
+
+    def test_import_translation(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.base.translation',
+            #       |  'name'  |'name@fr_FR'|          'html'           |    'html@fr_FR',           |'descriptione'|'descriptione@fr_FR'
+            'file': ("Product 1,Produit 1,<p>My product 1</p><p>Product 1-1</p>,<p>Mon produit 1</p><p>Produit 1-1</p>,My product 1,Mon produit 1\n"
+                     "Product 2,Produit 2,<p>My product 2</p><p>Product 2-2</p>,<p>Mon produit 2</p><p>Produit 2-2</p>,My product 2,Mon produit 2\n"),
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.execute_import(
+            ['name', 'name@fr_FR', 'html', 'html@fr_FR', 'description', 'description@fr_FR'],
+            [],
+            {
+                'quoting': '"',
+                'separator': ',',
+            }
+        )
+        self.assertEqual(len(results['ids']), 2, "should have imported 2 records")
+
+        product = self.env['import.base.translation'].browse(results['ids'])
+        product_fr = self.env['import.base.translation'].with_context(lang="fr_FR").browse(results['ids'])
+
+        self.assertEqual(product[0].name, 'Product 1')
+        self.assertEqual(product[0].html, '<p>My product 1</p><p>Product 1-1</p>')
+        self.assertEqual(product[0].description, 'My product 1')
+
+        self.assertEqual(product_fr[0].name, 'Produit 1')
+        self.assertEqual(product_fr[0].html, '<p>Mon produit 1</p><p>Produit 1-1</p>')
+        self.assertEqual(product_fr[0].description, 'Mon produit 1')
+
+        self.assertEqual(product[1].name, 'Product 2')
+        self.assertEqual(product[1].html, '<p>My product 2</p><p>Product 2-2</p>')
+        self.assertEqual(product[1].description, 'My product 2')
+
+        self.assertEqual(product_fr[1].name, 'Produit 2')
+        self.assertEqual(product_fr[1].html, '<p>Mon produit 2</p><p>Produit 2-2</p>')
+        self.assertEqual(product_fr[1].description, 'Mon produit 2')
+
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

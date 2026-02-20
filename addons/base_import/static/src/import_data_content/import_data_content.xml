@@ -35,6 +35,7 @@
                     <tr class="border-bottom">
                         <th scope="col">File Column</th>
                         <th scope="col">Odoo Field</th>
+                        <th t-if="showLanguageSelection" class="o-translation" scope="col"><i class="fa fa-globe"/> Translation</th>
                         <th scope="col">Comments</th>
                     </tr>
                 </thead>
@@ -85,6 +86,18 @@
                                             <t t-esc="choice.data.label" />
                                         </div>
                                     </t>
+                                </SelectMenu>
+                            </td>
+                            <td t-if="showLanguageSelection">
+                                <SelectMenu
+                                    t-if="columnHasLang(column) and showLanguageSelection"
+                                    value="column.language"
+                                    choices="getLanguages()"
+                                    onSelect="(language) => this.setLanguage(column, language)"
+                                    searchPlaceholder.translate="Search a language..."
+                                >
+                                    <span t-if="column.language" t-esc="getLanguagesLabel(column.language)" />
+                                    <span t-else="" class="text-warning">All</span>
                                 </SelectMenu>
                             </td>
                             <td>

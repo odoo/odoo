@@ -16,10 +16,16 @@ export class ImportDataContent extends Component {
         isFieldSet: { type: Function },
         onOptionChanged: { type: Function },
         onFieldChanged: { type: Function },
+        onFieldLanguageChanged: { type: Function },
         options: { type: Object },
         importMessages: { type: Object },
         previewError: { type: String, optional: true },
+        languagesInstalled: { type: Array },
     };
+
+    setup() {
+        this.showLanguageSelection = this.props.languagesInstalled.length > 1;
+    }
 
     getGroups(column) {
         const groups = [
@@ -88,5 +94,25 @@ export class ImportDataContent extends Component {
         ];
         const fieldInfo = fields.find((f) => f.fieldPath === fieldPath);
         this.props.onFieldChanged(column, fieldInfo);
+    }
+
+    columnHasLang(column) {
+        const validTranslatableType = ["char", "text", "html"];
+        return validTranslatableType.includes(column.fieldInfo?.type);
+    }
+
+    getLanguages() {
+        return this.props.languagesInstalled.map((val) => ({
+            value: val[0],
+            label: val[1],
+        }));
+    }
+
+    getLanguagesLabel(value) {
+        return this.props.languagesInstalled.find((val) => val[0] === value)?.[1];
+    }
+
+    setLanguage(column, language) {
+        this.props.onFieldLanguageChanged(column, language);
     }
 }

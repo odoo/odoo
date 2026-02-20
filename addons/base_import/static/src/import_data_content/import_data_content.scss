@@ -7,17 +7,11 @@
         width: fit-content;
     }
 
-    > table {
-        thead {
-            th:nth-child(1) {
-                min-width: 20rem;
-            }
-            th:nth-child(2) {
-                min-width: 20rem;
-            }
-            th:nth-child(3) {
-                min-width: 20rem;
-            }
+    > table thead th {
+        min-width: 20rem;
+
+        &.o-translation {
+            min-width: 10rem;
         }
     }
 
