@@ -164,7 +164,7 @@ class PurchaseOrder(models.Model):
             domain = fields.Domain.AND([domain, ctx.get("suggest_domain")])
         products = self.env['product.product'].search(domain)
 
-        self.partner_id.write({
+        self.partner_id.sudo().write({
             'suggest_days': ctx.get('suggest_days'),
             'suggest_based_on': ctx.get('suggest_based_on'),
             'suggest_percent': ctx.get('suggest_percent'),
