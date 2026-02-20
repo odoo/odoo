@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from lxml import etree
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, mute_logger
 
 
 @tagged('post_install', '-at_install')
@@ -183,6 +184,10 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         }])
 
     def test_import_bill(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'Test account',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
         partner = self.env['res.partner'].create({
             'name': "My Belgian Partner",
             'vat': "BE0477472701",
@@ -214,6 +219,33 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         self.assertRecordValues(imported_invoice.invoice_line_ids, [{
             'amount_currency': 1000.00,
             'quantity': 1.0}])
+
+    def test_import_bill_no_self_bank(self):
+        partner = self.env['res.partner'].create({
+            'name': "My Belgian Partner",
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """
+            <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='PaymentID'])" position="after">
+                <PayeeFinancialAccount><ID>Test account</ID></PayeeFinancialAccount>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+        logger_name = 'odoo.addons.account_edi.models.account_edi_format'
+        with mute_logger(logger_name), self.assertLogs(logging.getLogger(logger_name), logging.ERROR) as logs:
+            self.env['account.journal']\
+                .with_context(default_journal_id=self.company_data['default_journal_sale'].id)\
+                ._create_document_from_attachment(xml_attachment.id)
+        self.assertIn('add your own bank account manually', logs.output[0])
 
     def test_import_bill_without_tax(self):
         """ Test that no tax is set (even the default one) when importing a bill without tax."""
