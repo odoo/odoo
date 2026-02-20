@@ -115,11 +115,12 @@ BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
-_DEFAULT_WEB_TIMEOUT = float(os.getenv('ODOO_TEST_WEB_TIMEOUT', '0')) or 12
-_DEFAULT_WEB_NAVIGATE_TIMEOUT = float(os.getenv('ODOO_TEST_WEB_NAVIGATE_TIMEOUT', '0')) or _DEFAULT_WEB_TIMEOUT * 2
-_DEFAULT_JS_TIMEOUT = _DEFAULT_WEB_TIMEOUT * 5
-assert _DEFAULT_WEB_TIMEOUT > 0, "bad ODOO_TEST_WEB_TIMEOUT environment variable"
-assert _DEFAULT_WEB_NAVIGATE_TIMEOUT > 0, "bad ODOO_TEST_WEB_NAVIGATE_TIMEOUT environment variable"
+_DEFAULT_HTTP_TIMEOUT = float(os.getenv('ODOO_TEST_HTTP_TIMEOUT', '0')) or 12
+_DEFAULT_WS_TIMEOUT = float(os.getenv('ODOO_TEST_WS_TIMEOUT', '0')) or 10
+_DEFAULT_TOUR_TIMEOUT = float(os.getenv('ODOO_TEST_TOUR_TIMEOUT', '0')) or 60
+assert _DEFAULT_HTTP_TIMEOUT > 0, "bad ODOO_TEST_HTTP_TIMEOUT environment variable"
+assert _DEFAULT_WS_TIMEOUT > 0, "bad ODOO_TEST_WS_TIMEOUT environment variable"
+assert _DEFAULT_TOUR_TIMEOUT > 0, "bad ODOO_TEST_TOUR_TIMEOUT environment variable"
 
 IGNORED_MSGS = re.compile(r"""
     (?: failed\ to\ fetch  # base error
@@ -1681,7 +1682,7 @@ class ChromeBrowser:
                     shorten(str(msg), 500, placeholder='...'),
                 )
 
-    def _websocket_request(self, method, *, params=None, timeout=10.0):
+    def _websocket_request(self, method, *, params=None, timeout=_DEFAULT_WS_TIMEOUT):
         assert threading.get_ident() != self._receiver.ident,\
             "_websocket_request must not be called from the consumer thread"
         if not hasattr(self, 'ws'):
@@ -1884,7 +1885,7 @@ which leads to stray network requests and inconsistencies."""
         params['name'] = name
         self._websocket_request('Network.deleteCookies', params=params)
 
-    def _wait_ready(self, ready_code=None, timeout=60):
+    def _wait_ready(self, ready_code=None, timeout=_DEFAULT_TOUR_TIMEOUT):
         timeout *= self.throttling_factor
         ready_code = ready_code or "document.readyState === 'complete'"
         self._logger.info('Evaluate ready code "%s"', ready_code)
@@ -1944,9 +1945,9 @@ which leads to stray network requests and inconsistencies."""
             raise ChromeBrowserException('Script timeout exceeded') from err
         raise ChromeBrowserException("Unknown error") from err
 
-    def navigate_to(self, url, wait_stop=False):
+    def navigate_to(self, url, wait_stop=False, timeout=_DEFAULT_WS_TIMEOUT):
         self._logger.info('Navigating to: "%s"', url)
-        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=_DEFAULT_WEB_NAVIGATE_TIMEOUT)
+        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=timeout)
         self._logger.info("Navigation result: %s", nav_result)
         if wait_stop:
             frame_id = nav_result['frameId']
@@ -2383,7 +2384,7 @@ class HttpCase(TransactionCase):
     def csrf_token(self):
         return Request.csrf_token(self)  # noqa: F821
 
-    def url_open(self, url, data=None, files=None, timeout=_DEFAULT_WEB_TIMEOUT, headers=None, json=None, params=None, allow_redirects=True, cookies=None, method: str | None = None):
+    def url_open(self, url, data=None, files=None, timeout=_DEFAULT_HTTP_TIMEOUT, headers=None, json=None, params=None, allow_redirects=True, cookies=None, method: str | None = None):
         if not method and (data or files or json):
             method = 'POST'
         method = method or 'GET'
@@ -2391,7 +2392,7 @@ class HttpCase(TransactionCase):
             url = self.base_url() + url
         return self.opener.request(method, url, params=params, data=data, json=json, files=files, timeout=timeout, headers=headers, cookies=cookies, allow_redirects=allow_redirects)
 
-    def _wait_remaining_requests(self, timeout=_DEFAULT_WEB_TIMEOUT):
+    def _wait_remaining_requests(self, timeout=10):
 
         def get_http_request_threads():
             return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
@@ -2518,7 +2519,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=_DEFAULT_JS_TIMEOUT, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=_DEFAULT_TOUR_TIMEOUT, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2605,12 +2606,12 @@ class HttpCase(TransactionCase):
                     'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
                 browser.throttle(cpu_throttling)
 
-            browser.navigate_to(url, wait_stop=not bool(ready))
+            browser.navigate_to(url, wait_stop=not bool(ready), timeout=timeout / 3)
             atexit.callback(browser.stop)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
-            self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+            self.assertTrue(browser._wait_ready(ready, timeout=timeout), 'The ready "%s" code was always falsy' % ready)
 
             error = None
             try:
@@ -2624,15 +2625,15 @@ class HttpCase(TransactionCase):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
-        options = {
-            'stepDelay': step_delay or 0,
-            'keepWatchBrowser': kwargs.get('watch', False),
-            'debug': kwargs.get('debug', False),
-            'startUrl': url_path,
-        }
-        code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
-        ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
-        timeout = kwargs.pop('timeout', 60)
+        if 'code' not in kwargs:
+            options = {
+                'stepDelay': step_delay or 0,
+                'keepWatchBrowser': kwargs.get('watch', False),
+                'debug': kwargs.get('debug', False),
+                'startUrl': url_path,
+            }
+            kwargs['code'] = f"odoo.startTour({tour_name!r}, {json.dumps(options)})"
+        kwargs.setdefault('ready', f"odoo.isTourReady({tour_name!r})")
 
         if step_delay is not None:
             self._logger.warning('step_delay is only suitable for local testing')
@@ -2644,7 +2645,7 @@ class HttpCase(TransactionCase):
         with patch.object(Users, 'tour_enabled', False),\
                 patch.object(Users, '_post_model_setup__', setup),\
                 patch.object(Users, '_compute_tour_enabled', lambda _: None):
-            self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
+            self.browser_js(url_path=url_path, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
         """
@@ -2669,7 +2670,7 @@ class HttpCase(TransactionCase):
                 additional_tags.append('is_tour')
         return additional_tags
 
-    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None, timeout=_DEFAULT_WEB_TIMEOUT):
+    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None, timeout=_DEFAULT_HTTP_TIMEOUT):
         """Make a JSON-RPC request to the server.
 
         :raises requests.HTTPError: if one occurred
