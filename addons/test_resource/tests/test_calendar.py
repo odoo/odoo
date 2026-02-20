@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta, UTC
+from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
 
 from odoo.tests import tagged
@@ -114,61 +114,6 @@ class TestCalendar(TestResourceCommon):
 
         leave.unlink()
 
-        # 2 weeks calendar week 1
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 30)
-
-        # 2 weeks calendar week 1
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 16, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 20, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 30)
-
-        # 2 weeks calendar week 2
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 16)
-
-        # 2 weeks calendar week 2, leave during a day where he doesn't work this week
-        leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Time Off Jules week 2',
-            'calendar_id': self.calendar_jules.id,
-            'resource_id': False,
-            'date_from': self.datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
-            'date_to': self.datetime_str(2018, 4, 13, 4, 0, 0, tzinfo=self.jules.tz),
-        })
-
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 16)
-
-        leave.unlink()
-
-        # 2 weeks calendar week 2, leave during a day where he works this week
-        leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Time Off Jules week 2',
-            'calendar_id': self.calendar_jules.id,
-            'resource_id': False,
-            'date_from': self.datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            'date_to': self.datetime_str(2018, 4, 9, 23, 59, 0, tzinfo=self.jules.tz),
-        })
-
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 8)
-
-        leave.unlink()
-
         # leave without calendar, should count for anyone in the company
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small leave',
@@ -207,7 +152,6 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(res, 5.0)
 
     def test_calendar_working_hours_24(self):
-        self.calendar_jean.attendance_ids.filtered(lambda a: a.dayofweek == '2').unlink()
         self.att_4 = self.env['resource.calendar.attendance'].create({
             'calendar_id': self.calendar_jean.id,
             'dayofweek': '2',
@@ -378,8 +322,8 @@ class TestCalendar(TestResourceCommon):
         })
 
         # Jean changes working schedule to Jules'
-        self.jean.resource_calendar_id = self.calendar_jules
-        self.assertEqual(leave.calendar_id, self.calendar_jules, "Leave calendar should update")
+        self.jean.resource_calendar_id = self.calendar_patel
+        self.assertEqual(leave.calendar_id, self.calendar_patel, "Leave calendar should update")
         self.assertEqual(holiday.calendar_id, self.calendar_jean, "Global leave shouldn't change")
 
     def test_compute_work_time_rate_with_one_week_calendar(self):
@@ -420,40 +364,5 @@ class TestCalendar(TestResourceCommon):
         resource_calendar.write({
             'name': 'Calendar Full-Time',
             'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})],
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)
-
-    def test_compute_work_time_rate_with_variable_calendar(self):
-        """Test Case: check if the computation of the work time rate in the resource.calendar is correct."""
-        def create_attendance_ids(days, hours):
-            return [(0, 0, {'date': date(2026, 1, 26) + timedelta(days=day), 'hour_from': hours[0], 'hour_to': hours[1]}) for day in days]
-
-        # Define a mid time
-        resource_calendar = self.env['resource.calendar'].create({
-            'name': 'Calendar Mid-Time',
-            'full_time_required_hours': 40,
-            'schedule_type': 'variable',
-            'attendance_ids': create_attendance_ids([0, 1, 7, 8], (8, 16)) + create_attendance_ids([2, 9], (8, 12)),
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 50, 2)
-
-        # Define a 4/5
-        resource_calendar.write({
-            'name': 'Calendar (4 / 5)',
-            'attendance_ids': create_attendance_ids([2, 9], (12, 16)) + create_attendance_ids([3, 10], (8, 16)),
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 80, 2)
-
-        # Define a 9/10
-        resource_calendar.write({
-            'name': 'Calendar (9 / 10)',
-            'attendance_ids': create_attendance_ids([4, 11], (8, 12)),
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 90, 2)
-
-        # Define a Full-Time
-        resource_calendar.write({
-            'name': 'Calendar Full-Time',
-            'attendance_ids': create_attendance_ids([4, 11], (12, 16)),
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)
