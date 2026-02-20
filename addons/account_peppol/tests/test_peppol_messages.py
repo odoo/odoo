@@ -349,6 +349,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 }])
 
     def test_receive_success_peppol(self):
+        # Test the reception of a correct peppol document, and ensure a copy of the move doesn't keep the same uuid 
+        # and that the we detects duplicated uuid if we try to reuse it on another move
         # a correct move should be created
         self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
 
@@ -358,6 +360,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_move_state': 'done',
                 'move_type': 'in_invoice',
             }])
+
+        copied_move = move.copy()
+        self.assertNotEqual(move.peppol_message_uuid, copied_move.peppol_message_uuid)
+        
+        # Check the error about duplicated messages uuid
+        copied_move.peppol_message_uuid = move.peppol_message_uuid
+        self.assertRecordValues(copied_move, [{'duplicated_ref_ids': move.ids}])
 
     def test_peppol_document_retrieval_with_company_context(self):
         # Ensure that the bill creation is done using the move company/proxy user context
