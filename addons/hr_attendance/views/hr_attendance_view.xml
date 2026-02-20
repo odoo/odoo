@@ -201,8 +201,8 @@
                     </group>
                     <notebook invisible="not overtime_status">
                         <page string="Overtime Details">
-                            <field name="linked_overtime_ids">
-                                <list editable="bottom">
+                            <field name="linked_overtime_ids" readonly="1">
+                                <list>
                                     <field name="rule_ids" widget="many2many_tags" readonly="1"/>
                                     <field name="duration" widget="float_time" readonly="1"/>
                                     <field name="manual_duration" widget="float_time" readonly="0"/>
