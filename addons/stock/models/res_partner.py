@@ -9,12 +9,10 @@ class ResPartner(models.Model):
     _check_company_auto = True
 
     property_stock_customer = fields.Many2one(
-        'stock.location', string="Customer Location", company_dependent=True, check_company=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
+        'stock.location', string="Customer Location", company_dependent=True,
         help="The stock location used as destination when sending goods to this contact.")
     property_stock_supplier = fields.Many2one(
-        'stock.location', string="Vendor Location", company_dependent=True, check_company=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
+        'stock.location', string="Vendor Location", company_dependent=True,
         help="The stock location used as source when receiving goods from this contact.")
     picking_warn_msg = fields.Text('Message for Stock Picking')
 

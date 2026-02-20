@@ -811,7 +811,7 @@ class StockPicking(models.Model):
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
                     'id': late_move.id,
-                    'name': late_move.display_name,
+                    'name': late_move.sudo().display_name,
                     'model': late_move._name,
                 } for late_move in picking.move_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]

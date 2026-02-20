@@ -76,12 +76,15 @@ class ResCompany(models.Model):
            we don't want to create accounting entries at that time.
         '''
         for company in self:
-            location = self.env['stock.location'].create({
-                'name': _('Inter-warehouse transit'),
-                'usage': 'transit',
-                'company_id': company.id,
-                'active': False
-            })
+            if company.parent_id:
+                location = company.parent_id.internal_transit_location_id
+            else:
+                location = self.env['stock.location'].create({
+                    'name': _('Inter-warehouse transit'),
+                    'usage': 'transit',
+                    'company_id': company.id,
+                    'active': False
+                })
 
             company.write({'internal_transit_location_id': location.id})
 
@@ -204,22 +207,22 @@ class ResCompany(models.Model):
             company.sudo()._create_per_company_sequences()
             company.sudo()._create_per_company_picking_types()
             company.sudo()._create_per_company_rules()
-            company.sudo()._set_per_company_inter_company_locations(inter_company_location)
+            company.sudo()._set_per_company_inter_company_locations()
         if modules.module.current_test:
             self.env['stock.warehouse'].sudo().create([{'company_id': company.id} for company in companies])
         return companies
 
-    def _set_per_company_inter_company_locations(self, inter_company_location):
+    def _set_per_company_inter_company_locations(self):
         self.ensure_one()
         if not self.env.user.has_group('base.group_multi_company'):
             return
+        inter_company_location = self.env.ref('stock.stock_location_inter_company')
         other_companies = self.env['res.company'].search([('id', '!=', self.id)])
-        other_companies.partner_id.with_company(self).write({
-            'property_stock_customer': inter_company_location.id,
-            'property_stock_supplier': inter_company_location.id,
-        })
         for company in other_companies:
-            # Still need to insert those one by one, as the env company must be different every time
+            company.partner_id.with_company(self).write({
+                'property_stock_customer': inter_company_location.id,
+                'property_stock_supplier': inter_company_location.id,
+            })
             self.partner_id.with_company(company).write({
                 'property_stock_customer': inter_company_location.id,
                 'property_stock_supplier': inter_company_location.id,

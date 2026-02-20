@@ -670,7 +670,7 @@ class ProductProduct(models.Model):
         })
         if rule in seen_rules:
             raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
-        if not rule:
+        if not rule or location == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False):
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
             return seen_rules | rule

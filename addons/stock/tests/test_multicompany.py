@@ -98,17 +98,6 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             self.company_a.internal_transit_location_id = self.company_b.internal_transit_location_id
 
-    def test_partner_1(self):
-        """On a partner without company, as a user of Company B, check it is not possible to use a
-        location limited to Company A as `property_stock_supplier` or `property_stock_customer`.
-        """
-        shared_partner = self.env['res.partner'].create({
-            'name': 'Shared Partner',
-            'company_id': False,
-        })
-        with self.assertRaises(UserError):
-            shared_partner.with_user(self.user_b).property_stock_customer = self.stock_location_a
-
     def test_partner_2(self):
         """On the partners of companies A and B:
         - As a user of Company A, the customer/vendor location of Company B should be the inter-company location
@@ -669,31 +658,3 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(in_move.state, 'cancel')
         self.assertEqual(out_move.state, 'cancel')
 
-    def test_route_rules_company_consistency(self):
-        route = self.env['stock.route'].create({
-            'name': 'Test Route',
-            'company_id': self.company_a.id,
-            'rule_ids': [
-                (0, 0, {
-                    'name': 'Buy',
-                    'action': 'pull_push',
-                    'company_id': self.company_a.id,
-                    'location_dest_id': self.stock_location_a.id,
-                    'picking_type_id': self.warehouse_a.in_type_id.id,
-                })
-            ]
-        })
-
-        with self.assertRaises(ValidationError):
-            route.write({'company_id': self.company_b.id})
-
-        with self.assertRaises(ValidationError):
-            route.write({'rule_ids': [
-                (0, 0, {
-                    'name': 'Buy',
-                    'action': 'pull_push',
-                    'company_id': self.company_b.id,
-                    'location_dest_id': self.stock_location_b.id,
-                    'picking_type_id': self.warehouse_b.in_type_id.id,
-                })
-            ]})

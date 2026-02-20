@@ -234,11 +234,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move7.remaining_qty, 0.0)  # unused in out moves
 
         # send 10 units in our transit location, the valorisation should not be impacted
-        transit_location = self.env['stock.location'].search([
-            ('company_id', '=', self.company.id),
-            ('usage', '=', 'transit'),
-            ('active', '=', False)
-        ], limit=1)
+        transit_location = self.company.internal_transit_location_id
         transit_location.active = True
         move8 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
