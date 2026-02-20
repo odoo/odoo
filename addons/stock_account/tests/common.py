@@ -119,6 +119,7 @@ class TestStockValuationCommon(BaseCommon):
             quantity,
             unit_cost=None,
             create_picking=False,
+            company=None,
             **kwargs,
         ):
         """ Helper to create and validate a receipt move.
@@ -127,6 +128,8 @@ class TestStockValuationCommon(BaseCommon):
         :param quantity: Quantity to move
         :param unit_cost: Price unit
         :param create_picking: Create the picking containing the created move
+        :param company: If set, the move is created in that company's context
+            and warehouse defaults are resolved from that company's warehouse.
         :param **kwargs: stock.move fields that you can override
             ''location_id: origin location for the move
             ''location_dest_id: destination location for the move
@@ -135,6 +138,15 @@ class TestStockValuationCommon(BaseCommon):
             ''uom_id: Unit of measure
             ''owner_id: Consignment owner
         """
+        env = self.env['stock.move'].with_company(company).env if company else self.env
+        if company:
+            warehouse = env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+            default_dest = warehouse.lot_stock_id.id
+            default_picking_type = warehouse.in_type_id.id
+        else:
+            default_dest = self.stock_location.id
+            default_picking_type = self.picking_type_in.id
+
         product_qty = quantity
         if kwargs.get('uom_id'):
             uom = self.env['uom.uom'].browse(kwargs.get('uom_id'))
@@ -142,20 +154,20 @@ class TestStockValuationCommon(BaseCommon):
         move_vals = {
             'product_id': product.id,
             'location_id': kwargs.get('location_id', self.supplier_location.id),
-            'location_dest_id': kwargs.get('location_dest_id', self.stock_location.id),
+            'location_dest_id': kwargs.get('location_dest_id', default_dest),
             'product_uom': kwargs.get('uom_id', self.uom.id),
             'product_uom_qty': quantity,
-            'picking_type_id': kwargs.get('picking_type_id', self.picking_type_in.id),
+            'picking_type_id': kwargs.get('picking_type_id', default_picking_type),
         }
         if unit_cost:
             move_vals['value_manual'] = unit_cost * product_qty
             move_vals['price_unit'] = unit_cost
         else:
             move_vals['value_manual'] = product.standard_price * product_qty
-        in_move = self.env['stock.move'].create(move_vals)
+        in_move = env['stock.move'].create(move_vals)
 
         if create_picking:
-            picking = self.env['stock.picking'].create({
+            picking = env['stock.picking'].create({
                 'picking_type_id': in_move.picking_type_id.id,
                 'location_id': in_move.location_id.id,
                 'location_dest_id': in_move.location_dest_id.id,
@@ -194,6 +206,7 @@ class TestStockValuationCommon(BaseCommon):
         quantity,
         force_assign=True,
         create_picking=False,
+        company=None,
         **kwargs,
     ):
         """ Helper to create and validate a delivery move.
@@ -202,6 +215,8 @@ class TestStockValuationCommon(BaseCommon):
         :param quantity: Quantity to move
         :param force_assign: Bypass reservation to force the required quantity
         :param create_picking: Create the picking containing the created move
+        :param company: If set, the move is created in that company's context
+            and warehouse defaults are resolved from that company's warehouse.
         :param **kwargs: stock.move fields that you can override
             ''location_id: origin location for the move
             ''location_dest_id: destination location for the move
@@ -210,17 +225,26 @@ class TestStockValuationCommon(BaseCommon):
             ''uom_id: Unit of measure
             ''owner_id: Consignment owner
         """
-        out_move = self.env['stock.move'].create({
+        env = self.env['stock.move'].with_company(company).env if company else self.env
+        if company:
+            warehouse = env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+            default_src = warehouse.lot_stock_id.id
+            default_picking_type = warehouse.out_type_id.id
+        else:
+            default_src = self.stock_location.id
+            default_picking_type = self.picking_type_out.id
+
+        out_move = env['stock.move'].create({
             'product_id': product.id,
-            'location_id': kwargs.get('location_id', self.stock_location.id),
+            'location_id': kwargs.get('location_id', default_src),
             'location_dest_id': kwargs.get('location_dest_id', self.customer_location.id),
             'product_uom': kwargs.get('uom_id', self.uom.id),
             'product_uom_qty': quantity,
-            'picking_type_id': kwargs.get('picking_type_id', self.picking_type_out.id),
+            'picking_type_id': kwargs.get('picking_type_id', default_picking_type),
         })
 
         if create_picking:
-            picking = self.env['stock.picking'].create({
+            picking = env['stock.picking'].create({
                 'picking_type_id': out_move.picking_type_id.id,
                 'location_id': out_move.location_id.id,
                 'location_dest_id': out_move.location_dest_id.id,
@@ -339,12 +363,15 @@ class TestStockValuationCommon(BaseCommon):
         cls.env["account.chart.template"]._load(
             "generic_coa", cls.company, install_demo=False
         )
-        cls.env.user.company_id = cls.company
+        cls.company = cls.company.with_company(cls.company.id)
+        cls.env = cls.company.env
+        cls.env.invalidate_all()
         # We use the admin on tour.
         cls.user_admin = cls.env.ref('base.user_admin')
-        cls.user_admin.company_ids = [(4, cls.company.id)]
-        cls.user_admin.company_id = cls.company
-
+        cls.user_admin.write({
+            'company_id': cls.company.id,
+            'company_ids': cls.company.ids,
+        })
         cls.inventory_user = cls._create_new_internal_user(name='Inventory User', login='inventory_user', groups='stock.group_stock_user')
         cls.owner = cls._create_partner(name='Consignment Owner')
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)], limit=1)
