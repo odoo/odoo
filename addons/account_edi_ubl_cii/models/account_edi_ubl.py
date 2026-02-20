@@ -1,5 +1,8 @@
 from odoo import _, models
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
+    FloatFmt,
+    GST_COUNTRY_CODES,
+)
 from odoo.tools import frozendict
 
 
@@ -81,37 +84,43 @@ class AccountEdiUBL(models.AbstractModel):
             or self._ubl_is_excise_tax(tax_data)
         ):
             return
-        elif self._ubl_is_reverse_charge_tax(tax_data):
-            # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
-            # In self-billed invoices, we report them from the seller's perspective, as 0% taxes.
-            tax = tax_data['tax']
-            return {
-                'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
-                **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
-                'percent': 0.0,
-                'scheme_id': 'VAT',
-                'is_withholding': False,
-                'currency': currency,
-            }
-        elif tax_data:
-            tax = tax_data['tax']
-            return {
-                'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
-                **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
-                'percent': tax.amount,
-                'scheme_id': 'VAT',
-                'is_withholding': tax.amount < 0.0,
-                'currency': currency,
-            }
         else:
-            return {
-                'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, self.env['account.tax']),
-                **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, self.env['account.tax']),
-                'percent': 0.0,
-                'scheme_id': 'VAT',
-                'is_withholding': False,
-                'currency': currency,
-            }
+            supplier_country_code = supplier.commercial_partner_id.country_id.code
+            if supplier_country_code in GST_COUNTRY_CODES:
+                scheme_id = 'GST'
+            else:
+                scheme_id = 'VAT'
+            if self._ubl_is_reverse_charge_tax(tax_data):
+                # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
+                # In self-billed invoices, we report them from the seller's perspective, as 0% taxes.
+                tax = tax_data['tax']
+                return {
+                    'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
+                    **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
+                    'percent': 0.0,
+                    'scheme_id': scheme_id,
+                    'is_withholding': False,
+                    'currency': currency,
+                }
+            elif tax_data:
+                tax = tax_data['tax']
+                return {
+                    'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
+                    **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
+                    'percent': tax.amount,
+                    'scheme_id': scheme_id,
+                    'is_withholding': tax.amount < 0.0,
+                    'currency': currency,
+                }
+            else:
+                return {
+                    'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, self.env['account.tax']),
+                    **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, self.env['account.tax']),
+                    'percent': 0.0,
+                    'scheme_id': scheme_id,
+                    'is_withholding': False,
+                    'currency': currency,
+                }
 
     def _ubl_default_tax_subtotal_tax_category_grouping_key(self, tax_grouping_key, vals):
         """ Give the values about how taxes are grouped together in TaxTotal -> TaxSubtotal -> TaxCategory
@@ -249,40 +258,18 @@ class AccountEdiUBL(models.AbstractModel):
     # EXPORT: Collecting data
     # -------------------------------------------------------------------------
 
-    def _ubl_add_base_line_ubl_values_item(self, vals):
-        """ Add 'base_line' -> '_ubl_values' -> 'item'.
+    def _ubl_add_values_company(self, vals, company):
+        vals['company'] = company
+        vals['supplier'] = company.partner_id
 
-        :param vals:        Some custom data.
-        """
-        AccountTax = self.env['account.tax']
-        base_lines = vals['base_lines']
-        company = vals['company']
-        company_currency = company.currency_id
-        currency = vals['currency_id']
+    def _ubl_add_values_currency(self, vals, currency):
+        vals['currency'] = currency
 
-        for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
-            base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
-                base_lines=base_lines,
-                grouping_function=lambda base_line, tax_data: self._ubl_default_base_line_item_classified_tax_category_grouping_key(
-                    base_line=base_line,
-                    tax_data=tax_data,
-                    vals=vals,
-                    currency=sub_currency,
-                ),
-            )
-            for base_line, aggregated_values in base_lines_aggregated_values:
-                item = base_line['_ubl_values'][f'item{suffix}'] = {
-                    'currency': sub_currency,
-                    'base_line': base_line,
-                    'classified_tax_categories': {},
-                }
-                for grouping_key, values in aggregated_values.items():
-                    if grouping_key:
-                        item['classified_tax_categories'][grouping_key] = {
-                            **grouping_key,
-                            'base_amount': values[f'base_amount{suffix}'],
-                            'tax_amount': values[f'tax_amount{suffix}'],
-                        }
+    def _ubl_add_values_customer(self, vals, customer):
+        vals['customer'] = customer
+
+    def _ubl_add_values_delivery(self, vals, delivery):
+        vals['delivery'] = delivery
 
     def _ubl_add_base_line_ubl_values_price(self, vals):
         """ Add 'price_amount' under 'base_line' -> '_ubl_values' -> 'price_amount[_currency]'.
@@ -787,6 +774,229 @@ class AccountEdiUBL(models.AbstractModel):
             '_text': FloatFmt(gross_total_excluded, min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
+
+    def _ubl_add_party_endpoint_id_node(self, vals):
+        vals['party_node']['cbc:EndpointID'] = {
+            '_text': None,
+            'schemeID': None,
+        }
+
+    def _ubl_add_party_identification_nodes(self, vals):
+        vals['party_node']['cac:PartyIdentification'] = []
+
+    def _ubl_add_party_name_node(self, vals):
+        partner = vals['party_vals']['partner']
+
+        # When the selected partner is a contact or an invoice address, there is nothing ensuring the partner's name is set.
+        # In that case, fallback on the commercial partner's name.
+        if partner.name:
+            name = partner.display_name
+        else:
+            name = partner.commercial_partner_id.display_name
+
+        vals['party_node']['cac:PartyName'] = {
+            'cbc:Name': {'_text': name},
+        }
+
+    def _ubl_get_partner_address_node(self, vals, partner):
+        return {
+            'cbc:StreetName': {'_text': partner.street},
+            'cbc:AdditionalStreetName': {'_text': partner.street2},
+            'cbc:CityName': {'_text': partner.city},
+            'cbc:PostalZone': {'_text': partner.zip},
+            'cbc:CountrySubentity': {'_text': partner.state_id.name},
+            'cbc:CountrySubentityCode': {'_text': partner.state_id.code},
+            'cac:Country': {
+                'cbc:IdentificationCode': {'_text': partner.country_id.code},
+                'cbc:Name': {'_text': partner.country_id.name},
+            },
+        }
+
+    def _ubl_add_party_postal_address_node(self, vals):
+        partner = vals['party_vals']['partner']
+        vals['party_node']['cac:PostalAddress'] = self._ubl_get_partner_address_node(vals, partner)
+
+    def _ubl_add_party_tax_scheme_nodes(self, vals):
+        vals['party_node']['cac:PartyTaxScheme'] = []
+
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        vals['party_node']['cac:PartyLegalEntity'] = []
+
+    def _ubl_add_party_contact_node(self, vals):
+        partner = vals['party_vals']['partner']
+        vals['party_node']['cac:Contact'] = {
+            'cbc:ID': {'_text': None},
+            'cbc:Name': {'_text': partner.name},
+            'cbc:Telephone': {'_text': partner.phone},
+            'cbc:ElectronicMail': {'_text': partner.email},
+        }
+
+    def _ubl_add_accounting_supplier_party_endpoint_id_node(self, vals):
+        self._ubl_add_party_endpoint_id_node(vals)
+
+    def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
+        self._ubl_add_party_identification_nodes(vals)
+
+    def _ubl_add_accounting_supplier_party_name_node(self, vals):
+        self._ubl_add_party_name_node(vals)
+
+    def _ubl_add_accounting_supplier_party_postal_address_node(self, vals):
+        self._ubl_add_party_postal_address_node(vals)
+
+    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
+        self._ubl_add_party_tax_scheme_nodes(vals)
+
+    def _ubl_add_accounting_supplier_party_legal_entity_nodes(self, vals):
+        self._ubl_add_party_legal_entity_nodes(vals)
+
+    def _ubl_add_accounting_supplier_party_contact_node(self, vals):
+        self._ubl_add_party_contact_node(vals)
+
+    def _ubl_add_accounting_supplier_party_node(self, vals):
+        node = vals['document_node']['cac:AccountingSupplierParty'] = {'cac:Party': {}}
+        party_node = node['cac:Party']
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['supplier']},
+            'party_node': party_node,
+        }
+        self._ubl_add_accounting_supplier_party_endpoint_id_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_identification_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_name_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_postal_address_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_contact_node(sub_vals)
+
+    def _ubl_add_accounting_customer_party_endpoint_id_node(self, vals):
+        self._ubl_add_party_endpoint_id_node(vals)
+
+    def _ubl_add_accounting_customer_party_identification_nodes(self, vals):
+        self._ubl_add_party_identification_nodes(vals)
+
+    def _ubl_add_accounting_customer_party_name_node(self, vals):
+        self._ubl_add_party_name_node(vals)
+
+    def _ubl_add_accounting_customer_party_postal_address_node(self, vals):
+        self._ubl_add_party_postal_address_node(vals)
+
+    def _ubl_add_accounting_customer_party_tax_scheme_nodes(self, vals):
+        self._ubl_add_party_tax_scheme_nodes(vals)
+
+    def _ubl_add_accounting_customer_party_legal_entity_nodes(self, vals):
+        self._ubl_add_party_legal_entity_nodes(vals)
+
+    def _ubl_add_accounting_customer_party_contact_node(self, vals):
+        self._ubl_add_party_contact_node(vals)
+
+    def _ubl_add_accounting_customer_party_node(self, vals):
+        node = vals['document_node']['cac:AccountingCustomerParty'] = {'cac:Party': {}}
+        party_node = node['cac:Party']
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['customer']},
+            'party_node': party_node,
+        }
+        self._ubl_add_accounting_customer_party_endpoint_id_node(sub_vals)
+        self._ubl_add_accounting_customer_party_identification_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_name_node(sub_vals)
+        self._ubl_add_accounting_customer_party_postal_address_node(sub_vals)
+        self._ubl_add_accounting_customer_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_contact_node(sub_vals)
+
+    def _ubl_add_seller_supplier_party_node(self, vals):
+        node = vals['document_node']['cac:SellerSupplierParty'] = {'cac:Party': {}}
+        party_node = node['cac:Party']
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['supplier']},
+            'party_node': party_node,
+        }
+        self._ubl_add_accounting_supplier_party_endpoint_id_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_identification_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_name_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_postal_address_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_contact_node(sub_vals)
+
+    def _ubl_add_buyer_customer_party_node(self, vals):
+        node = vals['document_node']['cac:BuyerCustomerParty'] = {'cac:Party': {}}
+        party_node = node['cac:Party']
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['customer']},
+            'party_node': party_node,
+        }
+        self._ubl_add_accounting_customer_party_endpoint_id_node(sub_vals)
+        self._ubl_add_accounting_customer_party_identification_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_name_node(sub_vals)
+        self._ubl_add_accounting_customer_party_postal_address_node(sub_vals)
+        self._ubl_add_accounting_customer_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_contact_node(sub_vals)
+
+    def _ubl_add_delivery_party_endpoint_id_node(self, vals):
+        self._ubl_add_party_endpoint_id_node(vals)
+
+    def _ubl_add_delivery_party_identification_nodes(self, vals):
+        self._ubl_add_party_identification_nodes(vals)
+
+    def _ubl_add_delivery_party_name_node(self, vals):
+        self._ubl_add_party_name_node(vals)
+
+    def _ubl_add_delivery_party_postal_address_node(self, vals):
+        self._ubl_add_party_postal_address_node(vals)
+
+    def _ubl_add_delivery_party_tax_scheme_nodes(self, vals):
+        self._ubl_add_party_tax_scheme_nodes(vals)
+
+    def _ubl_add_delivery_party_legal_entity_nodes(self, vals):
+        self._ubl_add_party_legal_entity_nodes(vals)
+
+    def _ubl_add_delivery_party_contact_node(self, vals):
+        self._ubl_add_party_contact_node(vals)
+
+    def _ubl_get_delivery_node_from_delivery_address(self, vals):
+        delivery_partner = vals['delivery']
+        node = {
+            'cbc:ActualDeliveryDate': {'_text': None},
+            'cac:DeliveryLocation': {
+                'cbc:ID': {
+                    'schemeID': None,
+                    '_text': None,
+                },
+                'cac:Address': self._ubl_get_partner_address_node(vals, delivery_partner),
+            },
+        }
+
+        if delivery_partner.global_location_number:
+            node['cac:DeliveryLocation']['cbc:ID']['schemeID'] = '0088'
+            node['cac:DeliveryLocation']['cbc:ID']['_text'] = delivery_partner.global_location_number
+
+        party_node = node['cac:DeliveryParty'] = {}
+
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['delivery']},
+            'party_node': party_node,
+        }
+        self._ubl_add_delivery_party_endpoint_id_node(sub_vals)
+        self._ubl_add_delivery_party_identification_nodes(sub_vals)
+        self._ubl_add_delivery_party_name_node(sub_vals)
+        self._ubl_add_delivery_party_postal_address_node(sub_vals)
+        self._ubl_add_delivery_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_delivery_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_delivery_party_contact_node(sub_vals)
+
+        return node
+
+    def _ubl_add_delivery_nodes(self, vals):
+        nodes = vals['document_node']['cac:Delivery'] = []
+
+        if vals.get('delivery'):
+            nodes.append(self._ubl_get_delivery_node_from_delivery_address(vals))
 
     def _ubl_get_allowance_charge_early_payment(self, vals, early_payment_values):
         currency = early_payment_values['currency']
