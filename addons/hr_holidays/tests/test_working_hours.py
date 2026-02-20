@@ -1,24 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
-from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
+
+from odoo.addons.hr_calendar.tests.common import TestHrContractCalendarCommon
 
 from odoo.tests import tagged
 
 
 @tagged('work_hours')
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestWorkingHours(TestHrCalendarCommon):
+class TestWorkingHours(TestHrContractCalendarCommon):
     """ Test global leaves for a whole company, conflict resolutions """
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # YTI TODO: Those tests seem to be never launched from now.
-        if 'hr.version' in cls.env:
-            cls.skipTest(cls,
-                "hr_contract module is installed. To test these features you need to install hr_holidays_contract"
-            )
 
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Unpaid Time Off',
@@ -27,6 +23,7 @@ class TestWorkingHours(TestHrCalendarCommon):
             'leave_validation_type': 'no_validation',
             'request_unit': 'day',
             'unit_of_measure': 'day',
+            'count_as': 'absence',
         })
 
     def test_multi_companies_2_employees_2_selected_companies_holidays(self):
