@@ -4348,6 +4348,25 @@ class AccountTax(models.Model):
             return ''
         return html2plaintext(self.description)
 
+    def _get_zero_tax(self):
+        """ Return the 0% tax for the current company, creating it if it does not exist yet.
+        """
+        zero_tax = self.search([
+            ('amount_type', '=', 'percent'),
+            ('amount', '=', 0),
+            ('type_tax_use', 'in', ['sale']),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        if not zero_tax:
+            zero_tax = self.create({
+                'name': '0% Tax',
+                'amount_type': 'percent',
+                'amount': 0,
+                'type_tax_use': 'sale',
+                'company_id': self.env.company.id,
+            })
+        return zero_tax
+
 
 class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"
