@@ -8,7 +8,7 @@ declare module "plugins" {
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { before_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, delete_handlers, delete_range_overrides, DeleteShared, functional_empty_node_predicates, is_empty_predicates, removable_descendants_providers, system_node_selectors, unremovable_node_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
-    import { after_insert_handlers, before_insert_processors, before_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
+    import { after_insert_handlers, before_insert_processors, before_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, are_inlines_allowed_at_root_predicates } from "@html_editor/core/dom_plugin";
     import { format_class_predicates, format_selection_handlers, FormatShared, has_format_predicates, remove_all_formats_handlers } from "@html_editor/core/format_plugin";
     import { attribute_change_handlers, attribute_change_processors, before_add_step_handlers, before_filter_mutation_record_handlers, content_updated_handlers, external_step_added_handlers, handleNewRecords, history_cleaned_handlers, history_reset_from_steps_handlers, history_reset_handlers, history_step_processors, HistoryShared, post_redo_handlers, post_undo_handlers, restore_savepoint_handlers, savable_mutation_record_predicates, serializable_descendants_processors, set_attribute_overrides, step_added_handlers, unreversible_step_predicates } from "@html_editor/core/history_plugin";
     import { beforeinput_handlers, input_handlers } from "@html_editor/core/input_plugin";
@@ -220,6 +220,7 @@ declare module "plugins" {
         unreversible_step_predicates: unreversible_step_predicates;
         unsplittable_node_predicates: unsplittable_node_predicates;
         valid_contenteditable_predicates: valid_contenteditable_predicates;
+        are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
 
         // Processors
         apply_background_color_processors: apply_background_color_processors;

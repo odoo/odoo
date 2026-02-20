@@ -1,4 +1,3 @@
-import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 
 import { Composer } from "@mail/core/common/composer";
@@ -30,7 +29,6 @@ patch(Composer.prototype, {
         }
         const container = document.createElement("DIV");
         container.append(...childNodes(fragment));
-        wrapInlinesInBlocks(container, { baseContainerNodeName: "DIV" });
         return getInnerHtml(container);
     },
 });
