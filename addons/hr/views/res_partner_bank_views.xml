@@ -14,7 +14,7 @@
                     <span invisible="not employee_salary_amount_is_percentage">%</span>
                     <field name="currency_id" invisible="employee_salary_amount_is_percentage" readonly="True"/>
                 </div>
-                <field name="employee_id" invisible="not employee_id" widget="many2many_avatar_employee"/>
+                <field name="employee_id" invisible="not employee_id" groups="hr.group_hr_user" widget="many2many_avatar_employee"/>
             </xpath>
             <xpath expr="//page" position="before">
                 <page string="Bank Information" invisible="not bank_id">
