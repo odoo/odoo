@@ -548,6 +548,14 @@ export class Message extends Component {
             { context: this }
         );
     }
+
+    get showSubject() {
+        return (
+            this.props.message.subject &&
+            !this.message.isSubjectSimilarToThreadName &&
+            !this.message.isSubjectDefault
+        );
+    }
 }
 
 discussComponentRegistry.add("Message", Message);

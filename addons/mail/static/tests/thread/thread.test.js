@@ -650,7 +650,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
     await click("button:text('Inbox')");
-    await contains("h4:text('Congratulations, your inbox is empty')");
+    await contains(".o-mail-EmptyInbox");
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchel Admin",
@@ -708,7 +708,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     await contains(".o-mail-Composer-html.odoo-editor-editable");
     await triggerEvents(".o-mail-Composer-html.odoo-editor-editable", ["blur", "focusout"]);
     await click("button:text('Inbox')");
-    await contains("h4:text('Congratulations, your inbox is empty')");
+    await contains(".o-mail-EmptyInbox");
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchel Admin",

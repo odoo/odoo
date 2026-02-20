@@ -40,7 +40,7 @@
                     <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">
                         on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
                     </span>
-                    <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
+                    <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Discard" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
                 </div>
                 <span t-if="props.composer.message and ui.isSmall" class="px-1" t-on-click="onClickCancelOrSaveEditText">
                     <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="EDIT_CLICK_TYPE.CANCEL">

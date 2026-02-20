@@ -6,8 +6,23 @@ registerThreadAction("mark-all-read", {
     condition: ({ owner, thread }) =>
         thread?.id === "inbox" && !owner.isDiscussSidebarChannelActions,
     disabledCondition: ({ thread }) => thread.isEmpty,
-    onSelected: ({ store }) =>
-        store.env.services.orm.silent.call("mail.message", "mark_all_as_read"),
+    onSelected: async ({ store }) => {
+        const orm = store.env.services.orm;
+        const readMessageIds = await orm.silent.call("mail.message", "mark_all_as_read");
+        const closeFn = store.env.services.notification.add(_t("Marked as read"), {
+            type: "success",
+            buttons: [
+                {
+                    name: _t("Undo"),
+                    icon: "fa-undo",
+                    onClick: () => {
+                        orm.silent.call("mail.message", "mark_as_unread", [readMessageIds]);
+                        closeFn();
+                    },
+                },
+            ],
+        });
+    },
     sequence: 1,
     name: _t("Mark all read"),
 });
