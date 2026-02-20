@@ -32,7 +32,7 @@ class StockMove(models.Model):
     value_manual = fields.Monetary(
         "Manual Value", currency_field='company_currency_id',
         compute="_compute_value_manual", inverse="_inverse_value_manual")
-    standard_price = fields.Float(related='product_id.standard_price', string='Standard Price')
+    standard_price = fields.Float(compute='_compute_standard_price', string='Standard Price')
 
     # To remove and only use value
     price_unit = fields.Float("Price Unit")
@@ -57,10 +57,16 @@ class StockMove(models.Model):
         if not products:
             products = self.env['product.product'].search([('is_storable', '=', True), ('qty_available', '>', 0)])
         move_ids = []
-        for qty_by_move in products._get_remaining_moves().values():
-            for move in qty_by_move:
-                move_ids.append(move.id)
+        for company in self.env.companies:
+            for qty_by_move in products.with_company(company)._get_remaining_moves().values():
+                for move in qty_by_move:
+                    move_ids.append(move.id)
         return [('id', 'in', move_ids)]
+
+    @api.depends('product_id.standard_price')
+    def _compute_standard_price(self):
+        for move in self:
+            move.standard_price = move.product_id.with_company(move.company_id).standard_price
 
     @api.depends('state', 'move_line_ids')
     def _compute_is_in(self):
@@ -113,11 +119,12 @@ class StockMove(models.Model):
 
     @api.depends('quantity', 'product_id.stock_move_ids.value')
     def _compute_remaining_qty(self):
-        products = self.product_id
-        remaining_by_product = products._get_remaining_moves()
+        for company, moves in self.grouped('company_id').items():
+            products = moves.product_id
+            remaining_by_product = products.with_company(company)._get_remaining_moves()
 
-        for move in self:
-            move.remaining_qty = remaining_by_product.get(move.product_id, {}).get(move, 0)
+            for move in moves:
+                move.remaining_qty = remaining_by_product.get(move.product_id, {}).get(move, 0)
 
     @api.depends('value', 'remaining_qty')
     def _compute_remaining_value(self):
@@ -129,7 +136,7 @@ class StockMove(models.Model):
             if move.product_id.cost_method == 'fifo':
                 move.remaining_value = ratio * move.value if ratio else 0
             else:
-                move.remaining_value = move.remaining_qty * move.with_company(move.company_id).standard_price
+                move.remaining_value = move.remaining_qty * move.standard_price
 
     def _inverse_picked(self):
         super()._inverse_picked()
