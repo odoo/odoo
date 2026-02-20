@@ -1,8 +1,7 @@
 from odoo.fields import Command
-from odoo.tests import tagged, common, Form
+from odoo.tests import common, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestConsumptionWarning(common.TransactionCase):
     @classmethod
     def setUpClass(cls):

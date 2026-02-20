@@ -1,8 +1,7 @@
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.fields import Command
 
 
-@tagged('post_install', '-at_install')
 class TestReportBom(HttpCase):
 
     def test_mrp_report_bom_variant_selection(self):

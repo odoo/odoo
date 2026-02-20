@@ -4,14 +4,13 @@ from datetime import timedelta
 from odoo import exceptions, fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import Form, HttpCase, freeze_time, tagged
+from odoo.tests import Form, HttpCase, freeze_time
 from odoo.tools import float_compare, float_repr, float_round, format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
 @freeze_time(fields.Date.today())
-@tagged('at_install', '-post_install')  # LEGACY at_install Access error in post install
 class TestBoM(TestMrpCommon):
 
     @classmethod
@@ -2881,7 +2880,6 @@ class TestBoM(TestMrpCommon):
         self.assertFalse(self.bom_1.show_copy_operations_button, "The copy operations button should be visible even if the current BoM is empty.")
 
 
-@tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
     @classmethod
     def setUpClass(cls):

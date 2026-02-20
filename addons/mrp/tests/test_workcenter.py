@@ -4,10 +4,9 @@ from freezegun import freeze_time
 
 from . import common
 from odoo import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
-@tagged('-at_install', 'post_install')
 class TestWorkcenterOverview(common.TestMrpCommon):
 
     @freeze_time('2020-03-13')  # Friday

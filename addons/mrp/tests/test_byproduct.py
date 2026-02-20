@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import common, tagged, Form
+from odoo.tests import common, Form
 from odoo.exceptions import ValidationError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install MissingError in post install
 class TestMrpByProduct(common.TransactionCase):
 
     @classmethod

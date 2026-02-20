@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
 from odoo import Command
-from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
 class TestWarehouseMrp(common.TestMrpCommon):
@@ -345,7 +343,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertNotIn(self.warehouse_1.pbm_mto_pull_id, self.route_mto.rule_ids)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestKitPicking(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):

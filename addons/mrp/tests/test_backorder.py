@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
 from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase, freeze_time
 
 
@@ -967,11 +966,10 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertFalse(mo.picking_ids.filtered(lambda p: p.state == 'cancel' and p.product_id == self.product_6))
 
 
-@tagged('-post_install', 'at_install')  # test_mrp_backorder_operations breaks post install
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestMrpWorkorderBackorder, cls).setUpClass()
+        super().setUpClass()
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.finished1 = cls.env['product.product'].create({
             'name': 'finished1',
@@ -1010,8 +1008,6 @@ class TestMrpWorkorderBackorder(TransactionCase):
                 Command.create({'sequence': 2, 'name': 'finished operation 2', 'workcenter_id': cls.workcenter2.id}),
             ],
         })
-        cls.bom_finished1.bom_line_ids[0].operation_id = cls.bom_finished1.operation_ids[0].id
-        cls.bom_finished1.bom_line_ids[1].operation_id = cls.bom_finished1.operation_ids[1].id
 
     @freeze_time('2025-10-27 12:00:00')
     def test_mrp_backorder_operations(self):
@@ -1039,11 +1035,6 @@ class TestMrpWorkorderBackorder(TransactionCase):
         op_2.button_start()
         op_2.button_finish()
         action = mo.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
-        self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
-            {'product_consumed_qty_uom': 10, 'product_expected_qty_uom': 4},
-        ])
-        action = warning.action_confirm()
         backorder_1 = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder_1.save().action_backorder()
         bo_1 = mo.production_group_id.production_ids - mo

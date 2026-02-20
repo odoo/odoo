@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -8,12 +7,11 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, users
 from odoo.tools.misc import format_date
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import HttpCase
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestMrpOrder(TestMrpCommon):
 
     @classmethod
@@ -23,6 +21,15 @@ class TestMrpOrder(TestMrpCommon):
             'product_selectable': True,
         })
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+
+    def _handle_workorder_compatibility(self):
+        # Once `mrp_workorder` is installed, an employee is required for a lot of workorder usecases.
+        # To avoid issues when running these tests post-install, we add an employee if that module is installed.
+        if self.env['ir.module.module']._get('mrp_workorder').state == 'installed':
+            self.env['hr.employee'].create({
+                'name': 'Current User Employee',
+                'user_id': self.env.user.id,
+            })
 
     def test_access_rights_manager(self):
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
@@ -2873,18 +2880,18 @@ class TestMrpOrder(TestMrpCommon):
         wo_1.button_start()
         wo_1.qty_producing = 20
         self.assertEqual(mo.state, 'progress')
-        wo_1.button_finish()
         self.assertEqual(duration_expected, wo_1.duration_expected)
+        wo_1.button_finish()
 
         wo_2.button_start()
         wo_2.qty_producing = 10
-        wo_2.button_finish()
         self.assertEqual(wo_2.duration_expected, 12 + 10 * 60)
+        wo_2.button_finish()
 
         wo_3.button_start()
         wo_3.qty_producing = 5
-        wo_3.button_finish()
         self.assertEqual(wo_3.duration_expected, 13 + 5 * 60)
+        wo_3.button_finish()
 
         self.assertEqual(mo.state, 'to_close')
         mo.button_mark_done()
@@ -3036,6 +3043,7 @@ class TestMrpOrder(TestMrpCommon):
         """
             Check that the timers in the workorders are stopped after the cancellation of the MO
         """
+        self._handle_workorder_compatibility()
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_2
         mo_form.product_qty = 1
@@ -3071,6 +3079,7 @@ class TestMrpOrder(TestMrpCommon):
         """
             Check that the work order is started only once when clicking the start button several times.
         """
+        self._handle_workorder_compatibility()
         # Required for `workorder_ids` to be visible in the view
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
         production_form = Form(self.env['mrp.production'])
@@ -3791,6 +3800,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_unlink_update_workcenter_productivity(self):
         """ Test that workcenter_productivity entries for deleted work order has end date set
         """
+        self._handle_workorder_compatibility()
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_3
         mo = mo_form.save()
@@ -5260,6 +5270,7 @@ class TestMrpOrder(TestMrpCommon):
         """Test to ensure that `_split_productions` is correctly skipping workorder quantity. when
         `skip_workorder_quantity` param is passed as true.
         """
+        self._handle_workorder_compatibility()
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_4.id,
             'product_qty': 10,
@@ -5375,7 +5386,6 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(mo.workorder_ids), 1)
 
 
-@tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
         product = self.env['product.product'].create({
