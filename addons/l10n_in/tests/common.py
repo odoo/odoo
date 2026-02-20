@@ -269,3 +269,18 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         move_debit_note_wiz.create_debit()
 
         return cls._set_vals_and_post(move=inv.debit_note_ids[0], ref=ref, line_vals=line_vals)
+
+    def tds_wizard_entry(self, move, lines):
+        journal_id = self.env['account.journal'].search([
+            ('company_id', 'parent_of', move.company_id.id),
+            ('type', '=', 'general'),
+        ], limit=1)
+        withhold_entrys = self.env['account.move']
+        for tax, amount in lines:
+            withhold_entrys += self.env['l10n_in.withhold.wizard'].with_context(active_model='account.move', active_ids=move.ids).create({
+                'journal_id': journal_id.id,
+                'tax_id': tax.id,
+                'base': amount,
+                'date': move.invoice_date,
+            }).action_create_and_post_withhold()
+        return withhold_entrys

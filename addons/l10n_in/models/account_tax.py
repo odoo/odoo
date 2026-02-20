@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
-from odoo.tools import frozendict
+from odoo.tools import frozendict, float_round
 
 
 class AccountTax(models.Model):
@@ -141,3 +141,9 @@ class AccountTax(models.Model):
                 for key, values in items_map.items()
             ],
         }
+
+    def _eval_tax_amount_price_excluded(self, batch, raw_base, evaluation_context):
+        res = super()._eval_tax_amount_price_excluded(batch, raw_base, evaluation_context)
+        if self.l10n_in_tax_type in ('tds_sale', 'tds_purchase'):
+            res = float_round(res, precision_digits=0, rounding_method='UP')
+        return res
