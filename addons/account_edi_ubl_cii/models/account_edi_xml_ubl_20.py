@@ -935,7 +935,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
 
+        invoice_line_vals = []
         invoice_line_tag = 'InvoiceLine' if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else 'CreditNoteLine'
+        all_trees = []
         for i, invl_el in enumerate(tree.findall('./{*}' + invoice_line_tag)):
             # Avoid creating a line if its LineExtensionAmount is missing/empty/zero.
             line_total_node = invl_el.find('./{*}LineExtensionAmount')
@@ -948,9 +950,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 # If the value is not a valid number, skip creating the line.
                 continue
 
-            invoice_line = invoice.invoice_line_ids.create({'move_id': invoice.id})
-            invl_logs = self._import_fill_invoice_line_form(invl_el, invoice_line, qty_factor)
-            logs += invl_logs
+            all_trees.append(invl_el)
+            invoice_line_vals.append({'move_id': invoice.id})
+
+        invoice_lines = invoice.invoice_line_ids.create(invoice_line_vals)
+        logs += self._import_fill_invoice_line_form_batched(all_trees, invoice_lines, qty_factor)
 
         # ==== Payable Rounding amount ====
 
@@ -958,6 +962,78 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         logs += self._import_rounding_amount(invoice, payable_rounding_node, qty_factor)
 
         return logs
+
+    def _import_fill_invoice_line_form_batched(self, trees, invoice_lines, qty_factor):
+        logs = []
+
+        all_inv_line_vals = []
+        all_tax_nodes = []
+        previously_retrieved_product = defaultdict()
+        for tree, invoice_line in zip(trees, invoice_lines):
+
+            default_code = self._find_value('./cac:Item/cac:SellersItemIdentification/cbc:ID', tree)
+            name = self._find_value('./cac:Item/cbc:Name', tree)
+            barcode = self._find_value("./cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID='0160']", tree)
+            company = invoice_line.company_id
+
+            # Product.
+            product_id = previously_retrieved_product.get((default_code, name, barcode, company))
+            if not (default_code, name, barcode, company) in previously_retrieved_product:
+                product_id = self.env['product.product']._retrieve_product(
+                    default_code=default_code,
+                    name=name,
+                    barcode=barcode,
+                    company=company
+                )
+                previously_retrieved_product[default_code, name, barcode, company] = product_id
+
+            invoice_line.product_id = product_id
+
+            # Description
+            description_node = tree.find('./{*}Item/{*}Description')
+            name_node = tree.find('./{*}Item/{*}Name')
+            if description_node is not None:
+                invoice_line.name = description_node.text
+            elif name_node is not None:
+                invoice_line.name = name_node.text  # Fallback on Name if Description is not found.
+
+            # Start and End date (enterprise fields)
+            if invoice_line._fields.get('deferred_start_date'):
+                start_date = tree.find('./{*}InvoicePeriod/{*}StartDate')
+                end_date = tree.find('./{*}InvoicePeriod/{*}EndDate')
+                if start_date is not None and end_date is not None:  # there is a constraint forcing none or the two to be set
+                    invoice_line.write({
+                        'deferred_start_date': start_date.text,
+                        'deferred_end_date': end_date.text,
+                    })
+            xpath_dict = {
+                'basis_qty': [
+                    './{*}Price/{*}BaseQuantity',
+                ],
+                'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
+                'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
+                'net_price_unit': './{*}Price/{*}PriceAmount',
+                'billed_qty':  './{*}InvoicedQuantity' if invoice_line.move_id.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
+                'allowance_charge': './/{*}AllowanceCharge',
+                'allowance_charge_indicator': './{*}ChargeIndicator',
+                'allowance_charge_amount': './{*}Amount',
+                'allowance_charge_reason': './{*}AllowanceChargeReason',
+                'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
+                'line_total_amount': './{*}LineExtensionAmount',
+            }
+            # Taxes
+            all_inv_line_vals.append(self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor))
+            # retrieve tax nodes
+            tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
+            if not tax_nodes:
+                for elem in tree.findall('.//{*}TaxTotal'):
+                    percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                    if not percentage_nodes:
+                        percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                    tax_nodes += percentage_nodes
+            all_tax_nodes.append(tax_nodes)
+
+        return self._import_fill_invoice_line_taxes_batched(all_tax_nodes, invoice_lines, all_inv_line_vals, logs)
 
     def _import_fill_invoice_line_form(self, tree, invoice_line, qty_factor):
         logs = []
