@@ -1,5 +1,6 @@
 import { CarouselSlider } from "@website/interactions/carousel/carousel_slider";
 import { registry } from "@web/core/registry";
+import { patchDynamicContentEntry } from "@web/public/utils";
 
 const CarouselSliderEdit = (I) =>
     class extends I {
@@ -13,6 +14,12 @@ const CarouselSliderEdit = (I) =>
         // Pause carousel in edit mode.
         carouselOptions = { ride: false, pause: true, keyboard: false };
         showClickableSlideLinks = false;
+
+        setup() {
+            // Do not alter the sliding options behavior in edit mode.
+            patchDynamicContentEntry(this.dynamicContent, "_root", "t-att-data-bs-ride", undefined);
+            super.setup();
+        }
 
         start() {
             super.start();
