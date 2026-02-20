@@ -285,22 +285,23 @@ class HrExpense(models.Model):
     # --------------------------------------------
 
     @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
-    def _check_required_fields_if_not_draft(self):
-        for expense in self.filtered(lambda expense: expense.state != 'draft'):
+    def _check_required_fields(self):
+        for expense in self:
             errors = []
 
-            # Check for required fields 'name' and 'product_id'
-            if not expense.name and not expense.product_id:
-                errors.append(self.env._("Enter a description and select a category to proceed."))
-            elif not expense.name:
-                errors.append(self.env._("Enter a description to proceed."))
-            elif not expense.product_id:
+            # Product must exist if not in draft/refused state
+            if expense.state not in ('draft', 'refused') and not expense.product_id:
                 errors.append(self.env._("Select a category to proceed."))
 
+            # Name required if not in draft state
+            if expense.state != 'draft' and not expense.name:
+                errors.append(self.env._("Enter a description to proceed."))
+
             # Check for non-zero amounts
-            total_amount_is_zero = expense.company_currency_id.is_zero(expense.total_amount)
-            total_amount_currency_is_zero = expense.currency_id.is_zero(expense.total_amount_currency)
-            if total_amount_is_zero or total_amount_currency_is_zero:
+            if expense.state != 'draft' and (
+                expense.company_currency_id.is_zero(expense.total_amount) or
+                expense.currency_id.is_zero(expense.total_amount_currency)
+            ):
                 errors.append(self.env._("Only draft expenses can have a total of 0."))
 
             if errors:
