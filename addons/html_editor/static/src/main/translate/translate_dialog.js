@@ -1,8 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState, onWillDestroy, status, markup } from "@odoo/owl";
+import { Component, useState, onWillDestroy, markup } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { GoogleTranslator, ChatGPTTranslator } from "./translator";
 
 const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
     let lines = content.split("\n");
@@ -51,32 +53,42 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
     return fragment;
 };
 
-export class ChatGPTDialog extends Component {
-    static template = "";
-    static components = { Dialog };
+export class TranslateDialog extends Component {
+    static template = "html_editor.TranslateDialog";
+    static components = { Dialog, Dropdown, DropdownItem };
     static props = {
         insert: { type: Function },
         close: { type: Function },
         sanitize: { type: Function },
         baseContainer: { type: String, optional: true },
+        originalText: String,
+        targetLang: { type: Object, shape: { languageCode: String, languageName: String } },
     };
     static defaultProps = {
         baseContainer: "DIV",
     };
 
     setup() {
+        const google_translate = new GoogleTranslator("translate_google", "Google Translate");
+        const chatgpt_translate = new ChatGPTTranslator("translate_gpt", "ChatGPT");
+        this.translators = [google_translate, chatgpt_translate];
+
         this.notificationService = useService("notification");
-        this.state = useState({ selectedMessageId: null });
-        onWillDestroy(() => this.pendingRpcPromise?.abort());
-    }
-
-    selectMessage(ev) {
-        this.state.selectedMessageId = +ev.currentTarget.getAttribute("data-message-id");
-    }
-
-    insertMessage(ev) {
-        this.selectMessage(ev);
-        this._confirm();
+        this.state = useState({
+            selectedMessageId: null,
+            selectedTranslator: google_translate,
+            messages: new Map(),
+            translationInProgress: true,
+        });
+        this.translate();
+        onWillDestroy(() => {
+            for (const translator of this.translators) {
+                if (translator.pendingRpcPromise) {
+                    translator.pendingRpcPromise.abort();
+                    delete translator.pendingRpcPromise;
+                }
+            }
+        });
     }
 
     formatContent(content) {
@@ -89,24 +101,47 @@ export class ChatGPTDialog extends Component {
         return markup(result);
     }
 
-    generate(prompt, callback) {
-        const protectedCallback = (...args) => {
-            if (status(this) !== "destroyed") {
-                delete this.pendingRpcPromise;
-                return callback(...args);
-            }
-        };
-        this.pendingRpcPromise = rpc(
-            "/html_editor/generate_text",
-            {
-                prompt,
-                conversation_history: this.state.conversationHistory,
-            },
-            { silent: true }
-        );
-        return this.pendingRpcPromise
-            .then((content) => protectedCallback(content))
-            .catch((error) => protectedCallback(_t(error.data?.message || error.message), true));
+    onSelectedTranslator(translator) {
+        if (this.state.selectedTranslator.id === translator.id) {
+            return;
+        }
+        this.state.selectedTranslator = translator;
+        this.state.translationInProgress = true;
+        this.translate();
+    }
+
+    async translate(originalText = this.props.originalText, targetLang = this.props.targetLang) {
+        const messageId = new Date().getTime();
+        let translateResult;
+        if (!originalText.trim()) {
+            translateResult = {
+                translatedText: "You didn't select any text.",
+                isError: true,
+            };
+        } else {
+            translateResult = await this.state.selectedTranslator.translate(
+                originalText,
+                targetLang
+            );
+        }
+
+        if (!this.formatContent(translateResult.translatedText).length) {
+            return {
+                translatedText: "You didn't select any text.",
+                isError: true,
+            };
+        }
+
+        this.state.translationInProgress = false;
+        this.state.messages.set(messageId, {
+            translator: this.state.selectedTranslator.name,
+            translatedText: translateResult.translatedText,
+            isError: translateResult.isError,
+        });
+        // only select the new translation if there was no error
+        if (!translateResult.isError) {
+            this.state.selectedMessageId = messageId;
+        }
     }
 
     _cancel() {
@@ -116,14 +151,17 @@ export class ChatGPTDialog extends Component {
     _confirm() {
         try {
             this.props.close();
-            const text = this.state.messages.find(
-                (message) => message.id === this.state.selectedMessageId
-            )?.text;
+            const translatedText = this.state.messages.get(
+                this.state.selectedMessageId
+            )?.translatedText;
             this.notificationService.add(_t("Your content was successfully generated."), {
                 title: _t("Content generated"),
                 type: "success",
             });
-            const fragment = POSTPROCESS_GENERATED_CONTENT(text || "", this.props.baseContainer);
+            const fragment = POSTPROCESS_GENERATED_CONTENT(
+                translatedText || "",
+                this.props.baseContainer
+            );
             this.props.sanitize(fragment, { IN_PLACE: true });
             this.props.insert(fragment);
         } catch (e) {

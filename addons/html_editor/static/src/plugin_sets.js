@@ -19,7 +19,6 @@ import { SplitPlugin } from "./core/split_plugin";
 import { UserCommandPlugin } from "./core/user_command_plugin";
 import { AlignPlugin } from "./main/align/align_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
-import { ChatGPTTranslatePlugin } from "./main/chatgpt/chatgpt_translate_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
 import { EmojiPlugin } from "./main/emoji_plugin";
 import { ColorPlugin } from "./main/font/color_plugin";
@@ -27,6 +26,7 @@ import { ColorUIPlugin } from "./main/font/color_ui_plugin";
 import { FeffPlugin } from "./main/feff_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { FontFamilyPlugin } from "./main/font/font_family_plugin";
+import { TranslatePlugin } from "./main/translate/translate_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
@@ -104,12 +104,12 @@ export const CORE_PLUGINS = [
 export const MAIN_PLUGINS = [
     ...CORE_PLUGINS,
     BannerPlugin,
-    ChatGPTTranslatePlugin,
     ColorPlugin,
     ColorUIPlugin,
     SeparatorPlugin,
     ColumnPlugin,
     EmojiPlugin,
+    TranslatePlugin,
     HintPlugin,
     AlignPlugin,
     ListPlugin,

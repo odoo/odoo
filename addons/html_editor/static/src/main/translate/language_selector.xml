@@ -2,7 +2,7 @@
     <t t-name="html_editor.LanguageSelector">
         <t t-if="state.languages.length === 1">
             <t t-call="html_editor.translateButton">
-                <t t-set="onClick" t-value="() => this.onSelected(state.languages[0][1])"/>
+                <t t-set="onClick" t-value="() => this.onSelected({languageCode: state.languages[0][0], languageName: state.languages[0][1]})"/>
             </t>
         </t>
         <Dropdown t-else="" menuRef="menuRef">
@@ -12,7 +12,7 @@
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="state.languages" t-as="language" t-key="language[0]">
-                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
+                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected({languageCode: language[0], languageName: language[1]})">
                             <div class="lang" t-esc="language[1]"/>
                         </DropdownItem>
                     </t>
