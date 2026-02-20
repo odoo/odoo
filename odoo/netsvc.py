@@ -200,6 +200,7 @@ def init_logger():
         'astroid',  # deprecated imp module (fixed in 2.5.1)
         'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
         'firebase_admin', # deprecated method_whitelist
+        'pylibdmtx',  # usage of deprecated distutils package
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
