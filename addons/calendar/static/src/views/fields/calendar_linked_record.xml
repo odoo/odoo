@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="calendar.CalendarLinkedRecord">
+        <div class="d-flex align-items-center gap-2">
+            <i class="oi oi-odoo text-primary"/>
+            <t t-if="resId and resModel">
+                <a href="#" t-on-click.stop="openRecord" class="fw-bold text-truncate">
+                    <t t-esc="displayName"/>
+                </a>
+                <button class="btn btn-link text-danger p-0" t-on-click="clearRecord">
+                    <i class="fa fa-close"/>
+                </button>
+            </t>
+            <t t-else="">
+                <ModelSelector
+                    value="modelName"
+                    models="availableModels"
+                    onModelSelected.bind="onModelSelected"
+                    placeholder.translate="Select a model..."
+                />
+            </t>
+        </div>
+    </t>
+</templates>
