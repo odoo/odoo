@@ -2643,6 +2643,7 @@ class TestStockFlow(TestStockCommon):
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')
 
+<<<<<<< 66ac4c72f0c89bfefd4027de193fad7480b15ebe
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
@@ -2684,6 +2685,59 @@ class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
         self.start_tour('/odoo', 'test_basic_stock_flow_with_minimal_access_rights', login='pauline')
 
 
+||||||| 4b3ccdb5f067972a3a8875f4fe9b8d8b01387511
+=======
+    def test_multiple_moves_with_different_destinations_putaway_strategy(self):
+        '''
+        Ensure that, when assigning a batch of moves with different destinations,
+        putaway strategy correctly defaults to child locations.
+        '''
+        view_a, view_b = self.env['stock.location'].create([{
+            'name': 'View A',
+            'usage': 'view',
+            'location_id': self.stock_location.id,
+        }, {
+            'name': 'View B',
+            'usage': 'view',
+            'location_id': self.stock_location.id,
+        }])
+        child_a, child_b = self.env['stock.location'].create([{
+            'name': 'Child A',
+            'usage': 'internal',
+            'location_id': view_a.id,
+        }, {
+            'name': 'Child B',
+            'usage': 'internal',
+            'location_id': view_b.id,
+        }])
+        picking_1, picking_2 = self.env['stock.picking'].create([{
+            'location_id': self.supplier_location.id,
+            'location_dest_id': view_a.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': view_a.id,
+                'product_id': self.productA.id,
+                'product_uom_qty': 1.0,
+            })],
+        }, {
+            'location_id': self.supplier_location.id,
+            'location_dest_id': view_b.id,
+            'picking_type_id': self.picking_type_in.id,
+            'state': 'draft',
+            'move_ids': [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': view_b.id,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1.0,
+            })],
+        }])
+        (picking_1 | picking_2).action_confirm()
+        self.assertEqual(picking_1.move_ids.move_line_ids.location_dest_id, child_a)
+        self.assertEqual(picking_2.move_ids.move_line_ids.location_dest_id, child_b)
+
+
+>>>>>>> c8f74329c78031f82ba77e1335f21364f2576a5b
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 
