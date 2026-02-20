@@ -401,7 +401,7 @@
                                                 <i class="oi oi-search" role="img"/>
                                             </a>
                                         </t>
-                                        <div t-attf-class="{{'d-lg-none' if not hasPricelistDropdown and not is_view_active('website_sale.sort') else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
+                                        <div t-attf-class="{{'d-lg-none' if not hasPricelistDropdown and not is_view_active('website_sale.sort') and not wsale_has_filters_btn else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
                                             <t
                                                 t-if="hasPricelistDropdown"
                                                 t-call="website_sale.pricelist_list"
