@@ -9,9 +9,23 @@ import { markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    formatDate,
+    formatDateTime,
+} from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 import { htmlEscape, setElementContent } from "@web/core/utils/html";
+import { formatFloat } from "@web/core/utils/numbers";
 import { escapeRegExp, unaccent } from "@web/core/utils/strings";
 import { setAttributes } from "@web/core/utils/xml";
+import {
+    formatChar,
+    formatInteger,
+    formatMonetary,
+    formatText,
+} from "@web/views/fields/formatters";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
@@ -307,3 +321,56 @@ export function parseEmail(text) {
 }
 
 export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
+
+/**
+ * @returns {string}
+ */
+export function formatTracking(trackingType, trackingValue) {
+    switch (trackingType) {
+        case "boolean":
+            return trackingValue.value ? _t("Yes") : _t("No");
+        /**
+         * many2one formatter exists but is expecting id/display_name or data
+         * object but only the target record name is known in this context.
+         *
+         * Selection formatter exists but requires knowing all
+         * possibilities and they are not given in this context.
+         */
+        case "char":
+        case "many2one":
+        case "selection":
+            return formatChar(trackingValue.value);
+        case "date": {
+            const value = trackingValue.value
+                ? deserializeDate(trackingValue.value)
+                : trackingValue.value;
+            return formatDate(value);
+        }
+        case "datetime": {
+            const value = trackingValue.value
+                ? deserializeDateTime(trackingValue.value)
+                : trackingValue.value;
+            return formatDateTime(value);
+        }
+        case "float":
+            return formatFloat(trackingValue.value, { digits: trackingValue.floatPrecision });
+        case "integer":
+            return formatInteger(trackingValue.value);
+        case "text":
+            return formatText(trackingValue.value);
+        case "monetary":
+            return formatMonetary(trackingValue.value, {
+                currencyId: trackingValue.currencyId,
+            });
+        default:
+            return trackingValue.value;
+    }
+}
+
+/**
+ * @returns {string}
+ */
+export function formatTrackingOrNone(trackingType, trackingValue) {
+    const formattedValue = formatTracking(trackingType, trackingValue);
+    return formattedValue || _t("None");
+}

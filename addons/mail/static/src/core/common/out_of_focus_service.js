@@ -1,4 +1,4 @@
-import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { formatTrackingOrNone, htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -38,25 +38,19 @@ export class OutOfFocusService {
         const author = message.author;
         let notificationTitle;
         let icon = "/mail/static/src/img/odoobot_transparent.png";
-        if (!author) {
-            notificationTitle = _t("New message");
-        } else {
-            icon = author.avatarUrl;
-            if (message.thread?.channel_type === "channel") {
-                notificationTitle = _t("%(author name)s from %(channel name)s", {
-                    "author name": author.name,
-                    "channel name": message.thread.displayName,
-                });
+        let notificationContent =
+            htmlToTextContentInline(message.body) + this.generateTrackingMessage(message);
+        if (author) {
+            notificationTitle = message.thread?.displayName || author.name || _t("New message");
+            if (message.thread?.channel_type === "chat") {
+                icon = author.avatarUrl;
             } else {
-                notificationTitle = author.name;
+                icon = message.thread?.avatarUrl || author.avatarUrl || icon;
+                notificationContent = `${author.name}: ${notificationContent}`;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
         this.sendNotification({
-            message: notificationContent,
+            message: notificationContent.substring(0, PREVIEW_MSG_MAX_SIZE),
             sound: message.thread?.model === "discuss.channel",
             title: notificationTitle,
             type: "info",
@@ -167,6 +161,30 @@ export class OutOfFocusService {
 
     get canSendNativeNotification() {
         return Boolean(browser.Notification && browser.Notification.permission === "granted");
+    }
+
+    /**
+     * @returns {string}
+     */
+    generateTrackingMessage(message) {
+        const returnLine = "\n";
+        if (!message.trackingValues.length) {
+            return "";
+        }
+        let trackingMessage = "";
+        if (message.subtype_description) {
+            trackingMessage = message.subtype_description + returnLine;
+        }
+        for (const trackingValue of message.trackingValues) {
+            const oldValue = formatTrackingOrNone(trackingValue.fieldType, trackingValue.oldValue);
+            const newValue = formatTrackingOrNone(trackingValue.fieldType, trackingValue.newValue);
+            trackingMessage += `${trackingValue.changedField}: ${oldValue}`;
+            if (oldValue !== newValue) {
+                trackingMessage += ` → ${newValue}`;
+            }
+            trackingMessage += returnLine;
+        }
+        return trackingMessage;
     }
 }
 
