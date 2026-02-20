@@ -46,7 +46,7 @@ declare module "plugins" {
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_processors, TableShared } from "@html_editor/main/table/table_plugin";
     import { shift_tab_overrides, tab_overrides, TabulationShared } from "@html_editor/main/tabulation_plugin";
-    import { can_display_toolbar_predicates, collapsed_selection_toolbar_predicate, toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
+    import { can_display_toolbar_predicates, toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
     import { CollaborationShared, on_external_history_step_added_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
@@ -195,7 +195,6 @@ declare module "plugins" {
         // Predicates
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
         can_display_toolbar_predicates: can_display_toolbar_predicates;
-        collapsed_selection_toolbar_predicate: collapsed_selection_toolbar_predicate;
         is_format_class_predicates: is_format_class_predicates;
         is_node_fully_selected_predicates: is_node_fully_selected_predicates;
         is_functional_empty_node_predicates: is_functional_empty_node_predicates;
