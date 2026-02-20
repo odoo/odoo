@@ -23,17 +23,41 @@ EU_TAG_MAP = {
         'refund_tax_tag': None,
     },
     # Belgium
-    'be_comp': {
+    'be_comp_abbr_con': {
         'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
         'invoice_tax_tag': None,
         'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
         'refund_tax_tag': None,
     },
-    'be_asso': {
+    'be_comp_abbr_cap': {
+            'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
+            'invoice_tax_tag': None,
+            'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
+            'refund_tax_tag': None,
+    },
+    'be_comp_full_con': {
+            'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
+            'invoice_tax_tag': None,
+            'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
+            'refund_tax_tag': None,
+    },
+    'be_comp_full_cap': {
+                'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
+                'invoice_tax_tag': None,
+                'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
+                'refund_tax_tag': None,
+    },
+    'be_asso_abbr': {
         'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
         'invoice_tax_tag': None,
         'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
         'refund_tax_tag': None,
+    },
+    'be_asso_full': {
+            'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
+            'invoice_tax_tag': None,
+            'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
+            'refund_tax_tag': None,
     },
     # Bulgaria
     'bg': {

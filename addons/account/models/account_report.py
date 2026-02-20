@@ -337,13 +337,19 @@ class AccountReport(models.Model):
             name += ' ' + _('(copy)')
         return name
 
-    @api.depends('name', 'country_id')
+    def get_chart_template_name(self):
+        self.ensure_one()
+        return self.country_id.code if self.country_id else None
+
+    @api.depends('name', 'country_id', 'availability_condition', 'chart_template')
     def _compute_display_name(self):
         for report in self:
-            if report.name:
-                report.display_name = report.name + (f' ({report.country_id.code})' if report.country_id else '')
+            if report.name and report.availability_condition == 'country' and (country_code := report.country_id.code):
+                report.display_name = f'{report.name} ({country_code})'
+            elif report.name and report.availability_condition == 'coa' and (chart_template_name := report.get_chart_template_name()):
+                report.display_name = f'{report.name} ({chart_template_name})'
             else:
-                report.display_name = False
+                report.display_name = report.name
 
 
 class AccountReportLine(models.Model):
