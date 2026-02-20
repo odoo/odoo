@@ -92,3 +92,149 @@ class TestOwnChecks(L10nLatamCheckTest):
         })
         payment.action_post()
         self.assertEqual(payment.amount, 120)
+
+    def test_single_check_invoice_status(self):
+        """ Verify that a Bill paid with a Single Own Check remains 'in_payment' until the bank statement clears it. """
+        invoice = self.env["account.move"].create({
+            "move_type": "in_invoice",
+            "partner_id": self.partner_a.id,
+            "company_id": self.bank_journal.company_id.id,
+            "invoice_date": fields.Date.today(),
+            "l10n_latam_document_number": "00001-00000002",
+            "l10n_latam_document_type_id": 1,
+            "invoice_line_ids": [
+                Command.create({
+                    "name": "Single Product Test",
+                    "price_unit": 1000.0,
+                    "quantity": 1,
+                })
+            ],
+        })
+        invoice.action_post()
+
+        own_checks_method = self.bank_journal._get_available_payment_method_lines("outbound").filtered(lambda x: x.code == "own_checks")[:1]
+
+        ctx_wizard = {
+            "active_model": "account.move",
+            "active_ids": invoice.ids,
+        }
+
+        with Form(self.env["account.payment.register"].with_context(ctx_wizard)) as wizard_form:
+            wizard_form.journal_id = self.bank_journal
+            wizard_form.payment_method_line_id = own_checks_method
+
+            with wizard_form.l10n_latam_new_check_ids.new() as check:
+                check.name = "CHK-SINGLE-001"
+                check.amount = 1000.0
+                check.payment_date = fields.Date.today()
+
+        wizard = wizard_form.save()
+        action = wizard.action_create_payments()
+        payment = self.env["account.payment"].browse(action["res_id"])
+
+        self.assertEqual(payment.l10n_latam_new_check_ids.issue_state, "handed")
+        self.assertEqual(invoice.payment_state, "in_payment")
+
+        st_line = self.env["account.bank.statement.line"].create({
+            "payment_ref": f"Clear {payment.l10n_latam_new_check_ids.name}",
+            "journal_id": self.bank_journal.id,
+            "amount": -1000.0,
+            "date": fields.Date.today(),
+            "partner_id": self.partner_a.id,
+        })
+
+        check_obj = payment.l10n_latam_new_check_ids
+        _st_liq, st_suspense, _st_other = st_line.with_context(
+            skip_account_move_synchronization=True
+        )._seek_for_lines()
+        st_suspense.account_id = check_obj.outstanding_line_id.account_id
+        (st_suspense + check_obj.outstanding_line_id).reconcile()
+
+        invoice.invalidate_recordset(["payment_state"])
+        self.assertEqual(invoice.payment_state, "paid")
+
+    def test_multi_check_invoice_status(self):
+        """Verify that a Bill paid with multiple Own Checks remains 'in_payment' until cleared by the bank,
+        validating that the bill correctly tracks the unreconciled status of individual check lines."""
+        invoice = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": self.partner_a.id,
+                "company_id": self.bank_journal.company_id.id,
+                "invoice_date": fields.Date.today(),
+                "l10n_latam_document_number": "00001-00000001",
+                "l10n_latam_document_type_id": 1,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "name": "Test Product",
+                            "price_unit": 500.0,
+                            "quantity": 1,
+                        }
+                    )
+                ],
+            }
+        )
+        invoice.action_post()
+
+        own_checks_method = self.bank_journal._get_available_payment_method_lines("outbound").filtered(lambda x: x.code == "own_checks")[:1]
+
+        ctx_wizard = {
+            "active_model": "account.move",
+            "active_ids": invoice.ids,
+        }
+
+        with Form(self.env["account.payment.register"].with_context(ctx_wizard)) as wizard_form:
+            wizard_form.journal_id = self.bank_journal
+            wizard_form.payment_method_line_id = own_checks_method
+
+            with wizard_form.l10n_latam_new_check_ids.new() as check:
+                check.name = "Check001"
+                check.amount = 250.0
+                check.payment_date = fields.Date.today()
+
+            with wizard_form.l10n_latam_new_check_ids.new() as check:
+                check.name = "Check002"
+                check.amount = 250.0
+                check.payment_date = fields.Date.today()
+
+        wizard = wizard_form.save()
+        action = wizard.action_create_payments()
+
+        payment = self.env["account.payment"].browse(action["res_id"])
+
+        self.assertEqual(invoice.payment_state, "in_payment")
+
+        check_1 = payment.l10n_latam_new_check_ids[0]
+        st_line_1 = self.env["account.bank.statement.line"].create(
+            {
+                "payment_ref": f"Clear {check_1.name}",
+                "journal_id": self.bank_journal.id,
+                "amount": -check_1.amount,
+                "date": check_1.payment_date,
+                "partner_id": self.partner_a.id,
+            }
+        )
+        _st_liq_1, st_suspense_1, _st_other_1 = st_line_1.with_context(skip_account_move_synchronization=True)._seek_for_lines()
+        st_suspense_1.account_id = check_1.outstanding_line_id.account_id
+        (st_suspense_1 + check_1.outstanding_line_id).reconcile()
+
+        invoice.invalidate_recordset(["payment_state"])
+        self.assertEqual(invoice.payment_state, "in_payment")
+
+        check_2 = payment.l10n_latam_new_check_ids[1]
+        st_line_2 = self.env["account.bank.statement.line"].create(
+            {
+                "payment_ref": f"Clear {check_2.name}",
+                "journal_id": self.bank_journal.id,
+                "amount": -check_2.amount,
+                "date": check_2.payment_date,
+                "partner_id": self.partner_a.id,
+            }
+        )
+        _st_liq_2, st_suspense_2, _st_other_2 = st_line_2.with_context(skip_account_move_synchronization=True)._seek_for_lines()
+        st_suspense_2.account_id = check_2.outstanding_line_id.account_id
+        (st_suspense_2 + check_2.outstanding_line_id).reconcile()
+
+        invoice.invalidate_recordset(["payment_state"])
+        self.assertEqual(invoice.payment_state, "paid")

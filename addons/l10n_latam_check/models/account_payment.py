@@ -131,8 +131,9 @@ class AccountPayment(models.Model):
 
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
+            pay_with_signal = payment.with_context(skip_check_search=True)
             if len(payment.l10n_latam_new_check_ids) == 1:
-                liquidity_line = payment._seek_for_lines()[0]
+                liquidity_line = pay_with_signal._seek_for_lines()[0]
                 payment.l10n_latam_new_check_ids.outstanding_line_id = liquidity_line.id
                 continue
 
@@ -141,7 +142,7 @@ class AccountPayment(models.Model):
                 'move_type': 'entry',
                 'line_ids': [],
             }
-            payment_liquidity_line = payment._seek_for_lines()[0]
+            payment_liquidity_line = pay_with_signal._seek_for_lines()[0]
 
             # One line per check
             checks_total = sum(payment.l10n_latam_new_check_ids.mapped('amount'))
@@ -199,6 +200,20 @@ class AccountPayment(models.Model):
             check.outstanding_line_id.move_id.button_draft()
             check.outstanding_line_id.move_id.unlink()
 
+    def _seek_for_lines(self):
+        """
+        Overridden to return the check lines when using own checks so the payment status
+        depends on the check status and not on the payment line (which is reconciled against the split move)
+        """
+        res = super()._seek_for_lines()
+        if self.env.context.get('skip_check_search'):
+            return res
+
+        if self.payment_method_code == "own_checks" and self.payment_type == "outbound" and self.l10n_latam_new_check_ids and len(self.l10n_latam_new_check_ids) > 1:
+            res[0] = self.l10n_latam_new_check_ids.outstanding_line_id
+
+        return res
+
     @api.depends(
         'payment_method_line_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
         'l10n_latam_move_check_ids.issuer_vat', 'l10n_latam_move_check_ids.bank_id', 'l10n_latam_move_check_ids.payment_id.date',
@@ -238,6 +253,10 @@ class AccountPayment(models.Model):
     def _get_trigger_fields_to_synchronize(self):
         res = super()._get_trigger_fields_to_synchronize()
         return res + ('l10n_latam_new_check_ids',)
+
+    @api.depends("l10n_latam_new_check_ids.outstanding_line_id.amount_residual")
+    def _compute_reconciliation_status(self):
+        super()._compute_reconciliation_status()
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
         """ Add check name and operation on liquidity line """
