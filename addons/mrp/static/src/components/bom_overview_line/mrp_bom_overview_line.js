@@ -79,7 +79,7 @@ export class BomOverviewLine extends Component {
             name: _t("Attachments"),
             type: "ir.actions.act_window",
             res_model: "product.document",
-            domain: ['&', ["attached_on_mrp", "=", "bom"], '|',
+            domain: ['|',
                 '&',["res_model", "=", "product.product"],["res_id", "in", [this.data.product_id]],
                 '&',["res_model", "=", "product.template"],["res_id", "in", [this.data.product_template_id]]],
             views: [[false, "kanban"], [false, "list"], [false, "form"]],

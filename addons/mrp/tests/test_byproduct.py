@@ -512,49 +512,6 @@ class TestMrpByProduct(common.TransactionCase):
         byproduct_move = picking.move_ids.filtered(lambda m: m.product_id == self.bom_byproduct.byproduct_ids.product_id)
         self.assertEqual(byproduct_move.product_qty, 1.0)
 
-    def test_byproducts_bom_document(self):
-        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
-        doc_product_bom = self.env['product.document'].create({
-            'name': 'doc_product_bom',
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_a.id,
-            'res_model': 'product.product',
-        })
-
-        # ensures that the archived docs are not taken into account
-        self.env['product.document'].create({
-            'name': 'doc_product_bom_archived',
-            'active': False,
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_a.id,
-            'res_model': 'product.product',
-        })
-
-        doc_template_bom = self.env['product.document'].create({
-            'name': 'doc_template_bom',
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_a.product_tmpl_id.id,
-            'res_model': 'product.template',
-        })
-
-        attachments = doc_template_bom.ir_attachment_id + doc_product_bom.ir_attachment_id
-
-        bom = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.product_b.product_tmpl_id.id,
-            'uom_id': self.product_b.product_tmpl_id.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'byproduct_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'product_qty': 1
-                }),
-            ]
-        })
-
-        # the two docs linked to the byproduct should be in the chatter
-        self.assertEqual(bom._get_extra_attachments(), attachments)
-
     def test_3_steps_byproduct(self):
         """ Test that non-bom byproducts are correctly pushed from
         post-production to the stock location in 3-steps manufacture. """
