@@ -387,7 +387,7 @@ class AccountMove(models.Model):
                 'action_text': _('View invoice(s)'),
             },
             'invoice_chain_not_confirmed': {
-                'records': self.env['account.move'].union(*[
+                'records': self.env['account.move'].union(
                     move._l10n_hu_get_chain_base()._l10n_hu_get_chain_invoices().filtered(
                         lambda m: (
                             m.id < move.id
@@ -396,7 +396,7 @@ class AccountMove(models.Model):
                         )
                     )
                     for move in self
-                ]),
+                ),
                 'message': _('The following invoices appear to be earlier in the chain, but have not yet been sent. Please send them first.'),
                 'action_text': _('View invoice(s)'),
             },
@@ -492,7 +492,7 @@ class AccountMove(models.Model):
         # Batch by company, with max 100 invoices per batch.
         for __, batch_company in groupby(invoices_sorted, lambda m: m.company_id):
             for batch in split_every(100, batch_company):
-                self.env['account.move'].union(*batch)._l10n_hu_edi_upload_single_batch(connection)
+                self.env['account.move'].union(batch)._l10n_hu_edi_upload_single_batch(connection)
 
     def _l10n_hu_edi_get_operation_type(self):
         base_invoice = self._l10n_hu_get_chain_base()
@@ -582,7 +582,7 @@ class AccountMove(models.Model):
 
         # Querying status should be grouped by company and transaction code
         for __, invoices_grouped in groupby(invoices, lambda m: (m.company_id, m.l10n_hu_edi_transaction_code)):
-            self.env['account.move'].union(*invoices_grouped)._l10n_hu_edi_query_status_single_batch(connection)
+            self.env['account.move'].union(invoices_grouped)._l10n_hu_edi_query_status_single_batch(connection)
 
     def _l10n_hu_edi_query_status_single_batch(self, connection):
         """ Check the NAV status for invoices that share the same transaction code (uploaded in a single batch). """
@@ -738,7 +738,7 @@ class AccountMove(models.Model):
         # Batch by company, with max 100 annulment requests per batch.
         for __, batch_company in groupby(self, lambda m: m.company_id):
             for batch in split_every(100, batch_company):
-                self.env['account.move'].union(*batch)._l10n_hu_edi_request_cancel_single_batch(connection, code, reason)
+                self.env['account.move'].union(batch)._l10n_hu_edi_request_cancel_single_batch(connection, code, reason)
 
     def _l10n_hu_edi_request_cancel_single_batch(self, connection, code, reason):
         for i, invoice in enumerate(self, start=1):

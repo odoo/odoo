@@ -160,14 +160,14 @@ class TestSort(TransactionCase):
         self.assertGreater(NewId(5), NewId(4))
 
     def test_sorted_new_id(self):
-        new_countries = self.env['test_orm.country'].concat(*[
+        new_countries = self.env['test_orm.country'].concat(
             self.env['test_orm.country'].new(vals)
             for vals in [
                 {'name': 'B'},
                 {'name': 'A'},
                 {'name': 'C'},
             ]
-        ])
+        )
 
         order = 'id'  # new id after existing ones
         self.assertEqual(

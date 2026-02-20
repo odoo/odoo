@@ -1899,7 +1899,7 @@ class MrpProduction(models.Model):
         moves_to_do = self.move_raw_ids.filtered(lambda x: x.state == 'done') - self.env['stock.move'].browse(moves_not_to_do)
         # Create a dict to avoid calling filtered inside for loops.
         moves_to_do_by_order = defaultdict(lambda: self.env['stock.move'], [
-            (key, self.env['stock.move'].concat(*values))
+            (key, self.env['stock.move'].concat(values))
             for key, values in tools_groupby(moves_to_do, key=lambda m: m.raw_material_production_id.id)
         ])
         for order in self:
@@ -2469,7 +2469,7 @@ class MrpProduction(models.Model):
             visited_objects = [sm for sm in visited_objects if sm._name == 'stock.move']
             impacted_object = []
             if visited_objects:
-                visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
+                visited_objects = self.env[visited_objects[0]._name].concat(visited_objects)
                 visited_objects |= visited_objects.mapped('move_orig_ids')
                 impacted_object = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
             values = {

@@ -49,7 +49,7 @@ class IrModelFields(models.Model):
                 if field.model_id.model not in self.env:
                     # Model is already deleted
                     continue
-                self.env['mail.tracking.value'].concat(*trackings).write({
+                self.env['mail.tracking.value'].concat(trackings).write({
                     'field_info': {
                         'desc': field.field_description,
                         'name': field.name,

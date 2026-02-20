@@ -1040,7 +1040,7 @@ class AccountAccount(models.Model):
 
             records_list.append(new_accounts)
 
-        records = self.env['account.account'].union(*records_list)
+        records = self.env['account.account'].union(records_list)
         records._ensure_code_is_unique()
         return records
 
@@ -1281,7 +1281,7 @@ class AccountAccount(models.Model):
             })
             for company in companies_to_update
         }
-        new_accounts = self.env['account.account'].union(*new_account_by_company.values())
+        new_accounts = self.env['account.account'].union(new_account_by_company.values())
 
         # Step 3: Update foreign keys in DB.
 

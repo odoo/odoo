@@ -1241,7 +1241,7 @@ class IrQweb(models.AbstractModel):
 
         xmlids = list(missing_refs)
         missing_refs_values = list(missing_refs.values())
-        views = self.env['ir.ui.view'].sudo().union(*[data['view'] for data in missing_refs_values])
+        views = self.env['ir.ui.view'].sudo().union(data['view'] for data in missing_refs_values)
 
         trees = views._get_view_etrees()
 

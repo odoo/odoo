@@ -73,8 +73,7 @@ class ResourceMixin(models.AbstractModel):
             resource_default['company_id'] = default['company_id']
         if 'resource_calendar_id' in default:
             resource_default['calendar_id'] = default['resource_calendar_id']
-        resources = [record.resource_id for record in self]
-        resources_to_copy = self.env['resource.resource'].concat(*resources)
+        resources_to_copy = self.resource_id
         new_resources = resources_to_copy.copy(resource_default)
         for resource, vals in zip(new_resources, vals_list):
             vals['resource_id'] = resource.id

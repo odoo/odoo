@@ -125,7 +125,7 @@ class MailMessage(models.Model):
                 values['published_date_str'] = format_datetime(self.env, values['date']) if values.get('date') else ''
             reaction_groups = []
             for content, reactions in groupby(message.sudo().reaction_ids, lambda r: r.content):
-                reactions = self.env["mail.message.reaction"].union(*reactions)
+                reactions = self.env["mail.message.reaction"].union(reactions)
                 reaction_groups.append(
                     {
                         "content": content,

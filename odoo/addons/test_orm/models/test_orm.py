@@ -706,7 +706,7 @@ class TestOrmOrderLine(models.Model):
             for other_line in line.order_id.line_ids
             if other_line.reward and other_line.product == line.product
         ]
-        self = self.union(*reward_lines)  # noqa: PLW0642
+        self |= self.union(reward_lines)  # noqa: PLW0642
         return super().unlink()
 
 

@@ -1647,8 +1647,8 @@ class StockPicking(models.Model):
         """
         if self.env.context.get('skip_activity'):
             return {}
-        move_to_orig_object_rel = {co: ooc for ooc in orig_obj_changes.keys() for co in ooc[stream_field]}
-        origin_objects = self.env[list(orig_obj_changes.keys())[0]._name].concat(*list(orig_obj_changes.keys()))
+        move_to_orig_object_rel = {co: ooc for ooc in orig_obj_changes for co in ooc[stream_field]}
+        origin_objects = self.env[next(iter(orig_obj_changes.keys()))._name].concat(orig_obj_changes.keys())
         # The purpose here is to group each destination object by
         # (document to log, responsible) no matter the stream direction.
         # example:
@@ -1681,7 +1681,7 @@ class StockPicking(models.Model):
         for (parent, responsible), moves in grouped_moves:
             if not parent:
                 continue
-            moves = self.env[moves[0]._name].concat(*moves)
+            moves = self.env[moves[0]._name].concat(moves)
             # Get the note
             rendering_context = {move: (orig_object, orig_obj_changes[orig_object]) for move in moves for orig_object in move_to_orig_object_rel[move]}
             if visited_documents:
@@ -1737,7 +1737,7 @@ class StockPicking(models.Model):
             """
             origin_moves = self.env['stock.move'].browse([move.id for move_orig in rendering_context.values() for move in move_orig[0]])
             origin_picking = origin_moves.mapped('picking_id')
-            move_dest_ids = self.env['stock.move'].concat(*rendering_context.keys())
+            move_dest_ids = self.env['stock.move'].concat(rendering_context.keys())
             impacted_pickings = origin_picking._get_impacted_pickings(move_dest_ids) - move_dest_ids.mapped('picking_id')
             values = {
                 'origin_picking': origin_picking,

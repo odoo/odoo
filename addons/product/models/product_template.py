@@ -969,9 +969,10 @@ class ProductTemplate(models.Model):
 
             elif existing_variants:
                 variants_combinations = [variant.product_template_attribute_value_ids for variant in existing_variants.values()]
-                current_variants_to_activate += Product.concat(*[existing_variants[possible_combination]
+                current_variants_to_activate += Product.concat(
+                    existing_variants[possible_combination]
                     for possible_combination in tmpl_id._filter_combinations_impossible_by_config(variants_combinations, ignore_no_variant=True)
-                ])
+                )
                 variants_to_activate += current_variants_to_activate
 
             variants_to_unlink += all_variants - current_variants_to_activate
@@ -1146,7 +1147,7 @@ class ProductTemplate(models.Model):
             lambda l: l.attribute_id.display_type != 'multi')
         exclusions = self._get_own_attribute_exclusions()
         for combination_tuple in combination_tuples:
-            combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
+            combination = self.env['product.template.attribute.value'].concat(combination_tuple)
             combination_without_multi = combination.filtered(
                 lambda l: l.attribute_line_id.attribute_id.display_type != 'multi')
             if len(combination_without_multi) != len(attribute_lines_without_multi):

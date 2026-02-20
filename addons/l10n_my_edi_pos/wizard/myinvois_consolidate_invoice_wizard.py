@@ -50,7 +50,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
             consolidated_invoice_vals = []
             for config, lines in lines_per_config.items():
                 for line_batch in split_every(MAX_LINE_COUNT_PER_INVOICE, lines, list):
-                    orders = self.env['pos.order'].union(*line_batch)
+                    orders = self.env['pos.order'].union(line_batch)
                     consolidated_invoice_vals.append({
                         'pos_order_ids': [Command.set(orders.ids)],
                         'company_id': config.company_id.id,

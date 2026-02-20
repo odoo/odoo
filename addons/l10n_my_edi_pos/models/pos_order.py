@@ -109,4 +109,4 @@ class PosOrder(models.Model):
 
     def _get_active_consolidated_invoice(self, including_in_progress=False):
         """ Small helper to get the currently active consolidated invoice if more that one is linked to an order. """
-        return self.env['myinvois.document'].union(*[order.consolidated_invoice_ids._get_active_myinvois_document(including_in_progress) for order in self])
+        return self.env['myinvois.document'].union(order.consolidated_invoice_ids._get_active_myinvois_document(including_in_progress) for order in self)

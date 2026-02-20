@@ -49,7 +49,7 @@ class AccountMoveSend(models.AbstractModel):
         def is_ksef(move):
             return 'pl_ksef' in invoices_data[move].get('extra_edis', []) and not move.l10n_pl_edi_status
 
-        moves_by_company = self.env['account.move'].union(*invoices_data).filtered(is_ksef).grouped('company_id')
+        moves_by_company = self.env['account.move'].union(invoices_data).filtered(is_ksef).grouped('company_id')
         for company, moves in moves_by_company.items():
 
             service = KsefApiService(company)
@@ -112,7 +112,7 @@ class AccountMoveSend(models.AbstractModel):
                     attachment_ids=move.l10n_pl_edi_attachment_id.ids,
                 )
 
-        self.env['account.move'].union(*invoices_data).invalidate_recordset(fnames=[
+        self.env['account.move'].union(invoices_data).invalidate_recordset(fnames=[
             'l10n_pl_edi_attachment_id',
             'l10n_pl_edi_attachment_file',
         ])

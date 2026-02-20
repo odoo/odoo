@@ -1670,7 +1670,7 @@ class ProjectTask(models.Model):
             sanitized_email_dict.keys(),
             no_create=True
         )
-        users = self.env['res.partner'].concat(*matched_partners).user_ids
+        users = self.env['res.partner'].concat(matched_partners).user_ids
         return users.filtered(lambda u: not u.share).ids
 
     @api.model

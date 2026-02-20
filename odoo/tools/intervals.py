@@ -44,8 +44,9 @@ class Intervals[T]:
                     starts.append(value)
                     if items is None:
                         items = value_items
-                    else:
-                        items = items.union(value_items)
+                    elif value_items:
+                        # make sure we have a copy of items
+                        items = items | value_items
                 else:
                     start = starts.pop()
                     if not starts:

@@ -439,8 +439,8 @@ class TestAPI(SavepointCaseWithUserDemo):
         for child in children:
             self.assertEqual(set(prefetch_ids), set(child._prefetch_ids))
 
-        self.assertEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
-        self.assertEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners.concat(children)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners.union(children)._prefetch_ids))
 
         # incremental concatenation/union should not cause a recursion error
         partners = partners.create([{
@@ -478,7 +478,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
         self.assertEqual(set(fetched_ids), set(records._ids))
 
-        records = self.env['res.partner'].concat(*[partner.child_ids[0] for partner in partners])
+        records = self.env['res.partner'].concat(partner.child_ids[0] for partner in partners)
         records.invalidate_model(['name'])
         records.mapped('name')
         fetched_ids = records._fields['name']._get_all_cache_ids(records.env)

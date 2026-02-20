@@ -253,7 +253,7 @@ class ProductProduct(models.Model):
         moves_qty_by_product = {}
         for product in self:
             moves, remaining_qty = product._run_fifo_get_stack()
-            moves = self.env['stock.move'].concat(*moves)
+            moves = self.env['stock.move'].concat(moves)
             if not moves:
                 continue
             qty_by_move = {m: m.quantity for m in moves[1:]}

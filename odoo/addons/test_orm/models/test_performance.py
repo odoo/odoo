@@ -113,7 +113,7 @@ class Test_PerformanceSimpleMinded(models.Model):
 
     def union_once(self):
         """ Union all first children at once. """
-        return self.browse().union(*[record.child_ids[:1] for record in self])
+        return self.union(record.child_ids[:1] for record in self)
 
     def union_loop(self):
         """ Union all first children in a loop. """

@@ -448,11 +448,11 @@ class AccountDocumentImportMixin(models.AbstractModel):
             This only returns those elements in `files_data` which correspond to an ir.attachment
             (thus, embedded files that were never turned into ir.attachments are omitted).
         """
-        return self.env['ir.attachment'].union(*(
+        return self.env['ir.attachment'].union(
             file_data['attachment']
             for file_data in files_data
             if file_data.get('attachment')
-        ))
+        )
 
     @api.model
     def _get_import_file_type(self, file_data):
