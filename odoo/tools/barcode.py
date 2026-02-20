@@ -12,7 +12,7 @@ _barcode_init_lock = RLock()
 # before rendering a barcode (done in a C extension) and this part is not thread safe.
 # This cached functions allows to lazily initialize the T1 fonts cache need for rendering of
 # barcodes in a thread-safe way.
-@functools.lru_cache(1)
+@functools.cache
 def _init_barcode():
     with _barcode_init_lock:
         try:

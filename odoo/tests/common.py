@@ -36,7 +36,7 @@ from concurrent.futures import CancelledError, Future, InvalidStateError, wait
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from datetime import datetime
-from functools import lru_cache, partial, wraps
+from functools import cache, partial, wraps
 from itertools import islice, zip_longest
 from textwrap import shorten
 from typing import TYPE_CHECKING
@@ -2124,7 +2124,7 @@ class Screencaster:
             self._logger.runbot('Screencast in: %s', outfile)
 
 
-@lru_cache(1)
+@cache
 def _find_executable():
     system = platform.system()
     if system == 'Linux':
