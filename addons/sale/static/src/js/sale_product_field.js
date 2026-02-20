@@ -189,11 +189,13 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     async _getPreloadedConfigData() {
         const result = await this.orm.call(
             'product.template',
-            'get_single_product_variant',
+            'get_configurator_init_data',
             [this.props.record.data.product_template_id.id],
             {
                 quantity: this.props.record.data.product_uom_qty,
                 context: this.props.context,
+                ptav_ids: this._getVariantPtavIds(this.props.record.data),
+                product_uom_id: this.props.record.data.product_uom_id.id,
                 ...this._getAdditionalRpcParams(),
             }
         );
@@ -238,7 +240,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         if (this.isCombo) {
             this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
-            this._openProductConfigurator(true);
+            this._openProductConfigurator({edit: true});
         }
     }
 
@@ -381,7 +383,10 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             const selectedComboProducts = selectedComboItems.map(
                 item => ({ name: item.product.display_name })
             );
-            await this._openProductConfigurator(false, selectedComboProducts);
+            await this._openProductConfigurator({
+                edit: false,
+                selectedComboItems: selectedComboProducts
+            });
         }
     }
 
