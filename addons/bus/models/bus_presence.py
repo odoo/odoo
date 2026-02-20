@@ -49,8 +49,15 @@ class BusPresence(models.Model):
         return result
 
     def unlink(self):
-        self._send_presence("offline")
-        return super().unlink()
+        identity_data_by_target = {
+            presence._get_bus_target(): presence._get_identity_data()
+            for presence in self
+        }
+        res = super().unlink()
+        for target, identity_data in identity_data_by_target.items():
+            if target and identity_data:
+                self._send_status_updated_notification(target, identity_data, "offline")
+        return res
 
     @api.model
     def update_presence(self, inactivity_period, identity_field, identity_value):
@@ -107,24 +114,28 @@ class BusPresence(models.Model):
 
         :param im_status: 'online', 'away' or 'offline'
         """
-        notifications = []
         for presence in self:
             identity_data = presence._get_identity_data()
             target = presence._get_bus_target()
-            target = bus_target or (target and (target, "presence"))
             if identity_data and target:
-                notifications.append(
-                    (
-                        target,
-                        "bus.bus/im_status_updated",
-                        {
-                            "presence_status": im_status or presence.status,
-                            "im_status": presence._get_bus_target().im_status,
-                            **identity_data
-                        },
-                    )
+                self._send_status_updated_notification(
+                    target,
+                    identity_data,
+                    im_status or target.im_status,
+                    bus_target=bus_target,
                 )
-        self.env["bus.bus"]._sendmany(notifications)
+
+    @api.model
+    def _send_status_updated_notification(self, identity, identity_data, status, bus_target=None):
+        self.env["bus.bus"]._sendone(
+            bus_target or (identity, "presence"),
+            "bus.bus/im_status_updated",
+            {
+                "presence_status": status,
+                "im_status": identity.im_status,
+                **identity_data,
+            },
+        )
 
     @api.autovacuum
     def _gc_bus_presence(self):
