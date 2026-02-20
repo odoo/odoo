@@ -20,5 +20,5 @@ class DomainController(Controller):
         try:
             Domain(domain).validate(Model.sudo())
             return True
-        except ValueError:  # noqa: BLE001
+        except (ValueError, TypeError):  # noqa: BLE001
             return False

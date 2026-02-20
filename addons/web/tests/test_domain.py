@@ -42,3 +42,10 @@ class DomainTest(HttpCaseWithUserDemo):
             data=json.dumps({'params': {'model':'res.users', 'domain':[('hop')]}}),
         )
         self.assertEqual(resp.json()['result'], False)
+
+        resp = self.url_open(
+            '/web/domain/validate',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps({'params': {'model': 'res.users', 'domain': [('', '=', 1)]}}),
+        )
+        self.assertEqual(resp.json()['result'], False)
