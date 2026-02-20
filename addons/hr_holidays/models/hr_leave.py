@@ -455,6 +455,36 @@ class HolidaysRequest(models.Model):
                         days = 1 if not leave.request_unit_half else 0.5
                     else:
                         days = hours / 24
+                elif leave.employee_id.sudo().is_flexible and leave.leave_type_request_unit == 'day' and check_leave_type:
+                    start = leave.date_from.date()
+                    end = leave.date_to.date()
+                    days = (end - start).days + 1
+
+                    if not leave.holiday_status_id.include_public_holidays_in_duration and days > 0:
+                        public_holidays = self.env['resource.calendar.leaves'].search([
+                            ('resource_id', '=', False),
+                            ('date_from', '<', leave.date_to),
+                            ('date_to', '>', leave.date_from),
+                            ('calendar_id', 'in', [False, calendar.id]),
+                            ('company_id', '=', leave.company_id.id),
+                            ('time_type', '=', 'leave'),
+                        ])
+                        ph_days = set()
+                        for ph in public_holidays:
+                            ph_start = max(start, ph.date_from.date())
+                            ph_end = min(end, ph.date_to.date())
+                            if ph_start <= ph_end:
+                                for i in range((ph_end - ph_start).days + 1):
+                                    ph_days.add(ph_start + timedelta(days=i))
+                        days = max(0, days - len(ph_days))
+                    if leave.request_unit_half and start == end and days > 0:
+                        days = 0.5
+                    hpd = (calendar.hours_per_day or HOURS_PER_DAY)
+                    hours = days * hpd
+                    if days not in (0.0, 0.5):
+                        days = ceil(days)
+                    result[leave.id] = (days, hours)
+                    continue
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
