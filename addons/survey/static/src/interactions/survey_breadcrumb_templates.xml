@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="survey.survey_breadcrumb_template">
-    <ol class="breadcrumb justify-content-end bg-transparent">
+    <ol class="breadcrumb mb-0">
         <t t-set="canGoBack" t-value="surveyCanGoBack"/>
         <t t-foreach="pages" t-as="page" t-key="page_index">
             <t t-set="isActivePage" t-value="page.id === currentPageId"/>
-            <li t-att-class="'breadcrumb-item' + (isActivePage ? ' active fw-bold' : '')"
+            <li t-attf-class="breadcrumb-item{{ isActivePage ? ' active' : '' }}"
                 t-att-data-page-id="page.id"
                 t-att-data-page-title="page.title">
                 <t t-if="currentPageId === page.id">
@@ -16,12 +16,15 @@
                 </t>
                 <t t-if="canGoBack">
                     <a class="text-primary text-break" href="#">
+                        <span t-esc="page_index + 1"/>.
                         <span t-esc="page.title" />
                     </a>
                 </t>
                 <t t-else="">
-                    <span t-att-class="'text-break ' + (isActivePage ? 'text-black' : 'text-muted')"
-                          t-esc="page.title" />
+                    <span t-attf-class="{{ isActivePage ? 'text-body' : 'text-muted' }}">
+                        <span t-esc="page_index + 1"/>.
+                        <span class="text-break" t-esc="page.title" />
+                    </span>
                 </t>
             </li>
         </t>

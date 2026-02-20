@@ -118,8 +118,7 @@ export class SurveySessionChart extends Interaction {
                     datalabels: {
                         color: this.getLabelColor.bind(this),
                         font: {
-                            size: "50",
-                            weight: "bold",
+                            size: "30",
                         },
                         anchor: "end",
                         align: "top",
@@ -145,15 +144,15 @@ export class SurveySessionChart extends Interaction {
                             minRotation: 20,
                             maxRotation: 90,
                             font: {
-                                size: "35",
+                                size: "20",
                                 weight: "bold",
                             },
-                            color: "#212529",
+                            color: "#ffffff",
                             autoSkip: false,
                         },
                         grid: {
                             drawOnChartArea: false,
-                            color: "rgba(0, 0, 0, 0.2)",
+                            color: "rgba(255, 255, 255, 0.2)",
                         },
                     },
                 },
@@ -324,7 +323,7 @@ export class SurveySessionChart extends Interaction {
      *   in 'this.answersValidity'
      */
     getLabelColor(metaData) {
-        let color = "#212529";
+        let color = "#ffffff";
         if (this.showAnswers && this.hasCorrectAnswers) {
             color = this.isValidAnswer(metaData.dataIndex) ? "#2CBB70" : "#D9534F";
         }

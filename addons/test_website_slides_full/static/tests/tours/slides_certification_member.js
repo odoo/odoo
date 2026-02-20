@@ -42,15 +42,15 @@ var failCertificationSteps = [{
     run: "click",
 }, { // Question: What type of wood is the best for furniture?
     content: 'Survey: selecting answer "Fir"',
-    trigger: 'div.js_question-wrapper:contains("What type of wood is the best for furniture") label:contains("Fir")',
+    trigger: 'div.o_survey_question:contains("What type of wood is the best for furniture") label:contains("Fir")',
     run: "click",
 }, { // Question: Select all the furniture shown in the video
     content: 'Survey: ticking answer "Table"',
-    trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Table")',
+    trigger: 'div.o_survey_question:contains("Select all the furniture shown in the video") label:contains("Table")',
     run: "click",
 }, {
     content: 'Survey: ticking answer "Bed"',
-    trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Bed")',
+    trigger: 'div.o_survey_question:contains("Select all the furniture shown in the video") label:contains("Bed")',
     run: "click",
 }, {
     content: 'Survey: submitting the certification with wrong answers',
@@ -58,7 +58,7 @@ var failCertificationSteps = [{
     run: "click",
 }, {
     content: "Click on Submit",
-    trigger: 'button.btn-primary:contains("Submit")',
+    trigger: 'button.btn-primary:contains("Yes, submit")',
     run: "click",
 }];
 
@@ -75,19 +75,19 @@ var succeedCertificationSteps = [{
     run: "click",
 }, { // Question: What type of wood is the best for furniture?
     content: 'Survey: selecting answer "Oak"',
-    trigger: 'div.js_question-wrapper:contains("What type of wood is the best for furniture") label:contains("Oak")',
+    trigger: 'div.o_survey_question:contains("What type of wood is the best for furniture") label:contains("Oak")',
     run: "click",
 }, { // Question: Select all the furniture shown in the video
     content: 'Survey: ticking answer "Chair"',
-    trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Chair")',
+    trigger: 'div.o_survey_question:contains("Select all the furniture shown in the video") label:contains("Chair")',
     run: "click",
 }, {
     content: 'Survey: ticking answer "Shelve"',
-    trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Shelve")',
+    trigger: 'div.o_survey_question:contains("Select all the furniture shown in the video") label:contains("Shelve")',
     run: "click",
 }, {
     content: 'Survey: ticking answer "Desk"',
-    trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Desk")',
+    trigger: 'div.o_survey_question:contains("Select all the furniture shown in the video") label:contains("Desk")',
     run: "click",
 }, {
     content: 'Survey: submitting the certification with correct answers',
@@ -95,7 +95,7 @@ var succeedCertificationSteps = [{
     run: "click",
 }, {
     content: "Click on Submit",
-    trigger: 'button.btn-primary:contains("Submit")',
+    trigger: 'button.btn-primary:contains("Yes, submit")',
     run: "click",
 }];
 
@@ -103,7 +103,7 @@ var certificationCompletionSteps = [{
     content: 'Survey: check certification successful',
     trigger: 'div:contains("Congratulations, you have passed the test")',
 }, { // Sharing the certification
-    trigger: 'a:contains("Share your certification")',
+    trigger: 'a.o_wslides_share',
     run: "click",
 }, {
     trigger: '.o_wslides_js_share_email input',

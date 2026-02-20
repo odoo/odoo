@@ -2,19 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="survey.survey_image_zoomer">
-        <div role="dialog" class="o_survey_img_zoom_modal show modal fade d-flex align-items-center p-0"
+        <div role="dialog" class="o_survey_img_zoom_modal show modal fade d-flex align-items-center p-0 cursor-pointer"
             data-bs-backdrop="false" aria-label="Image Zoom Dialog" tabindex="-1">
-            <div class="o_survey_img_zoom_dialog modal-dialog h-100 w-100 mw-100 py-0" role="Picture Enlarged">
+            <div class="o_survey_img_zoom_dialog modal-dialog h-100 w-100 mw-100 m-0 py-0 bg-black-75" role="Picture Enlarged">
                 <div class="modal-content h-100 bg-transparent">
                     <div class="o_survey_img_zoom_body modal-body h-100 bg-transparent d-flex justify-content-center">
                         <button type="button" data-bs-dismiss="modal" aria-label="close"
-                            class="o_survey_img_zoom_close_btn close text-white btn-close-white btn-close position-absolute"/>
-                        <img class="o_survey_img_zoom_image img img-fluid d-block m-auto" t-att-src="sourceImage" alt="Zoomed Image"/>
-                        <div class="o_survey_img_zoom_controls_wrapper position-absolute">
-                            <button type="button" class="o_survey_img_zoom_in_btn text-white me-1" aria-label="Zoom in">
+                            class="close btn-close btn-close-white position-absolute end-0 top-0 me-3 mt-3"/>
+                        <img class="o_survey_img_zoom_image img img-fluid mh-75 mw-75 m-auto object-fit-contain" t-att-src="sourceImage" alt="Zoomed Image"/>
+                        <div class="d-flex gap-1 position-absolute bottom-0 mb-3">
+                            <button type="button" class="o_survey_img_zoom_in_btn btn btn-dark" aria-label="Zoom in">
                                 <span class="fa fa-plus"/>
                             </button>
-                            <button type="button" class="o_survey_img_zoom_out_btn text-white ms-1" aria-label="Zoom out">
+                            <button type="button" class="o_survey_img_zoom_out_btn btn btn-dark" aria-label="Zoom out">
                                 <span class="fa fa-minus"/>
                             </button>
                         </div>
