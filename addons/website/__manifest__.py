@@ -67,6 +67,7 @@
         'views/snippets/s_carousel_intro.xml',
         'views/snippets/s_carousel_cards.xml',
         'views/snippets/s_alert.xml',
+        'views/snippets/s_list_group.xml',
         'views/snippets/s_motto.xml',
         'views/snippets/s_card.xml',
         'views/snippets/s_cards_grid.xml',

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ListGroupOption" >
+    <BuilderRow label.translate="Icon Color">
+        <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--s_list_group-icon-color'" />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Icon Background Color">
+        <BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'--s_list_group-icon-bg'" />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Replace Icons" tooltip.translate="Replace all icons at once">
+        <BuilderButton action="'replaceListIcon'" preview="false">
+            <i class="fa fa-fw fa-refresh me-1"/> Replace
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>

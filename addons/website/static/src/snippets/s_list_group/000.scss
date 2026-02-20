@@ -1,0 +1,60 @@
+.s_list_group {
+    --s_list_group-icon-content: "\f00c";
+    --s_list_group-icon-width: 1.5em;
+    --s_list_group-icon-color: var(--o-cc1-btn-primary);
+    --s_list_group-icon-bg: #{fade-currentColor(10%)};
+
+    ul:not(.o_checklist) {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: map-get($spacers, 3);
+        padding-left: 0;
+
+        &[dir="rtl"] {
+            li {
+                padding-right: calc(var(--s_list_group-icon-width) + #{map-get($spacers, 2)});
+
+                &:not(.oe-nested)::before {
+                    right: 0;
+                }
+
+                &.o-we-hint::after {
+                    right: 2em;
+                }
+            }
+        }
+
+        > li {
+            position: relative;
+            padding-left: calc(var(--s_list_group-icon-width) + #{map-get($spacers, 2)});
+
+            &:not(.oe-nested)::before {
+                @include o-position-absolute($left: 0);
+                content: var(--s_list_group-icon-content);
+                width: 1.5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                color: var(--s_list_group-icon-color);
+                background: var(--s_list_group-icon-bg, unset);
+                font-family: "FontAwesome";
+            }
+
+            &:not(.oe-nested) > ul {
+                margin-top: map-get($spacers, 3);
+            }
+
+            &.o-we-hint::after {
+                padding-left: calc(var(--s_list_group-icon-width) + #{map-get($spacers, 2)});
+            }
+        }
+    }
+}
+
+@for $index from 1 through 5 {
+    .o_cc#{$index} .s_list_group {
+        --s_list_group-icon-color: var(--o-cc#{$index}-btn-primary);
+    }
+}
