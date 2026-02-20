@@ -221,6 +221,7 @@ class TestEventSale(TestEventSaleCommon):
         ticket2_line.write({'price_unit': 50})
 
         editor_action = customer_so.action_confirm()
+        self.env.flush_all()
         self.assertEqual(customer_so.state, 'sale')
         self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + (TICKET2_COUNT + 2) * 50)
 
