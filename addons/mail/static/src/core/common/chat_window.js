@@ -48,8 +48,11 @@ export class ChatWindow extends Component {
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
+            editingDescription: false,
+            editingDescriptionText: "",
             editingGuestName: false,
             editingName: false,
+            showDescriptionDialog: false,
         });
         this.ui = useService("ui");
         this.contentRef = useRef("content");
@@ -77,10 +80,26 @@ export class ChatWindow extends Component {
         return this.props.chatWindow.channel;
     }
 
+    get channelDescriptionText() {
+        return _t(`Description: "%(channel_description)s"`, {
+            channel_description: this.channel.description,
+        });
+    }
+
     get attClass() {
         return {
             "w-100 h-100 o-mobile": this.ui.isSmall,
             "o-rounded-bubble border border-dark o-border-opacity-15 mb-2": !this.ui.isSmall,
+        };
+    }
+
+    get editingDescriptionTextAttClass() {
+        return { "pt-2 pb-3": true };
+    }
+
+    get editingDescriptionTextareaAttClass() {
+        return {
+            "form-control me-1 mt-2 mb-2 mx-n1 px-2 py-1 w-100 bg-100 rounded": true,
         };
     }
 
@@ -115,6 +134,10 @@ export class ChatWindow extends Component {
                     this.state.editingName = false;
                     return;
                 }
+                if (this.state.showDescriptionDialog) {
+                    this.closeDescriptionDialog();
+                    return;
+                }
                 this.close({ escape: true });
                 break;
             case "tab": {
@@ -130,7 +153,30 @@ export class ChatWindow extends Component {
                 this.store.env.services.command.openMainPalette({ searchValue: "@" });
                 ev.preventDefault();
                 break;
+            case "enter":
+                if (this.state.showDescriptionDialog && !this.state.editingDescription) {
+                    this.state.editingDescription = true;
+                    ev.stopPropagation();
+                }
         }
+    }
+
+    /** @param {KeyboardEvent} ev */
+    onKeydownDescriptionTextarea(ev) {
+        if (ev.key === "Enter") {
+            this.updateThreadDescription();
+        }
+        if (ev.key === "Escape") {
+            this.closeDescriptionDialog();
+            ev.stopPropagation();
+        }
+    }
+
+    onClickDescriptionDialogBackground() {
+        if (this.state.editingDescription) {
+            return;
+        }
+        this.closeDescriptionDialog();
     }
 
     onClickHeader(ev) {
@@ -158,6 +204,11 @@ export class ChatWindow extends Component {
         chatWindow.close(options);
     }
 
+    closeDescriptionDialog() {
+        this.state.showDescriptionDialog = false;
+        this.state.editingDescription = false;
+    }
+
     get actionsMenuTitleText() {
         return _t("Open Actions Menu");
     }
@@ -174,6 +225,28 @@ export class ChatWindow extends Component {
             await this.store.self_guest.updateGuestName(newName);
         }
         this.state.editingGuestName = false;
+    }
+
+    toggleShowDescriptionDialog() {
+        if (!this.state.showDescriptionDialog) {
+            this.state.showDescriptionDialog = true;
+            this.state.editingDescription = false;
+            this.state.editingDescriptionText = this.channel.description || "";
+        } else {
+            this.closeDescriptionDialog();
+        }
+    }
+
+    async updateThreadDescription() {
+        this.state.showDescriptionDialog = false;
+        this.state.editingDescription = false;
+        const newDescription = this.state.editingDescriptionText.trim();
+        if (!newDescription && !this.channel.description) {
+            return;
+        }
+        if (newDescription !== this.channel.description) {
+            await this.channel.notifyDescriptionToServer(newDescription);
+        }
     }
 
     async onActionsMenuStateChanged(isOpen) {

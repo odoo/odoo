@@ -162,7 +162,7 @@ test("can active change thread from messaging menu", async () => {
 });
 
 test.tags("focus required");
-test("can change the thread description of #general", async () => {
+test("can change the thread description of #general (discuss app)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1908,9 +1908,7 @@ test("Do not trigger channel description server update when channel has no descr
         create_uid: serverState.userId,
         name: "General",
     });
-
     onRpc("discuss.channel", "channel_change_description", ({ method }) => expect.step(method));
-
     await start();
     await openDiscuss(channelId);
     await insertText("input.o-mail-DiscussContent-threadDescription", "");

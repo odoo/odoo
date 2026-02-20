@@ -32,6 +32,7 @@ import {
     preloadBundle,
     serverState,
     withUser,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -77,6 +78,40 @@ test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut f
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message");
+});
+
+test.tags("focus required");
+test("can change the thread description of #general (chat window)", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+        description: "General announcements...",
+        create_uid: serverState.userId,
+    });
+    onRpc("discuss.channel", "channel_change_description", ({ route }) => expect.step(route));
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow");
+    await click(
+        `.o-mail-ChatWindow-header i.fa-info-circle[data-tooltip='Description: "General announcements..."']`
+    );
+    await contains(".o-mail-ChatWindow-descriptionDialog:has(:text('Description:'))");
+    await contains(".o-mail-ChatWindow-descriptionDialog:has(:text('General announcements...'))");
+    await click(".o-mail-ChatWindow-descriptionDialog button:has(:text('Edit'))");
+    await contains(
+        ".o-mail-ChatWindow-descriptionDialog textarea:value('General announcements...')"
+    );
+    await insertText(".o-mail-ChatWindow-descriptionDialog textarea", "I want a burger today!", {
+        replace: true,
+    });
+    await click(".o-mail-ChatWindow-descriptionDialog button:has(:text('Save'))");
+    await contains(".o-mail-ChatWindow-descriptionDialog", { count: 0 });
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
+    await contains(
+        `.o-mail-ChatWindow-header i.fa-info-circle[data-tooltip='Description: "I want a burger today!"']`
+    );
 });
 
 test("load messages from opening chat window from messaging menu", async () => {
