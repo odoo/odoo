@@ -3287,6 +3287,19 @@ class BaseModel(metaclass=MetaModel):
         if not (regular_fields or property_fields):
             return
 
+        has_company_field = (
+            self._name == 'res.company'
+            or 'company_id' in self
+            or 'company_ids' in self
+        )
+        if regular_fields and not has_company_field:
+            _logger.warning(_(
+                "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
+                "but the model doesn't have a `company_id` or `company_ids` field!",
+                model_name=self._name, field_names=regular_fields
+            ))
+            regular_fields = []
+
         inconsistencies = []
         for record in self:
             # The first part of the check verifies that all records linked via relation fields are compatible
@@ -3299,11 +3312,6 @@ class BaseModel(metaclass=MetaModel):
                 elif 'company_ids' in self:
                     companies = record.company_ids
                 else:
-                    _logger.warning(_(
-                        "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
-                        "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self._name, field_names=regular_fields
-                    ))
                     continue
                 for name in regular_fields:
                     corecords = record.sudo()[name]
@@ -3346,6 +3354,24 @@ class BaseModel(metaclass=MetaModel):
                 })
             lines.append(_("To avoid a mess, no company crossover is allowed!"))
             raise UserError("\n".join(lines))
+
+    def _check_company_on_unarchive_inverses(self):
+        """Check company consistency on inverse relations when unarchiving."""
+        if not self:
+            return
+        ids = self.ids
+        env = self.env
+        inverse_map = env.registry.check_company_inverses.get(self._name)
+        if not inverse_map:
+            return
+        for model_name, field_names in inverse_map.items():
+            if len(field_names) == 1:
+                domain = Domain(field_names[0], 'in', ids)
+            else:
+                domain = Domain.OR(Domain(name, 'in', ids) for name in field_names)
+            records = env[model_name].sudo().with_context(active_test=False).search(domain)
+            if records:
+                records._check_company(field_names)
 
     @api.private  # use has_access
     def check_access(self, operation: str) -> None:
@@ -3678,6 +3704,11 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return True
 
+        active_name = self._active_name
+        inactive_before = None
+        if active_name and active_name in vals and vals[active_name]:
+            inactive_before = self.filtered(lambda record: not record[active_name])
+
         self.check_access('write')
         for field_name in vals:
             try:
@@ -3825,6 +3856,15 @@ class BaseModel(metaclass=MetaModel):
 
         if self._check_company_auto:
             self._check_company(list(vals))
+        if inactive_before:
+            to_unarchive = inactive_before.filtered(lambda record: record[active_name])
+            if 'company_id' in self:
+                to_unarchive._validate_fields(['company_id'])
+            if self._check_company_auto and (
+                self._name == 'res.company' or 'company_id' in self or 'company_ids' in self
+            ):
+                to_unarchive._check_company()
+            to_unarchive._check_company_on_unarchive_inverses()
         return True
 
     def _write(self, vals: ValuesType) -> None:

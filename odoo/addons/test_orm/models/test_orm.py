@@ -1291,6 +1291,7 @@ class TestOrmModel_Child(models.Model):
     _check_company_auto = True
 
     name = fields.Char()
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company')
     parent_id = fields.Many2one('test_orm.model_parent', string="Parent", check_company=True)
     parent_ids = fields.Many2many('test_orm.model_parent', string="Parents", check_company=True)
@@ -1304,6 +1305,16 @@ class TestOrmModel_Child_Nocheck(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company')
     parent_id = fields.Many2one('test_orm.model_parent', check_company=False)
+
+
+class TestOrmModel_Child_Ref(models.Model):
+    _name = 'test_orm.model_child_ref'
+    _description = 'Model referencing a multicompany child'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    child_id = fields.Many2one('test_orm.model_child', check_company=True)
 
 
 # model with explicit and stored field 'display_name'

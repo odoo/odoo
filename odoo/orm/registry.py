@@ -523,6 +523,32 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return result
 
     @functools.cached_property
+    def check_company_inverses(self) -> dict[str, dict[str, tuple[str, ...]]]:
+        """Map comodel names to models and their check_company field names."""
+        result: defaultdict[str, dict[str, tuple[str, ...]]] = defaultdict(dict)
+        for model_name, Model in self.models.items():
+            if Model._abstract:
+                continue
+            if not (
+                Model._name == 'res.company'
+                or 'company_id' in Model._fields
+                or 'company_ids' in Model._fields
+            ):
+                continue
+            fields_by_comodel: defaultdict[str, list[str]] = defaultdict(list)
+            for field in Model._fields.values():
+                if (
+                    field.type in ('many2one', 'many2many')
+                    and field.check_company
+                    and field.comodel_name
+                    and field.store
+                ):
+                    fields_by_comodel[field.comodel_name].append(field.name)
+            for comodel_name, field_names in fields_by_comodel.items():
+                result[comodel_name][model_name] = tuple(field_names)
+        return result
+
+    @functools.cached_property
     def field_computed(self) -> dict[Field, list[Field]]:
         """ Return a dict mapping each field to the fields computed by the same method. """
         computed: dict[Field, list[Field]] = {}
