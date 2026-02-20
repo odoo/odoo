@@ -16,8 +16,8 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         this.copyFields.push('is_optional');
     }
 
-    get disableOptionalButton() {
-        return this.shouldCollapse(this.record, 'is_optional');
+    disableOptionalButton(record) {
+        return this.shouldCollapse(record, 'is_optional');
     }
 
     get isCurrentSectionOptional() {
