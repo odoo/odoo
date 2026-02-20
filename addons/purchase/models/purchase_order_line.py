@@ -569,6 +569,8 @@ class PurchaseOrderLine(models.Model):
             'purchase_line_id': self.id,
             'is_downpayment': self.is_downpayment,
         }
+        if self.is_downpayment and self.invoice_lines:
+            res['account_id'] = self.invoice_lines.account_id[:1].id
         return res
 
     @api.model
