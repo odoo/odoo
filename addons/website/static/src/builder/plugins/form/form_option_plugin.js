@@ -1428,7 +1428,11 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
-        const valueList = JSON.parse(value);
+        let valueList = JSON.parse(value);
+        if (getSelect(fieldEl)) {
+            // If applying changes to a select field, drop any empty entry
+            valueList = valueList.filter((value) => value.id !== "" || value.display_name !== "");
+        }
         const field = getActiveField(fieldEl, { fields });
         field.records = valueList;
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
