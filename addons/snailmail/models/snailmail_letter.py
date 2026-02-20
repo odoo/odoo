@@ -28,6 +28,7 @@ ERROR_CODES = [
     'FORMAT_ERROR',
     'UNKNOWN_ERROR',
     'ATTACHMENT_ERROR',
+    'LETTER_UNDELIVERABLE',
 ]
 
 
@@ -53,7 +54,9 @@ class SnailmailLetter(models.Model):
         ('pending', 'In Queue'),
         ('sent', 'Sent'),
         ('error', 'Error'),
-        ('canceled', 'Cancelled')
+        ('canceled', 'Cancelled'),
+        ('delivered', 'Delivered'),
+        ('undeliverable', 'Undeliverable'),
         ], 'Status', readonly=True, copy=False, default='pending', required=True,
         help="When a letter is created, the status is 'Pending'.\n"
              "If the letter is correctly sent, the status goes in 'Sent',\n"
@@ -61,6 +64,7 @@ class SnailmailLetter(models.Model):
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
     info_msg = fields.Html('Information')
 
+    document_id = fields.Char('Snailmail letter ID')
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 
     message_id = fields.Many2one('mail.message', string="Snailmail Status Message", index='btree_not_null')
@@ -232,6 +236,7 @@ class SnailmailLetter(models.Model):
         """
         account_token = self.env['iap.account'].get('snailmail').sudo().account_token
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+        base_url = self.get_base_url()
         documents = []
 
         for letter in self:
@@ -300,6 +305,7 @@ class SnailmailLetter(models.Model):
         return {
             'account_token': account_token,
             'dbuuid': dbuuid,
+            'db_url': base_url,
             'documents': documents,
             'options': {
                 'color': self and self[0].color,
@@ -396,7 +402,7 @@ class SnailmailLetter(models.Model):
                 self.env['iap.account']._send_success_notification(
                     message=_("Snail Mails are successfully sent"))
                 note = _('The document was correctly sent by post.<br>The tracking id is %s', doc['send_id'])
-                letter_data = {'info_msg': note, 'state': 'sent', 'error_code': False}
+                letter_data = {'info_msg': note, 'document_id': doc['send_id'], 'state': 'sent', 'error_code': False}
                 notification_data = {
                     'notification_status': 'sent',
                     'failure_type': False,
