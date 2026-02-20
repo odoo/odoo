@@ -32,7 +32,6 @@ test("closing popover should not remove style", async () => {
         anchorOffset: 1,
     });
     await contains(".o-we-linkpopover .o_we_edit_link").click();
-    await contains(".o-we-linkpopover [title='Advanced mode']").click();
     await contains(":iframe").click();
 
     expect(":iframe p > a").toHaveStyle("color: rgb(0, 255, 0)", { inline: true });

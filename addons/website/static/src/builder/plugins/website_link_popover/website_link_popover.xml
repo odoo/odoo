@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.websiteLinkPopover" t-inherit="html_editor.linkPopover">
+        <xpath expr="//div[@t-else]/div[hasclass('o_link_popover_container')]" position="replace">
+            <t t-if="linkstate.showAdvancedOptions">
+                <div class="o_advance_option_panel">
+                    <div class="o_advance_options_grid" style="width: 200px;">
+                        <button t-if="linkstate.showAdvancedOptions" class="fa fa-angle-left btn btn-secondary border-10" t-on-click="toggleAdvancedOptions"/>
+                            <t t-foreach="Object.values(linkstate.relAttributeOptions)" t-as="opt" t-key="opt.label">
+                                <t t-if="opt.label !== 'noopener'">
+                                    <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
+                                        <span t-att-title="opt.description"><t t-out="opt.label"/></span>
+                                        <CheckBox
+                                            value="opt.isChecked"
+                                            onChange="toggleRelAttr.bind(this, opt.label)"/>
+                                    </div>
+                                </t>
+                            </t>
+                        <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
+                            <span>Open in new tab</span>
+                            <CheckBox
+                                value="linkstate.linkTarget === '_blank'"
+                                onChange="onClickNewWindow.bind(this)"
+                                className="'target-blank-option'"/>
+                        </div>
+                        <t t-if="linkstate.linkTarget === '_blank'">
+                            <div class="o_seo_option_row o_seo_option_child d-flex justify-content-between align-items-center py-1 gap-2 ps-4">
+                                <span>noopener</span>
+                                <CheckBox
+                                    value="linkstate.relAttributeOptions.noopener.isChecked"
+                                    onChange="toggleRelAttr.bind(this, 'noopener')"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//a[hasclass('o_we_remove_link')]" position="after">
+                <button t-if="Object.values(linkstate.relAttributeOptions).length" 
+                        class="btn btn-sm btn-secondary"
+                        title="Advanced mode"
+                        t-att-disabled="!state.url"
+                        t-on-click="toggleAdvancedOptions">
+                        <i class="fa fa-gear"/>
+                </button>
+        </xpath>
+    </t>
+</templates>

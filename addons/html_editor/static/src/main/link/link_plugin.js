@@ -282,6 +282,8 @@ export class LinkPlugin extends Plugin {
             }),
         ],
 
+        link_rel_attribute_options: [],
+
         immutable_link_selectors: [
             '[data-bs-toggle="tab"]',
             '[data-bs-toggle="collapse"]',
@@ -512,45 +514,45 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes, linkTarget, attachmentId, relValue) => {
+        const applyCallback = (params) => {
             if (this.linkInDocument) {
-                if (url) {
-                    this.linkInDocument.href = url;
+                if (params.url) {
+                    this.linkInDocument.href = params.url;
                 } else {
                     this.linkInDocument.removeAttribute("href");
                 }
-                if (relValue) {
-                    this.linkInDocument.setAttribute("rel", relValue);
+                if (params.relValue) {
+                    this.linkInDocument.setAttribute("rel", params.relValue);
                 } else {
                     this.linkInDocument.removeAttribute("rel");
                 }
-                if (linkTarget) {
-                    this.linkInDocument.setAttribute("target", linkTarget);
+                if (params.linkTarget) {
+                    this.linkInDocument.setAttribute("target", params.linkTarget);
                 } else {
                     this.linkInDocument.removeAttribute("target");
                 }
                 if (!isImage) {
-                    if (classes) {
-                        this.linkInDocument.className = classes;
+                    if (params.classes) {
+                        this.linkInDocument.className = params.classes;
                     } else {
                         this.linkInDocument.removeAttribute("class");
                     }
                     if (
                         this.linkInDocument.childElementCount == 0 &&
-                        cleanZWChars(this.linkInDocument.innerText) !== label
+                        cleanZWChars(this.linkInDocument.innerText) !== params.label
                     ) {
-                        this.linkInDocument.innerText = label;
+                        this.linkInDocument.innerText = params.label;
                         cursorsToRestore = null;
                     }
                 }
-            } else if (url) {
+            } else if (params.url) {
                 // prevent the link creation if the url field was empty
 
                 // create a new link with current selection as a content
-                if ((selectionTextContent && selectionTextContent === label) || isImage) {
-                    const link = this.createLink(url);
-                    if (relValue) {
-                        link.setAttribute("rel", relValue);
+                if ((selectionTextContent && selectionTextContent === params.label) || isImage) {
+                    const link = this.createLink(params.url);
+                    if (params.relValue) {
+                        link.setAttribute("rel", params.relValue);
                     }
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
@@ -584,21 +586,21 @@ export class LinkPlugin extends Plugin {
                         this.dependencies.dom.insert(link);
                     }
                     this.linkInDocument = link;
-                } else if (label) {
-                    const link = this.createLink(url, label);
-                    if (classes) {
-                        link.className = classes;
+                } else if (params.label) {
+                    const link = this.createLink(params.url, params.label);
+                    if (params.classes) {
+                        link.className = params.classes;
                     }
-                    if (linkTarget) {
-                        link.setAttribute("target", linkTarget);
+                    if (params.linkTarget) {
+                        link.setAttribute("target", params.linkTarget);
                     }
                     this.linkInDocument = link;
                     cursorsToRestore = null;
                     this.dependencies.dom.insert(link);
                 }
             }
-            if (attachmentId) {
-                this.linkInDocument.dataset.attachmentId = attachmentId;
+            if (params.attachmentId) {
+                this.linkInDocument.dataset.attachmentId = params.attachmentId;
             }
         };
 
@@ -657,6 +659,7 @@ export class LinkPlugin extends Plugin {
             includeStyling: !this.config.hideStylingInLinkPopover,
             allowTargetBlank: this.config.allowTargetBlank,
             allowStripDomain: this.config.allowStripDomain,
+            relAttributeOptions: this.getResource("link_rel_attribute_options"),
         };
 
         const popover = this.getActivePopover(linkElement);
