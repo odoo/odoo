@@ -36,7 +36,11 @@ class PaymentPostProcessing(http.Controller):
         monitored_tx = self._get_monitored_transaction()
         # The session might have expired, or the transaction never existed.
         values = {'tx': monitored_tx} if monitored_tx else {'payment_not_found': True}
-        return request.render('payment.payment_status', values)
+        template = self.get_payment_status_template_xmlid(monitored_tx)
+        return request.render(template, values)
+
+    def get_payment_status_template_xmlid(self, tx):
+        return 'payment.payment_status'
 
     @http.route('/payment/status/poll', type='jsonrpc', auth='public')
     def poll_status(self, **_kwargs):

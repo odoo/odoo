@@ -53,65 +53,143 @@
         />
     </template>
 
+    <!-- Display of /payment/status -->
+    <template id="pos_payment_status" name="POS Payment Status">
+        <t t-call="web.frontend_layout" no_header="True" no_footer="True" pageName="'h-100'">
+            <div class="pos_payment_status h-100 w-100 d-flex justify-content-center align-items-center" style="background-color: #eae4e8">
+                <div class="container text-center">
+                    <!-- Payment not found -->
+                    <div t-if="payment_not_found">
+                        <i class="fa fa-paper-plane-o fa-5x mb-4 text-primary"/>
+                        <h3 class="display-3">Your payment is on its way!</h3>
+                        <p class="fs-5">
+                            You should receive an email confirming your payment within a few minutes.<br />
+                            Don't hesitate to contact us if you don't receive it.
+                        </p>
+                    </div>
+
+                    <!-- Polling -->
+                    <div t-else="" name="o_payment_status">
+                        <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                        <h3 class="display-3">Almost there!</h3>
+                        <p class="fs-5">We're confirming your payment.</p>
+                        <a t-att-href="tx.landing_route" role="button" class="btn btn-link link-primary">
+                            Skip <i class="fa fa-long-arrow-right ms-1"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Header -->
+    <!-- TODO (PR https://github.com/odoo/odoo/pull/242202): apply suggestions comments -->
+    <template id="pos_state_header" name="POS State Header" inherit_id="payment.state_header" primary="True">
+        <xpath expr="//div[@name='o_payment_status_alert']" position="replace">
+            <t t-if="status_message">
+                <div t-if="tx.state == 'done' or tx.state == 'authorized'" class="o_tx_status_container o_check_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75" />
+                        <polyline class="icon-line line-1" points="28.5346107,51.0058517 42.1743011,64.645546 71.4653931,35.3544579 "/>
+                    </svg>
+                </div>
+
+
+                <div t-elif="tx.state == 'error' or tx.state == 'cancel'" class="o_tx_status_container o_error_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <line class="icon-line line-1" x1="35" y1="35" x2="65" y2="65"/>
+                        <line class="icon-line line-2" x1="65" y1="35" x2="35" y2="65"/>
+                    </svg>
+                </div>
+
+                <div t-elif="tx.state == 'pending'" class="o_tx_status_container o_pending_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <polyline class="icon-line" points="35,25 65,25 35,75 65,75 35,25"/>
+                    </svg>
+                </div>
+
+                <div t-elif="tx.state == 'draft'" class="o_tx_status_container o_draft_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <polyline class="icon-line line-1" points="37,27 63,27 69,33 69,73 37,73 37,27" />
+                        <line class="icon-line line-2" x1="44" y1="44" x2="60" y2="44"/>
+                        <line class="icon-line line-3" x1="46" y1="52" x2="58" y2="52"/>
+                        <line class="icon-line line-4" x1="48" y1="60" x2="56" y2="60"/>
+                    </svg>
+                </div>
+
+                <div t-else="" class="o_tx_status_container o_unknown_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <path class="icon-line line-1" d="M40 38 Q50 25 60 38 Q60 48 50 52 Q50 58 50 60" />
+                        <line class="icon-line line-2" x1="50" y1="68" x2="50" y2="72" />
+                    </svg>
+                </div>
+
+                <h5 t-if="status_heading" t-out="status_heading"/>
+                <span t-if="status_message" t-out="status_message"/>
+                <span t-if="tx.state_message" t-out="tx.state_message"/>
+                <hr />
+            </t>
+        </xpath>
+    </template>
+
     <!-- Display of /pos/pay/confirmation -->
     <template id="pay_confirmation">
-        <t t-set="page_title">Payment Confirmation</t>
-        <t t-set="additional_title">
-            <t t-out="page_title" />
-        </t>
-        <t t-call="portal.frontend_layout"
-            page_title="page_title"
-            additional_title="additional_title"
-            no_footer="1"
-            no_header="1">
+        <t t-call="web.frontend_layout" no_header="True" no_footer="True" pageName="'h-100'">
+            <div class="pos_pay_confirmation h-100 w-100 d-flex justify-content-center align-items-center px-3">
+                <div class="text-center w-100" style="max-width: 540px;">
+                    <!-- State -->
+                    <t t-call="pos_online_payment.pos_state_header"/>
 
-            <div class="wrap">
-                <div class="container d-flex flex-column vh-100 pb-3">
-                    <div class="row flex-grow-1">
-                        <div class="col mt-3">
-                            <t t-if="state == 'error'">
-                                <div class="alert alert-danger">
-                                    <strong>Error:</strong> There was a problem during the payment process.
-                                </div>
-                            </t>
-                            <t t-else="">
-                                <t t-call="payment.state_header"/>
-                                <div class="row row-cols-1 row-cols-sm-2">
-                                    <t t-if="state == 'success'">
-                                        <div class="col fw-bold">Amount</div>
-                                        <div class="col mb-2 mb-lg-0 text-start text-sm-end" t-out="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                    </t>
+                    <!-- Summary -->
+                    <table class="table table-borderless w-100">
+                        <tr t-if="state == 'success'">
+                            <th class="text-start">Amount</th>
+                            <td class="text-end">
+                                <span t-out="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Order Reference</th>
+                            <td class="text-end">
+                                <span t-out="order_reference"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Transaction Reference</th>
+                            <td class="text-end">
+                                <span t-out="tx_reference"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Order ID</th>
+                            <td class="text-end">
+                                <span t-out="pos_order_id"/>
+                            </td>
+                        </tr>
+                    </table>
 
-                                    <div class="col fw-bold">Order Reference</div>
-                                    <div t-out="order_reference" class="col mb-2 mb-lg-0 text-start text-sm-end"/>
-
-                                    <div class="col fw-bold">Transaction Reference</div>
-                                    <div t-out="tx_reference" class="col mb-2 mb-lg-0 text-start text-sm-end"/>
-
-                                    <div class="col fw-bold">Order ID</div>
-                                    <div t-out="pos_order_id" class="col mb-2 mb-lg-0 text-start text-sm-end"/>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                    <div class="row g-2 row-cols-1 justify-content-between">
-                        <div t-if="exit_route" class="col col-sm-auto me-auto">
-                            <a role="button" t-att-class="'btn btn-lg w-100 ' + ('btn-primary' if state == 'success' else 'btn-light border')"  t-att-href="exit_route">
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 flex-column flex-sm-row">
+                        <div t-if="exit_route" style="flex: 1 1 0;">
+                            <a role="button" t-att-class="'btn w-100 ' + ('btn-primary' if state == 'success' else 'btn-light border')"  t-att-href="exit_route">
                                 <t t-out="'Continue' if state == 'success' else 'Cancel payment'"/>
                             </a>
                         </div>
-                        <div t-if="pay_route and state != 'success'" class="col col-sm-auto ms-auto">
-                            <a role="button" class="btn btn-primary btn-lg w-100" t-att-href="pay_route"
-                                >
+                        <div t-if="pay_route and state != 'success'" style="flex: 1 1 0;">
+                            <a role="button" class="btn btn-primary w-100" t-att-href="pay_route">
                                 Try again
                             </a>
                         </div>
                     </div>
-                    <div class="row" t-if="state == 'success'">
-                        <div class="mb-3 text-muted text-center"> 
-                            Processed by 
-                            <t t-out="provider_name"/>
-                        </div>
+
+                    <!-- Processed by -->
+                    <div t-if="state == 'success'" class="my-2 text-muted">
+                        Processed by
+                        <t t-out="provider_name"/>
                     </div>
                 </div>
             </div>
