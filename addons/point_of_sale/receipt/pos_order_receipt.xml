@@ -76,7 +76,7 @@
                                         <img class="invoice-qr-code" t-att-src="image['invoice_qr_code']" />
                                     </td>
                                     <td class="text-start top w-75 ps-1" t-if="conditions['display_url']">
-                                        <p class="text-bold text-normal">Need an invoice?</p>
+                                        <div class="text-bold text-normal">Need an invoice?</div>
                                         <div class="text-small" t-out="extra_data['self_invoicing_url']" />
                                         <div class="text-small">Code: <t t-out="order['ticket_code']"/></div>
                                     </td>
@@ -113,7 +113,7 @@
 
         <template id="point_of_sale.pos_order_receipt_header">
             <div class="w-100 text-center mb-3" name="logo">
-                <img t-if="image['logo']" t-att-src="image['logo']" style="max-height: 75px" />
+                <img t-if="image['logo']" t-att-src="image['logo']" class="w-50" />
             </div>
             <div class="w-100 text-center">
                 <div name="ticket_reference">
@@ -178,10 +178,9 @@
                 <span class="line-note" t-out="line['customer_note']" />
             </div>
             <div t-if="line['lot_names']" class="text-small">
-                <strong>Lot number: </strong>
-                <span t-foreach="line['lot_names']" t-as="lot_name">
-                    <t t-out="lot_name" />
-                </span>
+                <ul t-foreach="line['lot_names']" t-as="lot_name" style="list-style: none; padding: 0; margin: 0;">
+                    <li t-out="lot_name" />
+                </ul>
             </div>
             <div name="extra-info" />
         </template>
@@ -189,7 +188,7 @@
         <template id="point_of_sale.pos_order_receipt_footer">
             <div class="w-100 text-center mt-3">
                 <div class="w-100 mt-2" name="footer" />
-                <div class="mt-2 mb-2" t-if="extra_data['formated_shipping_date']">
+                <div t-if="extra_data['formated_shipping_date']" class="mt-2 mb-2 text-start">
                     Expected delivery: <span class="shipping-date" t-out="extra_data['formated_shipping_date']" />
                 </div>
                 <t t-call="point_of_sale.company_info_receipt" />

@@ -15,13 +15,14 @@ _logger = logging.getLogger(__name__)
 
 class PosController(PortalAccount):
 
-    @http.route('/pos/receipt/<order_id>', type='http', auth='user', sitemap=False, website=True)
+    @http.route('/pos/receipt/<order_id>', type='http', auth='user')
     def pos_receipt_download(self, order_id=None):
         pos_order = request.env['pos.order'].browse(int(order_id))
         if not pos_order.exists():
             return request.not_found()
 
-        image = pos_order.sudo().order_receipt_generate_image()
+        pos_order = pos_order.with_company(pos_order.company_id).with_context(allowed_company_ids=pos_order.company_id.ids)
+        image = pos_order.order_receipt_generate_image()
         return request.make_response(image, [
             ('Content-Type', 'image/png'),
             ('Content-Length', len(image)),
