@@ -5,7 +5,8 @@ from collections.abc import Set as AbstractSet
 import dateutil.relativedelta
 
 from odoo.exceptions import ValidationError
-from odoo.tools import SQL
+from odoo.tools import SQL, unique
+from odoo.tools.misc import freehash
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -138,6 +139,9 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
             and self._records._prefetch_ids == other._records._prefetch_ids
         )
 
+    def __hash__(self):
+        return hash(self._field) ^ freehash(self._records._prefetch_ids)
+
     def __iter__(self):
         field_cache = self._field._get_cache(self._records.env)
         if self._field.type == 'many2one':
@@ -145,7 +149,7 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
                 if (coid := field_cache.get(id_)) is not None:
                     yield coid
         else:
-            for id_ in self._records._prefetch_ids:
+            for id_ in unique(self._records._prefetch_ids):
                 if (coids := field_cache.get(id_)):
                     yield from coids
 
@@ -156,7 +160,7 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
                 if (coid := field_cache.get(id_)) is not None:
                     yield coid
         else:
-            for id_ in reversed(self._records._prefetch_ids):
+            for id_ in unique(reversed(self._records._prefetch_ids)):
                 if (coids := field_cache.get(id_)):
                     yield from coids
 
@@ -172,6 +176,9 @@ class OriginIds(Reversible):  # noqa: PLW1641
 
     def __eq__(self, other):
         return isinstance(other, OriginIds) and self.ids == other.ids
+
+    def __hash__(self):
+        return freehash(self.ids) ^ 1
 
     def __iter__(self):
         for id_ in self.ids:
@@ -197,35 +204,58 @@ class PrefetchUnion(Reversible):
         self._ids = ids
         self._prefetches = prefetches
 
+    class __AlwaysHash:
+        __slots__ = ('obj',)
+
+        def __new__(cls, obj):
+            try:
+                hash(obj)
+                return obj
+            except TypeError:  # unhashable
+                pass
+            r = object.__new__(cls)
+            r.obj = obj
+            return r
+
+        def __eq__(self, value):
+            return isinstance(value, self.__class__) and self.obj == value.obj
+
+        def __hash__(self):
+            return id(self.obj)
+
     def __iter__(self):
-        prev_it = self._ids
-        yield from prev_it
+        it = self._ids
+        yield from it
         # flatten out prefetches in order to avoid recursion errors
         stack = list(reversed(self._prefetches))
+        seen = {self.__AlwaysHash(it)}
         while stack:
             it = stack.pop()
+            h = self.__AlwaysHash(it)
+            if h in seen:
+                continue
+            seen.add(h)
             if isinstance(it, PrefetchUnion):
                 stack.extend(reversed(it._prefetches))
                 continue
-            if it == prev_it:  # small optimization to deduplicate a bit
-                continue
             yield from it
-            prev_it = it
 
     def __reversed__(self):
-        prev_it = self._ids
-        yield from prev_it
+        it = self._ids
+        yield from it
         # flatten out prefetches in order to avoid recursion errors
         stack = list(self._prefetches)
+        seen = {self.__AlwaysHash(it)}
         while stack:
             it = stack.pop()
+            h = self.__AlwaysHash(it)
+            if h in seen:
+                continue
+            seen.add(h)
             if isinstance(it, PrefetchUnion):
                 stack.extend(it._prefetches)
                 continue
-            if it == prev_it:  # small optimization to deduplicate a bit
-                continue
             yield from reversed(it)
-            prev_it = it
 
 
 class Prefetch:
