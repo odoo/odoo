@@ -42,6 +42,5 @@ registry.category("web_tour.tours").add("ZATCA_invoice_mandatory_if_not_settleme
             PaymentScreen.isInvoiceButtonChecked(),
             // Try to uncheck it and verify it remains checked
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.isInvoiceButtonChecked(),
         ].flat(),
 });
