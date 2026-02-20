@@ -196,7 +196,31 @@ class ProductsRibbonOptionPlugin extends Plugin {
             );
         }
 
-        return Promise.all(promises);
+        let res = []
+        try {
+            res = await Promise.all(promises);
+            for (const ribbonId in ribbonTemplates) {
+                const parsedId = parseInt(ribbonId);
+                if (!currentIds.includes(parsedId)) continue;
+
+                const newId = localToServer[parsedId]?.id;
+                if (!newId) continue;
+
+                const ribbon = this.ribbons.find(r => r.id === parsedId);
+                if (ribbon) ribbon.id = newId;
+
+                this.productTemplatesRibbons =
+                    this.productTemplatesRibbons.filter(r => r.ribbonId !== parsedId);
+                this.editable.querySelectorAll(`[data-ribbon-id="${ribbonId}"]`)
+                    .forEach(el => el.dataset.ribbonId = newId);
+                this.ribbonsObject[newId] = this.ribbonsObject[parsedId];
+                delete this.ribbonsObject[parsedId];
+            }
+            this.originalRibbons = JSON.parse(JSON.stringify(this.ribbonsObject));
+        } catch (error) {
+            console.error(error)
+        }
+        return res;
     }
 
     /**
