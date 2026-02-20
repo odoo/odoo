@@ -4,7 +4,6 @@ import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
-import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
     handleSaleDetails,
@@ -16,7 +15,6 @@ import { barcodeService } from "@barcodes/barcode_service";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
-import { _t } from "@web/core/l10n/translation";
 import { uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
@@ -32,7 +30,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};
@@ -141,10 +138,7 @@ export class Navbar extends Component {
     }
 
     async reloadProducts() {
-        this.dialog.add(SyncPopup, {
-            title: _t("Reload Data"),
-            confirm: (fullReload) => this.pos.reloadData(fullReload),
-        });
+        this.pos.reloadData(false);
     }
 
     openCustomerDisplay() {
