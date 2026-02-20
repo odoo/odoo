@@ -107,15 +107,23 @@ test("should log notification when channel/thread is renamed", async () => {
     });
     onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
     await start();
+    await openFormView("discuss.channel", channelId, {
+        arch: `<form><field name="name"/></form>`,
+    });
+    await insertText("[name=name] input", "test", { replace: true });
+    await click(".o_form_button_save");
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-threadName:value(general)");
+    await contains(
+        ".o-mail-NotificationMessage :text(Mitchell Admin changed the channel name to test)"
+    );
+    await click(".o-mail-DiscussContent-threadName:value(test)");
     await insertText(".o-mail-DiscussContent-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
     await contains(".o-mail-DiscussContent-threadName:value(special)");
-    await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} changed the channel name to special`,
-    });
+    await contains(
+        ".o-mail-NotificationMessage :text(Mitchell Admin changed the channel name to special)"
+    );
 
     await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "test" });
     await click(".o-mail-DiscussContent-threadName:value(test)");
@@ -125,9 +133,9 @@ test("should log notification when channel/thread is renamed", async () => {
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
     await contains(".o-mail-DiscussContent-threadName:value(specialThread)");
-    await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} changed the thread name to specialThread`,
-    });
+    await contains(
+        ".o-mail-NotificationMessage :text(Mitchell Admin changed the thread name to specialThread)"
+    );
 });
 
 test("can active change thread from messaging menu", async () => {
@@ -2499,4 +2507,36 @@ test("do not show control panel without breadcrumbs", async () => {
     await openDiscuss();
     await contains(".o-mail-Discuss");
     await contains(".o_control_panel .breadcrumb", { text: serverState.partnerName });
+});
+
+test.tags("focus required");
+test("group chat name reset uses display name in rename notification message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
+    await start();
+    await openDiscuss(channelId);
+    await insertText("input.o-mail-DiscussContent-threadName:enabled", "test", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
+    await contains(
+        ".o-mail-NotificationMessage :text(Mitchell Admin changed the channel name to test)"
+    );
+    await insertText("input.o-mail-DiscussContent-threadName:enabled", "", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
+    await contains(
+        ".o-mail-NotificationMessage :text(Mitchell Admin changed the channel name to Mitchell Admin and Dumbledore)"
+    );
 });

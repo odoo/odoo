@@ -485,6 +485,13 @@ class DiscussChannel(models.Model):
         old_vals = {channel: get_vals(channel) for channel in self}
         result = super().write(vals)
         for channel in self:
+            if (
+                "name" in vals
+                and channel.channel_type in ("channel", "group")
+                and channel.name != old_vals[channel].get(None, {}).get("name", [channel.name])[0]
+            ):
+                body = Markup("<div data-oe-type='channel_rename' class='o_mail_notification'>%s</div>") % channel.display_name
+                channel.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_comment")
             new_subchannel_vals = get_vals(channel)
             for subchannel, values in new_subchannel_vals.items():
                 diff = []
@@ -1479,8 +1486,6 @@ class DiscussChannel(models.Model):
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
-        body = Markup('<div data-oe-type="channel_rename" class="o_mail_notification">%s</div>') % name
-        self.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_comment")
 
     def channel_change_description(self, description):
         self.ensure_one()

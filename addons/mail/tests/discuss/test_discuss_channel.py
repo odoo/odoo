@@ -618,17 +618,117 @@ class TestChannelInternals(MailCommon, HttpCase):
         test_channel.image_128 = base64.b64encode(("<svg/>").encode())
         self.assertEqual(test_channel.avatar_128, test_channel.image_128)
 
+    @freeze_time("2020-03-22 10:42:06")
     def test_channel_write_should_send_notification(self):
-        channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
-        with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id)],
-            [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {"discuss.channel": [{"id": channel.id, "name": "test test"}]},
-                }
-            ],
-        ):
+        channel = self.env["discuss.channel"].create({"name": "test", "description": "test"})
+
+        def get_channel_write_bus():
+            last_message = self.env["mail.message"].search([
+                ("model", "=", "discuss.channel"),
+                ("res_id", "=", channel.id),
+            ], order="id desc", limit=1)
+            member = channel.channel_member_ids.filtered(lambda m: m.is_self)
+            author = self.env.user.partner_id
+            return (
+                [
+                    (self.cr.dbname, "res.partner", author.id),
+                    (self.cr.dbname, "discuss.channel", channel.id),
+                    (self.cr.dbname, "discuss.channel", channel.id),
+                ],
+                [
+                    {
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel.member": [
+                                {
+                                    "id": member.id,
+                                    "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                                    "partner_id": author.id,
+                                    "new_message_separator": last_message.id + 1,
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "type": "discuss.channel/new_message",
+                        "payload": {
+                            "id": channel.id,
+                            "data": {
+                                "mail.message": self._filter_messages_fields(
+                                    {
+                                        "attachment_ids": [],
+                                        "author_id": author.id,
+                                        "author_guest_id": False,
+                                        "body": [
+                                            "markup",
+                                            '<div data-oe-type="channel_rename" class="o_mail_notification">test test</div>',
+                                        ],
+                                        "create_date": fields.Datetime.to_string(last_message.create_date),
+                                        "date": "2020-03-22 10:42:06",
+                                        "default_subject": "test test",
+                                        "email_from": '"OdooBot" <odoobot@example.com>',
+                                        "id": last_message.id,
+                                        "incoming_email_cc": False,
+                                        "incoming_email_to": False,
+                                        "message_link_preview_ids": [],
+                                        "message_type": "notification",
+                                        "model": "discuss.channel",
+                                        "notification_ids": [],
+                                        "parent_id": False,
+                                        "partner_ids": [],
+                                        "pinned_at": False,
+                                        "rating_id": False,
+                                        "reactions": [],
+                                        "record_name": "test test",
+                                        "res_id": channel.id,
+                                        "scheduledDatetime": False,
+                                        "subject": False,
+                                        "subtype_id": self.env.ref("mail.mt_comment").id,
+                                        "thread": {"id": channel.id, "model": "discuss.channel"},
+                                        "write_date": fields.Datetime.to_string(last_message.write_date),
+                                    },
+                                ),
+                                "mail.message.subtype": [{"description": False, "id": self.env.ref("mail.mt_comment").id}],
+                                "mail.thread": self._filter_threads_fields(
+                                    {
+                                        "display_name": "test test",
+                                        "id": channel.id,
+                                        "model": "discuss.channel",
+                                        "module_icon": "/mail/static/description/icon.png",
+                                        "rating_avg": 0.0,
+                                        "rating_count": 0,
+                                    },
+                                ),
+                                "res.partner": self._filter_partners_fields(
+                                    {
+                                        "avatar_128_access_token": author._get_avatar_128_access_token(),
+                                        "id": author.id,
+                                        "is_company": False,
+                                        "main_user_id": self.env.user.id,
+                                        "name": author.name,
+                                        "write_date": fields.Datetime.to_string(author.write_date),
+                                    },
+                                ),
+                                "res.users": self._filter_users_fields(
+                                    {"id": self.env.user.id, "share": False},
+                                ),
+                            },
+                        },
+                    },
+                    {
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel": [
+                                {
+                                    "id": channel.id,
+                                    "name": "test test",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            )
+        with self.assertBus(get_params=get_channel_write_bus):
             channel.name = "test test"
 
     def test_channel_write_should_send_notification_if_image_128_changed(self):
@@ -1025,3 +1125,22 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    def test_group_chat_name_reset_posts_rename_message_with_display_name(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Original Name",
+            "channel_type": "group",
+            "channel_member_ids": [
+                Command.create({"partner_id": self.partner_employee.id}),
+                Command.create({"partner_id": self.test_partner.id}),
+            ],
+        })
+        channel.name = ""
+        last_message = self.env["mail.message"].search([
+            ("model", "=", "discuss.channel"),
+            ("res_id", "=", channel.id),
+        ], order="id desc", limit=1)
+        self.assertEqual(
+            last_message.body,
+            '<div data-oe-type="channel_rename" class="o_mail_notification">Ernest Employee, Test Partner, and OdooBot</div>',
+        )
