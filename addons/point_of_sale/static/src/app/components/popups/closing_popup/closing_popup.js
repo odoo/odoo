@@ -238,6 +238,7 @@ export class ClosePosPopup extends Component {
                 await this.handleClosingControlError();
             }
         } finally {
+            this.pos.removeDefaultPrinter();
             localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
         }
     }

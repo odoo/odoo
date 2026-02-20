@@ -82,18 +82,22 @@ export class TestEPos extends Component {
     }
 
     async _testAllPrinters() {
-        const config_id = this.props.record.resId;
+        const record = this.props.record;
+        let printers_id = [];
 
-        if (!config_id) {
-            this.notification.add(_t("Save the configuration before testing"), {
-                type: "warning",
-            });
-            return;
+        if (record.resId) {
+            // Saved record → read from database
+            const config_data = await this.orm.read(
+                "pos.config",
+                [record.resId],
+                ["receipt_printer_ids"]
+            );
+            if (config_data[0].receipt_printer_ids.length) {
+                printers_id = config_data[0].receipt_printer_ids || [];
+            } else {
+                printers_id = record.data.receipt_printer_ids._currentIds || [];
+            }
         }
-        const config_data = await this.orm.read("pos.config", [config_id], ["receipt_printer_ids"]);
-
-        const printers_id = config_data[0].receipt_printer_ids;
-
         if (!printers_id.length) {
             this.notification.add(_t("No receipt printers configured for this POS."), {
                 type: "warning",

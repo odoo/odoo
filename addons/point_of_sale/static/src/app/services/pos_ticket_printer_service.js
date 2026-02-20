@@ -97,11 +97,10 @@ export class PosTicketPrinterService {
     }
 
     async openCashbox() {
-        if (!this.config.default_receipt_printer_id?._instance?.openCashbox) {
+        if (!this.defaultPrinter.id?._instance?.openCashbox) {
             return false;
         }
-
-        return await this.config.default_receipt_printer_id._instance.openCashbox();
+        return await this.defaultPrinter.id._instance.openCashbox();
     }
 
     async print({ printer, iframe, image = null }) {
@@ -119,11 +118,19 @@ export class PosTicketPrinterService {
         return status;
     }
 
+    get defaultPrinter() {
+        const DEFAULT_PRINTER_STORAGE_KEY = "pos.default_printer_id";
+        const printer_id = Number(
+            localStorage.getItem(DEFAULT_PRINTER_STORAGE_KEY + this.config.id)
+        );
+        return this.receiptPrinters.find((printer) => printer.id === printer_id);
+    }
+
     async printWithFallback({
         iframe,
         image = null,
         webFallback = true,
-        printer = this.config.default_receipt_printer_id,
+        printer = this.defaultPrinter,
         fallbacks = this.config.receipt_printer_ids,
     } = {}) {
         if (!printer) {
@@ -160,7 +167,6 @@ export class PosTicketPrinterService {
     /**
      * All bellow method are using the default receipt printer but can
      * fallback to another printer if needed.
-     * - this.config.default_receipt_printer_id
      * - this.config.receipt_printer_ids
      */
     async printSaleDetailsReceipt({ webFallback = true } = {}) {
@@ -189,7 +195,7 @@ export class PosTicketPrinterService {
         formattedAmount,
         webFallback = true,
     }) {
-        const printer = this.config.default_receipt_printer_id;
+        const printer = this.defaultPrinter.id;
         if (!printer) {
             return;
         }

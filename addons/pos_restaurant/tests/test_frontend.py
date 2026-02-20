@@ -768,7 +768,6 @@ class TestFrontend(TestFrontendCommon):
             'iface_print_skip_screen': True,
             'other_devices': True,
             'preparation_devices': True,
-            'default_receipt_printer_id': receipt_printer.id,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')

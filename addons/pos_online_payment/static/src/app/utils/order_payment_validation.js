@@ -215,7 +215,8 @@ patch(OrderPaymentValidation.prototype, {
         // Now, do practically the normal flow
         if (
             (this.order.isPaidWithCash() || this.order.change) &&
-            this.pos.config.iface_cashdrawer
+            this.pos.config.receipt_printer_ids.length &&
+            this.pos.printer.device.iface_cashdrawer
         ) {
             this.pos.openCashbox();
         }

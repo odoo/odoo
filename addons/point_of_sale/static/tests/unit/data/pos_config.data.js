@@ -66,7 +66,6 @@ export class PosConfig extends models.ServerModel {
             journal_id: 1,
             invoice_journal_id: 1,
             currency_id: 1,
-            iface_cashdrawer: false,
             iface_big_scrollbars: false,
             iface_print_auto: false,
             iface_print_skip_screen: true,

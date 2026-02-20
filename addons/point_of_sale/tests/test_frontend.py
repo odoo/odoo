@@ -3055,7 +3055,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_print_skip_screen': True,
             'other_devices': True,
             'receipt_printer_ids': [Command.set(pos_printer.ids)],
-            'default_receipt_printer_id': pos_printer,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_product_screen_with_automatic_receipt_printing')
@@ -3176,7 +3175,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_print_auto': True,
             'iface_print_skip_screen': True,
             'receipt_printer_ids': [self.printer.id],
-            'default_receipt_printer_id': self.printer.id,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

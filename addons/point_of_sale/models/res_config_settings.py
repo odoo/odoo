@@ -55,7 +55,6 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
     pos_module_pos_appointment = fields.Boolean(related="pos_config_id.module_pos_appointment", readonly=False)
     pos_module_pos_avatax = fields.Boolean(related='pos_config_id.module_pos_avatax', readonly=False)
-    pos_default_receipt_printer_id = fields.Many2one(related='pos_config_id.default_receipt_printer_id', readonly=False)
     pos_receipt_printer_ids = fields.Many2many(related='pos_config_id.receipt_printer_ids', domain="[('use_type', '=', 'receipt')]", readonly=False)
     pos_preparation_printer_ids = fields.Many2many(related='pos_config_id.preparation_printer_ids', domain="[('use_type', '=', 'preparation')]", readonly=False)
     pos_use_custom_receipt_info = fields.Boolean(related='pos_config_id.use_custom_receipt_info', readonly=False)
@@ -83,7 +82,6 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
     pos_iface_group_by_categ = fields.Boolean(related='pos_config_id.iface_group_by_categ', readonly=False)
-    pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
@@ -249,10 +247,6 @@ class ResConfigSettings(models.TransientModel):
             pos_config = self.env['pos.config'].browse(pos_config_id)
             return pos_config.open_ui()
 
-    @api.model
-    def _is_cashdrawer_displayed(self, res_config):
-        return res_config.pos_other_devices and bool(res_config.pos_default_receipt_printer_id)
-
     @api.depends('pos_limit_categories', 'pos_config_id')
     def _compute_pos_iface_available_categ_ids(self):
         for res_config in self:
@@ -268,14 +262,6 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_selectable_categ_ids = res_config.pos_iface_available_categ_ids
             else:
                 res_config.pos_selectable_categ_ids = self.env['pos.category'].search([])
-
-    @api.depends('pos_config_id', 'pos_default_receipt_printer_id', 'pos_other_devices')
-    def _compute_pos_iface_cashdrawer(self):
-        for res_config in self:
-            if self._is_cashdrawer_displayed(res_config):
-                res_config.pos_iface_cashdrawer = res_config.pos_config_id.iface_cashdrawer
-            else:
-                res_config.pos_iface_cashdrawer = False
 
     @api.depends('pos_use_header_or_footer', 'pos_config_id')
     def _compute_pos_receipt_header_footer(self):
@@ -333,9 +319,3 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
-
-    @api.onchange('pos_receipt_printer_ids')
-    def _onchange_pos_receipt_printer_ids(self):
-        """Clear pos_default_receipt_printer_id if it's removed from pos_receipt_printer_ids"""
-        if self.pos_default_receipt_printer_id.id not in self.pos_receipt_printer_ids.ids:
-            self.pos_default_receipt_printer_id = False
