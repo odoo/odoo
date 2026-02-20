@@ -1473,3 +1473,26 @@ class TestPoSBasicConfig(TestPoSCommon):
         test_payment_method.journal_id = False
         test_journal.action_archive()
         self.assertFalse(test_journal.active, "Journal should be archived when not linked to a POS payment method.")
+
+    def test_pos_invoice_auto_reviewed_for_pos_only_user(self):
+        """POS invoices must be automatically marked as 'reviewed' even when
+        the invoicing user has no accounting review permissions."""
+        self.open_new_session()
+
+        pos_only_user = self.env['res.users'].create({
+            'name': 'POS Only User',
+            'login': 'pos_only_user',
+            'password': 'pos_only_user',
+            'group_ids': [self.env.ref('point_of_sale.group_pos_manager').id],
+        })
+
+        orders = self._create_orders([{
+            'pos_order_lines_ui_args': [(self.product1, 1)],
+            'customer': self.customer,
+            'is_invoiced': False,
+        }])
+        orders = sum(orders.values(), self.env['pos.order'])
+
+        orders.with_user(pos_only_user)._generate_pos_order_invoice()
+
+        self.assertEqual(orders.account_move.review_state, 'reviewed')
