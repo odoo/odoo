@@ -8,7 +8,8 @@
                 </div>
             </div>
             <t t-set="show_title" position="after">
-                <t t-set="show_title" t-if="True"/>
+                <t t-set="show_title" t-if="conditions.get('code_sa')" t-value="order['state'] != 'draft'"/>
+
             </t>
             <t t-set="show_simplified_title" position="after">
                 <t t-set="show_simplified_title"

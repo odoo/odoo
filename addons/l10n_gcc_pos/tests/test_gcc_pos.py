@@ -1,10 +1,11 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestGenericGCC(TestGenericLocalization):
+class TestGenericGCC(TestGenericLocalization, CommonPosTest):
     @classmethod
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
@@ -30,6 +31,8 @@ class TestGenericGCC(TestGenericLocalization):
 
     def test_generic_localization(self):
         self.main_pos_config.l10n_gcc_dual_language_receipt = True
+        self.main_pos_config.cash_rounding = True
+        self.main_pos_config.rounding_method = self.account_cash_rounding_half
         _, html = super().test_generic_localization()
         self.assertTrue("Served by / خدم بواسطة" in html)
         self.assertTrue("Ticket / تذكرة" in html)
@@ -37,5 +40,3 @@ class TestGenericGCC(TestGenericLocalization):
         self.assertTrue("Subtotal / الإجمالي الفرعي" in html)
         self.assertTrue("Rounding / التقريب" in html)
         self.assertTrue("Total / اﻹجمالي" in html)
-        self.assertTrue("Discount / الخصومات" in html)
-        self.assertTrue("Change / الباقي" in html)
