@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from ast import literal_eval
 
 
 class ProjectTaskTypeDelete(models.TransientModel):
@@ -55,23 +54,4 @@ class ProjectTaskTypeDelete(models.TransientModel):
         return self._get_action()
 
     def _get_action(self):
-        project_id = self.env.context.get('default_project_id')
-
-        if project_id:
-            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
-            action['domain'] = [('project_id', '=', project_id), ('display_in_project', '=', 'True')]
-            action['context'] = str({
-                'pivot_row_groupby': ['user_ids'],
-                'default_project_id': project_id,
-            })
-        elif self.env.context.get('stage_view'):
-            action = self.env["ir.actions.actions"]._for_xml_id("project.open_task_type_form")
-        else:
-            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
-
-        context = action.get('context', '{}')
-        context = context.replace('uid', str(self.env.uid))
-        context = dict(literal_eval(context), active_test=True)
-        action['context'] = context
-        action['target'] = 'main'
-        return action
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
