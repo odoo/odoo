@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     openFormView,
     patchUiSize,
     scroll,
@@ -10,6 +11,8 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -235,4 +238,29 @@ test("removing the last attachment should close the attachment box", async () =>
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("Attachment should be at the top while uploading", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+        {
+            mimetype: "text/plain",
+            name: "Blu.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const text = new File(["hello, world"], "text2.txt", { type: "text/plain" });
+    onRpc("/mail/attachment/upload", () => new Deferred()); // never fulfill the attachment upload promise.
+    await inputFiles(".o-mail-Chatter-fileUploader", [text]);
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentContainer:first-child div[title='Uploading']"
+    );
 });
