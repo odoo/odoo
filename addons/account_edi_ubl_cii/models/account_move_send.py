@@ -126,7 +126,11 @@ class AccountMoveSend(models.AbstractModel):
 
         if invoice._need_ubl_cii_xml(invoice_data['invoice_edi_format']):
             builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
-            xml_content, errors = builder._export_invoice(invoice)
+            xml_content, errors = (
+                builder
+                .with_context(from_peppol='peppol' in invoice_data['sending_methods'])
+                ._export_invoice(invoice)
+            )
             filename = builder._export_invoice_filename(invoice)
 
             # Failed.

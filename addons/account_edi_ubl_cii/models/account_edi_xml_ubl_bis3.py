@@ -866,20 +866,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
             })
 
-        # [PEPPOL-EN16931-R010]
-        if not vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cbc:EndpointID']['_text']:
-            constraints['ubl_peppol_en16931-r010'] = _(
-                "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the customer '%s'.",
-                vals['customer'].display_name,
-            )
-
-        # [PEPPOL-EN16931-R020]
-        if not vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cbc:EndpointID']['_text']:
-            constraints['ubl_peppol_en16931-r020'] = _(
-                "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the company '%s'.",
-                vals['supplier'].display_name,
-            )
-
         return constraints
 
     # -------------------------------------------------------------------------
