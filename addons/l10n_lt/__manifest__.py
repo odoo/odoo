@@ -3,7 +3,7 @@
     'name': 'Lithuania - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['lt'],
-    'version': '1.0.0',
+    'version': '1.1.0',
     'description': """
 Chart of Accounts (COA) Template for Lithuania's Accounting.
 
