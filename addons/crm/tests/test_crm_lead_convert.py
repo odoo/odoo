@@ -416,6 +416,50 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertFalse(self.lead_1.lead_properties)
 
     @users('user_sales_manager')
+    def test_lead_convert_with_company_and_contact_email(self):
+        """ Test when a lead has both company name and contact names,
+        the resulting company partner has no phone, mobile and email while the contact partner has it. """
+        lead = self.env['crm.lead'].create({
+            'name': 'Test Lead',
+            'partner_name': 'Test Company',
+            'contact_name': 'Test Contact',
+            'email_from': 'test@example.com',
+            'phone': '123456789',
+            'mobile': '987654321',
+            'type': 'lead',
+        })
+        lead._handle_partner_assignment()
+        self.assertRecordValues(lead.partner_id, [{
+            'name': 'Test Contact',
+            'email': 'test@example.com',
+            'phone': "123456789",
+            'mobile': "987654321",
+        }])
+        self.assertRecordValues(lead.partner_id.parent_id, [{
+            'name': 'Test Company',
+            'email': False,
+            'phone': False,
+            'mobile': False,
+        }])
+        # IF only company name is provided and contact name is empty
+        # phone, mobile and email should belong to the company partner
+        lead = self.env['crm.lead'].create({
+            'name': 'Test Lead 2',
+            'partner_name': 'Test Company 2',
+            'type': 'lead',
+            'email_from': 'test2@example.com',
+            'phone': "1234567891",
+            'mobile': "9876543211",
+        })
+        lead._handle_partner_assignment()
+        self.assertRecordValues(lead.partner_id, [{
+            'name': 'Test Company 2',
+            'email': 'test2@example.com',
+            'phone': "1234567891",
+            'mobile': "9876543211",
+        }])
+
+    @users('user_sales_manager')
     def test_lead_merge(self):
         """ Test convert wizard working in merge mode """
         date = Datetime.from_string('2020-01-20 16:00:00')
