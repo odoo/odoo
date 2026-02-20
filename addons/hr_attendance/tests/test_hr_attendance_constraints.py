@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from freezegun import freeze_time
 import time
 
 from odoo.tests.common import tagged, TransactionCase
@@ -62,6 +63,27 @@ class TestHrAttendance(TransactionCase):
             self.open_attendance.write({
                 'check_out': time.strftime('%Y-%m-10 11:30'),
             })
+
+    @freeze_time("2024-02-05 11:00:00")
+    def test_attendance_in_the_future(self):
+        employee = self.env['hr.employee'].create({'name': "Test"})
+        self.attendance.create({
+            'employee_id': employee.id,
+            'check_in': time.strftime('2024-02-10 11:00'),
+            'check_out': time.strftime('2024-02-10 12:00'),
+        })
+        open_attendance = self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': time.strftime('2024-02-05 10:00'),
+        })
+
+        self.assertEqual(employee.attendance_state, 'checked_in')
+
+        open_attendance.write({
+            'check_out': time.strftime('2024-02-05 11:30'),
+        })
+
+        self.assertEqual(employee.attendance_state, 'checked_out')
 
     def test_time_format_attendance(self):
         self.env.user.tz = 'UTC'
