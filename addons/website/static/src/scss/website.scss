@@ -342,9 +342,9 @@ body {
                 > header #o_main_nav {
                     padding-left: 0;
                     padding-right: 0;
-                    
+
                     @if ($-header-template == "search") {
-                        & > div, 
+                        & > div,
                         & > .o_header_hide_on_scroll > .container {
                             padding-left: 0;
                             padding-right: 0;
@@ -1256,6 +1256,14 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         position: absolute;
     }
 
+    .carousel-control-prev, .carousel-control-next {
+        &:focus-visible {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+            }
+        }
+    }
+
     // Allow clicks to pass through the carousel control's wrapper, while
     // keeping the control indicators clickable.
     .carousel-indicators {
@@ -1480,7 +1488,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             button {
                 color: inherit;
             }
-            
+
             &.s_carousel_indicators_numbers {
                 // For large screen, use the same size as the margin-bottom of
                 // the prev/next buttons (like other indicators; instead of
@@ -1798,7 +1806,7 @@ header {
             // When the header should only have a bottom border, only take the
             // first value of the variable 'menu-border-width' to behave as if
             // the input only accepted one number.
-            $-menu-border-bottom-width: nth($-menu-border-width, 1); 
+            $-menu-border-bottom-width: nth($-menu-border-width, 1);
             border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
             border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
