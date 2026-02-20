@@ -81,6 +81,18 @@ export function getBasicServerData() {
     };
 }
 
+function getField(model, fieldPath) {
+    const path = fieldPath.split(".");
+    let currentNode = model._fields;
+    for (const part of path) {
+        if (!currentNode[part]) {
+            throw new Error(`Field ${fieldPath} not found in model ${model._name}`);
+        }
+        currentNode = currentNode[part];
+    }
+    return currentNode;
+}
+
 /**
  *
  * @param {string} model
@@ -91,29 +103,25 @@ export function getBasicServerData() {
  */
 export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
     const cols = [];
-    for (const name of columns) {
-        const fieldName = name.split(".")[0]; // in case of property field (eg. partner_properties.my_property)
-        const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
+    for (let { name, string } of columns) {
+        if (!string) {
+            // const fieldName = name.split(".")[0]; // in case of property field (eg. partner_properties.my_property)
+            const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
+            string = getField(PyModel, name);
+        }
         cols.push({
             name,
-            type: PyModel._fields[fieldName].type,
+            string,
         });
     }
     return {
-        definition: {
-            metaData: {
-                resModel: model,
-                columns,
-            },
-            searchParams: {
-                domain: [],
-                context: {},
-                orderBy,
-            },
-            name: "List",
-            actionXmlId,
-        },
+        model,
         columns: cols,
+        domain: [],
+        context: {},
+        orderBy,
+        actionXmlId,
+        name: "List",
     };
 }
 

@@ -1,33 +1,31 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { helpers } from "@odoo/o-spreadsheet";
-import { Domain } from "@web/core/domain";
-import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
-const { getMaxObjectId } = helpers;
+const { getMaxObjectId, deepEquals, deepCopy } = helpers;
+
+/**
+ * @typedef {Object} ListColumn
+ * @property {string} name The technical field path of the column
+ * @property {string} string The custom display name of the column
+ * @property {boolean} [hidden] Whether the column is hidden or not
+ */
 
 /**
  * @typedef {Object} ListDefinition
- * @property {Array<string>} columns
+ * @property {Array<ListColumn>} columns
  * @property {Object} context
  * @property {Array<Array<string>>} domain
- * @property {string} id The id of the list
  * @property {string} model The technical name of the model we are listing
  * @property {string} name Name of the list
  * @property {Array<string>} orderBy
  * @property {string} actionXmlId
- *
- * @typedef {Object} List
- * @property {string} id
- * @property {string} dataSourceId
- * @property {ListDefinition} definition
  */
 
 export class ListCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
         "getListDisplayName",
         "getListDefinition",
-        "getListModelDefinition",
         "getListIds",
         "getListName",
         "getNextListId",
@@ -37,20 +35,25 @@ export class ListCorePlugin extends OdooCorePlugin {
         super(config);
 
         this.nextId = 1;
-        /** @type {Object.<string, List>} */
+        /** @type {Object.<string, ListDefinition>} */
         this.lists = {};
     }
 
+    /**
+     * @param {AllCoreCommand} cmd
+     *
+     * @returns {string | string[]}
+     */
     allowDispatch(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST":
-                if (cmd.id !== this.nextId.toString()) {
+                if (cmd.listId !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
-                if (this.lists[cmd.id]) {
+                if (this.lists[cmd.listId]) {
                     return CommandResult.ListIdDuplicated;
                 }
-                break;
+                return this._checkDefinition(cmd.definition);
             case "DUPLICATE_ODOO_LIST":
                 if (!this.lists[cmd.listId]) {
                     return CommandResult.ListIdNotFound;
@@ -68,6 +71,13 @@ export class ListCorePlugin extends OdooCorePlugin {
                 }
                 break;
             case "UPDATE_ODOO_LIST":
+                if (!(cmd.listId in this.lists)) {
+                    return CommandResult.ListIdNotFound;
+                }
+                if (deepEquals(this.lists[cmd.listId], cmd.list)) {
+                    return CommandResult.ListDefinitionUnchanged;
+                }
+                return this._checkDefinition(cmd.list);
             case "UPDATE_ODOO_LIST_DOMAIN":
                 if (!(cmd.listId in this.lists)) {
                     return CommandResult.ListIdNotFound;
@@ -78,36 +88,34 @@ export class ListCorePlugin extends OdooCorePlugin {
     }
 
     /**
-     * Handle a spreadsheet command
+     * @param {AllCoreCommand} cmd
      *
-     * @param {Object} cmd Command
      */
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
-                const { sheetId, col, row, id, definition, linesNumber, columns } = cmd;
+                const { sheetId, col, row, definition, listId, linesNumber, mode } = cmd;
                 const anchor = [col, row];
-                this._addList(id, definition);
-                this._insertList(sheetId, anchor, id, linesNumber, columns);
-                this.history.update("nextId", parseInt(id, 10) + 1);
+                this._addList(listId, definition);
+                const columns = this.lists[listId].columns;
+                this._insertList(sheetId, anchor, listId, linesNumber, columns, mode);
                 break;
             }
             case "DUPLICATE_ODOO_LIST": {
                 const { listId, newListId, duplicatedListName } = cmd;
-                const duplicatedList = deepCopy(this.lists[listId].definition);
+                const duplicatedList = deepCopy(this.lists[listId]);
                 duplicatedList.name = duplicatedListName ?? duplicatedList.name + " (copy)";
                 this._addList(newListId, duplicatedList);
-                this.history.update("nextId", parseInt(newListId, 10) + 1);
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {
-                const { sheetId, col, row, id, linesNumber, columns } = cmd;
+                const { sheetId, col, row, listId, linesNumber, columns, mode } = cmd;
                 const anchor = [col, row];
-                this._insertList(sheetId, anchor, id, linesNumber, columns);
+                this._insertList(sheetId, anchor, listId, linesNumber, columns, mode);
                 break;
             }
             case "RENAME_ODOO_LIST": {
-                this.history.update("lists", cmd.listId, "definition", "name", cmd.name);
+                this.history.update("lists", cmd.listId, "name", cmd.name);
                 break;
             }
             case "REMOVE_ODOO_LIST": {
@@ -117,18 +125,11 @@ export class ListCorePlugin extends OdooCorePlugin {
                 break;
             }
             case "UPDATE_ODOO_LIST_DOMAIN": {
-                this.history.update(
-                    "lists",
-                    cmd.listId,
-                    "definition",
-                    "searchParams",
-                    "domain",
-                    cmd.domain
-                );
+                this.history.update("lists", cmd.listId, "domain", cmd.domain);
                 break;
             }
             case "UPDATE_ODOO_LIST": {
-                this.history.update("lists", cmd.listId, "definition", cmd.list);
+                this.history.update("lists", cmd.listId, cmd.list);
                 break;
             }
         }
@@ -151,7 +152,7 @@ export class ListCorePlugin extends OdooCorePlugin {
      * @returns {string}
      */
     getListName(id) {
-        return this.lists[id].definition.name;
+        return this.lists[id].name;
     }
 
     /**
@@ -177,21 +178,7 @@ export class ListCorePlugin extends OdooCorePlugin {
      * @returns {ListDefinition}
      */
     getListDefinition(id) {
-        const def = this.lists[id].definition;
-        return {
-            columns: [...def.metaData.columns],
-            domain: def.searchParams.domain,
-            model: def.metaData.resModel,
-            context: { ...def.searchParams.context },
-            orderBy: [...def.searchParams.orderBy],
-            id,
-            name: def.name,
-            actionXmlId: def.actionXmlId,
-        };
-    }
-
-    getListModelDefinition(id) {
-        return this.lists[id].definition;
+        return this.lists[id];
     }
 
     /**
@@ -211,11 +198,9 @@ export class ListCorePlugin extends OdooCorePlugin {
 
     _addList(id, definition) {
         const lists = { ...this.lists };
-        lists[id] = {
-            id,
-            definition,
-        };
+        lists[id] = definition;
         this.history.update("lists", lists);
+        this.history.update("nextId", parseInt(id, 10) + 1);
     }
 
     /**
@@ -226,10 +211,15 @@ export class ListCorePlugin extends OdooCorePlugin {
      * @param {number} linesNumber Number of records to insert
      * @param {Array<Object>} columns Columns ({name, type})
      */
-    _insertList(sheetId, anchor, id, linesNumber, columns) {
-        this._resizeSheet(sheetId, anchor, columns.length, linesNumber + 1);
-        this._insertHeaders(sheetId, anchor, id, columns);
-        this._insertValues(sheetId, anchor, id, columns, linesNumber);
+    _insertList(sheetId, anchor, id, linesNumber, columns, mode) {
+        if (mode === "static") {
+            this._resizeSheet(sheetId, anchor, columns.length, linesNumber + 1);
+            this._insertHeaders(sheetId, anchor, id, columns);
+            this._insertValues(sheetId, anchor, id, columns, linesNumber);
+        } else {
+            this._resizeSheet(sheetId, anchor, columns.length, linesNumber + 1);
+            this._insertSplillableList(sheetId, anchor, id, linesNumber);
+        }
     }
 
     _insertHeaders(sheetId, anchor, id, columns) {
@@ -258,12 +248,22 @@ export class ListCorePlugin extends OdooCorePlugin {
                     sheetId,
                     col,
                     row,
-                    content: `=ODOO.LIST(${id},${i},"${column.name}")`,
+                    content: `=ODOO.LIST.VALUE(${id},${i},"${column.name}")`,
                 });
                 col++;
             }
             row++;
         }
+    }
+
+    _insertSplillableList(sheetId, anchor, id, linesNumber) {
+        const content = linesNumber ? `=ODOO.LIST(${id}, ${linesNumber})` : `=ODOO.LIST(${id})`;
+        this.dispatch("UPDATE_CELL", {
+            sheetId,
+            col: anchor[0],
+            row: anchor[1],
+            content,
+        });
     }
 
     /**
@@ -300,6 +300,16 @@ export class ListCorePlugin extends OdooCorePlugin {
         }
     }
 
+    _checkDefinition(definition) {
+        if (
+            !definition.columns ||
+            definition.columns.some((column) => !column.name || !column.string)
+        ) {
+            return CommandResult.InvalidListDefinition;
+        }
+        return CommandResult.Success;
+    }
+
     // ---------------------------------------------------------------------
     // Import/Export
     // ---------------------------------------------------------------------
@@ -312,20 +322,7 @@ export class ListCorePlugin extends OdooCorePlugin {
     import(data) {
         if (data.lists) {
             for (const [id, list] of Object.entries(data.lists)) {
-                const definition = {
-                    metaData: {
-                        resModel: list.model,
-                        columns: list.columns,
-                    },
-                    searchParams: {
-                        domain: list.domain,
-                        context: list.context,
-                        orderBy: list.orderBy,
-                    },
-                    actionXmlId: list.actionXmlId,
-                    name: list.name,
-                };
-                this._addList(id, definition);
+                this._addList(id, list);
             }
         }
         this.nextId = data.listNextId || getMaxObjectId(this.lists) + 1;
@@ -339,7 +336,6 @@ export class ListCorePlugin extends OdooCorePlugin {
         data.lists = {};
         for (const id in this.lists) {
             data.lists[id] = JSON.parse(JSON.stringify(this.getListDefinition(id)));
-            data.lists[id].domain = new Domain(data.lists[id].domain).toJson();
         }
         data.listNextId = this.nextId;
     }

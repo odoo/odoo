@@ -50,6 +50,15 @@ declare module "@spreadsheet" {
     type OdooDispatch = UIDispatch & OdooCommandDispatcher["dispatch"];
     type OdooCoreDispatch = CoreDispatch & OdooCoreCommandDispatcher["dispatch"];
 
+
+    type OdooListCoreDefinition = {
+        model: string;
+        domain: Array<Array<string>>;
+        orderBy: Array<string>;
+        context: Record<string, any>;
+        columns: { name: string; string: string }[];
+    }
+
     // CORE
 
     export interface ExtendedAddPivotCommand extends AddPivotCommand {
@@ -145,6 +154,27 @@ declare module "@spreadsheet" {
         filters: { filterId: string; value: any }[];
     }
 
+    export interface InsertListCommand {
+        type: "INSERT_ODOO_LIST";
+        listId: string;
+        definition: OdooListCoreDefinition;
+        sheetId: string;
+        col: number;
+        row: number;
+        linesNumber: number;
+        mode: "static" | "dynamic";
+    }
+
+    export interface reInsertListCommand {
+        type: "RE_INSERT_ODOO_LIST";
+        listId: string;
+        sheetId: string;
+        col: number;
+        row: number;
+        linesNumber: number;
+        mode: "static" | "dynamic";
+    }
+
     type OdooCoreCommand =
         | ExtendedAddPivotCommand
         | ExtendedUpdatePivotCommand
@@ -155,7 +185,9 @@ declare module "@spreadsheet" {
         | AddGlobalFilterCommand
         | EditGlobalFilterCommand
         | RemoveGlobalFilterCommand
-        | MoveGlobalFilterCommand;
+        | MoveGlobalFilterCommand
+        | InsertListCommand
+        | reInsertListCommand;
 
     export type AllCoreCommand = OdooCoreCommand | CoreCommand;
 

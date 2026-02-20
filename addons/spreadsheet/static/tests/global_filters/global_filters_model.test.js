@@ -246,7 +246,7 @@ test("Adding new DataSource will set its fieldMatching according to other ones w
     expect(fieldMatching.type).toBe("date");
     expect(fieldMatching.offset).toBe(undefined);
 
-    insertListInSpreadsheet(model, { model: "partner", columns: ["foo"] });
+    insertListInSpreadsheet(model, { model: "partner", columns: [{ name: "foo", string: "Foo" }] });
     fieldMatching = model.getters.getListFieldMatching("1", filterId);
     expect(fieldMatching.chain).toBe("created_on");
     expect(fieldMatching.type).toBe("date");
@@ -269,7 +269,10 @@ test("Adding new DataSource with a different model won't set up its field matchi
     });
     const filterId = THIS_YEAR_GLOBAL_FILTER.id;
 
-    insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
+    insertListInSpreadsheet(model, {
+        model: "product",
+        columns: [{ name: "name", string: "Name" }],
+    });
     const fieldMatching = model.getters.getListFieldMatching("1", filterId);
     expect(fieldMatching).toBe(undefined);
 });
@@ -435,7 +438,7 @@ test("Can import/export filters", async function () {
         lists: {
             1: {
                 id: 1,
-                columns: ["foo", "contact_name"],
+                columns: [{ name: "foo" }, { name: "contact_name" }],
                 domain: [],
                 model: "partner",
                 orderBy: [],
@@ -520,7 +523,10 @@ test("Can import/export filters of only list", async function () {
         lists: {
             1: {
                 id: 1,
-                columns: ["foo", "contact_name"],
+                columns: [
+                    { name: "foo", string: "Foo" },
+                    { name: "contact_name", string: "Contact Name" },
+                ],
                 domain: [],
                 model: "partner",
                 orderBy: [],

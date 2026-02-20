@@ -156,7 +156,7 @@ migrationStepRegistry.add("18.5.10", {
                 }
             }
         }
-        const re = /ODOO\.FILTER\.VALUE/gi
+        const re = /ODOO\.FILTER\.VALUE/gi;
         for (const sheet of data.sheets || []) {
             for (const xc in sheet.cells || {}) {
                 const content = sheet.cells[xc];
@@ -204,6 +204,16 @@ migrationStepRegistry.add("19.1.2", {
                 }
             }
         }
+        return data;
+    },
+});
+
+migrationStepRegistry.add("19.2.1", {
+    migrate(data) {
+        for (const list of Object.values(data.lists || {})) {
+            list.columns = list.columns?.map((col) => ({ name: col, string: col })) || [];
+        }
+        renameFunctions(data, { "ODOO.LIST": "ODOO.LIST.VALUE" });
         return data;
     },
 });
@@ -257,7 +267,7 @@ function parseDimension(dimension) {
     return { name };
 }
 
-function renameFunctions(data, map) {
+function renameFunctionsPre19(data, map) {
     for (const sheet of data.sheets || []) {
         for (const xc in sheet.cells || []) {
             const cell = sheet.cells[xc];
@@ -275,12 +285,30 @@ function renameFunctions(data, map) {
     return data;
 }
 
+function renameFunctions(data, map) {
+    for (const sheet of data.sheets || []) {
+        for (const xc in sheet.cells || []) {
+            const cell = sheet.cells[xc];
+            if (cell?.startsWith("=")) {
+                const tokens = tokenize(cell);
+                for (const token of tokens) {
+                    if (token.type === "SYMBOL" && token.value.toUpperCase() in map) {
+                        token.value = map[token.value.toUpperCase()];
+                    }
+                }
+                sheet.cells[xc] = tokensToString(tokens);
+            }
+        }
+    }
+    return data;
+}
+
 function tokensToString(tokens) {
     return tokens.reduce((acc, token) => acc + token.value, "");
 }
 
 function migrate0to1(data) {
-    return renameFunctions(data, MAP_V1);
+    return renameFunctionsPre19(data, MAP_V1);
 }
 
 function migrate1to2(data) {
@@ -500,7 +528,7 @@ function migrate8to9(data) {
 }
 
 function migrate9to10(data) {
-    return renameFunctions(data, MAP_FN_NAMES_V10);
+    return renameFunctionsPre19(data, MAP_FN_NAMES_V10);
 }
 
 function migrate10to11(data) {
