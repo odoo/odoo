@@ -108,6 +108,84 @@ test("getTotalDiscount", async () => {
     expect(taxTotalsWDiscount.tax_amount_currency).toBe(1.83);
 });
 
+test("preventRoundingErrorsCombo", async () => {
+    const store = await setupPosEnv();
+    store.models["product.product"].get(7).taxes_id = [1];
+    store.models["product.product"].get(7).lst_price = 50;
+    store.models["product.product"].get(8).taxes_id = [1];
+    store.models["product.product"].get(9).taxes_id = [1];
+    store.models["pos.preset"].get(1).pricelist_id = false;
+    store.models["product.combo"].get(1).qty_free = 3;
+    store.models["product.combo"].get(1).base_price = 10;
+    const comboProduct1 = store.models["product.combo.item"].get(1);
+    const comboProduct2 = store.models["product.combo.item"].get(2);
+    comboProduct2.extra_price = 0;
+    const template = store.models["product.template"].get(7);
+    const order = store.addNewOrder();
+    const order2 = store.addNewOrder();
+    const order3 = store.addNewOrder();
+
+    // 3 of the same product
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [[{ combo_item_id: comboProduct1, qty: 3 }]],
+            qty: 1,
+        },
+        order
+    );
+    order.setOrderPrices();
+    expect(order.amount_total).toBe(57.5);
+    expect(order.lines[1].qty).toBe(2);
+    expect(order.lines[1].price_unit).toBe(16.67);
+    expect(order.lines[2].qty).toBe(1);
+    expect(Math.round(order.lines[2].price_unit * 100) / 100).toBe(16.66);
+
+    // 2 different products
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [
+                [
+                    { combo_item_id: comboProduct1, qty: 1 },
+                    { combo_item_id: comboProduct2, qty: 2 },
+                ],
+            ],
+            qty: 1,
+        },
+        order2
+    );
+    order2.setOrderPrices();
+    expect(order2.amount_total).toBe(57.5);
+    expect(order2.lines[1].price_unit).toBe(16.67);
+    expect(order2.lines[1].qty).toBe(1);
+    expect(order2.lines[2].price_unit).toBe(16.67);
+    expect(order2.lines[2].qty).toBe(1);
+    expect(Math.round(order2.lines[3].price_unit * 100) / 100).toBe(16.66);
+    expect(order2.lines[3].qty).toBe(1);
+
+    // 3 of the same product and 3 of the same extra items
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [
+                [{ combo_item_id: comboProduct1, qty: 3 }],
+                [{ combo_item_id: comboProduct1, qty: 3 }],
+            ],
+            qty: 1,
+        },
+        order3
+    );
+    order3.setOrderPrices();
+    expect(order3.amount_total).toBe(92);
+    expect(order3.lines[1].qty).toBe(2);
+    expect(order3.lines[1].price_unit).toBe(16.67);
+    expect(Math.round(order3.lines[2].price_unit * 100) / 100).toBe(16.66);
+    expect(order3.lines[2].qty).toBe(1);
+    expect(order3.lines[3].qty).toBe(3);
+    expect(order3.lines[3].price_unit).toBe(10);
+});
+
 test("customer requirements", async () => {
     const store = await setupPosEnv();
     const preset = store.models["pos.preset"].get(3); // Address Required Preset
