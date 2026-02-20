@@ -184,6 +184,43 @@ class Intervals(object):
 
         return result
 
+    def conflicting(self, other):
+        """Return whole intervals from `self` that overlap ANY interval in `other`."""
+        result = Intervals()
+        append = result._items.append
+
+        bounds_self = _boundaries(self, 'start', 'stop')
+        bounds_other = _boundaries(other, 'switch', 'switch')
+
+        # We want touching NOT to overlap, so:
+        # - process 'stop' before 'start' at the same timestamp
+        # - process 'switch' before 'start' at the same timestamp (so other ending at t
+        #   is applied before self starting at t)
+        rank = {'stop': 0, 'switch': 0, 'start': 1}
+
+        def _key(item):
+            value, flag, _recs = item
+            return (value, rank[flag])
+
+        cur = None                    # (self_start, self_recs) if a self interval is open, else None
+        overlapped = False            # did current self interval overlap at any moment?
+        active_other = False          # Is an `other` interval currently open
+        for value, flag, recs in sorted(chain(bounds_self, bounds_other), key=_key):
+            if flag == 'start':
+                cur = (value, recs)
+                overlapped = active_other
+            elif flag == 'stop':
+                if overlapped:
+                    start, s_recs = cur
+                    append((start, value, s_recs))
+                cur = None
+            else:  # 'switch'
+                active_other = not active_other
+                if active_other and cur is not None:
+                    overlapped = True
+
+        return result
+
 def sum_intervals(intervals):
     """ Sum the intervals duration (unit : hour)"""
     return sum(
