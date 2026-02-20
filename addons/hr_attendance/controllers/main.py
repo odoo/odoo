@@ -219,6 +219,8 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
+        if latitude is False and longitude is False and request.env.company.attendance_device_tracking:
+            raise UserError(_("Unable to get a valid location. Please check your location settings."))
         employee = request.env.user.employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
