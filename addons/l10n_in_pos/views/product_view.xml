@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_pos.product_template_view_form_normalized_pos" model="ir.ui.view">
+        <field name="name">l10n_in_pos.product.template.view.form.normalized.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="point_of_sale.product_template_view_form_normalized_pos"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_categ_ids']" position="before">
+                <field name="l10n_in_hsn_code" invisible="'IN' not in fiscal_country_codes or not l10n_in_is_gst_registered_enabled"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_pos.product_tree_hsn_code" model="ir.ui.view">
+        <field name="name">l10n_in_pos.product.template.list.hsn_code.pos</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Product" multi_edit="1" editable="top" sample="1">
+                <field name="name" readonly="1"/>
+                <field name="l10n_in_hsn_code" string="HSN/SAC Code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_missing_hsn_product" model="ir.actions.act_window">
+        <field name="name">Missing HSN Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="l10n_in_pos.product_tree_hsn_code"/>
+    </record>
+
+</odoo>
