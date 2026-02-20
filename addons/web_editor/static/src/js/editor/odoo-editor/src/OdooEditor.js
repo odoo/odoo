@@ -2427,6 +2427,30 @@ export class OdooEditor extends EventTarget {
         const restoreCursor = preserveCursor(this.document);
         restoreUpdate();
         restoreCursor();
+        const selection = document.getSelection();
+        this.deleteEmptyDivSelection(selection)
+    }
+
+    deleteEmptyDivSelection(selection) {
+        if (
+            selection.anchorNode.nodeName === "DIV" &&
+            selection.anchorNode !== this.editable &&
+            isEmptyBlock(selection.anchorNode) &&
+            !selection.anchorNode.classList.contains("o_text_columns")
+        ) {
+            const paragraph = document.createElement("P");
+            fillEmpty(paragraph);
+            if (isUnremovable(selection.anchorNode)) {
+                if (selection.anchorNode.firstChild) {
+                    selection.anchorNode.firstChild.remove();
+                }
+                selection.anchorNode.appendChild(paragraph);
+            } else {
+                selection.anchorNode.parentElement.replaceChild(paragraph, selection.anchorNode);
+            }
+            setSelection(paragraph, 0, paragraph, 0);
+            return true;
+        }
     }
 
     /**
@@ -2615,6 +2639,10 @@ export class OdooEditor extends EventTarget {
             if (BACKSPACE_ONLY_COMMANDS.includes(method)) {
                 return true;
             }
+        }
+
+        if (this.deleteEmptyDivSelection(sel)) {
+            return;
         }
 
         this.options.beforeAnyCommand();
