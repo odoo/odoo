@@ -49,6 +49,7 @@ const websiteSlidesService = {
                 karmaGain: undefined,
                 karmaWon: undefined,
                 karmaMax: undefined,
+                desciption: undefined,
                 descriptionSafe: undefined,
                 slideResources: [],
                 rankProgress: undefined,
@@ -137,9 +138,7 @@ const websiteSlidesService = {
                     });
                     Object.assign(data.quiz, {
                         sessionAnswers: quizData.session_answers || [],
-                        descriptionSafe: quizData.slide_description
-                            ? markup(quizData.slide_description)
-                            : "",
+                        description: quizData.description || "",
                         questions: quizData.slide_questions || [],
                         questionCount: quizData.slide_questions.length,
                         attemptsCount: quizData.quiz_attempts_count || 0,
@@ -149,6 +148,7 @@ const websiteSlidesService = {
                         slideResources: quizData.slide_resource_ids || [],
                     });
                 }
+                data.quiz.descriptionSafe = markup(data.quiz.description || "");
                 quizCache[data.slide.id] = structuredClone(data.quiz);
                 data.slide.hasQuestion = data.quiz.questionCount > 0;
             },
