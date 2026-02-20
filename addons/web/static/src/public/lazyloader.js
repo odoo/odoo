@@ -1,17 +1,19 @@
-import {
-    BUTTON_HANDLER_SELECTOR,
-    makeAsyncHandler,
-    makeButtonHandler,
-} from '@web/legacy/js/public/minimal_dom';
+import { BUTTON_HANDLER_SELECTOR, makeAsyncHandler, makeButtonHandler } from "@web/public/utils";
+
+// Track when interactions have started.
+const interactionsProms = [];
+export const registerInteractionsProm = interactionsProms.push.bind(interactionsProms);
 
 // Track when all JS files have been lazy loaded. Will allow to unblock the
 // related DOM sections when the whole JS have been loaded and executed.
-let allScriptsLoadedResolve = null;
-const _allScriptsLoaded = new Promise(resolve => {
-    allScriptsLoadedResolve = resolve;
-}).then(stopWaitingLazy);
+export const allScriptsLoaded = Promise.withResolvers();
+allScriptsLoaded.promise.then(() => {
+    Promise.all(interactionsProms).then(stopWaitingLazy);
+});
 
 const retriggeringWaitingProms = [];
+export const registerPageReadinessDelay =
+    retriggeringWaitingProms.push.bind(retriggeringWaitingProms);
 /**
  * Function to use as an event handler to replay the incoming event after the
  * whole lazy JS has been loaded. Note that blocking the incoming event is left
@@ -23,7 +25,7 @@ const retriggeringWaitingProms = [];
 async function waitForLazyAndRetrigger(ev) {
     // Wait for the lazy JS to be loaded before re-triggering the event.
     const targetEl = ev.target;
-    await _allScriptsLoaded;
+    await allScriptsLoaded.promise;
     // Loaded scripts were able to add a delay to wait for before re-triggering
     // events: we wait for it here.
     await Promise.all(retriggeringWaitingProms);
@@ -98,7 +100,21 @@ function waitLazy() {
         });
     // Note: this is a limitation/a "risk" to only block and retrigger those
     // specific event types.
-    const loadingEffectEventTypes = ['mouseover', 'mouseenter', 'mousedown', 'mouseup', 'click', 'mouseout', 'mouseleave'];
+    const loadingEffectEventTypes = [
+        "click",
+        "mousedown",
+        "mouseenter",
+        "mouseleave",
+        "mouseout",
+        "mouseover",
+        "mouseup",
+        "pointerdown",
+        "pointerenter",
+        "pointerleave",
+        "pointerout",
+        "pointerover",
+        "pointerup",
+    ];
     for (const buttonEl of loadingEffectButtonEls) {
         for (const eventType of loadingEffectEventTypes) {
             const loadingEffectHandler = eventType === 'click'
@@ -142,10 +158,10 @@ if (document.readyState !== 'loading') {
 
 // As soon as the document is fully loaded, start loading the whole remaining JS
 if (document.readyState === 'complete') {
-    setTimeout(_loadScripts, 0);
+    setTimeout(loadScripts, 0);
 } else {
     window.addEventListener('load', function () {
-        setTimeout(_loadScripts, 0);
+        setTimeout(loadScripts, 0);
     });
 }
 
@@ -153,7 +169,7 @@ if (document.readyState === 'complete') {
  * @param {DOMElement[]} scripts
  * @param {integer} index
  */
-function _loadScripts(scripts, index) {
+export function loadScripts(scripts, index) {
     if (scripts === undefined) {
         scripts = document.querySelectorAll('script[data-src]');
     }
@@ -161,18 +177,12 @@ function _loadScripts(scripts, index) {
         index = 0;
     }
     if (index >= scripts.length) {
-        allScriptsLoadedResolve();
+        allScriptsLoaded.resolve();
         return;
     }
     const script = scripts[index];
-    script.addEventListener('load', _loadScripts.bind(this, scripts, index + 1));
+    script.addEventListener('load', loadScripts.bind(this, scripts, index + 1));
     script.setAttribute('defer', 'defer'); // See LAZY_LOAD_DEFER
     script.src = script.dataset.src;
     script.removeAttribute('data-src');
 }
-
-export default {
-    loadScripts: _loadScripts,
-    allScriptsLoaded: _allScriptsLoaded,
-    registerPageReadinessDelay: retriggeringWaitingProms.push.bind(retriggeringWaitingProms),
-};

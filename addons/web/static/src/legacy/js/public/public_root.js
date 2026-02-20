@@ -1,7 +1,7 @@
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
-import lazyloader from "@web/legacy/js/public/lazyloader";
+import { allScriptsLoaded } from "@web/public/lazyloader";
 
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from '@web/core/templates';
@@ -57,11 +57,16 @@ export const PublicRoot = publicWidget.Widget.extend({
         if (interactionsService) {
             patch(interactionsService.constructor.prototype, {
                 startInteractions(el) {
-                    super.startInteractions(el);
+                    const interactionsProms = super.startInteractions(el);
+                    let widgetProms = null;
                     if (!publicRoot.startFromEventHandler) {
                         // this.editMode is assigned by website_edit_service
-                        publicRoot._startWidgets($(el || this.el), { fromInteractionPatch: true, editableMode: this.editMode })
+                        widgetProms = publicRoot._startWidgets(
+                            $(el || this.el),
+                            { fromInteractionPatch: true, editableMode: this.editMode }
+                        );
                     }
+                    return Promise.all([interactionsProms, widgetProms]);
                 },
                 stopInteractions(el) {
                     super.stopInteractions(el);
@@ -366,7 +371,7 @@ export const PublicRoot = publicWidget.Widget.extend({
  * been consumed.
  */
 export async function createPublicRoot(RootWidget) {
-    await lazyloader.allScriptsLoaded;
+    await allScriptsLoaded.promise;
     await whenReady();
     const env = makeEnv();
     await startServices(env);

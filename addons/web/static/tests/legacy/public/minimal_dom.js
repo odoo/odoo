@@ -1,8 +1,8 @@
 /** @odoo-module **/
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { DEBOUNCE, makeAsyncHandler, makeButtonHandler } from '@web/legacy/js/public/minimal_dom';
 import { registry } from "@web/core/registry";
+import { DEBOUNCE, makeAsyncHandler, makeButtonHandler } from "@web/public/utils";
 import { patchWithCleanup } from "../helpers/utils";
 
 function patchServiceCategory() {

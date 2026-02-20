@@ -7,7 +7,7 @@ import Class from "@web/legacy/js/core/class";
 import { loadBundle, loadCSS, loadJS } from '@web/core/assets';
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
-import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/public/minimal_dom";
+import { makeAsyncHandler, makeButtonHandler } from "@web/public/utils";
 
 /**
  * Mixin to structure objects' life-cycles following a parent-children

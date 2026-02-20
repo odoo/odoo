@@ -1,7 +1,8 @@
-import { registry } from "@web/core/registry";
 import { appTranslateFn } from "@web/core/l10n/translation";
-import { Interaction } from "./interaction";
+import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
+import { registerInteractionsProm, registerPageReadinessDelay } from "@web/public/lazyloader";
+import { Interaction } from "./interaction";
 import { PairSet } from "./utils";
 import { Colibri } from "./colibri";
 
@@ -24,6 +25,12 @@ import { Colibri } from "./colibri";
  * It provides full access to Owl features, but is rendered browser side.
  *
  */
+// Register user events to replay them once the interactions have started.
+// Otherwise, with a poor connection, a user might click on a button without any
+// effect. The lazyloader also adds a loading animation on buttons.
+const interactionsStartedResolvers = Promise.withResolvers();
+registerInteractionsProm(interactionsStartedResolvers.promise);
+registerPageReadinessDelay(interactionsStartedResolvers.promise);
 
 class InteractionService {
     /**
@@ -53,7 +60,10 @@ class InteractionService {
      */
     activate(Interactions, target) {
         this.Interactions = Interactions;
-        const startProm = this.env.isReady.then(() => this.startInteractions(target));
+        const startProm = this.env.isReady.then(async () => {
+            await this.startInteractions(target);
+            interactionsStartedResolvers.resolve();
+        });
         this.proms.push(startProm);
     }
 
