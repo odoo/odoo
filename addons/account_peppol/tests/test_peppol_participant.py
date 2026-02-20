@@ -300,6 +300,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         # Disconnect from the network.
         with self._mock_requests([
             self._mock_cancel_peppol_registration(),
+            self._mock_get_all_documents(),
             self._mock_participant_status('sender'),
         ]):
             config_wizard = self.env['peppol.config.wizard'].with_context(allowed_company_ids=branch.ids).create({})
