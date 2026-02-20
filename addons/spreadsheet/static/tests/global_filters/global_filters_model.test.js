@@ -2,7 +2,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 
-import { DispatchResult, Model, helpers, tokenize, constants } from "@odoo/o-spreadsheet";
+import { DispatchResult, Model, helpers, constants, CompiledFormula } from "@odoo/o-spreadsheet";
 import { Domain } from "@web/core/domain";
 import {
     defineSpreadsheetModels,
@@ -83,7 +83,7 @@ function getFiltersMatchingPivot(model, formula) {
     const pivotUIPlugin = model["handlers"].find(
         (handler) => handler instanceof PivotUIGlobalFilterPlugin
     );
-    return pivotUIPlugin._getFiltersMatchingPivot(sheetId, tokenize(formula));
+    return pivotUIPlugin._getFiltersMatchingPivot(sheetId, CompiledFormula.Compile(formula, sheetId, model.getters));
 }
 
 test("Can add a global filter", async function () {
@@ -1256,7 +1256,7 @@ test("ODOO.FILTER.VALUE formulas are updated when filter label is changed", asyn
     };
     await editGlobalFilter(model, newFilter);
     expect(getCellFormula(model, "A10")).toBe(
-        `=ODOO.FILTER.VALUE("Interprete") & ODOO.FILTER.VALUE("Interprete")`
+        `=ODOO.FILTER.VALUE("Interprete")&ODOO.FILTER.VALUE("Interprete")`
     );
 });
 

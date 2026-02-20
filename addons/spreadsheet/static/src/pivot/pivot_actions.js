@@ -58,7 +58,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
         pivotCell.type !== "EMPTY" &&
         cell &&
         cell.isFormula &&
-        getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
+        getNumberOfPivotFunctions(cell.compiledFormula) === 1 &&
         getters.getPivotCoreDefinition(pivotId).type === "ODOO" &&
         getters.getPivot(pivotId).getPivotCellDomain(pivotCell.domain)
     );
