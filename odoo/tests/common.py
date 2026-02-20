@@ -534,7 +534,12 @@ class BaseCase(case.TestCase):
         with ExitStack() as init:
             if self.env:
                 init.enter_context(self.env.cr.savepoint())
-                if issubclass(exception, AccessError):
+                access_error_types = ()
+                if isinstance(exception, type):
+                    access_error_types = (exception,)
+                elif isinstance(exception, tuple):
+                    access_error_types = tuple(exc for exc in exception if isinstance(exc, type))
+                if access_error_types and any(issubclass(exc, AccessError) for exc in access_error_types):
                     # The savepoint() above calls flush(), which leaves the
                     # record cache with lots of data.  This can prevent
                     # access errors to be detected. In order to avoid this
