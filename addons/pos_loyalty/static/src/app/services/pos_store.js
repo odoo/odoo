@@ -772,6 +772,11 @@ patch(PosStore.prototype, {
             }
             return agg;
         }, {});
+
+        for (const couponId in couponData) {
+            couponData[couponId].earned_points = couponData[couponId].points;
+        }
+
         for (const line of rewardLines) {
             const reward = line.reward_id;
             const couponId = line.coupon_id.id;

@@ -543,7 +543,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used (Whiteboard Pen price is 1.20)
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
-        loyalty_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id), ('id', '!=', gift_card_creation_history.id)])
+        loyalty_history = self.env['loyalty.history'].with_context(active_test=False).search([('card_id', '=', gift_card_program.coupon_ids.id), ('id', '!=', gift_card_creation_history.id)])
         self.assertEqual(loyalty_history.used, 3.2)
 
     def test_ewallet_program(self):
@@ -2754,7 +2754,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("EWalletLoyaltyHistory")
         # Check that ewallets are created for partner_aaa.
         ewallet_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', ewallet_program.id)])
-        loyalty_history = self.env['loyalty.history'].search([('card_id','=',ewallet_aaa.id)])
+        loyalty_history = self.env['loyalty.history'].with_context(active_test=False).search([('card_id', '=', ewallet_aaa.id)])
         self.assertEqual(loyalty_history.mapped("issued"), [0.0, 50.0])
         self.assertEqual(loyalty_history.mapped("used"), [12.0, 0.0])
 

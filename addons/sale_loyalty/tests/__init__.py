@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_buy_gift_card
+from . import test_expire_loyalty_points
 from . import test_loyalty
 from . import test_loyalty_history
 from . import test_pay_with_gift_card

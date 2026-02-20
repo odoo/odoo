@@ -3,6 +3,7 @@
 from . import loyalty_card
 from . import loyalty_history
 from . import loyalty_mail
+from . import loyalty_point_track
 from . import loyalty_program
 from . import loyalty_reward
 from . import loyalty_rule

@@ -25,11 +25,16 @@
                     <notebook invisible="not id">
                         <page string="History Lines">
                             <field name="history_ids">
-                                <list>
+                                <list create="0">
                                     <field name="description"/>
                                     <field name="order_id"/>
-                                    <field name="create_date" string="Date"/>
+                                    <field name="create_date" string="Creation"/>
+                                    <field
+                                        name="expiration_date"
+                                        column_invisible="parent.program_type != 'loyalty'"
+                                    />
                                     <field name="issued"/>
+                                    <field name="available_issued_points"/>
                                     <field name="used"/>
                                 </list>
                             </field>
