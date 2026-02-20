@@ -454,3 +454,31 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(res_boxB.with_context(picking_id=delivery.id).weight, 11)     # 1 + 2 * 5 = 11kg
         self.assertEqual(res_big_box.with_context(picking_id=delivery.id).weight, 20)  # 4 + 5 + 11 = 20kg
         self.assertEqual(res_pallet.with_context(picking_id=delivery.id).weight, 30)   # 10 + 20 = 30kg
+
+    def test_delivery_shipping_weight_with_package_before_validation(self):
+        """Check that package and picking shipping weights are correctly computed
+        on delivery pickings when products are put into a package.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 1)
+        picking_ship = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.product_aw.id,
+                'quantity': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id
+            })],
+        })
+        picking_ship.action_confirm()
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+        picking_ship.action_put_in_pack()
+        package = picking_ship.move_line_ids.result_package_id
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+        self.assertFalse(package.quant_ids, "No quant should be linked to the package yet.")
+        picking_ship.button_validate()
+        self.assertEqual(picking_ship.state, 'done')
+        self.assertTrue(package.quant_ids)
+        self.assertEqual(package.weight, self.product_aw.weight, "As the package contains quants, its weight is correctly computed from them.")
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
