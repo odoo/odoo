@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".o_opportunity_kanban:not(:has(.o_view_sample_data)) .o_kanban_group .o_kanban_record:last-of-type",
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     tooltipPosition: "right",
-    run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
+    run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(1))",
 },
 {
     trigger: ".o_opportunity_kanban .o_kanban_renderer",
@@ -77,20 +77,13 @@ registry.category("web_tour.tours").add('crm_tour', {
     tooltipPosition: "top",  // dot NOT move to bottom, it would cause a resize flicker, see task-2476595
     run: "click",
 }, {
-    id: "drag_opportunity_to_won_step",
-    trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
-    content: markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
-    tooltipPosition: "right",
-    run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
-},
-{
     trigger: ".o_kanban_record",
     content: _t("Let’s have a look at an Opportunity."),
     tooltipPosition: "right",
     run: "click",
 }, {
     trigger: ".o_lead_opportunity_form .o_statusbar_status",
-    content: _t("You can make your opportunity advance through your pipeline from here."),
+    content: _t("You can make your opportunity advance through your pipeline by clicking on stages here. Try sending it to the next stage!"),
     tooltipPosition: "bottom",
     run: "click",
 }, {
@@ -98,4 +91,10 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: _t("Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."),
     tooltipPosition: "bottom",
     run: "click .breadcrumb-item:not(.active):last",
-}]});
+}, {
+    id: "drag_opportunity_to_won_step",
+    trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
+    content: markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
+    tooltipPosition: "right",
+    run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
+},]});
