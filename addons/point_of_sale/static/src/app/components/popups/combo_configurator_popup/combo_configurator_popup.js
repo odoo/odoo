@@ -100,13 +100,18 @@ export class ComboConfiguratorPopup extends Component {
     get configurationFromValues() {
         const values = this.props.values;
         const conf = {};
+        // Track already processed order lines
+        this.pos._usedComboLineUuids ||= new Set();
         for (const comboId in values) {
             for (const lineUuid in values[comboId]) {
-                if (lineUuid === "upsell") {
+                if (lineUuid === "upsell" || this.pos._usedComboLineUuids.has(lineUuid)) {
                     continue;
                 }
                 const line = this.pos.models["pos.order.line"].getBy("uuid", lineUuid);
-                conf[values[comboId][lineUuid].combo_item.id] = {
+                this.pos._usedComboLineUuids.add(lineUuid);
+                // Preserve distinct configurations when multiple lines reference the
+                // same combo item but have different configuration details.
+                conf[`${values[comboId][lineUuid].combo_item.id}_${lineUuid}`] = {
                     attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
                     attribute_custom_values: Object.fromEntries(
                         line.custom_attribute_value_ids.map((c) => [
@@ -118,6 +123,7 @@ export class ComboConfiguratorPopup extends Component {
                 };
             }
         }
+
         return conf;
     }
 
@@ -168,6 +174,7 @@ export class ComboConfiguratorPopup extends Component {
         const itemsIncluded = [];
         const itemsExtra = [];
         const comboFreeQtyTracker = {};
+        const configurationKeys = Object.keys(this.state.configuration);
         Object.values(this.state.qty).forEach((comboItems) => {
             Object.entries(comboItems)
                 .filter(([, qty]) => qty > 0)
@@ -180,28 +187,42 @@ export class ComboConfiguratorPopup extends Component {
                         comboFreeQtyTracker[comboId] = 0;
                     }
 
-                    const remainingFreeQty = comboFreeQty - comboFreeQtyTracker[comboId];
-                    if (remainingFreeQty > 0) {
-                        const includedQty = Math.min(qty, remainingFreeQty);
-                        itemsIncluded.push({
-                            combo_item_id: comboItemId,
-                            configuration: this.state.configuration[comboItemId.id],
-                            qty: includedQty,
-                        });
-                        comboFreeQtyTracker[comboId] += includedQty;
-                        qty -= includedQty;
+                    const idStr = String(comboItemId.id);
+                    const comboConfigurationsKeys = configurationKeys.filter((key) => {
+                        const k = String(key);
+                        return k === idStr || k.startsWith(idStr + "_");
+                    });
+                    if (comboConfigurationsKeys.length === 0) {
+                        comboConfigurationsKeys.push(comboItemId.id);
+                    }
+
+                    for (const key of comboConfigurationsKeys) {
+                        const remainingFreeQty = comboFreeQty - comboFreeQtyTracker[comboId];
+                        if (remainingFreeQty > 0) {
+                            const includedQty = Math.min(qty, remainingFreeQty);
+                            itemsIncluded.push({
+                                combo_item_id: comboItemId,
+                                configuration: this.state.configuration[key],
+                                qty: includedQty,
+                            });
+                            comboFreeQtyTracker[comboId] += includedQty;
+                            qty -= includedQty;
+                        }
                     }
 
                     if (qty > 0) {
+                        // assign remaining qty to the LAST used configuration
+                        const fallbackKey =
+                            comboConfigurationsKeys[comboConfigurationsKeys.length - 1] ??
+                            comboItemId.id;
                         itemsExtra.push({
                             combo_item_id: comboItemId,
-                            configuration: this.state.configuration[comboItemId.id],
+                            configuration: this.state.configuration[fallbackKey],
                             qty: qty,
                         });
                     }
                 });
         });
-
         return [itemsIncluded, itemsExtra];
     }
 

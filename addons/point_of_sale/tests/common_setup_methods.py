@@ -39,7 +39,7 @@ def setup_product_combo_items(self):
         "name": "Category 3",
     })
 
-    combo_product_1 = self.env["product.product"].create(
+    self.combo_product_1 = self.env["product.product"].create(
         {
             "name": "Combo Product 1",
             "is_storable": True,
@@ -77,7 +77,7 @@ def setup_product_combo_items(self):
             "name": "Desk Accessories Combo",
             "combo_item_ids": [
                 Command.create({
-                    "product_id": combo_product_1.id,
+                    "product_id": self.combo_product_1.id,
                     "extra_price": 0,
                 }),
                 Command.create({
