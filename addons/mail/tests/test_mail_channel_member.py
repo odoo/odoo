@@ -276,3 +276,25 @@ class TestMailChannelMembers(MailCommon):
             1,  # channel 2 user 1: received 1 message (from message post)
             1,  # channel 2 user 3: received 1 message (from message post)
         ])
+
+    # ------------------------------------------------------------
+    # AUTO-SUBSCRIPTION & ACCESS RIGHTS TESTS
+    # ------------------------------------------------------------
+
+    def test_subscribe_users_skips_inactive_users_to_avoid_unique_violation(self):
+        """Test that archived users are skipped and active ones added during group-based auto-subscription."""
+        test_group = self.env['res.groups'].create({
+            'name': 'Test Subscription Group',
+            'users': [(6, 0, [self.user_1.id])],
+        })
+        channel = self.env['mail.channel'].create({
+            'name': 'Test Channel',
+            'channel_type': 'channel',
+            'group_ids': [(6, 0, [test_group.id])],
+        })
+        self.assertIn(self.user_1.partner_id, channel.channel_partner_ids)
+        self.user_1.active = False
+        test_group.write({'users': [(4, self.user_2.id)]})
+        channel.write({'group_ids': [(6, 0, [test_group.id])]})
+        self.assertIn(self.user_2.partner_id, channel.channel_partner_ids)
+        self.assertNotIn(self.user_1.partner_id, channel.channel_partner_ids)
