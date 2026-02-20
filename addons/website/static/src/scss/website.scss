@@ -1139,6 +1139,14 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         position: absolute;
     }
 
+    .carousel-control-prev, .carousel-control-next {
+        &:focus-visible {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+            }
+        }
+    }
+
     .carousel-control-prev-icon, .carousel-control-next-icon {
         width: $-o-carousel-controllers-size;
         height: $-o-carousel-controllers-size;
@@ -1354,7 +1362,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             button {
                 color: inherit;
             }
-            
+
             &.s_carousel_indicators_numbers {
                 // For large screen, use the same size as the margin-bottom of
                 // the prev/next buttons (like other indicators; instead of
