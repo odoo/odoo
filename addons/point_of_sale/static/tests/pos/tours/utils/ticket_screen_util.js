@@ -215,9 +215,14 @@ export function invoicePrinted() {
         },
     ];
 }
-export function toRefundTextContains(text) {
+export function toRefundTextContains(text, product) {
+    if (!product) {
+        return inLeftSide({
+            trigger: `.ticket-screen .qty .refund:contains("${text}")`,
+        });
+    }
     return inLeftSide({
-        trigger: `.ticket-screen .qty .refund:contains("${text}")`,
+        trigger: `.ticket-screen .product-name:contains("${product}"):has(.refund:contains("${text}"))`,
     });
 }
 export function refundedNoteContains(text) {
