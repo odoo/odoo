@@ -1009,10 +1009,10 @@ test("should drag and drop image with its caption(1)", async () => {
             <figure contenteditable="false">
                 <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
                 <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
-                    []<input ${CAPTION_INPUT_ATTRIBUTES}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
             </figure>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
 });
@@ -1062,10 +1062,10 @@ test("should drag and drop image with its caption(2)", async () => {
             <figure contenteditable="false">
                 <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
                 <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
-                    []<input ${CAPTION_INPUT_ATTRIBUTES}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
             </figure>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
 });
