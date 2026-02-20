@@ -139,7 +139,7 @@
                     <group>
                         <group id="batch_delivery_data">
                             <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
-                            <field name="picking_type_id" readonly="state != 'draft'"/>
+                            <field name="picking_type_id" options="{'no_quick_create': True}" readonly="state != 'draft'"/>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                             <field name="description"/>
                         </group>
@@ -174,7 +174,7 @@
                 <field name="description"/>
                 <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
-                <field name="picking_type_id" readonly="state != 'draft'"/>
+                <field name="picking_type_id" options="{'no_quick_create': True}" readonly="state != 'draft'"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')" decoration-danger="state == 'cancel'"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
