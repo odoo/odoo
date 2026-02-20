@@ -94,7 +94,7 @@ class ProductSupplierinfo(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Vendor Pricelists'),
+            'label': _('Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
 

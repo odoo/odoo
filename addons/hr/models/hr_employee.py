@@ -2051,7 +2051,7 @@ class HrEmployee(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Employees'),
+            'label': _('Template for Employees'),
             'template': '/hr/static/xls/hr_employee.xls'
         }]
 

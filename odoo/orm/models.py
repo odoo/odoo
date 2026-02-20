@@ -2557,10 +2557,7 @@ class BaseModel(metaclass=MetaModel):
 
         if isinstance(exc, psycopg2.errors.NotNullViolation):
             return self.env._(
-                "Missing required value for the field %(field_display)s.\n"
-                "Model: %(model_display)s\n"
-                "- create/update: a mandatory field is not set\n"
-                "- delete: another model requires the record being deleted, you can archive it instead\n",
+                "Missing required field %(field_display)s for model %(model_display)s",
                 **info,
             )
 

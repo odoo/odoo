@@ -194,7 +194,7 @@ class MailingContact(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Mailing List Contacts'),
+            'label': _('Template for Mailing List Contacts'),
             'template': '/mass_mailing/static/xls/mailing_contact.xls'
         }]
 

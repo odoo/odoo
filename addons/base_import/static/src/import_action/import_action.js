@@ -25,12 +25,12 @@ export class ImportAction extends Component {
     };
     static props = { ...standardActionServiceProps };
     static path = "import";
-    static displayName = _t("Import a File");
+    static displayName = _t("Import");
 
     setup() {
         this.actionService = useService("action");
         this.notification = useService("notification");
-        this.env.config.setDisplayName(this.props.action.name || _t("Import a File"));
+        this.env.config.setDisplayName(this.props.action.name || _t("Import"));
         this.model = useImportModel({
             env: this.env,
             context: this.props.action.params?.context || {},
@@ -196,12 +196,6 @@ export class ImportAction extends Component {
         this.model.unblock();
     }
 
-    async reload() {
-        this.model.block();
-        await this.model.updateData();
-        this.model.unblock();
-    }
-
     //--------------------------------------------------------------------------
     // File
     //--------------------------------------------------------------------------
@@ -212,6 +206,7 @@ export class ImportAction extends Component {
         }
 
         this.state.filename = files[0].name;
+        this.env.config.setDisplayName(_t("Import") + ` ${this.state.filename}`);
         this.state.importMessages = [];
 
         this.model.block(_t("Loading file..."));
