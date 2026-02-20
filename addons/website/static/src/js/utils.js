@@ -513,6 +513,44 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
     }
 }
 
+/**
+ * Toggles the submit button state in a website form based on given parameters.
+ *
+ * Disables or enables the submit button, and optionally shows a tooltip for
+ * designers if no form field is present.
+ *
+ * @param {jQuery} $form - jQuery object of the form containing the submit button.
+ * @param {boolean} [disable=true] - Whether to disable the submit button.
+ * @param {boolean} [showTooltip=false] - Whether to show a tooltip when disabling.
+ * @param {boolean} [isDesignerUser=false] - Whether the user is a website designer.
+ */
+export function toggleSubmitButton($form, disable = true, showTooltip = false, isDesignerUser = false) {
+    const $submitButton = $form.find('.s_website_form_send, .o_website_form_send');
+
+    if (disable) {
+        $submitButton.addClass('disabled').attr('disabled', 'disabled');
+
+        if (showTooltip && isDesignerUser) {
+            if (!$submitButton.parent().hasClass('tooltip-wrapper')) {
+                $submitButton.wrap('<div class="tooltip-wrapper" style="display:inline-block; cursor: not-allowed;"></div>');
+            }
+            $submitButton.tooltip({
+                title: "Add at least one field to enable the submit button!",
+                trigger: "manual",
+                placement: "bottom"
+            });
+
+            const $wrapper = $submitButton.parent('.tooltip-wrapper');
+            $wrapper.hover(
+                () => $submitButton.tooltip('show'),
+                () => $submitButton.tooltip('hide')
+            );
+        }
+    } else {
+        $submitButton.removeClass('disabled').removeAttr('disabled');
+    }
+ }
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
