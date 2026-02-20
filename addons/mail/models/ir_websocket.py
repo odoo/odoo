@@ -104,7 +104,7 @@ class IrWebsocket(models.AbstractModel):
     def _after_subscribe_data(self, data):
         user, guest = self.env["res.users"]._get_current_persona()
         if user or guest:
-            data["missed_presences"]._send_presence(bus_target=user.partner_id or guest)
+            data["missed_presences"]._send_presence(bus_target=user or guest)
 
     def _on_websocket_closed(self, cookies):
         super()._on_websocket_closed(cookies)

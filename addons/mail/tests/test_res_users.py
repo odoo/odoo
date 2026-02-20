@@ -7,8 +7,8 @@ from unittest import skip
 from unittest.mock import patch
 
 from odoo.addons.base.models.res_users import ResUsersPatchedInTest
-from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests import RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
@@ -249,7 +249,7 @@ class TestUserSettings(MailCommon):
         settings.channel_notifications = False
 
         with self.assertBus(
-                [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
+                [self.user_employee],
                 [{
                     'type': 'res.users.settings',
                     'payload': {

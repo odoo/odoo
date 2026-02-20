@@ -45,8 +45,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertIn(message_c1, search_result)
         self.assertNotIn(message_c2, search_result)
 
+    @users("employee")
     def test_unlink_failure_message_notify_author(self):
-        recipient = new_test_user(self.env, login="Bob", email="invalid_email_addr")
+        recipient = new_test_user(self.env(su=True), login="Bob", email="invalid_email_addr")
         with self.mock_mail_gateway():
             message = self.env.user.partner_id.message_post(
                 body="Hello world!", partner_ids=recipient.partner_id.ids
@@ -55,10 +56,7 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
         self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
         with self.assertBus(
-            [
-                (self.cr.dbname, "res.partner", recipient.partner_id.id),
-                (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
-            ],
+            [recipient, self.env.user],
             [
                 {"type": "mail.message/delete", "payload": {"message_ids": [message.id]}},
                 {"type": "mail.message/delete", "payload": {"message_ids": [message.id]}},

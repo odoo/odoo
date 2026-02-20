@@ -281,7 +281,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         def get_bus_params():
             return (
-                [(self.env.cr.dbname, "res.partner", self.partner.id)],
+                [self.user],
                 [
                     {
                         "type": "calendar.alarm",
@@ -591,7 +591,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         def get_bus_params():
             return (
-                [(self.env.cr.dbname, "res.partner", self.partner.id)],
+                [self.user],
                 [
                     {
                         "type": "calendar.alarm",

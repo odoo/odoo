@@ -32,22 +32,22 @@ class ResConfigSettings(models.TransientModel):
             if response.status_code == 200:
                 nilvera_registered_tax_number = response.json().get('TaxNumber')
                 if self.env.company.vat == nilvera_registered_tax_number:
-                    self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                    self.env.user._bus_send('simple_notification', {
                         'type': 'success',
                         'message': _("Nilvera connection successful!"),
                     })
                 else:
-                    self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                    self.env.user._bus_send('simple_notification', {
                         'type': 'success',
                         'message': _("Nilvera connection successful but the tax number on Nilvera and Odoo doesn't match. Check Nilvera."),
                     })
             elif response.status_code == 401:
-                self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                self.env.user._bus_send('simple_notification', {
                     'type': 'danger',
                     'message': _("Nilvera connection was unsuccessful, check the API key."),
                 })
             else:
-                self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                self.env.user._bus_send('simple_notification', {
                     'type': 'danger',
                     'message': _("An error occurred. Try again later."),
                 })

@@ -43,12 +43,11 @@ class TestPartnerGeoLocalization(TransactionCase):
     def test_geo_localization_notification(self):
         """ Warning message is sent to the user when geolocation fails. """
         partner = self.env['res.partner']
-        user_partner = self.env.user.partner_id
 
         with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
             partner1 = partner.create({'name': 'Test A'})
             partner1.with_context(force_geo_localize=True).geo_localize()
-            mock_send.assert_called_with(user_partner, 'simple_notification', {
+            mock_send.assert_called_with(self.env.user, 'simple_notification', {
                 'type': 'danger',
                 'title': "Warning",
                 'message': "No match found for Test A address(es).",
@@ -57,7 +56,7 @@ class TestPartnerGeoLocalization(TransactionCase):
 
             partner2 = partner.create({'name': "", 'parent_id': partner1.id, 'type': 'other'})
             partner2.with_context(force_geo_localize=True).geo_localize()
-            mock_send.assert_called_with(user_partner, 'simple_notification', {
+            mock_send.assert_called_with(self.env.user, 'simple_notification', {
                 'type': 'danger',
                 'title': "Warning",
                 'message': "No match found for Test A, Other address(es).",

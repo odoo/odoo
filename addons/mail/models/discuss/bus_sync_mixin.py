@@ -38,18 +38,19 @@ class BusSyncMixin(models.AbstractModel):
             """Get the current values of the fields to sync."""
             result = defaultdict(dict)
             for bus_target, field_descriptions in fields_to_sync.items():
-                target = (
+                target, sub_channel = (
                     (record[bus_target[0]], bus_target[1])
                     if isinstance(bus_target, tuple)
-                    else (record._bus_channel(), bus_target)
+                    else (record, bus_target)
                 )
-                result[target] = {
-                    Store.get_field_name(field_description): (
-                        get_field_value(record, field_description),
-                        field_description,
-                    )
-                    for field_description in field_descriptions
-                }
+                for bus_channel in target._bus_channels():
+                    result[bus_channel, sub_channel] = {
+                        Store.get_field_name(field_description): (
+                            get_field_value(record, field_description),
+                            field_description,
+                        )
+                        for field_description in field_descriptions
+                    }
             return result
 
         self._sync_field_names(fields_to_sync := defaultdict(Store.FieldList))

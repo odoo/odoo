@@ -22,7 +22,7 @@ from urllib.parse import urlparse, urlencode, parse_qsl
 from odoo import tools, fields
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
-from odoo.addons.bus.models.bus import BusBus, json_dump
+from odoo.addons.bus.models.bus import BusBus, channel_with_db, json_dump
 from odoo.addons.bus.tests.common import BusCase
 from odoo.addons.mail.models import mail_thread
 from odoo.addons.mail.models.mail_mail import MailMail
@@ -32,9 +32,7 @@ from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
 from odoo.tools import LazyTranslate, mute_logger
-from odoo.tools.mail import (
-    email_normalize, email_normalize_all, email_split, email_split_and_format_normalize, formataddr
-)
+from odoo.tools.mail import email_normalize, email_split_and_format_normalize, formataddr
 from odoo.tools.translate import code_translations
 
 _logger = logging.getLogger(__name__)
@@ -1724,7 +1722,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
     def assertMessageBusNotifications(self, message, count=1):
         """Asserts that the expected notification updates have been sent on the
         bus for the given message."""
-        self.assertBusNotifications([(self.cr.dbname, 'res.partner', message.author_id.id)] * count, [{
+        self.assertBusNotifications([message.author_id.user_ids] * count, [{
             "type": "mail.record/insert",
             "payload": Store().add(message, "_store_notification_fields").get_result(),
         }], check_unique=False)
@@ -1734,9 +1732,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         channels being notified. Content check is optional.
 
         EXPECTED
-        :param channels: list of expected bus channels, like [
-          (self.cr.dbname, 'res.partner', self.partner_employee_2.id)
-        ]
+        :param channels: list of expected bus channels, like [self.user_employee]
         :param message_items: if given, list of expected message making a valid
           pair (channel, message) to be found in bus.bus, like [
             {'type': 'mail.message/notification_update',
@@ -1749,7 +1745,8 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             }, {...}]
         """
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
+        channels_with_db = [json_dump(channel_with_db(self.cr.dbname, c)) for c in channels]
+        bus_notifs = self.env["bus.bus"].sudo().search([("channel", "in", channels_with_db)])
         new_lines = "\n\n"
 
         def notif_to_string(notif):
@@ -1757,8 +1754,8 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
 
         self.assertEqual(
             bus_notifs.mapped("channel"),
-            [json_dump(channel) for channel in channels],
-            f"\n\nExpected:\n{new_lines[0].join([json_dump(channel) for channel in channels])}"
+            channels_with_db,
+            f"\n\nExpected:\n{new_lines[0].join(channels_with_db)}"
             f"\n\nReturned:\n{new_lines.join([notif_to_string(notif) for notif in bus_notifs])}",
         )
         for expected in message_items or []:
@@ -1789,16 +1786,17 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             with self.mock_bus():
                 yield
         finally:
-            bus_notifs = (
-                self.env["bus.bus"]
-                .sudo()
-                .search([("channel", "in", [json_dump(channel) for channel, _ in expected_pairs])])
-            )
+            channels_with_db = [
+                json_dump(channel_with_db(self.cr.dbname, channel))
+                for channel, _ in expected_pairs
+            ]
+            bus_notifs = self.env["bus.bus"].sudo().search([("channel", "in", channels_with_db)])
             notif_types = [
                 (json.loads(notif.message).get("type"), notif.channel) for notif in bus_notifs
             ]
             expected_notif_types = [
-                (notif_type, json_dump(channel)) for channel, notif_type in expected_pairs
+                (notif_type, json_dump(channel_with_db(self.cr.dbname, channel)))
+                for channel, notif_type in expected_pairs
             ]
             self.assertEqual(notif_types, expected_notif_types)
 

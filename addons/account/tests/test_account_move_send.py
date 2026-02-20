@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
@@ -7,9 +6,11 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import users, warmup, tagged, Form
+from odoo.tests.common import new_test_user
 from odoo.tools import formataddr, mute_logger
 
 
@@ -500,17 +501,17 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
                 {k: v for k, v in expected_values.items() if not check_id_needed and k != 'id'},
             )
 
-    def create_send_and_print(self, invoices, default=False, **kwargs):
-        invoices.action_send_and_print()
+    def create_send_and_print(self, invoices, default=False, *, as_user=None, **kwargs):
+        invoices.with_user(as_user).action_send_and_print()
         if len(invoices) == 1:
             if not default and not kwargs.get('sending_methods'):
                 # In most cases, for testing purpose you only want to try to generate the document, no need to send it.
                 # Therefore by default we deactivate sending methods, unless default parameter is set to True,
                 # or they are explicitly given.
                 kwargs['sending_methods'] = []
-            return self._create_account_move_send_wizard_single(invoices, **kwargs)
+            return self._create_account_move_send_wizard_single(invoices, as_user=as_user, **kwargs)
         else:
-            return self._create_account_move_send_wizard_multi(invoices, **kwargs)
+            return self._create_account_move_send_wizard_multi(invoices, as_user=as_user, **kwargs)
 
     def _get_mail_message(self, move, limit=1):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
@@ -1060,10 +1061,12 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         sp_partner_1 = self.env.user.partner_id
         wizard_partner_1 = self.create_send_and_print(invoices_success)
         wizard_partner_1.action_send_and_print()
-
-        sp_partner_2 = self.env['res.partner'].create({'name': 'Partner 2', 'email': 'test@test.odoo.com'})
-        self.env.user.partner_id = sp_partner_2
-        wizard_partner_2 = self.create_send_and_print(invoices_error)
+        user_2 = new_test_user(
+            self.env,
+            "Partner 2",
+            "account.group_account_invoice,base.group_partner_manager",
+        )
+        wizard_partner_2 = self.create_send_and_print(invoices_error, as_user=user_2)
         wizard_partner_2.action_send_and_print()
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
@@ -1072,7 +1075,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.assertTrue(all(invoice.sending_data for invoice in invoices_success + invoices_error))
         self.assertTrue(all(invoice.sending_data.get('author_partner_id') == sp_partner_1.id for invoice in invoices_success))
-        self.assertTrue(all(invoice.sending_data.get('author_partner_id') == sp_partner_2.id for invoice in invoices_error))
+        self.assertTrue(all(invoice.sending_data.get('author_partner_id') == user_2.partner_id.id for invoice in invoices_error))
 
         #  reset bus
         self.env.cr.precommit.run()
@@ -1086,7 +1089,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 
         bus_1 = self.env['bus.bus'].sudo().search(
-            [('channel', 'like', f'"res.partner",{sp_partner_1.id}')],
+            [('channel', '=', json_dump(channel_with_db(self.cr.dbname, self.env.user)))],
             order='id desc',
             limit=1,
         )
@@ -1095,7 +1098,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(sorted(payload_1['action_button']['res_ids']), invoices_success.ids)
 
         bus_2 = self.env['bus.bus'].sudo().search(
-            [('channel', 'like', f'"res.partner",{sp_partner_2.id}')],
+            [('channel', '=', json_dump(channel_with_db(self.cr.dbname, user_2)))],
             order='id desc',
             limit=1,
         )

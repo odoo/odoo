@@ -1584,10 +1584,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                 lambda n: n.res_partner_id == self.user_follower_emp_inbox.partner_id
             )
             return (
-                [
-                    (self.cr.dbname, "res.partner", self.user_emp_inbox.partner_id.id),
-                    (self.cr.dbname, "res.partner", self.user_follower_emp_inbox.partner_id.id),
-                ],
+                [self.user_emp_inbox, self.user_follower_emp_inbox],
                 [
                     {
                         "type": "mail.message/inbox",

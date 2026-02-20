@@ -7,5 +7,5 @@ class ResUsersSettings(models.Model):
     _name = 'res.users.settings'
     _inherit = ["res.users.settings", "bus.listener.mixin"]
 
-    def _bus_channel(self):
-        return self.user_id
+    def _bus_channels(self):
+        return self.user_id._bus_channels()

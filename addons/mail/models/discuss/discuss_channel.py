@@ -577,9 +577,9 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
-        stores = lazymapping(lambda member: Store(bus_channel=member._bus_channel()))
-        for member in new_members:
-            stores[member].add(member.channel_id, "_store_channel_fields").add(
+        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        for member, store in new_members._get_member_store_list(stores):
+            store.add(member.channel_id, "_store_channel_fields").add(
                 member,
                 lambda res: (
                     res.from_method("_store_persona_default_fields"),
@@ -616,8 +616,9 @@ class DiscussChannel(models.Model):
                 ("partner_id", "=", partner.id) if partner else ("guest_id", "=", guest.id),
             ]
         )
-        custom_store = Store(bus_channel=member._bus_channel() or partner.main_user_id or guest)
-        custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False}).bus_send()
+        for bus_channel in ((member or partner or guest)._bus_channels()):
+            custom_store = Store(bus_channel=bus_channel)
+            custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False}).bus_send()
         if not member:
             return
         if self.channel_type != "channel" and post_leave_message:
@@ -681,8 +682,8 @@ class DiscussChannel(models.Model):
             else:
                 new_members = self.env["discuss.channel.member"].create(members_to_create)
             all_new_members += new_members
-            for member in new_members:
-                joined_store = Store(bus_channel=member._bus_channel())
+            joined_stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+            for member, joined_store in new_members._get_member_store_list(joined_stores):
                 joined_store.add(member.channel_id, "_store_channel_fields")
                 joined_store.add(member, ["unpin_dt"])
                 payload = {

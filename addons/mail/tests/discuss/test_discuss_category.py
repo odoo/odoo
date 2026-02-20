@@ -15,9 +15,7 @@ class TestDiscussCategory(MailCommon, HttpCase):
 
         def get_assign_channel_category_bus():
             return (
-                [
-                    (self.cr.dbname, "discuss.channel", self.channel.id),
-                ],
+                [self.channel],
                 [
                     {
                         "type": "mail.record/insert",

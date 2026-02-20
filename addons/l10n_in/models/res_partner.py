@@ -149,7 +149,7 @@ class ResPartner(models.Model):
         except AccessError:
             raise UserError(_("Unable to connect with GST network"))
         if response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):
-            return self.env["bus.bus"]._sendone(self.env.user.partner_id, "iap_notification",
+            return self.env.user._bus_send("iap_notification",
                 {
                     "type": "no_credit",
                     "title": _("Not enough credits to check GSTIN status"),

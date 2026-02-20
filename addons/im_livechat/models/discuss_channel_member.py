@@ -157,9 +157,9 @@ class DiscussChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.channel_id.livechat_end_dt = fields.Datetime.now()
-        stores = lazymapping(lambda member: Store(bus_channel=member._bus_channel()))
-        for member in sessions_to_be_unpinned:
-            stores[member].add(member.channel_id, {"close_chat_window": True})
+        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        for member, store in sessions_to_be_unpinned._get_member_store_list(stores):
+            store.add(member.channel_id, {"close_chat_window": True})
         for store in stores.values():
             store.bus_send()
         sessions_to_be_unpinned.unpin_dt = fields.Datetime.now()

@@ -140,6 +140,12 @@ class BusBus(models.Model):
         """
         self._ensure_hooks()
         channel = channel_with_db(self.env.cr.dbname, target)
+        if isinstance(channel, tuple) and len(channel) == 3 and channel[1] == "res.partner":
+            _logger.warning(
+                "Sending bus notifications on res.partner records is deprecated."
+                " Partners do not receive notifications unless they have dedicated user(s)."
+                " So please send on the expected res.users instead.",
+            )
         self.env.cr.precommit.data["bus.bus.values"].append(
             {
                 "channel": json_dump(channel),

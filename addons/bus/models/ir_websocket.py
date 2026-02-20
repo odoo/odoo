@@ -25,6 +25,7 @@ class IrWebsocket(models.AbstractModel):
         channels.extend(self.env.user.all_group_ids)
         if req.session.uid:
             channels.append(self.env.user.partner_id)
+            channels.append(self.env.user)
         return channels
 
     def _serve_ir_websocket(self, event_name, data):

@@ -2974,7 +2974,7 @@ class MailThread(models.AbstractModel):
             "UPDATE mail_message SET pinned_at=%(pinned_at)s WHERE id=%(id)s",
             {"pinned_at": fields.Datetime.now() if pinned else None, "id": message.id},
         )
-        Store(bus_channel=message._bus_channel()).add(message, ["pinned_at"]).bus_send()
+        Store(bus_channel=message).add(message, ["pinned_at"]).bus_send()
         return True
 
     # ------------------------------------------------------------
@@ -5061,7 +5061,7 @@ class MailThread(models.AbstractModel):
             self.env["mail.message.translation"].sudo().search(
                 [("message_id", "=", message.id)],
             ).unlink()
-        Store(bus_channel=message._bus_channel()).add(
+        Store(bus_channel=message).add(
             message,
             lambda res: (
                 res.many("attachment_ids", "_store_attachment_fields", sort="id"),

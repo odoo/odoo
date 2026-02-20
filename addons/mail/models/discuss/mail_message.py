@@ -45,11 +45,11 @@ class MailMessage(models.Model):
                 sudo=True,
             )
 
-    def _bus_channel(self):
+    def _bus_channels(self):
         self.ensure_one()
         if self.channel_id:
-            return self.channel_id
+            return self.channel_id._bus_channels()
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
-            return guest
-        return super()._bus_channel()
+            return guest._bus_channels()
+        return super()._bus_channels()

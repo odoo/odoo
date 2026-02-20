@@ -249,10 +249,8 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             rating = self.env["rating.rating"].sudo().search([], order="id desc", limit=1)
             return (
                 [
-                    # unread counter/new message separator (not asserted below)
-                    (self.env.cr.dbname, "res.partner", self.env.user.partner_id.id),
-                    # new_message
-                    (self.env.cr.dbname, "discuss.channel", channel.id),
+                    self.env.user,  # unread counter/new message separator (not asserted below)
+                    channel,  # new_message
                 ],
                 [
                     {

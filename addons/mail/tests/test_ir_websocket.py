@@ -83,7 +83,7 @@ class TestIrWebsocket(WebsocketCase):
         bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
         self.assertEqual(
             bus_record.channel,
-            json_dump(channel_with_db(self.env.cr.dbname, bob.partner_id)),
+            json_dump(channel_with_db(self.env.cr.dbname, bob)),
         )
         self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
         self.assertEqual(notification["message"]["payload"]["im_status"], "online")

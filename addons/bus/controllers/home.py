@@ -13,8 +13,8 @@ def _admin_password_warn(uid):
     if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
         return
     env = request.env(user=SUPERUSER_ID, su=True)
-    admin = env.ref('base.partner_admin')
-    if uid not in admin.user_ids.ids:
+    admin = env.ref("base.user_admin")
+    if uid != admin.id:
         return
     has_demo = bool(env['ir.module.module'].search_count([('demo', '=', True)]))
     if has_demo:
