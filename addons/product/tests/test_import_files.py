@@ -145,15 +145,31 @@ class TestImportFiles(TransactionCase):
         # product.product. But the product should be removed after import some
         # variant.
 
+        prod_ids = self.env['product.product'].search([]).ids
+        attr_ids = self.env['product.attribute'].search([]).ids
+        val_ids = self.env['product.attribute.value'].search([]).ids
+
+        test_file = "product/static/xls/test_import_product_without_values.xls"
         addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)
-        if 'stock' not in addons:
-            self.skipTest('Needs stock addon for this test')
-            return
+        if 'stock' in addons:
+            test_file = "product/static/xls/test_import_product_without_values_stock.xls"
 
-        self.import_product_xls("product.product", filepath="product/static/xls/test_import_product_without_values.xls")
+        self.import_product_xls("product.product", filepath=test_file)
 
-        self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
-        self.assertEqual(self.env.ref('__import__.product_product_1').qty_available, 100.0)
+        products = self.env['product.product'].search([('id', 'not in', prod_ids)])
+        self.assertEqual(products.mapped('name'), ['Apple juice', 'Ananas juice', 'Orange juice', 'Orange juice', 'Lemon juice', 'Lemon juice'])
+        self.assertEqual(products.mapped('display_name'), ['[JUICE-1] Apple juice', '[JUICE-2] Ananas juice', '[JUICE-3] Orange juice (Orange)', '[JUICE-4] Orange juice (Red)', '[JUICE-5] Lemon juice (Orange)', '[JUICE-6] Lemon juice (Red)'])
+
+        attributes = self.env['product.attribute'].search([('id', 'not in', attr_ids)])
+        self.assertEqual(attributes.mapped('name'), ['Color'])
+
+        values = self.env['product.attribute.value'].search([('id', 'not in', val_ids)])
+        self.assertEqual(values.mapped('name'), ['Orange', 'Red'])
+        self.assertEqual(values.mapped('display_name'), ['Color: Orange', 'Color: Red'])
+
+        if 'stock' in addons:
+            self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
+            self.assertEqual(self.env.ref('__import__.product_product_1').qty_available, 100.0)
 
     def test_import_create_product_template_xls(self):
         results = self.import_product_xls("product.template", filepath="product/static/xls/test_import_template.xls")
