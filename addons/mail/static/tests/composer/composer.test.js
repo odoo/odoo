@@ -1482,7 +1482,7 @@ test("composer reply-to message is restored on thread change", async () => {
             store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
         )
     ).toBe(
-        '{"emailAddSignature":true,"replyToMessageId":1,"composerHtml":["markup","Hello World!"]}'
+        '{"emailAddSignature":true,"replyToMessageId":1,"composerHtml":["markup","Hello World!"],"fromFullComposer":false}'
     );
     // check local storage emptied on message post
     await click(".o-mail-Composer button:enabled[aria-label='Send']");
