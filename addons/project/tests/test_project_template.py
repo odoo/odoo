@@ -1,3 +1,5 @@
+from datetime import date
+
 from odoo.exceptions import UserError
 from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
@@ -15,6 +17,47 @@ class TestProjectTemplates(TestProjectCommon):
             "name": "Task in Project Template",
             "project_id": cls.project_template.id,
         })
+
+    def test_convert_project_to_project_template_preserves_planned_dates(self):
+        """
+        Test that converting a project into a project template preserves the planned start and end dates.
+        """
+        project = self.env["project.project"].create({
+            "name": "Project",
+            "date_start": date(2025, 6, 1),
+            "date": date(2025, 6, 11),
+        })
+
+        data = project.action_create_template_from_project()
+        project_template = self.env["project.project"].browse(
+            data["params"]["project_id"]
+        )
+
+        self.assertTrue(project_template.is_template,
+            "The generated project should be marked as a template."
+        )
+        self.assertEqual(project_template.date_start, project.date_start,
+            "The start date should be preserved when converting a project to a template."
+        )
+        self.assertEqual(project_template.date, project.date,
+            "The expiration date should be preserved when converting a project to a template."
+        )
+
+        # Create project without passing planned dates
+        project_a = project_template.action_create_from_template({"name": "Project A"})
+
+        self.assertFalse(project_a.date_start, "Project should not have a start date by default.")
+        self.assertFalse(project_a.date, "Project should not have an expiration date by default.")
+
+        # Create project with planned new dates
+        project_b = project_template.action_create_from_template({
+            "name": "Project B",
+            "date_start": date(2025, 6, 1),
+            "date": date(2025, 6, 10),
+        })
+
+        self.assertEqual(project_b.date_start, date(2025, 6, 1), "Project should have the new start date.")
+        self.assertEqual(project_b.date, date(2025, 6, 10), "Project should have the new expiration date.")
 
     def test_create_from_template(self):
         """
