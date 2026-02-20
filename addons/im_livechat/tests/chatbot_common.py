@@ -156,7 +156,13 @@ class ChatbotCase(common.HttpCase):
         })
 
     def _post_answer_and_trigger_next_step(
-        self, discuss_channel, body=None, email=None, phone=None, chatbot_script_answer=None
+        self,
+        discuss_channel,
+        body=None,
+        email=None,
+        phone=None,
+        chatbot_script_answer=None,
+        trigger_cookies=None,
     ):
         data = self.make_jsonrpc_request(
             "/mail/message/post",
@@ -184,4 +190,6 @@ class ChatbotCase(common.HttpCase):
                     "selected_answer_id": chatbot_script_answer.id,
                 },
             )
-        self.make_jsonrpc_request("/chatbot/step/trigger", {"channel_id": discuss_channel.id})
+        self.make_jsonrpc_request(
+            "/chatbot/step/trigger", {"channel_id": discuss_channel.id}, cookies=trigger_cookies
+        )

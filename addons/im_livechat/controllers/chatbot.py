@@ -75,7 +75,9 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
-        step_data = next_step._process_step(discuss_channel)
+        step_data = next_step.with_context(
+            lang=chatbot_language, country_code=request.geoip.country_code
+        )._process_step(discuss_channel)
         posted_message = step_data["message"]
         store.add(posted_message, "_store_message_fields")
         store.add(next_step, "_store_script_step_fields")

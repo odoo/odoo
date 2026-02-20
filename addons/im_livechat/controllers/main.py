@@ -155,19 +155,20 @@ class LivechatController(http.Controller):
                 ),
             )
         else:
+            lang = request.env["res.lang"].search(
+                [("code", "=", request.cookies.get("frontend_lang"))]
+            )
             if request.env.user._is_public():
                 guest = guest.sudo()._get_or_create_guest(
                     guest_name=self._get_guest_name(),
                     country_code=request.geoip.country_code,
                     timezone=request.env["mail.guest"]._get_timezone_from_request(request),
+                    lang=lang,
                 )
                 livechat_channel = livechat_channel.with_context(guest=guest)
                 request.update_context(guest=guest)
             channel_vals = livechat_channel._get_livechat_discuss_channel_vals(**operator_info)
             channel_vals.update(**persisted_channel_params)
-            lang = request.env["res.lang"].search(
-                [("code", "=", request.cookies.get("frontend_lang"))]
-            )
             channel_vals.update({"country_id": country.id, "livechat_lang_id": lang.id})
             channel = request.env['discuss.channel'].with_context(
                 lang=request.env['chatbot.script']._get_chatbot_language()
