@@ -177,6 +177,9 @@ class PosOrder(models.Model):
             inv_line_vals["name"] = origin_line.name
             origin_line._set_analytic_distribution(inv_line_vals)
 
+        if self.config_id.down_payment_product_id == pos_line.product_id:
+            inv_line_vals["is_downpayment"] = True
+
         return inv_line_vals
 
     def write(self, vals):
