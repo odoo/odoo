@@ -39,6 +39,7 @@ export class Builder extends Component {
         closeEditor: { type: Function, optional: true },
         reloadEditor: { type: Function, optional: true },
         onEditorLoad: { type: Function, optional: true },
+        newInstalledModule: { type: String, optional: true },
         installSnippetModule: { type: Function, optional: true },
         snippetsName: { type: String },
         toggleMobile: { type: Function },

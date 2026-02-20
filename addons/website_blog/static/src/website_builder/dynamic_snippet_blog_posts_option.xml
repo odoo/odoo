@@ -9,13 +9,28 @@
 
 <t t-name="website_blog.DynamicSnippetBlogPostsOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
-        <BuilderRow label.translate="Blog" t-if="!isSingleMode">
-            <BuilderSelect dataAttributeAction="'filterByBlogId'" preview="false">
-                <BuilderSelectItem dataAttributeActionValue="'-1'">All blogs</BuilderSelectItem>
-                <t t-foreach="blogState.blogs" t-as="blog" t-key="blog.id">
-                    <BuilderSelectItem dataAttributeActionValue="`${blog.id}`" t-out="blog.name"/>
-                </t>
-            </BuilderSelect>
+        <BuilderRow label.translate="Blogs" preview="false">
+            <BuilderMany2Many model="'blog.blog'"
+                dataAttributeAction="'filterByBlogIds'"
+                domain="[
+                    '|',
+                    ['website_id', '=', false],
+                    ['website_id', '=', this.services.website.currentWebsite.id],
+                ]"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Tags" preview="false">
+            <BuilderMany2Many model="'blog.tag'"
+                dataAttributeAction="'filterByTagIds'"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Authors" preview="false">
+            <SelectMenu
+                togglerClass="'form-control'"
+                choices="blogState.authors"
+                value="blogState.value"
+                multiSelect="true"
+                onSelect.bind="onSelect"/>
         </BuilderRow>
     </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
