@@ -94,23 +94,21 @@ class ProductProduct(models.Model):
 
     def _compute_product_price_with_pricelist(self, products, config_id):
         config = self.env['pos.config'].browse(config_id)
-        pricelist = config.pricelist_id
 
-        product_ids = [product['id'] for product in products]
-        product_objs = self.env['product.product'].browse(product_ids)
-
-        product_map = {product.id: product for product in product_objs}
-        loaded_product_tmpl_ids = list({p['product_tmpl_id'] for p in products})
-        archived_combinations = self._get_archived_combinations_per_product_tmpl_id(loaded_product_tmpl_ids)
+        archived_combinations = self._get_archived_combinations_per_product_tmpl_id(
+            list({p['product_tmpl_id'] for p in products})
+        )
+        lst_prices = config.pricelist_id._get_products_price(
+            self.env['product.product'].browse([product['id'] for product in products]),
+            quantity=1.0,
+            currency=config.currency_id,
+        )
 
         for product in products:
-            product_obj = product_map.get(product['id'])
-            if product_obj:
-                product['lst_price'] = pricelist._get_product_price(
-                    product_obj, 1.0, currency=config.currency_id
-                )
-            if archived_combinations.get(product['product_tmpl_id']):
-                product['_archived_combinations'] = archived_combinations[product['product_tmpl_id']]
+            if product['id'] in lst_prices:
+                product['lst_price'] = lst_prices[product['id']]
+            if archived_combination := archived_combinations.get(product['product_tmpl_id']):
+                product['_archived_combinations'] = archived_combination
 
     def _filter_applicable_attributes(self, attributes_by_ptal_id: Dict) -> List[Dict]:
         """
