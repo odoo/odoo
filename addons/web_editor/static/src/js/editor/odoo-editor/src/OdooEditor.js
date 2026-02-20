@@ -2638,6 +2638,7 @@ export class OdooEditor extends EventTarget {
      * @returns {?}
      */
     _applyCommand(...args) {
+        this.dispatchEvent(new Event("dirty"));
         this._recordHistorySelection(true);
         const result = this._protect(() => this._applyRawCommand(...args));
         this.historyStep();
@@ -3784,6 +3785,7 @@ export class OdooEditor extends EventTarget {
     //--------------------------------------------------------------------------
 
     _onBeforeInput(ev) {
+        this.dispatchEvent(new Event('dirty'));
         this._lastBeforeInputType = ev.inputType;
         // For chrome when we have this structure
         // <div contenteditable="true">
@@ -3822,6 +3824,7 @@ export class OdooEditor extends EventTarget {
         if (newSelection.anchorNode && isProtected(newSelection.anchorNode)) {
             return;
         }
+        this.dispatchEvent(new Event('dirty'));
         const shouldOpenPowerbox = newSelection.isCollapsed && newSelection.rangeCount &&
             ev.data === '/' && this.powerbox && !this.powerbox.isOpen &&
             (!this.options.getPowerboxElement || !!this.options.getPowerboxElement());
@@ -5224,6 +5227,7 @@ export class OdooEditor extends EventTarget {
             return;
         }
         ev.preventDefault();
+        this.dispatchEvent(new Event('dirty'));
         const files = getImageFiles(ev.clipboardData);
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');

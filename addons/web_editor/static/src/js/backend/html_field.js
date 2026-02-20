@@ -74,6 +74,7 @@ export class HtmlField extends Component {
         this.rpc = useService("rpc");
 
         this.onIframeUpdated = this.env.onIframeUpdated || (() => {});
+        this.isDirty = false;
 
         this.state = useState({
             showCodeView: false,
@@ -291,6 +292,7 @@ export class HtmlField extends Component {
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
             stripHistoryIds(value) !== stripHistoryIds(lastValue)
         ) {
+            this.isDirty = false;
             this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
             const contentMetadata = getHtmlFieldMetadata(lastValue);
@@ -314,14 +316,18 @@ export class HtmlField extends Component {
             this.wysiwyg.toolbarEl.append($codeviewButtonToolbar[0]);
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
-        this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
-            this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty())
-        );
+        this.wysiwyg.odooEditor.addEventListener("historyStep", () => {
+            return this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty());
+        });
+
+        this.wysiwyg.odooEditor.addEventListener("dirty", () => {
+            this.isDirty = true;
+        });
 
         if (this.props.isCollaborative) {
-            this.wysiwyg.odooEditor.addEventListener("onExternalHistorySteps", () =>
-                this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty())
-            );
+            this.wysiwyg.odooEditor.addEventListener("onExternalHistorySteps", () => {
+                this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty());
+            });
         }
 
         this.isRendered = true;
@@ -439,32 +445,7 @@ export class HtmlField extends Component {
         this.Wysiwyg = wysiwygModule.Wysiwyg;
     }
     _isDirty() {
-        const strippedPropValue = stripHistoryIds(String(this.props.record.data[this.props.name]));
-        const strippedEditingValue = stripHistoryIds(this.getEditingValue());
-        const domParser = new DOMParser();
-        const codeViewEl = this._getCodeViewEl();
-        let parsedPreviousValue;
-        // If the wysiwyg is active, we need to clean the content of the
-        // initialValue as the editingValue will be cleaned.
-        if (!codeViewEl && this.wysiwyg) {
-            const editable = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
-            // Temporarily append the editable to the DOM because the
-            // wysiwyg.getValue can indirectly call methods that needs to have
-            // access the node.ownerDocument.defaultView.getComputedStyle.
-            // By appending the editable to the dom, the node.ownerDocument will
-            // have a `defaultView`.
-            const div = document.createElement('div');
-            div.style.display = 'none';
-            div.append(editable);
-            document.body.append(div);
-            const editableValue = stripHistoryIds(this.wysiwyg.getValue({ $layout: $(editable) }));
-            div.remove();
-            parsedPreviousValue = domParser.parseFromString(editableValue, 'text/html').body;
-        } else {
-            parsedPreviousValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
-        }
-        const parsedNewValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
-        return !this.props.readonly && parsedPreviousValue.innerHTML !== parsedNewValue.innerHTML;
+        return !this.props.readonly && this.isDirty;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
