@@ -7,6 +7,96 @@ import * as EventTourUtils from "@pos_event/../tests/tours/utils/event_tour_util
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 
+registry.category("web_tour.tours").add("EventAvailabilityInPos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // Check event seats limited (seats_max = 2), basic ticket unlimited, vip ticket max 1
+            // - Taking 3 basic tickets should show error
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 3),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Taking 3 different tickets should show error
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 2),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Taking 2 vip tickets should show error
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket VIP", 2),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Taking 1 vip ticket should work
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Taking 1 vip ticket (1 vip already in cart) should show error
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Taking 1 basic ticket (1 vip already in cart) should work
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Event should be sold out (seats_max = 2)
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            ProductScreen.clickDisplayedProduct("Event Limited"),
+            {
+                trigger: ".o_notification_bar.bg-danger",
+            },
+            // - Ending with 1 basic + 1 vip in cart
+
+            // --------------------------------------------------------------------
+
+            // Check event seats unlimited, basic ticket unlimited (max 3 per selection), vip ticket max 1
+            // - Taking 4 basic tickets should show error (limit max per order = 3)
+            ProductScreen.clickDisplayedProduct("Event Unlimited"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 4),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Taking 2 vip tickets should show error
+            ProductScreen.clickDisplayedProduct("Event Unlimited"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket VIP", 2),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Taking 1 vip ticket and 3 basic tickets should work
+            ProductScreen.clickDisplayedProduct("Event Unlimited"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 3),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Event shouldn't be sold out.
+            // - Taking 1 vip ticket (1 vip already in cart) should show error
+            ProductScreen.clickDisplayedProduct("Event Unlimited"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            // - Ending with 3 basic + 1 vip in cart
+
+            // Pay order
+            ProductScreen.totalAmountIs("800.00"), // (4 basic + 2 vip)
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            EventTourUtils.printTicket("full"),
+            EventTourUtils.printTicket("badge"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("SellingEventInPos", {
     steps: () =>
         [

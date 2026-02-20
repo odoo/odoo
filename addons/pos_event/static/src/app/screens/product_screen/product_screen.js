@@ -1,6 +1,7 @@
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 import { EventConfiguratorPopup } from "@pos_event/app/components/popup/event_configurator_popup/event_configurator_popup";
 import { EventRegistrationPopup } from "../../components/popup/event_registration_popup/event_registration_popup";
 import { EventSlotSelectionPopup } from "../../components/popup/event_slot_selection_popup/event_slot_selection_popup";
@@ -24,16 +25,60 @@ patch(ProductScreen.prototype, {
             return await super.addProductToOrder(product);
         }
 
-        if (product.event_id.seats_available === 0 && product.event_id.seats_limited) {
-            this.notification.add("No more seats available for this event", {
+        const event = product.event_id;
+        const tickets = event.event_ticket_ids.filter(
+            (ticket) => ticket.product_id && ticket.product_id.service_tracking === "event"
+        );
+
+        // Used to dynamically update the event ticket availabilities depending on
+        // the current order already validated registrations.
+        // NB: Other orders event ticket registrations are not taken into account.
+        const currentOrderEventRegistrations = (this.pos.getOrder()?.lines || []).reduce(
+            (acc, line) => {
+                const regs = (line.event_registration_ids.flat() || []).filter(
+                    (reg) => reg.event_id?.id === event.id
+                );
+                return acc.concat(regs);
+            },
+            []
+        );
+
+        // Sold out alert: for event limit
+        const eventCurrentAvailability = Math.max(
+            event.seats_available - currentOrderEventRegistrations.length,
+            0
+        );
+        const soldOutMessage = _t("No more seats available for this event");
+        if (event.seats_limited && eventCurrentAvailability === 0) {
+            this.notification.add(soldOutMessage, {
                 type: "danger",
             });
             return;
         }
 
-        const event = product.event_id;
-        const tickets = event.event_ticket_ids.filter(
-            (ticket) => ticket.product_id && ticket.product_id.service_tracking === "event"
+        const currentOrderRegCounts = currentOrderEventRegistrations.reduce(
+            (acc, reg) => {
+                const slotId = reg.event_slot_id?.id;
+                const ticketId = reg.event_ticket_id?.id;
+                // Per slot & ticket
+                if (slotId && ticketId) {
+                    if (!acc.perSlotTicket[ticketId]) {
+                        acc.perSlotTicket[ticketId] = {};
+                    }
+                    acc.perSlotTicket[ticketId][slotId] =
+                        (acc.perSlotTicket[ticketId][slotId] || 0) + 1;
+                }
+                // Per slot
+                if (slotId) {
+                    acc.perSlot[slotId] = (acc.perSlot[slotId] || 0) + 1;
+                }
+                // Per ticket
+                if (ticketId) {
+                    acc.perTicket[ticketId] = (acc.perTicket[ticketId] || 0) + 1;
+                }
+                return acc;
+            },
+            { perSlotTicket: {}, perSlot: {}, perTicket: {} }
         );
 
         // Multi Slot
@@ -66,55 +111,103 @@ patch(ProductScreen.prototype, {
                 "get_slot_tickets_availability_pos",
                 [event.id, slotTickets]
             );
-            const eventSeats = event.seats_limited ? event.seats_available : "unlimited";
             avaibilityByTicket = slotTicketAvailabilities.reduce((acc, availability, idx) => {
                 const ticketsData = slotTickets[idx];
                 const slotId = ticketsData[0];
                 const ticketId = ticketsData[1];
+                const currentCount = currentOrderRegCounts.perSlotTicket[ticketId]?.[slotId] ?? 0;
+                // Maximum number of ticket the user can select in the selection box.
+                // NB: This number doesn't refer to a global limit for the order.
+                const selectionLimitMax =
+                    tickets.find((t) => t.id === ticketId)?.limit_max_per_order ?? 0;
+
                 if (!acc[ticketId]) {
                     acc[ticketId] = {};
                 }
                 if (!acc[ticketId][slotId]) {
                     acc[ticketId][slotId] = {};
                 }
+                let slotTicketAvailability;
                 if (availability === null) {
-                    acc[ticketId][slotId] = "unlimited";
+                    slotTicketAvailability = "unlimited";
                 } else if (typeof availability === "number") {
-                    acc[ticketId][slotId] = availability;
+                    slotTicketAvailability = availability - currentCount;
                 } else {
-                    acc[ticketId][slotId] = 0;
+                    slotTicketAvailability = 0;
                 }
+                if (selectionLimitMax > 0) {
+                    slotTicketAvailability =
+                        slotTicketAvailability === "unlimited"
+                            ? selectionLimitMax
+                            : Math.min(selectionLimitMax, slotTicketAvailability);
+                }
+                if (slotTicketAvailability !== "unlimited") {
+                    slotTicketAvailability = Math.max(0, slotTicketAvailability);
+                }
+                acc[ticketId][slotId] = slotTicketAvailability;
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some((av) =>
-                Object.values(av).some((a) => typeof a === "number" && a > 0)
+                Object.values(av).some((a) => (typeof a === "number" && a > 0) || a === "unlimited")
             );
-            if (!isAvailable || eventSeats === 0) {
-                this.notification.add("All slots are booked out for this event.", {
+            // Sold out alert: for slot ticket limits
+            if (!isAvailable) {
+                this.notification.add(soldOutMessage, {
                     type: "danger",
                 });
                 return;
             }
-            const availabilityPerSlot = Object.values(avaibilityByTicket).reduce(
+            // Sum of ticket availabilities per slot.
+            // Ex: Standard ticket: 2 seats available, VIP ticket: 1 seats available => total = 3
+            //     If one is "unlimited" then total = "unlimited".
+            const sumTicketAvailabilitiesPerSlot = Object.values(avaibilityByTicket).reduce(
                 (acc, ticketAvailability) => {
                     Object.entries(ticketAvailability).forEach(([slotId, availability]) => {
-                        if (!acc[slotId]) {
-                            acc[slotId] = 0;
-                        } else if (acc[slotId] === "unlimited") {
-                            return acc;
+                        if (acc[slotId] === "unlimited") {
+                            return;
                         }
                         if (availability === "unlimited") {
                             acc[slotId] = "unlimited";
                         } else if (typeof availability === "number") {
-                            acc[slotId] = Math.max(acc[slotId], availability);
+                            acc[slotId] = (acc[slotId] || 0) + availability;
                         } else {
-                            acc[slotId] = Math.max(acc[slotId], 0);
+                            acc[slotId] = 0;
                         }
                     });
                     return acc;
                 },
                 {}
             );
+            // Availability per slot is the minimum between:
+            // - the sum of each slot ticket availabilities
+            // - the slot seats_available which accounts for the event seats_max limitation (i.e. max X attendees per slot)
+            // Both considering the current order registrations for the slot and tickets.
+            const availabilityPerSlot = slots.reduce((acc, slot) => {
+                const currentOrderSlotRegCount = currentOrderRegCounts.perSlot[slot.id] ?? 0;
+                const slotAvailability = Math.max(
+                    slot.seats_available - currentOrderSlotRegCount,
+                    0
+                );
+                // "sumTicketAvailabilitiesPerSlot" already accounting for current order count
+                const slotTotalTicketAvailability = sumTicketAvailabilitiesPerSlot[slot.id] ?? 0;
+
+                let availability = 0;
+                if (!event.seats_limited) {
+                    // Slot = unlimited seats
+                    availability = slotTotalTicketAvailability;
+                } else if (slotTotalTicketAvailability === "unlimited") {
+                    // Slot = limited seats, Tickets = total is unlimited
+                    availability = slotAvailability;
+                } else {
+                    // Slot = limited seats, Tickets = total is limited
+                    availability = Math.max(
+                        Math.min(slotAvailability, slotTotalTicketAvailability),
+                        0
+                    );
+                }
+                acc[slot.id] = availability;
+                return acc;
+            }, {});
             slotResult = await makeAwaitable(this.dialog, EventSlotSelectionPopup, {
                 availabilityPerSlot: availabilityPerSlot,
                 event: event,
@@ -125,17 +218,46 @@ patch(ProductScreen.prototype, {
             slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
+                const currentTicketCount = currentOrderRegCounts.perTicket[ticket.id] ?? 0;
+                // Maximum number of ticket the user can select in the selection box.
+                // NB: This number doesn't refer to a global limit for the order.
+                const selectionLimitMax = ticket.limit_max_per_order ?? 0;
+
+                let availability;
                 if (ticket.seats_max === 0) {
-                    acc[ticket.id] = event.seats_limited ? event.seats_available : "unlimited";
+                    // Ticket = unlimited seats
+                    availability = "unlimited";
                 } else {
-                    acc[ticket.id] = ticket.seats_available;
+                    // Ticket = limited seats
+                    availability = ticket.seats_available - currentTicketCount;
                 }
+                if (selectionLimitMax > 0) {
+                    availability =
+                        availability === "unlimited"
+                            ? selectionLimitMax
+                            : Math.min(selectionLimitMax, availability);
+                }
+                if (availability !== "unlimited") {
+                    availability = Math.max(0, availability);
+                }
+                acc[ticket.id] = availability;
                 return acc;
             }, {});
+            const isAvailable = Object.values(avaibilityByTicket).some(
+                (av) => (typeof av === "number" && av > 0) || av === "unlimited"
+            );
+            // Sold out alert: for ticket limits
+            if (!isAvailable) {
+                this.notification.add(soldOutMessage, {
+                    type: "danger",
+                });
+                return;
+            }
         }
 
         const ticketResult = await makeAwaitable(this.dialog, EventConfiguratorPopup, {
             availabilityPerTicket: avaibilityByTicket,
+            slotOrEventAvailability: slotResult?.slotAvailability || eventCurrentAvailability,
             slotResult: slotResult,
             tickets: tickets,
         });
