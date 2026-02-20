@@ -14,6 +14,8 @@ export class MentionPlugin extends Plugin {
                 }
             }
         },
+        selectors_for_feff_providers: () =>
+            this.MENTION_SELECTORS.map(({ selector }) => selector).join(", "),
         select_all_overrides: this.selectAll.bind(this),
     };
 
