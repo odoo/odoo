@@ -3,22 +3,22 @@
 # * website_profile
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-11-24 12:09+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-31 12:49+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_profile/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -33,7 +33,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_profile/models/res_users.py:0
 msgid "%(company_name)s Profile validation"
-msgstr ""
+msgstr "%(company_name)s 프로필 검증"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -53,13 +53,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
 msgstr ". 다른 검색을 시도하십시오."
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
-msgid ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</a>"
-msgstr ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">웹사이트로 돌아갑니다.</a>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -209,7 +202,7 @@ msgstr "총 시간"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "자동 게시"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__publish_on
@@ -252,6 +245,16 @@ msgstr "이력"
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
 msgid "Can Publish"
 msgstr "게시 가능"
+
+#. module: website_profile
+#. odoo-javascript
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: website_profile
 #. odoo-javascript
@@ -429,7 +432,7 @@ msgstr "공개 프로필"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__published_date
 msgid "Published date"
-msgstr ""
+msgstr "게시일"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -441,6 +444,11 @@ msgstr "랭킹"
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Ranks and Badges"
 msgstr "랭킹 및 배지"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
+msgid "Return to the website."
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -496,6 +504,12 @@ msgid "Update"
 msgstr "업데이트"
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+msgid "Update failed."
+msgstr "업데이트에 실패했습니다."
+
+#. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
 msgid "User"
 msgstr "사용자"
@@ -542,12 +556,12 @@ msgstr "웹사이트 절대 URL"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website
 msgid "Website Link"
-msgstr ""
+msgstr "웹사이트 링크"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "웹사이트 파트너 전체 설명"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url

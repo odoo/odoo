@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-12-02 14:56+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -137,12 +137,6 @@ msgstr "También puede usar archivos .csv"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
@@ -159,11 +153,11 @@ msgstr "La columna %(column)s contiene valores incorrectos (valor: %(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr ""
-"La columna %(column)s contiene valores incorrectos. Error en la línea %"
-"(line)d: %(error)s"
+"La columna %(column)s contiene valores incorrectos. Error en la línea "
+"%(line)d: %(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -188,8 +182,8 @@ msgstr "Comentarios"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"No se pudo recuperar la URL: %(url)s [%(field_name)s: L%(line_number)d]: %"
-"(error)s"
+"No se pudo recuperar la URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -253,6 +247,12 @@ msgid "Delay after each batch"
 msgstr "Retraso después de cada lote"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
@@ -310,8 +310,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Error al importar registros: todas las filas deben ser del mismo tamaño, "
 "pero la fila de título tiene %(title_row_entries)d entradas mientras que la "
@@ -376,8 +376,8 @@ msgstr "El tamaño del archivo excede el máximo establecido (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Archivo a comprobar o importar, binario sin procesar (no base64)"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -531,8 +531,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"Formato de celda no válido en la fila %(row)s, columna %(col)s: %"
-"(cell_value)s, con el formato %(cell_format)s. El formato (%(format_type)s) "
+"Formato de celda no válido en la fila %(row)s, columna %(col)s: "
+"%(cell_value)s, con el formato %(cell_format)s. El formato (%(format_type)s) "
 "no es compatible."
 
 #. module: base_import

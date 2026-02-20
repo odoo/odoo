@@ -7,16 +7,16 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:47+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:40+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_event/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -477,8 +477,7 @@ msgid "All"
 msgstr "Tutti"
 
 #. module: website_event
-#. odoo-python
-#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All Countries"
 msgstr "Tutte le nazioni"
 
@@ -489,11 +488,6 @@ msgstr "Tutte le nazioni"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "All Events"
 msgstr "Tutti gli eventi"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_location
-msgid "All countries"
-msgstr "Tutte le nazioni"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -531,14 +525,14 @@ msgstr "Autore"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Pubblicazione automatica il"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag_category__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Pubblica automaticamente la pagina nella data e nell'ora selezionate."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
@@ -559,7 +553,7 @@ msgstr "Articolo blog"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "Percorso visibile"
 
 #. module: website_event
 #. odoo-python
@@ -579,12 +573,6 @@ msgstr "Link calendario"
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "Può pubblicare"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Cancel"
-msgstr "Annulla"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -724,8 +712,15 @@ msgid "Description"
 msgstr "Descrizione"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Discard"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -836,6 +831,11 @@ msgid "Event Registrations"
 msgstr "Registrazioni evento"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr "Slot evento"
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
@@ -877,7 +877,7 @@ msgstr "Evento pubblicato"
 #: model:mail.message.subtype,description:website_event.mt_event_scheduled
 #: model:mail.message.subtype,name:website_event.mt_event_scheduled
 msgid "Event scheduled"
-msgstr ""
+msgstr "Evento programmato"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -889,7 +889,7 @@ msgstr "Evento nascosto"
 #: model:mail.message.subtype,description:website_event.mt_event_unscheduled
 #: model:mail.message.subtype,name:website_event.mt_event_unscheduled
 msgid "Event unscheduled"
-msgstr ""
+msgstr "Evento non programmato"
 
 #. module: website_event
 #. odoo-javascript
@@ -1061,6 +1061,7 @@ msgstr "Come sei venuto a conoscenza dell'evento"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1071,6 +1072,21 @@ msgstr "Come sei venuto a conoscenza dell'evento"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid ""
+"If enabled, online events will be included when user filters by country."
+msgstr ""
+"Se abilitato, gli eventi online saranno inclusi quando l'utente filtra per "
+"Paese."
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid "Include online"
+msgstr "Includi online"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -1367,7 +1383,7 @@ msgstr "Pubblicata"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Publish on"
-msgstr ""
+msgstr "Pubblica su"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1381,7 +1397,7 @@ msgstr "Pubblicato"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__published_date
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Data pubblicazione"
 
 #. module: website_event
 #. odoo-javascript
@@ -1553,7 +1569,7 @@ msgstr "Le iscrizioni terminano il"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales start on"
-msgstr "La vendita inizia il"
+msgstr "Le iscrizioni iniziano il"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_card
@@ -1570,7 +1586,7 @@ msgstr "Campione"
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_tree_view
 msgid "Scheduled"
-msgstr ""
+msgstr "Programmati"
 
 #. module: website_event
 #. odoo-python
@@ -1582,7 +1598,7 @@ msgstr "Eventi programmati"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Scheduled for"
-msgstr ""
+msgstr "Programmato per"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -1781,7 +1797,7 @@ msgstr "Filtro barra superiore"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Unschedule"
-msgstr ""
+msgstr "Annulla"
 
 #. module: website_event
 #. odoo-python
@@ -2013,6 +2029,11 @@ msgstr "disponibile/i)"
 #: code:addons/website_event/models/event_event.py:0
 msgid "date_end"
 msgstr "date_end"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates

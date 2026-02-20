@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-12-04 17:50+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -139,12 +139,6 @@ msgstr "Nhưng bạn cũng có thể sử dụng tệp .csv"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "Hủy"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr "Bấm vào 'Tiếp tục' để tiếp tục nhập, tiếp tục tại dòng %s."
@@ -159,8 +153,8 @@ msgstr "Cột %(column)s chứa giá trị không hợp lệ (giá trị: %(valu
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr ""
 "Cột %(column)s chứa giá trị không hợp lệ. Lỗi ở dòng %(line)d: %(error)s"
 
@@ -187,8 +181,8 @@ msgstr "Bình luận"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Không thể truy cập đường dẫn: %(url)s [%(field_name)s: L%(line_number)d]: %"
-"(error)s"
+"Không thể truy cập đường dẫn: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -251,6 +245,12 @@ msgid "Delay after each batch"
 msgstr "Độ trễ sau mỗi lô"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
@@ -306,12 +306,12 @@ msgstr "Lỗi khi nhập bản ghi: Dấu phân cách văn bản phải là mộ
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Lỗi khi nhập bản ghi: tất cả các hàng phải có cùng kích thước, nhưng hàng "
-"tiêu đề có mục %(title_row_entries)d trong khi hàng đầu tiên có %"
-"(first_row_entries)d. Bạn có thể cần phải thay đổi ký tự phân cách."
+"tiêu đề có mục %(title_row_entries)d trong khi hàng đầu tiên có "
+"%(first_row_entries)d. Bạn có thể cần phải thay đổi ký tự phân cách."
 
 #. module: base_import
 #. odoo-javascript
@@ -371,8 +371,8 @@ msgstr "Tập tin vượt quá dung lượng tối đa (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Tập tin để kiểm tra và/hoặc nhập, raw binary (không phải là base64)"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

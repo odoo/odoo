@@ -3,16 +3,16 @@
 # * html_editor
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-11 06:45+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-07 12:23+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "html_editor/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -41,13 +41,13 @@ msgstr "사진을 가리키면 '제목 태그'가 툴팁으로 표시됩니다."
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "'s description from"
-msgstr ""
+msgstr "상세 설명은"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "'s version from"
-msgstr ""
+msgstr "버전은"
 
 #. module: html_editor
 #. odoo-javascript
@@ -221,7 +221,7 @@ msgstr "모든 이미지가 로드되었습니다"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Alternate row colors"
-msgstr ""
+msgstr "행마다 색상 바꾸기"
 
 #. module: html_editor
 #. odoo-javascript
@@ -351,19 +351,7 @@ msgstr "큰 섹션 제목"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Bold (Ctrl + B)"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Border"
-msgstr "테두리"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Border Size"
-msgstr "테두리 크기"
+msgstr "굵게 (Ctrl + B)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -385,26 +373,38 @@ msgstr "버튼"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Button Primary"
 msgstr "기본 버튼"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Button Secondary"
 msgstr "보조 버튼"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
 msgid "Cancel"
 msgstr "취소"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
+msgid "Cancel Upload"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Center align"
+msgstr "가운데 정렬"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "Change the placeholder or the expression for an existing field"
 msgstr ""
 
 #. module: html_editor
@@ -429,7 +429,7 @@ msgstr "제거"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Clear alternate colors"
-msgstr ""
+msgstr "대체 색상 지우기"
 
 #. module: html_editor
 #. odoo-javascript
@@ -445,6 +445,15 @@ msgstr "변환을 초기화하려면 다시 클릭하세요"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.xml:0
+msgid ""
+"Click to open options\n"
+"Drag to move"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "닫기"
@@ -452,6 +461,7 @@ msgstr "닫기"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/syntax_highlighting.xml:0
 msgid "Code"
 msgstr "코드"
 
@@ -459,7 +469,7 @@ msgstr "코드"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Code copied to the clipboard."
-msgstr ""
+msgstr "클립보드에 코드가 복사되었습니다."
 
 #. module: html_editor
 #. odoo-javascript
@@ -471,7 +481,7 @@ msgstr "코드 보기"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
 msgid "Colors"
-msgstr ""
+msgstr "색상"
 
 #. module: html_editor
 #. odoo-javascript
@@ -483,13 +493,13 @@ msgstr "컬럼화"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Comparing current description with"
-msgstr ""
+msgstr "다음 내용을 현재 설명과 비교하기:"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
 msgid "Conic"
-msgstr ""
+msgstr "Conic"
 
 #. module: html_editor
 #. odoo-javascript
@@ -524,14 +534,14 @@ msgstr "열로 변환"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
-msgid "Copy"
-msgstr "복사"
+msgid "Convert to paragraph"
+msgstr "문단으로 변환"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "링크 복사"
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Copy"
+msgstr "복사"
 
 #. module: html_editor
 #. odoo-javascript
@@ -582,7 +592,7 @@ msgstr "이미지 자르기"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Custom"
 msgstr "사용자 정의"
 
@@ -591,6 +601,18 @@ msgstr "사용자 정의"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Dailymotion"
 msgstr "Dailymotion"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "Data"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Default"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -615,7 +637,7 @@ msgstr "설명"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Diff view mode"
-msgstr ""
+msgstr "차이 보기 모드"
 
 #. module: html_editor
 #. odoo-javascript
@@ -626,6 +648,7 @@ msgstr "직접 다운로드"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
@@ -664,12 +687,6 @@ msgid "Documents"
 msgstr "문서"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
-msgid "Dynamic Placeholder"
-msgstr "동적 자리 표시자"
-
-#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "ERROR: couldn't get download urls from media library."
@@ -678,6 +695,7 @@ msgstr "오류: 미디어 라이브러리에서 다운로드 URL을 가져올 �
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "편집"
 
@@ -686,6 +704,12 @@ msgstr "편집"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "링크 편집"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "Edit field"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -763,6 +787,13 @@ msgstr "가장 먼 쪽으로 확장"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Facebook"
+msgstr "Facebook"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Field"
 msgstr ""
 
 #. module: html_editor
@@ -775,12 +806,6 @@ msgstr "필드 html 이력"
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.js:0
 msgid "File could not be saved"
 msgstr "파일을 저장할 수 없음"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Fill Color"
-msgstr "색상 채우기"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1028,7 +1053,7 @@ msgstr "위험 배너 삽입"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
 msgid "Insert a field"
 msgstr "필드 삽입"
 
@@ -1037,6 +1062,12 @@ msgstr "필드 삽입"
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "Insert a horizontal rule separator"
 msgstr "가로 규칙 구분 기호 삽입"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a monospace banner"
+msgstr "고정폭 배너 삽입"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1102,7 +1133,7 @@ msgstr "이미지 또는 아이콘 삽입"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Insert image, icon or video"
-msgstr ""
+msgstr "이미지, 아이콘 또는 동영상 삽입"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1114,7 +1145,7 @@ msgstr "왼쪽으로 삽입"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Insert link (Ctrl + K)"
-msgstr ""
+msgstr "링크 삽입 (Ctrl + K)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1138,13 +1169,13 @@ msgstr "인스타그램"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Italic (Ctrl + I)"
-msgstr ""
+msgstr "기울임꼴 (Ctrl + I)"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Justify"
-msgstr ""
+msgstr "설명"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1154,7 +1185,7 @@ msgstr "라벨"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Large"
 msgstr "크게"
 
@@ -1172,7 +1203,7 @@ msgstr "최근 갱신 일자"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Left align"
-msgstr ""
+msgstr "왼쪽 정렬"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1183,15 +1214,15 @@ msgstr "선형"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Link"
 msgstr "링크"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Link copied to clipboard."
-msgstr "링크가 클립보드에 복사되었습니다."
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr "링크 팝업"
 
 #. module: html_editor
 #. odoo-python
@@ -1241,19 +1272,13 @@ msgstr "MM:SS"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
-msgid "Marketing Tools"
-msgstr "마케팅 도구"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Media"
 msgstr "매체"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Medium"
 msgstr "중간"
 
@@ -1271,9 +1296,27 @@ msgstr "파일 누락"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Model"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Modules"
 msgstr "모듈"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace"
+msgstr "고정폭 글꼴"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace Banner"
+msgstr "Monospace 배너"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1616,7 +1659,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
 msgid "Repeating"
-msgstr ""
+msgstr "반복"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1719,13 +1762,13 @@ msgstr "기록 복원하기"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Revisions"
-msgstr ""
+msgstr "개정 사항"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Right align"
-msgstr ""
+msgstr "오른쪽 정렬"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1789,6 +1832,18 @@ msgstr "미디어 선택"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button shape"
+msgstr "버튼 모양 선택"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button size"
+msgstr "버튼 크기 선택"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
 msgid "Select font family"
 msgstr "글꼴 패밀리 선택"
@@ -1849,15 +1904,9 @@ msgstr "모양 설정: 썸네일"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Shape"
-msgstr "배경 디자인"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Show comparison"
-msgstr ""
+msgstr "비교 보기"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1869,7 +1918,7 @@ msgstr "최적화된 이미지 보기"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Showing"
-msgstr ""
+msgstr "표시"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1880,13 +1929,12 @@ msgstr "서명"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Size"
 msgstr "사이즈"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Small"
 msgstr "작게"
 
@@ -1912,7 +1960,7 @@ msgstr "메시지가 너무 깁니다. 더 짧은 단어로 말해주세요."
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Split"
-msgstr ""
+msgstr "분할"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1930,7 +1978,7 @@ msgstr "시작일:"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Strikethrough (Ctrl + 5)"
-msgstr ""
+msgstr "취소선 (Ctrl + 5)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1971,6 +2019,12 @@ msgstr "목차"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Technical name"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Tells search engines not to follow this link"
 msgstr ""
@@ -1983,9 +2037,9 @@ msgstr "문자"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Text Color"
-msgstr "텍스트 색상"
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Text shown if field is empty"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -2097,7 +2151,7 @@ msgstr "굵게 전환"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Toggle comparison view"
-msgstr ""
+msgstr "비교 보기 전환"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2218,7 +2272,7 @@ msgstr "프로그램을 사용할 수 있는 위치를 관리합니다."
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Underline (Ctrl + U)"
-msgstr ""
+msgstr "밑줄 (Ctrl + U)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2230,6 +2284,12 @@ msgstr "취소"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Unified"
+msgstr "통합"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Update"
 msgstr ""
 
 #. module: html_editor
@@ -2261,7 +2321,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Vertical"
-msgstr ""
+msgstr "수직선"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2367,13 +2427,6 @@ msgstr ""
 "다."
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
-msgid ""
-"You need to select a model before opening the dynamic placeholder selector."
-msgstr "동적 자리 표시자 선택기를 열기 전에 모델을 먼저 선택해 주세요."
-
-#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "You need to specify either data or url to create an attachment."
@@ -2419,7 +2472,7 @@ msgstr "및"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "by"
-msgstr ""
+msgstr "by"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2456,12 +2509,6 @@ msgstr "noopener"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "or"
 msgstr "또는"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "px"
-msgstr "px"
 
 #. module: html_editor
 #. odoo-javascript

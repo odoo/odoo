@@ -6,22 +6,22 @@
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-24 12:46+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-24 12:26+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/lunch/nl/"
-">\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/lunch/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -126,13 +126,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-"
-"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
+"get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', '')"
-"\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', "
+"'')\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -203,6 +203,85 @@ msgid ""
 "<p>Do not hesitate to contact us if you have any questions.</p>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
+"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
+"get('currency_id'))\"/>\n"
+"<p>\n"
+"Beste <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
+"</p><p>\n"
+"Hier zijn de bestellingen van vandaag voor <t t-out=\"order."
+"get('company_name', '')\">LunchCompany</t>:\n"
+"</p>\n"
+"\n"
+"<t t-if=\"sites\">\n"
+"    <br/>\n"
+"    <p>Locatie</p>\n"
+"    <p t-foreach=\"site\" t-as=\"site\">\n"
+"        <t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or "
+"''\"/>\n"
+"    </p>\n"
+"    <br/>\n"
+"</t>\n"
+"\n"
+"<table>\n"
+"    <thead>\n"
+"        <tr style=\"background-color:rgb(233,232,233);\">\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>Product</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>Opmerkingen</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>Persoon</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>Site</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" "
+"align=\"center\"><strong>Aantal</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" "
+"align=\"center\"><strong>Prijs</strong></th>\n"
+"        </tr>\n"
+"    </thead>\n"
+"    <tbody>\n"
+"        <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-"
+"out=\"line['product'] or ''\">Sushi zalm</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"            <t t-if=\"line['toppings']\">\n"
+"                <t t-out=\"line['toppings'] or ''\">Sojasaus</t>\n"
+"            </t>\n"
+"            <t t-if=\"line['note']\">\n"
+"                <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] "
+"or ''\">Met wasabi.</div>\n"
+"            </t>\n"
+"            </td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-"
+"out=\"line['username'] or ''\">lap</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-"
+"out=\"line['site'] or ''\">Office 1</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" "
+"align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" "
+"align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">€ "
+"1,00</td>\n"
+"        </tr>\n"
+"        <tr>\n"
+"            <td/>\n"
+"            <td/>\n"
+"            <td/>\n"
+"            <td/>\n"
+"            <td style=\"width: 100%; font-size: 13px; border-top: 1px solid "
+"black;\"><strong>Totaal</strong></td>\n"
+"            <td style=\"width: 100%; font-size: 13px; border-top: 1px solid "
+"black;\" align=\"right\"><strong t-out=\"order.get('amount_total') and "
+"format_amount(order['amount_total'], currency) or ''\">€ 10,00</strong></"
+"td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+"</table>\n"
+"\n"
+"<p>Neem gerust contact met ons op bij eventuele vragen.</p>\n"
+"        </t>"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
@@ -223,12 +302,6 @@ msgstr ""
 msgid "A product is defined by its name, category, price and vendor."
 msgstr ""
 "Een product wordt bepaald door zijn naam, categorie, prijs en leverancier."
-
-#. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__am
-msgid "AM"
-msgstr "AM"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction
@@ -258,7 +331,7 @@ msgstr "Activiteit uitzondering decoratie"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Activiteitenplannen"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
@@ -268,7 +341,7 @@ msgstr "Activiteitsfase"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -343,8 +416,8 @@ msgstr "Aantal bijlagen"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
-msgid "Automatic Email Sending Time should be between 0 and 12"
-msgstr "Automatische e-mail verzendtijd moet tussen 0 en 12 zijn"
+msgid "Automatic Email Sending Time should be between 0 and 24"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -519,21 +592,25 @@ msgstr "Bestelling verwijderen"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid ""
-"Click on the <span class=\"fa fa-phone text-success\" title=\"Order "
-"button\"></span> to announce that the order is ordered.<br>\n"
+"Click on the <span class=\"fa fa-phone text-success\" role=\"img\" aria-"
+"label=\"Order button\" title=\"Order button\"></span> to announce that the "
+"order is ordered.<br>\n"
 "            Click on the <span class=\"fa fa-check text-success\" "
-"title=\"Receive button\"></span> to announce that the order is received."
-"<br>\n"
+"role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"></span> "
+"to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" "
-"title=\"Cancel button\"></span> red X to announce that the order isn't "
-"available."
+"role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"></span> "
+"red X to announce that the order isn't available."
 msgstr ""
-"<br>Klik op de <span class=\"fa fa-phone text-success\" title=\"Order "
-"knop\"></span> om aan te kondigen dat de order is besteld.\n"
-"Klik op de <span class=\"fa fa-check text-success\" title=\"Ontvang knop\"></"
-"span> om aan te kondigen dat de order is ontvangen.<br>\n"
-"Klik op de <span class=\"fa fa-times-circle text-danger\" title=\"Annulleer "
-"knop\"></span> rode X om aan te kondigen dat de order niet beschikbaar is."
+"Klik op de <span class=\"fa fa-phone text-success\" role=\"img\" aria-"
+"label=\"Bestelknop\" title=\"Bestelknop\"></span> om aan te geven dat de "
+"bestelling is geplaatst.<br>\n"
+"            Klik op de <span class=\"fa fa-check text-success\" role=\"img\" "
+"aria-label=\"Ontvangstknop\" title=\"Ontvangstknop\"></span> om aan te geven "
+"dat de bestelling is ontvangen.<br>\n"
+"            Klik op de <span class=\"fa fa-times-circle text-danger\" "
+"role=\"img\" aria-label=\"Annuleerknop\" title=\"Annuleerknop\"></span> red "
+"X om aan te geven dat de bestelling niet beschikbaar is."
 
 #. module: lunch
 #. odoo-javascript
@@ -699,11 +776,6 @@ msgstr "Levering"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__description
 msgid "Description"
 msgstr "Omschrijving"
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Discard"
-msgstr "Negeren"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mode
@@ -1192,32 +1264,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Lunch: Leveranciersorders"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_234
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Lunch: waarschuwing chatbericht (bericht voor kantoor 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Lunch: stuur automatische e-mail naar Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Lunch: stuur automatische e-mail naar lunch leverancier"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Lunch: stuur automatische e-mail naar Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Lunch: stuur automatische e-mail naar Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Lunch: stuur automatische e-mail naar The Corner"
 
@@ -1255,11 +1327,6 @@ msgstr "Bericht afleverfout"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
 msgid "Messages"
 msgstr "Berichten"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
-msgid "Moment"
-msgstr "Moment"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
@@ -1338,7 +1405,7 @@ msgstr "Nieuw"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
-msgstr "Nieuw order"
+msgstr "Nieuwe order"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
@@ -1426,19 +1493,14 @@ msgid "Nothing to order, add some meals to begin."
 msgstr "Niets om te bestellen. Voeg maaltijden toe om te starten."
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
-msgid "Notification Moment"
-msgstr "Moment van melding"
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
 msgid "Notification Time"
 msgstr "Tijd van melding"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
-msgid "Notification time must be between 0 and 12"
-msgstr "Tijd van melding moet tussen 0 en 12 zijn"
+msgid "Notification time must be between 0 and 24"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
@@ -1549,16 +1611,10 @@ msgid "Overdraft"
 msgstr "Achterstand"
 
 #. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
-msgid "PM"
-msgstr "NM"
-
-#. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Passed orders"
-msgstr ""
+msgstr "Doorgegeven bestellingen"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pasta

@@ -3,22 +3,22 @@
 # * auth_totp_mail
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-30 17:01+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-02-14 12:04+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/auth_totp_mail/es_419/>\n"
+"odoo-s19-1/auth_totp_mail/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -120,9 +120,9 @@ msgid ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
-"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
 "        Activate my two-factor authentication\n"
 "    </a>\n"
 "</p>\n"
@@ -162,9 +162,9 @@ msgstr ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
-"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
 "        Activa tu autenticación de dos factores\n"
 "    </a>\n"
 "</p>\n"
@@ -222,6 +222,12 @@ msgid "Authentication Device"
 msgstr "Dispositivo de autenticación"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Authentication code via email"
+msgstr ""
+
+#. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
@@ -241,6 +247,7 @@ msgstr "Ajustes de configuración"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_ir_http__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
 msgid "Display Name"
@@ -272,7 +279,19 @@ msgid "Enforce two-factor authentication"
 msgstr "Habilita la autenticación de dos factores"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Enter below the six-digit authentication code just sent to your email"
+msgstr ""
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_ir_http__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
 msgid "ID"
@@ -367,7 +386,7 @@ msgstr "Autenticación de dos factores"
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr "Política de cumplimiento de verificación de dos factores"
+msgstr "Política de cumplimiento de la autenticación de dos factores"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -382,6 +401,12 @@ msgid "Two-factor authentication has been deactivated on your account"
 msgstr "La autenticación de dos factores se ha desactivado en tu cuenta"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Use an authentication code sent by email"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "User"
 msgstr "Usuario"
@@ -393,6 +418,12 @@ msgid "Verification failed, please double-check the 6-digit code"
 msgstr "La verificación falló, revisa el código de 6 dígitos"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Verify"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 "We strongly recommend enabling the two-factor authentication using an "
@@ -402,6 +433,12 @@ msgstr ""
 "Te recomendamos activar la autenticación de dos factores con una aplicación "
 "especial para proteger mejor tu cuenta.\n"
 "                <br/>"
+
+#. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "XXXXXX"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code

@@ -7,21 +7,22 @@
 # Martin Trigaux, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 04:38+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/base_vat/"
-"ko/>\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-01-16 06:53+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
+"base_vat/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_vat
 #. odoo-python
@@ -40,8 +41,15 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr "17291716060 (NIN) 또는 1729171602 (VKN)"
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -70,20 +78,12 @@ msgstr "CHE-123.456.788 TVA 또는 CHE-123.456.788 MWST 또는 CHE-123.456.788 I
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "회사"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "환경설정"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr "VIES 서버 연결에 실패했습니다. %s VAT 번호가 확인되지 않습니다."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -115,6 +115,12 @@ msgstr "DE123456788 또는 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "표시명"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -204,8 +210,8 @@ msgstr "사업자등록번호"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
 "%(vat_label)s [%(wrong_vat)s] 번호는 유효하지 않습니다. %(expected_note)s"
 
@@ -233,25 +239,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
-"VAT 유효성 검사 요청이 실패했습니다. VIES 서비스가 다음 오류를 확인했습니다 "
-"%s"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr ""
-"(유효) 부가가치세 없음으로 명확히 표시하려면 '/' 기호를 대신 사용합니다. "
 
 #. module: base_vat
 #. odoo-python

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
@@ -44,6 +44,11 @@ msgid ""
 msgstr ""
 
 #. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_account
+msgid "Account"
+msgstr ""
+
+#. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
 msgstr "會計分錄"
@@ -70,6 +75,13 @@ msgid "Bills Count"
 msgstr "賬單數目"
 
 #. module: account_fleet
+#: model:ir.model.fields,help:account_fleet.field_account_account__is_vehicle_account
+msgid ""
+"Check this box if a vehicle has to be linked to the account, when creating a "
+"bill for an expense or when creating an asset."
+msgstr ""
+
+#. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
 msgid "Cost"
 msgstr "成本"
@@ -85,6 +97,7 @@ msgid "Creation Date"
 msgstr "建立日期"
 
 #. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_account__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__display_name
@@ -94,6 +107,7 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_account__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__id
@@ -116,6 +130,11 @@ msgstr "日記賬項目"
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
 msgstr "需要車輛"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_account__is_vehicle_account
+msgid "Requires vehicle"
+msgstr ""
 
 #. module: account_fleet
 #. odoo-python
@@ -166,10 +185,9 @@ msgstr "你不可刪除日誌服務記錄，因為其中一項或多項記錄是
 #. odoo-python
 #: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
 msgid ""
-"You cannot modify amount of services linked to an account move line. Do it "
-"on the related accounting entry instead."
+"You cannot modify the amount of services linked to a journal item. Do it on "
+"the related accounting entry instead."
 msgstr ""
-"連結至賬戶移動資料行的服務數量，不可修改。請改為在相關會計記項上執行此操作。"
 
 #. module: account_fleet
 #. odoo-python

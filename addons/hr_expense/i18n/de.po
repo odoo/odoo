@@ -9,16 +9,16 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:33+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"PO-Revision-Date: 2026-02-07 12:18+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_expense/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -104,6 +104,11 @@ msgid "(incl"
 msgstr "(inkl."
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "--<br/>"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
@@ -170,6 +175,16 @@ msgstr ""
 "span>"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "<strong>expenses</strong> pending approval, from:"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "A new expense is waiting for your approval in Odoo."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
 msgid "Account"
 msgstr "Konto"
@@ -208,7 +223,7 @@ msgstr "Aktivitätsausnahme-Dekoration"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitätspläne"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
@@ -290,6 +305,9 @@ msgid ""
 "An expense with the same category, amount, and date already exists.\n"
 "Are you sure you want to submit this one as well?"
 msgstr ""
+"Es existiert bereits eine Ausgabe mit derselben Kategorie, demselben Betrag "
+"und demselben Datum.\n"
+"Möchten Sie diese Ausgabe wirklich ebenfalls einreichen?"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -407,14 +425,6 @@ msgid "Can Reset"
 msgstr "Kann zurückgesetzt werden"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -529,7 +539,6 @@ msgstr "Wechselkurs"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Dear"
 msgstr "Hallo"
 
@@ -568,17 +577,12 @@ msgid "Digitalize your receipts with OCR and Artificial Intelligence"
 msgstr "Digitalisieren Sie Ihre Belege mit OCR und Künstlicher Intelligenz"
 
 #. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/components/hr_expense_product_form_view.js:0
-msgid "Discard"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__display_name
@@ -637,7 +641,7 @@ msgstr "Ausgabe duplizieren"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/expense_form_view.js:0
 msgid "Duplicate Expense found"
-msgstr ""
+msgstr "Doppelte Ausgabe gefunden"
 
 #. module: hr_expense
 #. odoo-python
@@ -678,12 +682,14 @@ msgstr "Mitarbeiterspesen"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Enter a description and select a category to proceed."
 msgstr ""
+"Geben Sie eine Beschreibung ein und wählen Sie eine Kategorie aus, um "
+"fortzufahren."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Enter a description to proceed."
-msgstr ""
+msgstr "Geben Sie eine Beschreibung ein, um fortzufahren."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -731,7 +737,6 @@ msgstr "Doppelte Spesengenehmigung"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_search_view
 msgid "Expense Approver"
 msgstr "Spesengenehmiger"
 
@@ -980,6 +985,11 @@ msgid "Has Message"
 msgstr "Hat eine Nachricht"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Hi"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, Flugtickets, Taxi usw."
@@ -995,6 +1005,7 @@ msgstr "Alias-Domain für Personalausgaben"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__id
@@ -1140,6 +1151,11 @@ msgstr "Auf Entwurf gesetzte Journalbuchung"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
 msgstr "Bezeichnung des Wechselkurses"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__last_notification_date
+msgid "Last Notification Date"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1290,15 +1306,6 @@ msgid "New expense entries"
 msgstr "Neue Speseneinträge"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
-msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
-msgstr ""
-"Neue Ausgaben waren auf Ihre Genehmigung.\n"
-"                Klicken Sie zur Prüfung auf diesen Link"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
@@ -1398,6 +1405,7 @@ msgstr "Zahlen wurden aus Ihren persönlichen Ausgaben berechnet."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1512,9 +1520,14 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment_register
+msgid "Pay"
+msgstr "Bezahlen"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
 msgid "Payment"
-msgstr ""
+msgstr "Zahlung"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1594,6 +1607,7 @@ msgstr "Gebucht"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Unterstützt durch"
 
@@ -1744,6 +1758,11 @@ msgid "Restaurants, business lunches, etc."
 msgstr "Restaurants, Geschäftsessen usw."
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Review Expenses"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS-Zustellungsfehler"
@@ -1776,7 +1795,7 @@ msgstr "Scannen"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select a category to proceed."
-msgstr ""
+msgstr "Wählen Sie eine Kategorie aus, um fortzufahren."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1900,7 +1919,7 @@ msgstr "Einreichen"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/expense_form_view.js:0
 msgid "Submit Expense"
-msgstr ""
+msgstr "Ausgabe einreichen"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1974,6 +1993,11 @@ msgstr "Steuern"
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
 msgstr "Teamgenehmiger"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Thanks,"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2063,6 +2087,9 @@ msgid ""
 "There are draft expenses linked to this category. Updating the category cost "
 "will change expense amounts. Make sure it is what you want to do."
 msgstr ""
+"Mit dieser Kategorie sind Ausgaben im Entwurf verbunden. Durch die "
+"Aktualisierung der Kategoriekosten ändern sich die Ausgabenbeträge. "
+"Vergewissern Sie sich, dass Sie dies wirklich tun möchten."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2188,7 +2215,7 @@ msgstr "Nettobetrag"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/hr_expense_product_form_view.js:0
 msgid "Update cost"
-msgstr ""
+msgstr "Kosten aktualisieren"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2225,11 +2252,6 @@ msgstr "Lieferant"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
 msgstr "Ausgaben anzeigen"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
-msgid "View expenses"
-msgstr "Spesen anzeigen"
 
 #. module: hr_expense
 #. odoo-python
@@ -2382,6 +2404,11 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
 msgstr "Sie können eine bereits gebuchte Ausgabe nicht aufteilen"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "You currently have"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

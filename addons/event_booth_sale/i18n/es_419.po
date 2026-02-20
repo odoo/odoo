@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-10-30 17:00+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -69,11 +69,6 @@ msgstr "Estands"
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_category_id
 msgid "Booths Category"
 msgstr "Categoría de los estands"
-
-#. module: event_booth_sale
-#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
-msgid "Cancel"
-msgstr "Cancelar"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
@@ -356,8 +351,8 @@ msgid ""
 "Category, %(event_booth_category_name)s. The service_tracking must remain "
 "\"Event Booth\"."
 msgstr ""
-"No puedes cambiar el \"service_tracking\" de la plantilla del producto %"
-"(product_template_name)s porque una de sus variantes está asignada a la "
+"No puedes cambiar el \"service_tracking\" de la plantilla del producto "
+"%(product_template_name)s porque una de sus variantes está asignada a la "
 "categoría %(event_booth_category_name)s del estand del evento. El "
 "service_tracking debe permanecer como \"Estand del evento\"."
 
@@ -365,11 +360,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 msgid ""
-"The following booths are unavailable, please remove them to continue : %"
-"(booth_names)s"
+"The following booths are unavailable, please remove them to continue : "
+"%(booth_names)s"
 msgstr ""
-"Los siguientes estands no están disponibles, quítelos para continuar: %"
-"(booth_names)s"
+"Los siguientes estands no están disponibles, quítelos para continuar: "
+"%(booth_names)s"
 
 #. module: event_booth_sale
 #. odoo-python
@@ -403,8 +398,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/event_booth_sale/models/event_booth.py:0
 msgid ""
-"You can't delete the following booths as they are linked to sales orders: %"
-"(booths)s"
+"You can't delete the following booths as they are linked to sales orders: "
+"%(booths)s"
 msgstr ""
 "No puede eliminar los siguientes estands ya que están vinculados a órdenes "
 "de venta: %(booths)s"

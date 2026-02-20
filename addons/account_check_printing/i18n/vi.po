@@ -7,15 +7,15 @@
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-04 17:50+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:22+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_check_printing/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,6 @@ msgstr "Tổng tiền bằng chữ"
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Bills"
 msgstr "Hoá đơn"
-
-#. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Cancel"
-msgstr "Hủy"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
@@ -153,7 +148,7 @@ msgstr "Séc cần in"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Công ty"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
@@ -260,8 +255,8 @@ msgstr ""
 "Phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh "
 "toán do đối tác lưu khi mua hoặc đăng ký online.\n"
 "Séc: Thanh toán hóa đơn bằng séc và in từ Odoo.\n"
-"Nộp theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và nộp "
-"theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Gửi tiền theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và "
+"gửi tiền theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
 "Chuyển tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển "
 "tín dụng SEPA cho ngân hàng của bạn. Cần có phân hệ account_iso20022.\n"
 "Ghi nợ trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy "
@@ -296,7 +291,7 @@ msgstr "Không"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payment"
-msgstr ""
+msgstr "Thanh toán"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
@@ -401,8 +396,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid ""
-"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
-"(max)d. Please enter a smaller number."
+"The check number you entered (%(num)s) exceeds the maximum allowed value of "
+"%(max)d. Please enter a smaller number."
 msgstr ""
 "Số séc bạn đã nhập (%(num)s) vượt quá giá trị tối đa được phép là %(max)d. "
 "Vui lòng nhập một số nhỏ hơn."

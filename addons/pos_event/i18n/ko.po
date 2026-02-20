@@ -3,23 +3,23 @@
 # * pos_event
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 22:03+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/pos_event/"
-"ko/>\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-07 12:27+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
+"pos_event/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_event
 #. odoo-javascript
@@ -55,7 +55,7 @@ msgstr "<span class=\"o_stat_text\">POS 주문</span>"
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.event_event_view_form_inherit_pos_event
 msgid "<span class=\"o_stat_text\">PoS Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">PoS 판매</span>"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -72,16 +72,16 @@ msgstr "참석자"
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
-msgid "Cancel"
-msgstr "취소"
+msgid "Confirm"
+msgstr "승인"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
-msgid "Confirm"
-msgstr "승인"
+msgid "Discard"
+msgstr ""
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__display_name
@@ -187,7 +187,7 @@ msgstr "슬롯 없음"
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "잠시만요!"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__image_1024
@@ -207,7 +207,7 @@ msgstr "POS 주문 명세"
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__pos_price_total
 msgid "PoS Total (Tax Included)"
-msgstr ""
+msgstr "POS 총액 (세금 포함)"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_config
@@ -217,12 +217,12 @@ msgstr "POS 환경 설정"
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "POS 주문"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "POS 판매주문서 내역"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_session
@@ -287,7 +287,6 @@ msgstr ""
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "Unlimited"
 msgstr "제한 없음"
 
@@ -306,9 +305,14 @@ msgstr "for"
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "left"
 msgstr "왼쪽"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "seats"
+msgstr ""
 
 #. module: pos_event
 #. odoo-javascript

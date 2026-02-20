@@ -9,21 +9,22 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 15:27+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-15 21:50+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-19/lunch/zh_Hans/>\n"
+"projects/odoo-s19-1/lunch/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -127,13 +128,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-"
-"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
+"get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', '')"
-"\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', "
+"'')\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -221,12 +222,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "A product is defined by its name, category, price and vendor."
 msgstr "通过产品的名称,类别,价格和供应商来定义一个产品。"
-
-#. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__am
-msgid "AM"
-msgstr "上午"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction
@@ -341,8 +336,8 @@ msgstr "附件数量"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
-msgid "Automatic Email Sending Time should be between 0 and 12"
-msgstr "自动电子邮件发送时间应介于0到12之间"
+msgid "Automatic Email Sending Time should be between 0 and 24"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -515,22 +510,16 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid ""
-"Click on the <span class=\"fa fa-phone text-success\" title=\"Order "
-"button\"></span> to announce that the order is ordered.<br>\n"
+"Click on the <span class=\"fa fa-phone text-success\" role=\"img\" aria-"
+"label=\"Order button\" title=\"Order button\"></span> to announce that the "
+"order is ordered.<br>\n"
 "            Click on the <span class=\"fa fa-check text-success\" "
-"title=\"Receive button\"></span> to announce that the order is received."
-"<br>\n"
+"role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"></span> "
+"to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" "
-"title=\"Cancel button\"></span> red X to announce that the order isn't "
-"available."
+"role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"></span> "
+"red X to announce that the order isn't available."
 msgstr ""
-"点击<span class=\"fa fa-phone text-success\" title=\"Order button\"></span>以"
-"宣布订单已订购。<br>\n"
-"            点击<span class=\"fa fa-check text-success\" title=\"Receive "
-"button\"></span> 宣布订单已收到。\n"
-" <br>\n"
-"            点击<span class=\"fa fa-times-circle text-danger\" "
-"title=\"Cancel button\"></span> 红色X宣布订单不可用。"
 
 #. module: lunch
 #. odoo-javascript
@@ -696,11 +685,6 @@ msgstr "交货"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__description
 msgid "Description"
 msgstr "说明"
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Discard"
-msgstr "丢弃"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mode
@@ -1186,32 +1170,32 @@ msgid "Lunch: Supplier Order"
 msgstr "午餐：供应商订单"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_234
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "午餐：提醒聊天通知（提醒Office 3）。"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "午餐：自动发送电子邮件给Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "午餐：自动发送电子邮件给午餐供应商"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "午餐：自动发送电子邮件给Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "午餐：自动发送电子邮件给寿司店"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to The Corner"
 msgstr "午餐：自动发送电子邮件给 The Corner"
 
@@ -1249,11 +1233,6 @@ msgstr "消息发送错误"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
 msgid "Messages"
 msgstr "消息"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
-msgid "Moment"
-msgstr "时刻"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
@@ -1420,19 +1399,14 @@ msgid "Nothing to order, add some meals to begin."
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
-msgid "Notification Moment"
-msgstr "通知时刻"
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
 msgid "Notification Time"
 msgstr "通知时间"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
-msgid "Notification time must be between 0 and 12"
-msgstr "通知时间必须介于0到12之间"
+msgid "Notification time must be between 0 and 24"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
@@ -1538,12 +1512,6 @@ msgstr "{{ ctx.get('order', {}).get('company_name') }} 的订单"
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
 msgstr "透支"
-
-#. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
-msgid "PM"
-msgstr "下午"
 
 #. module: lunch
 #. odoo-javascript

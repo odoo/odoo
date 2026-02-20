@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
@@ -50,12 +50,6 @@ msgstr "驗證方式"
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users__auth_passkey_key_ids
 msgid "Auth Passkey Key"
 msgstr "驗證密碼金鑰密鑰"
-
-#. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_rename
-msgid "Cancel"
-msgstr "取消"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
@@ -157,6 +151,8 @@ msgid "Or choose a different method:"
 msgstr "或選用其他方法："
 
 #. module: auth_passkey
+#. odoo-javascript
+#: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
 #: model:ir.model,name:auth_passkey.model_auth_passkey_key
 #: model:ir.model.fields.selection,name:auth_passkey.selection__res_users_identitycheck__auth_method__webauthn
 msgid "Passkey"
@@ -227,11 +223,29 @@ msgid "Use a Passkey"
 msgstr "使用密碼金鑰"
 
 #. module: auth_passkey
+#. odoo-javascript
+#: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
+msgid "Use passkey"
+msgstr ""
+
+#. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "Use password"
 msgstr "使用密碼"
 
 #. module: auth_passkey
+#. odoo-javascript
+#: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
+msgid "Use your passkey"
+msgstr ""
+
+#. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users
 msgid "User"
 msgstr "使用者"
+
+#. module: auth_passkey
+#. odoo-javascript
+#: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
+msgid "When you are ready, authenticate using the button below."
+msgstr ""

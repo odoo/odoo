@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:33+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:14+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_check_printing/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -65,11 +65,6 @@ msgstr "Importe en letra"
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Bills"
 msgstr "Facturas"
-
-#. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Cancel"
-msgstr "Cancelar"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
@@ -256,19 +251,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
-"Manual: paga o cobra con cualquier método fuera de Odoo.\n"
+"Manual: paga o cobra mediante cualquier método externo a Odoo.\n"
 "Proveedores de pago: cada proveedor de pago tiene su propio método de pago. "
-"Solicita una transacción en o a una tarjeta mediante el token de pago que el "
-"contacto guarda al hacer una compra o suscribirse en línea.\n"
+"Solicita una transacción a una tarjeta mediante un token de pago guardado "
+"por el cliente al comprar o suscribirse en línea.\n"
 "Cheque: paga las facturas con un cheque e imprímelo desde Odoo.\n"
-"Depósito por lote: cobra varios cheques de clientes a la vez y genere y "
-"envía un depósito por lote a tu banco. Necesitas el módulo "
-"account_batch_payment.\n"
+"Depósito por lote: agrupa varios cheques de clientes y envíalos al banco en "
+"un solo depósito. Se necesita el módulo account_batch_payment.\n"
 "Transferencia de crédito SEPA: efectúa un pago en la zona SEPA al enviar un "
-"archivo de transferencia de crédito SEPA a tu banco. Necesitas el módulo "
+"archivo de transferencia de crédito SEPA a tu banco. Se necesita el módulo "
 "account_iso20022.\n"
-"Domiciliación bancaria SEPA: cobra en la zona SEPA con el mandato que te "
-"otorgará tu contacto. Necesitas el módulo account_iso20022.\n"
+"Domiciliación bancaria SEPA: cobra en la zona SEPA mediante un mandato "
+"concedido por tu cliente. Se necesita el módulo account_iso20022.\n"
+"ISO20022 EE. UU.: paga en EE.UU. al enviar un archivo ISO20022 a tu banco. "
+"Se necesita el módulo account_iso20022.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -402,8 +398,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid ""
-"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
-"(max)d. Please enter a smaller number."
+"The check number you entered (%(num)s) exceeds the maximum allowed value of "
+"%(max)d. Please enter a smaller number."
 msgstr ""
 "El número de cheque que has introducido (%(num)s) supera el valor máximo "
 "permitido de %(max)d. Introduce un número más pequeño."

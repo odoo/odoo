@@ -8,17 +8,17 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-09 14:04+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@quartile.co>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-07 12:17+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "delivery/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Delivery Description</strong>"
-msgstr ""
+msgstr "<strong>配送説明</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -120,7 +120,7 @@ msgstr "納品書の検証中のアクション"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -132,7 +132,7 @@ msgstr "追加"
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
-msgstr ""
+msgstr "配送方法を追加"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -189,7 +189,7 @@ msgstr "可能な配送業者"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr "計算規則に基づく"
+msgstr "計算ルールに基づく"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
@@ -266,7 +266,7 @@ msgstr "国"
 #. module: delivery
 #: model:ir.model,website_form_label:delivery.model_res_partner
 msgid "Create a Customer"
-msgstr "顧客を作成する"
+msgstr "顧客を作成"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
@@ -312,6 +312,11 @@ msgid "Define a new delivery method"
 msgstr "新規配送方法の登録"
 
 #. module: delivery
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr "配送費用"
@@ -338,7 +343,7 @@ msgstr "配送方法"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "配送方法選択ウィザード"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -356,7 +361,7 @@ msgstr "送料"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "配送価格規則"
+msgstr "配送価格ルール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
@@ -386,6 +391,7 @@ msgid ""
 "Delivery method %(name)s cannot have the same tag in both Must Have Tags and "
 "Excluded Tags."
 msgstr ""
+"配送方法%(name)s は、必須タグと除外タグの両方に同じタグを設定できません。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -393,6 +399,8 @@ msgid ""
 "Delivery method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"配送方法の詳細は、見積書や受注確認メールの下部に表示されます(例：お客様向けの"
+"案内や指示など)。"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -400,6 +408,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery methods to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"配送先郵便番号プレフィックスは配送方法に割り当てられ、\n"
+"            利用可能な郵便番号を制限します。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -416,11 +426,6 @@ msgstr "配送先"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
 msgstr "表示順序を決定します"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "Discard"
-msgstr "破棄"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -447,7 +452,7 @@ msgid ""
 msgstr ""
 "各配送会社（例：UPS）は、複数の配送方法\n"
 "　　　（例：UPSエクスプレス、UPSスタンダード）\n"
-"　　　  を持つことができ、各配送方法に料金規則が紐づけられています。"
+"　　　  を持つことができ、各配送方法に料金ルールが紐づけられています。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -500,6 +505,8 @@ msgid ""
 "Filling this form allows you to make the delivery method available according "
 "to the content of the order or its destination."
 msgstr ""
+"このフォームに記入することで、オーダ内容や配送先に応じて配送方法を選択できる"
+"ようになります。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -797,6 +804,10 @@ msgid ""
 "lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. "
 "'100$' will only match '100' and not '1000')"
 msgstr ""
+"この配送方法を適用する郵便番号のプレフィクス(接頭辞)を指定します。国によって"
+"郵便番号の桁数が異なる場合に対応するため、正規表現を使用することもできます。"
+"たとえば、末尾に $ を付けることで完全一致を指定できます(例：100$ は 100 にの"
+"み一致し、1000 には一致しません)"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -808,7 +819,7 @@ msgstr "価格"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "価格規則"
+msgstr "価格ルール"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -818,7 +829,7 @@ msgstr "価格設定"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr "価格設定規則"
+msgstr "価格設定ルール"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -984,7 +995,7 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"これらの方法により、（見積書に基づいた）販売オーダまたは（配送オーダに基づい"
+"これらの方法により、（見積書に基づいた）販売オーダまたは（出荷オーダに基づい"
 "た）請求書上で、設定に応じた配送費用を自動的に計算することができます。"
 
 #. module: delivery
@@ -1105,6 +1116,8 @@ msgid ""
 "You cannot delete this product category as it is used on the products linked "
 "to delivery methods."
 msgstr ""
+"このプロダクトカテゴリは配送方法に関連付けられたプロダクトで使用されているた"
+"め、削除できません。"
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod

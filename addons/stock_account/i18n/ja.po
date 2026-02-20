@@ -7,16 +7,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-05 07:58+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:42+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_account/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -36,14 +36,14 @@ msgstr " [ %sに会計処理済]"
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
 msgstr ""
-"%(lot)s の価格が%(old_price)s から %(new_price)s に変更されました。変更者： %"
-"(user)s"
+"%(lot)s の価格が%(old_price)s から %(new_price)s に変更されました。変更者： "
+"%(user)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
-msgstr "%(quantity)s %(uom)s プロダクトの標準価格： %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
+msgstr "%(quantity)s %(uom)s プロダクトの原価で"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -161,7 +161,7 @@ msgstr "分析勘定明細"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "分析プラン"
 
 #. module: stock_account
 #. odoo-javascript
@@ -206,6 +206,12 @@ msgstr "BC46282798"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
 msgstr "ベーコン"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
+#: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
+msgid "Closing Date"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -522,9 +528,15 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "在庫調整参照/理由"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
+#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
+msgid "Inventory Closing"
+msgstr "在庫期末処理"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "在庫ロケーション"
 
 #. module: stock_account
 #. odoo-javascript
@@ -557,7 +569,7 @@ msgstr "直送"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_in
 msgid "Is Incoming (valued)"
-msgstr "入庫 (評価対象)"
+msgstr "入荷予定 (評価対象)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_out
@@ -580,6 +592,16 @@ msgid "Is valued outside the company"
 msgstr "社外評価対象"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
+msgstr ""
+"選択された日付以降の期末処理が存在します。それ以前の仕訳を生成する前に、それ"
+"らをキャンセルしてください"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "仕訳"
@@ -594,6 +616,11 @@ msgstr "仕訳明細"
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Journal Items"
 msgstr "仕訳明細"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr "理由"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -649,6 +676,19 @@ msgstr "月次"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
 msgid "Move"
 msgstr "仕訳"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr "新しい値"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
+"remaining_qty の検索では、only=True が設定されている場合のみサポートされてい"
+"ます。"
 
 #. module: stock_account
 #. odoo-python
@@ -783,12 +823,17 @@ msgstr "生産 WIP(仕掛品) 間接費 勘定"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "在庫数量"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "参照"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr "残り"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -1123,6 +1168,16 @@ msgstr ""
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
 msgstr "評価の調整は、一度に1つの移動に対してのみ行うことができます。"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr ""
+"「標準価格」を原価計算方法とするプロダクトについてのみ、特定の日付における標"
+"準価格を取得できます。"
 
 #. module: stock_account
 #. odoo-python

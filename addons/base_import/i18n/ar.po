@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-09-16 13:37+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -138,12 +138,6 @@ msgstr "ولكن، يمكنك أيضاً استخدام ملفات .csv"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "إلغاء"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr "اضغط على 'استمرار' لاستئناف عملية الاستيراد من السطر %s."
@@ -158,8 +152,8 @@ msgstr "يحتوي العمود %(column)s على قيم غير صحيحة (ال
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr ""
 "يحتوي العمود %(column)s على قيم غير صحيحة. الخطأ في السطر %(line)d: %(error)s"
 
@@ -249,6 +243,12 @@ msgid "Delay after each batch"
 msgstr "التأخير بعد كل دفعة"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
@@ -304,12 +304,12 @@ msgstr "حدث خطأ أثناء استيراد السجلات: يجب أن يك
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "حدث خطأ أثناء استيراد التقارير: يجب أن يكون لكافة الصفوف نفس الحجم، ولكن لدى "
-"صف العنوان %(title_row_entries)d قيد بينما الصف الأول به %"
-"(first_row_entries)d."
+"صف العنوان %(title_row_entries)d قيد بينما الصف الأول به "
+"%(first_row_entries)d."
 
 #. module: base_import
 #. odoo-javascript
@@ -369,8 +369,8 @@ msgstr "حجم الملف يتجاوز الحد الأقصى المضبوط (%s 
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "الملف المراد فحصه و/أو استيراده، هو ملف مزدوج خام (ليس base64)"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

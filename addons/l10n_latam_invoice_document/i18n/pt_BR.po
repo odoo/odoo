@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"POT-Creation-Date: 2026-02-20 12:31+0000\n"
 "PO-Revision-Date: 2025-03-27 17:58-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -20,11 +20,6 @@ msgstr ""
 #: model:ir.model,name:l10n_latam_invoice_document.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Modelo de plano de contas"
-
-#. module: l10n_latam_invoice_document
-#: model:ir.model,name:l10n_latam_invoice_document.model_account_move_reversal
-msgid "Account Move Reversal"
-msgstr "Estorno de movimentação da conta"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_l10n_latam_document_type__active
@@ -218,6 +213,11 @@ msgid "Journal Entry"
 msgstr "Lançamento de diário"
 
 #. module: l10n_latam_invoice_document
+#: model:ir.model,name:l10n_latam_invoice_document.model_account_move_reversal
+msgid "Journal Entry Reversal"
+msgstr ""
+
+#. module: l10n_latam_invoice_document
 #: model:ir.model,name:l10n_latam_invoice_document.model_account_move_line
 msgid "Journal Item"
 msgstr "Item do diário"
@@ -293,11 +293,9 @@ msgstr "Defina o número do documento nas seguintes faturas %s."
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,help:l10n_latam_invoice_document.field_l10n_latam_document_type__doc_code_prefix
 msgid ""
-"Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will "
-"build 'FA 0001-0000001' Document Number"
+"Prefix for Documents Codes on Invoices and Journal Entries. For eg. 'FA ' "
+"will build 'FA 0001-0000001' Document Number"
 msgstr ""
-"Prefixo para códigos de documentos em faturas e movimentações de contas. For "
-"eg. 'FA ' will build 'FA 0001-0000001' Document Number"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_l10n_latam_document_type__sequence

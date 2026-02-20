@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-12-02 14:57+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -22,7 +22,6 @@ msgstr ""
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__display_name
-#: model:ir.model.fields,field_description:sale_project_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__display_name
 msgid "Display Name"
@@ -30,26 +29,15 @@ msgstr "显示名称"
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__id
-#: model:ir.model.fields,field_description:sale_project_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sale_project_stock
-#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
-msgid "No stock move found"
-msgstr "没有库存移动"
-
-#. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_project_project
 msgid "Project"
 msgstr "项目"
-
-#. module: sale_project_stock
-#: model:ir.model,name:sale_project_stock.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "销售订单明细"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_move
@@ -87,22 +75,6 @@ msgstr ""
 "在验证库存拣货之前，必须先验证与项目%(project)s相关联的销售订单%(order)s。"
 
 #. module: sale_project_stock
-#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
-msgid ""
-"This menu gives you the full traceability of inventory\n"
-"                operations on a specific product. You can filter on the "
-"product\n"
-"                to see all the past or future movements for the product."
-msgstr ""
-"此菜单能让您完整的追溯某一特定产品的盘点\n"
-"作业。您可以在产品上筛选此产品过去和将来的的所有的调拨。"
-
-#. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_picking
 msgid "Transfer"
 msgstr "转账"
-
-#. module: sale_project_stock
-#: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
-msgid "Transfers"
-msgstr "转移"

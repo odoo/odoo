@@ -3,22 +3,30 @@
 # * l10n_it_edi
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:04+0000\n"
-"PO-Revision-Date: 2025-11-19 16:32+0000\n"
+"POT-Creation-Date: 2026-02-20 12:31+0000\n"
+"PO-Revision-Date: 2026-01-08 12:54+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19-l10n/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
 "l10n_it_edi/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,help:l10n_it_edi.field_account_bank_statement_line__l10n_it_convention_code
+#: model:ir.model.fields,help:l10n_it_edi.field_account_move__l10n_it_convention_code
+msgid ""
+" Used to connect an individual invoice to a broader framework agreement, a "
+"specific project, or a long-term convention."
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
@@ -94,11 +102,6 @@ msgid "Account EDI proxy user"
 msgstr "Conto EDI utente proxy"
 
 #. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_account_move_send
-msgid "Account Move Send"
-msgstr "Movimento contabile inviato"
-
-#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__agreement
 msgid "Agreement"
 msgstr "Accordo"
@@ -116,8 +119,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"An error occurred while downloading updates from the Proxy Server: (%"
-"(code)s) %(message)s"
+"An error occurred while downloading updates from the Proxy Server: "
+"(%(code)s) %(message)s"
 msgstr ""
 "Si è verificato un errore durante il download degli aggiornamenti dal server "
 "proxy: (%(code)s) %(message)s"
@@ -144,11 +147,6 @@ msgstr "Conto bancario non trovato, informazioni utili dal file XML:"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__being_sent
 msgid "Being Sent To SdI"
 msgstr "In invio a SdI"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc16
-msgid "CASAGIT Additional pension fund for journalists"
-msgstr "CASAGIT Cassa mutua integrativa dei giornalisti italiani"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_cig
@@ -225,7 +223,7 @@ msgstr "Il Codice fiscale deve contenere da 11 a 16 caratteri."
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Azienda"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
@@ -368,61 +366,6 @@ msgid "EDI operating mode"
 msgstr "Modalità operativa EDI"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc07
-msgid "ENASARCO pension fund for sales agents"
-msgstr "Cassa previdenziale ENASARCO per agenti di commercio"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc19
-msgid "ENPAB national pension fund for biologists"
-msgstr "Fondo previdenziale nazionale ENPAB per biologi"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc08
-msgid "ENPACL pension fund for labor consultants"
-msgstr "Cassa previdenziale ENPACL per consulenti del lavoro"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc10
-msgid "ENPAF pension fund for chemists"
-msgstr "Cassa previdenziale ENPAF per farmacisti"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc12
-msgid "ENPAIA pension fund for people working in agriculture"
-msgstr "Cassa previdenziale ENPAIA per persone che lavorano in agricoltura"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc09
-msgid "ENPAM pension fund for doctors"
-msgstr "Cassa previdenziale ENPAM per medici"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc21
-msgid "ENPAP national pension fund for psychologists"
-msgstr "Fondo previdenziale nazionale ENPAP per psicologi"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc20
-msgid "ENPAPI national pension fund for nurses"
-msgstr "Fondo previdenziale nazionale ENPAPI per infermieri"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc11
-msgid "ENPAV pension fund for veterinaries"
-msgstr "Cassa previdenziale ENPAV per veterinari"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc18
-msgid "EPAP pension fund"
-msgstr "Cassa previdenziale EPAP"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc17
-msgid "EPPI pension fund for industrial experts"
-msgstr "Cassa previdenziale EPPI per periti industriali"
-
-#. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_tax
 msgid "ETA tax codes mixin"
 msgstr "Mixin codici fiscali ETA"
@@ -476,8 +419,8 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
-msgid "Fattura Electronica (FatturaPA)"
-msgstr "Fattura elettronica (FatturaPA)"
+msgid "Fattura Elettronica (FatturaPA)"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_name
@@ -509,16 +452,6 @@ msgstr "Codice fiscale della tua azienda"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__id
 msgid "ID"
 msgstr "ID"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc14
-msgid "INPGI pension fund for journalists"
-msgstr "Fondo pensione INPGI per giornalisti"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc22
-msgid "INPS national pension fund"
-msgstr "Fondo pensione nazionale INPS"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -858,21 +791,6 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc04
-msgid "National pension fund for associated engineers and architects"
-msgstr "Cassa nazionale di previdenza per ingegneri e architetti associati"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc01
-msgid "National pension fund for lawyers and solicitors"
-msgstr "Cassa nazionale di previdenza per avvocati e procuratori"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc05
-msgid "National pension fund for notaries"
-msgstr "Cassa nazionale di previdenza per notai"
-
-#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__no
 msgid "Not a limited liability company"
 msgstr "Non è una società a responsabilità limitata"
@@ -888,9 +806,10 @@ msgid "Numero DDT"
 msgstr "Numero DDT"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc15
-msgid "ONAOSI fund for sanitary orphans"
-msgstr "Fondo ONAOSI per orfani sanitari"
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_convention_code
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_convention_code
+msgid "Order/Convention Code"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_origin_document_date
@@ -968,7 +887,7 @@ msgstr "Metodo di pagamento"
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_payment_method_line
 msgid "Payment Method Line"
-msgstr ""
+msgstr "Riga metodo di pagamento"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -992,27 +911,6 @@ msgstr "Tipo di fondo pensione. Solo per EDI contabilità italiana."
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Pension Fund tax not found"
 msgstr "Imposta Fondo Pensione non trovata"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc02
-msgid "Pension fund for accountants with a degree"
-msgstr "Cassa previdenziale per dottori commercialisti"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc06
-msgid "Pension fund for accountants without a degree and commercial experts"
-msgstr "Cassa previdenziale per ragionieri e periti commerciali"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc13
-msgid "Pension fund for employees in delivery and marine agencies"
-msgstr ""
-"Cassa previdenziale per dipendenti in agenzie di spedizione e marittime"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc03
-msgid "Pension fund for surveyors"
-msgstr "Cassa previdenziale per geometri"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_pension_fund_type
@@ -1179,6 +1077,11 @@ msgid "Share capital actually paid up"
 msgstr "Capitale sociale effettivamente versato"
 
 #. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_sole_shareholder
 msgid "Shareholder"
 msgstr "Socio"
@@ -1289,11 +1192,11 @@ msgstr "La data del documento di origine non può essere nel futuro."
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The amount_total %(current_total)s is different than PrezzoTotale %"
-"(expected_total)s for '%(move_name)s'"
+"The amount_total %(current_total)s is different than PrezzoTotale "
+"%(expected_total)s for '%(move_name)s'"
 msgstr ""
-"L'importo totale %(current_total)s è diverso dal PrezzoTotale %"
-"(expected_total)s per '%(move_name)s'"
+"L'importo totale %(current_total)s è diverso dal PrezzoTotale "
+"%(expected_total)s per '%(move_name)s'"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_liquidation_state__ls
@@ -1319,8 +1222,8 @@ msgid ""
 "It will try again for 10 days, after which it will be considered accepted, "
 "but you will still have to send it by post or e-mail."
 msgstr ""
-"Il file di fattura elettronica %(file)s non può essere inoltrato a %"
-"(partner)s (Pubblica Amministrazione) dal SdI in questo momento. Verrà "
+"Il file di fattura elettronica %(file)s non può essere inoltrato a "
+"%(partner)s (Pubblica Amministrazione) dal SdI in questo momento. Verrà "
 "riprovato per 10 giorni, dopodiché sarà considerato accettato, ma dovrai "
 "comunque inviarlo per posta o e-mail."
 
@@ -1331,8 +1234,8 @@ msgid ""
 "The e-invoice file %(file)s couldn't be forwarded to %(partner)s.\n"
 "Please remember to send it via post or e-mail."
 msgstr ""
-"Il file di fattura elettronica %(file)s non è stato inoltrato a %"
-"(partner)s.\n"
+"Il file di fattura elettronica %(file)s non è stato inoltrato a "
+"%(partner)s.\n"
 "Si prega di inviarlo per posta o e-mail."
 
 #. module: l10n_it_edi
@@ -1405,8 +1308,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %(file)s was accepted and succesfully forwarded it to %"
-"(partner)s by the SdI."
+"The e-invoice file %(file)s was accepted and succesfully forwarded it to "
+"%(partner)s by the SdI."
 msgstr ""
 "Il file di fattura elettronica %(file)s è stato accettato e inoltrato con "
 "successo a %(partner)s dal SdI."
@@ -2046,6 +1949,117 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__s
 msgid "[S] Provisions for commissioner work"
 msgstr "[S] Compensi per il lavoro di commissionario"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc01
+msgid "[TC01] National pension fund for lawyers and solicitors"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc02
+msgid "[TC02] Pension fund for accountants with a degree"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc03
+msgid "[TC03] Pension fund for surveyors"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc04
+msgid "[TC04] National pension fund for associated engineers and architects"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc05
+msgid "[TC05] National pension fund for notaries"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc06
+msgid ""
+"[TC06] Pension fund for accountants without a degree and commercial experts"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc07
+msgid "[TC07] ENASARCO pension fund for sales agents"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc08
+msgid "[TC08] ENPACL pension fund for labor consultants"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc09
+msgid "[TC09] ENPAM pension fund for doctors"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc10
+msgid "[TC10] ENPAF pension fund for chemists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc11
+msgid "[TC11] ENPAV pension fund for veterinaries"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc12
+msgid "[TC12] ENPAIA pension fund for people working in agriculture"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc13
+msgid "[TC13] Pension fund for employees in delivery and marine agencies"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc14
+msgid "[TC14] INPGI pension fund for journalists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc15
+msgid "[TC15] ONAOSI fund for sanitary orphans"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc16
+msgid "[TC16] CASAGIT Additional pension fund for journalists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc17
+msgid "[TC17] EPPI pension fund for industrial experts"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc18
+msgid "[TC18] EPAP pension fund"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc19
+msgid "[TC19] ENPAB national pension fund for biologists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc20
+msgid "[TC20] ENPAPI national pension fund for nurses"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc21
+msgid "[TC21] ENPAP national pension fund for psychologists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc22
+msgid "[TC22] INPS national pension fund"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__t

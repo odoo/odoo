@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-10-31 12:46+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
@@ -21,9 +21,51 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_calendar
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "<i class=\"fa fa-clock-o ms-1\" title=\"Date\"/>"
+msgstr ""
+
+#. module: hr_calendar
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "<i class=\"fa fa-map-marker mx-2 pt-2\" title=\"Location\"/>"
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/hr_homeworking_calendar_controller.js:0
+msgid ""
+"An administrator first needs to link your user to an employee in order to "
+"set work locations."
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/hr_homeworking_calendar_controller.js:0
+msgid "Are you sure you want to delete this exception?"
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/hr_homeworking_calendar_controller.js:0
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Are you sure you want to delete this location?"
+msgstr ""
+
+#. module: hr_calendar
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Are you sure you want to delete this recurring location?"
+msgstr ""
+
+#. module: hr_calendar
 #: model:ir.model,name:hr_calendar.model_calendar_event
 msgid "Calendar Event"
 msgstr "Kalender-Ereignis"
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/hr_homeworking_calendar_controller.js:0
+msgid "Confirmation"
+msgstr ""
 
 #. module: hr_calendar
 #: model:ir.model,name:hr_calendar.model_res_partner
@@ -36,18 +78,135 @@ msgid "Create a Customer"
 msgstr "Kunden erstellen"
 
 #. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__date
+msgid "Date"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__day_week_string
+msgid "Day Week String"
+msgstr ""
+
+#. module: hr_calendar
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Delete homeworking location"
+msgstr ""
+
+#. module: hr_calendar
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Discard"
+msgstr ""
+
+#. module: hr_calendar
 #: model:ir.model.fields,field_description:hr_calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__display_name
+#: model:ir.model.fields,field_description:hr_calendar.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_calendar.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: hr_calendar
+#: model:ir.model,name:hr_calendar.model_hr_employee
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__employee_id
+msgid "Employee"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__employee_name
+msgid "Employee Name"
+msgstr ""
+
+#. module: hr_calendar
 #: model:ir.model.fields,field_description:hr_calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__id
+#: model:ir.model.fields,field_description:hr_calendar.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_calendar.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__work_location_type
+msgid "Icon"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__work_location_id
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Location"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__work_location_name
+msgid "Location name"
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/hr_homeworking_calendar_controller.js:0
+msgid "Missing Employee"
+msgstr ""
+
+#. module: hr_calendar
 #: model_terms:ir.ui.view,arch_db:hr_calendar.view_res_partner_filter_inherit_calendar
 msgid "My Team"
 msgstr "Mein Team"
+
+#. module: hr_calendar
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Repeat every"
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
+msgid "Set"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model,name:hr_calendar.model_homework_location_wizard
+msgid "Set Homework Location Wizard"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.actions.act_window,name:hr_calendar.set_location_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr_calendar.homework_location_wizard_view_form
+msgid "Set Location"
+msgstr ""
+
+#. module: hr_calendar
+#. odoo-javascript
+#: code:addons/hr_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
+msgid "Set location"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.model.fields,field_description:hr_calendar.field_homework_location_wizard__weekly
+msgid "Weekly"
+msgstr ""
+
+#. module: hr_calendar
+#: model:ir.ui.menu,name:hr_calendar.menu_hr_homeworking_location_menu
+msgid "Work Locations"
+msgstr ""

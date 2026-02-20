@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-08 19:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
@@ -39,16 +39,16 @@ msgid "%s's Opportunity"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.countries_setting
 msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                There are no matching partners found for the selected "
-"country. Displaying results across all countries instead."
+"            There are no matching partners found for the selected country. "
+"Displaying results across all countries instead."
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -64,18 +64,8 @@ msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "Rediger"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
-msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to resellers"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "<option>Countries...</option>"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "<option>States...</option>"
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
+msgid "<i class=\"oi oi-chevron-left me-2\"/>Back"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -152,13 +142,13 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">You need to fill up the next action and contact the "
-"customer before accepting the lead</span>"
+"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
+"none;\">You need to fill up the next action and contact the customer before "
+"accepting the lead</span>"
 msgstr ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">Du må fylle ut neste tiltak og kontakte kunden før "
-"du godtar lead</span>"
+"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
+"none;\">Du må fylle ut neste tiltak og kontakte kunden før du godtar lead</"
+"span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -168,6 +158,11 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "<span> at </span>"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
+msgid "<span>Find a partner</span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -203,25 +198,24 @@ msgid ""
 "href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject "
 "Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name "
 "or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name "
-"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and "
-"lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</"
-"t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
+"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id']."
+"country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-"
+"out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
 "Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> "
 "</li><br/>\n"
 "</ol>\n"
 "<t t-if=\"ctx.get('partner_in_portal')\">\n"
-"    Please connect to your <a t-att-href=\"'%s?db=%s' % "
-"(object.get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get "
-"details. On each lead are two buttons on the top left corner that you should "
-"press after having contacted the lead: \"I'm interested\" &amp; \"I'm not "
+"    Please connect to your <a t-att-href=\"'%s?db=%s' % (object."
+"get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get details. "
+"On each lead are two buttons on the top left corner that you should press "
+"after having contacted the lead: \"I'm interested\" &amp; \"I'm not "
 "interested\".<br/>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
 "    You do not have yet a portal access to our database. Please contact\n"
 "    <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email "
-"and 'your account manager %s (%s)' % "
-"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or "
-"'us'\">us</t>.<br/>\n"
+"and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+"ctx['partner_id'].user_id.email) or 'us'\">us</t>.<br/>\n"
 "</t>\n"
 "The lead will be sent to another partner if you do not contact the lead "
 "before 20 days.<br/><br/>\n"
@@ -259,8 +253,6 @@ msgid "Add an opportunity"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Address"
 msgstr "Adresse"
@@ -271,18 +263,13 @@ msgid "Address:"
 msgstr "Adresse:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "All Categories"
-msgstr "Alle kategorier"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "All Countries"
 msgstr "Alle land"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "All Industries"
 msgstr "Alle Bransjer"
 
@@ -313,18 +300,8 @@ msgid "Assigned Partner:"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__publish_on
-msgid "Auto publish on"
-msgstr ""
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "Automatic Assignment"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__publish_on
-msgid "Automatically publish the page on the chosen date and time."
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -333,7 +310,7 @@ msgid "Automatically sanitized HTML contents"
 msgstr "Automatisk rengjort HTML-innhold"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
 msgid "Back to resellers list"
 msgstr ""
 
@@ -348,25 +325,12 @@ msgid "Campaign:"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__can_publish
-msgid "Can Publish"
-msgstr "Kan publisere"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "Cancel"
-msgstr "Avbryt"
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "City"
 msgstr "Sted"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -395,12 +359,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website_crm_partner_assign
-#. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/partner_page_option.xml:0
-msgid "Contact Details"
-msgstr "Kontaktdetaljer"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -416,6 +374,17 @@ msgstr "Kontaktnavn"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Contents"
 msgstr "Innhold"
+
+#. module: website_crm_partner_assign
+#. odoo-javascript
+#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.xml:0
+msgid "Countries"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "Countries..."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__country_id
@@ -477,11 +446,6 @@ msgid "Customer:"
 msgstr "Kunde:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
-msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
-msgstr ""
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Date"
@@ -508,10 +472,18 @@ msgid "Details Next Activity"
 msgstr "Detaljer neste aktivitet"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "Discard"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
@@ -528,11 +500,6 @@ msgstr "Rediger kontakt"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Opportunity"
 msgstr "Rediger salgsmulighet"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Edit to add a short description"
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -564,37 +531,23 @@ msgid "Expected Revenue"
 msgstr "Forventet omsetning"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Filter by category"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.countries_setting
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "Filter by country"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "Filter by industry"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Filters"
-msgstr "Filtre"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Find a reseller"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,description:website_crm_partner_assign.portal_entry_leads
 msgid "Follow and convert your leads"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,description:website_crm_partner_assign.portal_entry_opportunities
 msgid "Follow and convert your opportunities"
 msgstr ""
 
@@ -657,11 +610,6 @@ msgid ""
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Go to reseller"
-msgstr ""
-
-#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
 msgid "Grade"
 msgstr "Gradering"
@@ -705,6 +653,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_portal_entry__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
@@ -734,11 +683,6 @@ msgstr "Implementert av"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date
 msgid "Invoice Account Date"
 msgstr "Fakturakontodato"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__is_published
-msgid "Is Published"
-msgstr "Er publisert"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__write_uid
@@ -814,7 +758,7 @@ msgid "Lead forward to partner"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,name:website_crm_partner_assign.portal_entry_leads
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
@@ -900,11 +844,6 @@ msgid "No more partner available"
 msgstr "Ingen flere partnere tilgjengelig"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "No results found for \""
-msgstr "Ingen resultater for \""
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "Not allowed to update the following field(s): %s."
@@ -919,12 +858,12 @@ msgid ""
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "Open industries dropdown"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,name:website_crm_partner_assign.portal_entry_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Opportunities"
@@ -991,12 +930,6 @@ msgid "Partner Location"
 msgstr "Partnersted"
 
 #. module: website_crm_partner_assign
-#. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/partner_page_option_plugin.js:0
-msgid "Partner Page"
-msgstr ""
-
-#. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_partner_pages_list
 msgid "Partner Pages"
 msgstr ""
@@ -1017,8 +950,6 @@ msgid "Partner not interested"
 msgstr "Partner ikke interessert"
 
 #. module: website_crm_partner_assign
-#. odoo-python
-#: code:addons/website_crm_partner_assign/controllers/main.py:0
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_partners_pages
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_pages_tree_view
@@ -1061,8 +992,8 @@ msgid "Planned Revenue"
 msgstr "Planlagt omsetning"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Please check back soon."
+#: model:ir.model,name:website_crm_partner_assign.model_portal_entry
+msgid "Portal Entry"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -1076,11 +1007,6 @@ msgstr "Prioritet:"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Probability"
 msgstr "Sannsynlighet"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__published_date
-msgid "Published date"
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1127,7 +1053,6 @@ msgstr "Referanser"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "Resellers"
 msgstr "Videreforhandlere"
 
@@ -1147,32 +1072,12 @@ msgid "Salesperson:"
 msgstr "Selger:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Search"
-msgstr "Søk"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Search by name or address"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "See all resellers"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "See categories filters"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "See countries filters"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "See industries filters"
 msgstr ""
 
@@ -1234,6 +1139,11 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "States..."
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Street"
 msgstr "Gate"
 
@@ -1252,16 +1162,6 @@ msgstr "Etiketter"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:0
 msgid "The Forward Email Template is not in the database"
 msgstr "Mal for videresending av e-post er ikke i databasen"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
-msgid "The full absolute URL to access the document through the website."
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
-msgid "The full relative URL to access the document through the website."
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1315,35 +1215,15 @@ msgid "User"
 msgstr "Bruker"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_published
-msgid "Visible on current website"
-msgstr "Synlig på nåværende nettsted"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "Warning"
 msgstr "Advarsel"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "We're expanding our partner network."
-msgstr ""
-
-#. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_website
 msgid "Website"
 msgstr "Nettsted"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
-msgid "Website Absolute URL"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
-msgid "Website URL"
-msgstr "Nettsted-URL"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1402,7 +1282,7 @@ msgid "at"
 msgstr "á"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "in"
 msgstr "i"
 
@@ -1420,16 +1300,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "on"
 msgstr "på"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "reference"
-msgstr "referanse"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "references"
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned

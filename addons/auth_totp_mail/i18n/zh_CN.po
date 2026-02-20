@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-16 15:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -118,9 +118,9 @@ msgid ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
-"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
 "        Activate my two-factor authentication\n"
 "    </a>\n"
 "</p>\n"
@@ -158,9 +158,9 @@ msgstr ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
-"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
 "        激活我的双因素身份验证\n"
 "    </a>\n"
 "</p>\n"
@@ -217,6 +217,12 @@ msgid "Authentication Device"
 msgstr "认证设备"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Authentication code via email"
+msgstr ""
+
+#. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
@@ -234,6 +240,7 @@ msgstr "配置设定"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_ir_http__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
 msgid "Display Name"
@@ -265,7 +272,19 @@ msgid "Enforce two-factor authentication"
 msgstr "实行双因素认证"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Enter below the six-digit authentication code just sent to your email"
+msgstr ""
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_ir_http__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
 msgid "ID"
@@ -372,6 +391,12 @@ msgid "Two-factor authentication has been deactivated on your account"
 msgstr "您账户的双重验证已停用"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Use an authentication code sent by email"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "User"
 msgstr "用户"
@@ -383,6 +408,12 @@ msgid "Verification failed, please double-check the 6-digit code"
 msgstr "校验失败，请再次检查 6 位验证码"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Verify"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 "We strongly recommend enabling the two-factor authentication using an "
@@ -391,6 +422,12 @@ msgid ""
 msgstr ""
 "我们强烈建议使用 Authenticator 应用程序启用双因素认证，以保护您的账户安全。\n"
 "               <br/>"
+
+#. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "XXXXXX"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
