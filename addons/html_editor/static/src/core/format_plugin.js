@@ -317,6 +317,9 @@ export class FormatPlugin extends Plugin {
                 )
         );
         const unformattedTextNodes = selectedTextNodes.filter((n) => {
+            if (!(this.checkPredicates("is_formattable_node_predicates", n) ?? true)) {
+                return false;
+            }
             const listItem = closestElement(n, "li");
             if (listItem && this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
                 const hasFontSizeStyle =
