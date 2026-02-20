@@ -278,6 +278,7 @@ class ResUsers(models.Model):
     def _alert_new_device(self):
         self.ensure_one()
         if self.email:
+            lang = self.lang or "en_US"
             email_values = {
                 'email_cc': False,
                 'auto_delete': True,
@@ -288,7 +289,7 @@ class ResUsers(models.Model):
                 'email_to': self.email
             }
 
-            body = self.env['mail.render.mixin']._render_template(
+            body = self.env['mail.render.mixin'].with_context(lang=lang)._render_template(
                     'auth_signup.alert_login_new_device',
                     model='res.users', res_ids=self.ids,
                     engine='qweb_view', options={'post_process': True},
