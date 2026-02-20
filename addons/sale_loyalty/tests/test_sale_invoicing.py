@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
@@ -29,14 +30,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
             'lst_price': 500,
         })
 
-        order = self.empty_order
-        order.write({
-            'order_line': [
-                (0, 0, {
-                    'product_id': product.id,
-                })
-            ]
-        })
+        order = self._create_so(order_line=[Command.create({'product_id': product.id})])
 
         #Check default invoice_policy on discount product
         self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
@@ -83,18 +77,8 @@ class TestSaleInvoicing(TestSaleCouponCommon):
             })]
         })
 
-        order = self.empty_order
-
-        product_6 = self.env['product.product'].create({
-            'name': 'Large Cabinet',
-        })
-        # orderline1
-        self.env['sale.order.line'].create({
-            'product_id': product_6.id,
-            'name': 'largeCabinet',
-            'product_uom_qty': 1.0,
-            'order_id': order.id,
-        })
+        product_6 = self.env['product.product'].create({'name': 'Large Cabinet'})
+        order = self._create_so(order_line=[Command.create({'product_id': product_6.id})])
 
         #Check default invoice_policy on discount product
         self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')

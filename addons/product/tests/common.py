@@ -28,13 +28,11 @@ class ProductCommon(UomCommon):
             'list_price': 50.0,
             'categ_id': cls.product_category.id,
         }])
-        cls.pricelist = cls.env['product.pricelist'].create({
-            'name': 'Test Pricelist',
-        })
-        # Archive all existing pricelists
-        cls.env['product.pricelist'].search([
-            ('id', '!=', cls.pricelist.id),
-        ]).action_archive()
+        # Archive all existing pricelists and disable feature group
+        # Ensures a consistent default setup for tests run through this common
+        # Please call `_enable_pricelists` if a test is meant to test pricelist logic
+        cls.env['product.pricelist'].search([]).action_archive()
+        cls.group_user._remove_group(cls.group_product_pricelist)
 
     @classmethod
     def get_default_groups(cls):
@@ -43,11 +41,12 @@ class ProductCommon(UomCommon):
 
     @classmethod
     def _enable_pricelists(cls):
-        cls.env.user.group_ids += cls.group_product_pricelist
+        cls.group_user._apply_group(cls.group_product_pricelist)
+        return cls._create_pricelist()
 
     @classmethod
     def _enable_variants(cls):
-        cls.env.user.group_ids += cls.group_product_variant
+        cls.group_user._apply_group(cls.group_product_variant)
 
     @classmethod
     def _create_pricelist(cls, **create_vals):

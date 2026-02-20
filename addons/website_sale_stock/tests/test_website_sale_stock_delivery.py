@@ -2,18 +2,17 @@
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 from odoo.http import request
+from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
-from odoo.addons.delivery.tests.common import DeliveryCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon, DeliveryCommon):
+class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon):
 
     def test_validate_payment_with_no_available_delivery_method(self):
         """
@@ -31,7 +30,7 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon, D
 
         WebsiteSaleCartController = Cart()
         WebsiteSaleController = WebsiteSale()
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             WebsiteSaleCartController.add_to_cart(
                 product_template_id=storable_product.product_tmpl_id,
                 product_id=storable_product.id,
@@ -69,7 +68,7 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon, D
             'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
         }).action_apply_inventory()
 
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             request.cart = sale_order
             with self.assertRaises(ValidationError):
                 WebsiteSaleController.shop_payment_validate()

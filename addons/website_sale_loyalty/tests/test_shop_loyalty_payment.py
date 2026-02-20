@@ -26,7 +26,6 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
     @mute_logger('odoo.http')
     def test_expired_reward_validation(self):
         """Ensure payments don't process if any applied reward is no longer valid."""
-        order = self.empty_order
         program = self.program_gift_card
 
         program.date_to = date.today() + timedelta(days=1)  # set program to expire after tomorrow
@@ -36,15 +35,12 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
             'points_granted': 100,
         }).generate_coupons()
 
-        order.write({
-            'partner_id': self.portal_partner.id,
-            'website_id': self.website.id,
-            'message_partner_ids': self.portal_partner.ids,
-            'order_line': [Command.create({
-                'product_id': self.service_product.id,
-                'tax_ids': None,
-            })],
-        })
+        order = self._create_so(
+            partner_id=self.portal_partner.id,
+            website_id=self.website.id,
+            message_partner_ids=self.portal_partner.ids,
+            order_line=[Command.create({'product_id': self.service_product.id, 'tax_ids': None})],
+        )
         self._apply_promo_code(order, program.coupon_ids.code)
 
         with freeze_time(program.date_to + timedelta(days=2)):

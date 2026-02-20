@@ -39,8 +39,7 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
 
     def test_applicable_programs(self):
 
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             (0, False, {
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
@@ -51,7 +50,7 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
                 'name': '2 Product B',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         order._update_programs_and_rewards()
 
         self.assertNotIn(self.immediate_promotion_program_c2, self._get_applicable_programs(order))
@@ -119,18 +118,10 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
         self.sale_user.write({'company_ids': [Command.set((branch_a + self.company_a).ids)]})
 
         # create an order
-        order = self.empty_order
-        order.update(
-            {
-                'order_line': [
-                    Command.create({
-                        'product_id': self.product_A.id,
-                    }),
-                ],
-                'company_id': branch_a.id,
-                'partner_id': self.partner.id,
-                'user_id': self.sale_user.id
-            }
+        order = self._create_so(
+            order_line=[Command.create({'product_id': self.product_A.id})],
+            company_id=branch_a.id,
+            user_id=self.sale_user.id,
         )
 
         order.with_user(self.sale_user).with_company(branch_a.id).sudo(False).action_confirm()

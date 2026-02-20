@@ -53,6 +53,7 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
         cls.products.website_published = True
 
         # Prepare pricelists
+        cls.pricelist = cls._enable_pricelists()
         cls.eur_currency = cls.env.ref('base.EUR')
         cls.eur_currency.write({
             'active': True,
@@ -66,6 +67,9 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
             currency_id=cls.eur_currency.id,
             selectable=True,
         )
+
+        # Needed for gmc tests to succeed, should be investigated and dropped someday ideally
+        cls.env.user.group_ids -= cls.group_product_pricelist
 
     def update_items(self, feed=None):
         feed = feed or self.gmc_feed

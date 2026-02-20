@@ -19,6 +19,8 @@ class TestSalePrices(SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.pricelist = cls._enable_pricelists()
+        cls.sale_order.pricelist_id = cls.pricelist
         cls._enable_discounts()
         cls.discount = 10  # %
 
@@ -48,40 +50,33 @@ class TestSalePrices(SaleCommon):
         product_price = self.product.lst_price
         product_dozen_price = product_price * 12
 
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 3.0,
-            }),
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 4.0,
-            }),
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 5.0,
-            }),
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 1.0,
-                'product_uom_id': self.uom_dozen.id,
-            }),
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 0.4,
-                'product_uom_id': self.uom_dozen.id,
-            }),
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 0.3,
-                'product_uom_id': self.uom_dozen.id,
-            })
-        ]
+        order = self._create_so(
+            order_line=[
+                Command.create({'product_id': self.product.id, 'product_uom_qty': 3.0}),
+                Command.create({'product_id': self.product.id, 'product_uom_qty': 4.0}),
+                Command.create({'product_id': self.product.id, 'product_uom_qty': 5.0}),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom_id': self.uom_dozen.id,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 0.4,
+                    'product_uom_id': self.uom_dozen.id,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 0.3,
+                    'product_uom_id': self.uom_dozen.id,
+                }),
+            ]
+        )
 
-        discounted_lines = self.empty_order.order_line.filtered('pricelist_item_id')
-        self.assertEqual(discounted_lines, self.empty_order.order_line[1:5])
+        discounted_lines = order.order_line.filtered('pricelist_item_id')
+        self.assertEqual(discounted_lines, order.order_line[1:5])
         self.assertEqual(discounted_lines.pricelist_item_id, pricelist_rule)
-        self.assertTrue(all(not line.discount for line in self.empty_order.order_line - discounted_lines))
+        self.assertTrue(all(not line.discount for line in order.order_line - discounted_lines))
         self.assertEqual(
             discounted_lines.mapped('price_unit'),
             [product_price, product_price, product_dozen_price, product_dozen_price])
@@ -102,20 +97,17 @@ class TestSalePrices(SaleCommon):
 
         with freeze_time(today):
             # Create an order today, add line today, rule active today works
-            self.empty_order.date_order = today
-            order_line = self.env['sale.order.line'].create({
-                'order_id': self.empty_order.id,
-                'product_id': self.product.id,
-            })
+            order = self._create_so(date_order=today)
+            order_line = order.order_line
 
             self.assertAlmostEqual(order_line.pricelist_item_id, pricelist_rule)
             self.assertAlmostEqual(order_line.price_unit, self.product.lst_price)
             self.assertEqual(order_line.discount, 10)
 
             # Create an order tomorrow, add line today, rule active today doesn't work
-            self.empty_order.date_order = tomorrow
+            order.date_order = tomorrow
             order_line = self.env['sale.order.line'].create({
-                'order_id': self.empty_order.id,
+                'order_id': order.id,
                 'product_id': self.product.id,
             })
 
@@ -125,9 +117,9 @@ class TestSalePrices(SaleCommon):
 
         with freeze_time(tomorrow):
             # Create an order tomorrow, add line tomorrow, rule active today doesn't work
-            self.empty_order.date_order = tomorrow
+            order.date_order = tomorrow
             order_line = self.env['sale.order.line'].create({
-                'order_id': self.empty_order.id,
+                'order_id': order.id,
                 'product_id': self.product.id,
             })
 
@@ -136,9 +128,9 @@ class TestSalePrices(SaleCommon):
             self.assertEqual(order_line.discount, 0.0)
 
             # Create an order today, add line tomorrow, rule active today works
-            self.empty_order.date_order = today
+            order.date_order = today
             order_line = self.env['sale.order.line'].create({
-                'order_id': self.empty_order.id,
+                'order_id': order.id,
                 'product_id': self.product.id,
             })
 
@@ -149,7 +141,7 @@ class TestSalePrices(SaleCommon):
             self.assertEqual(order_line.discount, 10)
 
         self.assertEqual(
-            self.empty_order.amount_untaxed,
+            order.amount_untaxed,
             self.product.lst_price * 3.8)  # Discount of 10% on 2 of the 4 sol
 
     def test_pricelist_product_context(self):
@@ -181,15 +173,17 @@ class TestSalePrices(SaleCommon):
         ptavs[0].price_extra = 5.0
         ptavs[2].price_extra = 25.0
 
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': product_template.product_variant_id.id,
-                'product_no_variant_attribute_value_ids': [Command.link(ptav.id)]
-            })
-            for ptav in ptavs
-        ]
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': product_template.product_variant_id.id,
+                    'product_no_variant_attribute_value_ids': [Command.link(ptav.id)],
+                })
+                for ptav in ptavs
+            ]
+        )
 
-        order_lines = self.empty_order.order_line
+        order_lines = order.order_line
         self.assertEqual(order_lines[0].price_unit, 80.0)
         self.assertEqual(order_lines[1].price_unit, 75.0)
         self.assertEqual(order_lines[2].price_unit, 100.0)
@@ -198,14 +192,16 @@ class TestSalePrices(SaleCommon):
         """Check currencies and uom conversions when no pricelist rule is available"""
         # UoM Conversion
         # Selling dozens => price_unit = 12*price by unit
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': self.product.id,
-                'product_uom_id': self.uom_dozen.id,
-                'product_uom_qty': 2.0,
-            }),
-        ]
-        self.assertEqual(self.empty_order.order_line.price_unit, 240.0)
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_id': self.uom_dozen.id,
+                    'product_uom_qty': 2.0,
+                })
+            ]
+        )
+        self.assertEqual(order.order_line.price_unit, 240.0)
 
         other_currency = self._enable_currency('EUR')
         pricelist_in_other_curr = self.env['product.pricelist'].create({
@@ -237,17 +233,15 @@ class TestSalePrices(SaleCommon):
         """aka surcharges"""
         self.discount = -10
         rule = self._create_discount_pricelist_rule()
-        order_line = self.env['sale.order.line'].create({
-            'order_id': self.empty_order.id,
-            'product_id': self.product.id,
-        })
+        order = self._create_so()
+        order_line = order.order_line
         self.assertEqual(order_line.price_unit, 22.0)
         self.assertEqual(order_line.pricelist_item_id, rule)
 
         # Even when the discount is supposed to be shown
         #   Surcharges shouldn't be shown to the user
         order_line = self.env['sale.order.line'].create({
-            'order_id': self.empty_order.id,
+            'order_id': order.id,
             'product_id': self.product.id,
         })
         self.assertEqual(order_line.price_unit, 22.0)
@@ -279,14 +273,8 @@ class TestSalePrices(SaleCommon):
             })],
         })
 
-        self.empty_order.write({
-            'date_order': '2018-07-11',
-        })
-
-        order_line = self.env['sale.order.line'].create({
-            'order_id': self.empty_order.id,
-            'product_id': self.product.id,
-        })
+        order = self._create_so(date_order='2018-07-11')
+        order_line = order.order_line
 
         self.assertEqual(order_line.pricelist_item_id, self.pricelist.item_ids)
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
@@ -328,15 +316,8 @@ class TestSalePrices(SaleCommon):
             })],
         })
 
-        self.empty_order.write({
-            'date_order': '2018-07-12',
-            'pricelist_id': pricelist_eur.id,
-        })
-
-        order_line = self.env['sale.order.line'].create({
-            'order_id': self.empty_order.id,
-            'product_id': self.product.id,
-        })
+        order = self._create_so(date_order='2018-07-12', pricelist_id=pricelist_eur.id)
+        order_line = order.order_line
 
         # force compute uom and prices
         self.assertEqual(order_line.discount, 10, "First pricelist rule not applied")
@@ -348,8 +329,6 @@ class TestSalePrices(SaleCommon):
         Test price updates correctly when quantity changes with
         pricelist based on another pricelist.
         """
-        self._enable_pricelists()
-
         pricelist_a = self.env['product.pricelist'].create({
             'name': "Pricelist A",
             'item_ids': [
@@ -551,6 +530,7 @@ class TestSalePrices(SaleCommon):
             sale_order.amount_total, so_amount,
             "Updating the prices of an unmodified SO shouldn't modify the amounts")
 
+        self.assertTrue(self.sale_order.pricelist_id)
         pricelist = sale_order.pricelist_id
         pricelist.item_ids = [
             Command.create({
@@ -662,32 +642,27 @@ class TestSalePrices(SaleCommon):
         })
 
         # creating SO
-        self.empty_order.write({
-            'fiscal_position_id': fiscal_pos.id,
-            'order_line': [Command.create({
-                'product_id': self.product.id,
-            })],
-        })
+        order = self._create_so(fiscal_position_id=fiscal_pos.id)
 
         # Update Prices
-        self.empty_order._recompute_prices()
+        order._recompute_prices()
 
         # Check that the discount displayed is the correct one
         self.assertEqual(
-            self.empty_order.order_line.discount, 54,
+            order.order_line.discount, 54,
             "Wrong discount computed for specified product & pricelist"
         )
         # Additional to check for overall consistency
         self.assertEqual(
-            self.empty_order.order_line.price_unit, 100,
+            order.order_line.price_unit, 100,
             "Wrong unit price computed for specified product & pricelist"
         )
         self.assertEqual(
-            self.empty_order.order_line.price_subtotal, 46,
+            order.order_line.price_subtotal, 46,
             "Wrong subtotal price computed for specified product & pricelist"
         )
         self.assertEqual(
-            self.empty_order.order_line.tax_ids.id, tax_b.id,
+            order.order_line.tax_ids.id, tax_b.id,
             "Wrong tax applied for specified product & pricelist"
         )
 
@@ -697,7 +672,6 @@ class TestSalePrices(SaleCommon):
         """
         # If test is run without demo data
         # pricelists are not automatically enabled
-        self._enable_pricelists()
         pricelist = self.pricelist
         partner = self.partner
 
@@ -869,8 +843,6 @@ class TestSalePrices(SaleCommon):
         self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
 
     def test_so_tax_mapping(self):
-        order = self.empty_order
-
         fpos = self.env['account.fiscal.position'].create({
             'name': 'Test Fiscal Position',
             'sequence': 1,
@@ -894,12 +866,7 @@ class TestSalePrices(SaleCommon):
             'taxes_id': [Command.set(tax_include.ids)]
         })
 
-        order.write({
-            'fiscal_position_id': fpos.id,
-            'order_line': [Command.create({
-                'product_id': self.product.id,
-            })]
-        })
+        order = self._create_so(fiscal_position_id=fpos.id)
 
         # Check the unit price of SO line
         self.assertEqual(
@@ -932,14 +899,9 @@ class TestSalePrices(SaleCommon):
             'parent_id': self.env.company.id,
             'account_fiscal_country_id': self.env.company.account_fiscal_country_id.id,
         })
-        order = self.empty_order.with_company(branch_company)
-        order.sudo().write({
-            'company_id': branch_company.id,
-            'fiscal_position_id': fpos.id,
-            'user_id': False,
-            'team_id': False,
-            'order_line': [Command.create({'product_id': self.product.id})],
-        })
+        order = self._create_so(
+            company_id=branch_company.id, fiscal_position_id=fpos.id, user_id=False, team_id=False
+        ).with_company(branch_company)
         self.assertEqual(order.order_line.tax_ids, tax_exclude, "Line tax should be mapped")
         self.assertAlmostEqual(
             order.order_line.price_unit, 100.0,
@@ -963,15 +925,16 @@ class TestSalePrices(SaleCommon):
             'price_include_override': 'tax_included',
             'include_base_amount': True,
         }])
-        order = self.empty_order
-        order.order_line = [Command.create({
-            'product_id': self.product.id,
-            'product_uom_qty': 1,
-            'price_unit': 0.0,
-            'tax_ids': [
-                Command.set(taxes.ids),
-            ],
-        })]
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 0.0,
+                    'tax_ids': [Command.set(taxes.ids)],
+                })
+            ]
+        )
 
         self.assertRecordValues(order.order_line, [{
             'price_tax': 0.3,
@@ -1016,14 +979,17 @@ class TestSalePrices(SaleCommon):
         """When adding a discount on a SO line, this test ensures that the untaxed amount to invoice is
         equal to the untaxed subtotal"""
         self.product.invoice_policy = 'delivery'
-        order = self.empty_order
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 38,
+                    'price_unit': 541.26,
+                    'discount': 2.00,
+                })
+            ]
+        )
 
-        order.order_line = [Command.create({
-            'product_id': self.product.id,
-            'product_uom_qty': 38,
-            'price_unit': 541.26,
-            'discount': 2.00,
-        })]
         order.action_confirm()
         line = order.order_line
         self.assertEqual(line.untaxed_amount_to_invoice, 0)
@@ -1053,14 +1019,16 @@ class TestSalePrices(SaleCommon):
     def test_discount_and_amount_undiscounted(self):
         """When adding a discount on a SO line, this test ensures that amount undiscounted is
         consistent with the used tax"""
-        order = self.empty_order
-
-        order.order_line = [Command.create({
-            'product_id': self.product.id,
-            'product_uom_qty': 1,
-            'price_unit': 100.0,
-            'discount': 1.00,
-        })]
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100.0,
+                    'discount': 1.00,
+                })
+            ]
+        )
         order.action_confirm()
         order_line = order.order_line
 
@@ -1104,14 +1072,16 @@ class TestSalePrices(SaleCommon):
     def test_product_quantity_rounding(self):
         """When adding a sale order line, product quantity should be rounded
         according to decimal precision"""
-        order = self.empty_order
-
         product_uom_qty = 0.333333
-        order.order_line = [Command.create({
-            'product_id': self.product.id,
-            'product_uom_qty': product_uom_qty,
-            'price_unit': 75.0,
-        })]
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': product_uom_qty,
+                    'price_unit': 75.0,
+                })
+            ]
+        )
         order.action_confirm()
         line = order.order_line
         quantity_precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -1205,7 +1175,6 @@ class TestSalePrices(SaleCommon):
 
     def test_combo_product_discount(self):
         """Ensure that pricelist discounts for combo products get applied to combo items"""
-        order = self.empty_order
 
         product_a = self._create_product(name="Beefy burger")
         product_b = self._create_product(name="Belgian fries")
@@ -1224,6 +1193,8 @@ class TestSalePrices(SaleCommon):
         )
 
         self._create_discount_pricelist_rule(product_tmpl_id=product_combo.product_tmpl_id.id)
+        order = self._create_so(order_line=[])
+
         combo_line = self.env['sale.order.line'].create({
             'order_id': order.id,
             'product_id': product_combo.id,
@@ -1277,20 +1248,16 @@ class TestSalePrices(SaleCommon):
             'taxes_id': [Command.set(tax_a.ids)]
         })
 
-        self.empty_order.write({
-            'order_line': [Command.create({
-                'product_id': self.product.id,
-            })],
-        })
+        order = self._create_so()
 
-        self.empty_order.write({'fiscal_position_id': fiscal_pos.id})
-        self.empty_order._recompute_taxes()
+        order.write({'fiscal_position_id': fiscal_pos.id})
+        order._recompute_taxes()
 
         self.assertEqual(
-            self.empty_order.order_line.price_unit, 106.0,
+            order.order_line.price_unit, 106.0,
             "Wrong unit price computed after tax mapping applied"
         )
         self.assertEqual(
-            self.empty_order.order_line.price_subtotal, 100.0,
+            order.order_line.price_subtotal, 100.0,
             "Wrong subtotal price computed after tax mapping applied"
         )

@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
-from odoo.exceptions import ValidationError
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoyaltyDelivery
 
@@ -220,7 +220,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         self.cart._try_apply_code("FREE")
         self.cart._apply_program_reward(program.reward_ids, program.coupon_ids)
 
-        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+        with self.mock_request(sale_order_id=self.cart.id):
             result = self.Controller.shop_set_delivery_method(self.normal_delivery2.id)
         self.assertEqual(result['delivery_discount_minor_amount'], -600)
 
@@ -245,7 +245,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         self.cart.set_delivery_line(self.normal_delivery, self.normal_delivery.fixed_price)
         self.cart._try_apply_code("FREE")
         self.cart._apply_program_reward(program.reward_ids, program.coupon_ids)
-        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+        with self.mock_request(sale_order_id=self.cart.id):
             payment_values = Cart()._get_express_shop_payment_values(self.cart)
 
         self.assertEqual(payment_values['minor_amount'], amount_without_delivery)

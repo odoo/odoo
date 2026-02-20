@@ -3,7 +3,7 @@
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -17,7 +17,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         existing_visitors = self.env['website.visitor'].search([])
         existing_tracks = self.env['website.track'].search([])
 
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             cookies = self.WebsiteSaleController.products_recently_viewed_update(self.product.id)
 
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -25,7 +25,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         self.assertEqual(len(new_visitors), 1, "A visitor should be created after visiting a tracked product")
         self.assertEqual(len(new_tracks), 1, "A track should be created after visiting a tracked product")
 
-        with MockRequest(self.env, website=self.website, cookies=cookies):
+        with self.mock_request(cookies=cookies):
             self.WebsiteSaleController.products_recently_viewed_update(self.product.id)
 
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -39,7 +39,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
             'list_price': 320.0,
         })
 
-        with MockRequest(self.env, website=self.website, cookies=cookies):
+        with self.mock_request(cookies=cookies):
             self.WebsiteSaleController.products_recently_viewed_update(product.id)
 
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -60,9 +60,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
             'website_published': True,
             'sale_ok': True,
         })
-
-        website = self.website.with_user(self.public_user)
-        with MockRequest(website.env, website=website):
+        with self.mock_request():
             snippet_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
 
@@ -72,7 +70,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         product.product_tmpl_id.company_id = new_company
         product.product_tmpl_id.flush_recordset(['company_id'])
 
-        with MockRequest(website.env, website=website):
+        with self.mock_request():
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
         res_products = [res_product['_record'] for res_product in res]
         self.assertNotIn(product, res_products)
@@ -102,9 +100,9 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         self.assertFalse(res)
 
         # AFTER VISITING THE PRODUCT
-        with MockRequest(self.website.env, website=self.website):
+        with self.mock_request():
             cookies = self.WebsiteSaleController.products_recently_viewed_update(product.id)
-        with MockRequest(self.website.env, website=self.website, cookies=cookies):
+        with self.mock_request(cookies=cookies):
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
         res_products = [res_product['_record'] for res_product in res]
         self.assertIn(product, res_products)
@@ -112,6 +110,6 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         # AFTER CHANGING PRODUCT COMPANY
         product.product_tmpl_id.company_id = new_company
         product.product_tmpl_id.flush_recordset(['company_id'])
-        with MockRequest(self.website.env, website=self.website, cookies=cookies):
+        with self.mock_request(cookies=cookies):
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
         self.assertFalse(res)

@@ -7,7 +7,7 @@ from odoo.tools import SQL
 from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
 )
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -111,7 +111,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             order_line=[Command.create({'product_id': self.pink_case_M.id})],
         )
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id
             )._get_products('latest_sold')
@@ -126,7 +126,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ],
         )
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id, limit=2
             )._get_products('latest_sold')
@@ -142,7 +142,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ],
         )
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, hide_variants=True, website_id=self.website.id
             )._get_products('latest_sold')
@@ -162,7 +162,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ],
         )
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id
             )._get_products('latest_sold')
@@ -176,7 +176,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         """
         viewed_products = self.black_case_M + self.pink_case_L + self.computer.product_variant_id
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_viewed_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request(user=self.env.user):
             visitor = self.env['website.visitor']._upsert_visitor(self.env.user.partner_id.id)
             self.env['website.track'].create([{
                 'visitor_id': visitor[0],
@@ -210,17 +210,15 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         """
         computer = self.computer.product_variant_id
         monitor = self.monitor.product_variant_id
-        self.empty_cart.write({
-            'website_id': self.website.id,
-            'order_line': [
+        self._create_so(
+            order_line=[
                 Command.create({'product_id': product_id})
                 for product_id in (computer + monitor + self.pink_case_L).ids
-            ],
-        })
-        self.empty_cart.action_confirm()
+            ]
+        ).action_confirm()
 
         dyn_filter = self.env.ref('website_sale.dynamic_filter_cross_selling_recently_sold_with')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=False,
@@ -250,7 +248,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When hiding variants, the filter should return 2 products: monitor & case.
         """
         dyn_filter = self.env.ref('website_sale.dynamic_filter_cross_selling_accessories')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=False,
@@ -278,7 +276,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When hiding variants, the filter should return 2 products: computer & Windows PC.
         """
         dyn_filter = self.env.ref('website_sale.dynamic_filter_cross_selling_alternative_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=False,
@@ -314,7 +312,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         })
 
         dyn_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             with_variants = dyn_filter._prepare_values(search_domain=[])
             self.assertEqual(
                 len(with_variants),

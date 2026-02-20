@@ -17,6 +17,8 @@ class TestProductPricelist(ProductCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.pricelist = cls._enable_pricelists()
+
         cls.category_5_id = cls.env['product.category'].create({
             'name': 'Office Furniture',
             'parent_id': cls.product_category.id

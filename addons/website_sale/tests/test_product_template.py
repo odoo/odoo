@@ -5,7 +5,7 @@ from datetime import datetime
 from odoo.fields import Command, Date
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -16,14 +16,13 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10})
         product = self._create_product(list_price=100, taxes_id=[Command.link(tax.id)])
 
-        env = self.env(user=self.public_user)
-        with MockRequest(env, website=self.website.with_env(env)):
+        with self.mock_request():
             configurator_price = self.env['product.template']._get_configurator_display_price(
                 product_or_template=product,
                 quantity=3,
                 date=datetime(2000, 1, 1),
                 currency=self.currency,
-                pricelist=self.pricelist,
+                pricelist=self.env['product.pricelist'],
             )
 
         self.assertEqual(configurator_price[0], 110)
@@ -46,16 +45,14 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 }),
             ],
         })
-        website = self.website
-        with MockRequest(website.env, website=website):
+        with self.mock_request():
             markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'ProductGroup')
         self.assertEqual(len(markup_data['hasVariant']), 2)
 
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env['product.template'].create({'name': 'Test product'})
-        website = self.website
-        with MockRequest(website.env, website=website):
+        with self.mock_request():
             markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'Product')
 
@@ -63,7 +60,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.env['res.config.settings'].create({
             'show_line_subtotals_tax_selection': 'tax_excluded'
         }).execute()
-        with MockRequest(self.website.env, website=self.website):
+        with self.mock_request():
             markup_data = self.product._to_markup_data(self.website)
             self.assertEqual(
                 markup_data['offers']['price'],
@@ -75,7 +72,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             'show_line_subtotals_tax_selection': 'tax_included'
         }).execute()
         self.product.price_extra = 10
-        with MockRequest(self.website.env, website=self.website):
+        with self.mock_request():
             product_tmpl = self.product.product_tmpl_id
             markup_data = self.product._to_markup_data(self.website)
             self.assertEqual(
@@ -91,7 +88,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.website.currency_id = self.env['res.currency'].with_context(active_test=False).search([
             ('name', '!=', company_currency.name)
         ], limit=1)
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             markup = self.product._to_markup_data(self.website)
         # Expected converted price
         expected_price = company_currency._convert(
@@ -121,7 +118,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.website.currency_id = self.env['res.currency'].with_context(active_test=False).search([
             ('name', '!=', company_currency.name)
         ], limit=1)
-        with MockRequest(self.env, website=self.website):
+        with self.mock_request():
             result = self.env['product.template']._get_additionnal_combination_info(
                 self.product, 1.0, self.product.uom_id, Date.from_string('2020-01-01'), self.website
             )

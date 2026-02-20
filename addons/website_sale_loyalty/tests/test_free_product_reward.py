@@ -4,7 +4,7 @@ from odoo import Command, http
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -20,7 +20,6 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         cls.WebsiteSaleController = WebsiteSale()
 
         cls.website = cls.website.with_user(cls.user_portal)
-        cls.empty_cart.partner_id = cls.partner_portal
 
         cls.sofa, cls.carpet = cls.env['product.product'].create([
             {
@@ -65,13 +64,13 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
     def test_add_product_to_cart_when_it_exist_as_free_product(self):
         # This test the flow when we claim a reward in the cart page and then we
         # want to add the product again
-        order = self.empty_cart
-        with MockRequest(self.website.env, website=self.website, sale_order_id=order.id):
+        with self.mock_request() as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.sofa.product_tmpl_id,
                 product_id=self.sofa.id,
                 quantity=1,
             )
+            order = request.cart
             self.WebsiteSaleController.claim_reward(self.program.reward_ids[0].id)
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.carpet.product_tmpl_id,
@@ -86,7 +85,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
             self.assertEqual(carpet_line.product_uom_qty, 1, "Should have only 1 qty for carpet as non reward")
 
     def test_get_claimable_free_shipping(self):
-        cart = self.empty_cart
+        cart = self._create_so(order_line=[])
         self.program.write({
             'program_type': 'next_order_coupons',
             'applies_on': 'future',
@@ -101,7 +100,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         })
         coupon = self.program.coupon_ids
 
-        with MockRequest(self.website.env, website=self.website, sale_order_id=cart.id):
+        with self.mock_request(sale_order_id=cart.id):
             self.assertDictEqual(cart._get_claimable_and_showable_rewards(), {
                 coupon: self.program.reward_ids,
             })

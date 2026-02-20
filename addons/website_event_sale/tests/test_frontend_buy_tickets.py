@@ -133,8 +133,6 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         """
         self.authenticate(None, None)
 
-        sale_order = self.empty_cart
-
         self.ticket_2.write({
             'name': "VIP",
             'event_id': self.event.id,
@@ -150,11 +148,15 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         self.assertEqual(self.event.seats_available, 3)
 
         # Add VIP ticket to cart & create draft registration
-        sale_order.order_line = [Command.create({
-            'product_id': self.ticket.product_id.id,
-            'event_id': self.event.id,
-            'event_ticket_id': self.ticket_2.id,
-        })]
+        sale_order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.ticket.product_id.id,
+                    'event_id': self.event.id,
+                    'event_ticket_id': self.ticket_2.id,
+                })
+            ]
+        )
         registration = self.env['event.registration'].create({
             'state': 'draft',
             'partner_id': sale_order.partner_id.id,

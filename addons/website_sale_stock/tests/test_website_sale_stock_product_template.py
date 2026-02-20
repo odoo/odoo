@@ -5,7 +5,6 @@ from datetime import datetime
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
@@ -32,13 +31,12 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
             'quantity': 10,
         })
 
-        env = self.env(user=self.public_user)
-        with MockRequest(env, website=self.website.with_env(env)):
+        with self.mock_request():
             configurator_data = self.env['product.template']._get_additional_configurator_data(
                 product_or_template=product,
                 date=datetime(2000, 1, 1),
                 currency=self.currency,
-                pricelist=self.pricelist,
+                pricelist=self.env['product.pricelist'],
             )
 
         self.assertEqual(configurator_data['free_qty'], 10)
@@ -71,7 +69,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         )
         self.cart.order_line = [Command.create({'product_id': product_a.id, 'product_uom_qty': 3})]
 
-        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id):
             combination_info = self.env['product.template'].with_context(
                 website_sale_product_page=True
             )._get_additionnal_combination_info(
@@ -91,7 +89,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         })
         combo_product = self._create_product(type='combo', combo_ids=[Command.link(combo.id)])
 
-        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id):
             combination_info = self.env['product.template'].with_context(
                 website_sale_product_page=True
             )._get_additionnal_combination_info(
@@ -110,7 +108,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
             9,
             self.warehouse.lot_stock_id.id,
         )
-        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id):
             combination_info = self.env['product.template'].with_context(
                 website_sale_product_page=True,
             )._get_additionnal_combination_info(

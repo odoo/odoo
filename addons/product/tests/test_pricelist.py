@@ -20,6 +20,7 @@ class TestPricelist(ProductVariantsCommon):
         cls.datacard = cls.env['product.product'].create({'name': 'Office Lamp'})
         cls.usb_adapter = cls.env['product.product'].create({'name': 'Office Chair'})
 
+        cls.pricelist = cls._enable_pricelists()
         cls.sale_pricelist_id, cls.pricelist_eu = cls.env['product.pricelist'].create([{
             'name': 'Sale pricelist',
             'item_ids': [

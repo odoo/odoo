@@ -7,11 +7,10 @@ from odoo.tests import Form, tagged
 from odoo.tools import float_compare
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
-from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestDeliveryCost(DeliveryCommon, SaleCommon):
+class TestDeliveryCost(DeliveryCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -294,7 +293,6 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
     def test_get_invalid_delivery_weight_lines(self):
         """Ensure we can retrieve lines that contain physical products without a weight value."""
-        order = self.empty_order
         weightless_product = self._create_product(weight=0.0, list_price=50.0)
         combos = self.env['product.combo'].create([{
                 'name': "Combo A",
@@ -305,10 +303,8 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             },
         ])
         combo_product = self._create_product(type='combo', combo_ids=combos.ids)
-        combo_line = self.env['sale.order.line'].create({
-            'order_id': order.id,
-            'product_id': combo_product.id,
-        })
+        order = self._create_so(order_line=[Command.create({'product_id': combo_product.id})])
+        combo_line = order.order_line
         order.order_line = [
             *[Command.create({
                 'product_id': product.id,
@@ -320,6 +316,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             Command.create({'display_type': 'line_section', 'name': "Misc."}),
             Command.create({'is_downpayment': True, 'price_unit': 5.0}),
         ]
+
         error_lines = order.order_line._get_invalid_delivery_weight_lines()
         self.assertIn(
             weightless_product, error_lines.product_id,

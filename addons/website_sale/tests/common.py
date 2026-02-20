@@ -11,7 +11,6 @@ from odoo.tools import lazy
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.http_routing.tests.common import MockRequest as websiteMockRequest
-from odoo.addons.product.tests.common import ProductCommon
 from odoo.addons.website_sale.models.website import (
     CART_SESSION_CACHE_KEY,
     FISCAL_POSITION_SESSION_CACHE_KEY,
@@ -48,8 +47,7 @@ def MockRequest(
         yield request
 
 
-class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
-    # Not based on SaleCommon as there is no need for SalesTeamCommon nor standard SaleCommon data
+class WebsiteSaleCommon(DeliveryCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -65,13 +63,11 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
         if 'enforce_cities' in cls.env['res.country']._fields:
             cls.env.company.country_id.enforce_cities = False
 
+        # Publish tests products
+        (cls.product + cls.service_product).website_published = True
+
         cls.public_user = cls.website.user_id
         cls.public_partner = cls.public_user.partner_id
-
-        cls.empty_cart = cls.env['sale.order'].create({
-            'partner_id': cls.partner.id,
-            'website_id': cls.website.id,
-        })
         cls.cart = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
             'website_id': cls.website.id,
@@ -87,13 +83,6 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
             ]
         })
 
-        # Publish tests products
-        (
-            cls.product
-            + cls.service_product
-        ).website_published = True
-        cls.pricelist.website_id = cls.website
-
         cls.country_be = cls.quick_ref('base.be')
         cls.country_us = cls.quick_ref('base.us')
         cls.country_us_state_id = cls.env['ir.model.data']._xmlid_to_res_id('base.state_us_39')
@@ -107,29 +96,30 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
             'email': 'admin@yourcompany.example.com',
         }
 
-    def _create_so(self, **values):
-        default_values = {
-            'partner_id': self.partner.id,
-            'website_id': self.website.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product.id,
-                }),
-            ],
-        }
-        return self.env['sale.order'].create(dict(default_values, **values))
+    @classmethod
+    def _create_pricelist(cls, **create_vals):
+        create_vals.setdefault('website_id', cls.website.id)
+        return super()._create_pricelist(**create_vals)
+
+    @classmethod
+    def _create_product(cls, **create_vals):
+        """Override of `product` to auto-publish test products by default."""
+        create_vals.setdefault('website_published', True)
+        return super()._create_product(**create_vals)
+
+    @classmethod
+    def _disable_taxes(cls):
+        return False
+
+    @classmethod
+    def _create_so(cls, **values):
+        values.setdefault('website_id', cls.website.id)
+        return super()._create_so(**values)
 
     @classmethod
     def _prepare_carrier(cls, product, website_published=True, **values):
         """Override of `delivery` to auto-publish test delivery methods."""
         return super()._prepare_carrier(product, website_published=website_published, **values)
-
-    @classmethod
-    def _create_product(cls, **kwargs):
-        """Override of `product` to auto-publish test products by default."""
-        if 'website_published' not in kwargs:
-            kwargs['website_published'] = True
-        return super()._create_product(**kwargs)
 
     @classmethod
     def _create_public_category(cls, list_vals):
@@ -156,3 +146,14 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
         Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
         f.seek(0)
         return base64.b64encode(f.read())
+
+    @contextmanager
+    def mock_request(self, website=None, user=None, **kwargs):
+        website = website or self.website
+        user = user or website.user_id
+
+        request_env = self.env(user=user)
+        website = website.with_env(request_env)
+
+        with MockRequest(request_env, website=website, **kwargs) as request:
+            yield request

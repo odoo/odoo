@@ -3,7 +3,7 @@
 from odoo import Command, http
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
@@ -85,10 +85,9 @@ class TestClaimReward(WebsiteSaleCommon):
 
     def test_claim_reward_with_multi_products(self):
         product1, product2 = self.product2, self.product2
-        order = self.empty_cart
-        order.order_line = [Command.create({'product_id': product1.id})]
+        order = self._create_so(order_line=[Command.create({'product_id': product1.id})])
         order._update_programs_and_rewards()
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id):
+        with self.mock_request(sale_order_id=order.id):
             self.WebsiteSaleController.claim_reward(
                 self.promo_program.reward_ids.id,
                 product_id=str(product2.id),
@@ -97,16 +96,14 @@ class TestClaimReward(WebsiteSaleCommon):
             self.assertEqual(order.order_line[1].product_id, product2, 'added reward line should should contain product 2')
 
     def test_apply_coupon_with_multiple_rewards_claim_discount(self):
-        cart = self.empty_cart
-        cart.update({
-            'partner_id': self.partner_portal.id,
-            'order_line': [Command.create({'product_id': self.product1.id})],
-        })
+        cart = self._create_so(
+            partner_id=self.partner_portal.id,
+            order_line=[Command.create({'product_id': self.product1.id})],
+        )
         cart._update_programs_and_rewards()
-        website = cart.website_id.with_user(self.user_portal)
         discount_reward = self.coupon_program.reward_ids.filtered('discount')
 
-        with MockRequest(website.env, website=website, sale_order_id=cart.id):
+        with self.mock_request(user=self.user_portal, sale_order_id=cart.id):
             self.WebsiteSaleController.pricelist(promo=self.coupon.code)
             self.assertFalse(cart.order_line.reward_id)
 
@@ -123,16 +120,14 @@ class TestClaimReward(WebsiteSaleCommon):
             )
 
     def test_apply_coupon_with_multiple_rewards_claim_multiproduct(self):
-        cart = self.empty_cart
-        cart.update({
-            'partner_id': self.partner_portal.id,
-            'order_line': [Command.create({'product_id': self.product1.id})],
-        })
+        cart = self._create_so(
+            partner_id=self.partner_portal.id,
+            order_line=[Command.create({'product_id': self.product1.id})],
+        )
         cart._update_programs_and_rewards()
-        website = cart.website_id.with_user(self.user_portal)
         multiproduct_reward = self.coupon_program.reward_ids.filtered('reward_product_tag_id')
 
-        with MockRequest(website.env, website=website, sale_order_id=cart.id):
+        with self.mock_request(user=self.user_portal, sale_order_id=cart.id):
             self.WebsiteSaleController.pricelist(promo=self.coupon.code)
             self.assertFalse(cart.order_line.reward_id)
 

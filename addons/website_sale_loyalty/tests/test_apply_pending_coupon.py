@@ -4,7 +4,7 @@ from odoo import http
 from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -40,6 +40,8 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
         for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
+        cls.largeCabinet.website_published = True
+
     def setUp(self):
         super().setUp()
 
@@ -47,15 +49,15 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
         self.WebsiteSaleCartController = Cart()
 
     def test_01_activate_coupon_with_existing_program(self):
-        order = self.empty_cart
         self.env['product.pricelist.item'].search([]).unlink()
 
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+        with self.mock_request() as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.largeCabinet.product_tmpl_id,
                 product_id=self.largeCabinet.id,
                 quantity=2,
             )
+            order = request.cart
             self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
             self.assertEqual(
                 order.amount_total,
@@ -86,15 +88,15 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             )
 
     def test_02_pending_coupon_with_existing_program(self):
-        order = self.empty_cart
         self.env['product.pricelist.item'].search([]).unlink()
 
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+        with self.mock_request() as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.largeCabinet.product_tmpl_id,
                 product_id=self.largeCabinet.id,
                 quantity=1,
             )
+            order = request.cart
             self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
             self.assertEqual(self.largeCabinet.lst_price, 320)
             cabinet_sol = order.order_line.filtered(lambda sol: sol.product_id == self.largeCabinet)
