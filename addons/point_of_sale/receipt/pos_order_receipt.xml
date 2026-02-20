@@ -127,7 +127,7 @@
             </div>
             <div class="w-100 text-center" t-if="partner" name="partner_info">
                 <div t-out="partner['name']" />
-                <div t-if="partner['pos_contact_address']" t-out="partner['pos_contact_address']" />
+                <div t-if="partner['address']" t-out="partner['address']" />
                 <div t-if="partner['vat']">
                     <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
                 </div>

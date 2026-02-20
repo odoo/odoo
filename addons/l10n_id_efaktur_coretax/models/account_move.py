@@ -384,7 +384,7 @@ class AccountMove(models.Model):
             "BuyerCountry": COUNTRY_CODE_MAP.get(partner.country_id.code),
             "BuyerDocumentNumber": partner.l10n_id_buyer_document_number if partner.l10n_id_buyer_document_type != "TIN" else "",
             "BuyerName": self.partner_id.name,
-            "BuyerAdress": self.partner_id.contact_address.replace('\n', ' ').strip(),
+            "BuyerAdress": self.partner_id._display_address(separator=' '),
             "BuyerEmail": partner.email or "",
             "BuyerIDTKU": partner.vat + (partner.l10n_id_tku or '000000'),
         })

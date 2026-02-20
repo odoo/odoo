@@ -26,17 +26,10 @@ class ResPartner(models.Model):
     vat = fields.Char(tracking=5)
     # tracked field used for chatter logging purposes
     # we need this to be readable inline as tracking messages use inline HTML nodes
-    contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
+    contact_address_inline = fields.Char(tracking=True)
     # sudo: res.partner - can access presence of accessible partner
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
-
-    @api.depends('contact_address')
-    def _compute_contact_address_inline(self):
-        """Compute an inline-friendly address based on contact_address."""
-        for partner in self:
-            # replace any successive \n with a single comma
-            partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
 
     @api.depends("user_ids.manual_im_status", "user_ids.presence_ids.status")
     def _compute_im_status(self):

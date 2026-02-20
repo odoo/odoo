@@ -415,7 +415,7 @@ class AccountMove(models.Model):
         if not self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id:
             errors.append(self.env._("Please fill in the ECpay API information in the Setting!"))
 
-        if (self.l10n_tw_edi_is_print or self.partner_id.vat) and not self.partner_id.contact_address:
+        if (self.l10n_tw_edi_is_print or self.partner_id.vat) and not self.partner_id.address_inline:
             errors.append(self.env._("Please fill in the customer address for printing Ecpay invoice."))
 
         if not self.partner_id.email and not self.partner_id.phone:
@@ -575,7 +575,7 @@ class AccountMove(models.Model):
             "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
             "RelateNumber": self.l10n_tw_edi_related_number,
             "CustomerIdentifier": self.partner_id.vat if self.l10n_tw_edi_is_b2b and self.partner_id.vat else "",
-            "CustomerAddr": self.partner_id._l10n_tw_edi_formatted_address(),
+            "CustomerAddr": self.partner_id.address_inline,
             "CustomerEmail": self.partner_id.email or "",
             "CustomerPhone": formatted_phone,
             "InvType": self.l10n_tw_edi_invoice_type,
@@ -672,8 +672,8 @@ class AccountMove(models.Model):
             "EmailAddress": self.partner_id.commercial_partner_id.email,
         }
 
-        if partner := self.partner_id.commercial_partner_id:
-            buyer_json_data["Address"] = partner._l10n_tw_edi_formatted_address()
+        if address := self.partner_id.commercial_partner_id.address_inline:
+            buyer_json_data["Address"] = address
         if number := self.partner_id.commercial_partner_id.phone:
             buyer_json_data["TelephoneNumber"] = self._reformat_phone_number(number)
 

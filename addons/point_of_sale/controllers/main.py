@@ -258,7 +258,7 @@ class PosController(PortalAccount):
             if not partner.country_id or not partner.street:
                 form_values['partner_address'] = False
             else:
-                form_values['partner_address'] = partner._display_address()
+                form_values['partner_address'] = partner.contact_address
 
         return request.render("point_of_sale.ticket_validation_screen", {
             **self._prepare_address_form_values(partner, **kwargs),

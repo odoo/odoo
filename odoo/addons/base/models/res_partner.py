@@ -260,6 +260,7 @@ class ResPartner(models.Model):
     state_id: ResCountryState = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id: ResCountry = fields.Many2one('res.country', string='Country', ondelete='restrict')
     country_code = fields.Char(related='country_id.code', string="Country Code")
+    country_name = fields.Char(string="Country Name", compute='_compute_country_name')  # for snailmail
     partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
     email = fields.Char()
@@ -285,7 +286,10 @@ class ResPartner(models.Model):
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
-    contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
+    contact_address = fields.Char(compute='_compute_address', string="Complete Address")
+    address = fields.Char(compute='_compute_address', string="Address (without name)")
+    contact_address_inline = fields.Char(compute='_compute_address', string="Complete Address inline")
+    address_inline = fields.Char(compute='_compute_address', string="Address inline (without name)")
 
     # technical field used for managing commercial fields
     commercial_partner_id: ResPartner = fields.Many2one(
@@ -483,10 +487,14 @@ class ResPartner(models.Model):
             else:
                 partner.type_address_label = _('Address')
 
+    @api.depends_context('lang')
     @api.depends(lambda self: self._display_address_depends())
-    def _compute_contact_address(self):
+    def _compute_address(self):
         for partner in self:
             partner.contact_address = partner._display_address()
+            partner.address = partner._display_address(without_name=True)
+            partner.contact_address_inline = partner._display_address(separator=', ')
+            partner.address_inline = partner._display_address(without_name=True, separator=', ')
 
     def _compute_get_ids(self):
         for partner in self:
@@ -517,6 +525,12 @@ class ResPartner(models.Model):
 
     def _compute_company_registry_placeholder(self):
         self.company_registry_placeholder = False
+
+    @api.depends_context('lang')
+    @api.depends('country_id')
+    def _compute_country_name(self):
+        for partner in self:
+            partner.country_name = partner.country_id.name or ''
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -1035,7 +1049,7 @@ class ResPartner(models.Model):
                 if partner.env.context.get('show_email') and partner.email:
                     name = f"{name} <{partner.email}>"
                 if partner.env.context.get('show_address'):
-                    name = name + "\n" + partner._display_address(without_company=True)
+                    name = name + "\n" + partner.address
 
                 if partner.env.context.get('show_vat') and partner.vat:
                     if partner.env.context.get('show_address'):
@@ -1148,11 +1162,11 @@ class ResPartner(models.Model):
     def _get_default_address_format(self):
         return "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
 
-    @api.model
     def _get_address_format(self):
+        self.ensure_one()
         return self.country_id.address_format or self._get_default_address_format()
 
-    def _prepare_display_address(self, without_company=False):
+    def _prepare_display_address(self, without_name=False):
         # get the information that will be injected into the display format
         # get the address format
         address_format = self._get_address_format()
@@ -1160,29 +1174,31 @@ class ResPartner(models.Model):
             'state_code': self.state_id.code or '',
             'state_name': self.state_id.name or '',
             'country_code': self.country_id.code or '',
-            'country_name': self._get_country_name(),
+            'country_name': self.country_name,
             'parent_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
             args[field] = self[field] or ''
-        if without_company:
+        if without_name:
             args['parent_name'] = ''
         elif self.parent_id:
             address_format = '%(parent_name)s\n' + address_format
         return address_format, args
 
-    def _display_address(self, without_company=False):
+    def _display_address(self, without_name=False, separator='\n'):
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
 
-        :param without_company: if address contains company
+        :param without_name: if address contains name
         :returns: the address formatted in a display that fit its country habits (or the default ones
             if not country is specified)
         :rtype: string
         '''
-        address_format, args = self._prepare_display_address(without_company)
-        return address_format % args
+        address_format, args = self._prepare_display_address(without_name)
+        address = address_format % args
+        address = re.sub(r' {2,}', ' ', address)  # Remove extra space
+        return separator.join(val for line in address.splitlines() if (val := line.strip()))
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
@@ -1216,9 +1232,6 @@ class ResPartner(models.Model):
                                     ('country_id', '=', country_id)]
                     state = States.search(state_domain, limit=1)
                     vals['state_id'] = state.id  # replace state or remove it if not found
-
-    def _get_country_name(self):
-        return self.country_id.name or ''
 
     def _get_all_addr(self):
         self.ensure_one()
