@@ -3,22 +3,19 @@
 import json
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests.common import new_test_user
 
 
 class TestGuestFeature(WebsocketCase, MailCommon):
     def test_mark_as_read_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
-        partner = self.env["res.partner"].create({"name": "John"})
-        channel = self.env["discuss.channel"]._create_channel(
-            group_id=None, name="General"
-        )
-        channel._add_members(guests=guest, partners=partner)
+        john = new_test_user(self.env, "John")
+        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="General")
+        channel._add_members(guests=guest, users=john)
         channel.message_post(
             body="Hello World!", message_type="comment", subtype_xmlid="mail.mt_comment"
         )
-        guest_member = channel.channel_member_ids.filtered(
-            lambda m: m.guest_id == guest
-        )
+        guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
         self.assertEqual(guest_member.seen_message_id, self.env["mail.message"])
         self.make_jsonrpc_request(
             "/discuss/channel/mark_as_read",

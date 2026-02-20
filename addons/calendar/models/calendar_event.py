@@ -806,7 +806,7 @@ class CalendarEvent(models.Model):
                         new_partner_ids.append(command[1])
                     elif command[0] == Command.SET:
                         new_partner_ids.extend(command[2])
-                self.videocall_channel_id.add_members(new_partner_ids)
+                self.videocall_channel_id.add_members(partner_ids=new_partner_ids)
 
         time_fields = self.env['calendar.event']._get_time_fields()
         if any([values.get(key) for key in time_fields]):
@@ -1084,11 +1084,18 @@ class CalendarEvent(models.Model):
             if event_with_channel:
                 self.videocall_channel_id = event_with_channel.videocall_channel_id
                 return
-        self.videocall_channel_id = self._create_videocall_channel_id(self.name, self.partner_ids.ids)
+        self.videocall_channel_id = self._create_videocall_channel_id(
+            self.name,
+            self.partner_ids.user_ids,
+        )
         self.videocall_channel_id.channel_change_description(self.recurrence_id.name if self.recurrency else self.display_time)
 
-    def _create_videocall_channel_id(self, name, partner_ids):
-        videocall_channel = self.env['discuss.channel']._create_group(partner_ids, default_display_mode='video_full_screen', name=name)
+    def _create_videocall_channel_id(self, name, users):
+        videocall_channel = self.env["discuss.channel"]._create_group(
+            users,
+            default_display_mode="video_full_screen",
+            name=name,
+        )
         # if recurrent event, set channel to all other records of the same recurrency
         if self.recurrency:
             recurrent_events_without_channel = self.env['calendar.event'].search([

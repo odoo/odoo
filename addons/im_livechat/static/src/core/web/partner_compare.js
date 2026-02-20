@@ -2,9 +2,14 @@ import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 
 partnerCompareRegistry.add(
     "im_livechat.available",
-    (p1, p2, { thread }) => {
-        if (thread?.channel?.channel_type === "livechat" && p1.is_available !== p2.is_available) {
-            return p1.is_available ? -1 : 1;
+    (p1, p2, { thread, u1, u2 }) => {
+        if (
+            u1 &&
+            u2 &&
+            thread?.channel?.channel_type === "livechat" &&
+            u1.is_available !== u2.is_available
+        ) {
+            return u1.is_available ? -1 : 1;
         }
     },
     { sequence: 15 }
@@ -12,12 +17,14 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "im_livechat.invite-count",
-    (p1, p2, { thread }) => {
+    (p1, p2, { thread, u1, u2 }) => {
         if (
+            u1 &&
+            u2 &&
             thread?.channel?.channel_type === "livechat" &&
-            p1.invite_by_self_count !== p2.invite_by_self_count
+            u1.invite_by_self_count !== u2.invite_by_self_count
         ) {
-            return p2.invite_by_self_count - p1.invite_by_self_count;
+            return u2.invite_by_self_count - u1.invite_by_self_count;
         }
     },
     { sequence: 20 }

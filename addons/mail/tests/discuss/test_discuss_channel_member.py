@@ -57,10 +57,10 @@ class TestDiscussChannelMember(MailCommon):
 
     def test_group_subchannel_join(self):
         """Test join subchannel."""
-        self.group.add_members((self.user_1 | self.user_2).partner_id.ids)
+        self.group._add_members(users=self.user_1 + self.user_2)
         group_subchannel = self.group.with_user(self.user_1)._create_sub_channel()
-        group_subchannel.with_user(self.user_2).add_members(self.user_2.partner_id.id)
-        self.assertEqual(group_subchannel.channel_member_ids.partner_id, (self.user_1 | self.user_2).partner_id)
+        group_subchannel.with_user(self.user_2)._add_members(users=self.user_2)
+        self.assertEqual(group_subchannel.channel_member_ids.partner_id, (self.user_1 + self.user_2).partner_id)
 
     # ------------------------------------------------------------
     # PUBLIC CHANNELS

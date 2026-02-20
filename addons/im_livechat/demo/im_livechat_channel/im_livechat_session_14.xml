@@ -74,7 +74,7 @@
         </record>
         <function model="discuss.channel" name="_add_members">
             <value eval="[ref('im_livechat.livechat_channel_session_14')]"/>
-            <value name="partners" model="res.partner" eval="obj().env['res.partner'].browse(ref('base.partner_demo'))"/>
+            <value name="users" model="res.users" eval="obj().env['res.users'].browse(ref('base.user_demo'))"/>
             <value name="inviting_partner" model="res.partner" eval="obj().env['res.partner'].browse(ref('base.partner_admin'))"/>
         </function>
         <record id="livechat_channel_session_14_message_3" model="mail.message">

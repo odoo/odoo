@@ -29,14 +29,14 @@ const storeServicePatch = {
     /**
      * @param {Object} param0
      * @param {string} param0.default_display_mode
-     * @param {number[]} param0.partners_to
      * @param {string} param0.name
+     * @param {number[]} param0.user_ids
      * @returns {Promise<import("models").DiscussChannel>}
      */
-    async createGroupChat({ default_display_mode, partners_to, name }) {
+    async createGroupChat({ default_display_mode, name, user_ids }) {
         const { channel } = await this.fetchStoreData(
             "/discuss/create_group",
-            { default_display_mode, partners_to, name },
+            { default_display_mode, name, user_ids },
             { readonly: false, requestData: true }
         );
         channel.open({ focus: true });
@@ -74,20 +74,18 @@ const storeServicePatch = {
     sortMembers(m1, m2) {
         return m1.name?.localeCompare(m2.name) || m1.id - m2.id;
     },
-    /** @param {number[]} partnerIds */
-    async startChat(partnerIds) {
-        const partners_to = [...new Set([this.self.id, ...partnerIds])];
-        if (partners_to.length === 1) {
-            const chat = await this.joinChat(partners_to[0], true);
+    /** @param {number[]} user_ids */
+    async startChat(user_ids) {
+        user_ids = [...new Set([this.self.id, ...user_ids])];
+        if (user_ids.length === 1) {
+            const chat = await this.joinChat(user_ids[0], true);
             chat.open({ focus: true, bypassCompact: true });
-        } else if (partners_to.length === 2) {
-            const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self_user?.partner_id?.id
-            );
-            const chat = await this.joinChat(correspondentId, true);
+        } else if (user_ids.length === 2) {
+            const user_id = user_ids.find((user_id) => user_id !== this.store.self_user?.id);
+            const chat = await this.joinChat(user_id, true);
             chat.open({ focus: true, bypassCompact: true });
         } else {
-            await this.createGroupChat({ partners_to });
+            await this.createGroupChat({ user_ids });
         }
     },
 };

@@ -137,13 +137,12 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 self.chatbot_script.operator_partner_id,
             )
             discuss_channel._add_members(users=self.env.user)
-            self_member = discuss_channel.channel_member_ids.filtered(lambda m: m.is_self)
             bot_member = discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.chatbot_script.operator_partner_id
             )
             guest_member = discuss_channel.channel_member_ids.filtered(lambda m: bool(m.guest_id))
             self.env["mail.presence"]._update_presence(guest_member.guest_id)
-            self_member._rtc_join_call()
+            discuss_channel.self_member_id._rtc_join_call()
             self.assertTrue(guest_member.rtc_inviting_session_id)
             self.assertFalse(bot_member.rtc_inviting_session_id)
 

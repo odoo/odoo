@@ -236,12 +236,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         )
         self.channel_channel_group_2._add_members(users=self.users[0] | self.users[2] | self.users[6] | self.users[7] | self.users[13])
         # create chats
-        self.channel_chat_1 = Channel._get_or_create_chat((self.users[0] + self.users[14]).partner_id.ids)
-        self.channel_chat_2 = Channel._get_or_create_chat((self.users[0] + self.users[15]).partner_id.ids)
-        self.channel_chat_3 = Channel._get_or_create_chat((self.users[0] + self.users[2]).partner_id.ids)
-        self.channel_chat_4 = Channel._get_or_create_chat((self.users[0] + self.users[3]).partner_id.ids)
+        self.channel_chat_1 = Channel._get_or_create_chat(self.users[0] + self.users[14])
+        self.channel_chat_2 = Channel._get_or_create_chat(self.users[0] + self.users[15])
+        self.channel_chat_3 = Channel._get_or_create_chat(self.users[0] + self.users[2])
+        self.channel_chat_4 = Channel._get_or_create_chat(self.users[0] + self.users[3])
         # create groups
-        self.channel_group_1 = Channel._create_group((self.users[0] + self.users[12]).partner_id.ids)
+        self.channel_group_1 = Channel._create_group(self.users[0] + self.users[12])
         # create livechats
         self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['mail.presence']._update_presence(self.users[0])
@@ -1264,6 +1264,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {"id": self.im_livechat_channel.id, "name": "support"}
 
     def _expected_result_for_livechat_member_history(self, channel):
+        members = channel.channel_member_ids
+        member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
+        member_1 = members.filtered(lambda m: m.partner_id == self.users[1].partner_id)
+        member_g = members.filtered(lambda m: m.guest_id)
         histories = channel.livechat_channel_member_history_ids
         if channel == self.channel_livechat_1:
             return [
@@ -1272,18 +1276,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
                     "livechat_member_type": "agent",
                     "partner_id": self.users[0].partner_id.id,
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.partner_id == self.users[0].partner_id
-                    ).id,
+                    "member_id": member_0.id,
                 },
                 {
                     "channel_id": channel.id,
                     "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
                     "livechat_member_type": "visitor",
                     "partner_id": self.users[1].partner_id.id,
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.partner_id == self.users[1].partner_id
-                    ).id,
+                    "member_id": member_1.id,
                 },
             ]
         if channel == self.channel_livechat_2:
@@ -1293,18 +1293,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
                     "livechat_member_type": "agent",
                     "partner_id": self.users[0].partner_id.id,
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.partner_id == self.users[0].partner_id
-                    ).id,
+                    "member_id": member_0.id,
                 },
                 {
                     "channel_id": channel.id,
                     "guest_id": self.guest.id,
                     "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
                     "livechat_member_type": "visitor",
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.guest_id == self.guest
-                    ).id,
+                    "member_id": member_g.id,
                 },
             ]
         return []

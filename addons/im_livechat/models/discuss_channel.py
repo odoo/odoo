@@ -523,10 +523,9 @@ class DiscussChannel(models.Model):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
         if not self.livechat_end_dt:
-            member = self.channel_member_ids.filtered(lambda m: m.is_self)
-            if member:
+            if self.self_member_id:
                 # sudo: discuss.channel.rtc.session - member of current user can leave call
-                member.sudo()._rtc_leave_call()
+                self.self_member_id.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_end_dt = fields.Datetime.now()
             # avoid useless notification if the channel is empty
@@ -729,26 +728,8 @@ class DiscussChannel(models.Model):
             subtype_xmlid='mail.mt_comment',
         )
 
-    def _add_members(
-        self,
-        *,
-        guests=None,
-        partners=None,
-        users=None,
-        create_member_params=None,
-        invite_to_rtc_call=False,
-        post_joined_message=True,
-        inviting_partner=None,
-    ):
-        all_new_members = super()._add_members(
-            guests=guests,
-            partners=partners,
-            users=users,
-            create_member_params=create_member_params,
-            invite_to_rtc_call=invite_to_rtc_call,
-            post_joined_message=post_joined_message,
-            inviting_partner=inviting_partner,
-        )
+    def _add_members(self, **kwargs):
+        all_new_members = super()._add_members(**kwargs)
         for channel in all_new_members.channel_id:
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
             if channel.sudo().livechat_status == "need_help":
@@ -922,7 +903,7 @@ class DiscussChannel(models.Model):
             if chatbot_script_step.operator_expertise_ids:
                 create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
                 channel_sudo.livechat_expertise_ids |= chatbot_script_step.operator_expertise_ids
-            channel_sudo._add_new_members_to_channel(
+            channel_sudo._add_members(
                 create_member_params=create_member_params,
                 inviting_partner=bot_partner_id,
                 users=human_operator,
@@ -935,7 +916,7 @@ class DiscussChannel(models.Model):
                 operator_name=human_operator.livechat_username if human_operator.livechat_username else human_operator.name,
             )
             channel_sudo._add_next_step_message_to_store(chatbot_script_step)
-            channel_sudo._broadcast(human_operator.partner_id.ids)
+            channel_sudo._broadcast(human_operator)
             self.self_member_id.last_interest_dt = fields.Datetime.now()
         else:
             # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
@@ -960,17 +941,6 @@ class DiscussChannel(models.Model):
         if chatbot_script_step and chatbot_script_step.message:
             posted_message = self._chatbot_post_message(chatbot_script_step.chatbot_script_id, chatbot_script_step.message)
         return posted_message
-
-    def _add_new_members_to_channel(self, create_member_params, inviting_partner, users=None, partners=None):
-        member_params = {
-            'create_member_params': create_member_params,
-            'inviting_partner': inviting_partner
-        }
-        if users:
-            member_params['users'] = users
-        if partners:
-            member_params['partners'] = partners
-        self._add_members(**member_params)
 
     def _update_forwarded_channel_data(self, /, *, livechat_failure, operator_name):
         self.write(

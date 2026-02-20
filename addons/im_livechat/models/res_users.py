@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import fields, models, api
 from odoo.addons.mail.tools.discuss import Store
 from odoo.fields import Command
+from odoo.tools.misc import OrderedSet
 
 
 class ResUsers(models.Model):
@@ -148,6 +151,45 @@ class ResUsers(models.Model):
                     .write({"user_ids": [Command.unlink(operator.id) for operator in lost_operators]})
                 return result
         return super().write(vals)
+
+    def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
+        super()._store_channel_invite_fields(res, channel=channel)
+        if channel.channel_type != "livechat" or not self:
+            return
+        lang_name_by_code = dict(self.env["res.lang"].get_installed())
+        invite_by_self_count_by_partner = defaultdict(
+            int,
+            self.env["discuss.channel.member"]._read_group(
+                [["create_uid", "=", self.env.user.id], ["partner_id", "in", self.partner_id.ids]],
+                groupby=["partner_id"],
+                aggregates=["__count"],
+            ),
+        )
+        active_livechat_users = (
+            self.env["im_livechat.channel"].search([]).available_operator_ids
+        )
+        languages_by_user = {
+            user: list(
+                OrderedSet(
+                    [
+                        lang_name_by_code[user.lang],
+                        # sudo: res.users.settings - agent can access other agents languages
+                        *user.sudo().livechat_lang_ids.mapped("name"),
+                    ],
+                ),
+            )
+            for user in self
+        }
+        res.attr("invite_by_self_count", lambda u: invite_by_self_count_by_partner[u.partner_id])
+        res.attr("is_available", lambda u: u in active_livechat_users)
+        res.attr("lang_name", lambda u: languages_by_user[u][0])
+        res.many("livechat_expertise_ids", ["name"])
+        res.attr("livechat_languages", lambda u: languages_by_user[u][1:])
+        # sudo: res.users.settings - agent can access other agents livechat usernames
+        res.attr("livechat_username", sudo=True)
+        # sudo - res.users: checking if agent is in call for live
+        # chat invitation is acceptable.
+        res.attr("is_in_call", sudo=True)
 
     def _store_init_global_fields(self, res: Store.FieldList):
         super()._store_init_global_fields(res)

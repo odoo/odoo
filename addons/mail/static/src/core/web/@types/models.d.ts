@@ -19,13 +19,10 @@ declare module "models" {
         activityGroups: Object[];
         computeGlobalCounter: () => number;
         globalCounter: number;
-        history: Thread;
-        inbox: Thread;
         onLinkFollowed: (fromThread: Thread) => void;
         onUpdateActivityGroups: () => void;
-        scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
-        bookmarkBox: Thread;
         removeAllBookmarks: () => Promise<void>;
+        scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
         updateAppBadge: () => void;
     }
     export interface Thread {

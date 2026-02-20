@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools.misc import OrderedSet
 from odoo.fields import Domain
 
 class ResPartner(models.Model):
@@ -16,45 +14,6 @@ class ResPartner(models.Model):
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
     chatbot_script_ids = fields.One2many("chatbot.script", "operator_partner_id")
     livechat_channel_count = fields.Integer(compute='_compute_livechat_channel_count')
-
-    def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
-        super()._store_channel_invite_fields(res, channel=channel)
-        if channel.channel_type != "livechat" or not self:
-            return
-        lang_name_by_code = dict(self.env["res.lang"].get_installed())
-        invite_by_self_count_by_partner = defaultdict(
-            int,
-            self.env["discuss.channel.member"]._read_group(
-                [["create_uid", "=", self.env.user.id], ["partner_id", "in", self.ids]],
-                groupby=["partner_id"],
-                aggregates=["__count"],
-            ),
-        )
-        active_livechat_partners = (
-            self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
-        )
-        languages_by_partner = {
-            partner: list(
-                OrderedSet(
-                    [
-                        lang_name_by_code[partner.lang],
-                        # sudo: res.users.settings - operator can access other operators languages
-                        *partner.user_ids.sudo().livechat_lang_ids.mapped("name"),
-                    ],
-                ),
-            )
-            for partner in self
-        }
-        res.attr("invite_by_self_count", lambda p: invite_by_self_count_by_partner[p])
-        res.attr("is_available", lambda p: p in active_livechat_partners)
-        res.attr("lang_name", lambda p: languages_by_partner[p][0])
-        res.attr("livechat_languages", lambda p: languages_by_partner[p][1:])
-        # sudo: res.users.settings - operator can access other operators livechat usernames
-        res.attr("user_livechat_username", sudo=True)
-        # sudo - res.partner: checking if operator is in call for live
-        # chat invitation is acceptable.
-        res.attr("is_in_call", sudo=True)
-        res.one("main_user_id", lambda res: res.many("livechat_expertise_ids", ["name"]))
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):

@@ -1922,10 +1922,9 @@ test("Channel is added to discuss after invitation", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('my channel')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
-    const adminPartnerId = serverState.partnerId;
     withUser(userId, () =>
         getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [adminPartnerId],
+            user_ids: [serverState.userId],
         })
     );
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");

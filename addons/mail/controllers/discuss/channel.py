@@ -83,9 +83,12 @@ class DiscussChannelWebclientController(WebclientController):
                 member.unpin_dt = False if params["pinned"] else fields.Datetime.now()
             self._add_has_unpinned_channels_to_store(store)
         if name == "/discuss/get_or_create_chat":
-            resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
-                params["partners_to"],
-            )
+            users = (
+                request.env["res.users"]
+                .with_context(active_test=False)
+                .search([("id", "=", params["user_id"])])
+            ) | request.env.user
+            resolve_channel = request.env["discuss.channel"]._get_or_create_chat(users)
         if name == "/discuss/create_channel":
             resolve_channel = request.env["discuss.channel"]._create_channel(
                 params["name"],
@@ -93,10 +96,15 @@ class DiscussChannelWebclientController(WebclientController):
                 params["is_readonly"],
             )
         if name == "/discuss/create_group":
+            users = (
+                request.env["res.users"]
+                .with_context(active_test=False)
+                .search([("id", "in", params["user_ids"])])
+            ) | request.env.user
             resolve_channel = request.env["discuss.channel"]._create_group(
-                params["partners_to"],
-                params.get("default_display_mode", False),
-                params.get("name", ""),
+                users,
+                default_display_mode=params.get("default_display_mode", False),
+                name=params.get("name", ""),
             )
         if resolve_channel:
             store.resolve_data_request(

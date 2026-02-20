@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 imStatusDataRegistry.add(
     "hr-holidays",
     {
-        condition: ({ persona }) => Boolean(persona.main_user_id?.employee_id?.leave_date_to),
+        condition: ({ user }) => Boolean(user?.employee_id?.leave_date_to),
         icon: "fa fa-plane",
         title: {
             online: _t("User is on leave and online"),

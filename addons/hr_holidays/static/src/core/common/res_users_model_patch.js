@@ -4,10 +4,10 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").ResUsers} */
 const resUsersPatch = {
-    setup() {
-        super.setup(...arguments);
-        /** @type {string} */
-        this.leave_date_to = undefined;
+    /** @returns {string} */
+    get outOfOfficeDateEndText() {
+        const employee = this.employee_id || this.partner_id?.employee_id;
+        return employee?.outOfOfficeDateEndText ?? "";
     },
 };
 patch(ResUsers.prototype, resUsersPatch);

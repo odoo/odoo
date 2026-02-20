@@ -9,8 +9,8 @@
                             t-attf-src="/web/image/{{props.model}}/{{props.id}}/avatar_128"
                             class="rounded"
                         />
-                        <span t-if="partner?.im_status and partner.im_status !== 'im_partner'" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
-                            <ImStatus persona="partner" />
+                        <span t-if="this.user?.im_status and this.user.im_status !== 'im_partner'" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
+                            <ImStatus user="user" />
                         </span>
                     </span>
                     <div class="d-flex flex-column o_card_user_infos overflow-hidden">

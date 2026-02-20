@@ -631,10 +631,17 @@ class DiscussChannel(models.Model):
         member.unlink()
 
     def add_members(
-        self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True
+        self,
+        *,
+        user_ids=None,
+        partner_ids=None,  # deprecated, use user_ids instead
+        guest_ids=None,
+        invite_to_rtc_call=False,
+        post_joined_message=True,
     ):
-        """ Adds the given partner_ids and guest_ids as member of self channels. """
+        """Adds the given user_ids and guest_ids as member of self channels."""
         return self._add_members(
+            users=self.env["res.users"].browse(user_ids or []).exists(),
             partners=self.env["res.partner"].browse(partner_ids or []).exists(),
             guests=self.env["mail.guest"].browse(guest_ids or []).exists(),
             invite_to_rtc_call=invite_to_rtc_call,
@@ -645,7 +652,7 @@ class DiscussChannel(models.Model):
         self,
         *,
         guests=None,
-        partners=None,
+        partners=None,  # deprecated, use users instead
         users=None,
         create_member_params=None,
         invite_to_rtc_call=False,
@@ -1153,16 +1160,15 @@ class DiscussChannel(models.Model):
     # ------------------------------------------------------------
 
     # Anonymous method
-    def _broadcast(self, partner_ids):
-        """ Broadcast the current channel header to the given partner ids
-            :param partner_ids : the partner to notify
+    def _broadcast(self, users):
+        """ Broadcast the current channel header to the given users
+            :param users : the users to notify
         """
-        for partner in self.env['res.partner'].browse(partner_ids):
-            if user := partner.main_user_id:
-                Store(bus_channel=user).add(
-                    self.with_user(user).with_context(allowed_company_ids=[]),
-                    "_store_channel_fields",
-                ).bus_send()
+        for user in users:
+            Store(bus_channel=user).add(
+                self.with_user(user).with_context(allowed_company_ids=[]),
+                "_store_channel_fields",
+            ).bus_send()
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
@@ -1346,21 +1352,15 @@ class DiscussChannel(models.Model):
     # User methods
 
     @api.model
-    def _get_or_create_chat(self, partners_to):
-        """ Get the canonical private channel between some partners, create it if needed.
+    def _get_or_create_chat(self, users):
+        """ Get the canonical private channel between some users, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
-            only the given partners.
-            :param partners_to : list of res.partner ids to add to the conversation
-            :param pin : True if getting the channel should pin it for the current user
+            only the given users.
+            :param users: list of res.users to add to the conversation
             :returns: channel_info of the created or existing channel
             :rtype: dict
         """
-        partners = (
-            self.env["res.partner"]
-            .with_context(active_test=False)
-            .search([("id", "in", partners_to)])
-        ) | self.env.user.partner_id
-        if len(partners) > 2:
+        if len(users) > 2:
             raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
         # determine type according to the number of partner in the channel
         self.flush_model()
@@ -1383,8 +1383,8 @@ class DiscussChannel(models.Model):
             HAVING ARRAY_AGG(DISTINCT M.partner_id ORDER BY M.partner_id) = %(sorted_partner_ids)s
             LIMIT 1
                 """,
-                partner_ids=tuple(partners.ids),
-                sorted_partner_ids=sorted(partners.ids),
+                partner_ids=tuple(users.partner_id.ids),
+                sorted_partner_ids=sorted(users.partner_id.ids),
             )
         )
         result = self.env.cr.dictfetchall()
@@ -1396,7 +1396,7 @@ class DiscussChannel(models.Model):
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
             channel.self_member_id.write({"last_interest_dt": last_interest_dt, "unpin_dt": False})
-            channel._broadcast(self.env.user.partner_id.ids)
+            channel._broadcast(self.env.user)
         else:
             # create a new one
             channel = self.create(
@@ -1405,19 +1405,19 @@ class DiscussChannel(models.Model):
                         Command.create(
                             {
                                 "last_interest_dt": last_interest_dt,
-                                "partner_id": partner.id,
+                                "partner_id": user.partner_id.id,
                                 # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                                "unpin_dt": False if partner == self.env.user.partner_id else now,
+                                "unpin_dt": False if user == self.env.user else now,
                             }
                         )
-                        for partner in partners
+                        for user in users
                     ],
                     "channel_type": "chat",
                     "last_interest_dt": last_interest_dt,
-                    "name": ", ".join(partners.mapped("name")),
+                    "name": ", ".join(users.mapped("name")),
                 }
             )
-            channel._broadcast(partners.ids)
+            channel._broadcast(users)
         return channel
 
     def _allow_invite_by_email(self):
@@ -1456,13 +1456,13 @@ class DiscussChannel(models.Model):
         self.write({'description': description})
 
     def channel_join(self):
-        """Shortcut to add the current user as member of self channels.
-        Prefer calling add_members() directly when possible.
+        """Add the current user as member of self channels, or update their last_interest_dt if they
+        are already a member.
+        Prefer calling either _add_members() or updating last_interest_dt directly when possible.
         """
-        if not self.self_member_id:
-            self._add_members(users=self.env.user)
-        else:
-            self.self_member_id.last_interest_dt = fields.Datetime.now()
+        non_member_channels = self.filtered(lambda c: not c.self_member_id)
+        non_member_channels._add_members(users=self.env.user)
+        (self - non_member_channels).self_member_id.last_interest_dt = fields.Datetime.now()
 
     def open_chat_window_action(self):
         """Return an action the web client can use to open this channel."""
@@ -1490,35 +1490,34 @@ class DiscussChannel(models.Model):
         return new_channel
 
     @api.model
-    def _create_group(self, partners_to, default_display_mode=False, name=''):
+    def _create_group(self, users, *, default_display_mode=False, name=''):
         """ Creates a group channel.
 
-            :param partners_to : list of res.partner ids to add to the conversation
+            :param users: list of res.users to add to the conversation
             :param str default_display_mode: how the channel will be displayed by default
             :param str name: group name. default name is computed client side from the list of members if no name is set
             :returns: channel_info of the created channel
             :rtype: dict
         """
-        partners_to = OrderedSet(partners_to)
         channel = self.create(
             {
                 "channel_member_ids": [
                     Command.create(
                         {
-                            "partner_id": partner_id,
+                            "partner_id": user.partner_id.id,
                             "channel_role": "owner"
-                            if partner_id == self.env.user.partner_id.id and not self.env.user._is_public()
+                            if user == self.env.user and not self.env.user._is_public()
                             else None,
-                        }
+                        },
                     )
-                    for partner_id in partners_to
+                    for user in users
                 ],
                 "channel_type": "group",
                 "default_display_mode": default_display_mode,
                 "name": name,
-            }
+            },
         )
-        channel._broadcast(channel.channel_member_ids.partner_id.ids)
+        channel._broadcast(users)
         return channel
 
     def _create_sub_channel(self, from_message_id=None, name=None):
@@ -1541,7 +1540,11 @@ class DiscussChannel(models.Model):
                 "parent_channel_id": self.id,
             }
         )
-        sub_channel.add_members(partner_ids=(self.env.user.partner_id | message.author_id).ids, post_joined_message=False)
+        sub_channel._add_members(
+            users=self.env.user,
+            partners=message.author_id,
+            post_joined_message=False,
+        )
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
             % _(
