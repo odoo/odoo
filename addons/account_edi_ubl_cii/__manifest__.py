@@ -26,6 +26,13 @@ Pro rules and show the errors.
         'data/cii_22_templates.xml',
         'data/ubl_20_templates.xml',
         'data/ubl_21_templates.xml',
+<<<<<<< e1e6fcb3aa4b46b0b6ce65a93826e4c9e43161a7
+||||||| 159fb4168be9e8bd16d7b173d014c0665988f111
+        'views/res_config_settings_views.xml',
+=======
+        'views/account_move_views.xml',
+        'views/res_config_settings_views.xml',
+>>>>>>> af784b928cacda52ed32c55279ad87f42e69e3ab
         'views/res_partner_views.xml',
     ],
     'assets': {

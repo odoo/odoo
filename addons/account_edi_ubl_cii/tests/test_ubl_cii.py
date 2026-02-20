@@ -684,4 +684,251 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
             "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
         })
+<<<<<<< e1e6fcb3aa4b46b0b6ce65a93826e4c9e43161a7
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
+||||||| 159fb4168be9e8bd16d7b173d014c0665988f111
+        self.assertEqual(node[0].text, company.vat, "Company VAT fallback")
+
+    def test_ubl_split_fixed_taxes_into_allowance_charges_or_extra_invoice_lines(self):
+        """Test that fixed taxes are split correctly:
+        - fixed taxes that affect the base are exported as AllowanceCharge.
+        - fixed taxes that not affect the base are exported as extra invoice lines."""
+
+        self.partner_a.country_id = self.env.ref('base.be')
+        standard_vat_21 = self.company_data['default_tax_sale']
+
+        # fixed AND include_base_amount => this should be treated as allowance charge
+        ecotax = self.env['account.tax'].create({
+            'name': 'Eco Tax',
+            'amount_type': 'fixed',
+            'amount': 3.0,
+            'include_base_amount': True,
+            'type_tax_use': 'sale',
+        })
+
+        # fixed AND not include_base_amount => this should be treated as extra invoice line
+        vidange = self.env['account.tax'].create({
+            'name': 'Tax Vidange',
+            'amount_type': 'fixed',
+            'amount': 5.0,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.place_prdct.id,
+                'product_uom_id': self.uom_units.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [Command.set((standard_vat_21 | ecotax | vidange).ids)],
+            })],
+        })
+        invoice.action_post()
+
+        xml_bytes = self.env["account.edi.xml.ubl_bis3"]._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+
+        ns = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
+        vidange_lines = xml_tree.xpath(
+            "./cac:InvoiceLine[cac:Item/cbc:Name='Tax Vidange']",
+            namespaces=ns,
+        )
+        self.assertTrue(vidange_lines)
+
+        ecotax_allowance_charge = xml_tree.xpath(
+            "./cac:InvoiceLine/cac:AllowanceCharge[cbc:AllowanceChargeReason='Eco Tax']",
+            namespaces=ns,
+        )
+        self.assertTrue(ecotax_allowance_charge)
+
+        # there should be a TaxSubtotal with VAT category 'E' for emptying taxes
+        subtotals = xml_tree.xpath(
+            "./cac:TaxTotal/cac:TaxSubtotal[cac:TaxCategory/cbc:ID='E']",
+            namespaces=ns,
+        )
+        self.assertTrue(subtotals)
+
+        # check TaxTotal ?= sum(TaxSubtotal)
+        tax_total_amount = float(xml_tree.xpath("string(./cac:TaxTotal/cbc:TaxAmount)", namespaces=ns) or 0.0)
+        subtotal_amounts = [
+            float(x) for x in xml_tree.xpath("./cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount/text()", namespaces=ns)
+        ]
+        self.assertAlmostEqual(
+            tax_total_amount,
+            sum(subtotal_amounts),
+            places=2,
+            msg="TaxTotal != sum(TaxSubtotal)",
+        )
+=======
+        self.assertEqual(node[0].text, company.vat, "Company VAT fallback")
+
+    def test_import_and_group_lines_by_tax(self):
+        """
+        Test the group/ungroup lines action on account.move
+        """
+        self.env.ref('base.EUR').active = True
+        tax_16 = self.env["account.tax"].create({
+            'name': '16 %',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 16.0,
+        })
+        tax_21 = self.env["account.tax"].create({
+            'name': '21 %',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 21.0,
+        })
+
+        file_path = "bis3_bill_group_by_tax.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'bis3_bill_group_by_tax.xml',
+                'raw': file.read(),
+            })
+        bill = self.import_attachment(xml_attachment)
+
+        # Should group lines by tax
+        bill.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {
+                'quantity': 1.0,
+                'price_unit': 600.0,
+                'price_subtotal': 600.0,
+                'price_total': 696.00,
+                'tax_ids': tax_16.ids,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 1300.0,
+                'price_subtotal': 1300.0,
+                'price_total': 1573.00,
+                'tax_ids': tax_21.ids,
+            },
+        ])
+        self.assertRecordValues(bill, [{
+            'amount_untaxed': 1900.0,
+            'amount_tax': 369,
+            'amount_total': 2269.00,
+        }])
+
+        # Should ungroup lines from xml
+        bill.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {
+                'quantity': 1.0,
+                'price_unit': 600.0,
+                'price_subtotal': 600.0,
+                'price_total': 696.00,
+                'tax_ids': tax_16.ids,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 300.0,
+                'price_subtotal': 300.0,
+                'price_total': 363.00,
+                'tax_ids': tax_21.ids,
+            },
+            {
+                'quantity': 2.0,
+                'price_unit': 500.0,
+                'price_subtotal': 1000.0,
+                'price_total': 1210.00,
+                'tax_ids': tax_21.ids,
+            },
+        ])
+        self.assertRecordValues(bill, [{
+            'amount_untaxed': 1900.0,
+            'amount_tax': 369,
+            'amount_total': 2269.00,
+        }])
+
+    def test_ubl_split_fixed_taxes_into_allowance_charges_or_extra_invoice_lines(self):
+        """Test that fixed taxes are split correctly:
+        - fixed taxes that affect the base are exported as AllowanceCharge.
+        - fixed taxes that not affect the base are exported as extra invoice lines."""
+
+        self.partner_a.country_id = self.env.ref('base.be')
+        standard_vat_21 = self.company_data['default_tax_sale']
+
+        # fixed AND include_base_amount => this should be treated as allowance charge
+        ecotax = self.env['account.tax'].create({
+            'name': 'Eco Tax',
+            'amount_type': 'fixed',
+            'amount': 3.0,
+            'include_base_amount': True,
+            'type_tax_use': 'sale',
+        })
+
+        # fixed AND not include_base_amount => this should be treated as extra invoice line
+        vidange = self.env['account.tax'].create({
+            'name': 'Tax Vidange',
+            'amount_type': 'fixed',
+            'amount': 5.0,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.place_prdct.id,
+                'product_uom_id': self.uom_units.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [Command.set((standard_vat_21 | ecotax | vidange).ids)],
+            })],
+        })
+        invoice.action_post()
+
+        xml_bytes = self.env["account.edi.xml.ubl_bis3"]._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+
+        ns = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
+        vidange_lines = xml_tree.xpath(
+            "./cac:InvoiceLine[cac:Item/cbc:Name='Tax Vidange']",
+            namespaces=ns,
+        )
+        self.assertTrue(vidange_lines)
+
+        ecotax_allowance_charge = xml_tree.xpath(
+            "./cac:InvoiceLine/cac:AllowanceCharge[cbc:AllowanceChargeReason='Eco Tax']",
+            namespaces=ns,
+        )
+        self.assertTrue(ecotax_allowance_charge)
+
+        # there should be a TaxSubtotal with VAT category 'E' for emptying taxes
+        subtotals = xml_tree.xpath(
+            "./cac:TaxTotal/cac:TaxSubtotal[cac:TaxCategory/cbc:ID='E']",
+            namespaces=ns,
+        )
+        self.assertTrue(subtotals)
+
+        # check TaxTotal ?= sum(TaxSubtotal)
+        tax_total_amount = float(xml_tree.xpath("string(./cac:TaxTotal/cbc:TaxAmount)", namespaces=ns) or 0.0)
+        subtotal_amounts = [
+            float(x) for x in xml_tree.xpath("./cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount/text()", namespaces=ns)
+        ]
+        self.assertAlmostEqual(
+            tax_total_amount,
+            sum(subtotal_amounts),
+            places=2,
+            msg="TaxTotal != sum(TaxSubtotal)",
+        )
+>>>>>>> af784b928cacda52ed32c55279ad87f42e69e3ab
