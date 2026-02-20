@@ -1835,7 +1835,10 @@ class Lead(models.Model):
             contact_name = parse_contact_from_email(self.email_from)[0] if self.email_from else False
 
         if self.partner_name:
-            partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
+            partner_values = self._prepare_customer_values(self.partner_name, is_company=True)
+            if contact_name:
+                partner_values.pop('email', None)
+            partner_company = Partner.create(partner_values)
         elif self.partner_id:
             partner_company = self.partner_id
         else:
