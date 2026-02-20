@@ -26,7 +26,7 @@ export class ImageFormatOption extends BaseOptionComponent {
             const mimetype =
                 editingElement.dataset.formatMimetype ||
                 editingElement.dataset.mimetypeBeforeConversion ||
-                getMimetype(editingElement);
+                (await getMimetype(editingElement));
             const compressionUnsupported =
                 mimetype === "image/webp" && this.webpCompressionUnuspported();
             return {

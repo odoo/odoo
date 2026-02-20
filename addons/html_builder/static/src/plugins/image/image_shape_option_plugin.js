@@ -8,6 +8,7 @@ import {
     cropperDataFields,
     loadImage,
     isGif,
+    loadImageInfo,
 } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "@html_builder/plugins/image/image_shapes_definition";
@@ -76,7 +77,6 @@ export class ImageShapeOptionPlugin extends Plugin {
         "getShapeLabel",
         "loadShape",
         "getShapeCategory",
-        "isImageSupportedForShapes",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -92,6 +92,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         on_will_process_image_handlers: this.processImageWarmup.bind(this),
         on_image_processed_handlers: this.processImagePost.bind(this),
         image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
+        hover_effect_image_dataset_providers: this.hoverEffectImageDatasetProviders.bind(this),
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -106,7 +107,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         const shapeName = img.dataset.shape;
         return shapeName?.split("/")[1];
     }
-    isImageSupportedForShapes(img, dataset = img.dataset) {
+    async isImageSupportedForShapes(img, dataset = img.dataset) {
         // todo: The hover effect and shape code should probably be define somewhere else.
         if (!!dataset.hoverEffect || !!dataset.shape) {
             return true;
@@ -114,7 +115,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         if (!dataset.originalId) {
             return false;
         }
-        return isImageSupportedForProcessing(getMimetype(img, dataset));
+        return isImageSupportedForProcessing(await getMimetype(img, dataset));
     }
     async getShapeSvgText(shapeName) {
         // Compatibility with old shapes.
@@ -248,6 +249,13 @@ export class ImageShapeOptionPlugin extends Plugin {
         });
         const dataURL = await createDataURL(blob);
         return [dataURL, { ...handlerDataset, mimetype: "image/svg+xml" }];
+    }
+    async hoverEffectImageDatasetProviders(imgEl) {
+        const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+        const isImageSupportedForShapes = await this.isImageSupportedForShapes(imgEl, dataset);
+        return {
+            isImageSupportedForShapes,
+        };
     }
 
     /**

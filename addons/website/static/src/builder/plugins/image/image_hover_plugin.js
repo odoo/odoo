@@ -216,7 +216,7 @@ export class ImageHoverPlugin extends Plugin {
             !dataset.isCorsProtected &&
             !(this.dependencies.imageShapeOption.getShapeCategory(imgEl) === "devices") &&
             !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
-            this.dependencies.imageShapeOption.isImageSupportedForShapes(imgEl, dataset)
+            !!dataset.isImageSupportedForShapes
         );
     }
 }
