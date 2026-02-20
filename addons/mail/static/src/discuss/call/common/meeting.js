@@ -41,6 +41,7 @@ export class Meeting extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
+        this.escape = useService("mail.escape");
         onMounted(() => {
             if (this.props.autoOpenAction) {
                 this.threadActions.actions
@@ -65,8 +66,16 @@ export class Meeting extends Component {
             messageHighlight: this.messageHighlight,
             messageSearch: this.messageSearch,
         });
+        const removeEscape = this.escape.add({
+            priority: 50,
+            isActive: () => Boolean(this.channel && this.rtc.isFullscreen),
+            onEscape: (ev) => this.onEscape(ev),
+        });
         onMounted(() => (this.store.meetingViewOpened = true));
-        onWillUnmount(() => (this.store.meetingViewOpened = false));
+        onWillUnmount(() => {
+            this.store.meetingViewOpened = false;
+            removeEscape();
+        });
     }
 
     get channel() {
@@ -78,5 +87,24 @@ export class Meeting extends Component {
             return [];
         }
         return this.threadActions.actions.filter((a) => PIP_EXTRA_ACTION_IDS.includes(a.id));
+    }
+
+    onEscape(ev) {
+        const target = ev.target;
+        if (
+            target instanceof HTMLElement &&
+            target.closest(".o-mail-NavigableList, .o-EmojiPicker, .o-dropdown--menu, .o-popover")
+        ) {
+            return false;
+        }
+        if (this.threadActions.activeAction) {
+            this.threadActions.activeAction.actionPanelClose();
+            return true;
+        }
+        if (this.rtc.isFullscreen) {
+            this.rtc.exitFullscreen();
+            return true;
+        }
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, onWillDestroy } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -14,6 +14,12 @@ export class CallPermissionDeniedDialog extends Component {
 
     setup() {
         this.ui = useService("ui");
+        this.escape = useService("mail.escape");
+        const removeEscape = this.escape.add({
+            priority: 300,
+            onEscape: () => this.props.close(),
+        });
+        onWillDestroy(removeEscape);
     }
 
     get title() {
