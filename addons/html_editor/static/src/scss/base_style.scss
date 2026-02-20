@@ -20,6 +20,7 @@ li.oe-nested {
 
 $sizes: '', 'xs-', 'sm-', 'md-', 'lg-', 'xl-', 'xxl-';
 .o_text_columns {
+    overflow-x: auto !important;
     max-width: 100% !important;
     padding: 0 !important;
 }
@@ -40,6 +41,7 @@ $--enable-no-overflow-of-text-columns: true !default;
 @if $--enable-no-overflow-of-text-columns {
     @media screen {
         .o_text_columns > .row {
+            flex-wrap: nowrap !important;
             margin: 0 !important;
             @each $size in $sizes {
                 @for $i from 1 through 12 {

@@ -1,0 +1,39 @@
+.o_text_columns > .row {
+    margin: 0 !important;
+    flex-wrap: nowrap !important;
+
+    > [class*="col-"] {
+        box-sizing: border-box;
+
+        /* default for middle columns */
+        border-left: 2px solid transparent;
+        border-right: 2px solid transparent;
+
+        &:first-child {
+            border-left-width: 4px;
+        }
+
+        &:last-child {
+            border-right-width: 4px;
+        }
+    }
+}
+
+.o_text_columns > .row {
+
+    /* current hovered column */
+    > .o_resize_handle {
+        border-left-color: $o-gray-300 !important;
+        border-right-color: $o-gray-300 !important;
+    }
+
+    /* previous column → right border */
+    > [class*="col-"]:has(+ .o_resize_handle) {
+        border-right-color: $o-gray-300 !important;
+    }
+
+    /* next column → left border */
+    > .o_resize_handle + [class*="col-"] {
+        border-left-color: $o-gray-300 !important;
+    }
+}
