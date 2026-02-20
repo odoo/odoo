@@ -378,6 +378,12 @@ export const htmlField = {
                 options.cleanEmptyStructuralContainers
             );
         }
+        if ("debouncePowerbuttons" in options) {
+            editorConfig.debouncePowerbuttons = Boolean(options.debouncePowerbuttons);
+        }
+        if ("debounceHints" in options) {
+            editorConfig.debounceHints = Boolean(options.debounceHints);
+        }
         return {
             editorConfig,
             isCollaborative: options.collaborative,
