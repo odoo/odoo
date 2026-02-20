@@ -18,7 +18,7 @@ from lxml import etree, html
 from urllib.parse import urlparse
 from werkzeug import urls
 
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
@@ -2417,7 +2417,7 @@ class Website(models.CachedModel):
         Generate Organization structured data using only website context.
         """
         base_url = self.get_base_url()
-        schema = SchemaBuilder(
+        schema = JsonLd(
             schema_type,
             name=self.name,
             url=base_url,
@@ -2440,7 +2440,7 @@ class Website(models.CachedModel):
             schema.set(same_as=same_as)
 
         logo_url = f"{base_url}/logo.png?company={self.company_id.id}"
-        schema.add_nested(logo=SchemaBuilder("ImageObject", url=logo_url))
+        schema.add_nested(logo=JsonLd("ImageObject", url=logo_url))
 
         return schema
 
@@ -2454,14 +2454,14 @@ class Website(models.CachedModel):
     #         company (res.company): The company for which to generate contact point structured data
 
     #     Returns:
-    #         SchemaBuilder or None: The structured data schema builder for the contact point
+    #         JsonLd or None: The structured data schema builder for the contact point
     #     """
     #     if not company:
     #         return None
     #     telephone = (company.phone or '').strip() or None
     #     email = (company.email or '').strip() or None
     #     if telephone or email:
-    #         return SchemaBuilder("ContactPoint", telephone=telephone, email=email)
+    #         return JsonLd("ContactPoint", telephone=telephone, email=email)
     #     return None
 
     @api.model
@@ -2489,7 +2489,7 @@ class Website(models.CachedModel):
         if not any([street, street2, city, zip_code, state, country]):
             return None
 
-        return SchemaBuilder(
+        return JsonLd(
             "PostalAddress",
             street_address=street_address,
             address_locality=city,

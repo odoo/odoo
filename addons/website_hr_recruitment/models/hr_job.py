@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.translate import html_translate
@@ -179,15 +179,15 @@ spirit. To be successful, you will have solid solving problem skills.''')
         if self.department_id:
             department = self.department_id.sudo()
             department_company = department.company_id
-            identifier = SchemaBuilder(
+            identifier = JsonLd(
                 "PropertyValue",
                 name=department_company.name,
                 value=f"{department_company.id}-{self.id}",
             )
             base_url = self.website_id.get_base_url()
-            hiring_organization = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
+            hiring_organization = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
             address = self.address_id.sudo()
-            job_location = SchemaBuilder(
+            job_location = JsonLd(
                 "Place",
                 address=self.env['website'].postal_address_structured_data(
                     city=address.city,
@@ -195,22 +195,20 @@ spirit. To be successful, you will have solid solving problem skills.''')
                     country_code=address.country_id.code,
                 ),
             )
-        return SchemaBuilder(
+        return JsonLd(
             "JobPosting",
             title=self.name,
             url=self.full_url,
             description=self.website_description,
-            date_posted=SchemaBuilder.datetime(self.create_date),
-            valid_through=valid_through,
+            date_posted=JsonLd.datetime(self.create_date),
             direct_apply=True,
             employment_type=employement_type,
         ).add_nested(
             identifier=identifier,
             hiring_organization=hiring_organization,
-            applicant_location_requirements=SchemaBuilder(
+            applicant_location_requirements=JsonLd(
                 "Country",
                 name=self.address_id.country_id.code,
             ),
             job_location=job_location,
-            base_salary=base_salary,
         )

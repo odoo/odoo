@@ -8,7 +8,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
@@ -1104,10 +1104,10 @@ class SlideChannel(models.Model):
         self.ensure_one()
         provider = None
         if just_id and website:
-            provider = SchemaBuilder.create_id_reference("Organization", f"{website.get_base_url()}/#organization")
+            provider = JsonLd.create_id_reference("Organization", f"{website.get_base_url()}/#organization")
         if website and not just_id:
             provider = website.organization_structured_data()
-        return SchemaBuilder("Course",
+        return JsonLd("Course",
                                url=self.website_absolute_url,
                                name=self.name,
                                description=self.description_short,

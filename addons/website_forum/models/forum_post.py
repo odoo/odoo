@@ -5,7 +5,7 @@ import math
 import re
 from datetime import datetime
 
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.fields import Domain
@@ -788,7 +788,7 @@ class ForumPost(models.Model):
         Only questions (posts without a parent) are converted to QAPage schema.
         Answers are included as accepted or suggested answers within the QAPage.
 
-        Returns: SchemaBuilder or None
+        Returns: JsonLd or None
         """
         self.ensure_one()
 
@@ -817,23 +817,23 @@ class ForumPost(models.Model):
                 ],
             )
 
-        return SchemaBuilder("QAPage").add_nested(main_entity=main_entity)
+        return JsonLd("QAPage").add_nested(main_entity=main_entity)
 
     def _to_question_structured_data(self):
         self.ensure_one()
         create_uid = self.create_uid
-        author = SchemaBuilder("Person", name=create_uid.name)
+        author = JsonLd("Person", name=create_uid.name)
         base_url = self.get_base_url()
         if create_uid.website_published:
             author.set(url=f"{base_url}/web/image/res.users/{create_uid.id}/avatar_128/")
 
-        question = SchemaBuilder(
+        question = JsonLd(
             "Question",
             name=self.name,
             text=self.plain_content or self.name,
             answer_count=self.child_count,
             upvote_count=self.vote_count,
-            date_published=SchemaBuilder.datetime(self.create_date),
+            date_published=JsonLd.datetime(self.create_date),
             url=f"{base_url}{self.website_url}",
         )
         question.add_nested(author=author)
@@ -842,15 +842,15 @@ class ForumPost(models.Model):
     def _to_answer_structured_data(self):
         self.ensure_one()
         create_uid = self.create_uid
-        author = SchemaBuilder("Person", name=create_uid.name)
+        author = JsonLd("Person", name=create_uid.name)
         base_url = self.get_base_url()
         if create_uid.website_published:
             author.set(url=f"{base_url}/web/image/res.users/{create_uid.id}/avatar_128/")
-        answer = SchemaBuilder(
+        answer = JsonLd(
             "Answer",
             text=self.plain_content,
             upvote_count=self.vote_count,
-            date_published=SchemaBuilder.datetime(self.create_date),
+            date_published=JsonLd.datetime(self.create_date),
             url=f"{base_url}{self.website_url}",
         )
         answer.add_nested(author=author)

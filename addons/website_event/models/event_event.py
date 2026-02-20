@@ -9,7 +9,7 @@ import werkzeug.urls
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo.addons.website.tools import text_from_html, truncate_text
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -674,7 +674,7 @@ class EventEvent(models.Model):
         image = None
         if image_url:
             image_url = f"{base_url}{website.image_url(self, 'image_1920')}"
-            image = SchemaBuilder("ImageObject", url=image_url) if image_url else None
+            image = JsonLd("ImageObject", url=image_url) if image_url else None
 
         location = None
         if self.address_id:
@@ -687,13 +687,13 @@ class EventEvent(models.Model):
                 state_state=address.state_id.code,
                 country_state=address.country_id.code,
             )
-            location = SchemaBuilder("Place", name=self.address_name).add_nested(address=address)
+            location = JsonLd("Place", name=self.address_name).add_nested(address=address)
         else:
             # From google docs: Virtual experiences that have no real-world
             # component aren't supported. Events must take place in a physical
             # location. -> TODO i think it's better to take decision early and
             # just not add this event schema
-            location = SchemaBuilder("VirtualLocation", url=self.event_url or event_url)
+            location = JsonLd("VirtualLocation", url=self.event_url or event_url)
 
         description = self.subtitle
         if not description and self.description:
@@ -702,7 +702,7 @@ class EventEvent(models.Model):
         organizer = None
         if self.organizer_id:
             organizer_sudo = self.organizer_id.sudo()
-            organizer = SchemaBuilder("Organization", name=organizer_sudo.name)
+            organizer = JsonLd("Organization", name=organizer_sudo.name)
             if organizer_sudo.website:
                 organizer.set(url=organizer_sudo.website)
 
@@ -718,7 +718,7 @@ class EventEvent(models.Model):
         currency = self.company_id.currency_id.name
         for ticket in self.event_ticket_ids:
             availability = "https://schema.org/SoldOut" if ticket.is_sold_out else "https://schema.org/InStock"
-            offer = SchemaBuilder("Offer",
+            offer = JsonLd("Offer",
                 name=ticket.name,
                 price=ticket.total_price_reduce,
                 price_currency=currency,
@@ -728,9 +728,9 @@ class EventEvent(models.Model):
                 offer.set(url=f"{event_url}/register")
 
             if ticket.start_sale_datetime:
-                offer.set(valid_from=SchemaBuilder.datetime(ticket.start_sale_datetime))
+                offer.set(valid_from=JsonLd.datetime(ticket.start_sale_datetime))
             if ticket.end_sale_datetime:
-                offer.set(valid_through=SchemaBuilder.datetime(ticket.end_sale_datetime))
+                offer.set(valid_through=JsonLd.datetime(ticket.end_sale_datetime))
 
             tickets.append(offer)
 
@@ -740,11 +740,11 @@ class EventEvent(models.Model):
             else "https://schema.org/OfflineEventAttendanceMode"
         )
 
-        return SchemaBuilder("Event",
+        return JsonLd("Event",
             name=self.name,
             url=event_url,
-            start_date=SchemaBuilder.datetime(self.date_begin),
-            end_date=SchemaBuilder.datetime(self.date_end),
+            start_date=JsonLd.datetime(self.date_begin),
+            end_date=JsonLd.datetime(self.date_end),
             description=description,
             event_status=f"https://schema.org/{event_status}",
         ).add_nested(

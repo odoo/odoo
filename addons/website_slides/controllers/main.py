@@ -13,7 +13,7 @@ from odoo import fields, http, tools, _
 from odoo.addons.base.models.ir_qweb import keep_query
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.fields import Domain
@@ -492,7 +492,7 @@ class WebsiteSlides(WebsiteProfile):
                 page=page,
                 step=page_size,
                 scope=3) if page else False,
-            'course_list_json_ld': SchemaBuilder.render_structured_data_list(course_list_json_ld),
+            'course_list_json_ld': JsonLd.render_structured_data_list(course_list_json_ld),
         })
 
         return render_values
@@ -502,11 +502,11 @@ class WebsiteSlides(WebsiteProfile):
         website = request.website
         return [
             website.organization_structured_data(with_id=True),
-            SchemaBuilder(
+            JsonLd(
                 "ItemList",
                 url=request.httprequest.url,
                 itemListElement=[
-                    SchemaBuilder(
+                    JsonLd(
                         "ListItem",
                         position=index,
                         item=channel._to_structured_data(website, just_id=True),

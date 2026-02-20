@@ -5,7 +5,7 @@ from datetime import datetime
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.website.structure_data_defination import create_breadcrumbs, SchemaBuilder
+from odoo.addons.website.structure_data_defination import create_breadcrumbs, JsonLd
 from odoo.addons.website.tools import text_from_html, truncate_text
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
@@ -144,15 +144,15 @@ class BlogBlog(models.Model):
         if not description and self.content:
             description = text_from_html(self.content, True)
 
-        blog_sd = SchemaBuilder(
+        blog_sd = JsonLd(
             "Blog",
             name=self.name,
             url=f"{base_url}/blog/{slug}",
             description=description,
         )
-        image = self._get_background_url(website)
+        image = self._get_background_image_url(website)
         if image:
-            blog_sd.add_nested(image=SchemaBuilder("ImageObject", url=image))
+            blog_sd.add_nested(image=JsonLd("ImageObject", url=image))
         return blog_sd
 
 
@@ -233,40 +233,40 @@ class BlogPost(models.Model):
             article_body = truncate_text(content_text, 300) if content_text else None
             word_count = len(content_text.split()) if content_text else None
             lang = website.default_lang_id
-            blog_post = SchemaBuilder(
+            blog_post = JsonLd(
                 "BlogPosting",
                 headline=post.name,
                 url=post_url,
-                date_published=SchemaBuilder.datetime(post.publish_on or post.create_date),
+                date_published=JsonLd.datetime(post.publish_on or post.create_date),
                 description=description,
                 article_body=article_body,
-                date_modified=SchemaBuilder.datetime(post.write_date),
+                date_modified=JsonLd.datetime(post.write_date),
                 keywords=", ".join(post.tag_ids.mapped("name")) if post.tag_ids else None,
                 article_section=post.blog_id.name if post.blog_id else None,
                 in_language=lang.code.replace("_", "-") if lang else None,
                 word_count=word_count,
             )
 
-            image_url = post._get_background_url(website)
+            image_url = post._get_background_image_url(website)
             if image_url:
-                image = SchemaBuilder("ImageObject", url=image_url)
+                image = JsonLd("ImageObject", url=image_url)
                 blog_post.add_nested(image=image)
 
             if post.author_id:
-                author = SchemaBuilder("Person", name=post.author_id.display_name or post.author_name)
+                author = JsonLd("Person", name=post.author_id.display_name or post.author_name)
                 blog_post.add_nested(author=author)
             if company:
                 blog_post.add_nested(publisher=website.organization_structured_data())
 
             if post.blog_id:
                 slug = self.env["ir.http"]._slug(post.blog_id)
-                blog = SchemaBuilder(
+                blog = JsonLd(
                     "Blog",
                     name=post.blog_id.name,
                     url=f"{base_url}/blog/{slug}",
                     description=post.blog_id.subtitle,
                 )
-                image = SchemaBuilder("ImageObject", url=post.blog_id._get_background_url(website))
+                image = JsonLd("ImageObject", url=post.blog_id._get_background_image_url(website))
                 if image:
                     blog.add_nested(image=image)
                 blog_post.add_nested(is_part_of=blog)

@@ -23,7 +23,7 @@ from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.structure_data_defination import create_breadcrumbs, SchemaBuilder
+from odoo.addons.website.structure_data_defination import create_breadcrumbs, JsonLd
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.addons.website_sale.models.website import (
@@ -540,7 +540,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
-            values['markup_data_json'] = SchemaBuilder.render_structured_data_list([
+            values['markup_data_json'] = JsonLd.render_structured_data_list([
                 website.organization_structured_data(),
                 self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
             ])
@@ -862,7 +862,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
-            'markup_data_json': SchemaBuilder.render_structured_data_list(markup_data),
+            'markup_data_json': JsonLd.render_structured_data_list(markup_data),
             'shop_path': SHOP_PATH,
         }
 

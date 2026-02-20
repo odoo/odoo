@@ -13,7 +13,7 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo.addons.website.tools import text_from_html
 from odoo.addons.website_sale.const import SHOP_PATH
 
@@ -1058,7 +1058,7 @@ class ProductTemplate(models.Model):
                 or (self.product_variant_ids[:1].default_code)
                 or f"TEMPLATE-{self.id}"
             )
-            product_group = SchemaBuilder(
+            product_group = JsonLd(
                 "ProductGroup",
                 name=self.name,
                 url=f"{base_url}{self.website_url}",
@@ -1066,7 +1066,7 @@ class ProductTemplate(models.Model):
                 description=self.description_sale,
                 product_group_id=product_group_id,
             )
-            brand_obj = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
+            brand_obj = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
             if brand_obj:
                 product_group.add_nested(brand=brand_obj)
 
@@ -1080,7 +1080,7 @@ class ProductTemplate(models.Model):
             markup_data = product_group
 
         if website.is_view_active('website_sale.product_comment') and self.rating_count:
-            rating = SchemaBuilder(
+            rating = JsonLd(
                 "AggregateRating",
                 rating_value=self.sudo().rating_avg,
                 review_count=self.rating_count,

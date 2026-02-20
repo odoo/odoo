@@ -123,22 +123,24 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
                 img = img[:-1] + suffix + ')'
         return img
 
-    def _get_background_url(self, website=None):
+    def _get_background_image_url(self, website=None):
+        """Return the absolute URL of the background image, or False."""
         self.ensure_one()
         background = self._get_background()
         if not background or background == 'none':
             return False
 
-        # In case of url('...'), extract the path
-        image_path = background[4:-1].strip('\'"')
-        if not image_path:
+        # CSS background uses url('...') syntax
+        path = background[4:-1].strip('\'"')
+        if not path:
             return False
-        if image_path.startswith(('http://', 'https://')):
-            return image_path
-        if image_path.startswith('//'):
-            return f'https:{image_path}'
-        base_url = website.get_base_url() if website else self.get_base_url()
-        return f'{base_url}{image_path}'
+
+        # Ensure the path is absolute
+        if not path.startswith(('http://', 'https://')):
+            prefix = 'https:' if path.startswith('//') else (website or self).get_base_url()
+            path = prefix + path
+
+        return path
 
     def write(self, vals):
         if 'cover_properties' not in vals:

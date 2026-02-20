@@ -7,7 +7,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.structure_data_defination import SchemaBuilder, create_breadcrumbs
+from odoo.addons.website.structure_data_defination import JsonLd, create_breadcrumbs
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -197,15 +197,15 @@ class WebsiteEventController(http.Controller):
         }
 
         # structured data for event listing page, lists all events shown (may not be needed check before removing TODO)
-        item_list = SchemaBuilder("ItemList")
+        item_list = JsonLd("ItemList")
         item_list_elements = []
         for idx, event in enumerate(events):
-            item_list_element = SchemaBuilder("ListItem", position=idx + 1)
+            item_list_element = JsonLd("ListItem", position=idx + 1)
             item_list_element.add_nested(item=event._to_structured_data(website))
             item_list_elements.append(item_list_element)
         item_list.add_nested(item_list_element=item_list_elements)
 
-        values['event_list_json_ld'] = SchemaBuilder.render_json(item_list)
+        values['event_list_json_ld'] = JsonLd.render_json(item_list)
         return request.render("website_event.index", values)
 
     # ------------------------------------------------------------
@@ -278,7 +278,7 @@ class WebsiteEventController(http.Controller):
             (_('All Events'), f'{base_url}/events'),
             (event.name, f'{base_url}{event.website_url}'),
         ])
-        values['event_json_ld'] = SchemaBuilder.render_structured_data_list([event_schema, breadcrumb_list_schema])
+        values['event_json_ld'] = JsonLd.render_structured_data_list([event_schema, breadcrumb_list_schema])
         return request.render("website_event.event_description_full", values)
 
     def _prepare_event_register_values(self, event, **post):

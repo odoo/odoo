@@ -6,7 +6,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
-from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.structure_data_defination import JsonLd
 
 
 class ProductProduct(models.Model):
@@ -188,17 +188,17 @@ class ProductProduct(models.Model):
         )
 
         base_url = website.get_base_url()
-        offer = SchemaBuilder(
+        offer = JsonLd(
             "Offer",
             price=price,
             price_currency=website.currency_id.name,
         )
-        seller = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
+        seller = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
 
         if seller:
             offer.add_nested(seller=seller)
 
-        product = SchemaBuilder(
+        product = JsonLd(
             "Product",
             name=self.with_context(display_default_code=False).display_name,
             url=f"{base_url}{self.website_url}",

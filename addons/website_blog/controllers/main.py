@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import http, tools, models, _
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.structure_data_defination import SchemaBuilder, create_breadcrumbs
+from odoo.addons.website.structure_data_defination import JsonLd, create_breadcrumbs
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.session import touch
@@ -186,10 +186,10 @@ class WebsiteBlog(http.Controller):
             return []
 
         for post_sd in posts_sd:
-            post_sd.add_nested(publisher=SchemaBuilder.create_id_reference("Organization", org_id))
+            post_sd.add_nested(publisher=JsonLd.create_id_reference("Organization", org_id))
             if blog:
                 blog_id = f"{base_url}/blog/{blog.id}#primary_blog"
-                post_sd.add_nested(is_part_of=SchemaBuilder.create_id_reference("Blog", blog_id))
+                post_sd.add_nested(is_part_of=JsonLd.create_id_reference("Blog", blog_id))
 
         result = []
 
@@ -201,11 +201,11 @@ class WebsiteBlog(http.Controller):
         if blog:
             blog_sd = blog._to_structured_data(website=website)
             blog_sd.values["@id"] = f"{base_url}/blog/{blog.id}#primary_blog"
-            organization = SchemaBuilder.create_id_reference("Organization", org_id)
+            organization = JsonLd.create_id_reference("Organization", org_id)
             blog_sd.add_nested(publisher=organization, has_part=posts_sd)
             result.extend([blog_sd, self._get_blog_breadcrumb_structured_data(website, blog=blog)])
         else:
-            collection = SchemaBuilder(
+            collection = JsonLd(
                 "CollectionPage",
                 name=_("Blog"),
                 url=f"{base_url}{request.httprequest.path}",
@@ -285,7 +285,7 @@ class WebsiteBlog(http.Controller):
 
         structured_data = self._prepare_blog_listing_structured_data(request.website, blog, values.get('posts'))
         if structured_data:
-            values['blog_ld_json'] = SchemaBuilder.render_structured_data_list(structured_data)
+            values['blog_ld_json'] = JsonLd.render_structured_data_list(structured_data)
 
         return request.render("website_blog.blog_post_short", values)
 
@@ -395,7 +395,7 @@ class WebsiteBlog(http.Controller):
         if post_data and breadcrumb_data:
             post_data.append(breadcrumb_data)
         if post_data:
-            values['blog_post_ld_json'] = SchemaBuilder.render_structured_data_list(post_data)
+            values['blog_post_ld_json'] = JsonLd.render_structured_data_list(post_data)
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):
