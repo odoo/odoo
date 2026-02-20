@@ -354,6 +354,18 @@ class DeliveryCarrier(models.Model):
                 'warning_message': False,
             }
 
+    @api.model
+    def rate_shipment_for_order(self, carrier_id, order_id):
+        """Rate shipment wrapper for RPC calls that pass IDs instead of records.
+
+        :param int carrier_id: ID of delivery.carrier
+        :param int order_id: ID of sale.order
+        :returns: dict with rate_shipment result
+        """
+        carrier = self.browse(carrier_id)
+        order = self.env['sale.order'].browse(order_id)
+        return carrier.rate_shipment(order)
+
     def log_xml(self, xml_string, func):
         self.ensure_one()
 

@@ -1,22 +1,101 @@
 import {
-    MapContainer
-} from '@delivery/js/location_selector/map_container/map_container';
-import { patch } from '@web/core/utils/patch';
+    LocationSchedule
+} from '@website_sale/js/location_selector/location_schedule/location_schedule';
+import { Map } from '@website_sale/js/location_selector/map/map';
+import { Component, onWillStart, useState } from '@odoo/owl';
+import { AssetsLoadingError, loadCSS, loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 
-patch(MapContainer.prototype, {
+export class MapContainer extends Component {
+    static components = { LocationSchedule, Map };
+    static template = 'website_sale.locationSelector.mapContainer';
+    static props = {
+        locations: {
+            type: Array,
+            element: {
+                type: Object,
+                values: {
+                    id: String,
+                    name: String,
+                    openingHours: {
+                        type: Object,
+                        values: {
+                            type: Array,
+                            element: String,
+                            optional: true,
+                        },
+                    },
+                    street: String,
+                    city: String,
+                    zip_code: String,
+                    state: { type: String, optional: true },
+                    country_code: String,
+                    additional_data: { type: Object, optional: true },
+                    latitude: String,
+                    longitude: String,
+                }
+            },
+        },
+        selectedLocationId: [String, { value: false }],
+        setSelectedLocation: Function,
+        validateSelection: Function,
+    };
+
+    setup() {
+        this.state = useState({
+            shouldLoadMap: false,
+        });
+
+        onWillStart(async () => {
+            /**
+             * We load the script for the map before rendering the owl component to avoid a
+             * UserError if the script can't be loaded (e.g. if the customer loses the connection
+             * between the rendering of the page and when he opens the location selector, or if the
+             * CDN’s doesn't host the library anymore).
+             */
+            try {
+                await Promise.all([
+                    loadJS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
+                    loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
+                ])
+                this.state.shouldLoadMap = true;
+            } catch (error) {
+                if (!(error instanceof AssetsLoadingError)) {
+                    throw error;
+                }
+            }
+        });
+    }
+
+    /**
+     * Get the city and the zip code.
+     *
+     * @param {Number} selectedLocation - The location form which the city and the zip code
+     *                                    should be taken.
+     * @return {Object} The city and the zip code.
+     */
+    getCityAndZipCode(selectedLocation) {
+        return `${selectedLocation.zip_code} ${selectedLocation.city}`;
+    }
+
+    /**
+     * Find the selected location based on its id.
+     *
+     * @return {Object} The selected location.
+     */
+    get selectedLocation() {
+        return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId);
+    }
+
     get errorMessage() {
-        // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
         return _t("There was an error loading the map");
-    },
+    }
 
     get chooseLocationButtonLabel() {
-        // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
         return _t("Choose this location");
-    },
+    }
 
     get openingHoursLabel() {
-        // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
         return _t("Opening hours");
-    },
-});
+    }
+}

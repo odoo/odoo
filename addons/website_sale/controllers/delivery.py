@@ -122,29 +122,6 @@ class Delivery(WebsiteSale):
             )
         return rate
 
-    @route('/website_sale/set_pickup_location', type='jsonrpc', auth='public', website=True)
-    def website_sale_set_pickup_location(self, pickup_location_data):
-        """ Fetch the order from the request and set the pickup location on the current order.
-
-        :param str pickup_location_data: The JSON-formatted pickup location address.
-        :return: The order summary values.
-        :rtype: dict
-        """
-        order_sudo = request.cart
-        order_sudo._set_pickup_location(pickup_location_data)
-        return self._order_summary_values(order_sudo)
-
-    @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
-    def website_sale_get_pickup_locations(self, **kwargs):
-        """ Fetch the order from the request and return the pickup locations close to the zip code.
-
-        :return: The close pickup locations data.
-        :rtype: dict
-        """
-        order_sudo = request.cart
-        country = order_sudo.partner_shipping_id.country_id
-        return order_sudo._get_pickup_locations(country=country, **kwargs)
-
     @route(_express_checkout_delivery_route, type='jsonrpc', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
         """ Process the shipping address and return the available delivery methods.

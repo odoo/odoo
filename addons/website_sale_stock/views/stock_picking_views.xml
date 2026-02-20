@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_website_sale" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.website.sale</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='partner_id']" position="attributes">
+                <attribute name="invisible" add="(carrier_id and is_pickup_delivery and partner_id)" separator="or"/>
+            </xpath>    
+            <xpath expr="//label[@for='partner_id']" position="after">
+                <label for="partner_id" string="Pickup Point" invisible="picking_type_code != 'outgoing' or not partner_id or not carrier_id or (carrier_id and not is_pickup_delivery)"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible" add="(partner_id and picking_type_code == 'outgoing' and carrier_id and is_pickup_delivery)" separator="or"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="partner_id" context="{'partner_zip_code': zip}" nolabel="1" invisible="picking_type_code != 'outgoing' or not partner_id or not carrier_id or (carrier_id and not is_pickup_delivery)" widget="pickup_location_many2one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

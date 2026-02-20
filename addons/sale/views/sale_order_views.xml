@@ -510,11 +510,14 @@
                               options="{'no_quick_create': True}"
                               context="{'default_type': 'invoice', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
-                        <field name="partner_shipping_id"
-                              groups="account.group_delivery_invoice_address"
-                              options="{'no_quick_create': True}"
-                              context="{'default_type': 'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
-                              readonly="state == 'cancel' or locked"/>
+                        <label for="partner_shipping_id"/>
+                        <div name="delivery_address">
+                            <field name="partner_shipping_id"
+                                  groups="account.group_delivery_invoice_address"
+                                  options="{'no_quick_create': True}"
+                                  context="{'default_type': 'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
+                                  readonly="state == 'cancel' or locked"/>
+                        </div>
                     </group>
                     <group name="order_details">
                         <field name="validity_date" invisible="state == 'sale'" readonly="state in ['cancel', 'sale']"/>

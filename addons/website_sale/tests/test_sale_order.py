@@ -4,10 +4,11 @@ from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleOrder(WebsiteSaleCommon):
+class TestSaleOrder(WebsiteSaleCommon, SaleCommon):
 
     def test_delivery_methods_match_order_company(self):
         company_1 = self.env['res.company'].create({'name': 'Test Company 1'})
@@ -63,3 +64,8 @@ class TestSaleOrder(WebsiteSaleCommon):
             self.cart.website_id,
             invoice.website_id,
         )
+
+    def test_avoid_setting_pickup_location_as_default_delivery_address(self):
+        self._create_partner(type='delivery', parent_id=self.partner.id, pickup_delivery_carrier_id=self.carrier.id)
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.assertFalse(so.partner_shipping_id.pickup_delivery_carrier_id)

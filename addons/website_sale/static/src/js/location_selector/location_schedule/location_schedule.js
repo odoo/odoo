@@ -1,12 +1,31 @@
-import {
-    LocationSchedule
-} from '@delivery/js/location_selector/location_schedule/location_schedule';
-import { patch } from '@web/core/utils/patch';
+import { Component } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 
-patch(LocationSchedule.prototype, {
+export class LocationSchedule extends Component {
+    static template = 'website_sale.locationSelector.schedule';
+    static props = {
+        openingHours: {
+            type: Object,
+            values: {
+                type: Array,
+                element: String,
+                optional: true,
+            },
+        },
+        wrapClass: { type: String, optional: true },
+    };
+
+    /**
+     * Return the localized day's name given his index in the week.
+     *
+     * @param {Number} weekday - The number of the day of the week. 0 for Monday, 6 for Sunday.
+     * @return {Object} the localized name of the day (long version).
+     */
+    getWeekDay(weekday) {
+        return luxon.Info.weekdays()[weekday]
+    }
+
     get closedLabel() {
-        // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
         return _t("Closed");
-    },
-});
+    }
+}

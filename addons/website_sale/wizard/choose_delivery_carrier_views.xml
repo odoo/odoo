@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="choose_delivery_carrier_view_form_inherit_website_sale" model="ir.ui.view">
+        <field name="name">choose.delivery.carrier.form.inherit.website.sale</field>
+        <field name="model">choose.delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.choose_delivery_carrier_view_form"/>
+        <field name="arch" type="xml">
+            <field name="delivery_price" position="after">
+                <field name="partner_id" invisible="1"/>  <!-- Needed in pickup_location_many2one widget -->
+            </field>
+            <div name="display_price" position="after">
+                <field string="Pickup Point" invisible="not is_pickup_delivery" name="partner_shipping_id" widget="pickup_location_many2one"/>
+            </div>
+        </field>
+    </record>
+</odoo>

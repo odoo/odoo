@@ -4,7 +4,7 @@ import { Component, useEffect, useRef } from '@odoo/owl';
 import { renderToString } from '@web/core/utils/render';
 
 export class Map extends Component {
-    static template = 'delivery.locationSelector.map';
+    static template = 'website_sale.locationSelector.map';
     static props = {
         locations: {
             type: Array,
@@ -24,15 +24,15 @@ export class Map extends Component {
                     street: String,
                     city: String,
                     zip_code: String,
-                    state: { type: String, optional: true},
+                    state: { type: String, optional: true },
                     country_code: String,
-                    additional_data: { type: Object, optional: true},
+                    additional_data: { type: Object, optional: true },
                     latitude: String,
                     longitude: String,
                 }
             },
         },
-        selectedLocationId: [String, {value: false}],
+        selectedLocationId: [String, { value: false }],
         setSelectedLocation: Function,
     };
 
@@ -104,9 +104,9 @@ export class Map extends Component {
             // Icon creation
             const iconInfo = {
                 className: isSelected ? 'o_location_selector_marker_icon_selected'
-                                      : 'o_location_selector_marker_icon',
+                    : 'o_location_selector_marker_icon',
                 html: renderToString(
-                    'delivery.locationSelector.map.marker',
+                    'website_sale.locationSelector.map.marker',
                     { number: locations.indexOf(loc) + 1 },
                 ),
                 iconSize: [30, 40],
@@ -114,7 +114,7 @@ export class Map extends Component {
             };
 
             const marker = L.marker(
-                [ loc.latitude, loc.longitude ],
+                [loc.latitude, loc.longitude],
                 {
                     icon: L.divIcon(iconInfo),
                     title: locations.indexOf(loc) + 1,

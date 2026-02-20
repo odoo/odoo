@@ -88,9 +88,14 @@ class ChooseDeliveryCarrier(models.TransientModel):
             'context': vals,
         }
 
-    def button_confirm(self):
-        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
-        self.order_id.write({
+    def _get_so_vals(self):
+        return {
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
-        })
+        }
+
+    def button_confirm(self):
+        self.ensure_one()
+        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
+        so_vals = self._get_so_vals()
+        self.order_id.write(so_vals)

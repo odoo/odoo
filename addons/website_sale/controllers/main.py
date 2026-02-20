@@ -1074,6 +1074,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'only_services': order_sudo.only_services,
             **self._prepare_address_data(partner_sudo, **kwargs),
             'address_url': '/shop/address',
+            'json_pickup_location_data': json.dumps(order_sudo.partner_shipping_id.pickup_location_data or {}),
         }
 
     @route(

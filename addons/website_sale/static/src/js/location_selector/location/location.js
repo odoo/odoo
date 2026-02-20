@@ -1,12 +1,42 @@
 import {
-    Location
-} from '@delivery/js/location_selector/location/location';
-import { patch } from '@web/core/utils/patch';
+    LocationSchedule
+} from '@website_sale/js/location_selector/location_schedule/location_schedule';
+import { Component } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 
-patch(Location.prototype, {
+export class Location extends Component {
+    static components = { LocationSchedule };
+    static template = 'website_sale.locationSelector.location';
+    static props = {
+        id: String,
+        number: Number,
+        name: String,
+        street: String,
+        city: String,
+        zipCode: String,
+        openingHours: {
+            type: Object,
+            values: {
+                type: Array,
+                element: String,
+                optional: true,
+            },
+        },
+        additionalData: { type: Object, optional: true },
+        isSelected: Boolean,
+        setSelectedLocation: Function,
+    };
+
+    /**
+     * Get the city and the zip code.
+     *
+     * @return {Object} The city and the zip code.
+     */
+    getCityAndZipCode() {
+        return `${this.props.zipCode} ${this.props.city}`;
+    }
+
     get openingHoursLabel() {
-        // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
         return _t("Opening hours");
-    },
-});
+    }
+}

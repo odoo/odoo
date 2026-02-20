@@ -27,11 +27,6 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    zip = fields.Char(related='partner_id.zip', string='Zip', search="_search_zip")
-
-    def _search_zip(self, operator, value):
-        return [('partner_id.zip', operator, value)]
-
     def write(self, vals):
         res = super().write(vals)
         if 'batch_id' not in vals:
