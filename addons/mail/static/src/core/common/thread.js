@@ -440,6 +440,11 @@ export class Thread extends Component {
         ) {
             let value;
             if (typeof thread.scrollTop === "string" && thread.scrollTop?.includes("bottom")) {
+                if (newerMessages && this.channel) {
+                    if (this.applyScrollContextuallyNewerChannelMessages(thread)) {
+                        return;
+                    }
+                }
                 value =
                     this.props.order === "asc"
                         ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
@@ -463,6 +468,29 @@ export class Thread extends Component {
                 });
             }
         }
+    }
+
+    /**
+     * @param {import("models").Thread} thread
+     * @returns {Boolean} true when fully handled, false otherwise.
+     */
+    applyScrollContextuallyNewerChannelMessages(thread) {
+        const firstNewerMessage = this.channel.getFirstNewerMessage({
+            from_message_id: this.newestPersistentMessage.id,
+        });
+        if (!firstNewerMessage) {
+            return false;
+        }
+        const firstNewestMessageRef = this.messageRefs.get(firstNewerMessage.id);
+        if (!firstNewestMessageRef) {
+            return false;
+        }
+        firstNewestMessageRef.el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
+            behavior: "instant",
+            block: this.props.order === "asc" ? "start" : "end",
+        });
+        thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef.el.scrollTop;
+        return true;
     }
 
     fetchInitialMessages() {

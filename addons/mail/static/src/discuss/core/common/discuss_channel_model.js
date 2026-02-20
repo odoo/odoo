@@ -285,26 +285,31 @@ export class DiscussChannel extends Record {
     get hasAttachmentPanel() {
         return true;
     }
+    getFirstNewerMessage({ from_message_id = this.self_member_id?.new_message_separator_ui } = {}) {
+        if (!this.self_member_id) {
+            return null;
+        }
+        const messages = this.messages.filter((m) => !m.isNotification);
+        const separator = from_message_id;
+        if (separator === 0 && !this.loadOlder) {
+            return messages[0];
+        }
+        if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
+            return null;
+        }
+        // try to find a perfect match according to the member's separator
+        let message = this.store["mail.message"].get({ id: separator });
+        if (!message || this.notEq(message.channel_id)) {
+            message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
+        }
+        return message;
+    }
     firstUnreadMessage = fields.One("mail.message", {
         /** @this {import("models").DiscussChannel} */
         compute() {
-            if (!this.self_member_id) {
-                return null;
-            }
-            const messages = this.messages.filter((m) => !m.isNotification);
-            const separator = this.self_member_id.new_message_separator_ui;
-            if (separator === 0 && !this.loadOlder) {
-                return messages[0];
-            }
-            if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
-                return null;
-            }
-            // try to find a perfect match according to the member's separator
-            let message = this.store["mail.message"].get({ id: separator });
-            if (!message || this.notEq(message.channel_id)) {
-                message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
-            }
-            return message;
+            return this.getFirstNewerMessage({
+                from_message_id: this.self_member_id?.new_message_separator_ui,
+            });
         },
     });
     hasOtherMembersTyping = fields.Attr(false, {
