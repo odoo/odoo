@@ -584,3 +584,22 @@ test("should not apply bold to selection placeholder nodes", async () => {
         `)
     );
 });
+
+test("should not apply bold formatting for partial selection inside contenteditable false", async () => {
+    const { editor, el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p data-selection-placeholder=""><br></p>[<p contenteditable="false">Test</p>]<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+    );
+    expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+});
+
+test("should toggle bold around non editable", async () => {
+    const { el, editor } = await setupEditor(`<p>[a</p><p contenteditable="false">b</p><p>c]</p>`);
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p><strong>[a</strong></p><p contenteditable="false">b</p><p><strong>c]</strong></p>`
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(`<p>[a</p><p contenteditable="false">b</p><p>c]</p>`);
+});
