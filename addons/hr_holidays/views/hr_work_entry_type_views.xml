@@ -61,6 +61,12 @@
                             <field name="requires_allocation" widget="checkbox"/>
                             <field name="employee_requests" widget="checkbox" invisible="not requires_allocation"/>
                             <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation"/>
+                            <label for="default_duration" invisible="not requires_allocation"/>
+                            <div class="o_row" invisible="not requires_allocation">
+                                <field name="default_duration" class="o_hr_narrow_field"/>
+                                <span invisible="request_unit == 'hour'">days</span>
+                                <span invisible="request_unit != 'hour'">hours</span>
+                            </div>
                         </group>
                     </group>
                     <group style="justify-content: unset;">
