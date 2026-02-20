@@ -804,6 +804,19 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
         if cfg:
             connection_info[p] = cfg
 
+    if 'ODOO_PG_TCP_KEEPIDLE' in os.environ:
+        # Sets socket.TCP_KEEPIDLE. Default is 0 i.e. kernel's `net.ipv4.tcp_keepalive_time`
+        # usually 7200 seconds on Linux
+        connection_info['keepalives_idle'] = int(os.environ['ODOO_PG_TCP_KEEPIDLE'])
+    if 'ODOO_PG_TCP_KEEPCNT' in os.environ:
+        # cfr socket.TCP_KEEPCNT. Default is 0 i.e. kernel's `net.ipv4.tcp_keepalive_probes`
+        # usually 9 on Linux
+        connection_info['keepalives_count'] = int(os.environ['ODOO_PG_TCP_KEEPCNT'])
+    if 'ODOO_PG_TCP_KEEPINTVL' in os.environ:
+        # cfr socket.TCP_KEEPINTVL. Default is 0 i.e. kernel's `net.ipv4.tcp_keepalive_intvl`
+        # usually 75 seconds on Linux
+        connection_info['keepalives_interval'] = int(os.environ['ODOO_PG_TCP_KEEPINTVL'])
+
     return db_or_uri, connection_info
 
 
