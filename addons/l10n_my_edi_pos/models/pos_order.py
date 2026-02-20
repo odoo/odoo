@@ -88,7 +88,7 @@ class PosOrder(models.Model):
 
             # At this point we don't want to raise anymore, if there are issues it'll be logged on the invoice, and we will
             # move on.
-            self.account_move.action_l10n_my_edi_send_invoice()
+            self.account_move.action_l10n_my_edi_send_invoice(allow_raising=not self.env.user.is_public)
 
             if self.env.context.get('generate_pdf', True):
                 self.account_move.with_context(skip_invoice_sync=True)._generate_and_send()

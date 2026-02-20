@@ -3,11 +3,11 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from freezegun import freeze_time
-from lxml import etree
+from lxml import etree, html
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 from odoo.tools import file_open, mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -18,7 +18,7 @@ CONTACT_PROXY_METHOD = 'odoo.addons.l10n_my_edi.models.account_edi_proxy_user.Ac
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestMyInvoisPoS(TestPoSCommon):
+class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('my')
@@ -848,6 +848,58 @@ class TestMyInvoisPoS(TestPoSCommon):
             with file_open('l10n_my_edi_pos/tests/expected_xmls/consolidated_invoice_refund.xml', 'rb') as f:
                 expected_xml = etree.fromstring(f.read())
             self.assertXmlTreeEqual(root, expected_xml)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_portal_invoice_request_flow(self):
+        """ Test the flow from the portal ticket validation to EDI submission. """
+        with self.with_pos_session():
+            order = self._create_order({
+                "pos_order_lines_ui_args": [(self.product_one, 1.0)],
+            })
+
+        self.assertFalse(order.account_move)
+
+        url = f"/pos/ticket/validate?access_token={order.access_token}"
+        response = self.url_open(url)  # GET request to get csrf token
+        self.assertEqual(response.status_code, 200)
+
+        token_elements = html.fromstring(response.content).xpath(
+            '//input[@name="csrf_token"]/@value',
+        )
+        self.assertTrue(token_elements, "CSRF token not found in the HTML tree")
+        csrf_token = token_elements[0]
+
+        requested_invoice_data = {
+            'access_token': order.access_token,
+            'name': 'Test Name',
+            'vat': 'C2584563200',
+            'l10n_my_identification_type': 'BRN',
+            'l10n_my_identification_number': '202001234567',
+            'country_id': self.env.ref('base.my').id,
+            'state_id': self.env.ref('base.state_my_kul').id,
+            'zip': '50300',
+            'street': '1 Wisma Dato Dagang',
+            'city': 'Kuala Lumpur',
+            'phone': '+60123456789',
+            'email': 'test@example.com',
+            'csrf_token': csrf_token,
+        }
+
+        with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+            self.url_open(url=url, data=requested_invoice_data)
+
+        self.assertTrue(order.account_move, "Invoice is not created")
+
+        myinvois_document = order.account_move._get_active_myinvois_document()
+        self.assertTrue(
+            myinvois_document,
+            "MyInvois document was not created",
+        )
+        self.assertIn(
+            myinvois_document.myinvois_state,
+            ("in_progress", "submitted", "valid"),
+            f"Unexpected MyInvois state: {myinvois_document.myinvois_state}",
+        )
 
     #################
     # Patched methods
