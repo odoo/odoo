@@ -203,6 +203,7 @@
     <template id="ubl_20_AllowanceChargeType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('id')"/>
             <cbc:ChargeIndicator t-out="vals.get('charge_indicator')"/>
             <cbc:AllowanceChargeReasonCode t-out="vals.get('allowance_charge_reason_code')"/>
             <cbc:AllowanceChargeReason t-out="vals.get('allowance_charge_reason')"/>
