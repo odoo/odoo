@@ -1,4 +1,4 @@
-from odoo import _, fields, models, modules, tools
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -38,7 +38,7 @@ class PosMakeInvoice(models.TransientModel):
                 invoices |= order._generate_pos_order_invoice()
                 # Commit after each invoice because a failure on one POS Order would rollback all previously created invoices,
                 # which is not desirable since some of the invoice send & print web services may already be triggered, and those are already committing.
-                if not tools.config['test_enable'] and not modules.module.current_test:
+                if self._can_commit():
                     self.env.cr.commit()
 
         else:
@@ -72,7 +72,7 @@ class PosMakeInvoice(models.TransientModel):
                 invoices |= orders._generate_pos_order_invoice()
                 # Commit after each invoice because a failure on one group of POS Orders would rollback all previously created invoices,
                 # which is not desirable since some of the invoice send & print web services may already be triggered, and those are already committing.
-                if not tools.config['test_enable'] and not modules.module.current_test:
+                if self._can_commit():
                     self.env.cr.commit()
 
         if invoices:
