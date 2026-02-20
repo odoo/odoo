@@ -59,6 +59,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
         'country_not_supported': 'sms_country_not_supported',
         'insufficient_credit': 'sms_credit',
         'unregistered': 'sms_acc',
+        'to_moderate': 'sms_to_moderate',
     }
 
     def __init__(self, env, account=None):
