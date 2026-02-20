@@ -23,4 +23,24 @@
             <attribute name="displayText">displayText</attribute>
         </TagsList>
     </t>
+
+    <t t-name="mail.KanbanMany2ManyTagsAvatarUserFieldPopover" t-inherit="web.Many2ManyTagsAvatarFieldPopover" t-inherit-mode="primary">
+        <Many2XAutocomplete position="attributes">
+            <attribute name="specification">autocompleteSpecification</attribute>
+        </Many2XAutocomplete>
+    </t>
+
+    <t t-name="mail.KanbanMany2ManyTagsAvatarUserFieldPopover.option">
+        <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center position-relative" t-att-data-tooltip="getTooltipText(autoCompleteItemScope.record?.__formatted_display_name)">
+            <span t-if="autoCompleteItemScope.value" class="position-relative flex-shrink-0 me-1">
+                <img class="rounded" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.value}}/avatar_128"/>
+                <t t-if="autoCompleteItemScope.record?.im_status">
+                    <span class="o_avatar_im_status position-absolute d-flex align-items-center justify-content-center">
+                        <ImStatus persona="autoCompleteItemScope.record" size="'sm'"/>
+                    </span>
+                </t>
+            </span>
+            <span class="text-truncate flex-grow-1 min-w-0" t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label"/>
+        </span>
+    </t>
 </templates>
