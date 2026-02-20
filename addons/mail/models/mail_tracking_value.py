@@ -81,9 +81,6 @@ class MailTrackingValue(models.Model):
         :return: a dict values valid for 'mail.tracking.value' creation;
         """
         field = self.env['ir.model.fields']._get(record._name, col_name)
-        if not field:
-            raise ValueError(f'Unknown field {col_name} on model {record._name}')
-
         values = {'field_id': field.id}
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:

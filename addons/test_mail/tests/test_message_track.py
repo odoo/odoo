@@ -54,6 +54,27 @@ class TestTrackingAPI(TestTrackingCommon):
             self.assertMessageFields(record_su.message_ids, {'tracking_values': []})
 
     @users('employee')
+    def test_tracking_custom(self):
+        test_tracking_records = self.test_tracking_records.with_env(self.env)
+        test_tracking_records._track_add(
+            {record.id: {'false_field': 'old'} for record in test_tracking_records},
+            end_values={record.id: {'false_field': 'new'} for record in test_tracking_records},
+            fields_info={'false_field': {'string': 'False Field', 'type': 'char'}},
+        )
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.flush_tracking()
+        self.assertEqual(len(self._new_msgs), len(test_tracking_records), 'Should have generated 1 tracking msg / record')
+        for record in test_tracking_records:
+            track_msg = self._new_msgs.filtered(lambda m: m.res_id == record.id)
+            self.assertMessageFields(
+                track_msg, {
+                    'author_id': self.partner_employee,
+                    'tracking_values': [('false_field', 'char', 'old', 'new')],
+                }
+            )
+
+    @users('employee')
     def test_tracking_default_subtype(self):
         """ Update some tracked fields not linked to some subtype -> message with onchange """
         customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
@@ -86,7 +107,7 @@ class TestTrackingAPI(TestTrackingCommon):
         # no specific recipients except those following notes, no email
         self.assertNotSentEmail()
 
-        # change container_id field, linked to a subtype through _track_subtype override
+        # change container_id field, linked to a subtype through _track_post_get_default_subtype override
         container = self.env['mail.test.container'].create({'name': 'Container'})
         with self.mock_mail_gateway(), self.mock_mail_app():
             test_record.write({
@@ -145,7 +166,7 @@ class TestTrackingAPI(TestTrackingCommon):
     @users('employee')
     def test_tracking_tweak_default_message(self):
         """Check that the default tracking log message defined on the model is used
-        and that setting a log message overrides it. See `_track_get_default_log_message`"""
+        and that setting a log message overrides it. See `_track_post_get_default_body`"""
         record = self.env['mail.test.track'].create({
             'name': 'Test',
             'track_enable_default_log': True,
@@ -161,7 +182,7 @@ class TestTrackingAPI(TestTrackingCommon):
         self.assertMessageFields(
             track_msg, {
                 'author_id': self.partner_employee,
-                # default message (`_track_get_default_log_message`) should be used
+                # default message (`_track_post_get_default_body`) should be used
                 'body': '<p>There was a change on Test for fields "user_id"</p>',
                 'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
             }
@@ -495,11 +516,11 @@ class TestTrackingTemplate(TestTrackingCommon):
             'use_default_to': True,
         } for n in range(2)])
 
-        def _track_subtype(self, init_values):
-            if 'container_id' in init_values and self.container_id:
+        def _track_post_get_default_subtype(self, track_init_values):
+            if 'container_id' in track_init_values and self.container_id:
                 return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
             return self.env.ref('mail.mt_note')
-        self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
+        self.patch(self.registry['mail.test.ticket'], '_track_post_get_default_subtype', _track_post_get_default_subtype)
 
         def _track_template(self, changes):
             if 'email_from' in changes:

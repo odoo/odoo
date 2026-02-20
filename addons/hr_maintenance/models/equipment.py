@@ -71,11 +71,11 @@ class MaintenanceEquipment(models.Model):
             self.message_subscribe(partner_ids=partner_ids)
         return super(MaintenanceEquipment, self).write(vals)
 
-    def _track_subtype(self, init_values):
+    def _track_post_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if ('employee_id' in init_values and self.employee_id) or ('department_id' in init_values and self.department_id):
+        if ('employee_id' in track_init_values and self.employee_id) or ('department_id' in track_init_values and self.department_id):
             return self.env.ref('maintenance.mt_mat_assign')
-        return super(MaintenanceEquipment, self)._track_subtype(init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
 
 class MaintenanceRequest(models.Model):

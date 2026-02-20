@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import typing
+
 from collections import defaultdict
 from datetime import datetime
 from lxml.builder import E
@@ -7,6 +9,7 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.api import ValuesType
 from odoo.fields import Domain
 from odoo.tools import parse_contact_from_email, OrderedSet
 from odoo.tools.mail import email_normalize, email_split_and_format
@@ -242,15 +245,19 @@ class Base(models.AbstractModel):
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------
 
-    def _mail_track(self, tracked_fields, initial_values):
+    def _mail_track(
+            self,
+            tracked_fields_get: dict[str, ValuesType],
+            initial_values: dict[str, typing.Any]
+        ) -> tuple[set[str], list[tuple[0, 0, dict[str, ValuesType]]]]:
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a valid command to create tracking values.
         The method accepts a single record or an empty one (where all field
         values will be falsy).
 
-        :param dict tracked_fields: fields_get of updated fields on which
+        :param dict[str, ValuesType] tracked_fields_get: fields_get of updated fields on which
           tracking is checked and performed;
-        :param dict initial_values: dict of initial values for each updated
+        :param dict[str, typing.Any] initial_values: dict of initial values for each updated
           fields;
 
         :return: a tuple (changes, tracking_value_ids) where
@@ -266,22 +273,16 @@ class Base(models.AbstractModel):
         updated = set()
         tracking_value_ids = []
 
-        fields_track_info = self._mail_track_order_fields(tracked_fields)
+        fields_track_info = self._mail_track_order_fields(tracked_fields_get)
         for col_name, _sequence in fields_track_info:
             if col_name not in initial_values:
                 continue
             initial_value = initial_values[col_name]
-            new_value = (
-                # get the properties definition with the value
-                # (not just the dict with the value)
-                field.convert_to_read(self[col_name], self)
-                if (field := self._fields[col_name]).type == 'properties'
-                else self[col_name]
-            )
+            new_value = self._track_convert_value(col_name, self[col_name]) if col_name in self else self.env.cr.precommit.data.get(f'mail.tracking.endvalues{self._name}', {}).get(col_name, False)
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
-            if self._fields[col_name].type == "properties":
+            if col_name in self and self._fields[col_name].type == "properties":
                 definition_record_field = self._fields[col_name].definition_record
                 if self[definition_record_field] == initial_values[definition_record_field]:
                     # track the change only if the parent changed
@@ -290,7 +291,7 @@ class Base(models.AbstractModel):
                 updated.add(col_name)
                 tracking_value_ids.extend(
                     [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
-                        property_, col_name, tracked_fields[col_name], self,
+                        property_, col_name, tracked_fields_get[col_name], self,
                     )]
                     # Show the properties in the same order as in the definition
                     for property_ in initial_value[::-1]
@@ -302,13 +303,13 @@ class Base(models.AbstractModel):
             tracking_value_ids.append(
                 [0, 0, self.env['mail.tracking.value']._create_tracking_values(
                     initial_value, new_value,
-                    col_name, tracked_fields[col_name],
+                    col_name, tracked_fields_get[col_name],
                     self
                 )])
 
         return updated, tracking_value_ids
 
-    def _mail_track_order_fields(self, tracked_fields):
+    def _mail_track_order_fields(self, tracked_fields: dict[str, ValuesType]):
         """ Order tracking, based on sequence found on field definition. When
         having several identical sequences, properties are added after,
         and then field name is used. """
@@ -327,7 +328,15 @@ class Base(models.AbstractModel):
         ), reverse=True)
         return fields_track_info
 
-    def _mail_track_get_field_sequence(self, fname):
+    def _track_convert_value(self, fname: str, value: typing.Any) -> typing.Any:
+        # get the properties definition with the value
+        # (not just the dict with the value)
+        self.ensure_one()
+        if fname in self and (field := self._fields[fname]).type == 'properties':
+            return field.convert_to_read(value, self)
+        return value
+
+    def _mail_track_get_field_sequence(self, fname: str) -> int:
         """ Find tracking sequence of a given field, given their name. Current
         parameter 'tracking' should be an integer, but attributes with True
         are still supported; old naming 'track_sequence' also. """

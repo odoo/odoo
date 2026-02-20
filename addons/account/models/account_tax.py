@@ -422,6 +422,7 @@ class AccountTax(models.Model):
         for (document_type, sequence), old_value, new_value in modified_lines:
             diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
             if diff_keys:
+                # TDE FIXME: change to real tracking
                 body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
                     type=document_type.capitalize(),
                     rep=_('repartition line'),

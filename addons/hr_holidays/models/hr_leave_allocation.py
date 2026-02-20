@@ -1016,11 +1016,11 @@ class HrLeaveAllocation(models.Model):
     # Messaging methods
     ####################################################
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values and self.state == 'validate':
+    def _track_post_get_default_subtype(self, track_init_values):
+        if 'state' in track_init_values and self.state == 'validate':
             allocation_notif_subtype_id = self.work_entry_type_id.allocation_notif_subtype_id
             return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
-        return super()._track_subtype(init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo

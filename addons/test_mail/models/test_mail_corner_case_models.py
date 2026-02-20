@@ -120,11 +120,11 @@ class MailTestTrack(models.Model):
         filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
         return values.filtered(lambda val: val.field_id.name not in filtered_fields)
 
-    def _track_get_default_log_message(self, changes):
+    def _track_post_get_default_body(self, tracked_fields):
         filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
-        if self.track_enable_default_log and not all(change in filtered_fields for change in changes):
-            return f'There was a change on {self.name} for fields "{",".join(changes)}"'
-        return super()._track_get_default_log_message(changes)
+        if self.track_enable_default_log and not all(change in filtered_fields for change in tracked_fields):
+            return f'There was a change on {self.name} for fields "{",".join(tracked_fields)}"'
+        return super()._track_post_get_default_body(tracked_fields)
 
 
 class MailTestTrackAllM2m(models.Model):

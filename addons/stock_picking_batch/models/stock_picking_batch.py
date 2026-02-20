@@ -436,10 +436,10 @@ class StockPickingBatch(models.Model):
                     batch=batch.name,
                     incompatible_transfers=erroneous_pickings.mapped('name')))
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values:
+    def _track_post_get_default_subtype(self, track_init_values):
+        if 'state' in track_init_values:
             return self.env.ref('stock_picking_batch.mt_batch_state')
-        return super()._track_subtype(init_values)
+        return super()._track_post_get_default_subtype(track_init_values)
 
     def _is_picking_auto_mergeable(self, picking):
         """ Verifies if a picking can be safely inserted into the batch without violating auto_batch_constrains.
