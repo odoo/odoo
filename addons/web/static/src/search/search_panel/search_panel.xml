@@ -53,7 +53,7 @@
          t-att-class="env.searchModel.searchPanelInfo.className"
          t-ref="root">
         <div class="d-flex align-items-center py-2">
-            <h6 t-out="env.searchModel.searchPanelInfo.title" class="mb-0 fw-normal"/>
+            <h6 t-if="env.searchModel.searchPanelInfo.title" t-out="env.searchModel.searchPanelInfo.title" class="mb-0 fw-normal"/>
             <button t-if="!env.isSmall" class="btn btn-light btn-sm ms-auto" t-on-click="toggleSidebar">
                 <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
             </button>
