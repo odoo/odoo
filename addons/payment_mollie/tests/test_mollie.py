@@ -49,3 +49,40 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         ):
             self._make_http_post_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')
+
+    def test_payload_preparation_in_payment_with_tokenize(self):
+        """Test that tokenization requests create a customer and set a 'first' sequence without a
+        mandate ID."""
+        tx = self._create_transaction('redirect')
+        tx.tokenize = True
+        with patch.object(
+            self.env.registry['payment.transaction'], '_mollie_create_customer',
+            return_value='cst_test987',
+        ):
+            payload = tx._mollie_prepare_payment_request_payload()
+
+        self.assertEqual(payload.get('sequenceType'), 'first')
+        self.assertEqual(payload.get('customerId'), 'cst_test987')
+        self.assertNotIn('mandateId', payload)
+
+    def test_payload_preparation_in_payment_with_token(self):
+        """Test that using a saved token produces a recurring payload with customer and mandate IDs
+        and no method."""
+        tx = self._create_transaction('redirect')
+        token = self._create_token()
+        token.mollie_customer_id = 'cst_test987'
+        tx.token_id = token
+
+        payload = tx._mollie_prepare_payment_request_payload()
+
+        self.assertEqual(payload.get('sequenceType'), 'recurring')
+        self.assertEqual(payload.get('customerId'), 'cst_test987')
+        self.assertEqual(payload.get('mandateId'), 'provider Ref (TEST)')
+        self.assertNotIn('method', payload)
+
+    def test_payload_preparation_in_oneoff_payment(self):
+        """Test that a payment without tokenization or token is configured as a one-off sequence."""
+        tx = self._create_transaction('redirect')
+        payload = tx._mollie_prepare_payment_request_payload()
+
+        self.assertEqual(payload.get('sequenceType'), 'oneoff')

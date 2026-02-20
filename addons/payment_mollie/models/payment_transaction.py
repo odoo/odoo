@@ -63,7 +63,7 @@ class PaymentTransaction(models.Model):
             self.currency_id.name, self.currency_id.decimal_places
         )
 
-        return {
+        payload = {
             'description': self.reference,
             'amount': {
                 'currency': self.currency_id.name,
@@ -92,6 +92,19 @@ class PaymentTransaction(models.Model):
             }],
         }
 
+        if self.token_id:
+            payload['sequenceType'] = 'recurring'
+            payload['customerId'] = self.token_id.mollie_customer_id
+            payload['mandateId'] = self.token_id.provider_ref
+            payload.pop('method')
+        elif self.tokenize:
+            payload['sequenceType'] = 'first'
+            payload['customerId'] = self._mollie_create_customer()
+        else:
+            payload['sequenceType'] = 'oneoff'
+
+        return payload
+
     def _mollie_prepare_billing_address_payload(self):
         """Return correctly formatted billing address payload.
 
@@ -108,6 +121,20 @@ class PaymentTransaction(models.Model):
             "country": self.partner_country_id.code,
             "email": self.partner_email,
         }
+
+    def _send_payment_request(self):
+        """Override of `payment` to send a token payment request to Mollie."""
+        if self.provider_code != 'mollie':
+            return super()._send_payment_request()
+
+        payload = self._mollie_prepare_payment_request_payload()
+        try:
+            payment_data = self._send_api_request('POST', '/payments', json=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+        else:
+            self.provider_reference = payment_data['id']
+            self._process('mollie', payment_data)
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -160,3 +187,44 @@ class PaymentTransaction(models.Model):
                 payment_status, self.reference
             )
             self._set_error(_("Received data with invalid payment status: %s.", payment_status))
+
+    def _extract_token_values(self, payment_data):
+        """Override of `payment` to return token data based on Mollie payment data."""
+        if self.provider_code != 'mollie':
+            return super()._extract_token_values(payment_data)
+
+        mandate_id = payment_data.get('mandateId')
+        customer_id = payment_data.get('customerId')
+        if not mandate_id or not customer_id:
+            _logger.warning(
+                "Mollie tokenization aborted: missing mandate_id or customer_id "
+                "(payment_id=%s, partner_id=%s)",
+                self.id,
+                self.partner_id.id,
+            )
+            return {}
+        token_values = {
+            'provider_ref': mandate_id,
+            'mollie_customer_id': customer_id,
+        }
+
+        if card_number := payment_data.get('details', {}).get('cardNumber'):
+            token_values['payment_details'] = card_number[-4:]
+
+        return token_values
+
+    def _mollie_create_customer(self):
+        """Create a Mollie customer for this partner."""
+        partner = self.partner_id
+        payload = {
+            'name': partner.name,
+            'email': partner.email,
+        }
+
+        try:
+            response = self._send_api_request('POST', '/customers', json=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
+
+        return response['id']

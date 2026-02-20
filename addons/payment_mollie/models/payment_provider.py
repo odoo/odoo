@@ -25,6 +25,11 @@ class PaymentProvider(models.Model):
 
     # === COMPUTE METHODS === #
 
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'mollie').support_tokenization = True
+
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
         supported_currencies = super()._get_supported_currencies()
