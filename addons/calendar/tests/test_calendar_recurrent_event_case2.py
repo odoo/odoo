@@ -52,3 +52,27 @@ class TestRecurrentEvent(common.TransactionCase):
             ('start', '>=', '2011-03-13'), ('stop', '<=', '2011-05-13')
         ])
         self.assertEqual(meetings_count, 10, 'Recurrent weekly meetings are not created!')
+
+    def test_recurrent_meeting3(self):
+        """
+        Test that 'forever' recurrences are limited to a certain number of years (default 15).
+        The default limit can be change by the system parameter `calendar.max_recurrence_years`.
+        """
+        values = {
+            'duration': 1.0,
+            'end_type': 'forever',
+            'name': 'Yearly Meeting',
+            'start': '2026-04-20 05:00:00',
+            'stop': '2026-04-20 06:00:00',
+            'recurrency': True,
+            'rrule_type': 'yearly',
+        }
+        self.CalendarEvent.create(values)
+        meetings_count = self.CalendarEvent.search_count([('name', '=', 'Yearly Meeting')])
+        self.assertEqual(meetings_count, 16, 'Recurrent yearly meetings should be created and not exceed 16!')
+        # Edit the max recurrence years
+        self.env['ir.config_parameter'].sudo().set_param('calendar.max_recurrence_years', 5)
+        values['name'] = 'Custom Yearly Meeting'
+        self.CalendarEvent.create(values)
+        meetings_count = self.CalendarEvent.search_count([('name', '=', 'Custom Yearly Meeting')])
+        self.assertEqual(meetings_count, 6, 'Recurrent yearly meetings should be created and not exceed 6!')
