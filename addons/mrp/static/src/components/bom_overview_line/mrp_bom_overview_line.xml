@@ -18,7 +18,7 @@
             </div>
         </td>
         <td class="text-end" name="quantity">
-            <t t-if="data.type == 'operation'" t-esc="formatFloatTime(data.quantity)"/>
+            <t t-if="data.type == 'operation'" t-esc="formatDuration(data.quantity, {'unit': 'minutes'})"/>
             <t t-else="" t-esc="formatFloat(data.quantity, {'digits': [false, precision]})"/>
         </td>
          <td t-if="showUom" class="text-start" t-esc="data.uom_name"/>
