@@ -323,7 +323,7 @@ describe("button edit", () => {
         manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 3 });
         await animationFrame();
         expect(getContent(el)).toBe(
-            '<p>this is a \ufeff<a href="http://test.test/" class="btn btn-fill-primary">[\ufefftest btn\ufeff]</a>\ufeff</p>'
+            '<p>this is a \ufeff<a href="http://test.test/" class="btn btn-fill-primary">\ufeff[test btn]\ufeff</a>\ufeff</p>'
         );
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">[test btn]</a></p>'
@@ -332,6 +332,17 @@ describe("button edit", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">X[]</a></p>'
         );
+    });
+
+    test("triple and type inside button should not remove the button", async () => {
+        const { el, editor } = await setupEditor(
+            '<p><a href="http://test.test/" class="btn btn-fill-primary">b[]</a></p>'
+        );
+        const button = el.querySelector("a");
+        manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 3 });
+        await animationFrame();
+        await editor.document.execCommand("insertText", false, "a");
+        expect(button.isConnected).toBe(true);
     });
 
     test("Should not remove invisible button", async () => {
