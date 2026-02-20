@@ -159,16 +159,10 @@ class WebsiteSaleL10nTW(WebsiteSale):
             raise werkzeug.exceptions.NotFound
         return self._is_valid_love_code(kwargs.get("love_code", False), order)
 
-    def _prepare_address_form_values(
-        self,
-        *args,
-        callback='',
-        order_sudo=False,
-        **kwargs
-    ):
-        rendering_values = super()._prepare_address_form_values(*args, callback=callback, order_sudo=order_sudo, **kwargs)
-        if order_sudo:
-            rendering_values["l10n_tw_edi_require_paper_format"] = order_sudo.partner_id.l10n_tw_edi_require_paper_format
+    def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
+        rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
+        if request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
+            rendering_values["l10n_tw_edi_require_paper_format"] = partner_sudo.l10n_tw_edi_require_paper_format
         return rendering_values
 
     def _validate_address_values(self, address_values, partner_sudo, address_type, *args, **kwargs):
@@ -192,8 +186,27 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
         return invalid_fields, missing_fields, error_messages
 
-    def _handle_extra_form_data(self, extra_form_data, address_values):
-        super()._handle_extra_form_data(extra_form_data, address_values)
+    def _create_or_update_address(
+            self,
+            partner_sudo,
+            address_type='billing',
+            use_delivery_as_billing=False,
+            callback='/my/addresses',
+            required_fields=False,
+            verify_address_values=True,
+            **form_data
+    ):
+        partner_sudo, res = super()._create_or_update_address(
+            partner_sudo,
+            address_type=address_type,
+            use_delivery_as_billing=use_delivery_as_billing,
+            callback=callback,
+            required_fields=required_fields,
+            verify_address_values=verify_address_values,
+            **form_data
+        )
+
+        address_values, extra_form_data = self._parse_form_data(form_data)
 
         if request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
             order_sudo = request.cart
@@ -203,21 +216,22 @@ class WebsiteSaleL10nTW(WebsiteSale):
                 l10n_tw_edi_is_print = extra_form_data.get('l10n_tw_edi_require_paper_format') == "1"
             if address_values.get('company_name'):  # B2B customer
                 # Create company contact if it does not exist
-                if not order_sudo.partner_id.parent_id:
+                if not partner_sudo.parent_id:
                     company_contact = request.env['res.partner'].sudo().create({
                         'name': address_values.get('company_name'),
                         'vat': address_values.get('vat'),
                         'company_type': 'company',
                         'l10n_tw_edi_require_paper_format': l10n_tw_edi_is_print,
                     })
-                    order_sudo.partner_id.parent_id = company_contact
+                    partner_sudo.parent_id = company_contact
                 else:
-                    order_sudo.partner_id.parent_id.write({
+                    partner_sudo.parent_id.write({
                         'name': address_values.get('company_name'),
                         'vat': address_values.get('vat'),
                         'l10n_tw_edi_require_paper_format': l10n_tw_edi_is_print,
                     })
             else:  # B2C customer
-                order_sudo.partner_id.l10n_tw_edi_require_paper_format = l10n_tw_edi_is_print
+                partner_sudo.l10n_tw_edi_require_paper_format = l10n_tw_edi_is_print
 
             order_sudo.l10n_tw_edi_is_print = l10n_tw_edi_is_print
+        return partner_sudo, res
