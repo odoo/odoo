@@ -3,3 +3,4 @@
 
 from . import test_peppol_messages
 from . import test_peppol_participant
+from . import test_ubl_export_bis3_be
