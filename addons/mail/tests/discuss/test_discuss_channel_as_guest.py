@@ -41,7 +41,10 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             partner_ids=[internal_user.partner_id.id],
             subtype_xmlid="mail.mt_comment",
         )
-        self.group = self.env['discuss.channel']._create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
+        self.group = self.env["discuss.channel"]._create_group(
+            internal_user + portal_user,
+            name="Test group",
+        )
         self.group._add_members(guests=guest)
         self.tour = "discuss_channel_public_tour.js"
 
@@ -134,6 +137,6 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.authenticate(bob.login, bob.login)
         channel = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
         response = self.url_open(channel.invitation_url)
-        group = self.env["discuss.channel"]._create_group(name="Group 1", partners_to=bob.partner_id.ids)
+        group = self.env["discuss.channel"]._create_group(bob, name="Group 1")
         response = self.url_open(group.invitation_url)
         self.assertIn(f"/odoo/action-mail.action_discuss?active_id={group.id}", response.url)

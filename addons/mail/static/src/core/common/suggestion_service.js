@@ -275,28 +275,37 @@ export class SuggestionService {
      * @returns {[import("models").Persona]}
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
-        const cleanedSearchTerm = cleanTerm(searchTerm);
-        const compareFunctions = partnerCompareRegistry.getAll();
-        const context = this.sortPartnerSuggestionsContext(thread);
-        return partners.sort((p1, p2) => {
-            p1 = toRaw(p1);
-            p2 = toRaw(p2);
-            if (p1.isSpecial || p2.isSpecial) {
-                return 0;
+        const options = this.partnerComparePrepare(searchTerm, thread);
+        return partners.sort((p1, p2) => this.partnerCompareFn(p1, p2, options));
+    }
+
+    partnerComparePrepare(searchTerm, thread) {
+        return {
+            compareFunctions: partnerCompareRegistry.getAll(),
+            context: this.sortPartnerSuggestionsContext(thread),
+            searchTerm: cleanTerm(searchTerm),
+            thread,
+        };
+    }
+
+    partnerCompareFn(p1, p2, { compareFunctions, context, searchTerm, thread }) {
+        p1 = toRaw(p1);
+        p2 = toRaw(p2);
+        if (p1.isSpecial || p2.isSpecial) {
+            return 0;
+        }
+        for (const fn of compareFunctions) {
+            const result = fn(p1, p2, {
+                env: this.env,
+                store: this.store,
+                searchTerm,
+                thread,
+                context,
+            });
+            if (result !== undefined) {
+                return result;
             }
-            for (const fn of compareFunctions) {
-                const result = fn(p1, p2, {
-                    env: this.env,
-                    store: this.store,
-                    searchTerm: cleanedSearchTerm,
-                    thread,
-                    context,
-                });
-                if (result !== undefined) {
-                    return result;
-                }
-            }
-        });
+        }
     }
 
     sortPartnerSuggestionsContext() {
@@ -351,6 +360,23 @@ export class SuggestionService {
             type: "discuss.channel",
             suggestions: suggestionList.sort(sortFunc),
         };
+    }
+
+    /**
+     * @param {[import("models").ResUsers]} users
+     * @param {string} [searchTerm=""]
+     * @param {import("models").Thread} [thread]
+     * @returns {[import("models").ResUsers]}
+     */
+    sortUserSuggestions(users, searchTerm = "", thread = undefined) {
+        const options = this.partnerComparePrepare(searchTerm, thread);
+        return users.sort((u1, u2) =>
+            this.partnerCompareFn(toRaw(u1).partner_id, toRaw(u2).partner_id, {
+                u1: toRaw(u1),
+                u2: toRaw(u2),
+                ...options,
+            })
+        );
     }
 }
 

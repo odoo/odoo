@@ -1042,7 +1042,8 @@ function _process_request_for_all(store, name, params, context = {}) {
         });
     }
     if (name === "/discuss/get_or_create_chat") {
-        const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
+        const users = ResUsers.browse([...new Set([params.user_id, this.env.user.id])]);
+        const channelId = DiscussChannel._get_or_create_chat(users);
         store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
     if (name === "/discuss/create_channel") {
@@ -1054,8 +1055,9 @@ function _process_request_for_all(store, name, params, context = {}) {
         store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
     if (name === "/discuss/create_group") {
+        const users = ResUsers.browse([...new Set([...params.user_ids, this.env.user.id])]);
         const channelId = DiscussChannel._create_group(
-            params.partners_to,
+            users,
             params.default_display_mode,
             params.name
         );

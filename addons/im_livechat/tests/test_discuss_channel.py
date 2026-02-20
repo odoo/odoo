@@ -166,9 +166,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         # Add the operator to both channels in a batch, which should switch their status to 'in_progress'
         self.assertEqual(channel_1.livechat_agent_partner_ids, self.operators[0].partner_id)
         agent_user = channel_1.livechat_agent_partner_ids.mapped("main_user_id")
-        (channel_1 | channel_2).with_user(agent_user).add_members(
-            partner_ids=bob_operator.partner_id.ids
-        )
+        (channel_1 + channel_2).with_user(agent_user)._add_members(users=bob_operator)
         self.assertEqual(channel_1.livechat_status, "in_progress")
         self.assertEqual(channel_2.livechat_status, "in_progress")
 
@@ -176,9 +174,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel_1.livechat_status = "need_help"
         self.assertEqual(channel_1.livechat_status, "need_help")
         self.assertEqual(channel_1.livechat_agent_partner_ids, bob_operator.partner_id | self.operators[0].partner_id)
-        channel_1.with_user(agent_user).add_members(
-            partner_ids=bob_operator.partner_id.ids
-        )
+        channel_1.with_user(agent_user)._add_members(users=bob_operator)
         self.assertEqual(channel_1.livechat_status, "need_help")
 
     def test_join_livechat_needing_help(self):

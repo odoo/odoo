@@ -98,7 +98,7 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-        partner_ids: [serverState.partnerId],
+        user_ids: [serverState.userId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await expect.waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels

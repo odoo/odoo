@@ -34,9 +34,9 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
             selectableEmails: [],
-            selectablePartners: [],
+            selectableUsers: [],
             selectedEmails: [],
-            selectedPartners: [],
+            selectedUsers: [],
             sentEmails: new Set(),
         });
         this.debouncedFetchPartnersToInvite = useDebounced(
@@ -51,27 +51,27 @@ export class ChannelInvitation extends Component {
         });
     }
 
-    get selectablePartners() {
-        return this.props.state?.selectablePartners ?? this.state.selectablePartners;
+    get selectableUsers() {
+        return this.props.state?.selectableUsers ?? this.state.selectableUsers;
     }
 
-    set selectablePartners(partners) {
-        if (this.props.state?.selectablePartners) {
-            this.props.state.selectablePartners = partners;
+    set selectableUsers(users) {
+        if (this.props.state?.selectableUsers) {
+            this.props.state.selectableUsers = users;
         } else {
-            this.state.selectablePartners = partners;
+            this.state.selectableUsers = users;
         }
     }
 
-    get selectedPartners() {
-        return this.props.state?.selectedPartners ?? this.state.selectedPartners;
+    get selectedUsers() {
+        return this.props.state?.selectedUsers ?? this.state.selectedUsers;
     }
 
-    set selectedPartners(partners) {
-        if (this.props.state?.selectedPartners) {
-            this.props.state.selectedPartners = partners;
+    set selectedUsers(users) {
+        if (this.props.state?.selectedUsers) {
+            this.props.state.selectedUsers = users;
         } else {
-            this.state.selectedPartners = partners;
+            this.state.selectedUsers = users;
         }
     }
 
@@ -91,7 +91,7 @@ export class ChannelInvitation extends Component {
         return _t(
             "Showing %(result_count)s results out of %(total_count)s. Narrow your search to see more choices.",
             {
-                result_count: this.selectablePartners.length,
+                result_count: this.selectableUsers.length,
                 total_count: this.state.searchResultCount,
             }
         );
@@ -115,11 +115,9 @@ export class ChannelInvitation extends Component {
             return;
         }
         this.store.insert(results.store_data);
-        const selectablePartners = results.partner_ids.map((id) =>
-            this.store["res.partner"].get(id)
-        );
-        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
-            selectablePartners,
+        const selectableUsers = results.user_ids.map((id) => this.store["res.users"].get(id));
+        this.selectableUsers = this.suggestionService.sortUserSuggestions(
+            selectableUsers,
             this.searchStr,
             this.props.channel?.thread
         );
@@ -156,15 +154,15 @@ export class ChannelInvitation extends Component {
         });
     }
 
-    onClickSelectablePartner(partner) {
-        if (partner.in(this.selectedPartners)) {
-            const index = this.selectedPartners.indexOf(partner);
+    onClickSelectableUser(user) {
+        if (user.in(this.selectedUsers)) {
+            const index = this.selectedUsers.indexOf(user);
             if (index !== -1) {
-                this.selectedPartners.splice(index, 1);
+                this.selectedUsers.splice(index, 1);
             }
             return;
         }
-        this.selectedPartners.push(partner);
+        this.selectedUsers.push(user);
     }
 
     onClickSelectableEmail(email) {
@@ -176,9 +174,9 @@ export class ChannelInvitation extends Component {
         this.state.selectedEmails.push(email);
     }
 
-    onClickSelectedPartner(partner) {
-        const index = this.selectedPartners.indexOf(partner);
-        this.selectedPartners.splice(index, 1);
+    onClickSelectedPartner(user) {
+        const index = this.selectedUsers.indexOf(user);
+        this.selectedUsers.splice(index, 1);
     }
 
     onClickSelectedEmail(email) {
@@ -194,20 +192,20 @@ export class ChannelInvitation extends Component {
         let channelId = this.props.channel.id;
         const invitePromises = [];
         if (this.props.channel?.channel_type === "chat") {
-            const partnerIds = this.selectedPartners.map((partner) => partner.id);
+            const user_ids = this.selectedUsers.map((user) => user.id);
             if (this.props.channel.correspondent?.partner_id) {
-                partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
+                user_ids.unshift(this.props.channel.correspondent.partner_id.id);
             }
             if (this.state.selectedEmails.length) {
-                const group = await this.store.createGroupChat({ partners_to: partnerIds });
+                const group = await this.store.createGroupChat({ user_ids });
                 channelId = group.id;
             } else {
-                await this.store.startChat(partnerIds);
+                await this.store.startChat(user_ids);
             }
-        } else if (this.selectedPartners.length) {
+        } else if (this.selectedUsers.length) {
             invitePromises.push(
                 this.orm.call("discuss.channel", "add_members", [[channelId]], {
-                    partner_ids: this.selectedPartners.map((partner) => partner.id),
+                    user_ids: this.selectedUsers.map((user) => user.id),
                     invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
                 })
             );
@@ -221,7 +219,7 @@ export class ChannelInvitation extends Component {
         }
         await Promise.all(invitePromises);
         this.state.selectedEmails = [];
-        this.state.selectedPartners = [];
+        this.state.selectedUsers = [];
         this.props.close?.();
     }
 
@@ -238,15 +236,11 @@ export class ChannelInvitation extends Component {
             return _t("Invite to Group Chat");
         } else if (this.props.channel.channel_type === "chat") {
             if (this.props.channel.correspondent?.persona.eq(this.store.self)) {
-                if (this.selectedPartners.length === 0) {
+                if (this.selectedUsers.length === 0) {
                     return _t("Invite");
                 }
-                if (this.selectedPartners.length === 1) {
-                    const alreadyChat = Object.values(this.store["discuss.channel"].records).some(
-                        (channel) =>
-                            channel.channel_type === "chat" &&
-                            channel.correspondent?.partner_id?.eq(this.selectedPartners[0])
-                    );
+                if (this.selectedUsers.length === 1) {
+                    const alreadyChat = this.selectedUsers[0].searchChat();
                     if (alreadyChat) {
                         return _t("Go to conversation");
                     }

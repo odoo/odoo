@@ -72,7 +72,7 @@ export class DiscussClientAction extends Component {
         if (!parsedActiveId) {
             this.store.discuss.thread = undefined;
             this.store.discuss.hasRestoredThread = true;
-            const odoobotChat = this.store.odoobot?.searchChat();
+            const odoobotChat = this.store.odoobot?.main_user_id?.searchChat();
             const selfMember = odoobotChat?.self_member_id;
             if (odoobotChat && selfMember?.is_pinned && !selfMember.seen_message_id) {
                 odoobotChat.setAsDiscussThread(false);

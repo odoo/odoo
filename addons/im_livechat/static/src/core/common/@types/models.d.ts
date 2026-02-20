@@ -48,12 +48,11 @@ declare module "models" {
     export interface Message {
         chatbotStep: ChatbotStep;
     }
-    export interface ResPartner {
-        livechat_languages: String[];
-    }
     export interface ResUsers {
         is_livechat_manager: boolean;
         livechat_expertise_ids: LivechatExpertise[];
+        livechat_languages: String[];
+        livechat_username: String;
     }
     export interface Store {
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;

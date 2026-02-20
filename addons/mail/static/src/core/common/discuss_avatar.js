@@ -16,6 +16,7 @@ export class DiscussAvatar extends Component {
         "typing?",
         "className?",
         "imgRoundedClass?",
+        "user?",
     ];
     static defaultProps = { className: "", size: 32, typing: true };
     static components = { ImStatus, ThreadIcon };
@@ -27,6 +28,10 @@ export class DiscussAvatar extends Component {
 
     get channel() {
         return this.props.channel ?? this.props.thread?.channel;
+    }
+
+    get persona() {
+        return this.props.user?.partner_id ?? this.props.persona ?? this.props.member?.persona;
     }
 
     get thread() {
@@ -54,5 +59,9 @@ export class DiscussAvatar extends Component {
             return true;
         }
         return false;
+    }
+
+    get user() {
+        return this.props.user ?? this.persona?.main_user_id;
     }
 }

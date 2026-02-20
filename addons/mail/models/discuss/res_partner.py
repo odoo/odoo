@@ -100,17 +100,14 @@ class ResPartner(models.Model):
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
         selectable_partners = self.env["res.partner"].browse(query)
         store.add(
-            selectable_partners,
+            selectable_partners.user_ids,
             "_store_channel_invite_fields",
             fields_params={"channel": channel},
         )
         return {
             "count": self.env["res.partner"].search_count(domain),
-            "partner_ids": selectable_partners.ids,
+            "user_ids": selectable_partners.user_ids.ids,
         }
-
-    def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
-        self._store_partner_fields(res)
 
     @api.readonly
     @api.model

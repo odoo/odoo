@@ -175,8 +175,8 @@ class LivechatController(http.Controller):
             channel_id = channel.id
             if is_chatbot_script:
                 chatbot_script._post_welcome_steps(channel)
-            if agents := channel.livechat_agent_partner_ids:
-                channel._broadcast(agents.ids)
+            if agents := channel.livechat_agent_partner_ids.user_ids:
+                channel._broadcast(agents)
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)

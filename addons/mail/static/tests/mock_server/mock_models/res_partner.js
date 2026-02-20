@@ -413,7 +413,9 @@ export class ResPartner extends webModels.ResPartner {
         this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
         return {
             count,
-            partner_ids: matchingPartnersIds,
+            user_ids: matchingPartnersIds.flatMap((partnerId) =>
+                ResUsers._filter([["partner_id", "=", partnerId]]).map((user) => user.id)
+            ),
         };
     }
 

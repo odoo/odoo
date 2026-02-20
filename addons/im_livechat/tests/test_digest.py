@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.digest.tests.common import TestDigestCommon
+from odoo.tests.common import new_test_user
 from odoo.tools import mute_logger
 
 
@@ -10,9 +11,7 @@ class TestLiveChatDigest(TestDigestCommon):
     @mute_logger('odoo.models.unlink')
     def setUpClass(cls):
         super().setUpClass()
-
-        other_partner = cls.env['res.partner'].create({'name': 'Other Partner'})
-
+        other_user = new_test_user(cls.env, "Other Partner")
         cls.channels = cls.env['discuss.channel'].create([{
             'name': 'Channel 1',
             'channel_type': 'livechat',
@@ -24,7 +23,7 @@ class TestLiveChatDigest(TestDigestCommon):
             'channel_type': 'livechat',
         }])
         cls.channels[0:2]._add_members(users=cls.env.user)
-        cls.channels[2]._add_members(partners=other_partner)
+        cls.channels[2]._add_members(users=other_user)
 
         cls.env['rating.rating'].search([]).unlink()
 

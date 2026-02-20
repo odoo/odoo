@@ -21,7 +21,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
         self.maxDiff = None
         channel = self.env['discuss.channel']._create_channel(name='Test Channel', group_id=self.env.ref('base.group_user').id)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
+        channel_member = channel.self_member_id
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id
         partner_data = {
@@ -148,9 +148,9 @@ class TestChannelRTC(MailCommon, HttpCase):
     @mute_logger('odoo.models.unlink')
     def test_10_start_call_in_chat_should_invite_all_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
-        channel = self.env['discuss.channel']._get_or_create_chat(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
-        channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
+        channel = self.env["discuss.channel"]._get_or_create_chat(self.env.user | test_user)
+        channel_member = channel.self_member_id
+        channel_member_test_user = channel.with_user(test_user).self_member_id
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id
         channel_member._rtc_leave_call()
@@ -258,11 +258,11 @@ class TestChannelRTC(MailCommon, HttpCase):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         self.env["mail.presence"]._update_presence(test_guest)
-        channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
+        channel = self.env["discuss.channel"]._create_group(self.env.user + test_user)
         channel._add_members(guests=test_guest)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
+        channel_member = channel.self_member_id
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id
         channel_member._rtc_leave_call()
@@ -440,9 +440,9 @@ class TestChannelRTC(MailCommon, HttpCase):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         self.env["mail.presence"]._update_presence(test_guest)
-        channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
+        channel = self.env['discuss.channel']._create_group(self.env.user + test_user)
         channel._add_members(guests=test_guest)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
+        channel_member = channel.self_member_id
         channel_member._rtc_join_call()
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
         last_rtc_session_id = channel_member.rtc_session_ids.id
@@ -645,9 +645,9 @@ class TestChannelRTC(MailCommon, HttpCase):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         self.env["mail.presence"]._update_presence(test_guest)
-        channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
+        channel = self.env['discuss.channel']._create_group(self.env.user + test_user)
         channel._add_members(guests=test_guest)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
+        channel_member = channel.self_member_id
         channel_member._rtc_join_call()
 
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
@@ -772,9 +772,9 @@ class TestChannelRTC(MailCommon, HttpCase):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         self.env["mail.presence"]._update_presence(test_guest)
-        channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
+        channel = self.env["discuss.channel"]._create_group(self.env.user + test_user)
         channel._add_members(guests=test_guest)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
+        channel_member = channel.self_member_id
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
         channel_member._rtc_join_call()
@@ -906,7 +906,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         self.env["mail.presence"]._update_presence(test_guest)
-        channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
+        channel = self.env["discuss.channel"]._create_group(self.env.user)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda member: member.partner_id == self.user_employee.partner_id)
         now = fields.Datetime.now()
         with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
@@ -1098,7 +1098,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     @freeze_time("2023-03-15 12:34:56")
     def test_40_leave_call_should_remove_existing_sessions_of_user_in_channel_and_return_data(self):
         self.maxDiff = None
-        channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
+        channel = self.env["discuss.channel"]._create_group(self.env.user)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id
@@ -1143,7 +1143,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     @freeze_time("2023-03-15 12:34:56")
     def test_50_garbage_collect_should_remove_old_sessions_and_notify_data(self):
         self.env["discuss.channel.rtc.session"].sudo().search([]).unlink()  # clean up before test
-        channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
+        channel = self.env["discuss.channel"]._create_group(self.env.user)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         channel_member.rtc_session_ids.flush_model()
@@ -1188,7 +1188,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     @mute_logger('odoo.models.unlink')
     @freeze_time("2023-03-15 12:34:56")
     def test_51_action_disconnect_should_remove_selected_session_and_notify_data(self):
-        channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
+        channel = self.env["discuss.channel"]._create_group(self.env.user)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id
@@ -1230,10 +1230,9 @@ class TestChannelRTC(MailCommon, HttpCase):
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_60_rtc_sync_sessions_should_gc_and_return_outdated_and_active_sessions(self):
-        channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
-        channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
+        channel = self.env['discuss.channel']._create_group(self.env.user)
         store = Store()
-        channel_member._rtc_join_call(store)
+        channel.self_member_id._rtc_join_call(store)
         join_call_values = store.get_result()
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         test_channel_member = self.env['discuss.channel.member'].create({
@@ -1266,17 +1265,17 @@ class TestChannelRTC(MailCommon, HttpCase):
                 },
             ],
         ):
-            current_rtc_sessions, outdated_rtc_sessions = channel_member._rtc_sync_sessions(
-                check_rtc_session_ids=[join_call_values["Rtc"]["localSession"]] + unused_ids
+            current_rtc_sessions, outdated_rtc_sessions = channel.self_member_id._rtc_sync_sessions(
+                check_rtc_session_ids=[join_call_values["Rtc"]["localSession"]] + unused_ids,
             )
-        self.assertEqual(channel_member.rtc_session_ids, current_rtc_sessions)
+        self.assertEqual(channel.self_member_id.rtc_session_ids, current_rtc_sessions)
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
         self.assertFalse(outdated_rtc_sessions.exists())
 
     def test_07_call_invitation_ui(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
-        channel = self.env["discuss.channel"].with_user(bob)._create_group(partners_to=(bob | john).partner_id.ids)
+        channel = self.env["discuss.channel"].with_user(bob)._create_group(bob + john)
         channel.with_user(bob).self_member_id.sudo()._rtc_join_call()
         self._reset_bus()
         self.start_tour("/odoo", "discuss_call_invitation.js", login="john")

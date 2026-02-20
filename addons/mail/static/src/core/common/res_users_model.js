@@ -38,6 +38,14 @@ export class ResUsers extends Record {
         );
         return getOuterHtml(divElement);
     }
+
+    searchChat() {
+        return Object.values(this.store["discuss.channel"].records).find(
+            (channel) =>
+                channel.channel_type === "chat" &&
+                channel.correspondent?.partner_id?.eq(this.partner_id)
+        );
+    }
 }
 
 ResUsers.register();

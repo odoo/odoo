@@ -510,6 +510,9 @@ class ResUsers(models.Model):
         res.attr("share")
         res.one("partner_id", "_store_avatar_card_fields")
 
+    def _store_user_fields(self, res: Store.FieldList):
+        res.one("partner_id", "_store_partner_fields")
+
     # ------------------------------------------------------------
     # Mail Servers
     # ------------------------------------------------------------

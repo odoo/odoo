@@ -117,13 +117,6 @@ export class ResPartner extends Record {
         return this.name || this.display_name;
     }
 
-    searchChat() {
-        return Object.values(this.store["discuss.channel"].records).find(
-            (channel) =>
-                channel.channel_type === "chat" && channel.correspondent?.partner_id?.eq(this)
-        );
-    }
-
     updateImStatus(newStatus) {
         if (newStatus === "offline") {
             this.offline_since = DateTime.now();

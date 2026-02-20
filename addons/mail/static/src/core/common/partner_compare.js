@@ -41,9 +41,9 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.internal-users",
-    (p1, p2) => {
-        const isAInternalUser = p1.main_user_id?.share === false;
-        const isBInternalUser = p2.main_user_id?.share === false;
+    (p1, p2, { u1, u2 }) => {
+        const isAInternalUser = (u1 || p1.main_user_id)?.share === false;
+        const isBInternalUser = (u2 || p2.main_user_id)?.share === false;
         if (isAInternalUser && !isBInternalUser) {
             return -1;
         }

@@ -43,6 +43,9 @@ class ResUsers(models.Model):
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()
 
+    def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
+        res.one("partner_id", "_store_partner_fields")
+
     def _store_init_global_fields(self, res: Store.FieldList):
         super()._store_init_global_fields(res)
         # sudo: ir.config_parameter - reading hard-coded config params to check their existence, safe to

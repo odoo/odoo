@@ -118,13 +118,15 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} ids
+     * @param {number[]} user_ids
      * @param {number[]} partner_ids
      * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids, invite_to_rtc_call) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
+    add_members(ids, user_ids, partner_ids, invite_to_rtc_call) {
+        const kwargs = getKwArgs(arguments, "ids", "user_ids", "partner_ids", "invite_to_rtc_call");
         ids = kwargs.ids;
         delete kwargs.ids;
+        user_ids = kwargs.user_ids || [];
         partner_ids = kwargs.partner_ids || [];
 
         /** @type {import("mock_models").BusBus} */
@@ -133,9 +135,14 @@ export class DiscussChannel extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
 
         const [channel] = this.browse(ids);
-        const partners = ResPartner.browse(partner_ids);
+        const users = ResUsers.browse(user_ids);
+        const partners = ResPartner.browse(
+            partner_ids.concat(users.map((user) => user.partner_id))
+        );
         for (const partner of partners) {
             if (partner.id === this.env.user.partner_id) {
                 continue; // adding 'yourself' to the conversation is handled below
@@ -234,8 +241,6 @@ export class DiscussChannel extends models.ServerModel {
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
         const id = this.create({
             channel_member_ids: [Command.create({ partner_id: this.env.user.partner_id })],
@@ -252,8 +257,7 @@ export class DiscussChannel extends models.ServerModel {
                 message_type: "notification",
             })
         );
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        this._broadcast([id], [partner]);
+        this._broadcast([id], [this.env.user.id]);
         return DiscussChannel.browse(id);
     }
 
@@ -303,50 +307,43 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * @param {number[]} partners_to
+     * @param {Object[]} users
      */
-    _get_or_create_chat(partners_to) {
-        const kwargs = getKwArgs(arguments, "partners_to");
-        partners_to = kwargs.partners_to || [];
+    _get_or_create_chat(users) {
+        const kwargs = getKwArgs(arguments, "users");
+        users = kwargs.users;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
-        if (!partners_to.includes(this.env.user.partner_id)) {
-            partners_to.push(this.env.user.partner_id);
-        }
-        const partners = ResPartner.browse(partners_to);
         const channels = this.search_read([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
             const channelMemberIds = DiscussChannelMember.search([
                 ["channel_id", "=", channel.id],
-                ["partner_id", "in", partners_to],
+                ["partner_id", "in", users.map((user) => user.partner_id)],
             ]);
             if (
-                channelMemberIds.length === partners.length &&
-                channel.channel_member_ids.length === partners.length
+                channelMemberIds.length === users.length &&
+                channel.channel_member_ids.length === users.length
             ) {
                 return DiscussChannel.browse(channel.id);
             }
         }
         const id = this.create({
-            channel_member_ids: partners.map((partner) =>
+            channel_member_ids: users.map((user) =>
                 Command.create({
-                    partner_id: partner.id,
-                    unpin_dt:
-                        partner.id == serverState.partnerId ? false : serializeDateTime(today()),
+                    partner_id: user.partner_id,
+                    unpin_dt: user.id == this.env.user.id ? false : serializeDateTime(today()),
                 })
             ),
             channel_type: "chat",
-            name: partners.map((partner) => partner.name).join(", "),
+            name: users.map((user) => user.name).join(", "),
         });
         this._broadcast(
             [id],
-            partners.map(({ id }) => id)
+            users.map(({ id }) => id)
         );
         return DiscussChannel.browse(id);
     }
@@ -478,33 +475,30 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      */
     /**
-     * @param {number[]} partners_to
+     * @param {Object[]} users
      * @param {string} [default_display_mode=undefined]
      * @param {string} name
      * */
-    _create_group(partners_to, default_display_mode, name) {
-        const kwargs = getKwArgs(arguments, "partners_to", "default_display_mode", "name");
-        partners_to = kwargs.partners_to || [];
+    _create_group(users, default_display_mode, name) {
+        const kwargs = getKwArgs(arguments, "users", "default_display_mode", "name");
+        users = kwargs.users || [];
         default_display_mode = kwargs.default_display_mode;
         name = kwargs.name || "";
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
-        const partners = ResPartner.browse(partners_to);
         const id = this.create({
             channel_type: "group",
-            channel_member_ids: partners.map((partner) =>
-                Command.create({ partner_id: partner.id })
+            channel_member_ids: users.map((user) =>
+                Command.create({ partner_id: user.partner_id })
             ),
             default_display_mode,
             name,
         });
         this._broadcast(
             [id],
-            partners.map((partner) => partner.id)
+            users.map((user) => user.id)
         );
         return DiscussChannel.browse(id);
     }
@@ -854,30 +848,30 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {number[]} partner_ids
+     * @param {number[]} user_ids
      */
-    _broadcast(ids, partner_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
+    _broadcast(ids, user_ids) {
+        const kwargs = getKwArgs(arguments, "ids", "user_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
-        partner_ids = kwargs.partner_ids;
+        user_ids = kwargs.user_ids;
 
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
 
-        const notifications = this._channel_channel_notifications(ids, partner_ids);
+        const notifications = this._channel_channel_notifications(ids, user_ids);
         BusBus._sendmany(notifications);
     }
 
     /**
      * @param {number} id
-     * @param {number[]} partner_ids
+     * @param {number[]} user_ids
      */
-    _channel_channel_notifications(ids, partner_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
+    _channel_channel_notifications(ids, user_ids) {
+        const kwargs = getKwArgs(arguments, "ids", "user_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
-        partner_ids = kwargs.partner_ids;
+        user_ids = kwargs.user_ids;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
@@ -887,14 +881,14 @@ export class DiscussChannel extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         const notifications = [];
-        for (const partner_id of partner_ids) {
-            const user = ResUsers._filter([["partner_id", "in", partner_id]])[0];
+        for (const user_id of user_ids) {
+            const user = ResUsers.browse(user_id);
             if (!user) {
                 continue;
             }
             // Note: `_to_store` on the server is supposed to be called with
             // the proper user context but this is not done here for simplicity.
-            const [relatedPartner] = ResPartner.search_read([["id", "=", partner_id]]);
+            const [relatedPartner] = ResPartner.search_read([["id", "=", user.partner_id]]);
             for (const channelId of ids) {
                 notifications.push([
                     relatedPartner,

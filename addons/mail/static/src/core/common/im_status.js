@@ -31,7 +31,16 @@ imStatusDataRegistry.add(
 );
 
 export class ImStatus extends Component {
-    static props = ["persona?", "className?", "style?", "member?", "slots?", "size?", "typing?"];
+    static props = [
+        "persona?",
+        "className?",
+        "style?",
+        "member?",
+        "slots?",
+        "size?",
+        "typing?",
+        "user?",
+    ];
     static template = "mail.ImStatus";
     static defaultProps = { className: "", style: "", size: "lg", typing: true };
     static components = { Typing };
@@ -42,7 +51,7 @@ export class ImStatus extends Component {
     }
 
     get persona() {
-        return this.props.persona ?? this.props.member?.persona;
+        return this.props.user?.partner_id ?? this.props.persona ?? this.props.member?.persona;
     }
 
     get showTypingIndicator() {
@@ -88,5 +97,9 @@ export class ImStatus extends Component {
             default:
                 return "opacity-75";
         }
+    }
+
+    get user() {
+        return this.props.user ?? this.persona?.main_user_id;
     }
 }
