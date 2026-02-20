@@ -22,7 +22,11 @@
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
                 opacity: var(--o-mail-ActionList-Button-opacity);
-
+            }
+            &:where(:has(span:first-child:last-child)) {
+                opacity: var(--o-mail-ActionList-Button-opacityInlineName);
+            }
+            &:where(:has(i:first-child:last-child)), &:where(:has(span:first-child:last-child)) {
                 &:where(.rounded-circle) {
                     aspect-ratio: 1;
                 }
