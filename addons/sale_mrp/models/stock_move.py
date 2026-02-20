@@ -14,3 +14,6 @@ class StockMove(models.Model):
             if bom:
                 return self._get_kit_price_unit(product, bom, order_line.qty_delivered)
         return super()._get_price_unit()
+
+    def _get_source_document(self):
+        return self.production_id or self.raw_material_production_id or super()._get_source_document()
