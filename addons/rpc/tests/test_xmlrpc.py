@@ -301,3 +301,49 @@ class TestAPIKeys(common.HttpCase):
                 self.env.cr.dbname, self._user.id, k,
                 'res.users', 'context_get', []
             ])
+
+    def test_renew_apikey(self):
+        self.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', True)
+        env = self.env(user=self._user)
+        key = env['res.users.apikeys.description'].create({'name': 'a'}).make_key()['context']['default_key']
+        apikey = self.env['res.users.apikeys'].search([('user_id', '=', self._user.id)])
+
+        in_ten_minutes = datetime.datetime.now() + datetime.timedelta(minutes=10)
+        in_twenty_minutes = datetime.datetime.now() + datetime.timedelta(minutes=20)
+
+        # an API key can be used to create a new one
+        key2 = model.dispatch('execute_kw', [
+            self.env.cr.dbname, self._user.id, key,
+            'res.users.apikeys', 'generate', [key, None, 'Second key', in_ten_minutes]
+        ])
+
+        apikeys = self.env['res.users.apikeys'].search([('user_id', '=', self._user.id)])
+        self.assertIn(apikey, apikeys)
+        self.assertRecordValues(apikeys - apikey, [
+            {'name': 'Second key', 'scope': False, 'expiration_date': in_ten_minutes},
+        ])
+
+        # the new key can be used to create a new one
+        model.dispatch('execute_kw', [
+            self.env.cr.dbname, self._user.id, key2,
+            'res.users.apikeys', 'generate', [key2, 'api', 'Third key', in_twenty_minutes]
+        ])
+
+        # revoke the previous one
+        model.dispatch('execute_kw', [
+            self.env.cr.dbname, self._user.id, key2,
+            'res.users.apikeys', 'revoke', [key2]
+        ])
+
+        # the second key is now revoked
+        with self.assertRaises(AccessDenied):
+            model.dispatch('execute_kw', [
+                self.env.cr.dbname, self._user.id, key2,
+                'res.users', 'context_get', []
+            ])
+
+        apikeys = self.env['res.users.apikeys'].search([('user_id', '=', self._user.id)])
+        self.assertIn(apikey, apikeys)
+        self.assertRecordValues(apikeys - apikey, [
+            {'name': 'Third key', 'scope': 'api', 'expiration_date': in_twenty_minutes},
+        ])
