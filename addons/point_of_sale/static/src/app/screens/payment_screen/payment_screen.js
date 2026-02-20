@@ -239,7 +239,7 @@ export class PaymentScreen extends Component {
                 this.onNewTip({ newValue, type, currentTipAmount: tip.amount, change }),
             formatDisplayedValue: (value, type) => {
                 if (type === "fixed") {
-                    return this.env.utils.formatCurrency(value, this.pos.currency);
+                    return this.env.utils.formatCurrency(parseFloat(value), this.pos.currency);
                 }
                 if (type === "percent") {
                     return `${value} %`;
