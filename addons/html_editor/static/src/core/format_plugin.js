@@ -202,7 +202,8 @@ export class FormatPlugin extends Plugin {
                 isTextNode(node) &&
                 !isZwnbsp(node) &&
                 !isEmptyTextNode(node) &&
-                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node)))
+                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node))) &&
+                isContentEditable(node)
         );
         const isFormatted = formatsSpecs[format].isFormatted;
         return (
