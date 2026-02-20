@@ -256,7 +256,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state != 'purchase' or not order.order_line:
                 order.receipt_status = False
-            elif all(line.qty_received >= line.product_uom_qty for line in order.order_line):
+            elif all(line.qty_received >= line.product_qty for line in order.order_line):
                 order.receipt_status = 'full'
             elif any(line.qty_received for line in order.order_line):
                 order.receipt_status = 'partial'
@@ -639,7 +639,7 @@ class PurchaseOrder(models.Model):
                 invalid_orders=invalid_targets)
         for order in self:
             for line in order.order_line:
-                line.qty_received = line.product_uom_qty
+                line.qty_received = line.product_qty
 
     def print_quotation(self):
         self.filtered(lambda po: po.state == 'draft').write({'state': "sent"})

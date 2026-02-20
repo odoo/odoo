@@ -183,6 +183,8 @@ class PurchaseOrderLine(models.Model):
                 move.date_deadline = date_promised
 
     def _create_or_update_picking(self):
+        if self.env.context.get('skip_picking'):
+            return
         for line in self:
             if line.product_id and line.product_id.type == 'consu':
                 rounding = line.product_uom_id.rounding

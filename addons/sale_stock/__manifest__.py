@@ -49,6 +49,7 @@ Preferences
             'sale_stock/static/tests/tours/*.js',
         ]
     },
+    'post_init_hook': '_create_pickings_for_open_sale_orders',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
