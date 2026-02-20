@@ -1541,7 +1541,7 @@
 
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
+        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}" id='o_fake_navbar_brand'>
             <!--
             Note: setting width *and* height attributes allows to reserve some
             space to avoid layout shift during page loading. Of course, CSS
