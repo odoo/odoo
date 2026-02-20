@@ -60,7 +60,14 @@ export class ChannelMember extends Record {
         },
     });
     new_message_separator_ui = null;
-    isTyping = false;
+    isTyping = fields.Attr(false, {
+        onUpdate() {
+            browser.clearTimeout(this.typingTimeoutId);
+            if (this.isTyping) {
+                this.registerTypingTimeout();
+            }
+        },
+    });
     is_typing_dt = fields.Datetime({
         onUpdate() {
             browser.clearTimeout(this.typingTimeoutId);
@@ -71,13 +78,16 @@ export class ChannelMember extends Record {
                 this.isTyping = false;
             }
             if (this.isTyping) {
-                this.typingTimeoutId = browser.setTimeout(
-                    () => (this.isTyping = false),
-                    Store.OTHER_LONG_TYPING
-                );
+                this.registerTypingTimeout();
             }
         },
     });
+    registerTypingTimeout() {
+        this.typingTimeoutId = browser.setTimeout(
+            () => (this.isTyping = false),
+            Store.OTHER_LONG_TYPING
+        );
+    }
     threadAsTyping = fields.One("Thread", {
         compute() {
             return this.isTyping ? this.channel_id : undefined;
