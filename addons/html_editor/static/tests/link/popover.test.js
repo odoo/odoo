@@ -251,7 +251,7 @@ describe("Link creation", () => {
             await insertText(editor, "http://google.co.in");
             await insertText(editor, " ");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p><a href="http://google.co.in">http://google.co.in</a>&nbsp;[]</p>'
+                '<p><a href="http://google.co.in">http://google.co.in</a> []</p>'
             );
         });
         test("typing invalid URL + space should not convert to link", async () => {
