@@ -370,6 +370,8 @@
                             <field name="active" invisible="1"/>
                             <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
+                            <!-- below field is used in hr_maintenance and fleet_maintenance -->
+                            <field name="equipment_assign_to" invisible="1" widget="ordered_radio"/>
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
@@ -448,6 +450,8 @@
                             <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model"/>)</span>
                         </div>
                         <field t-if="record.serial_no.raw_value" name="serial_no"/>
+                        <!-- below div is used in hr_maintenance and fleet_maintenance-->
+                        <div id="unassigned" invisible="1">Unassigned</div>
                         <footer>
                             <div class="badge rounded-pill text-bg-danger" t-if="record.maintenance_open_count.raw_value">
                                 <field name="maintenance_open_count" /> Request
@@ -494,8 +498,8 @@
                 <field string="Category" name="category_id"/>
                 <field name="owner_user_id"/>
                 <filter string="My Equipment" name="my" domain="[('owner_user_id', '=', uid)]"/>
-                <filter string="Assigned" name="assigned" domain="[('owner_user_id', '!=', False)]"/>
-                <filter string="Unassigned" name="available" domain="[('owner_user_id', '=', False)]"/>
+                <filter string="Assigned" name="assigned" domain="[('is_assigned', '=', True)]"/>
+                <filter string="Unassigned" name="available" domain="[('is_assigned', '=', False)]"/>
                 <separator/>
                 <filter string="Under Maintenance" name="under_maintenance" domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>

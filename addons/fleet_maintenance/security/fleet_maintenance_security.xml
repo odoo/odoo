@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fleet Officer and Administrator are allowed to manage equipment -->
+    <record id="fleet.fleet_group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('maintenance.group_equipment_manager'))]"/>
+    </record>
+</odoo>
