@@ -62,8 +62,8 @@ class EventRegistration(models.Model):
 
     def _update_available_seat(self):
         # Here sudo is used in order for pos_event to update the available seats to all open pos session when a ticket is sold in website for example
-        session_ids = self.env['pos.session'].sudo().search([("state", "!=", "closed")])
-        if len(session_ids) > 0:
+        session_ids = self.env['pos.session'].sudo().search([("state", "!=", "closed"), ("order_ids", "in", self.pos_order_id.ids)])
+        if session_ids:
             session_ids.config_id._update_events_seats(self.event_id)
 
     def action_view_pos_order(self):
