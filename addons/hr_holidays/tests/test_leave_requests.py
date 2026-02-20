@@ -1572,16 +1572,17 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_time_off_date_edit(self):
         user_id = self.employee_emp.user_id
         employee_id = self.employee_emp.id
+        base_date = datetime(2024, 3, 4, 10, 0, 0)
 
         leave = self.env['hr.leave'].with_user(user_id).create({
             'name': 'Test leave',
             'employee_id': employee_id,
             'work_entry_type_id': self.holidays_type_1.id,
-            'date_from': (datetime.today() - relativedelta(days=2)),
-            'date_to': datetime.today()
+            'date_from': (base_date - relativedelta(days=2)),
+            'date_to': base_date
         })
 
-        two_days_after = (datetime.today() + relativedelta(days=2)).date()
+        two_days_after = (base_date + relativedelta(days=2)).date()
         with Form(leave.with_user(user_id)) as leave_form:
             leave_form.request_date_from = two_days_after
             leave_form.request_date_to = two_days_after

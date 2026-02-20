@@ -351,8 +351,9 @@
                             <field name="display_name" invisible="not work_entry_type_id"/>
                         </div>
                         <group name="col_left" class="m-0">
+                            <field name="work_entry_type_count_as" invisible="1"/>
                             <label for="request_date_from" string="Dates"/>
-                            <div id="full_date" class="o_row">
+                            <div id="full_date" class="o_row" invisible="work_entry_type_count_as == 'working_time'">
                                 <field
                                     name="request_date_from"
                                     widget="daterange"
@@ -360,8 +361,17 @@
                                     required="not date_from or not date_to"
                                     options="{'end_date_field': 'request_date_to', 'always_range': '1'}"/>
                                 <field name="request_date_to" required="not date_from or not date_to" invisible="1"/> <!-- For Form view test-->
-                                <div>
-                                    ( <field name="duration_display" readonly="1" class="w-auto"/> )
+                                <div class="d-flex align-items-center">
+                                    ( <field name="duration_display" readonly="state != 'confirm'" force_save="1" class="w-auto text-center mx-1"/> )
+                                </div>
+                            </div>
+                            <div id="only_start_date" class="o_row" invisible="work_entry_type_count_as != 'working_time'">
+                                <field
+                                    name="request_date_from"
+                                    readonly="state != 'confirm'"
+                                    required="not date_from or not date_to"/>
+                                <div class="d-flex align-items-center">
+                                    ( <field name="duration_display" readonly="state != 'confirm'" force_save="1" class="w-auto text-center mx-1"/> )
                                 </div>
                             </div>
                             <!-- half day or custom hours-->
@@ -370,8 +380,9 @@
                                 <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
                                 <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
                             </div>
-                            <label for="request_hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
-                            <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
+
+                            <label for="request_hour_from" invisible="work_entry_type_request_unit != 'hour' or work_entry_type_count_as == 'working_time'" string="Hours"/>
+                            <div class="o_row" invisible="work_entry_type_request_unit != 'hour' or work_entry_type_count_as == 'working_time'">
                                 <field name="request_hour_from" readonly="state == 'validate'" required="work_entry_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
                                 <field name="request_hour_to" readonly="state == 'validate'" required="work_entry_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
                             </div>
