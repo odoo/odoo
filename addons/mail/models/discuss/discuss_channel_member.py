@@ -48,7 +48,7 @@ class ChannelMember(models.Model):
     last_seen_dt = fields.Datetime("Last seen date")
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
-    rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session')
+    rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session', index="btree_not_null")
 
     @api.autovacuum
     def _gc_unpin_outdated_sub_channels(self):

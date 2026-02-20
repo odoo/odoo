@@ -119,5 +119,6 @@ class BusPresence(models.Model):
     @api.autovacuum
     def _gc_bus_presence(self):
         self.search(
-            [("last_poll", "<", fields.Datetime.now() - timedelta(seconds=PRESENCE_OUTDATED_TIMER))]
+            [("last_poll", "<", fields.Datetime.now() - timedelta(seconds=PRESENCE_OUTDATED_TIMER))],
+            limit=1000,
         ).unlink()

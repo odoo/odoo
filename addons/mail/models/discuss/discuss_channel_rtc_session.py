@@ -93,7 +93,7 @@ class MailRtcSession(models.Model):
             this can happen when the server or the user's browser crash
             or when the user's odoo session ends.
         """
-        self.search(self._inactive_rtc_session_domain()).unlink()
+        self.search(self._inactive_rtc_session_domain(), limit=10000).unlink()
 
     def action_disconnect(self):
         session_ids_by_channel_by_url = defaultdict(lambda: defaultdict(list))

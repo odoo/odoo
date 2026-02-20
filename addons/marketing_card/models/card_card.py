@@ -46,7 +46,7 @@ class MarketingCard(models.Model):
         timedelta_days = self.env['ir.config_parameter'].get_param('marketing_card.card_image_cleanup_interval_days', 60)
         if not timedelta_days:
             return
-        self.with_context({"active_test": False}).search([('write_date', '<=', datetime.now() - timedelta(days=timedelta_days))]).unlink()
+        self.with_context({"active_test": False}).search([('write_date', '<=', datetime.now() - timedelta(days=timedelta_days))], limit=1000).unlink()
 
     def _get_card_url(self):
         return self._get_path('card.jpg')

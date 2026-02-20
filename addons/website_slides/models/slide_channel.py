@@ -267,7 +267,7 @@ class ChannelUsersRelation(models.Model):
             '&',
             ('last_invitation_date', '!=', False),
             ('last_invitation_date', '<', limit_dt),
-        ])
+        ], limit=1000)
         expired_invitations.unlink()
 
 
