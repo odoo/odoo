@@ -688,8 +688,49 @@ export class PosOrder extends Base {
         );
     }
 
+<<<<<<< f293c6f10ab7f33b5b433dd735e5722bb91a031c
     getTotalWithTax() {
         return this.taxTotals.order_sign * this.taxTotals.order_total;
+||||||| 2264f330859b79010b227e3a9fda1075de8ed4e8
+    // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
+    get_total_with_tax_of_lines(lines) {
+        return this.get_total_without_tax_of_lines(lines) + this.get_total_tax_of_lines(lines);
+    }
+
+    // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
+    get_total_without_tax_of_lines(lines) {
+        return roundPrecision(
+            lines.reduce(function (sum, line) {
+                return sum + line.get_price_without_tax();
+            }, 0),
+            this.currency.rounding
+        );
+    }
+
+    get_total_with_tax() {
+        return this.taxTotals.order_sign * this.taxTotals.order_total;
+=======
+    // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
+    get_total_with_tax_of_lines(lines) {
+        return this.get_total_without_tax_of_lines(lines) + this.get_total_tax_of_lines(lines);
+    }
+
+    // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
+    get_total_without_tax_of_lines(lines) {
+        return roundPrecision(
+            lines.reduce(function (sum, line) {
+                return sum + line.get_price_without_tax();
+            }, 0),
+            this.currency.rounding
+        );
+    }
+
+    get_total_with_tax() {
+        return roundPrecision(
+            this.taxTotals.order_sign * this.taxTotals.order_total,
+            this.currency.rounding
+        );
+>>>>>>> a8758e36ee3f1966f8e7580b3463e80dc6a9cd86
     }
 
     getTotalWithTaxOfLines(lines) {
@@ -840,7 +881,7 @@ export class PosOrder extends Base {
         if (this.config.cash_rounding) {
             remaining = this.getRoundedRemaining(this.config.rounding_method, remaining);
         }
-        return -order_sign * remaining;
+        return roundPrecision(-order_sign * remaining, this.currency.rounding);
     }
 
     getDue() {
