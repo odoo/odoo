@@ -1,4 +1,5 @@
-import { Component, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,7 +9,7 @@ class OfflineSystray extends Component {
 
     setup() {
         this.offlineService = useService("offline");
-        useEffect(this.env.redrawNavbar, () => [this.offlineService.offline]);
+        useLayoutEffect(this.env.redrawNavbar, () => [this.offlineService.offline]);
     }
 }
 

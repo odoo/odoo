@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -15,16 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    useEffect,
-    useSubEnv,
-    useRef,
-    useState,
-    xml,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useSubEnv, useRef, useState, xml } from "@odoo/owl";
 
 export class FormRenderer extends Component {
     static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
@@ -75,7 +67,7 @@ export class FormRenderer extends Component {
         const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
-            useEffect(
+            useLayoutEffect(
                 (record, rootEl) => {
                     if (!rootEl) {
                         return;

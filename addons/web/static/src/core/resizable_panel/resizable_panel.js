@@ -1,9 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
     onWillUpdateProps,
     onWillUnmount,
-    useEffect,
     useExternalListener,
     useRef,
     useComponent,
@@ -36,7 +36,7 @@ function useResizable({
     });
 
     let docDirection;
-    useEffect(
+    useLayoutEffect(
         (container) => {
             if (container) {
                 docDirection = getComputedStyle(container).direction;

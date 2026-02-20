@@ -109,6 +109,7 @@ class FileManager:
             if path.suffix in AVAILABLE_EXT
             if path.is_file()
         }
+        self._summary = []
 
     def __iter__(self) -> Iterator[FileAccessor]:
         return iter(self._files.values())
@@ -119,12 +120,23 @@ class FileManager:
     def get_file(self, path):
         return self._files.get(str(path))
 
+    def add_to_summary(self, message: str) -> None:
+        if message:
+            self._summary.append(message)
+
     if sys.stdout.isatty():
         def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
             total = total or len(self) or 1
             print(f'\033[K{current / total:>4.0%} \033[37m{file_name}\033[0m', end='\r', file=sys.stderr)  # noqa: T201
+
+        def print_summary(self) -> None:
+            if self._summary:
+                print("\n" + "\n".join(self._summary))  # noqa: T201
     else:
         def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
+            pass
+
+        def print_summary(self) -> None:
             pass
 
 
@@ -169,6 +181,7 @@ def migrate(
                 with file.path.open("w") as f:
                     f.write(file.content)
 
+    file_manager.print_summary()
     return any(file.dirty for file in file_manager)
 
 

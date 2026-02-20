@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { user } from "@web/core/user";
 import { registry } from "../registry";
 
-import { useEffect, useEnv, useSubEnv } from "@odoo/owl";
+import { useEnv, useSubEnv } from "@odoo/owl";
 const debugRegistry = registry.category("debug");
 
 const getAccessRights = async () => {
@@ -10,9 +11,9 @@ const getAccessRights = async () => {
         "ir.rule": "read",
         "ir.model.access": "read",
     };
-    const proms = Object.entries(rightsToCheck).map(([model, operation]) => {
-        return user.checkAccessRight(model, operation);
-    });
+    const proms = Object.entries(rightsToCheck).map(([model, operation]) =>
+        user.checkAccessRight(model, operation)
+    );
     const [canEditView, canSeeRecordRules, canSeeModelAccess] = await Promise.all(proms);
     const accessRights = { canEditView, canSeeRecordRules, canSeeModelAccess };
     return accessRights;
@@ -39,12 +40,12 @@ class DebugContext {
     async getItems(env) {
         const accessRights = await getAccessRights();
         return [...this.categories.entries()]
-            .flatMap(([category, contexts]) => {
-                return debugRegistry
+            .flatMap(([category, contexts]) =>
+                debugRegistry
                     .category(category)
                     .getAll()
-                    .map((factory) => factory(Object.assign({ env, accessRights }, ...contexts)));
-            })
+                    .map((factory) => factory(Object.assign({ env, accessRights }, ...contexts)))
+            )
             .filter(Boolean)
             .sort((x, y) => {
                 const xSeq = x.sequence || 1000;
@@ -75,7 +76,7 @@ export function useDebugCategory(category, context = {}) {
     const env = useEnv();
     if (env.debug) {
         const debugContext = useEnvDebugContext();
-        useEffect(
+        useLayoutEffect(
             () => debugContext.activateCategory(category, context),
             () => []
         );

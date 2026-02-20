@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/core/utils/strings";
 
-import { Component, useState, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, useRef } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
@@ -28,7 +29,7 @@ export class PropertyDefinitionSelection extends Component {
         this.propertyDefinitionSelectionRef = useRef("propertyDefinitionSelection");
         this.addButtonRef = useRef("addButton");
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             // automatically give the focus to the new option if it is empty
             if (!this.state.newOption) {
                 return;
@@ -139,7 +140,7 @@ export class PropertyDefinitionSelection extends Component {
      *
      * The attribute `_ignoreBlur` can be set if we don't want to remove
      * the option if it's empty (and it will re-gain the focus at the
-     * next `useEffect` call).
+     * next `useLayoutEffect` call).
      *
      * @param {event} event
      * @param {integer} optionIndex

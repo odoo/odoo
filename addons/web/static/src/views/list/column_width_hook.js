@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
@@ -15,7 +16,6 @@ import {
     onWillUnmount,
     status,
     useComponent,
-    useEffect,
     useExternalListener,
     xml,
 } from "@odoo/owl";
@@ -564,7 +564,7 @@ export function useMagicColumnWidths(tableRef, getState) {
 
     // Side effects
     if (renderer.constructor.useMagicColumnWidths) {
-        useEffect(forceColumnWidths);
+        useLayoutEffect(forceColumnWidths);
         // Forget computed widths (and potential manual column resize) on window resize
         useExternalListener(window, "resize", unsetWidths);
         // Listen to width changes on the parent node of the table, to recompute ideal widths

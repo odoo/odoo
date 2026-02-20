@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Thread } from "@mail/core/common/thread";
 
-import { useEffect, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -9,7 +10,7 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup(...arguments);
-        useEffect(
+        useLayoutEffect(
             (loadNewer, mountedAndLoaded) => {
                 if (
                     loadNewer ||

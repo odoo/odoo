@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef, useState } from "@odoo/owl";
 import { simplifyString } from "@api_doc/utils/doc_model_search";
 
 export class DocSidebar extends Component {
@@ -15,7 +16,7 @@ export class DocSidebar extends Component {
             searchValue: "",
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.containerRef.el?.querySelector(":scope .o_active")?.scrollIntoView();
             },

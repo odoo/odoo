@@ -1,12 +1,5 @@
-import {
-    Component,
-    onWillStart,
-    onWillUpdateProps,
-    useEffect,
-    useRef,
-    useState,
-    xml,
-} from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps, useRef, useState, xml } from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -72,7 +65,7 @@ export class Image extends Component {
                 await this.handleImgLoad(nextProps.src);
             }
         });
-        useEffect(
+        useLayoutEffect(
             (imgLoaded) => {
                 if (imgLoaded && this.isSvg(this.props.src) && this.svg.children.length) {
                     // We can't use t-out with markup because it is parsed as HTML,

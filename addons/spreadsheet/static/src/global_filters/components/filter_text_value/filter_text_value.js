@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 /** @ts-check */
 
-import { Component, useEffect } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -30,7 +31,7 @@ export class TextFilterValue extends Component {
 
     setup() {
         this.inputRef = useChildRef();
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.options.length && this.inputRef.el) {
                     // if there are options restricting the possible values,

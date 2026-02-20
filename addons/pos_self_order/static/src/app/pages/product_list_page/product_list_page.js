@@ -1,4 +1,5 @@
-import { Component, useRef, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
@@ -62,7 +63,7 @@ export class ProductListPage extends Component {
         useHorizontalScrollShadow(this.categoryListRef, useRef("category_container"));
         useDraggableScroll(this.subCategoryListRef);
 
-        useEffect(
+        useLayoutEffect(
             (lines) => {
                 this.state.quantityByProductTmplId = lines
                     .filter((line) => !line.combo_parent_id)

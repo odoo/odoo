@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, toRaw, useEffect, useRef, useSubEnv } from "@odoo/owl";
+import { EventBus, toRaw, useRef, useSubEnv } from "@odoo/owl";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
@@ -27,7 +28,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         this.orm = useService("orm");
         // Autofocus the visible editor in edition mode.
         this.root = useRef("compiled_view_root");
-        useEffect(
+        useLayoutEffect(
             (isInEdition, el) => {
                 if (
                     el &&

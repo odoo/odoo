@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { isValidEmail } from "@im_livechat/core/common/misc";
-import { Component, onWillUpdateProps, useEffect, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
@@ -32,7 +33,7 @@ export class TranscriptSender extends Component {
                 this.state.status = this.STATUS.IDLE;
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.state.status = this.STATUS.IDLE;
             },

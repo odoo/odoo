@@ -1,4 +1,5 @@
-import { Component, useState, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { listView } from "@web/views/list/list_view";
 import { registry } from "@web/core/registry";
@@ -19,7 +20,7 @@ export class ExtraHoursSummary extends Component {
             remainingExtraHours: 0,
         });
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             this.updateOvertimeData();
         }, () => [this.env.searchModel.domain]);
     }

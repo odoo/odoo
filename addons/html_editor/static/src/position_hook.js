@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
-import { useComponent, useEffect } from "@odoo/owl";
+import { useComponent } from "@odoo/owl";
 
 /**
  * This hook has the same job as the PositionPlugin, but for Components.
@@ -19,7 +20,7 @@ export function usePositionHook(containerRef, document, callback) {
         target.addEventListener(eventName, onLayoutGeometryChange, capture);
         cleanups.push(() => target.removeEventListener(eventName, onLayoutGeometryChange, capture));
     };
-    useEffect(
+    useLayoutEffect(
         () => {
             if (containerRef.el) {
                 resizeObserver.observe(document.body);

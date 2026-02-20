@@ -1,4 +1,5 @@
-import { Component, useState, useEffect, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState, useRef } from "@odoo/owl";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";
@@ -14,7 +15,7 @@ export class SettingsApp extends Component {
             search: this.env.searchState,
         });
         this.settingsAppRef = useRef("settingsApp");
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.settingsAppRef.el) {
                     const force =

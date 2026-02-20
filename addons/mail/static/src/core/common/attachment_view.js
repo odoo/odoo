@@ -1,10 +1,10 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
     onWillUnmount,
     onWillUpdateProps,
     useComponent,
-    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -27,7 +27,7 @@ class AbstractAttachmentView extends Component {
             /** @type {import("models").Thread|undefined} */
             thread: undefined,
         });
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el) {
                     hidePDFJSButtons(this.iframeViewerPdfRef.el);
