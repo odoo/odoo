@@ -1,6 +1,16 @@
 import { Cache } from "@web/core/utils/cache";
 import { isColorGradient } from "@web/core/utils/colors";
 
+const SUPPORTED_MIMETYPES = [
+    "image/gif",
+    "image/jpe",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/svg+xml",
+    "image/webp",
+];
+
 const headResponseCache = new Cache(
     async (src) => await fetch(src, { method: "HEAD" }),
     JSON.stringify
@@ -53,6 +63,37 @@ export function getMimetype(image, data = image.dataset) {
                 (src.endsWith(".jpeg") && "image/jpeg"))) ||
         null
     );
+}
+
+// TODO: in master, remove getFetchedMimetype and modify getMimetype
+/**
+ * @param {HTMLImageElement} image
+ * @param {Object} data
+ * @returns {string|null} The mimetype of the image.
+ */
+export async function getFetchedMimetype(image, data = image.dataset) {
+    const mimetypeOnData = data.mimetype || data.mimetypeBeforeConversion;
+    if (mimetypeOnData) {
+        return mimetypeOnData;
+    }
+    const src = getImageSrc(image);
+    try {
+        const response = await headResponseCache.read(src);
+        if (!response.ok) {
+            return null;
+        }
+        const contentType = response.headers.get("content-type");
+        if (!SUPPORTED_MIMETYPES.some((mimetype) => contentType.startsWith(mimetype))) {
+            return null;
+        }
+        if (contentType.startsWith("image/svg+xml")) {
+            return "image/svg+xml";
+        }
+        return contentType;
+    } catch {
+        // Typically a CORS image
+        return null;
+    }
 }
 
 /**
