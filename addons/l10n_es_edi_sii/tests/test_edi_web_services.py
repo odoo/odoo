@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo import fields
+from odoo.tests import tagged
 from .common import TestEsEdiCommon
+from odoo.addons.l10n_es_edi_sii.models.account_move import AccountMove
 
 
 @tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
@@ -48,22 +50,26 @@ class TestEdiWebServices(TestEsEdiCommon):
         })
         cls.in_invoice.action_post()
 
-        cls.moves = cls.out_invoice + cls.in_invoice
-
     def test_edi_gipuzkoa(self):
         self.env.company.l10n_es_sii_tax_agency = 'gipuzkoa'
 
-        self.moves.action_process_edi_web_services(with_commit=False)
-        generated_files = self._process_documents_web_services(self.moves, {'es_sii'})
-        self.assertTrue(generated_files)
-        self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
-        self.assertRecordValues(self.in_invoice, [{'edi_state': 'sent'}])
+        with patch.object(AccountMove, '_l10n_es_edi_call_web_service_sign', autospec=True) as mock_sign:
+            mock_sign.side_effect = lambda move, info_list, cancel=False: {'success': True}
+
+            self.out_invoice._send_l10n_es_invoice()
+            self.in_invoice._send_l10n_es_invoice()
+
+        self.assertEqual(self.out_invoice.l10n_es_edi_sii_state, 'sent')
+        self.assertEqual(self.in_invoice.l10n_es_edi_sii_state, 'sent')
 
     def test_edi_bizkaia(self):
         self.env.company.l10n_es_sii_tax_agency = 'bizkaia'
 
-        self.moves.action_process_edi_web_services(with_commit=False)
-        generated_files = self._process_documents_web_services(self.moves, {'es_sii'})
-        self.assertTrue(generated_files)
-        self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
-        self.assertRecordValues(self.in_invoice, [{'edi_state': 'sent'}])
+        with patch.object(AccountMove, '_l10n_es_edi_call_web_service_sign', autospec=True) as mock_sign:
+            mock_sign.side_effect = lambda move, info_list, cancel=False: {'success': True}
+
+            self.out_invoice._send_l10n_es_invoice()
+            self.in_invoice._send_l10n_es_invoice()
+
+        self.assertEqual(self.out_invoice.l10n_es_edi_sii_state, 'sent')
+        self.assertEqual(self.in_invoice.l10n_es_edi_sii_state, 'sent')
