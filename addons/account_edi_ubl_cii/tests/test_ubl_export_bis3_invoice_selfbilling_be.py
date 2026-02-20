@@ -4,7 +4,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
-class TestUblExportBis3InvoiceSelfBillingBE(TestUblBis3Common, TestUblCiiBECommon):
+class TestUblExportBis3SelfInvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
     @classmethod
     def setUpClass(cls):
@@ -29,7 +29,6 @@ class TestUblExportBis3InvoiceSelfBillingBE(TestUblBis3Common, TestUblCiiBECommo
             'street': 'Chaussée de Namur 40',
             'city': 'Ramillies',
             'zip': '1367',
-            'global_location_number': '0123456789',
             'country_id': self.ref('base.be'),
         })
         tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
