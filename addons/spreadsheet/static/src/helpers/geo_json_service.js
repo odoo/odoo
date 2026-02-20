@@ -126,6 +126,7 @@ export const geoJsonService = {
                 },
                 { id: "usa", label: _t("United States"), defaultProjection: "albersUsa" },
                 { id: "south_america", label: _t("South America"), defaultProjection: "mercator" },
+                { id: "oceania", label: _t("Oceania"), defaultProjection: "mercator" },
             ],
             getTopoJson: async function (region) {
                 const [topoJson] = await getRegionAndFetchMapping(region);
