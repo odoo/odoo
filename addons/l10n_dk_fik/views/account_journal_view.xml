@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_journal_form_l10n_dk_fik" model="ir.ui.view">
+        <field name="name">account.journal.form.l10n.dk.fik</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_reference_model']" position="after">
+                <field name="l10n_dk_fik_creditor_number"
+                       invisible="type != 'sale' or invoice_reference_model != 'dk_fik'"
+                       required="invoice_reference_model == 'dk_fik'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
