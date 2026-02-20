@@ -104,16 +104,6 @@ class ResConfigSettings(models.TransientModel):
         registration_action = registration_wizard._action_open_peppol_form(reopen=False)
         return registration_action
 
-    # Deprecated
-    def button_open_peppol_config_wizard(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Advanced Peppol Configuration',
-            'res_model': 'peppol.config.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-        }
-
     def button_peppol_disconnect_branch_from_parent(self):
         self.ensure_one()
         previous_parent_company_name = self.company_id.peppol_parent_company_id.name
@@ -128,12 +118,6 @@ class ResConfigSettings(models.TransientModel):
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
-
-    # Dreprecated
-    def button_peppol_register_sender_as_receiver(self):
-        """Register the existing user as a receiver."""
-        self.ensure_one()
-        return self.env['peppol.config.wizard'].new().button_peppol_register_sender_as_receiver()
 
     def button_reconnect_this_database(self):
         """Re-establish an out-of-sync connection"""
