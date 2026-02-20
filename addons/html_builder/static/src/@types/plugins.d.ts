@@ -63,58 +63,58 @@ declare module "plugins" {
     export type BuilderResources = ResourcesDeclarationsFactory<BuilderResourcesAccess>;
     export interface BuilderResourcesList {
         // Handlers
-        on_replicated_handlers: on_replicated_handlers;
-        on_saved_handlers: on_saved_handlers;
-        on_will_setup_editor_handlers: on_will_setup_editor_handlers;
-        on_current_options_containers_changed_handlers: on_current_options_containers_changed_handlers;
+        on_bg_color_updated_handlers: on_bg_color_updated_handlers;
         on_bg_image_hidden_handlers: on_bg_image_hidden_handlers;
+        on_cloned_handlers: on_cloned_handlers;
+        on_current_options_containers_changed_handlers: on_current_options_containers_changed_handlers;
+        on_dom_updated_handlers: on_dom_updated_handlers;
+        on_element_arrow_moved_handlers: on_element_arrow_moved_handlers;
         on_element_dragged_handlers: on_element_dragged_handlers;
+        on_element_dropped_handlers: on_element_dropped_handlers;
         on_element_dropped_near_handlers: on_element_dropped_near_handlers;
         on_element_dropped_over_handlers: on_element_dropped_over_handlers;
         on_element_move_handlers: on_element_move_handlers;
         on_element_out_dropzone_handlers: on_element_out_dropzone_handlers;
         on_element_over_dropzone_handlers: on_element_over_dropzone_handlers;
         on_mobile_preview_clicked: on_mobile_preview_clicked;
+        on_prepare_drag_handlers: on_prepare_drag_handlers;
         on_removed_handlers: on_removed_handlers;
-        on_will_restore_containers_handlers: on_will_restore_containers_handlers;
-        on_target_revealed_handlers: on_target_revealed_handlers;
+        on_replicated_handlers: on_replicated_handlers;
+        on_saved_handlers: on_saved_handlers;
+        on_shape_computed_handlers: on_post_compute_shape_handlers;
         on_snippet_dragged_handlers: on_snippet_dragged_handlers;
+        on_snippet_dropped_handlers: on_snippet_dropped_handlers;
         on_snippet_dropped_near_handlers: on_snippet_dropped_near_handlers;
         on_snippet_dropped_over_handlers: on_snippet_dropped_over_handlers;
         on_snippet_move_handlers: on_snippet_move_handlers;
         on_snippet_out_dropzone_handlers: on_snippet_out_dropzone_handlers;
         on_snippet_over_dropzone_handlers: on_snippet_over_dropzone_handlers;
+        on_target_hidden_handlers: on_target_hidden_handlers;
+        on_target_revealed_handlers: on_target_revealed_handlers;
+        on_target_shown_handlers: on_target_shown_handlers;
         on_will_clone_handlers: on_will_clone_handlers;
         on_will_remove_handlers: on_will_remove_handlers;
-        on_shape_computed_handlers: on_post_compute_shape_handlers;
-        on_target_hidden_handlers: on_target_hidden_handlers;
-        on_target_shown_handlers: on_target_shown_handlers;
-        on_dom_updated_handlers: on_dom_updated_handlers;
+        on_will_restore_containers_handlers: on_will_restore_containers_handlers;
         on_will_save_handlers: on_will_save_handlers;
-        on_bg_color_updated_handlers: on_bg_color_updated_handlers;
-        on_cloned_handlers: on_cloned_handlers;
-        on_element_arrow_moved_handlers: on_element_arrow_moved_handlers;
-        on_element_dropped_handlers: on_element_dropped_handlers;
-        on_prepare_drag_handlers: on_prepare_drag_handlers;
-        on_snippet_dropped_handlers: on_snippet_dropped_handlers;
         on_will_save_element_handlers: on_will_save_element_handlers;
+        on_will_setup_editor_handlers: on_will_setup_editor_handlers;
         on_will_reset_history_after_saving_handlers: on_will_reset_history_after_saving_handlers;
 
         // Overrides
-        apply_custom_css_style_overrides: apply_custom_css_style_overrides;
         after_setup_editor_overrides: after_setup_editor_overrides;
+        apply_custom_css_style_overrides: apply_custom_css_style_overrides;
         save_elements_overrides: save_elements_overrides;
 
         // Predicates
-        is_node_empty_predicates: is_node_empty_predicates;
-        is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
-        is_draggable_predicates: is_draggable_predicates;
         should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
         should_show_overlay_buttons_of_ancestor_predicates: should_show_overlay_buttons_of_ancestor_predicates;
+        is_draggable_predicates: is_draggable_predicates;
+        is_node_empty_predicates: is_node_empty_predicates;
+        is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
 
         // Processors
-        remove_disabled_reason_processors: remove_disabled_reason_processors;
         clone_disabled_reason_processors: clone_disabled_reason_processors;
+        remove_disabled_reason_processors: remove_disabled_reason_processors;
         snippet_preview_dialog_stylesheets_processors: snippet_preview_dialog_stylesheets_processors;
 
         // Providers
