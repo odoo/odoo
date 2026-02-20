@@ -3,6 +3,12 @@ import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
 
+const DataSourceViewTypeMap = {
+    list: "list",
+    pivot: "pivot",
+    chart: "graph",
+};
+
 export function onOdooChartItemClick(getters, chartId) {
     return navigateInOdooMenuOnClick(getters, chartId, (chartJsItem, chartData) => {
         const { datasets, labels } = chartData;
@@ -205,7 +211,7 @@ export async function navigateToOdooDatasourceFromChart(
             domain,
             context,
         },
-        { newWindow }
+        { viewType: DataSourceViewTypeMap[dataSourceType], newWindow }
     );
 }
 
