@@ -22,23 +22,6 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         xml_content = dict_to_xml(document_node, template=Order, nsmap=self._get_document_nsmap(vals))
         return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')
 
-    def _setup_base_lines(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._setup_base_lines(vals)
-
-        for base_line in vals['base_lines']:
-            product = base_line['product_id']
-            partner = base_line['partner_id']
-            supplier_info = product.variant_seller_ids.filtered(lambda s:
-                s.partner_id == partner
-                and (
-                    s.product_id == product
-                    or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
-                )
-                and (s.product_code or s.product_name),
-            )[:1]
-            base_line['supplier_info'] = supplier_info
-
     def _get_purchase_order_node(self, vals):
         self._add_purchase_order_config_vals(vals)
         self._add_purchase_order_base_lines_vals(vals)
@@ -58,6 +41,52 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         self._add_purchase_order_tax_total_nodes(document_node, vals)
         self._add_purchase_order_monetary_total_nodes(document_node, vals)
         return document_node
+
+    def _setup_base_lines(self, vals):
+        AccountTax = self.env['account.tax']
+        purchase_order = vals['purchase_order']
+        company = purchase_order.company_id
+        base_lines = vals['base_lines'] = [line._prepare_base_line_for_taxes_computation() for line in purchase_order.order_line.filtered(lambda line: not line.display_type)]
+        AccountTax._add_tax_details_in_base_lines(base_lines, company)
+        AccountTax._round_base_lines_tax_details(base_lines, company)
+
+        # CEN-EN16931 layer.
+        # [BR-27]-The Item net price (BT-146) shall NOT be negative.
+        self._ubl_turn_base_lines_price_unit_as_always_positive(vals)
+
+        # PINT layer.
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
+            base_lines=vals['base_lines'],
+            company=company,
+            vals=vals,
+        )
+
+        # Sub-dictionaries to store UBL-related values along the whole process.
+        vals['_ubl_values'] = {}
+        for base_line in vals['base_lines']:
+            base_line['_ubl_values'] = {}
+
+        # Global rounding of tax_details using 6 digits.
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+
+        for base_line in vals['base_lines']:
+            product = base_line['product_id']
+            partner = base_line['partner_id']
+            supplier_info = product.variant_seller_ids.filtered(lambda s:
+                s.partner_id == partner
+                and (
+                    s.product_id == product
+                    or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
+                )
+                and (s.product_code or s.product_name),
+            )[:1]
+            base_line['supplier_info'] = supplier_info
 
     def _add_purchase_order_config_vals(self, vals):
         purchase_order = vals['purchase_order']
@@ -87,14 +116,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         })
 
     def _add_purchase_order_base_lines_vals(self, vals):
-        purchase_order = vals['purchase_order']
-        AccountTax = self.env['account.tax']
-
-        base_lines = [line._prepare_base_line_for_taxes_computation() for line in purchase_order.order_line.filtered(lambda line: not line.display_type)]
-        AccountTax._add_tax_details_in_base_lines(base_lines, purchase_order.company_id)
-        AccountTax._round_base_lines_tax_details(base_lines, purchase_order.company_id)
-
-        vals['base_lines'] = base_lines
+        pass
 
     def _add_purchase_order_currency_vals(self, vals):
         self._add_document_currency_vals(vals)
@@ -263,15 +285,6 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             },
         }
         self._ubl_add_line_allowance_charge_nodes(sub_vals)
-
-        # Discount.
-        self._ubl_add_line_allowance_charge_nodes_for_discount(sub_vals)
-
-        # Recycling contribution taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals)
-
-        # Excise taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
 
     def _ubl_add_line_item_name_description_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

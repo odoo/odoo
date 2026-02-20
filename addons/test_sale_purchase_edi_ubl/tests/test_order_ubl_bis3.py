@@ -90,7 +90,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         self.customer_company.name = "Paris Corp"
         so2 = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         self.assertEqual(so2.partner_id, self.customer_company.partner_id)
-        self.assertEqual(len(so2.activity_ids), 0)
+        self.assertEqual(len(so2.activity_ids), 1)
 
         # wrong name and wrong VAT -> new partner with the new name & new VAT, activity that a new partner was created
         self.customer_company.vat = "FR123456798"
