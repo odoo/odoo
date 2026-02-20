@@ -9,6 +9,7 @@ class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
     @api.depends('quant_ids', 'package_type_id')
+    @api.depends_context('picking_id')
     def _compute_weight(self):
         if self.env.context.get('picking_id'):
             package_weights = defaultdict(float)
