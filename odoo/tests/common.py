@@ -70,7 +70,7 @@ from odoo.http.session import (
 )
 from odoo.http.session import Session as OdooHttpSession
 from odoo.modules.registry import Registry
-from odoo.sql_db import Cursor, Savepoint
+from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, float_compare, mute_logger, profiler
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, lower_logging
@@ -1073,6 +1073,7 @@ class TransactionCase(BaseCase):
     """
     muted_registry_logger = mute_logger(odoo.orm.registry._logger.name)
     freeze_time = None
+    savepoint = None
 
     @classmethod
     def _gc_filestore(cls):
@@ -1170,37 +1171,25 @@ class TransactionCase(BaseCase):
                 )
 
         self.addCleanup(_check_registry_lock)
-        # restore environments after the test to avoid invoking flush() with an
-        # invalid environment (inexistent user id) from another test
-        for env in self.env.transaction.envs:
-            self.addCleanup(env.clear)
-
-        # restore the set of known environments as it was at setUp
-        def reset_env(transaction, envs):
-            transaction._recent_envs.clear()
-            transaction._weak_envs.clear()
-            transaction._weak_envs.extend(envs)
-
-        self.addCleanup(reset_env, self.env.transaction, list(self.env.transaction._weak_envs))
 
         self.addCleanup(self.muted_registry_logger(self.registry.clear_all_caches))
+
+        # flush everything in setUpClass before introducing a savepoint
+        cr = self.cr
+        if self.savepoint is None:
+            self.savepoint = self.cr.savepoint(flush=True)
+            self.addClassCleanup(self.savepoint.close)
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
         # (these are not cleared in self.env.clear or envs.clear)
-        cr = self.env.cr
-
         def _reset(cb, funcs, data):
             cb._funcs = funcs
             cb.data = data
         for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
             self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
-        # flush everything in setUpClass before introducing a savepoint
-        self.env.flush_all()
-
-        savepoint = Savepoint(self.cr)
-        self.addCleanup(savepoint.close)
+        self.addCleanup(self.savepoint.rollback)
 
     @contextmanager
     def enter_registry_test_mode(self):

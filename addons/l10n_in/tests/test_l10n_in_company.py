@@ -6,25 +6,20 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestL10nInCompany(L10nInTestInvoicingCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        # Create a branch company under the default company
-        cls.company_data['company'].write({
-            'child_ids': [Command.create({
-                'name': 'IN Branch',
-                'country_id': cls.country_in.id,
-                'vat': '24FANCY1234AAZA',
-            })],
-        })
-        cls.in_branch = cls.company_data['company'].child_ids
-
     def test_l10n_in_journal_priority(self):
         """
         Ensure that when a branch company has its own journals,
         it is selected instead of falling back to the parent company's journal.
         """
+        # Create a branch company under the default company
+        self.company_data['company'].write({
+            'child_ids': [Command.create({
+                'name': 'IN Branch',
+                'country_id': self.country_in.id,
+                'vat': '24FANCY1234AAZA',
+            })],
+        })
+        self.in_branch = self.company_data['company'].child_ids
 
         # Check: branch has no journal initially
         branch_sale_journal = self.env['account.journal'].search([

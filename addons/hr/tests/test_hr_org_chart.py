@@ -27,6 +27,7 @@ class TestHrOrgChart(TestHrCommon, HttpCase):
                 'manager_id': cls.employee_paul.id,
             },
         ])
+        cls.cr.flush()  # TODO crashes test_employee_deletion without sudo in _track_prepare
 
     def test_employee_deletion(self):
         # Tests an issue with the form view where the employee could be deleted

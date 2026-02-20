@@ -35,7 +35,7 @@ import odoo
 from . import tools
 from .release import MIN_PG_VERSION
 from .tools import SQL, config
-from .tools.func import frame_codeinfo, locked
+from .tools.func import frame_codeinfo, locked, reset_cached_properties
 from .tools.misc import Callbacks, real_time
 
 if typing.TYPE_CHECKING:
@@ -140,12 +140,16 @@ class _FlushingSavepoint(Savepoint):
     def __init__(self, cr: BaseCursor):
         cr.flush()
         super().__init__(cr)
+        self._default_env = cr.transaction.default_env if cr.transaction is not None else None
 
     def rollback(self):
         cr = self._cr
         assert isinstance(cr, BaseCursor)
         if cr.transaction is not None:
+            cr.transaction.default_env = self._default_env
             cr.transaction.clear()
+            for env in cr.transaction.envs:
+                reset_cached_properties(env)
         super().rollback()
 
     def _close(self, rollback: bool):
