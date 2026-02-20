@@ -1108,6 +1108,10 @@ class ResPartner(models.Model):
             'country': self.country_id.code,
         }]
 
+    @api.model
+    def _get_res_city_by_name(self, name, country_id):
+        pass
+
 
 class ResPartnerIndustry(models.Model):
     _name = 'res.partner.industry'
