@@ -382,6 +382,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
         self.tds_wizard_entry(move=move, lines=[(self.tax_194c, 100000)])
         move.line_ids.remove_move_reconcile()
+        move.invalidate_recordset(['l10n_in_warning'])  # No complet depends on _compute_l10n_in_warning
         self.assertEqual(move.l10n_in_warning, False)
 
     def test_tcs_tds_warning_for_company_branches(self):

@@ -25,7 +25,7 @@ class IrUiMenu(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
-    parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
+    parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="set null")
     parent_path = fields.Char(index=True)
     group_ids = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
@@ -169,16 +169,6 @@ class IrUiMenu(models.Model):
         """
         if web_icon and len(web_icon.split(',')) == 2:
             return self._read_image(web_icon)
-
-    def unlink(self):
-        # Detach children and promote them to top-level, because it would be unwise to
-        # cascade-delete submenus blindly. We also can't use ondelete=set null because
-        # that is not supported when _parent_store is used (would silently corrupt it).
-        # TODO: ideally we should move them under a generic "Orphans" menu somewhere?
-        direct_children = self.with_context(active_test=False).search([('parent_id', 'in', self.ids)])
-        direct_children.write({'parent_id': False})
-
-        return super().unlink()
 
     def copy(self, default=None):
         new_menus = super().copy(default=default)

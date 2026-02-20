@@ -118,6 +118,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         previous_parent_company_name = self.company_id.peppol_parent_company_id.name
         self.account_peppol_edi_user._peppol_deregister_participant()
+        self.env['res.config.settings'].invalidate_model()
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -154,4 +155,5 @@ class ResConfigSettings(models.TransientModel):
 
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
+            self.env['res.config.settings'].invalidate_model()
         return True

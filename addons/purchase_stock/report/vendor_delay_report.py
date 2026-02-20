@@ -9,6 +9,14 @@ class VendorDelayReport(models.Model):
     _name = 'vendor.delay.report'
     _description = "Vendor Delay Report"
     _auto = False
+    _depends = {
+        'stock.move': ['purchase_line_id', 'product_id', 'date', 'state'],
+        'stock.move.line': ['move_id', 'quantity', 'product_uom_id'],
+        'purchase.order.line': ['product_id', 'partner_id', 'product_uom_qty', 'date_promised'],
+        'product.product': ['product_tmpl_id'],
+        'product.template': ['uom_id', 'categ_id'],
+        'uom.uom': ['factor'],
+    }
 
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)

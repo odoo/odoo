@@ -293,6 +293,7 @@ class TestPersonalStages(TestProjectCommon):
                          "Superuser should be able to delete personal stages in batch.")
         self.assertEqual(self.env['project.task'].with_user(user_1.id).search_count([('user_ids', 'in', user_1.ids)]), 4,
                          "Tasks in personal stages removed in batch by superuser should not be unlinked.")
+        self.env['project.task'].invalidate_model(['personal_stage_id', 'personal_stage_type_id'])  # No complet depends on _compute_personal_stage_id
         for private_task in private_tasks:
             self.assertEqual(private_task.with_user(user_1.id).personal_stage_type_id.id, user_1_stages[4].id,
                              "Tasks in a personal stage removed in batch should be moved to a stage with a higher sequence if no stage with lower sequence have been found")

@@ -161,13 +161,10 @@ class MailMail(models.Model):
             self.attachment_ids.check_access('read')
         return res
 
-    def unlink(self):
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
         # cascade-delete the parent message for all mails that are not created for a notification
-        mail_msg_cascade_ids = [mail.mail_message_id.id for mail in self if not mail.is_notification]
-        res = super(MailMail, self).unlink()
-        if mail_msg_cascade_ids:
-            self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
-        return res
+        yield self.sudo().filtered(lambda m: not m.is_notification).mail_message_id
 
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()

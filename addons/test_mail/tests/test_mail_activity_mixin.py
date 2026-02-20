@@ -706,7 +706,7 @@ class TestActivityMixin(TestActivityCommon):
         act = test_record.activity_schedule("test_mail.mail_act_test_todo", summary='Orphan activity')
         act.action_done()
         # Delete the record while preventing the cascade deletion of the activity to simulate a corrupted database
-        with patch.object(MailActivity, 'unlink', lambda self: None):
+        with patch.object(MailActivity, 'search', lambda *agrs, **kwargs: self.env['mail.activity'].browse()):
             test_record.unlink()
         self.assertTrue(act.exists())
         self.assertFalse(act.sudo().active)

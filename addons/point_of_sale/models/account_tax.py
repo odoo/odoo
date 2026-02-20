@@ -62,3 +62,11 @@ class AccountTax(models.Model):
             'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id', 'sequence', 'tax_group_id',
             'fiscal_position_ids',
         ]
+
+    @api.ondelete(at_uninstall=True)
+    def _delete_invalidate_tax_ids_after_fiscal_position(self):
+
+        def _post_hook():
+            self.env['pos.order.line'].invalidate_model(['tax_ids_after_fiscal_position'])
+
+        return _post_hook

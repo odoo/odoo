@@ -94,6 +94,10 @@ class HrAttendanceOvertimeLine(models.Model):
             ('employee_id', 'in', self.employee_id.ids),
         ])
 
+    @api.ondelete(at_uninstall=False)
+    def _ondelete_recompute_linked_attendances(self):
+        self._linked_attendances().invalidate_recordset(['linked_overtime_ids'])
+
     def write(self, vals):
         if any(key in vals for key in ['status', 'manual_duration']):
             attendances = self._linked_attendances()
@@ -105,4 +109,5 @@ class HrAttendanceOvertimeLine(models.Model):
                  attendances._fields['validated_overtime_hours'],
                  attendances
             )
+
         return super().write(vals)

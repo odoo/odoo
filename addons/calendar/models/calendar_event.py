@@ -847,7 +847,7 @@ class CalendarEvent(models.Model):
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
         (detached_events & self).active = False
-        (detached_events - self).with_context(archive_on_error=True).unlink()
+        (detached_events - self).unlink()
 
         # Notify attendees if there is an alarm on the modified event, or if there was an alarm
         # that has just been removed, as it might have changed their next event notification
@@ -1389,7 +1389,7 @@ class CalendarEvent(models.Model):
                 detached_events |= recurrence.calendar_event_ids
                 recurrence.calendar_event_ids.recurrence_id = False
                 recurrences_to_unlink |= recurrence
-        recurrences_to_unlink.with_context(archive_on_error=True).unlink()
+        recurrences_to_unlink.unlink()
         return detached_events - self
 
     def _get_time_update_dict(self, base_event, time_values):

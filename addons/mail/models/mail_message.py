@@ -803,16 +803,6 @@ class MailMessage(models.Model):
         return res
 
     def unlink(self):
-        # cascade-delete attachments that are directly attached to the message (should only happen
-        # for mail.messages that act as parent for a standalone mail.mail record).
-        # the cache of the related document doesn't need to be invalidate (see @_invalidate_documents)
-        # because the unlink method invalidates the whole cache anyway
-        if not self:
-            return True
-        self.check_access('unlink')
-        self.mapped('attachment_ids').filtered(
-            lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
-        ).unlink()
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
         partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
@@ -824,6 +814,15 @@ class MailMessage(models.Model):
         for partner, messages in messages_by_partner.items():
             partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
         return super().unlink()
+
+    def _delete_collect_extra(self):
+        # cascade-delete attachments that are directly attached to the message (should only happen
+        # for mail.messages that act as parent for a standalone mail.mail record).
+        attachments = self.mapped('attachment_ids').filtered(
+            lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
+        )
+        yield from super()._delete_collect_extra()
+        yield attachments
 
     def export_data(self, fields_to_export):
         if not self.env.is_admin():

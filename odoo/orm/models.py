@@ -3489,6 +3489,171 @@ class BaseModel(metaclass=MetaModel):
 
         return None
 
+    @api.ondelete(at_uninstall=False)
+    def _prevent_deletion_default(self):
+        ids = self._ids
+
+        # don't allow fallback value in ir.default for many2one company dependent fields to be deleted
+        # Exception: when 'force_delete', these fallbacks can be deleted by Defaults.discard_records(records)
+        if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self.env.context.get('force_delete'):
+            IrModelFields = self.env["ir.model.fields"].sudo()
+            Defaults = self.env['ir.default'].sudo()
+
+            field_ids = tuple(IrModelFields._get_ids(field.model_name).get(field.name) for field in many2one_fields)
+            json_ids = tuple(json.dumps(id) for id in ids)
+            if default := Defaults.search([('field_id', 'in', field_ids), ('json_value', 'in', json_ids)], limit=1, order='id'):
+                ir_field = default.field_id.sudo()
+                field = self.env[ir_field.model]._fields[ir_field.name]
+                record = self.browse(json.loads(default.json_value))
+                raise UserError(_('Unable to delete %(record)s because it is used as the default value of %(field)s', record=record, field=field))
+
+        for field in many2one_fields:
+            model = self.env[field.model_name]
+            if field.ondelete == 'restrict' and not self.env.context.get('force_delete'):
+                if res := self.env.execute_query(SQL(
+                    """
+                    SELECT id, %(field)s
+                    FROM %(table)s
+                    WHERE %(field)s IS NOT NULL
+                    AND %(field)s @? %(jsonpath)s
+                    ORDER BY id
+                    LIMIT 1
+                    """,
+                    table=SQL.identifier(model._table),
+                    field=SQL.identifier(field.name),
+                    jsonpath=f"$.* ? ({' || '.join(f'@ == {id_}' for id_ in ids)})",
+                )):
+                    on_restrict_id, field_json = res[0]
+                    to_delete_id = next(iter(id_ for id_ in field_json.values()))
+                    on_restrict_record = model.browse(on_restrict_id)
+                    to_delete_record = self.browse(to_delete_id)
+                    raise UserError(_('You cannot delete %(to_delete_record)s, as it is used by %(on_restrict_record)s',
+                                        to_delete_record=to_delete_record, on_restrict_record=on_restrict_record))
+
+        def _post_hook():
+            # on delete set null/restrict for jsonb company dependent many2one
+            for field in many2one_fields:
+                model = self.env[field.model_name]
+                if field.ondelete == 'restrict' and not self.env.context.get('force_delete'):
+                    continue
+                res = self.env.execute_query(SQL(
+                    """
+                    UPDATE %(table)s
+                    SET %(field)s = (
+                        SELECT jsonb_object_agg(
+                            key,
+                            CASE
+                                WHEN value::int4 in %(ids)s THEN NULL
+                                ELSE value::int4
+                            END)
+                        FROM jsonb_each_text(%(field)s)
+                    )
+                    WHERE %(field)s IS NOT NULL AND %(field)s @? %(jsonpath)s
+                    RETURNING %(table)s."id"
+                    """,
+                    table=SQL.identifier(model._table),
+                    field=SQL.identifier(field.name, to_flush=field),
+                    ids=ids,
+                    jsonpath=f"$.* ? ({' || '.join(f'@ == {id_}' for id_ in ids)})",
+                ))
+                model.browse(id_ for id_, in res).invalidate_recordset([field.name])
+
+        return _post_hook
+
+    @typing.final
+    def _delete_collect_impacted_records(self, field: Field) -> BaseModel:
+        # Attempt to find a suitable inverse field to avoid a search query.
+        inverses = self.pool.field_inverses[field]
+        inv_field = next((
+            inv_field for inv_field in inverses
+            if not inv_field.domain and inv_field.type == 'one2many'
+        ), None)
+        if inv_field:
+            return self.with_context(active_test=False).sudo()[inv_field.name]
+
+        return self.env[field.model_name].with_context(active_test=False).sudo().search(
+            Domain(field.name, 'in', self.ids), order='id',
+        )
+
+    @typing.final
+    def _delete_collect_cascade(self) -> Iterator[BaseModel]:
+        for field in self.env.transaction.registry.many2one_targeting.get(self._name, ()):
+            if field.ondelete != 'cascade':
+                continue
+
+            records_impacted = self._delete_collect_impacted_records(field)
+            if not records_impacted:
+                continue
+
+            yield records_impacted
+
+    @typing.final
+    def _delete_collect_nullify(self, ignore_records_dict) -> Iterator[tuple[Field, tuple[int, ...]]]:
+        for field in self.env.transaction.registry.many2one_targeting.get(self._name, ()):
+            if field.ondelete != 'set null':
+                continue
+
+            records_impacted = self._delete_collect_impacted_records(field)
+            if not records_impacted:
+                continue
+
+            model_name = field.model_name
+            if model_name in ignore_records_dict:
+                records_impacted -= ignore_records_dict[model_name]
+                if not records_impacted:
+                    continue
+
+            yield (field, records_impacted)
+
+    def _delete_collect_extra(self) -> Iterator[BaseModel]:
+        env = self.sudo().env
+        Data = env['ir.model.data'].with_context({})
+        Defaults = env['ir.default']
+        Attachment = env['ir.attachment'].with_context(skip_res_field_check=True)
+        ids = self.ids
+        # Removing the ir_model_data reference if the record being deleted
+        # is a record created by xml/csv file, as these are not connected
+        # with real database foreign keys, and would be dangling references.
+        yield Data.search([('model', '=', self._name), ('res_id', 'in', ids)], order='id')
+        # Simulate discard_records behavior.
+        yield Defaults.search([
+            ('field_id.ttype', '=', 'many2one'), ('field_id.relation', '=', self._name),
+            ('json_value', 'in', tuple(json.dumps(id) for id in ids)),
+        ], order='id')
+        yield Attachment.search([('res_model', '=', self._name), ('res_id', 'in', ids)], order='id')
+
+    @typing.final
+    def _delete_collect(self) -> tuple[dict[str, OrderedSet], dict[str, OrderedSet]]:
+        explicit_deletions = defaultdict(OrderedSet, {self._name: OrderedSet(self.ids)})  # Records to delete explicitly
+        implicit_deletions = defaultdict(OrderedSet)  # Records to be deleted automatically via cascade
+
+        nodes_to_process = defaultdict(OrderedSet, {self._name: OrderedSet(self.ids)})
+        done = defaultdict(set)  # Track processed records to avoid infinite looping
+
+        def collect_todo(records_generator, result_collector):
+            for records in records_generator:
+                if not records:
+                    continue
+                model_name = records._name
+                ids = records._ids
+                nodes_to_process[model_name].update(ids)
+                result_collector[model_name].update(ids)
+
+        while nodes_to_process:
+            model_name, ids_todo = nodes_to_process.popitem()
+            done_set = done[model_name]
+            ids_todo -= done_set
+            if not ids_todo:
+                continue
+
+            done_set.update(ids_todo)
+            records = self.env[model_name].browse(ids_todo)
+
+            collect_todo(records._delete_collect_cascade(), implicit_deletions)
+            collect_todo(records._delete_collect_extra(), explicit_deletions)
+
+        return explicit_deletions, implicit_deletions
+
     def unlink(self) -> typing.Literal[True]:
         """ Delete the records in ``self``.
 
@@ -3500,135 +3665,97 @@ class BaseModel(metaclass=MetaModel):
 
         self.check_access('unlink')
 
-        for func in self._ondelete_methods:
-            # func._ondelete is True => should be called during uninstallation
-            # func._ondelete is False => should be called unless its module is being uninstalled
-            if (
-                func._ondelete
-                or not self.pool.uninstalling_modules
-                or func.__module__.split('.')[2] not in self.pool.uninstalling_modules
-            ):
-                func(self)
+        # Retrieve all records that must be deleted by the ORM (explicit_deletions) and all records
+        # that will be deleted automatically by PostgreSQL's ON DELETE CASCADE (implicit_deletions).
+        explicit_deletions, implicit_deletions = self._delete_collect()
 
-        # TOFIX: this avoids an infinite loop when trying to recompute a
-        # field, which triggers the recomputation of another field using the
-        # same compute function, which then triggers again the computation
-        # of those two fields
-        for field in self._fields.values():
-            self.env.remove_to_compute(field, self)
+        records_delete_dict = defaultdict(OrderedSet, explicit_deletions)
+        for model_name, ids in implicit_deletions.items():
+            records_delete_dict[model_name].update(ids)
+        records_delete_dict = {
+            model_name: self.env[model_name].browse(ids)
+            for model_name, ids in records_delete_dict.items()
+        }
+        all_records_deleted = tuple(records_delete_dict.values())
 
-        self.env.flush_all()
+        post_hooks = []
+        for records in all_records_deleted:
+            for func in records._ondelete_methods:
+                # func._ondelete is True => should be called during uninstallation
+                # func._ondelete is False => should be called unless its module is being uninstalled
+                if (
+                    func._ondelete
+                    or not self.pool.uninstalling_modules
+                    or func.__module__.split('.')[2] not in self.pool.uninstalling_modules
+                ):
+                    post_hook = func(records)
+                    if post_hook is not None:
+                        assert callable(post_hook), "ondelete should return a Callable or None"
+                        post_hooks.append(post_hook)
 
-        cr = self.env.cr
-        Data = self.env['ir.model.data'].sudo().with_context({})
-        Defaults = self.env['ir.default'].sudo()
-        Attachment = self.env['ir.attachment'].sudo()
-        ir_model_data_unlink = Data
-        ir_attachment_unlink = Attachment
+        # Ensure that many2one fields are up to date before deletion.
+        many2one_targeting = self.env.transaction.registry.many2one_targeting
+        for records in all_records_deleted:
+            flushing_info = groupby(
+                (field for field in many2one_targeting.get(records._name, ())),
+                lambda field: field.model_name,
+            )
+            for model_name, fields in flushing_info:
+                records.env[model_name].flush_model([field.name for field in fields])
 
-        # mark fields that depend on 'self' to recompute them after 'self' has
-        # been deleted (like updating a sum of lines after deleting one line)
-        with self.env.protecting(self._fields.values(), self):
-            self.modified(self._fields, before=True)
+        cascade_nullify = []
+        for records in all_records_deleted:
+            cascade_nullify.extend(records._delete_collect_nullify(records_delete_dict))
 
-        for sub_ids in split_every(cr.IN_MAX, self.ids):
-            records = self.browse(sub_ids)
+        # Inside this block, do not call any ORM methods or hooks.
+        protecting_info = [(records._fields.values(), records) for records in all_records_deleted]
+        with self.env.protecting(protecting_info):
+            # Mark fields that depend on 'records' to recompute them after 'records' have
+            # been deleted or updated (e.g., updating a sum of lines after deleting a line).
+            for records in all_records_deleted:
+                records.modified(records._fields, before=True)
+            # We do not need to call modified afterwards because we know that
+            # dependencies have not changed, as the many2one field no longer targets any record.
+            for field, records in cascade_nullify:
+                records.modified([field.name], before=True)
 
-            cr.execute(SQL(
-                "DELETE FROM %s WHERE id IN %s",
-                SQL.identifier(self._table), sub_ids,
-            ))
+            # Perform this after modified() because modified() might use computed fields.
+            for records in all_records_deleted:
+                for field in records._fields.values():
+                    records.env.remove_to_compute(field, records)
 
-            # Removing the ir_model_data reference if the record being deleted
-            # is a record created by xml/csv file, as these are not connected
-            # with real database foreign keys, and would be dangling references.
-            #
-            # Note: the following steps are performed as superuser to avoid
-            # access rights restrictions, and with no context to avoid possible
-            # side-effects during admin calls.
-            data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
-            ir_model_data_unlink |= data
+            # Delete from the database.
+            for model_name, ids in explicit_deletions.items():
+                self.env.execute_query(SQL(
+                    'DELETE FROM %s WHERE "id" IN %s', SQL.identifier(self.env[model_name]._table), tuple(ids),
+                ))
 
-            # For the same reason, remove the relevant records in ir_attachment
-            # (the search is performed with sql as the search method of
-            # ir_attachment is overridden to hide attachments of deleted
-            # records)
-            cr.execute(SQL(
-                "SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s",
-                self._name, sub_ids,
-            ))
-            ir_attachment_unlink |= Attachment.browse(row[0] for row in cr.fetchall())
+            # Update the cache for many2one fields that are becoming NULL in the database.
+            for field, records in cascade_nullify:
+                field._update_cache(records, None, dirty=False)
 
-            # don't allow fallback value in ir.default for many2one company dependent fields to be deleted
-            # Exception: when 'force_delete', these fallbacks can be deleted by Defaults.discard_records(records)
-            if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self.env.context.get('force_delete'):
-                IrModelFields = self.env["ir.model.fields"]
-                field_ids = tuple(IrModelFields._get_ids(field.model_name).get(field.name) for field in many2one_fields)
-                sub_ids_json_text = tuple(json.dumps(id_) for id_ in sub_ids)
-                if default := Defaults.search([('field_id', 'in', field_ids), ('json_value', 'in', sub_ids_json_text)], limit=1, order='id desc'):
-                    ir_field = default.field_id.sudo()
-                    field = self.env[ir_field.model]._fields[ir_field.name]
-                    record = self.browse(json.loads(default.json_value))
-                    raise UserError(_('Unable to delete %(record)s because it is used as the default value of %(field)s', record=record, field=field))
+                # Update parent_path if necessary
+                if records._parent_store and field.name == records._parent_name:
+                    records._parent_store_update()
 
-            # on delete set null/restrict for jsonb company dependent many2one
-            for field in many2one_fields:
-                model = self.env[field.model_name]
-                if field.ondelete == 'restrict' and not self.env.context.get('force_delete'):
-                    if res := self.env.execute_query(SQL(
-                        """
-                        SELECT id, %(field)s
-                        FROM %(table)s
-                        WHERE %(field)s IS NOT NULL
-                        AND %(field)s @? %(jsonpath)s
-                        ORDER BY id
-                        LIMIT 1
-                        """,
-                        table=SQL.identifier(model._table),
-                        field=SQL.identifier(field.name),
-                        jsonpath=f"$.* ? ({' || '.join(f'@ == {id_}' for id_ in sub_ids)})",
-                    )):
-                        on_restrict_id, field_json = res[0]
-                        to_delete_id = next(iter(id_ for id_ in field_json.values()))
-                        on_restrict_record = model.browse(on_restrict_id)
-                        to_delete_record = self.browse(to_delete_id)
-                        raise UserError(_('You cannot delete %(to_delete_record)s, as it is used by %(on_restrict_record)s',
-                                          to_delete_record=to_delete_record, on_restrict_record=on_restrict_record))
-                else:
-                    self.env.execute_query(SQL(
-                        """
-                        UPDATE %(table)s
-                        SET %(field)s = (
-                            SELECT jsonb_object_agg(
-                                key,
-                                CASE
-                                    WHEN value::int4 in %(ids)s THEN NULL
-                                    ELSE value::int4
-                                END)
-                            FROM jsonb_each_text(%(field)s)
-                        )
-                        WHERE %(field)s IS NOT NULL
-                        AND %(field)s @? %(jsonpath)s
-                        """,
-                        table=SQL.identifier(model._table),
-                        field=SQL.identifier(field.name),
-                        ids=sub_ids,
-                        jsonpath=f"$.* ? ({' || '.join(f'@ == {id_}' for id_ in sub_ids)})",
-                    ))
+            many2many_targeting = self.env.transaction.registry.many2many_targeting
+            for records in all_records_deleted:
+                # Unflag dirty values of deleted records.
+                ids = records._ids
+                for field in records._fields.values():
+                    if field in records.env._field_dirty:
+                        records.env._field_dirty[field].difference_update(ids)
+                # Invalidate fields records.
+                records.invalidate_recordset(flush=False)
+                # Invalidate many2many inverse fields. For simplicity and efficiency, invalidate the all records.
+                for m2m_to_invalidate in many2many_targeting.get(records._name, ()):
+                    records.env[m2m_to_invalidate.model_name].invalidate_model([m2m_to_invalidate.name], flush=False)
+                # Invalidate the ORM cache if necessary.
+                if cache_name := records._clear_cache_name:
+                    records.env.registry.clear_cache(cache_name)
 
-            # For the same reason, remove the defaults having some of the
-            # records as value
-            Defaults.discard_records(records)
-
-        # invalidate the *whole* cache, since the orm does not handle all
-        # changes made in the database, like cascading delete!
-        self.env.invalidate_all(flush=False)
-        if ir_model_data_unlink:
-            ir_model_data_unlink.unlink()
-        if ir_attachment_unlink:
-            ir_attachment_unlink.unlink()
-        if cache_name := self._clear_cache_name:
-            self.env.registry.clear_cache(cache_name)
+        for post_hook in post_hooks:
+            post_hook()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)

@@ -405,20 +405,15 @@ class MailThread(models.AbstractModel):
 
         return result
 
-    def unlink(self):
-        """ Override unlink to delete (scheduled) messages and followers. This cannot be
-        cascaded, because link is done through (res_model, res_id). """
-        if not self:
-            return True
-        # discard pending tracking
+    @api.ondelete(at_uninstall=False)
+    def _delete_track_discard(self):
         self._track_discard()
-        self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
-        res = super(MailThread, self).unlink()
-        self.env['mail.followers'].sudo().search(
-            [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
-        ).unlink()
-        self.env['mail.scheduled.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
-        return res
+
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
+        yield self.sudo().message_follower_ids
+        yield self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)])
+        yield self.env['mail.scheduled.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)])
 
     def copy_data(self, default=None):
         # avoid tracking multiple temporary changes during copy

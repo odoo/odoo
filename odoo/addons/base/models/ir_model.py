@@ -384,6 +384,9 @@ class IrModel(models.Model):
             self.env['ir.attachment']._file_delete(fname)
 
     def unlink(self):
+        # flush other changes before trying to change schema
+        self.env.flush_all()
+
         # prevent screwing up fields that depend on these models' fields
         manual_models = self.filtered(lambda model: model.state == 'manual')
         manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
@@ -2365,14 +2368,20 @@ class IrModelData(models.Model):
             self.env.registry.clear_cache('groups')
         return res
 
-    def unlink(self):
-        """ Regular unlink method, but make sure to clear the caches. """
-        clear_groups = self and any(data.model == 'res.groups' for data in self.exists())
-        res = super().unlink()
-        self.env.registry.clear_cache()  # _xmlid_lookup
-        if clear_groups:
-            self.env.registry.clear_cache('groups')
-        return res
+    @api.ondelete(at_uninstall=True)
+    def _delete_clear_groups_hook(self):
+        # First delete in the database, *then* in the filesystem if the
+        # database allowed it. Helps avoid errors when concurrent transactions
+        # are deleting the same file, and some of the transactions are
+        # rolled back by PostgreSQL (due to concurrent updates detection).
+        clear_groups = any(data.model == 'res.groups' for data in self)
+
+        def _post_hook():
+            self.env.registry.clear_cache()
+            if clear_groups:
+                self.env.registry.clear_cache('groups')
+
+        return _post_hook
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """
@@ -2660,7 +2669,7 @@ class IrModelData(models.Model):
                 # record), also applies to ir.model.fields, constraints, etc.
                 pass
         # remove remaining module data records
-        module_data.unlink()
+        module_data.exists().unlink()
 
     @api.model
     def _process_end_unlink_record(self, record):

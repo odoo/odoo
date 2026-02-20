@@ -10,4 +10,5 @@ from . import (
     test_read_group,
     test_schema,
     test_unity_read,
+    test_unlink,
 )

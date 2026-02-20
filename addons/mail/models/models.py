@@ -40,16 +40,15 @@ class Base(models.AbstractModel):
     # CRUD
     # ------------------------------------------------------------
 
-    def unlink(self):
-        # Override unlink to delete records activities through (res_model, res_id)
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
         record_ids = self.ids if (not self._abstract and not self._transient) else []
-        result = super().unlink()
         # during uninstallation of module mail, the search below will crash
         if record_ids and 'mail' not in self.pool.uninstalling_modules:
-            self.env['mail.activity'].with_context(active_test=False).sudo().search(
-                [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
-            ).unlink()
-        return result
+            yield self.env['mail.activity'].with_context(active_test=False).sudo().search(
+                [('res_model', '=', self._name), ('res_id', 'in', record_ids)],
+                order='id',
+            )
 
     # ------------------------------------------------------------
     # CHECK ACCESS

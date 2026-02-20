@@ -815,7 +815,7 @@ class PropertiesCase(TestPropertiesMixin):
 
         # remove the partner on message 2
         self.partner.unlink()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(2):
             # 1 query to read the field
             # 1 query to read the definition
             # 2 queries to check if the many2one still exists / display_name
@@ -828,7 +828,7 @@ class PropertiesCase(TestPropertiesMixin):
         }]
         self.partner_2.unlink()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(1):
             value = self.message_2.read(['attributes'])
             value = value[0]['attributes']
             self.assertFalse(value[1]['value'])
@@ -1260,12 +1260,12 @@ class PropertiesCase(TestPropertiesMixin):
             self.assertEqual(attributes[0]['value'], name_get(partners[:10]))
 
         partners[:5].unlink()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(1):
             attributes = self.message_1.read(['attributes'])[0]['attributes']
             self.assertEqual(attributes[0]['value'], name_get(partners[5:10]))
 
         partners[5].unlink()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(1):
             properties = self.message_1.read(['attributes'])[0]['attributes']
         self.assertEqual(properties[0]['value'], name_get(partners[6:10]))
 

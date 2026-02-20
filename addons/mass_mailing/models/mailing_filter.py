@@ -33,3 +33,16 @@ class MailingFilter(models.Model):
                     raise ValidationError(
                         _("The filter domain is not valid for this recipients.")
                     )
+
+    @api.ondelete(at_uninstall=False)
+    def _delete_keep_domain(self):
+        # test_mailing_computed_fields_domain_w_filter, remove a mailing.filter
+        # shouldn't recompute mailing_domain
+        mailings = self.env['mailing.mailing'].search([('mailing_filter_id', 'in', self.ids)], order='id')
+        # To ensure that no pending recompute for mailing_domain
+        mailings.flush_recordset(['mailing_domain'])
+
+        def _post_hook():
+            mailings.env.remove_to_compute(mailings._fields['mailing_domain'], mailings)
+
+        return _post_hook

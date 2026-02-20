@@ -53,7 +53,7 @@ class HrEmployee(models.Model):
         compute='_compute_version_id',
         search='_search_version_id',
         compute_sql='_compute_sql_version_id',
-        ondelete='cascade',
+        ondelete='cascade',  # FIXME: cascade but not store to avoid Error => "Field definition for _inherits ..."
         required=True,
         store=False,
         compute_sudo=True,
