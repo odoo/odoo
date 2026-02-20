@@ -38,6 +38,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_pine_labs = fields.Boolean(string="Pine Labs Payment Terminal", help="The transactions are processed by Pine Labs. Set your Pine Labs credentials on the related payment method.")
     module_pos_qfpay = fields.Boolean(string="QFPay Payment Terminal", help="The transactions are processed by QFPay. Set your QFPay credentials on the related payment method.")
     module_pos_pricer = fields.Boolean(string="Pricer electronic price tags", help="Display the price of your products through electronic price tags")
+    module_pos_safaricom = fields.Boolean(string="Safaricom Payment Terminal", help="The transactions are processed by Safaricom. Set your Safaricom credentials on the related payment method.")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)

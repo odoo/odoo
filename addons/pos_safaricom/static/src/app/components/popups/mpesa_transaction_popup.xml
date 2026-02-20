@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_safaricom.MpesaTransactionPopup" owl="1">
+        <Dialog title="Select M-Pesa Transaction" bodyClass="'d-flex flex-column justify-content-center'" size="'lg'">
+            <div class="popup">
+                <!-- QR Code Display -->
+                <t t-if="props.qrCode and state.showQrCode">
+                    <div class="text-center mb-4">
+                        <h5 class="mb-3">Scan to Pay with M-Pesa</h5>
+                        <img t-att-src="'data:image/png;base64,' + props.qrCode"
+                             alt="M-Pesa QR Code"
+                             class="border border-2 p-2 rounded"
+                             style="max-width: 300px;"/>
+                    </div>
+                </t>
+
+                <!-- Search Bar -->
+                <div class="mb-3">
+                    <Input
+                        tModel="[state, 'searchQuery']"
+                        placeholder="Search by name or phone..."
+                        icon="{ type: 'fa', value: 'fa-search' }"
+                        class="'w-100'"
+                    />
+                </div>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Amount</th>
+                            <th>Arrived at</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="this.transactions.length > 0" t-foreach="this.transactions" t-as="tx" t-key="tx.id">
+                            <tr>
+                                <td><t t-esc="tx.name"/></td>
+                                <td><t t-esc="tx.phone"/></td>
+                                <td><t t-esc="tx.amount"/></td>
+                                <td><t t-esc="tx.received_at"/></td>
+                                <td>
+                                    <button class="btn btn-primary"
+                                            t-on-click="() => this.confirm(tx)">
+                                        Accept
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-primary" t-on-click="updateTransactions">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="cancel">Cancel</button>
+                    <button class="btn btn-secondary ms-auto" t-on-click="toggleQrCode">
+                        <i class="fa fa-qrcode"/>
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>
