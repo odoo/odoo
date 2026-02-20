@@ -146,8 +146,8 @@ class ProductProduct(models.Model):
         total_value_by_company_id = {}
         lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
         for company in self.env.companies:
-            std_price_by_product_id = {}
-            total_value_by_product_id = {}
+            std_price_by_product_id = defaultdict(float)
+            total_value_by_product_id = defaultdict(float)
 
             products = self.with_company(company.id).with_context(allowed_company_ids=company.ids)
             products = products._with_valuation_context()
