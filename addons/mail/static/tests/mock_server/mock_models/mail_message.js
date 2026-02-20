@@ -543,7 +543,13 @@ export class MailMessage extends models.ServerModel {
         }
         const messages = this._filter(domain).sort((m1, m2) => m2.id - m1.id);
         // pick at most 'limit' messages
+        if (after) {
+            messages.reverse();
+        }
         messages.length = Math.min(messages.length, limit);
+        if (after) {
+            messages.reverse();
+        }
         res.messages = messages;
         return res;
     }

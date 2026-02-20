@@ -277,6 +277,27 @@ export class Thread extends Record {
         return `${this.model}_${this.id}`;
     }
 
+    /**
+     * @param {"older"|"newer"} epoch
+     * @param {Number} [limit=60]
+     */
+    checkMessagesToUnload(epoch = "older", limit) {
+        if (limit === undefined) {
+            limit = this.store.FETCH_LIMIT * 2;
+        }
+        if (this.messages.length >= limit) {
+            this.unloadingHiddenMessages = true;
+            if (epoch === "older") {
+                this.messages.splice(limit, Infinity);
+                this.loadNewer = true;
+            } else {
+                this.messages.splice(0, this.messages.length - limit);
+                this.loadOlder = true;
+            }
+            this.unloadingHiddenMessages = false;
+        }
+    }
+
     get followersFullyLoaded() {
         return (
             this.followersCount ===
