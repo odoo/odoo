@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_uom_form_inherit" model="ir.ui.view">
+        <field name="name">uom.uom.form.inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <group name="uom_details" position="inside">
+                <field
+                    name="website_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                    placeholder="All websites"
+                />
+            </group>
+        </field>
+    </record>
+</odoo>

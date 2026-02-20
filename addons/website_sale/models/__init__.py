@@ -39,5 +39,6 @@ from . import (
     website_sale_extra_field,
     website_snippet_filter,
     website_track,
+    uom_uom,
     website_visitor,
 )

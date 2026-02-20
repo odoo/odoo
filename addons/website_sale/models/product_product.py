@@ -137,6 +137,8 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
+        if not self.product_tmpl_id._get_available_uoms():
+            return False
         website = self.env['website'].get_current_website()
         return not (
             website.prevent_sale

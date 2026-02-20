@@ -411,7 +411,7 @@ class ProductTemplate(models.Model):
                     product=template,
                     quantity=1.0,
                     date=date,
-                    uom=template.uom_id,
+                    uom=template._get_main_uom(),
                     currency=currency,
                 )
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
@@ -504,7 +504,7 @@ class ProductTemplate(models.Model):
 
         combination = combination or self.env['product.template.attribute.value']
         website = request.website.with_context(self.env.context)
-        uom = self.env['uom.uom'].browse(uom_id) or self.uom_id
+        uom = self.env['uom.uom'].browse(uom_id) or self._get_main_uom()
 
         if not product_id and not combination and not only_template:
             combination = self._get_first_possible_combination()
@@ -988,6 +988,8 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
+        if not self._get_available_uoms():
+            return False
         website = self.env['website'].get_current_website()
         return not (
             website.prevent_sale
@@ -1145,3 +1147,43 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         return bool(self.valid_product_template_attribute_line_ids)
+
+    def _has_multiple_uoms(self) -> bool:
+        """Check if the product has multiple available uoms for the current website.
+
+        :return: True if the product has multiple available uoms for the current website
+                 or if the default uom is not available
+        """
+        res = super()._has_multiple_uoms()
+        if self.env.context.get('website_id') and self.type != 'combo':
+            uoms = self._get_available_uoms()
+            if uoms:
+                return res or self.uom_id not in uoms
+        return res
+
+    def _get_available_uoms(self):
+        """Return a recordset of uoms configured for the product that are available for the current
+        website.
+
+        :returns: uoms available on the product for the current website.
+        :rtype: recordset of `uom.uom`
+        """
+        self.ensure_one()
+        all_uoms = super()._get_available_uoms()
+        if self.env.context.get('website_id'):
+            return all_uoms.filtered(lambda uom: uom._is_website_available())
+        return all_uoms
+
+    def _get_main_uom(self):
+        """Return the main uom for the product.
+        The main uom is always the first available uom on the current website, if no uom is
+        available, the default uom configured on the product is considered as the main uom.
+
+        :returns: the main uom of the product
+        :rtype: `uom.uom` recordset
+        """
+        self.ensure_one()
+        if self.env.context.get('website_id'):
+            available_uoms = self._get_available_uoms()
+            return available_uoms[0] if available_uoms else self.uom_id
+        return super()._get_main_uom()

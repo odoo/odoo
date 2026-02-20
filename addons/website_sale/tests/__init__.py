@@ -38,6 +38,7 @@ from . import (
     test_sitemap,
     test_snippets,
     test_technical_page,
+    test_uom_uom,
     test_website_editor,
     test_website_sale_checkout_steps,
     test_website_sale_comparison,

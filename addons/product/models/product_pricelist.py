@@ -203,7 +203,7 @@ class ProductPricelist(models.Model):
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
-            quantity_uom = uom or product.uom_id
+            quantity_uom = uom or product._get_main_uom()
             qty_to_consider = self._compute_qty_to_consider(
                 product,
                 quantity,

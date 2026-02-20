@@ -856,6 +856,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'category': category,
             'combination_info': combination_info,
+            'has_available_uoms': len(product._get_available_uoms()) > 0,
             'keep': keep,
             'main_object': product,
             'product': product,

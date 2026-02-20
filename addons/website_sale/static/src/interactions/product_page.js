@@ -624,7 +624,7 @@ export class ProductPage extends Interaction {
             comparePrice.classList.toggle('d-none', combination.has_discounted_price);
         }
 
-        this._toggleDisable(parent, isCombinationPossible);
+        this._toggleDisable(parent, isCombinationPossible && this.el.dataset.hasAvailableUoms);
 
         // Only update the images and tags if the product has changed.
         if (!combination.no_product_change) {
