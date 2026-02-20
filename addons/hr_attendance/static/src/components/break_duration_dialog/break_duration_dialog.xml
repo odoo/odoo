@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.BreakDurationDialog">
+        <Dialog title="title">
+            <div class="o_break_duration_dialog">
+                <p t-esc="promptText"/>
+                <div class="input-group">
+                    <input
+                        t-ref="durationInput"
+                        class="form-control"
+                        type="number"
+                        min="0"
+                        step="1"
+                        t-model.number="state.minutes"
+                        required="1"
+                    />
+                    <span class="input-group-text" t-esc="minutesLabel"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-secondary" t-on-click="cancel">
+                    <t t-esc="cancelLabel"/>
+                </button>
+                <button type="button" class="btn btn-primary" t-on-click="confirm">
+                    <t t-esc="confirmLabel"/>
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

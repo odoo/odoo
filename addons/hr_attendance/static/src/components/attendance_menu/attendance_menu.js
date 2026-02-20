@@ -3,11 +3,12 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 import { rpc, ConnectionLostError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { isIosApp } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
+import { BreakDurationDialog } from "@hr_attendance/components/break_duration_dialog/break_duration_dialog";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown, DropdownItem };
@@ -16,6 +17,7 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useService("ui");
+        this.dialog = useService("dialog");
         this.lazySession = useService("lazy_session");
         this.notification = useService("notification");
         this.employee = false;
@@ -83,11 +85,12 @@ export class ActivityMenu extends Component {
         return { h, m };
     }
 
-    async checking(latitude = false, longitude = false) {
+    async checking(latitude = false, longitude = false, breakDurationHours = null) {
         try {
             this.employee = await rpc("/hr_attendance/systray_check_in_out", {
                 latitude,
                 longitude,
+                break_duration: breakDurationHours,
             });
             this._searchReadEmployeeFill();
         } catch (error) {
@@ -112,24 +115,61 @@ export class ActivityMenu extends Component {
         }
         this._attendanceInProgress = true;
 
-        const trackingEnabled = this.employee && this.employee.device_tracking_enabled;
-        if (trackingEnabled && !isIosApp() && navigator.geolocation && navigator.onLine) {
-            // iOS app lacks permissions to call `getCurrentPosition`
-            navigator.geolocation.getCurrentPosition(
-                async ({ coords: { latitude, longitude } }) => {
-                    await this.checking(latitude, longitude);
-                },
-                async () => {
-                    await this.checking();
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
+        try {
+            await this.searchReadEmployee();
+            if (!this.employee || !this.employee.id) {
+                this._attendanceInProgress = false;
+                return;
+            }
+            let breakDurationHours = null;
+            if (this.employee.break_management_enabled && this.employee.attendance_state === "checked_in") {
+                const minutes = await this.requestBreakDuration();
+                if (minutes === null) {
+                    this._attendanceInProgress = false;
+                    return;
                 }
-            );
-        } else {
-            await this.checking();
+                breakDurationHours = (Number(minutes) || 0) / 60;
+            }
+            const trackingEnabled = this.employee && this.employee.device_tracking_enabled;
+            if (trackingEnabled && !isIosApp() && navigator.geolocation && navigator.onLine) {
+                // iOS app lacks permissions to call `getCurrentPosition`
+                navigator.geolocation.getCurrentPosition(
+                    async ({ coords: { latitude, longitude } }) => {
+                        await this.checking(latitude, longitude, breakDurationHours);
+                    },
+                    async () => {
+                        await this.checking(false, false, breakDurationHours);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                    }
+                );
+            } else {
+                await this.checking(false, false, breakDurationHours);
+            }
+        } catch (error) {
+            this._attendanceInProgress = false;
+            throw error;
         }
+    }
+
+    async requestBreakDuration() {
+        return new Promise((resolve) => {
+            let settled = false;
+            const finalize = (value) => {
+                if (!settled) {
+                    settled = true;
+                    resolve(value);
+                }
+            };
+            this.dialog.add(BreakDurationDialog, {
+                employeeName: this.employee?.name,
+                defaultMinutes: 0,
+                onConfirm: (minutes) => finalize(minutes),
+                onCancel: () => finalize(null),
+            });
+        });
     }
 }
 

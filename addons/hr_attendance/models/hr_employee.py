@@ -177,7 +177,7 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
-    def _attendance_action_change(self, geo_information=None):
+    def _attendance_action_change(self, geo_information=None, break_duration=None):
         """ Check In/Check Out action
             Check In: create a new attendance record
             Check Out: modify check_out field of appropriate attendance record
@@ -202,15 +202,12 @@ class HrEmployee(models.Model):
             return res
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
+            vals = {'check_out': action_date}
             if geo_information:
-                attendance.write({
-                    'check_out': action_date,
-                    **{'out_%s' % key: geo_information[key] for key in geo_information}
-                })
-            else:
-                attendance.write({
-                    'check_out': action_date
-                })
+                vals.update({'out_%s' % key: geo_information[key] for key in geo_information})
+            if break_duration is not None:
+                vals['break_duration'] = break_duration
+            attendance.write(vals)
             self._notify_employee_presence_status()
         else:
             raise exceptions.UserError(_(

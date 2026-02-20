@@ -20,6 +20,7 @@
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
+                <field name="break_duration" string="Break Duration" widget="float_time" optional="show"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
                 <field name="overtime_hours" string="Worked Extra Hours" optional="show" widget="float_time"/>
                 <field name="validated_overtime_hours" string="Extra Hours" optional="show" widget="float_time"/>
@@ -103,6 +104,7 @@
                                     groups="hr_attendance.group_hr_attendance_user"/>
                                 <field name="check_in" options="{'rounding': 0}" readonly="not can_edit"/>
                                 <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not can_edit"/>
+                                <field name="break_duration" widget="float_time" readonly="not can_edit"/>
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
@@ -401,6 +403,7 @@
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
                 <field name="check_in" readonly="1"/>
                 <field name="check_out" readonly="1"/>
+                <field name="break_duration" readonly="1" widget="float_time"/>
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
                 <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
                 <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
