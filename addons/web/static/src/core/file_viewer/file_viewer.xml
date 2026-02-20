@@ -56,6 +56,9 @@
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="onClickPrint" title="Print" role="button">
                         <i class="fa fa-fw fa-print" role="img"/>
                     </div>
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="onClickUnlink" title="Remove" role="button">
+                        <i class="fa fa-trash o-text-white" role="img"/>
+                    </div>
                     <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="">
                         <a t-att-href="state.file.downloadUrl" class="text-reset" download="">
                             <i class="fa fa-download fa-fw" role="img"/>

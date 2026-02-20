@@ -1,5 +1,7 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
@@ -66,6 +68,7 @@ export class FileViewer extends Component {
             angle: 0,
         });
         this.ui = useService("ui");
+        this.dialog = useService("dialog");
         useEffect(
             (el) => {
                 if (el) {
@@ -348,5 +351,18 @@ export class FileViewer extends Component {
                     </body>
                 </html>`);
         printWindow.document.close();
+    }
+
+    onClickUnlink() {
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Delete Attachment"),
+            body: _t(
+                'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
+                this.state.file.name
+            ),
+            confirmLabel: _t("Delete Attachment"),
+            cancel: () => {},
+            confirm: () => this.state.file.remove(),
+        });
     }
 }
