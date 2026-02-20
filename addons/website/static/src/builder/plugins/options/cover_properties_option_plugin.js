@@ -128,51 +128,52 @@ export class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
         this.classAction = this.dependencies.builderActions.getAction("classAction");
         this.styleAction = this.dependencies.builderActions.getAction("styleAction");
     }
-    load({ params: { mainParam: setBackground } }) {
-        if (!setBackground) {
-            return;
-        }
-        let resultPromise;
-        return this.dependencies.media
-            .openMediaDialog({
-                onlyImages: true,
-                save: (imageEl) => {
-                    resultPromise = (async () => {
-                        const b64ToSave = imageEl.getAttribute("src").startsWith("data:");
-                        return { imageSrc: imageEl.getAttribute("src"), b64ToSave };
-                    })();
-                },
-            })
-            .then(() => resultPromise || { cancel: true });
-    }
 
     isApplied({ editingElement, params: { mainParam: setBackground } }) {
         const bg = editingElement.querySelector(".o_record_cover_image").style.backgroundImage;
         return !setBackground === (!bg || bg === "none");
     }
-    apply({ editingElement, loadResult: { imageSrc, b64ToSave, cancel } = {} }) {
-        if (cancel) {
+
+    async apply({ editingElement, params: { mainParam: setBackground } }) {
+        if (!setBackground) {
+            this.styleAction.apply({
+                editingElement: editingElement.querySelector(".o_record_cover_image"),
+                params: { mainParam: "background-image" },
+                value: "",
+            });
+            editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
             return;
         }
-        (imageSrc ? this.classAction.apply : this.classAction.clean)({
-            editingElement,
-            params: { mainParam: "o_record_has_cover" },
-        });
+        await this.dependencies.media.openMediaDialog(this.getMediaDialogProps({ editingElement }));
+    }
 
-        const bgEl = editingElement.querySelector(".o_record_cover_image");
+    getMediaDialogProps({ editingElement }){
+        return {
+            onlyImages: true,
+            save: (imageEl) => {
+                const imageSrc = imageEl.getAttribute("src");
+                const b64ToSave = imageEl.getAttribute("src").startsWith("data:");
 
-        (b64ToSave ? this.classAction.apply : this.classAction.clean)({
-            editingElement: bgEl,
-            params: { mainParam: "o_b64_cover_image_to_save" },
-        });
+                (imageSrc ? this.classAction.apply : this.classAction.clean)({
+                    editingElement,
+                    params: { mainParam: "o_record_has_cover" },
+                });
 
-        this.styleAction.apply({
-            editingElement: bgEl,
-            params: { mainParam: "background-image" },
-            value: imageSrc ? `url('${imageSrc}')` : "",
-        });
+                const bgEl = editingElement.querySelector(".o_record_cover_image");
 
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+                (b64ToSave ? this.classAction.apply : this.classAction.clean)({
+                    editingElement: bgEl,
+                    params: { mainParam: "o_b64_cover_image_to_save" },
+                });
+
+                this.styleAction.apply({
+                    editingElement: bgEl,
+                    params: { mainParam: "background-image" },
+                    value: imageSrc ? `url('${imageSrc}')` : "",
+                });
+                editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+            }
+        }
     }
 }
 export class MarkCoverPropertiesToBeSavedAction extends BaseCoverPropertiesAction {

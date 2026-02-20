@@ -469,29 +469,18 @@ class ImageGalleryOption extends Plugin {
 export class AddImageAction extends BuilderAction {
     static id = "addImage";
     static dependencies = ["media", "imageGalleryOption"];
-    async load({ editingElement }) {
-        let selectedImages;
-        await new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                onlyImages: true,
-                multiImages: true,
-                save: (images) => {
-                    selectedImages = images;
-                    resolve();
-                },
-            });
-            onClose.then(resolve);
+    async apply({ editingElement }) {
+        await this.dependencies.media.openMediaDialog({
+            onlyImages: true,
+            multiImages: true,
+            save: async (images) => {
+                const { images: processedImages } = await this.dependencies.imageGalleryOption.processImages(editingElement, images);
+                if (processedImages && processedImages.length) {
+                    const mode = this.dependencies.imageGalleryOption.getMode(editingElement);
+                    this.dependencies.imageGalleryOption.setImages(editingElement, mode, processedImages);
+                }                   
+            },
         });
-        if (!selectedImages) {
-            return [];
-        }
-        return this.dependencies.imageGalleryOption.processImages(editingElement, selectedImages);
-    }
-    apply({ editingElement, loadResult: { images } }) {
-        if (images && images.length) {
-            const mode = this.dependencies.imageGalleryOption.getMode(editingElement);
-            this.dependencies.imageGalleryOption.setImages(editingElement, mode, images);
-        }
     }
 }
 export class RemoveAllImagesAction extends BuilderAction {

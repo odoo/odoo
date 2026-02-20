@@ -6,7 +6,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-
 import { Component, xml, useState, useRef, onWillStart, useEffect } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
@@ -19,6 +18,24 @@ export const IMAGE_MIMETYPES = [
     "image/webp",
 ];
 export const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".jpe", ".png", ".svg", ".gif", ".webp"];
+
+export const ATTACHMENT_FIELDS = [
+    "id",
+    "name",
+    "mimetype",
+    "description",
+    "checksum",
+    "url",
+    "type",
+    "res_id",
+    "res_model",
+    "public",
+    "access_token",
+    "image_src",
+    "image_width",
+    "image_height",
+    "original_id",
+];
 
 class RemoveButton extends Component {
     static template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
@@ -277,22 +294,7 @@ export class FileSelector extends Component {
         try {
             attachments = await this.orm.call("ir.attachment", "search_read", [], {
                 domain: this.attachmentsDomain,
-                fields: [
-                    "name",
-                    "mimetype",
-                    "description",
-                    "checksum",
-                    "url",
-                    "type",
-                    "res_id",
-                    "res_model",
-                    "public",
-                    "access_token",
-                    "image_src",
-                    "image_width",
-                    "image_height",
-                    "original_id",
-                ],
+                fields: ATTACHMENT_FIELDS,
                 order: "id desc",
                 // Try to fetch first record of next page just to know whether there is a next page.
                 limit,
