@@ -31,6 +31,6 @@ patch(PosOrder.prototype, {
         return computeSAQRCode(name, vat, date_isostring, amount_total, amount_tax);
     },
     get isSimplified() {
-        return !this?.partner_id?.vat && this.company_id.country_id?.code === "SA";
+        return !this.commercial_partner_id.is_company;
     },
 });
