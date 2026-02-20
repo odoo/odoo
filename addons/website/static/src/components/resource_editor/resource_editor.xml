@@ -86,7 +86,7 @@
 
     <t t-name="website.ResourceEditor.ResourceLabel">
         <i t-if="resource.customized or resource.dirty" t-att-class="{ 'fa fa-floppy-o mr8': true, 'text-warning': resource.dirty, 'text-success': resource.customized }"/>
-        <t t-esc="label"/>
+        <t t-out="label"/>
     </t>
 
 </templates>
