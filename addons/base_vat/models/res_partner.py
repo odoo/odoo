@@ -205,7 +205,7 @@ class ResPartner(models.Model):
                 msg, exc = "Connection with the VIES server failed.", e
             except InvalidComponent as e:
                 msg, exc = "Could not be interpreted by the VIES server.", e
-            except zeep.exceptions.Fault as e:
+            except zeep.exceptions.Error as e:
                 msg, exc = "The request for VAT validation was not processed.", e
 
             if exc:
