@@ -80,9 +80,7 @@ class EventType(models.Model):
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         help="This information will be printed on your tickets.")
-    question_ids = fields.One2many(
-        'event.question', 'event_type_id', default=_default_question_ids,
-        string='Questions', copy=True)
+    question_ids = fields.Many2many('event.question', string='Questions')
 
     @api.depends('has_seats_limitation')
     def _compute_seats_max(self):
