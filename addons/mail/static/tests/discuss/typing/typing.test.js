@@ -11,7 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -207,6 +207,38 @@ test('assume other member typing status becomes "no longer is typing" after long
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
+test('"is typing" timeout should work even when 2 notify_typing happen at the exact same time', async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Demo" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
+    mockDate("2024-01-01 12:00:00");
+    await withUser(userId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: false,
+        })
+    );
+    await withUser(userId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
+    );
+    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await advanceTime(Store.OTHER_LONG_TYPING);
+    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing..." });
+});
+
 test('[text composer] other member typing status "is typing" refreshes of assuming no longer typing', async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Demo" });
@@ -250,7 +282,7 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
             is_typing: true,
         })
     );
-    await expect.waitForSteps(["notify_typing", "register_typing_timeout"]);
+    await expect.waitForSteps([ "register_typing_timeout", "notify_typing", "register_typing_timeout"]);
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
@@ -301,7 +333,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
             is_typing: true,
         })
     );
-    await expect.waitForSteps(["notify_typing", "register_typing_timeout"]);
+    await expect.waitForSteps(["register_typing_timeout", "notify_typing", "register_typing_timeout"]);
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);

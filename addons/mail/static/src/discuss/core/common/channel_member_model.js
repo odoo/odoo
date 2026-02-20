@@ -87,7 +87,14 @@ export class ChannelMember extends Record {
         },
     });
     new_message_separator_ui = null;
-    isTyping = false;
+    isTyping = fields.Attr(false, {
+        onUpdate() {
+            browser.clearTimeout(this.typingTimeoutId);
+            if (this.isTyping) {
+                this.registerTypingTimeout();
+            }
+        },
+    });
     is_typing_dt = fields.Datetime({
         onUpdate() {
             browser.clearTimeout(this.typingTimeoutId);
