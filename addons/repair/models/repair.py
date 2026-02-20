@@ -180,7 +180,7 @@ class RepairOrder(models.Model):
     # Return Binding
     picking_id = fields.Many2one(
         'stock.picking', 'Transfer', check_company=True, index='btree_not_null',
-        domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
+        domain="[('product_id', '=?', product_id)]",
         copy=False, help="Transfer from which the product to be repaired is picked")
     picking_product_ids = fields.One2many('product.product', compute='_compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
