@@ -17,16 +17,12 @@
     'data': [
         'data/account_tax_report_data.xml',
         'data/menuitem_data.xml',
-        'wizard/generate_2307_wizard_views.xml',
-        'views/account_move_views.xml',
-        'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'views/report_disbursement_voucher_template.xml',
         'views/account_report.xml',
         'views/report_templates.xml',
-        'security/ir.model.access.csv'
     ],
     'demo': [
         'demo/demo_company.xml',
