@@ -354,30 +354,33 @@
                     keep the last computed duration in the front-end model and send it with "start"
                     when it changes-->
                     <!--field is also used for custom behavior in default_get, check before removing-->
-                    <field name="duration" invisible="1" force_save="1"/>
-                    <field name="start" nolabel="1"
-                        widget="daterange" options="{'end_date_field': 'stop'}"
-                        placeholder="Dates" class="w-100 mb-0"
-                        invisible="allday"
-                    />
-                    <field name="start_date" nolabel="1"
-                        widget="daterange" options="{'end_date_field': 'stop_date'}"
-                        placeholder="Dates" class="w-100 mb-0"
-                        invisible="not allday"
-                    />
-                    <span class="ms-1 w-25">
-                        <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
-                        <field name="show_as" invisible="1"/>
-                        <field name="allday" class="mb-0" title="All Day" nolabel="1"/>
-                        <span>All day</span>
-                    </span>
-                    <field name="stop" invisible="1"/>
+                    <div class="d-flex align-items-center flex-wrap gap-2 w-100">
+                        <field name="duration" invisible="1" force_save="1"/>
+                        <field name="start" nolabel="1"
+                            widget="daterange" options="{'end_date_field': 'stop'}"
+                            placeholder="Dates" class="text-nowrap flex-grow-1 mb-0"
+                            invisible="allday"
+                        />
+                        <field name="start_date" nolabel="1"
+                            widget="daterange" options="{'end_date_field': 'stop_date'}"
+                            placeholder="Dates" class="text-nowrap flex-grow-1 mb-0"
+                            invisible="not allday"
+                        />
+                        <span class="text-nowrap w-auto">
+                            <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
+                            <field name="show_as" invisible="1"/>
+                            <field name="allday" class="mb-0" title="All Day" nolabel="1"/>
+                            <span>All day</span>
+                        </span>
+                        <field name="stop" invisible="1"/>
+                    </div>
                 </div>
                 <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
                     <i class="fa fa-fw flex-shrink-0 fa-user text-600 me-2" title="Participants"/>
                     <field name="partner_ids" nolabel="1"
                         widget="many2many_tags"
                         placeholder="Participants"
+                        class="w-100 mb-0"
                     />
                 </div>
                 <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
