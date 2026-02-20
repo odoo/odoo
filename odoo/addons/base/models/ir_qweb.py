@@ -410,12 +410,12 @@ token.tok_name[token.QWEB] = 'QWEB'
 
 # security safe eval opcodes for generated expression validation, used in `_compile_expr`
 _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
-    'MAKE_FUNCTION', 'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'CALL_FUNCTION_EX',
-    'CALL_METHOD', 'LOAD_METHOD',
+    'MAKE_FUNCTION', 'CALL_FUNCTION_EX',
+    'LOAD_METHOD',
 
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
-    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
+    'JUMP_FORWARD', 'JUMP_BACKWARD',
+    'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
 
     'LOAD_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'UNPACK_SEQUENCE',
@@ -423,18 +423,11 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_GLOBAL',
     'EXTENDED_ARG',
     # Following opcodes were added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
-    'RESUME',
     'CALL',
-    'PRECALL',
     'PUSH_NULL',
     'KW_NAMES',
     'FORMAT_VALUE', 'BUILD_STRING',
     'RETURN_GENERATOR',
-    'SWAP',
-    'POP_JUMP_FORWARD_IF_FALSE', 'POP_JUMP_FORWARD_IF_TRUE',
-    'POP_JUMP_BACKWARD_IF_FALSE', 'POP_JUMP_BACKWARD_IF_TRUE',
-    'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_FORWARD_IF_NOT_NONE',
-    'POP_JUMP_BACKWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
     # 3.12 https://docs.python.org/3/whatsnew/3.12.html#new-opcodes
     'END_FOR',
     'LOAD_FAST_AND_CLEAR',

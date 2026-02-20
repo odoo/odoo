@@ -8,19 +8,11 @@ from textwrap import dedent
 from odoo import Command
 from odoo.tests.common import tagged, TransactionCase, BaseCase
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
+from odoo.tools.safe_eval import safe_eval, expr_eval
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSafeEval(BaseCase):
-    def test_const(self):
-        # NB: True and False are names in Python 2 not consts
-        expected = (1, {"a": {2.5}}, [None, u"foo"])
-        actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
-        self.assertEqual(actual, expected)
-        # Test RETURN_CONST
-        self.assertEqual(const_eval('10'), 10)
-
     def test_expr(self):
         # NB: True and False are names in Python 2 not consts
         expected = 3 * 4
