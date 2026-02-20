@@ -89,6 +89,49 @@ test("can be rendered", async () => {
     expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
 });
 
+// TODO: Hoot dispatches "change"/"blur" in the wrong order vs browser.
+test.todo("select option with onChange", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="state.value" sources="sources" onChange.bind="onChange" />`;
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [
+            item("/contactus", this.onSelect.bind(this)),
+            item("/contactus-thank-you", this.onSelect.bind(this)),
+        ]);
+
+        onChange({ inputValue, isOptionSelected }) {
+            expect.step(`isOptionSelected:${isOptionSelected}`);
+            if (isOptionSelected) {
+                return;
+            }
+            this.state.value = inputValue;
+        }
+
+        onSelect(option) {
+            this.state.value = option.label;
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+
+    await contains(".o-autocomplete input").edit("/", { confirm: false });
+    await runAllTimers();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+
+    await contains(queryFirst(".o-autocomplete--dropdown-item")).click();
+    await runAllTimers();
+    expect.verifySteps(["isOptionSelected:true", "/contactus"]);
+
+    await contains(".o-autocomplete input").edit("hello", { confirm: "false" });
+    expect.verifySteps(["isOptionSelected:false"]);
+    await contains(document.body).click();
+    expect(".o-autocomplete input").toHaveValue("hello");
+});
+
 test("select option", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
