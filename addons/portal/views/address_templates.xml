@@ -411,15 +411,15 @@
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center">
                         <input type="file" class="o_file_upload d-none" accept="image/*"/>
-                        <img class="o_profile_picture_img w-75 mb-3" t-att-src="image_data_uri(request.env.user.avatar_512)" t-att-data-user-id="request.env.user.id"/>
+                        <span class="o_profile_picture w-75 mb-3" t-field="request.env.user.avatar_512" t-options="{'widget': 'image'}"/>
                     </div>
                     <div class="d-flex justify-content-center gap-2">
-                        <a class="btn btn-primary o_portal_profile_pic_edit" aria-label="Edit">
+                        <button class="btn btn-primary o_portal_profile_pic_edit" aria-label="Edit">
                             <i class="fa fa-pencil" title="Edit"/>
-                        </a>
-                        <a class="btn border-primary o_portal_profile_pic_clear" aria-label="Clear">
+                        </button>
+                        <button class="btn btn-outline-secondary o_portal_profile_pic_clear" aria-label="Clear">
                             <i class="fa fa-trash-o" title="Clear"/>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

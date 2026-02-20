@@ -22,7 +22,7 @@ export class PortalProfileEditor extends Interaction {
     setup() {
         this.notification = this.services.notification;
         this.fileInputEl = this.el.querySelector(".o_file_upload");
-        this.profileImgEl = this.el.querySelector(".o_profile_picture_img");
+        this.profileEl = this.el.querySelector(".o_profile_picture");
         this.editBtnEl = this.el.querySelector(".o_portal_profile_pic_edit");
         this.clearBtnEl = this.el.querySelector(".o_portal_profile_pic_clear");
     }
@@ -33,7 +33,6 @@ export class PortalProfileEditor extends Interaction {
 
     async onClearProfile() {
         await this.updateProfileImage({
-            imageSrc: "/web/static/img/placeholder.png",
             imageData: false,
         });
     }
@@ -47,44 +46,35 @@ export class PortalProfileEditor extends Interaction {
         const dataUrl = await getDataURLFromFile(file);
         const base64Data = dataUrl.split(",")[1];
         await this.updateProfileImage({
-            imageSrc: `data:${file.type};base64,${base64Data}`,
             imageData: base64Data,
         });
     }
 
-    async updateProfileImage({ imageSrc, imageData }) {
-        // save current image src to revert in case of error
-        this._setButtonsDisabled(true);
-        const prevProfileSrc = this.profileImgEl.src;
+    async updateProfileImage({ imageData }) {
+        this._toggleButtons(true);
         try {
-            await this._waitForImageLoad(imageSrc);
             await rpc("/my/profile/save", {
-                user_id: parseInt(this.profileImgEl.dataset.userId),
+                user_id: parseInt(this.profileEl.dataset.oeId),
                 image_1920: imageData,
             });
         } catch {
-            // revert to previous image
-            this.profileImgEl.src = prevProfileSrc;
             this.notification.add(_t("An error occurred while saving your profile."), {
                 type: "danger",
             });
         } finally {
-            this._setButtonsDisabled(false);
+            this._toggleButtons(false);
             this.fileInputEl.value = '';
+            // force reload of the image to reflect changes or revert to
+            // previous image in case of error
+            const imgEl = this.profileEl.querySelector('img');
+            const newImg = imgEl.cloneNode(true);
+            imgEl.replaceWith(newImg);
         }
     }
 
-    _setButtonsDisabled(isDisabled) {
+    _toggleButtons(isDisabled) {
         this.editBtnEl.classList.toggle("disabled", isDisabled);
         this.clearBtnEl.classList.toggle("disabled", isDisabled);
-    }
-
-    _waitForImageLoad(imageSrc) {
-        return new Promise((resolve, reject) => {
-            this.profileImgEl.onload = resolve;
-            this.profileImgEl.onerror = reject;
-            this.profileImgEl.src = imageSrc;
-        });
     }
 }
 
