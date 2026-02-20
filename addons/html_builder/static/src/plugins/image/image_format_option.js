@@ -1,5 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { getImageSrc, getMimetype } from "@html_editor/utils/image";
+import { getImageSrc, getFetchedMimetype } from "@html_editor/utils/image";
 import { clamp } from "@web/core/utils/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
@@ -25,7 +25,7 @@ export class ImageFormatOption extends BaseOptionComponent {
             const mimetype =
                 editingElement.dataset.formatMimetype ||
                 editingElement.dataset.mimetypeBeforeConversion ||
-                getMimetype(editingElement);
+                (await getFetchedMimetype(editingElement));
             const compressionUnsupported =
                 mimetype === "image/webp" && this.webpCompressionUnuspported();
             return {
