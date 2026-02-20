@@ -7,7 +7,7 @@ import dateutil.relativedelta
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
-regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
+regex_alphanumeric = re.compile(r'^[a-z0-9_]+$', re.IGNORECASE)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.IGNORECASE)
 # match private methods, to prevent their remote invocation
