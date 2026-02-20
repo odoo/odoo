@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="data_recycle.DataRecycleX2ManyField" t-inherit="web.X2ManyField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='displayControlPanelButtons']" position="replace">
+            <h4 t-esc="props.record.fields[props.name].string or ''"/>
+            <t t-if="displayControlPanelButtons">
+                <div class="o_cp_buttons me-0 ms-auto" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                    <button type="button" class="btn btn-outline-secondary oe_stat_button d-flex align-items-center bg-white border" title="Add a rule" t-on-click="() => this.onAdd()">
+                        <i class="fa fa-plus me-2"/>
+                        <div class="o_stat_info text-start">
+                            <span class="o_stat_text">Add a rule</span>
+                        </div>
+                    </button>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

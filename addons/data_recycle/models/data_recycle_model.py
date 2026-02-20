@@ -21,19 +21,16 @@ class Data_RecycleModel(models.Model):
     _description = 'Recycling Model'
     _order = 'name'
 
-    active = fields.Boolean(default=True)
-    name = fields.Char(
-        compute='_compute_name', string='Name', readonly=False, store=True, required=True, copy=True)
 
-    res_model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade')
-    res_model_name = fields.Char(
-        related='res_model_id.model', string='Model Name', readonly=True, store=True)
+    unified_id = fields.Many2one('data_cleaning.unified', string='Unified Model', required=True, ondelete='cascade')
+    name = fields.Char(related='unified_id.name', string='Name', readonly=True)
+    res_model_id = fields.Many2one(related='unified_id.res_model_id', string='Model', readonly=True)
+    res_model_name = fields.Char(related='unified_id.res_model_name', string='Model Name', readonly=True)
+    
+    active = fields.Boolean(related='unified_id.active', readonly=False)
+    recycle_mode = fields.Selection(related='unified_id.cleaning_mode', string='Recycle Mode', readonly=False)
+    
     recycle_record_ids = fields.One2many('data_recycle.record', 'recycle_model_id')
-
-    recycle_mode = fields.Selection([
-        ('manual', 'Manual'),
-        ('automatic', 'Automatic'),
-    ], string='Recycle Mode', default='manual', required=True)
     recycle_action = fields.Selection([
         ('archive', 'Archive'),
         ('unlink', 'Delete'),
@@ -57,22 +54,11 @@ class Data_RecycleModel(models.Model):
         'Records To Recycle', compute='_compute_records_to_recycle_count')
 
     # User Notifications for Manual clean
-    notify_user_ids = fields.Many2many(
-        'res.users', string='Notify Users',
-        domain=lambda self: [('all_group_ids', 'in', self.env.ref('base.group_system').id)],
-        default=lambda self: self.env.user,
-        help='List of users to notify when there are new records to recycle')
-    notify_frequency = fields.Integer(string='Notify', default=1)
-    notify_frequency_period = fields.Selection([
-        ('days', 'Days'),
-        ('weeks', 'Weeks'),
-        ('months', 'Months')], string='Notify Frequency Period', default='weeks')
-    last_notification = fields.Datetime(readonly=True)
+    notify_user_ids = fields.Many2many(related='unified_id.notify_user_ids', readonly=False)
+    notify_frequency = fields.Integer(related='unified_id.notify_frequency', readonly=False)
+    notify_frequency_period = fields.Selection(related='unified_id.notify_frequency_period', readonly=False)
+    last_notification = fields.Datetime(related='unified_id.last_notification', readonly=True)
 
-    _check_notif_freq = models.Constraint(
-        'CHECK(notify_frequency > 0)',
-        'The notification frequency should be greater than 0',
-    )
 
     @api.constrains('recycle_action')
     def _check_recycle_action(self):
@@ -84,12 +70,7 @@ class Data_RecycleModel(models.Model):
     def _compute_domain(self):
         self.domain = '[]'
 
-    @api.depends('res_model_id')
-    def _compute_name(self):
-        for model in self:
-            if model.name:
-                continue
-            model.name = model.res_model_id.name if model.res_model_id else ''
+    # Removed _compute_name as name is now related
 
     def _compute_records_to_recycle_count(self):
         count_data = self.env['data_recycle.record']._read_group(
@@ -99,10 +80,6 @@ class Data_RecycleModel(models.Model):
         counts = {recycle_model.id: count for recycle_model, count in count_data}
         for model in self:
             model.records_to_recycle_count = counts[model.id] if model.id in counts else 0
-
-    def _cron_recycle_records(self):
-        self.sudo().search([])._recycle_records(batch_commits=True)
-        self.sudo()._notify_records_to_recycle()
 
     def _recycle_records(self, batch_commits=False):
         self.env.flush_all()
@@ -146,24 +123,6 @@ class Data_RecycleModel(models.Model):
             self.env['data_recycle.record'].create(records_to_clean_batch)
             if batch_commits and not is_test:
                 self.env.cr.commit()
-
-    @api.model
-    def _notify_records_to_recycle(self):
-        for recycle in self.search([('recycle_mode', '=', 'manual')]):
-            if not recycle.notify_user_ids or not recycle.notify_frequency:
-                continue
-
-            if recycle.notify_frequency_period == 'days':
-                delta = relativedelta(days=recycle.notify_frequency)
-            elif recycle.notify_frequency_period == 'weeks':
-                delta = relativedelta(weeks=recycle.notify_frequency)
-            else:
-                delta = relativedelta(months=recycle.notify_frequency)
-
-            if not recycle.last_notification or\
-                    (recycle.last_notification + delta) < fields.Datetime.now():
-                recycle.last_notification = fields.Datetime.now()
-                recycle._send_notification(delta)
 
     def _send_notification(self, delta):
         self.ensure_one()
