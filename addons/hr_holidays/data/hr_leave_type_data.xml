@@ -112,6 +112,61 @@
         <field name="country_id" ref="base.ae"/>
     </record>
 
+<!-- AU : Australia -->
+    <record id="l10n_au_leave_type_ancillary_defence_leave" model="hr.leave.type">
+        <field name="name">Ancillary and Defence Leave</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+
+    <record id="l10n_au_leave_type_annual_leave" model="hr.leave.type">
+        <field name="name">Annual Leave</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+
+    <record id="l10n_au_leave_type_community_service_leave" model="hr.leave.type">
+        <field name="name">Community Service Leave</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+    
+    <record id="l10n_au_leave_type_family_domestic_violence_leave" model="hr.leave.type">
+        <field name="name">Family and Domestic Violence Leave</field>
+        <field name="country_id" ref="base.au" />
+        <field name="hide_on_dashboard" eval="True" />
+    </record>
+
+    <record id="l10n_au_leave_type_long_service_leave" model="hr.leave.type">
+        <field name="name">Long Service Leave</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+    
+    <record id="l10n_au_leave_type_paid_parental_leave" model="hr.leave.type">
+        <field name="name">Paid Parental Leave</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+
+    <record id="l10n_au_leave_type_personal_leave" model="hr.leave.type">
+        <field name="name">Personal Leave</field>
+        <field name="country_id" ref="base.au" />
+        <field name="requires_allocation" eval="False"/>
+        <field name="hide_on_dashboard" eval="True"/>
+    </record>
+
+    <record id="l10n_au_leave_type_rostered_days_off" model="hr.leave.type">
+        <field name="name">Rostered Days Off</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+    
+    <record id="l10n_au_leave_type_time_off_in_lieu" model="hr.leave.type">
+        <field name="name">Time off in Lieu</field>
+        <field name="country_id" ref="base.au" />
+    </record>
+
+    <record id="l10n_au_leave_type_workers_compensation" model="hr.leave.type">
+        <field name="name">Workers Compensation</field>
+        <field name="country_id" ref="base.au" />
+        <field name="hide_on_dashboard" eval="True" />
+    </record>
+
 <!-- BE : Belgium -->
     <record id="l10n_be_leave_type_small_unemployment" model="hr.leave.type">
         <field name="name">Small Unemployment</field>
