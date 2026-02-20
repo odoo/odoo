@@ -33,6 +33,7 @@ export class CartLine extends Component {
         isWishlistViewActive: Boolean,
         currencyId: Number,
         isUomFeatureEnabled: Boolean,
+        templateData: Object,
         update: Function,
         addToWishlist: Function,
     }

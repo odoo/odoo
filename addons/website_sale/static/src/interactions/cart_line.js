@@ -6,8 +6,14 @@ import { CartLines as CartLinesComponent } from '@website_sale/js/cart_lines/car
 export class CartLine extends Interaction {
     static selector = '#cart_products';
 
-    setup(){
-        this.mountComponent(this.el, CartLinesComponent);
+    setup() {
+        const templateData = {
+            removeButtonText: this.el.parentElement.querySelector('.cart_remove').textContent,
+            wishlistButtonText: this.el.parentElement.querySelector('.cart_wishlist').textContent,
+            qtyMinusButtonText: this.el.parentElement.querySelector('.cart_quantity_minus').textContent,
+            qtyPlusButtonText: this.el.parentElement.querySelector('.cart_quantity_plus').textContent,
+        }
+        this.mountComponent(this.el, CartLinesComponent, { templateData });
     }
 }
 

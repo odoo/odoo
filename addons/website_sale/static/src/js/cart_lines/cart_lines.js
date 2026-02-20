@@ -7,7 +7,7 @@ import wishlistUtils from '@website_sale/js/wishlist_utils';
 
 export class CartLines extends Component {
     static template = 'website_sale.CartLines';
-    static props = {};
+    static props = { templateData: Object };
     static components = { CartLine };
 
     setup() {
@@ -78,6 +78,7 @@ export class CartLines extends Component {
             isWishlistViewActive: this.state.isWishlistViewActive,
             currencyId: this.state.currencyId,
             isUomFeatureEnabled: this.state.isUomFeatureEnabled,
+            templateData: this.props.templateData,
             update: this.updateLine.bind(this),
             addToWishlist: this.addToWishlist.bind(this),
         };

@@ -88,7 +88,7 @@
                                 title="Remove from cart"
                                 t-on-click="(event) => this.updateQuantity(0)"
                             >
-                                Remove
+                                <t t-out="props.templateData.removeButtonText"/>
                             </button>
                             <t t-if="props.isSellable and props.isWishlistViewActive">
                                 <span class="text-300">|</span>
@@ -99,7 +99,7 @@
                                     title="Save for later"
                                     t-on-click="() => this.addToWishlist()"
                                 >
-                                    Save for Later
+                                    <t t-out="props.templateData.wishlistButtonText"/>
                                 </button>
                             </t>
                             <div t-if="props.isCombo" class="d-none d-md-block ms-auto">
@@ -204,7 +204,7 @@
                     title="Remove one"
                     t-on-click="() => this.updateQuantity(state.quantity - 1)"
                 >
-                    <i class="oi oi-minus position-relative z-1"/>
+                    <i class="oi oi-minus position-relative z-1" t-out="props.templateData.qtyMinusButtonText"/>
                 </a>
                 <input
                     type="text"
@@ -231,7 +231,7 @@
                     title="Add one"
                     t-on-click="() => this.updateQuantity(state.quantity + 1)"
                 >
-                    <i class="oi oi-plus position-relative z-1"/>
+                    <i class="oi oi-plus position-relative z-1" t-out="props.templateData.qtyPlusButtonText"/>
                 </a>
             </t>
             <t t-else="">
