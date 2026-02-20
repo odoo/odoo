@@ -108,7 +108,7 @@ class IrQwebFieldImage(models.AbstractModel):
         src = src_zoom = None
         if options.get('qweb_img_raw_data', False):
             value = record[field_name]
-            if value is False:
+            if not value:
                 return False
             src = self._get_src_data_b64(value, options)
         else:

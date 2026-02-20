@@ -1,11 +1,10 @@
-import base64
 import uuid
 from markupsafe import Markup
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
 from datetime import datetime
-from base64 import b64decode, b64encode
+from base64 import b64encode
 from lxml import etree
 
 
@@ -54,9 +53,9 @@ class AccountMove(models.Model):
                     qr_code_str = move._l10n_sa_get_qr_code(move.company_id, xml_content, x509_cert,
                                                             move.l10n_sa_invoice_signature, True)
                     qr_code_str = b64encode(qr_code_str).decode()
-                elif zatca_document.state == 'sent' and zatca_document.attachment_id.datas:
-                    document_xml = zatca_document.attachment_id.with_context(bin_size=False).datas.decode()
-                    root = etree.fromstring(b64decode(document_xml))
+                elif zatca_document.state == 'sent' and zatca_document.attachment_id.raw:
+                    document_xml = zatca_document.attachment_id.raw.decode()
+                    root = etree.fromstring(document_xml)
                     qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
                     qr_code_str = qr_node.text
                 move.l10n_sa_qr_code_str = qr_code_str
@@ -119,13 +118,13 @@ class AccountMove(models.Model):
             amount_tax_enc = self._l10n_sa_get_qr_code_encoding(5, float_repr(abs(amount_tax), 2).encode())
             invoice_hash_enc = self._l10n_sa_get_qr_code_encoding(6, invoice_hash)
             signature_enc = self._l10n_sa_get_qr_code_encoding(7, signature.encode())
-            public_key_enc = self._l10n_sa_get_qr_code_encoding(8, base64.b64decode(certificate._get_public_key_bytes(formatting='base64')))
+            public_key_enc = self._l10n_sa_get_qr_code_encoding(8, certificate._get_public_key_bytes(formatting=''))
 
             qr_code_str = (seller_name_enc + seller_vat_enc + timestamp_enc + amount_total_enc +
                            amount_tax_enc + invoice_hash_enc + signature_enc + public_key_enc)
 
             if is_b2c:
-                qr_code_str += self._l10n_sa_get_qr_code_encoding(9, base64.b64decode(certificate._get_signature_bytes(formatting='base64')))
+                qr_code_str += self._l10n_sa_get_qr_code_encoding(9, certificate._get_signature_bytes(formatting=''))
 
         return qr_code_str
 

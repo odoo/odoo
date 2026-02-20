@@ -15,7 +15,7 @@ from odoo import api, models
 from odoo.fields import Command, Date, Domain
 from odoo.api import NewId
 from odoo.models import regex_order, READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes, BinaryValue, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyTranslate
@@ -2128,23 +2128,23 @@ class ResCompany(models.Model):
             self._update_asset_style()
         return res
 
-    def _get_asset_style_bin(self):
+    def _get_asset_style_raw(self) -> BinaryValue:
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
         company_styles = self.env['ir.qweb']._render('web.styles_company_report', {
                 'company_ids': company_ids,
             }, raise_if_not_found=False)
-        return company_styles.encode()
+        return BinaryBytes(company_styles.encode())
 
     def _update_asset_style(self):
         asset_attachment = self.env.ref('web.asset_styles_company_report', raise_if_not_found=False)
         if not asset_attachment:
             return
         asset_attachment = asset_attachment.sudo()
-        raw = self._get_asset_style_bin()
-        if raw != asset_attachment.raw:
-            asset_attachment.write({'raw': raw})
+        data = self._get_asset_style_raw()
+        if data.content != asset_attachment.raw.content:
+            asset_attachment.raw = data
 
 
 class RecordSnapshot(dict):

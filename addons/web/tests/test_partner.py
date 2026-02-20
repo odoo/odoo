@@ -3,7 +3,6 @@ import io
 import logging
 import unittest
 import zipfile
-from base64 import b64decode
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.exceptions import AccessError
@@ -76,7 +75,7 @@ class TestPartnerVCard(HttpCase):
         self.assertEqual(vcard.contents["tel"][0].params['TYPE'], ["work"], "Vcard should have the same phone")
         self.assertEqual(vcard.contents["tel"][0].value, partner.phone, "Vcard should have the same phone")
         self.assertEqual(vcard.contents["title"][0].value, partner.function, "Vcard should have the same function")
-        self.assertEqual(len(vcard.contents['photo'][0].value), len(b64decode(partner.avatar_512)), "Vcard should have the same photo")
+        self.assertEqual(len(vcard.contents['photo'][0].value), partner.avatar_512.size, "Vcard should have the same photo")
 
     def test_fetch_single_partner_vcard(self):
         res = self.url_open('/web_enterprise/partner/%d/vcard' % self.partners[0].id)

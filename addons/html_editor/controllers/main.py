@@ -1,7 +1,7 @@
 import contextlib
 import re
 import uuid
-from base64 import b64decode, b64encode
+from base64 import b64decode
 from datetime import datetime
 from os.path import join as opj
 from urllib.parse import urlparse, urljoin
@@ -73,16 +73,16 @@ def get_existing_attachment(IrAttachment, vals):
     fields = dict(vals)
     # Falsy res_id defaults to 0 on attachment creation.
     fields['res_id'] = fields.get('res_id') or 0
-    raw, datas = fields.pop('raw', None), fields.pop('datas', None)
+    raw = fields.pop('raw', None)
     domain = [(field, '=', value) for field, value in fields.items()]
     if fields.get('type') == 'url':
         if 'url' not in fields:
             return None
         domain.append(('checksum', '=', False))
     else:
-        if not (raw or datas):
+        if not raw:
             return None
-        domain.append(('checksum', '=', IrAttachment._compute_checksum(raw or b64decode(datas))))
+        domain.append(('checksum', '=', IrAttachment._compute_checksum(raw)))
     return IrAttachment.search(domain, limit=1) or None
 
 
@@ -529,17 +529,17 @@ class HTML_Editor(Controller):
                     resized = attachment.create_unique([{
                         'name': attachment.name,
                         'description': 'resize: %s' % size,
-                        'datas': per_type['image/webp'],
+                        'raw': per_type['image/webp'],
                         'res_id': reference_id,
                         'res_model': 'ir.attachment',
                         'mimetype': 'image/webp',
                     }])
-                    reference_id = resized[0]
+                    reference_id = resized[0].id
                 if 'image/jpeg' in per_type:
                     attachment.create_unique([{
                         'name': re.sub(r'\.webp$', '.jpg', attachment.name, flags=re.I),
                         'description': 'format: jpeg',
-                        'datas': per_type['image/jpeg'],
+                        'raw': per_type['image/jpeg'],
                         'res_id': reference_id,
                         'res_model': 'ir.attachment',
                         'mimetype': 'image/jpeg',
@@ -707,7 +707,7 @@ class HTML_Editor(Controller):
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
         # Add image in base64 inside the shape.
-        uri = image_data_uri(b64encode(image))
+        uri = image_data_uri(image)
         svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
 
         return request.make_response(svg, [

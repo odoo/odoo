@@ -1,6 +1,5 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
-from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import format_date
 
 import io
@@ -15,7 +14,7 @@ class IrAttachment(models.Model):
         buffer = io.BytesIO()
         with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
             for attachment in self:
-                zipfile_obj.writestr(attachment.display_name, attachment.raw)
+                zipfile_obj.writestr(attachment.display_name, attachment.raw.content)
         return buffer.getvalue()
 
     @api.ondelete(at_uninstall=True)
@@ -25,7 +24,7 @@ class IrAttachment(models.Model):
             and attachment.res_id
             and attachment.raw
             and attachment.company_id.restrictive_audit_trail
-            and guess_mimetype(attachment.raw) in (
+            and attachment.raw.mimetype in (
                 'application/pdf',
                 'application/xml',
             )
@@ -39,14 +38,14 @@ class IrAttachment(models.Model):
                 raise ue
 
     def write(self, vals):
-        if vals.keys() & {'res_id', 'res_model', 'raw', 'datas', 'store_fname', 'db_datas', 'company_id'}:
+        if vals.keys() & {'res_id', 'res_model', 'raw', 'store_fname', 'db_datas', 'company_id'}:
             try:
                 self._except_audit_trail()
             except UserError as e:
                 if (
                     not hasattr(e, '_audit_trail')
                     or vals.get('res_model') != 'documents.document'
-                    or vals.keys() & {'raw', 'datas', 'store_fname', 'db_datas'}
+                    or vals.keys() & {'raw', 'store_fname', 'db_datas'}
                 ):
                     raise  # do not raise if trying to version the attachment through a document
                 vals.pop('res_model', None)

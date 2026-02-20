@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import BinaryBytes
 
 
 class ImportController(http.Controller):
@@ -14,7 +14,7 @@ class ImportController(http.Controller):
     def set_file(self, id, ufile, model=None):
         file = ufile
         written = request.env['base_import.import'].browse(int(id)).write({
-            'file': base64.b64encode(file.read()),
+            'file': BinaryBytes(file.read()),
             'file_name': file.filename,
             'file_type': file.content_type,
         })

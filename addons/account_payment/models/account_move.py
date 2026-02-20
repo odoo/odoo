@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo import api, fields, models
 from odoo.tools import format_date
 from odoo.tools.translate import _
@@ -168,7 +166,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         portal_url = self._get_portal_payment_link()
         barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=portal_url, width=128, height=128, quiet=False)
-        return image_data_uri(base64.b64encode(barcode))
+        return image_data_uri(barcode)
 
     def _get_portal_payment_link(self):
         self.ensure_one()

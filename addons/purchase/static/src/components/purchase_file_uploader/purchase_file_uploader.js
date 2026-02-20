@@ -56,7 +56,7 @@ export class PurchaseFileUploader extends Component {
         const att_data = {
             name: file.name,
             mimetype: file.type,
-            datas: file.data,
+            raw: file.data,
         };
         const [att_id] = await this.orm.create("ir.attachment", [att_data], {
             context: { ...this.env.searchModel.context },

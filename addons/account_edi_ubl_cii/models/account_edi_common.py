@@ -686,7 +686,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'name': name,
                     'res_id': invoice.id,
                     'res_model': 'account.move',
-                    'datas': text + '=' * (len(text) % 3),  # Fix incorrect padding
+                    'raw': text + '=' * (len(text) % 4),  # Fix incorrect padding
                     'type': 'binary',
                     'mimetype': mimetype,
                 })

@@ -10,6 +10,7 @@ from itertools import starmap
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
+from odoo.tools import BinaryBytes
 
 _logger = logging.getLogger(__name__)
 
@@ -467,7 +468,7 @@ class L10nInEwaybill(models.Model):
             vals = {
                 'name': name,
                 'mimetype': 'application/json',
-                'raw': json.dumps(raw_data, indent=4),
+                'raw': json.dumps(raw_data, indent=4).encode(),
                 'res_model': self._name,
                 'res_id': self.id,
                 'res_field': res_field,
@@ -720,7 +721,7 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         if self.attachment_id:
             try:
-                res_json = json.loads(self.attachment_id.raw.decode("utf-8"))
+                res_json = json.loads(self.attachment_id.raw.content)
             except ValueError:
                 return False
             ewb_name = res_json.get("ewayBillNo") or res_json.get("EwbNo")
@@ -741,7 +742,7 @@ class L10nInEwaybill(models.Model):
         attachment = self.env['ir.attachment'].create({
             'name': f'{doc_label} - {self.document_number}.pdf',
             'type': 'binary',
-            'raw': pdf_content,
+            'raw': BinaryBytes(pdf_content),
             'res_model': 'l10n.in.ewaybill',
             'res_id': self.id,
             'mimetype': 'application/pdf',

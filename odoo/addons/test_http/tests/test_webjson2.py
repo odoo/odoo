@@ -246,13 +246,13 @@ class TestHttpWebJson_2(TestHttpBase):
             'raw': b'x  \x01-',
         })
         expected_datas = 'eCAgAS0='  # base64-encoded raw value
-        values = (attachment.id, expected_datas, expected_datas)
+        values = (attachment.id, expected_datas)
         res = self.db_url_open(
             '/json/2/ir.attachment/search_read',
-            data=r'{"domain": [["id", "=", %d]], "fields": ["datas", "raw"], "limit": 1}' % attachment.id,
+            data=r'{"domain": [["id", "=", %d]], "fields": ["raw"], "limit": 1}' % attachment.id,
             headers=CT_JSON | self.bearer_header,
         ).raise_for_status()
-        self.assertEqual(res.text, '[{"id": %d, "datas": "%s", "raw": "%s"}]' % values)
+        self.assertEqual(res.text, '[{"id": %d, "raw": "%s"}]' % values)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
     def test_webjson2_missing_method(self):

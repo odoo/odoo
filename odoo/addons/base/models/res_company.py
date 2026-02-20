@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import logging
 
 from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
-from odoo.tools import html2plaintext, file_open, ormcache
+from odoo.tools import BinaryBytes, file_open, html2plaintext, ormcache
 from odoo.tools.image import image_process
 from odoo.tools.sql import table_columns
 
@@ -27,8 +26,8 @@ class ResCompany(models.CachedModel):
         raise UserError(self.env._('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
-        with file_open('base/static/img/res_company_logo.png', 'rb') as file:
-            return base64.b64encode(file.read())
+        with file_open('base/static/img/res_company_logo.png', 'rb') as f:
+            return BinaryBytes(f.read())
 
     def _default_currency_id(self):
         if self.env.registry._init and not (set(self._cached_data_fields) <= table_columns(self.env.cr, self._table).keys()):
@@ -165,13 +164,13 @@ class ResCompany(models.CachedModel):
     def _compute_logo_web(self):
         for company in self:
             img = company.partner_id.image_1920
-            company.logo_web = img and base64.b64encode(image_process(base64.b64decode(img), size=(180, 0)))
+            company.logo_web = img and BinaryBytes(image_process(img.content, size=(180, 0)))
 
     @api.depends('partner_id.image_1920')
     def _compute_uses_default_logo(self):
         default_logo = self._get_logo()
         for company in self:
-            company.uses_default_logo = not company.logo or company.logo == default_logo
+            company.uses_default_logo = not company.logo or company.logo.content == default_logo.content
 
     @api.depends('root_id')
     def _compute_color(self):

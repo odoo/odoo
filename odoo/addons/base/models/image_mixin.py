@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
@@ -8,7 +7,7 @@ class ImageMixin(models.AbstractModel):
     _name = 'image.mixin'
     _description = "Image Mixin"
 
-    # all image fields are base64 encoded and PIL-supported
+    # all image fields are PIL-supported
 
     image_1920 = fields.Image("Image", max_width=1920, max_height=1920)
 

@@ -7,7 +7,7 @@ from odoo.http.session import session_store
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.base.tests.files import PNG_B64, PNG_RAW
+from odoo.addons.base.tests.files import PNG_RAW
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
@@ -49,7 +49,7 @@ class TestReports(odoo.tests.HttpCase):
             if res_model == 'ir.attachment' and res_id == image.id:
                 result['uid'] = self.env.uid
                 record = origin_find_record(self, xmlid, res_model, res_id, access_token, field)
-                result.update({'record_id': record.id, 'data': record.datas})
+                result.update({'record_id': record.id, 'data': record.raw.content or None})
             else:
                 record = origin_find_record(self, xmlid, res_model, res_id, access_token, field)
             return record
@@ -71,7 +71,7 @@ class TestReports(odoo.tests.HttpCase):
             result.get('uid'), admin.id, 'wkhtmltopdf is not fetching the image as the user printing the report'
         )
         self.assertEqual(result.get('record_id'), image.id, 'wkhtmltopdf did not fetch the expected record')
-        self.assertEqual(result.get('data'), PNG_B64, 'wkhtmltopdf did not fetch the right image content')
+        self.assertEqual(result.get('data'), PNG_RAW, 'wkhtmltopdf did not fetch the right image content')
 
         # 2. Request the report as public, who has no acess to the image
         self.logout()

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-import base64
 from collections import defaultdict
 
 import werkzeug
@@ -272,7 +270,7 @@ class ResPartnerBank(models.Model):
                 barcode = self.env['ir.actions.report'].barcode(**params)
             except (ValueError, AttributeError):
                 raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
-            return image_data_uri(base64.b64encode(barcode))
+            return image_data_uri(barcode)
         return None
 
     @api.model

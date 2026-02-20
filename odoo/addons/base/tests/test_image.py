@@ -287,7 +287,7 @@ class TestImage(TransactionCase):
 
     def test_20_image_data_uri(self):
         """Test that image_data_uri is working as expected."""
-        self.assertEqual(tools.image_data_uri(base64.b64encode(self.img_1x1_png)), 'data:image/png;base64,' + base64.b64encode(self.img_1x1_png).decode('ascii'))
+        self.assertEqual(tools.image_data_uri(self.img_1x1_png), 'data:image/png;base64,' + base64.b64encode(self.img_1x1_png).decode('ascii'))
 
     def test_21_image_guess_size_from_field_name(self):
         f = tools.image_guess_size_from_field_name

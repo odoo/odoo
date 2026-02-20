@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import io
 import re
 from unittest.mock import patch
@@ -10,6 +9,7 @@ from PIL import Image
 import odoo
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tools import BinaryBytes
 
 from odoo.addons.website.tests.test_performance import TestWebsitePerformanceCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -72,13 +72,13 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         f = io.BytesIO()
         Image.new('RGB', (1920, 1080), '#4169E1').save(f, 'JPEG')
         f.seek(0)
-        blue_image = base64.b64encode(f.read())
+        blue_image = BinaryBytes(f.read())
 
         # second image (red) for the variant 1
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#FF69E1').save(f, 'JPEG')
         f.seek(0)
-        red_image = base64.b64encode(f.read())
+        red_image = BinaryBytes(f.read())
 
         cls.productA = cls.env['product.product'].create({
             'name': 'Product A',

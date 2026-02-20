@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 from collections.abc import Mapping
 from datetime import date, datetime
 import json as json_
 import re
 
 import markupsafe
+from .binary import BinaryValue
 from .func import lazy
 
 JSON_SCRIPTSAFE_MAPPER = {
@@ -70,6 +70,8 @@ def json_default(obj):
         return dict(obj)
     if isinstance(obj, bytes):
         return obj.decode()
+    if isinstance(obj, BinaryValue):
+        return obj.content.decode()
     if isinstance(obj, fields.Domain):
         return list(obj)
     return str(obj)

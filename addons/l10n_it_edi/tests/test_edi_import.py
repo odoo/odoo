@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
@@ -18,7 +17,7 @@ _logger = logging.getLogger(__name__)
 class TestItEdiImport(TestItEdi):
     """ Main test class for the l10n_it_edi vendor bills XML import"""
 
-    fake_test_content = """<?xml version="1.0" encoding="UTF-8"?>
+    fake_test_content = b"""<?xml version="1.0" encoding="UTF-8"?>
         <p:FatturaElettronica versione="FPR12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
         xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -312,7 +311,7 @@ class TestItEdiImport(TestItEdi):
         })
         self.env['ir.attachment'].with_company(other_company).create({
             'name': filename,
-            'raw': self.fake_test_content.encode(),
+            'raw': self.fake_test_content,
             'res_model': 'account.move',
             'res_id': invoice.id,
             'res_field': 'l10n_it_edi_attachment_file',

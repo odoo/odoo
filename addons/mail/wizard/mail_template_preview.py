@@ -138,7 +138,7 @@ class MailTemplatePreview(models.TransientModel):
                         mail_values['attachment_ids'] += preview.env['ir.attachment'].create([
                             {
                                 'name': attach_fname,
-                                'datas': attach_datas,
+                                'raw': attach_datas,
                                 'res_model': 'mail.template.preview',
                                 'res_id': preview.id,
                                 'type': 'binary',

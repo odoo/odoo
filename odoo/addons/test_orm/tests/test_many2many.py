@@ -41,7 +41,7 @@ class Many2manyCase(TransactionCase):
             'name': 'test',
         }).with_user(user)
         record = self.env['test_orm.attachment.host'].create({
-            'real_binary': b'aGV5',
+            'real_binary': 'aGV5',
         }).with_user(user)
         attachments += attachments.sudo().search([
             ('res_model', '=', record._name),

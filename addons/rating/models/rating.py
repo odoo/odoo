@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import uuid
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
-from odoo.tools.misc import file_open
+from odoo.tools import BinaryBytes, file_open
 
 
 class RatingRating(models.Model):
@@ -109,7 +108,7 @@ class RatingRating(models.Model):
             rating.rating_image_url = f'/{image_path}'
             try:
                 with file_open(image_path, 'rb', filter_ext=('.png',)) as f:
-                    rating.rating_image = base64.b64encode(f.read())
+                    rating.rating_image = BinaryBytes(f.read())
             except OSError:
                 rating.rating_image = False
 

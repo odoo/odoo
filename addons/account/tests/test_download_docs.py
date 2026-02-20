@@ -44,7 +44,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.content, attachment.raw)
+        self.assertEqual(res.content, attachment.raw.content)
 
     def test_download_invoice_attachments_multiple(self):
         attachments = self.invoices.invoice_pdf_report_id
@@ -63,7 +63,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.content, self.invoices[0].invoice_pdf_report_id.raw)
+        self.assertEqual(res.content, self.invoices[0].invoice_pdf_report_id.raw.content)
 
     def test_download_invoice_documents_filetype_multiple(self):
         url = f'/account/download_invoice_documents/{",".join(map(str, self.invoices.ids))}/pdf'

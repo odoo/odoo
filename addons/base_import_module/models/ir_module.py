@@ -1,5 +1,4 @@
 import ast
-import base64
 import io
 import json
 import logging
@@ -20,7 +19,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
-from odoo.tools import SQL, convert_file
+from odoo.tools import BinaryBytes, SQL, convert_file
 from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
 from odoo.tools.misc import OrderedSet, topological_sort
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
@@ -71,7 +70,7 @@ class IrModuleModule(models.Model):
                     ], limit=1)
                     if attachment.raw:
                         try:
-                            with io.BytesIO(attachment.raw) as fileobj:
+                            with io.BytesIO(attachment.raw) as fileobj:  # use BytesIO to set the name
                                 fileobj.name = attachment.name
                                 translation_importer.load(fileobj, 'po', lang, module=module)
                         except Exception:   # noqa: BLE001
@@ -99,7 +98,7 @@ class IrModuleModule(models.Model):
                 ('res_model', '=', 'ir.ui.view')
             ], limit=1)
             if attachment:
-                module.icon_image = attachment.datas
+                module.icon_image = attachment.raw
 
     def _import_module(self, module, path, force=False, with_demo=False):
         # Do not create a bridge module for these neutralizations.
@@ -189,7 +188,7 @@ class IrModuleModule(models.Model):
                 for static_file in files:
                     full_path = opj(root, static_file)
                     with file_open(full_path, 'rb', env=self.env) as fp:
-                        data = base64.b64encode(fp.read())
+                        raw = BinaryBytes(fp.read())
                     url_path = '/{}{}'.format(module, full_path.split(path)[1].replace(os.path.sep, '/'))
                     if not isinstance(url_path, str):
                         url_path = url_path.decode(sys.getfilesystemencoding())
@@ -199,7 +198,7 @@ class IrModuleModule(models.Model):
                         url=url_path,
                         res_model='ir.ui.view',
                         type='binary',
-                        datas=data,
+                        raw=raw,
                     )
                     # Do not create a bridge module for this check.
                     if 'public' in IrAttachment._fields:
@@ -232,7 +231,7 @@ class IrModuleModule(models.Model):
                     # we don't support sub-directories in i18n
                     continue
                 with file_open(entry.path, 'rb', env=self.env) as fp:
-                    raw = fp.read()
+                    raw = BinaryBytes(fp.read())
                 lang = entry.name.split('.')[0]
                 # store as binary ir.attachment
                 values = {
@@ -528,7 +527,7 @@ class IrModuleModule(models.Model):
             if unavailable_modules:
                 raise UserError(missing_dependencies_description)
             import_module = self.env['base.import.module'].create({
-                'module_file': base64.b64encode(resp.content),
+                'module_file': BinaryBytes(resp.content),
                 'state': 'init',
                 'modules_dependencies': missing_dependencies_description,
             })
@@ -628,7 +627,7 @@ class IrModuleModule(models.Model):
             ], limit=1)
             if attachment.raw:
                 try:
-                    with io.BytesIO(attachment.raw) as fileobj:
+                    with io.BytesIO(attachment.raw) as fileobj:  # use BytesIO to set the name
                         fileobj.name = attachment.name
                         webclient_translations = CodeTranslations._read_code_translations_file(fileobj, filter_func)
                         translations.update(webclient_translations)
@@ -684,7 +683,7 @@ class IrModuleModule(models.Model):
                 extract_method = 'odoo.tools.translate:babel_extract_qweb'
                 extract_keywords = {}
             try:
-                with io.BytesIO(attachment.raw) as fileobj:
+                with attachment.raw.open() as fileobj:
                     for extracted in extract.extract(extract_method, fileobj, keywords=extract_keywords):
                         lineno, message, comments = extracted[:3]
                         value = translations.get(message, '')

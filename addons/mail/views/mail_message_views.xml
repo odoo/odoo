@@ -143,7 +143,7 @@
                     <field name="type"/>
                     <templates>
                         <t t-name="menu">
-                            <a t-attf-href="/web/content/ir.attachment/#{record.id.raw_value}/datas?download=true" download="" class="dropdown-item">Download</a>
+                            <a t-attf-href="/web/content/ir.attachment/#{record.id.raw_value}/raw?download=true" download="" class="dropdown-item">Download</a>
                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
                         <t t-name="card" class="o_kanban_attachment flex-row">

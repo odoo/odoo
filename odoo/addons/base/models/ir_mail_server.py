@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import datetime
 import email.policy
 import functools
@@ -25,6 +24,7 @@ from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.tools import (
+    BinaryValue,
     email_domain_extract,
     email_domain_normalize,
     email_normalize,
@@ -449,9 +449,9 @@ class IrMail_Server(models.Model):
                     else:  # ssl, starttls
                         ssl_context.verify_mode = ssl.CERT_NONE
                     ssl_context._ctx.use_certificate(load_pem_x509_certificate(
-                        base64.b64decode(mail_server.smtp_ssl_certificate)))
+                        mail_server.smtp_ssl_certificate.content))
                     ssl_context._ctx.use_privatekey(load_pem_private_key(
-                        base64.b64decode(mail_server.smtp_ssl_private_key),
+                        mail_server.smtp_ssl_private_key.content,
                         password=None))
                     # Check that the private key match the certificate
                     ssl_context._ctx.check_privatekey()
@@ -575,8 +575,8 @@ class IrMail_Server(models.Model):
                                   making the content part of the mail "text/plain".
            :param string subtype_alternative: optional mime subtype of ``body_alternative`` (usually 'plain'
                                               or 'html'). Default is 'plain'.
-           :param list attachments: list of (filename, filecontents) pairs, where filecontents is a string
-                                    containing the bytes of the attachment
+           :param list attachments: list of (filename, filecontents, mime) tuples, where filecontents are
+                                    raw bytes or a binary value
            :param message_id:
            :param references:
            :param list email_cc: optional list of string values for CC header (to be joined with commas)
@@ -630,6 +630,8 @@ class IrMail_Server(models.Model):
         if attachments:
             for (fname, fcontent, mime) in attachments:
                 maintype, subtype = mime.split('/') if mime and '/' in mime else ('application', 'octet-stream')
+                if isinstance(fcontent, BinaryValue):
+                    fcontent = fcontent.content
                 if maintype == 'message' and subtype == 'rfc822':
                     msg.add_attachment(BytesParser().parsebytes(fcontent), filename=fname)
                 else:

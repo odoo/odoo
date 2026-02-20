@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import fnmatch
 import functools
 import hashlib
@@ -28,9 +27,9 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import Query
 from odoo.modules.module import get_manifest
-from odoo.tools import SQL
+from odoo.tools import BinaryBytes, file_open
 from odoo.tools.image import image_process
-from odoo.tools.sql import escape_psql
+from odoo.tools.sql import SQL, escape_psql
 from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
@@ -189,8 +188,8 @@ class Website(models.CachedModel):
         return self.env.ref('base.main_company').social_discord
 
     def _default_logo(self):
-        with tools.file_open('website/static/src/img/website_logo.svg', 'rb') as f:
-            return base64.b64encode(f.read())
+        with file_open('website/static/src/img/website_logo.svg', 'rb') as f:
+            return BinaryBytes(f.read())
 
     logo = fields.Binary('Website Logo', default=_default_logo, help="Display this logo on the website.")
     social_twitter = fields.Char('X Account', default=_default_social_twitter)
@@ -225,8 +224,8 @@ class Website(models.CachedModel):
     robots_txt = fields.Html('Robots.txt', translate=False, groups='website.group_website_designer', sanitize=False)
 
     def _default_favicon(self):
-        with tools.file_open('web/static/img/favicon.ico', 'rb') as f:
-            return base64.b64encode(f.read())
+        with file_open('web/static/img/favicon.ico', 'rb') as f:
+            return BinaryBytes(f.read())
 
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
@@ -407,8 +406,8 @@ class Website(models.CachedModel):
 
     @api.model
     def _handle_favicon(self, vals):
-        if vals.get('favicon'):
-            vals['favicon'] = base64.b64encode(image_process(base64.b64decode(vals['favicon']), size=(256, 256), crop='center', output_format='ICO'))
+        if icon := vals.get('favicon'):
+            vals['favicon'] = BinaryBytes(image_process(icon, size=(256, 256), crop='center', output_format='ICO'))
 
     @api.model
     def _handle_domain(self, vals):
@@ -693,7 +692,7 @@ class Website(models.CachedModel):
         } for feature in configurator_features]
         r['logo'] = False
         if not company.uses_default_logo:
-            r['logo'] = company.logo.decode('utf-8')
+            r['logo'] = company.logo.to_base64()
         r['configurator_done'] = current_website.configurator_done
         try:
             result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.context.get('lang')})

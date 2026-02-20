@@ -132,9 +132,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
         copy=False,
     )
     # To use the binary widget in the form view to download the attachment
-    json_attachment_base64 = fields.Binary(
+    json_attachment_raw = fields.Binary(
         string="JSON",
-        related='json_attachment_id.datas',
+        related='json_attachment_id.raw',
     )
     json_attachment_filename = fields.Char(
         string="JSON Filename",
@@ -188,7 +188,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if not self.json_attachment_id:
             return {}
         json_data = self.json_attachment_id.raw
-        return json.loads(json_data)
+        return json.loads(json_data.content)
 
     def _get_record_identifier(self):
         if not self:

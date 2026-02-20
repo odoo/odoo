@@ -844,12 +844,12 @@ test("convert image to webp", async () => {
         if (!args[0][0].res_id) {
             // Here we check the image data we pass and generated data.
             // Also we check the file type
-            expect(args[0][0].datas).not.toBe(imageData);
+            expect(args[0][0].raw).not.toBe(imageData);
             expect(args[0][0].mimetype).toBe("image/webp");
             return [1];
         }
         // This handles second RPC call to store jpeg
-        expect(args[0][0].datas).not.toBe(imageData);
+        expect(args[0][0].raw).not.toBe(imageData);
         expect(args[0][0].mimetype).toBe("image/jpeg");
         return true;
     });

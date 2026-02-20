@@ -49,7 +49,7 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('cloud_storage_google_service_account_key')
     def _compute_cloud_storage_google_account_info(self):
         for setting in self:
-            key = setting.with_context(bin_size=False).cloud_storage_google_service_account_key
+            key = setting.cloud_storage_google_service_account_key
             setting.cloud_storage_google_account_info = base64.b64decode(key) if key else False
 
     def _setup_cloud_storage_provider(self):

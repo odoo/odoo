@@ -911,7 +911,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         message.with_user(self.user_employee).read()
         # Test: Employee has access to attachment, ok because they can read message
-        attachment.with_user(self.user_employee).read(['name', 'datas'])
+        attachment.with_user(self.user_employee).read(['name', 'raw'])
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_mail_follower(self):
