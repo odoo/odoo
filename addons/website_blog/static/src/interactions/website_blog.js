@@ -30,7 +30,7 @@ export class WebsiteBlog extends Interaction {
     };
 
     setup() {
-        this.defaultPosition = this._isCompactListView() ? 0 : 16;
+        this.defaultPosition = this._isCompactListOrSplitGridView() ? 0 : 16;
         this.position = this.defaultPosition;
     }
 
@@ -150,10 +150,11 @@ export class WebsiteBlog extends Interaction {
      * @private
      * @returns {boolean}
      */
-    _isCompactListView() {
-        // Check if the layout is compact list view by looking for specific elements
-        // that are only present in compact list view
-        return this.el.querySelector(".o_wblog_compact_list_month_header") !== null;
+    _isCompactListOrSplitGridView() {
+        // Check if the layout is compact list view or split grid view by looking for specific elements
+        // that are only present in these views (which require zero top position)
+        return this.el.querySelector(".o_wblog_compact_list_month_header") !== null ||
+               this.el.querySelector(".o_wblog_split_grid_view_container") !== null;
     }
 }
 

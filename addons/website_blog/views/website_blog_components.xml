@@ -8,9 +8,10 @@
     <t t-set="wblog_nav_offcanvas" t-value="len(blogs) > 4"/>
     <t t-set="wblog_all_title_string">All Blogs</t>
 
-    <div t-attf-class="mt-4 #{opt_blog_fullwidth and 'container-fluid' or 'container'}">
+    <div t-attf-class="#{(opt_blog_fullwidth or opt_blog_split_grid_view) and 'container-fluid' or 'container'}">
         <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="visually-hidden">Blog Posts</h1>
-        <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
+        <div class="oe_structure" id="oe_structure_blog_nav_0"/>
+        <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap py-4 #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
             <!-- Desktop -->
             <ul t-if="len(blogs) > 1" class="o_wblog_category list-unstyled d-none d-lg-flex flex-wrap gap-2 mb-0">
                 <li>
@@ -39,7 +40,7 @@
                     </a>
                     <div id="o_wblog_offcanvas" class="offcanvas offcanvas-bottom h-auto" tabindex="-1" aria-labelledby="o_wblog_offcanvas_label">
                         <div class="offcanvas-header">
-                            <h5 id="o_wblog_offcanvas_label" class="offcanvas-title my-0">Blogs</h5>
+                            <h2 id="o_wblog_offcanvas_label" class="offcanvas-title my-0 h5-fs">Blogs</h2>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                         </div>
                         <div class="offcanvas-body">
@@ -343,11 +344,10 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: Author avatar -->
 <template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="1">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-4">
-            <t t-call="website_blog.post_author">
+        <div class="o_wblog_sidebar_block pb-5">
+            <t t-call="website_blog.post_author"
                 is_post_page.f="true"
-                additionnal_classes.f="d-flex align-items-center"
-            </t>
+                additionnal_classes.f="d-flex align-items-center"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
     </xpath>
@@ -374,7 +374,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: display tags -->
-<template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" priority="3">
+<template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="False" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-4">
             <h2 class="h6">Tags</h2>
@@ -396,7 +396,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: display Blogs list -->
-<template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="True" priority="4">
+<template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="False" priority="4">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-4">
             <h2 class="h6">Our blogs</h2>
@@ -411,7 +411,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: display Archive -->
-<template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="True" priority="5">
+<template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="False" priority="5">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-4">
             <h2 class="h6">Archive</h2>

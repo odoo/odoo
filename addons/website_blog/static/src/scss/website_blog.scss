@@ -32,6 +32,17 @@
     // ==============================================
 
     #o_wblog_posts_loop {
+        &:has(.o_wblog_bordered_grid_container) {
+            --o-border-color: #{$gray-300};
+            --border-color: #{$gray-300};
+        }
+        
+        @at-root {
+            .o_wblog_bordered_grid_nav {
+                --o-border-color: #{$gray-300};
+                --border-color: #{$gray-300};
+            }
+        }
 
         .o_wblog_author_avatar {
             --Avatar-size: 1.5rem;
@@ -60,6 +71,17 @@
 
         .o_wblog_unpublished {
             @include o-position-absolute(0, 0, auto, auto);
+        }
+
+        .o_wblog_split_grid_view_container {
+            &:not(:first-child) {
+                margin-top: 0;
+            }
+            @include media-breakpoint-up(md) {
+                &:nth-child(even) article {
+                    flex-direction: row-reverse !important;
+                }
+            }
         }
     }
 
