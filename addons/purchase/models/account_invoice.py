@@ -272,7 +272,7 @@ class AccountMove(models.Model):
         # Sort the purchase order lines by unit price and remaining quantity to speed up matching
         purchase_lines = sorted(
             po_lines,
-            key=lambda line: (line.price_unit, line.product_qty - line.qty_invoiced),
+            key=lambda line: (line.price_unit, line.qty_to_invoice),
             reverse=True
         )
         matched_po_lines = []
@@ -297,7 +297,7 @@ class AccountMove(models.Model):
                         break
 
                     if (float_compare(invoice_line.price_unit, purchase_line.price_unit, precision_digits=precision) == 0
-                            and invoice_line.quantity <= purchase_line.product_qty - purchase_line.qty_invoiced):
+                            and invoice_line.quantity <= purchase_line.qty_to_invoice):
                         # The current purchase line is a possible match for the current invoice line.
                         # We calculate the name match ratio and continue with other possible matches.
                         #
@@ -388,7 +388,7 @@ class AccountMove(models.Model):
                 po_lines = [line for line in matching_purchase_orders.order_line if line.product_qty]
                 po_lines_with_amount = [{
                     'line': line,
-                    'amount_to_invoice': (1 - line.qty_invoiced / line.product_qty) * line.price_total,
+                    'amount_to_invoice': (line.qty_to_invoice / line.product_qty) * line.price_total,
                 } for line in po_lines]
 
                 # If the sum of all remaining amounts to be invoiced for these purchase orders' lines is within a
@@ -436,7 +436,24 @@ class AccountMove(models.Model):
             if len(matching_purchase_orders) == 1:
                 # We found exactly one match on vendor and total amount (within tolerance).
                 # We return all purchase order lines of the purchase order whose total amount matched our vendor bill.
-                return 'total_match', matching_purchase_orders.order_line, None
+                # For a total match the remaining quantity to invoice should match as all lines are replaced
+                po_lines = [line for line in matching_purchase_orders.order_line if line.product_qty]
+                if (amount_total - TOLERANCE
+                        < sum((line.qty_to_invoice / line.product_qty) * line.price_total for line in po_lines)
+                        < amount_total + TOLERANCE):
+                    return 'total_match', matching_purchase_orders.order_line, None
+                else:
+                    # We have an invoice from an EDI document, so we try to match individual invoice lines with
+                    # individual purchase order lines from referenced purchase orders.
+                    matching_po_lines, matching_inv_lines = self._find_matching_po_and_inv_lines(
+                        po_lines, self.invoice_line_ids, timeout)
+
+                    if matching_po_lines:
+                        # We found a subset of purchase order lines that match a subset of the vendor bill lines.
+                        # We return the matching purchase order lines and vendor bill lines.
+                        return ('subset_match',
+                                self.env['purchase.order.line'].union(*matching_po_lines),
+                                matching_inv_lines)
 
         # We couldn't find anything, so we return no lines.
         return ('no_match', matching_purchase_orders.order_line, None)

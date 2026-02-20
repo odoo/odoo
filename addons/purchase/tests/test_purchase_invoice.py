@@ -770,6 +770,48 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(inv.invoice_line_ids[2].name, f"{pol_prod_product_in_name.name}", "When description contains the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[3].name, f"{pol_prod_name_in_product.product_id.display_name}\n{pol_prod_name_in_product.name}", "When the product name contains the description, the invoice line name should be the product name and the description")
 
+    def test_import_bill_from_attachment_keep_full_quantity_with_partial_delivery(self):
+        """
+        Ensure that bills created from attachments do not trigger the a PO full match unexpectedly.
+
+        Even if a Purchase Order exists for the same partner with only partial deliveries,
+        the imported bill should reflect the exact quantities from the document attachment
+        rather than being restricted to the 'received' quantities suggested by the PO link.
+        """
+        company_partner = self.env.company.partner_id
+        self.product_a.purchase_method = 'receive'
+        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': company_partner.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_qty': 2,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 100,
+            })]
+        })
+        po.button_confirm()
+        po.order_line.qty_received = 1
+
+        invoice = self.env['account.move'].create({
+            'partner_id': company_partner.id,
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'line_ids': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'quantity': 2,
+                'product_uom_id': self.product_a.uom_id.id,
+                'price_unit': 100,
+            })]
+        })
+        invoice.action_post()
+        invoice._generate_and_send()
+
+        new_bill = self.company_data['default_journal_purchase'].with_context(default_move_type='in_invoice')._create_document_from_attachment(invoice.attachment_ids[0].ids)
+        self.assertEqual(2.0, new_bill.invoice_line_ids.quantity)
+        self.assertFalse(po.invoice_ids, "The Purchase Order should not be automatically linked to the Bill.")
+
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
