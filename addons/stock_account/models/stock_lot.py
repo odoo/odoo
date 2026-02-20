@@ -31,8 +31,8 @@ class StockLot(models.Model):
                 lot.total_value = 0.0
                 continue
             valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
-            qty_valued = valuated_product.qty_available
-            qty_available = valuated_product.with_context(warehouse_id=False).qty_available
+            qty_valued = lot.product_qty
+            qty_available = lot.with_context(warehouse_id=False).product_qty
             if valuated_product.uom_id.is_zero(qty_valued):
                 lot.total_value = 0
             elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
