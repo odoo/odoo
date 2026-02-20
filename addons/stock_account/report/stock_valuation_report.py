@@ -10,7 +10,7 @@ class StockValuationReport(models.AbstractModel):
     @api.model
     def get_report_values(self, date=False):
         return {
-            'data': self._get_report_data(date=date),
+            'data': self.with_context(allowed_company_ids=self.env.company.ids)._get_report_data(date=date),
             'context': {},
         }
 
