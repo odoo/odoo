@@ -25,7 +25,6 @@ The system is able to add and compute the shipping line.
         'views/delivery_zip_prefix_views.xml',
         'views/ir_module_module_views.xml',
         'views/payment_form_templates.xml',
-        'views/payment_provider_views.xml',
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
 

@@ -13,6 +13,6 @@ class PaymentTransaction(models.Model):
             lambda tx: tx.provider_id.custom_mode == 'cash_on_delivery' and tx.state == 'pending'
         )
         cod_pending_txs.sale_order_ids.filtered(
-            lambda so: so.state == 'draft'
+            lambda so: so.state in ['draft', 'sent']
         ).with_context(send_email=True).action_confirm()
         super()._post_process()

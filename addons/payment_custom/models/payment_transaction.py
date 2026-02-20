@@ -84,3 +84,13 @@ class PaymentTransaction(models.Model):
                 provider_name=self.provider_id.name
             )
         return message
+
+    def _post_process(self):
+        """Override of `payment` to confirm orders with the pay_on_invoice payment method."""
+        poi_pending_txs = self.filtered(
+            lambda tx: tx.provider_id.custom_mode == 'pay_on_invoice' and tx.state == 'pending'
+        )
+        poi_pending_txs.sale_order_ids.filtered(
+            lambda so: so.state in ['draft', 'sent']
+        ).with_context(send_email=True).action_confirm()
+        super()._post_process()

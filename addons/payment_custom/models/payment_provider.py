@@ -19,7 +19,7 @@ class PaymentProvider(models.Model):
     )
     custom_mode = fields.Selection(
         string="Custom Mode",
-        selection=[('wire_transfer', "Wire Transfer")],
+        selection=[('pay_on_invoice', "Pay on Invoice"), ('wire_transfer', "Wire Transfer")],
         required_if_provider='custom',
     )
     qr_code = fields.Boolean(
@@ -36,7 +36,7 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
         self.ensure_one()
-        if self.code != 'custom' or self.custom_mode != 'wire_transfer':
+        if self.code != 'custom' or self.custom_mode not in ['pay_on_invoice', 'wire_transfer']:
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 

@@ -9,6 +9,9 @@
             <group name="payment_form" position="inside">
                 <field name="so_reference_type" invisible="code != 'custom'"/>
             </group>
+            <group name="payment_form" position="attributes">
+                <attribute name="invisible">custom_mode == 'pay_on_invoice'</attribute>
+            </group>
         </field>
     </record>
 

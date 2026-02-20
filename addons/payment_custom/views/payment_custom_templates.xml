@@ -22,7 +22,7 @@
     <template id="custom_state_header" inherit_id="payment.state_header">
 
         <xpath expr="//div[@name='o_payment_status_alert']" position="before">
-            <h1 t-if=" tx.provider_id.sudo().code == 'custom' and tx.state == 'pending'"
+            <h1 t-if=" tx.provider_id.sudo().custom_mode == 'wire_transfer' and tx.state == 'pending'"
                 class="mb-3">
                 Finalize your payment
             </h1>
@@ -32,7 +32,7 @@
             <t t-set="qr_code"
                t-value="tx.provider_id.sudo().qr_code and tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx._get_communication(), None, tx.currency_id, tx.partner_id)"
             />
-            <t t-if="tx.provider_id.sudo().code == 'custom' and qr_code">
+            <t t-if="tx.provider_id.sudo().custom_mode == 'wire_transfer' and qr_code">
                 <div class="position-relative order-2 d-flex flex-md-column justify-content-center align-items-center align-items-md-stretch w-100 w-md-auto">
                     <hr class="d-inline d-md-none w-100"/>
                     <div class="vr d-none d-md-block h-100 mx-auto"/>
@@ -63,7 +63,7 @@
         </xpath>
 
         <xpath expr="//div[@id='o_payment_status_message']" position="replace">
-            <div t-if="tx.provider_id.sudo().code == 'custom'"
+            <div t-if="tx.provider_id.sudo().custom_mode == 'wire_transfer'"
                  id="o_payment_status_message"
                  class="order-3 order-md-1 flex-grow-1"
             >
