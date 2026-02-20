@@ -473,9 +473,63 @@ class ProductProduct(models.Model):
                 elif last_in := product._get_last_in():
                     product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
                 continue
+<<<<<<< 498cce13af3aed23486a65ae44405d34dda05cb0
             new_standard_price = product._run_avco()[0]
             if new_standard_price:
                 product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price
+||||||| c0e7549681af732bd4439f968ff240a962793d75
+            if cost_method == 'fifo':
+                for product in products:
+                    qty_available = product._with_valuation_context().qty_available
+                    if product.uom_id.compare(qty_available, 0) > 0:
+                        product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.total_value / qty_available
+                    elif last_in := product._get_last_in():
+                        if last_in_price_unit := last_in._get_price_unit():
+                            product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
+                continue
+            if cost_method == 'average':
+                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+                for product in products:
+                    if product.id in new_standard_price_by_product:
+                        product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
+
+    # -------------------------------------------------------------------------
+    # Old to remove
+    # -------------------------------------------------------------------------
+    def _run_avco(self, at_date=None, lot=None, method="realtime"):
+        self.ensure_one()
+        price_unit, value = self._run_average_batch(at_date=at_date, lot=lot, force_recompute=True)
+        return price_unit[self.id], value[self.id]
+
+    def _get_value_from_lots(self):
+        return 0
+=======
+            if cost_method == 'fifo':
+                for product in products:
+                    qty_available = product._with_valuation_context().qty_available
+                    if product.uom_id.compare(qty_available, 0) > 0:
+                        product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.total_value / qty_available
+                    elif last_in := product._get_last_in():
+                        if last_in_price_unit := last_in._get_price_unit():
+                            product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
+                continue
+            if cost_method == 'average':
+                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+                for product in products:
+                    if product.id in new_standard_price_by_product:
+                        product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
+
+    # -------------------------------------------------------------------------
+    # Old to remove
+    # -------------------------------------------------------------------------
+    def _run_avco(self, at_date=None, lot=None, method="realtime"):
+        self.ensure_one()
+        price_unit, value = self._run_average_batch(at_date=at_date, lot=lot, force_recompute=True)
+        return price_unit.get(self.id, 0), value.get(self.id, 0)
+
+    def _get_value_from_lots(self):
+        return 0
+>>>>>>> bbe92788513812b470c354aa19babec2fa5528f1
 
 
 class ProductCategory(models.Model):
