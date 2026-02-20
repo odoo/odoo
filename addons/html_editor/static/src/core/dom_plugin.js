@@ -406,15 +406,19 @@ export class DomPlugin extends Plugin {
                     (node) => {
                         // Don't remove the last BR in cases where the
                         // previous sibling is an unsplittable block
-                        // (i.e. a table, a non-editable div, ...)
-                        // to allow placing the cursor after that unsplittable
-                        // element. This can be removed when the cursor
-                        // is properly handled around these elements.
+                        // (i.e. a non-editable div, ...) to allow placing the
+                        // cursor after that unsplittable element.
+                        // Tables are exception because the cursor can be
+                        // places directly at the edge of the table, so the
+                        // trailing BR is not needed.
+                        // This can be removed when the cursor is properly
+                        // handled around these elements.
                         const previousSibling = node.previousSibling;
                         return (
                             previousSibling &&
                             isBlock(previousSibling) &&
-                            this.dependencies.split.isUnsplittable(previousSibling)
+                            this.dependencies.split.isUnsplittable(previousSibling) &&
+                            previousSibling.nodeName !== "TABLE"
                         );
                     },
                 ]);
