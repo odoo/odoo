@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="attributes">
+        <xpath expr="//DropdownItem/i[hasclass('fa-chevron-left')]/.." position="attributes">
             <attribute name="t-if">showBackend</attribute>
         </xpath>
-        <xpath expr="//DropdownItem[contains(text(), 'Close Register')]" position="attributes">
+        <xpath expr="//DropdownItem/i[hasclass('fa-key')]/.." position="attributes">
             <attribute name="t-if">
                 !pos.config.module_pos_hr or pos.employeeIsAdmin or pos.getCashierUserId() === pos.session.user_id?.id
             </attribute>
@@ -17,7 +17,7 @@
         </xpath>
         <xpath expr="//Dropdown//div[hasclass('pos-burger-menu-items')]" position="inside">
             <DropdownItem t-if="pos.config.module_pos_hr and ui.isSmall" onSelected="() => this.pos.showLoginScreen()">
-                Lock
+                <i class="fa fa-fw fa-lock" aria-hidden="true" /> Lock
             </DropdownItem>
         </xpath>
     </t>
