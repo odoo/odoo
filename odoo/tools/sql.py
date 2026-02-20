@@ -97,15 +97,50 @@ def table_columns(cr, tablename):
     # Do not select the field `character_octet_length` from `information_schema.columns`
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
-    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
-               FROM information_schema.columns WHERE table_name=%s'''
+    query = """
+        SELECT a.attname AS column_name,
+               coalesce(bt.typname, t.typname) AS udt_name,
+               information_schema._pg_char_max_length(information_schema._pg_truetypid(a.*, t.*), information_schema._pg_truetypmod(a.*, t.*)) AS character_maximum_length,
+               CASE WHEN a.attnotnull OR t.typtype = 'd' AND t.typnotnull THEN 'NO'
+                    ELSE 'YES'
+               END AS is_nullable
+          FROM pg_attribute a
+          JOIN pg_class c
+            ON a.attrelid = c.oid
+          JOIN pg_namespace nc
+            ON c.relnamespace = nc.oid
+          JOIN pg_type t
+            ON a.atttypid = t.oid
+     LEFT JOIN (pg_type bt JOIN pg_namespace nbt ON bt.typnamespace = nbt.oid)
+            ON t.typtype = 'd'::"char"
+           AND t.typbasetype = bt.oid
+         WHERE NOT pg_is_other_temp_schema(nc.oid)
+           AND a.attnum > 0
+           AND NOT a.attisdropped
+           AND (c.relkind = ANY (ARRAY['r'::"char", 'v'::"char", 'f'::"char", 'p'::"char"]))
+           AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_column_privilege(c.oid, a.attnum, 'SELECT, INSERT, UPDATE, REFERENCES'))
+           AND c.relname=%s
+    """
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
 def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
-    query = """ SELECT 1 FROM information_schema.columns
-                WHERE table_name=%s AND column_name=%s """
+    query = """
+        SELECT 1
+          FROM pg_attribute a
+          JOIN pg_class c
+            ON a.attrelid = c.oid
+          JOIN pg_namespace nc
+            ON c.relnamespace = nc.oid
+         WHERE NOT pg_is_other_temp_schema(nc.oid)
+           AND a.attnum > 0
+           AND NOT a.attisdropped
+           AND (c.relkind = ANY (ARRAY['r'::"char", 'v'::"char", 'f'::"char", 'p'::"char"]))
+           AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_column_privilege(c.oid, a.attnum, 'SELECT, INSERT, UPDATE, REFERENCES'))
+           AND c.relname=%s
+           AND a.attname=%s
+    """
     cr.execute(query, (tablename, columnname))
     return cr.rowcount
 
