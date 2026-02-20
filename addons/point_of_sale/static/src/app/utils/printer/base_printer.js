@@ -13,6 +13,20 @@ export class BasePrinter {
         this.product_categories_ids = printer.product_categories_ids;
         this.pos_config_ids = printer.pos_config_ids;
         this.use_lna = printer.use_lna;
+        this.paperSize = printer.paper_size;
+        this.timeout = printer.timeout || 3000;
+    }
+
+    get STYLE_MAPPING() {
+        const defaults = { fontSize: 22 };
+        return {
+            58: { ...defaults, maxWidth: 360 },
+            80: { ...defaults, maxWidth: 512 },
+        };
+    }
+
+    getStyle() {
+        return this.STYLE_MAPPING[this.paperSize] || this.STYLE_MAPPING[80];
     }
 
     async print(image) {
