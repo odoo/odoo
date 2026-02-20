@@ -316,7 +316,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                         line_analytic_distribution[account] += price_subtotal / line_vals['price_unit'] * distribution
                 line_vals['analytic_distribution'] = line_analytic_distribution
             # round price unit
-            line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * ratio)
+            line_vals['price_unit'] = line_vals['price_unit'] * ratio
 
             lines_values.append(line_vals)
             accounts.append(key['account_id'])
