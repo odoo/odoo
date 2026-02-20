@@ -97,8 +97,8 @@ class DiscussChannelRtcSession(models.Model):
             store.bus_send()
         return super().unlink()
 
-    def _bus_channel(self):
-        return self.channel_member_id._bus_channel()
+    def _bus_channels(self):
+        return self.channel_member_id._bus_channels()
 
     def _update_and_broadcast(self, values):
         """ Updates the session and notifies all members of the channel

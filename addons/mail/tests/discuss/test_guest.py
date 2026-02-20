@@ -33,11 +33,7 @@ class TestGuest(MailCase):
             }
 
             return (
-                [
-                    (self.cr.dbname, "discuss.channel", channel_1.id),
-                    (self.cr.dbname, "discuss.channel", channel_2.id),
-                    (self.cr.dbname, "mail.guest", guest.id),
-                ],
+                [channel_1, channel_2, guest],
                 [message, message, message],
             )
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta, UTC
@@ -666,7 +665,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
         users = self.env.user + self.user_employee_2
 
         expected_create_notifs = [
-            ([(self.env.cr.dbname, user.partner_id._name, user.partner_id.id)], [{
+            ([user], [{
                 "type": "mail.activity/updated",
                 "payload": {
                     "activity_created": True,
@@ -676,7 +675,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
             for user in users
         ]
         expected_unlink_notifs = [
-            ([(self.env.cr.dbname, user.partner_id._name, user.partner_id.id)], [{
+            ([user], [{
                 "type": "mail.activity/updated",
                 "payload": {
                     "activity_deleted": True,
@@ -714,7 +713,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
         expected_notifs = [
             # transfer 4 activities to the second employee, 2 todos taken and 2 given
             [
-                ([(self.env.cr.dbname, user.partner_id._name, user.partner_id.id)], [{
+                ([user], [{
                     "type": "mail.activity/updated",
                     "payload": {
                         "count_diff": count_diff,
@@ -725,7 +724,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
             ],
             # transfer 4 activities to the second employee, 2 todos are taken and 4 are given
             [
-                ([(self.env.cr.dbname, user.partner_id._name, user.partner_id.id)], [{
+                ([user], [{
                     "type": "mail.activity/updated",
                     "payload": {
                         "count_diff": count_diff,
@@ -735,7 +734,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
                 in zip(self.user_employee + self.user_employee_2, [-2, 4])
             ],
         ] + [[
-                ([(self.env.cr.dbname, self.user_employee.partner_id._name, self.user_employee.partner_id.id)], [{
+                ([self.user_employee], [{
                     "type": "mail.activity/updated",
                     "payload": {
                         "count_diff": count_diff,

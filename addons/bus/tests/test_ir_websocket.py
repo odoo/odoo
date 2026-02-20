@@ -28,7 +28,7 @@ class TestIrWebsocket(WebsocketCase):
             channels = set(ir_websocket_model._build_bus_channel_list(["test_channel"]))
         expected_channels = {
             "test_channel",
-            test_user.partner_id,
+            test_user,
             self.env.ref("base.group_system"),
             self.env.ref("base.group_user"),
         }

@@ -1025,7 +1025,7 @@ class MailMessage(models.Model):
         self._bus_send_reaction_group(content)
 
     def _bus_send_reaction_group(self, content):
-        store = Store(bus_channel=self._bus_channel())
+        store = Store(bus_channel=self)
         store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
         store.bus_send()
 
@@ -1353,8 +1353,8 @@ class MailMessage(models.Model):
                 store.add(user_messages, "_store_notification_fields")
                 store.bus_send()
 
-    def _bus_channel(self):
-        return self.env.user
+    def _bus_channels(self):
+        return self.env.user._bus_channels()
 
     # ------------------------------------------------------
     # TOOLS

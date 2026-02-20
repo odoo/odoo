@@ -81,7 +81,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id, "internal_users")],
+            [(channel, "internal_users")],
             [
                 {
                     "type": "mail.record/insert",
@@ -106,7 +106,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id, "internal_users")],
+            [(channel, "internal_users")],
             [
                 {
                     "type": "mail.record/insert",
@@ -133,12 +133,9 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             {"channel_id": self.livechat_channel.id},
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
-        group_id = self.env.ref("im_livechat.im_livechat_group_user").id
+        group = self.env.ref("im_livechat.im_livechat_group_user")
         with self.assertBus(
-            [
-                (self.cr.dbname, "discuss.channel", channel.id, "internal_users"),
-                (self.cr.dbname, "res.groups", group_id, "LOOKING_FOR_HELP"),
-            ]
+            [(channel, "internal_users"), (group, "LOOKING_FOR_HELP")],
         ):
             channel.livechat_status = "need_help"
 

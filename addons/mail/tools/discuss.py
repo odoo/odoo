@@ -342,6 +342,8 @@ class Store:
             assert channel is None or isinstance(channel, models.Model), (
                 f"channel should be None or a record: {channel}"
             )
+            if channel is not None:
+                channel = channel._bus_channels()
             assert channel is None or len(channel) <= 1, (
                 f"channel should be empty or should be a single record: {channel}"
             )

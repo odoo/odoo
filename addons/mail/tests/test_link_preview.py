@@ -144,7 +144,7 @@ class TestLinkPreview(MailCommon):
 
             def get_bus_params():
                 return (
-                    [(self.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+                    [self.env.user],
                     [
                         {
                             "type": "mail.record/insert",

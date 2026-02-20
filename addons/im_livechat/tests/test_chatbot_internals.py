@@ -220,7 +220,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 lambda m: m.partner_id == self.partner_employee
             )
             # data in-between join and leave
-            store = Store(bus_channel=member_emp._bus_channel())
+            store = Store(bus_channel=member_emp)
             store.add(discuss_channel, "_store_channel_fields")
             channel_data_join = store.get_result()
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
@@ -275,15 +275,15 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             ).id
             channels, message_items = (
                 [
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "res.partner", self.partner_employee.id),
+                    discuss_channel,  # discuss.channel/new_message (transfer)
+                    discuss_channel,  # mail.record/insert
+                    self.user_employee,  # discuss.channel/joined
+                    discuss_channel,  # discuss.channel/new_message (joined)
+                    discuss_channel,  # mail.record/insert
+                    discuss_channel,  # mail.record/insert"
+                    discuss_channel,  # mail.record/insert"
+                    discuss_channel,  # mail.record/insert"
+                    self.user_employee,  # mail.record/insert"
                 ],
                 [
                     {

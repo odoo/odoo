@@ -235,7 +235,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(mock.call_args[0][2], client_last_notification_id)
 
     def test_subscribe_to_custom_channel(self):
-        channel = self.env["res.partner"].create({"name": "John"})
+        channel = new_test_user(self.env, "John")
         websocket = self.websocket_connect()
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[channel]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())

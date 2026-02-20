@@ -54,7 +54,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         )["notifications"][0]
         bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
         self.assertEqual(
-            bus_record.channel, json_dump(channel_with_db(self.env.cr.dbname, self.partner_demo))
+            bus_record.channel, json_dump(channel_with_db(self.env.cr.dbname, self.user_demo)),
         )
         self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
         self.assertEqual(notification["message"]["payload"]["partner_id"], self.partner_demo.id)

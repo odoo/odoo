@@ -102,9 +102,9 @@ class DiscussChannelMember(models.Model):
             [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
         )
         members.unpin_dt = fields.Datetime.now()
-        stores = lazymapping(lambda member: Store(bus_channel=member._bus_channel()))
-        for member in members:
-            stores[member].add(member.channel_id, {"close_chat_window": True})
+        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        for member, store in members._get_member_store_list(stores):
+            store.add(member.channel_id, {"close_chat_window": True})
         for store in stores.values():
             store.bus_send()
 
@@ -330,8 +330,8 @@ class DiscussChannelMember(models.Model):
             store.bus_send()
         return res
 
-    def _bus_channel(self):
-        return self.partner_id.main_user_id or self.guest_id
+    def _bus_channels(self):
+        return self.partner_id._bus_channels() or self.guest_id._bus_channels()
 
     def _notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
@@ -360,6 +360,16 @@ class DiscussChannelMember(models.Model):
         members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
         members.write({"mute_until_dt": False})
         members._notify_mute()
+
+    def _get_member_store_list(self, stores):
+        """Returns the list of (member, store) combinations.
+        This is necessary because members are currently linked to partners,
+        which can have multiple users."""
+        return [
+            (member, stores[bus_channel])
+            for member in self
+            for bus_channel in member._bus_channels()
+        ]
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.attr("channel_id")
@@ -652,17 +662,18 @@ class DiscussChannelMember(models.Model):
             last seen message.
         """
         self.ensure_one()
-        bus_channel = self._bus_channel()
+        bus_channels = self._bus_channels()
         if self.seen_message_id.id < message.id:
             self.write({
                 "seen_message_id": message.id,
                 "last_seen_dt": fields.Datetime.now(),
             })
             if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
-                bus_channel = self.channel_id
+                bus_channels = self.channel_id
         if not notify:
             return
-        Store(bus_channel=bus_channel).add(self, "_store_seen_fields").bus_send()
+        for bus_channel in bus_channels:
+            Store(bus_channel=bus_channel).add(self, "_store_seen_fields").bus_send()
 
     def _set_new_message_separator(self, message_id):
         """
@@ -672,15 +683,16 @@ class DiscussChannelMember(models.Model):
         self.ensure_one()
         if message_id == self.new_message_separator:
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-            Store(bus_channel=self._bus_channel()).add(
-                self,
-                lambda res: (
-                    res.attr("message_unread_counter"),
-                    res.attr("message_unread_counter_bus_id", bus_last_id),
-                    res.attr("new_message_separator"),
-                    res.from_method("_store_identifying_fields"),
-                ),
-            ).bus_send()
+            for bus_channel in self._bus_channels():
+                Store(bus_channel=bus_channel).add(
+                    self,
+                    lambda res: (
+                        res.attr("message_unread_counter"),
+                        res.attr("message_unread_counter_bus_id", bus_last_id),
+                        res.attr("new_message_separator"),
+                        res.from_method("_store_identifying_fields"),
+                    ),
+                ).bus_send()
             return
         self.new_message_separator = message_id
 

@@ -9,7 +9,7 @@ from markupsafe import Markup
 
 from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
-from odoo.addons.bus.models.bus import json_dump
+from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
@@ -83,11 +83,11 @@ class TestChannelInternals(MailCommon, HttpCase):
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
             return (
                 [
-                    (self.cr.dbname, "discuss.channel", test_group.id),
-                    (self.cr.dbname, "res.partner", self.test_partner.id),
-                    (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "discuss.channel", test_group.id),
-                    (self.cr.dbname, "discuss.channel", test_group.id),
+                    test_group,
+                    self.test_user,
+                    self.user_employee,
+                    test_group,
+                    test_group,
                 ],
                 [
                     {
@@ -103,7 +103,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             "markup",
                                             f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
                                         ],
-                                        "create_date": fields.Datetime.to_string(message.create_date),
+                                        "create_date": fields.Datetime.to_string(
+                                            message.create_date,
+                                        ),
                                         "date": "2020-03-22 10:42:06",
                                         "default_subject": "Group",
                                         "id": message.id,
@@ -126,7 +128,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
-                                "mail.message.subtype": [{"description": False, "id": self.env.ref("mail.mt_comment").id}],
+                                "mail.message.subtype": [
+                                    {
+                                        "description": False,
+                                        "id": self.env.ref("mail.mt_comment").id,
+                                    },
+                                ],
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Group",
@@ -196,9 +203,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         def get_add_member_again_bus():
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
             return (
-                [
-                    (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
-                ],
+                [self.env.user],
                 [
                     {
                         "type": "mail.record/insert",
@@ -486,19 +491,13 @@ class TestChannelInternals(MailCommon, HttpCase):
             ]
 
         with self.assertBus(
-            [
-                (self.env.cr.dbname, "discuss.channel", chat.id),
-                (self.env.cr.dbname, "res.partner", self.test_partner.id),
-            ],
+            [chat, self.test_user],
             get_mark_as_read_notifs(for_internal_user=False),
         ):
             member._mark_as_read(msg_1.id)
         self._reset_bus()
         with self.assertBus(
-            [
-                (self.env.cr.dbname, "res.partner", self.test_partner.id),
-                (self.env.cr.dbname, "res.partner", self.test_partner.id),
-            ],
+            [self.test_user, self.test_user],
             get_mark_as_read_notifs(for_internal_user=True),
         ):
             member._mark_as_read(msg_1.id)
@@ -649,12 +648,12 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_write_should_send_notification(self):
         channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
         with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id)],
+            [channel],
             [
                 {
                     "type": "mail.record/insert",
                     "payload": {"discuss.channel": [{"id": channel.id, "name": "test test"}]},
-                }
+                },
             ],
         ):
             channel.name = "test test"
@@ -666,14 +665,14 @@ class TestChannelInternals(MailCommon, HttpCase):
         avatar_cache_key = channel.avatar_cache_key
         channel.image_128 = False
         with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id)],
+            [channel],
             [
                 {
                     "type": "mail.record/insert",
                     "payload": {
                         "discuss.channel": [{"avatar_cache_key": avatar_cache_key, "id": channel.id}],
                     },
-                }
+                },
             ],
         ):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
@@ -728,21 +727,14 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(mentions_notif), 0, "mentions + normal message = no needaction")
         self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
 
-        partner_ids = (
-            all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id
-        ).ids
+        all_users = all_test_user + mentions_test_user + nothing_test_user
         self._reset_bus()
-        with self.assertBusNotificationType(
-            [
-                ((self.cr.dbname, "res.partner", partner_id), "mail.message/inbox")
-                for partner_id in partner_ids
-            ],
-        ):
+        with self.assertBusNotificationType([(user, "mail.message/inbox") for user in all_users]):
             # sending mention message
             with self.with_user("employee"):
                 channel_msg = channel.message_post(
                     body="Test @mentions",
-                    partner_ids=partner_ids,
+                    partner_ids=all_users.partner_id.ids,
                     message_type="comment",
                     subtype_xmlid="mail.mt_comment",
                 )
@@ -859,7 +851,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
         channel.name = "<strong>R&D</strong>"
         with self.assertBus(
-            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+            [self.env.user],
             [
                 {
                     "type": "discuss.channel/transient_message",
@@ -896,7 +888,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         })
         test_group._add_members(users=self.user_employee_nomail)
         with self.assertBus(
-            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+            [self.env.user],
             [
                 {
                     "type": "discuss.channel/transient_message",
@@ -930,7 +922,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             "res_id": channel.id,
         })
         with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id)],
+            [channel],
             [
                 {
                     "type": "mail.record/insert",
@@ -1010,7 +1002,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                     self.cr.precommit.run()
                     matching_data = None
                     for notification in self.env["bus.bus"].search(
-                        [("channel", "=", json_dump((self.cr.dbname, "discuss.channel", channel.id)))]
+                        [("channel", "=", json_dump(channel_with_db(self.cr.dbname, channel)))],
                     ):
                         message = json.loads(notification.message)
                         if message["type"] != "mail.record/insert":
