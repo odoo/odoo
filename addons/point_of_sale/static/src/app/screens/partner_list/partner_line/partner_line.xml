@@ -60,8 +60,9 @@
                 <!-- FIXME: this should be in pos_settle_due, not here -->
                 <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
                 <td class="edit-partner-button-cell align-middle pe-0">
-                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag d-lg-inline-block d-none btn btn-link btn-lg mt-1 float-end">
-                        <i class="fa fa-check"/>
+                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag btn btn-light btn-lg lh-lg border d-inline-flex align-items-center">
+                        <i class="fa fa-times me-1"></i>
+                        <span>UNSELECT</span>
                     </button>
                 </td>
                 <td class="edit-partner-button-cell align-middle">
