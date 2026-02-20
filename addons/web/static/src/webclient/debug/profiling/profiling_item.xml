@@ -33,6 +33,10 @@
                                 <option value="0.1" t-att-selected="interval === '0.1'">0.1</option>
                                 <option value="1" t-att-selected="interval === '1'">1</option>
                             </select>
+                            <div class="input-group input-group-sm mt-2">
+                                <div class="input-group-text">Time Limit (seconds)</div>
+                                <input type="number" class="form-control" t-on-click.stop.prevent="" t-on-change="(ev) => this.changeParam('time_limit', ev)" t-att-value="profiling.state.params.time_limit || '0'" placeholder="None"/>
+                            </div>
                         </div>
                         <div class="input-group input-group-sm mt-2">
                             <div class="input-group-text">Entry Count</div>
