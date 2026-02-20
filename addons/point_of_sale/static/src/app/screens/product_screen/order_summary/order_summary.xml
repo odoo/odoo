@@ -6,12 +6,6 @@
 			<Orderline line="line"
 				onClick="(ev, duration) => this.clickLine(ev, line)"
 				onLongPress="(ev, duration) => this.onOrderlineLongPress(ev, line)">
-				<t t-set-slot="pack-lot-icon">
-					<i t-if="line.getProduct()?.product_tmpl_id?.isTracked()"
-						t-on-click.stop="() => this.editPackLotLines(line)" role="img"
-						t-attf-class="{{ line.hasValidProductLot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
-						t-attf-title="{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}" />
-				</t>
 			</Orderline>
 			<t t-set-slot="details">
 				<div t-if="isComboApplicable" class="combo-proposition d-flex justify-content-between align-items-center p-2 pb-0 ms-1">

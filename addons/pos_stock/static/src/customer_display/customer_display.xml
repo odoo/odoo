@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.CustomerDisplay" t-inherit="point_of_sale.CustomerDisplay" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('internal-note-container')]" position="after">
+            <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot"/>
+        </xpath>
+    </t>
+</templates>

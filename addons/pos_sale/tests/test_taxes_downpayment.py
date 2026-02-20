@@ -11,6 +11,11 @@ class TestTaxesDownPaymentPOS(TestTaxCommonPOS, TestTaxCommonSale, TestTaxesDown
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.pos_user.write({
+            'group_ids': [
+                (4, cls.env.ref('stock.group_stock_user').id),
+            ]
+        })
         cls.main_pos_config.down_payment_product_id = cls.env['product.product'].create({
             'name': 'downpayment',
             'available_in_pos': True,

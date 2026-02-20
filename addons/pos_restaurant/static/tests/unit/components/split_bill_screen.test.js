@@ -2,9 +2,9 @@ import { describe, test, expect } from "@odoo/hoot";
 import { SplitBillScreen } from "@pos_restaurant/app/screens/split_bill_screen/split_bill_screen";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { definePosStockModels } from "@pos_stock/../tests/unit/data/generate_model_definitions";
 
-definePosModels();
+definePosStockModels();
 
 test("_getSplitOrderName", async () => {
     const store = await setupPosEnv();

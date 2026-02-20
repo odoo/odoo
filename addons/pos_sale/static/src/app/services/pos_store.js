@@ -147,7 +147,7 @@ patch(PosStore.prototype, {
             if (
                 ["lot", "serial"].includes(newLine.getProduct().tracking) &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
-                converted_line.lot_names.length > 0
+                converted_line.lot_names?.length > 0 // to be revisited
             ) {
                 if (!useLoadedLots && !userWasAskedAboutLoadedLots) {
                     useLoadedLots = await ask(this.dialog, {

@@ -1,8 +1,8 @@
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 from odoo.fields import Command
 
 
-class CommonPosMrpTest(CommonPosTest):
+class CommonPosMrpTest(CommonPosStockTest):
     @classmethod
     def setUpClass(self):
         super().setUpClass()

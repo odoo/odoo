@@ -355,21 +355,6 @@ export function isInvoiceButtonChecked() {
     ];
 }
 
-export function clickShipLaterButton() {
-    return [
-        {
-            content: "click ship later button",
-            trigger: ".button:contains('Ship Later')",
-            run: "click",
-        },
-        {
-            content: "click confirm button",
-            trigger: ".btn:contains('Confirm')",
-            run: "click",
-        },
-    ];
-}
-
 export function clickPartnerButton() {
     return [
         {
@@ -386,13 +371,6 @@ export function clickPartnerButton() {
 
 export function clickCustomer(name, pressEnter = false) {
     return [...PartnerList.searchCustomerValue(name, pressEnter), PartnerList.clickPartner(name)];
-}
-
-export function shippingLaterHighlighted() {
-    return {
-        content: "Shipping later button is highlighted",
-        trigger: ".button:contains('Ship Later').highlight",
-    };
 }
 
 // This method is used to simulate payment with a payment terminal, before using terminal the order

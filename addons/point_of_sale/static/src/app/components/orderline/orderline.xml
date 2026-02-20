@@ -41,14 +41,6 @@
                             <BadgeTag color="note.colorIndex" text="note.text"/>
                         </t>
                     </div>
-                    <li t-if="vals.lotLines" class="row flex-wrap w-100 m-0">
-                        <div class="col-auto px-1">
-                            <t t-slot="pack-lot-icon" />
-                        </div>
-                        <div class="col ps-0">
-                            <li class="lot-number" t-foreach="vals.lotLines" t-as="lot" t-key="lot_index" t-esc="lot" />
-                        </div>
-                    </li>
                     <t t-slot="default" />
                 </ul>
             </div>

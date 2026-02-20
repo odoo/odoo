@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import tagged
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.pos_stock.tests.test_frontend import TestPosStockHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class TestUi(TestPointOfSaleHttpCommon):
+class TestUi(TestPosStockHttpCommon):
 
     def test_pos_repair(self):
         self.product_1 = self.env['product.product'].create({

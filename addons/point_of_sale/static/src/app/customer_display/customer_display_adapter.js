@@ -78,7 +78,6 @@ export class CustomerDisplayPosAdapter {
             qty: line.getQuantityStr().qtyStr,
             unit: line.product_id.uom_id ? line.product_id.uom_id.name : "",
             unitPrice: line.currencyDisplayPriceUnit,
-            packLotLines: line.packLotLines,
             comboParent: line.combo_parent_id?.getFullProductName?.() || "",
             price_without_discount: formatCurrency(line.displayPriceNoDiscount, line.currency),
             isSelected: line.isSelected(),

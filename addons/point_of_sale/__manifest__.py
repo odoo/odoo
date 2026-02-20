@@ -6,7 +6,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete'],
+    'depends': ['resource', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
@@ -54,7 +54,6 @@
         'views/account_move_views.xml',
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
-        'views/stock_reference_views.xml',
         'receipt/pos_receipt_common.xml',  # needed in the backend and frontend
         'receipt/pos_order_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_order_change_receipt.xml',  # needed in the backend and frontend

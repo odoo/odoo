@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+       <xpath expr="//div[hasclass('internal-note-container')]" position="before">
+            <li t-if="vals.lotLines" class="row flex-wrap w-100 m-0">
+                <div class="col-auto px-1">
+                    <t t-slot="pack-lot-icon"/>
+                </div>
+                <div class="col ps-0">
+                    <li class="lot-number" t-foreach="vals.lotLines" t-as="lot" t-key="lot_index" t-esc="lot"/>
+                </div>
+            </li>
+       </xpath>
+    </t>
+</templates>

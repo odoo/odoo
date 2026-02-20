@@ -22,12 +22,6 @@ class PosConfig(models.Model):
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
 
-    def _default_warehouse_id(self):
-        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
-
-    def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
-
     def _default_sale_journal(self):
         journal = self.env['account.journal']._ensure_company_account_journal()
         return journal
@@ -75,13 +69,6 @@ class PosConfig(models.Model):
     use_order_printer = fields.Boolean('Order Printer')
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
-    picking_type_id = fields.Many2one(
-        'stock.picking.type',
-        string='Operation Type',
-        default=_default_picking_type_id,
-        required=True,
-        domain=lambda self: [('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', self.env.company.id)],
-        ondelete='restrict')
     journal_id = fields.Many2one(
         'account.journal', string='Point of Sale Journal',
         domain=[('type', 'in', ('general', 'sale'))],
@@ -174,15 +161,6 @@ class PosConfig(models.Model):
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute='_compute_current_session')
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
-    ship_later = fields.Boolean(string="Ship Later")
-    warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
-    route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
-    picking_policy = fields.Selection([
-        ('direct', 'As soon as possible, with back orders'),
-        ('one', 'When all products are ready')],
-        string='Shipping Policy', required=True, default='direct',
-        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
-        "product lead time. Otherwise, it will be based on the shortest.")
     auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
     trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
                                           column2="is_trusted", string="Trusted Point of Sale Configurations",
@@ -560,11 +538,6 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if not self._default_warehouse_id():
-            self.env['stock.warehouse'].create({
-                'code': vals_list[0].get('name')[:3],  # first 3 characters of pos.config name
-                'company_id': self.env.company.id,
-            })
         for vals in vals_list:
             if not vals.get('iface_tipproduct', False):
                 vals['tip_product_id'] = False

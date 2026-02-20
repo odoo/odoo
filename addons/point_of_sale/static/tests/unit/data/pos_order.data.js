@@ -98,7 +98,6 @@ export class PosOrder extends models.ServerModel {
         const posSession = [];
         const posPayment = [];
         const posOrderLine = [];
-        const posPackOperationLot = [];
         const posCustomAttributeValue = [];
         const readOrder = this.read(orderIds, this._load_pos_data_fields(config_id), false);
 
@@ -115,12 +114,6 @@ export class PosOrder extends models.ServerModel {
                 this.env["pos.payment"]._load_pos_data_fields(config_id),
                 false
             );
-            const packLotLineIds = lines.flatMap((line) => line.pack_lot_ids);
-            const packLotLines = this.env["pos.pack.operation.lot"].read(
-                packLotLineIds,
-                this.env["pos.pack.operation.lot"]._load_pos_data_fields(config_id),
-                false
-            );
             const customAttributeValueIds = lines.flatMap(
                 (line) => line.custom_attribute_value_ids
             );
@@ -132,7 +125,6 @@ export class PosOrder extends models.ServerModel {
 
             posOrderLine.push(...lines);
             posPayment.push(...payments);
-            posPackOperationLot.push(...packLotLines);
             posCustomAttributeValue.push(...customAttributeValues);
         }
 
@@ -141,7 +133,6 @@ export class PosOrder extends models.ServerModel {
             "pos.session": posSession,
             "pos.payment": posPayment,
             "pos.order.line": posOrderLine,
-            "pos.pack.operation.lot": posPackOperationLot,
             "product.attribute.custom.value": posCustomAttributeValue,
         };
     }

@@ -220,50 +220,6 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
-            FeedbackScreen.clickNextOrder(),
-            // Ship later case
-            ProductScreen.addOrderline("Desk Organizer"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickPartnerButton(),
-            PaymentScreen.clickCustomer("Partner Full"),
-            // This will set today's date as shipping date
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                is_shipping_date: true,
-            }),
-            FeedbackScreen.clickEditPayment(),
-            // clicking once will make it empty and on clicking again it will open date picking
-            {
-                content: "click ship later button",
-                trigger: ".button:contains('Ship Later')",
-                run: "click",
-            },
-            {
-                content: "click ship later button",
-                trigger: ".button:contains('Ship Later')",
-                run: "click",
-            },
-            {
-                content: "pick a date",
-                trigger: ".modal-body .o_datetime_input",
-                run: () => {
-                    const input = document.querySelector(".modal-body .o_datetime_input");
-                    const nextYear = new Date().getFullYear() + 1;
-                    input.value = `${nextYear}-05-30`;
-                    input.dispatchEvent(new Event("input", { bubbles: true }));
-                    input.dispatchEvent(new Event("change", { bubbles: true }));
-                },
-            },
-            {
-                content: "click confirm button",
-                trigger: ".btn:contains('Confirm')",
-                run: "click",
-            },
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
         ].flat(),
 });
 

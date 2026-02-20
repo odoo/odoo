@@ -46,7 +46,6 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             standard_price=15.0,
             tax_ids=cls.taxes['tax7'].ids,
         )
-        cls.adjust_inventory([cls.product1, cls.product2, cls.product3], [100, 50, 50])
 
     @classmethod
     def _create_fiscal_position(cls):

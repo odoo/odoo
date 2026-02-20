@@ -2,7 +2,7 @@
     'name': 'POS Glory Cash Machines',
     'category': 'Sales/Point of Sale',
     'summary': 'Integrate your POS with a Glory automatic cash payment device',
-    'depends': ['point_of_sale'],
+    'depends': ['pos_stock'],
     'data': [
         'views/pos_payment_method_views.xml',
     ],

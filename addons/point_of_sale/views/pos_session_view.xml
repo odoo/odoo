@@ -14,7 +14,6 @@
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
-                    <field name="failed_pickings" invisible="1"/>
                     <field name="rescue" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_order"
@@ -22,10 +21,6 @@
                             icon="fa-shopping-basket"
                             type="object">
                             <field name="order_count" widget="statinfo" string="Orders"/>
-                        </button>
-                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-truck" invisible="picking_count == 0">
-                            <field name="picking_count" widget="statinfo" string="Pickings" invisible="failed_pickings"/>
-                            <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" invisible="not failed_pickings"/>
                         </button>
                         <button
                             name="action_show_payments_list"

@@ -2,9 +2,9 @@ import { test, expect } from "@odoo/hoot";
 import { TipScreen } from "@point_of_sale/app/screens/tip_screen/tip_screen";
 import { mountWithCleanup, MockServer } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
-import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { definePosStockModels } from "@pos_stock/../tests/unit/data/generate_model_definitions";
 
-definePosModels();
+definePosStockModels();
 
 test("validateTip", async () => {
     const store = await setupPosEnv();

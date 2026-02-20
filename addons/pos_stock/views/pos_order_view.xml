@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_order_view_form_inherit_pos_stock" model="ir.ui.view">
+        <field name="name">pos.order.view.form.inherit.pos.stock</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="failed_pickings" invisible="1"/>  <!-- Needed by the following button -->
+            </xpath>
+            <xpath expr="//sheet/div[@name='button_box']/button[@name='action_view_invoice']" position="before">
+                <button name="action_stock_picking"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="picking_count == 0">
+                    <field name="picking_count" widget="statinfo" string="Pickings" invisible="failed_pickings"/>
+                    <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" invisible="not failed_pickings"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='lines']/list/field[@name='is_edited']" position="after">
+                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot" optional="hide"/>
+            </xpath>
+             <xpath expr="//field[@name='lines']/list/field[@name='tax_ids']" position="after">
+                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

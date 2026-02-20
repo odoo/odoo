@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_config_view_search_inherit_pos_stock" model="ir.ui.view">
+        <field name="name">pos.config.view.search.inherit.pos.stock</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_search"/>
+        <field name="arch" type="xml">
+            <!-- TO CHECK NAME-->
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="picking_type_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

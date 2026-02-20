@@ -5,7 +5,8 @@ from datetime import datetime
 from odoo import fields, tools
 from odoo.fields import Command
 from odoo.tests import Form
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+
 
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ def archive_products(env):
     (all_pos_product - tip)._write({'active': False})
 
 
-class CommonPosTest(ValuationReconciliationTestCommon):
+class CommonPosTest(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(self):
         super().setUpClass()
@@ -360,7 +361,7 @@ class CommonPosTest(ValuationReconciliationTestCommon):
         return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
 
-class TestPoSCommon(ValuationReconciliationTestCommon):
+class TestPoSCommon(AccountTestInvoicingCommon):
     """ Set common values for different special test cases.
 
     The idea is to set up common values here for the tests
@@ -372,14 +373,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
-
-        cls.company_data['company'].write({
-            'point_of_sale_update_stock_quantities': 'real',
-            'country_id': cls.env['res.country'].create({
-                'name': 'PoS Land',
-                'code': 'WOW',
-            }),
-        })
 
         # Set basic defaults
         cls.account_tax_return_journal = cls.company_data['default_tax_return_journal']
@@ -431,8 +424,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         #   - product category with fifo and real_time valuations
         #   - used for checking anglo saxon accounting behavior
         cls.categ_basic = cls.env.ref('product.product_category_services')
-        cls.env.company.anglo_saxon_accounting = True
-        cls.categ_anglo = cls._create_categ_anglo()
 
         # other basics
         cls.sale_account = cls.company.income_account_id
@@ -450,12 +441,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         # cls.taxes => dict
         #   keys: 'tax7', 'tax10'(price_include=True), 'tax_group_7_10'
         cls.taxes = cls._create_taxes()
-
-        cls.stock_location_components = cls.env["stock.location"].create({
-            'name': 'Shelf 1',
-            'location_id': cls.company_data['default_warehouse'].lot_stock_id.id,
-        })
-
 
     #####################
     ## private methods ##
@@ -570,16 +555,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'payment_method_ids': [cls.cash_pm2.id, cls.bank_pm2.id],
         })
         return config
-
-    @classmethod
-    def _create_categ_anglo(cls):
-        return cls.env['product.category'].create({
-            'name': 'Anglo',
-            'parent_id': False,
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
-            'property_stock_valuation_account_id': cls.company_data['default_account_stock_valuation'].copy().id
-        })
 
     @classmethod
     def _create_taxes(cls):
@@ -745,7 +720,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             )
             return (0, 0, {
                 'id': randint(1, 1000000),
-                'pack_lot_ids': [],
                 'price_unit': price_unit,
                 'product_id': product.id,
                 'price_subtotal': tax_values['total_excluded'],
@@ -820,17 +794,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         if sale_account:
             product.property_account_income_id = sale_account
         return product
-
-    @classmethod
-    def adjust_inventory(cls, products, quantities):
-        """ Adjust inventory of the given products
-        """
-        for product, qty in zip(products, quantities):
-            cls.env['stock.quant'].with_context(inventory_mode=True).create({
-                'product_id': product.id,
-                'inventory_quantity': qty,
-                'location_id': cls.stock_location_components.id,
-            }).action_apply_inventory()
 
     def open_new_session(self, opening_cash=0):
         """ Used to open new pos session in each configuration.

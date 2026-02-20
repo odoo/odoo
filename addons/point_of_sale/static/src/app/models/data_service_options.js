@@ -28,13 +28,7 @@ export class DataServiceOptions {
     }
 
     get dynamicModels() {
-        return [
-            "pos.order",
-            "pos.order.line",
-            "pos.payment",
-            "pos.pack.operation.lot",
-            "product.attribute.custom.value",
-        ];
+        return ["pos.order", "pos.order.line", "pos.payment", "product.attribute.custom.value"];
     }
 
     get databaseIndex() {
@@ -79,12 +73,7 @@ export class DataServiceOptions {
     }
 
     get cascadeDeleteModels() {
-        return [
-            "pos.order.line",
-            "pos.payment",
-            "product.attribute.custom.value",
-            "pos.pack.operation.lot",
-        ];
+        return ["pos.order.line", "pos.payment", "product.attribute.custom.value"];
     }
 
     get uniqueModels() {

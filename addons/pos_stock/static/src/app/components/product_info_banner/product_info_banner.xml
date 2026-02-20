@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.ProductInfoBanner" t-inherit="point_of_sale.ProductInfoBanner" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('section-product-info-title')]" position="after">
+            <AccordionItem t-if="state.other_warehouses?.length > 0">
+                <t t-set-slot="header">
+                    Inventory
+                </t>
+                <t t-set-slot="content">
+                    <div class="border-start border-info text-muted small text-muted d-flex flex-column ps-2 ms-1">
+                        <t t-foreach="state.other_warehouses" t-as="warehouse" t-key="warehouse.id">
+                            <div class="d-flex gap-2">
+                                <div>
+                                    <t t-esc="warehouse.name"/>
+                                    :
+                                </div>
+                                <div>
+                                    <span class="me-1 fw-bolder"><t t-esc="warehouse.available_quantity"/></span>
+                                    <t t-esc="warehouse.uom"/> available,
+                                </div>
+                                <div>
+                                    <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
+                                    forecasted
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </AccordionItem>
+        </xpath>
+        <xpath expr="//div/i[hasclass('fa-circle-o-notch')]" position="replace">
+            <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.free_qty"/> <t t-esc="this.state.uom"/></span>
+            <span t-elif="this.fetchStock.status === 'error'">N/A</span>
+            <i t-else="" class="fa fa-fw fa-spin fa-circle-o-notch" aria-hidden="true" />
+        </xpath>
+    </t>
+</templates>
