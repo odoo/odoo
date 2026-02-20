@@ -3,6 +3,7 @@
 import uuid
 
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
 
@@ -18,6 +19,7 @@ class ResCompany(models.Model):
     # TODO: Remove in master
     overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
     hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
+    attendance_using_kiosk = fields.Boolean(string="Attendances using Kiosk", default=True)
     attendance_kiosk_mode = fields.Selection([
         ('barcode', 'Barcode / RFID'),
         ('barcode_manual', 'Barcode / RFID and Manual Selection'),
@@ -103,6 +105,12 @@ class ResCompany(models.Model):
                 company.hr_presence_control_login = True
 
     def _action_open_kiosk_mode(self):
+        if not self.env.company.attendance_using_kiosk:
+            raise UserError(self.env._(
+                "Kiosk Mode is disabled.\n"
+                "Please enable 'Attendances using Kiosk' in "
+                "Attendance settings to use this feature."
+            ))
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',

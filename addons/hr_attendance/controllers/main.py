@@ -2,6 +2,7 @@
 
 import datetime
 from requests.exceptions import RequestException
+from werkzeug.exceptions import NotFound
 
 import odoo.release
 from odoo import _, http
@@ -85,9 +86,12 @@ class HrAttendance(http.Controller):
             # Auto log out will prevent users from forgetting to log out of their session
             # before leaving the kiosk mode open to the public. This is a prevention security
             # measure.
+            company = request.env['res.company'].browse(company_id)
+            if not company.attendance_using_kiosk:
+                raise NotFound()
             if self.has_password():
                 logout(request.session, keep_db=True)
-            return request.redirect(request.env['res.company'].browse(company_id).attendance_kiosk_url)
+            return request.redirect(company.attendance_kiosk_url)
         else:
             return request.not_found()
 
@@ -164,8 +168,8 @@ class HrAttendance(http.Controller):
     @http.route(["/hr_attendance/<token>"], type='http', auth='public', website=True, sitemap=True)
     def open_kiosk_mode(self, token, from_trial_mode=False):
         company = self._get_company(token)
-        if not company:
-            return request.not_found()
+        if not company or not company.attendance_using_kiosk:
+            raise NotFound()
         else:
             department_list = [
                 {"id": dep["id"], "name": dep["name"], "count": dep["total_employee"]}

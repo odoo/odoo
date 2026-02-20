@@ -8,17 +8,37 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
-                    <block title="Modes" name="kiosk_mode_setting_container">
+                    <block title="Check-In / Check-Out Channels" name="checkin_checkout_channels">
+                        <setting string="Attendances using Kiosk" company_dependent="1" help="Enable attendances check-in/out from a shared kiosk using barcode, RFID, or manual slection.">
+                            <field name="attendance_using_kiosk"/>
+                        </setting>
+                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
+                            <field name="attendance_from_systray" required="1"/>
+                        </setting>
+                    </block>
+                    <block title="Kiosk Settings" invisible="not attendance_using_kiosk">
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
-                            <field name="attendance_kiosk_mode" required="1" class="w-75"/>
+                            <field name="attendance_kiosk_mode" widget="radio" options="{'horizontal': True}"/>
                             <div>
                                 <a href="https://www.odoo.com/documentation/latest/applications/hr/attendances/hardware.html"
                                     target="_blank"><i class="fa fa-fw fa-arrow-right"/>Installation Manual</a>
                             </div>
                         </setting>
-                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
-                            <field name="attendance_from_systray" required="1"/>
+                        <setting string="Display Time" company_dependent="1" help="Choose how long the greeting message will be displayed.">
+                            <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/><span> seconds</span>
                         </setting>
+                        <setting invisible="attendance_kiosk_mode == 'manual'" company_dependent="1" help="Define the camera used for the barcode scan.">
+                            <field name="attendance_barcode_source" required="1"/>
+                        </setting>
+                        <setting title="Kiosk Mode Adress" help="Use this url to access your kiosk mode from any device.">
+                            <field name="attendance_kiosk_url" class="o_hr_kiosk_url_media w-100" style="width:100% !important;" widget="CopyClipboardURL"/>
+                            <button name="regenerate_kiosk_key" type="object" string="Generate new URL" class="btn-link" icon="fa-refresh"/>
+                        </setting>
+                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
+                            <field name="attendance_kiosk_use_pin"/>
+                        </setting>
+                    </block>
+                    <block title="Attendance Rules &amp; Enforcement">
                         <setting string="Automatic Check-Out" company_dependent="1" help="Automatically Check-Out Employees based on their working schedule with an additional tolerance. Does not apply to employees with a flexible working schedule.">
                             <field name="auto_check_out"/>
                             <div invisible="not auto_check_out">
@@ -30,21 +50,6 @@
                         </setting>
                         <setting string="Device &amp; Location Tracking" company_dependent="1" help="Allow the collection of GPS location, IP address, and browser/device details used to track employee access and attendance">
                             <field name="attendance_device_tracking"/>
-                        </setting>
-                    </block>
-                    <block title="Kiosk Settings">
-                        <setting invisible="attendance_kiosk_mode == 'manual'" company_dependent="1" help="Define the camera used for the barcode scan.">
-                            <field name="attendance_barcode_source" required="1"/>
-                        </setting>
-                        <setting string="Display Time" company_dependent="1" help="Choose how long the greeting message will be displayed.">
-                            <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/><span> seconds</span>
-                        </setting>
-                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
-                            <field name="attendance_kiosk_use_pin"/>
-                        </setting>
-                        <setting title="Kiosk Mode Adress" help="Use this url to access your kiosk mode from any device.">
-                            <field name="attendance_kiosk_url" class="o_hr_kiosk_url_media w-100" style="width:100% !important;" widget="CopyClipboardURL"/>
-                            <button name="regenerate_kiosk_key" type="object" string="Generate new URL" class="btn-link" icon="fa-refresh"/>
                         </setting>
                     </block>
                     <block title="Extra Hours" name="overtime_settings">

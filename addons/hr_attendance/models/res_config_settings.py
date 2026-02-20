@@ -13,6 +13,7 @@ class ResConfigSettings(models.TransientModel):
     overtime_employee_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Employee", readonly=False)
     hr_attendance_display_overtime = fields.Boolean(related='company_id.hr_attendance_display_overtime', readonly=False)
+    attendance_using_kiosk = fields.Boolean(related="company_id.attendance_using_kiosk", readonly=False)
     attendance_kiosk_mode = fields.Selection(related='company_id.attendance_kiosk_mode', readonly=False)
     attendance_barcode_source = fields.Selection(related='company_id.attendance_barcode_source', readonly=False)
     attendance_kiosk_delay = fields.Integer(related='company_id.attendance_kiosk_delay', readonly=False)
