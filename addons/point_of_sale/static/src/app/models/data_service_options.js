@@ -5,25 +5,31 @@ export class DataServiceOptions {
         return {
             "pos.order": {
                 key: "uuid",
+<<<<<<< 56d9c31ec2242aa4982e089dbe4bbf6dc4f57164
                 condition: (record) =>
                     record.finalized &&
                     typeof record.id === "number" &&
                     record.pos_session_id !== parseInt(odoo.pos_session_id),
+||||||| 7ab52c1675b9764d11454c7b5216064bec4628f8
+                condition: (record) => record.finalized && typeof record.id === "number",
+=======
+                condition: (record) => record.canBeRemovedFromIndexedDB,
+>>>>>>> 906ca83dda1b4f75f4a17af8493c8477d1166fb3
             },
             "pos.order.line": {
                 key: "uuid",
-                condition: (record) =>
-                    record.order_id?.finalized && typeof record.order_id.id === "number",
+                condition: (record) => record.order_id?.canBeRemovedFromIndexedDB,
             },
             "pos.payment": {
                 key: "uuid",
-                condition: (record) =>
-                    record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
+                condition: (record) => record.pos_order_id?.canBeRemovedFromIndexedDB,
             },
             "product.attribute.custom.value": {
                 key: "id",
                 condition: (record) =>
                     record.order_id?.finalized && typeof record.order_id.id === "number",
+                getRecordsBasedOnLines: (orderlines) =>
+                    orderlines.flatMap((line) => line.custom_attribute_value_ids),
             },
         };
     }
