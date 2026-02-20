@@ -60,7 +60,7 @@ export class MessageCardList extends Component {
         }
         // Give the time for menus to close before scrolling to the message.
         await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
-        await this.env.messageHighlight?.highlightMessage(message, this.props.thread);
+        await this.env.messageHighlight?.highlightMessage(message);
     }
 
     onClickUnpin(message) {

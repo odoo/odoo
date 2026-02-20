@@ -34,7 +34,7 @@
             </div>
             <div class="o-mail-Composer-coreHeader">
                 <div t-if="props.composer.replyToMessage" class="text-truncate small p-2">
-                    <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
+                    <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage)">
                         Replying to <b t-esc="props.composer.replyToMessage.authorName"/>
                     </span>
                     <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">

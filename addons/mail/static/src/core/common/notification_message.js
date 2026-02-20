@@ -28,8 +28,7 @@ export class NotificationMessage extends Component {
                     res_id: this.props.thread.id,
                     model: this.props.thread.model,
                     thread: this.props.thread,
-                }),
-                this.props.thread
+                })
             );
         }
     }

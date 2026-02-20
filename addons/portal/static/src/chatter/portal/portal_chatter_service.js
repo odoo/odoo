@@ -52,6 +52,7 @@ export class PortalChatterService {
         Object.assign(thread, {
             access_token: chatterEl.getAttribute("data-token"),
             hash: chatterEl.getAttribute("data-hash"),
+            inPortal: true,
             pid: parseInt(chatterEl.getAttribute("data-pid")),
         });
         const data = await rpc(

@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import http
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
@@ -95,6 +96,23 @@ class WebclientController(ThreadController):
                 message = opt_sudo.poll_id.start_message_id
                 if self._get_thread_with_access(message.model, message.res_id, mode="read"):
                     store.add(opt_sudo.vote_ids, "_store_vote_fields")
+        if name == "/mail/thread/messages":
+            if thread := self._get_thread_with_access(
+                params["thread_model"],
+                params["thread_id"],
+                mode="read",
+                **params.get("access_params", {}),
+            ):
+                self._prepare_fetch_context(thread, **params)
+                messages = self._resolve_messages(
+                    store,
+                    domain=self._get_fetch_domain(thread, **params),
+                    thread=thread,
+                    fetch_params=params.get("fetch_params"),
+                    sudo=thread.env.su,
+                )
+                if not request.env.user._is_public():
+                    messages.set_message_done()
 
     @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):
@@ -125,19 +143,6 @@ class WebclientController(ThreadController):
             if lost:
                 lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
             store.add(valid.mail_message_id, "_store_notification_fields")
-        if name == "/mail/thread/messages":
-            if thread := self._get_thread_with_access(
-                params["thread_model"],
-                params["thread_id"],
-                mode="read",
-            ):
-                messages = self._resolve_messages(
-                    store,
-                    thread=thread,
-                    fetch_params=params.get("fetch_params"),
-                )
-                if not request.env.user._is_public():
-                    messages.set_message_done()
 
     @classmethod
     def _process_request_for_internal_user(self, store: Store, name, params):
@@ -208,7 +213,7 @@ class WebclientController(ThreadController):
         )
         messages = fetch_res.pop("messages")
         if add_to_store:
-            request.update_context(messages=request.env.context["messages"] | messages)
+            request.update_context(messages=messages | request.env.context["messages"])
         store.resolve_data_request(
             lambda res: (
                 [res.attr(k, v) for k, v in fetch_res.items()],
@@ -216,3 +221,23 @@ class WebclientController(ThreadController):
             ),
         )
         return messages
+
+    @classmethod
+    def _prepare_fetch_context(self, thread, **kwargs):
+        """To override to update the context before fetching thread messages if needed."""
+        return
+
+    @classmethod
+    def _should_apply_share_domain(self, thread, **kwargs):
+        """Determines if the share domain should be applied based on context of fetch."""
+        return not request.env.user._is_internal() or not thread.sudo(False).has_access("read")
+
+    @classmethod
+    def _get_fetch_domain(self, thread, **kwargs):
+        """Defines the fetch domain and restricts the fetched messages by user type. As a security
+        matter, non-internal users can only read the messages with non-internal subtypes. This early
+        check ensures that they won't pass the ACL, even if they are superusers.
+        """
+        if self._should_apply_share_domain(thread, **kwargs):
+            return Domain(request.env["mail.message"]._get_share_domain())
+        return Domain(True)

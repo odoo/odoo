@@ -24,7 +24,7 @@ const chatterPatch = {
     },
 
     get ratingStats() {
-        return this.state.thread?.messages.at(-1)?.rating_stats || this.state.thread?.rating_stats;
+        return this.state.thread?.rating_stats;
     },
 };
 
