@@ -441,6 +441,24 @@ export class Thread extends Component {
         ) {
             let value;
             if (typeof thread.scrollTop === "string" && thread.scrollTop?.includes("bottom")) {
+                if (newerMessages) {
+                    const firstNewerMessage = thread.getFirstNewerMessage({
+                        from_message_id: this.newestPersistentMessage.id,
+                    });
+                    if (firstNewerMessage) {
+                        const firstNewestMessageRef = this.refByMessageId.get(firstNewerMessage.id);
+                        firstNewestMessageRef.el
+                            .querySelector(".o-mail-Message-jumpTarget")
+                            .scrollIntoView({
+                                behavior: "instant",
+                                block: this.props.order === "asc" ? "start" : "end",
+                            });
+                        thread.scrollTop = this.isAtBottom
+                            ? "bottom"
+                            : this.scrollableRef.el.scrollTop;
+                        return;
+                    }
+                }
                 value =
                     this.props.order === "asc"
                         ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight

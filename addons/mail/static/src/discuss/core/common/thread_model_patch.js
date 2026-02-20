@@ -123,23 +123,9 @@ const threadPatch = {
         this.firstUnreadMessage = fields.One("mail.message", {
             /** @this {import("models").Thread} */
             compute() {
-                if (!this.self_member_id) {
-                    return null;
-                }
-                const messages = this.messages.filter((m) => !m.isNotification);
-                const separator = this.self_member_id.new_message_separator_ui;
-                if (separator === 0 && !this.loadOlder) {
-                    return messages[0];
-                }
-                if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
-                    return null;
-                }
-                // try to find a perfect match according to the member's separator
-                let message = this.store["mail.message"].get({ id: separator });
-                if (!message || this.notEq(message.thread)) {
-                    message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
-                }
-                return message;
+                return this.getFirstNewerMessage({
+                    from_message_id: this.self_member_id?.new_message_separator_ui,
+                });
             },
             inverse: "threadAsFirstUnread",
         });
@@ -241,6 +227,25 @@ const threadPatch = {
             },
         });
         this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
+    },
+    getFirstNewerMessage({ from_message_id } = {}) {
+        if (!this.self_member_id) {
+            return null;
+        }
+        const messages = this.messages.filter((m) => !m.isNotification);
+        const separator = this.self_member_id.new_message_separator_ui;
+        if (separator === 0 && !this.loadOlder) {
+            return messages[0];
+        }
+        if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
+            return null;
+        }
+        // try to find a perfect match according to the member's separator
+        let message = this.store["mail.message"].get({ id: separator });
+        if (!message || this.notEq(message.thread)) {
+            message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
+        }
+        return message;
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
