@@ -622,6 +622,14 @@ class TestHrEmployee(TestHrCommon):
         employee_A._cron_update_current_version_id()
         self.assertEqual(employee_A.work_phone, '+32222222222')
 
+    def test_employee_public_no_current_version(self):
+        emp = self.env["hr.employee"].create({"name": "A"})
+
+        self.assertTrue(self.env["hr.employee.public"].browse(emp.id).exists())
+        emp.current_version_id = False
+        self.env.flush_all()
+        self.assertTrue(self.env["hr.employee.public"].browse(emp.id).exists())
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
