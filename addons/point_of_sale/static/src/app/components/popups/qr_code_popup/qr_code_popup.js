@@ -6,13 +6,21 @@ export class QRPopup extends Component {
     static components = { Dialog };
     static props = {
         amount: { type: String },
-        confirm: { type: Function, optional: true, default: false },
-        cancel: { type: Function, optional: true, default: false },
-        close: { type: Function, optional: true, default: false },
-        isCustomerDisplay: { type: Boolean, optional: true, default: false },
-        paymentMethod: { type: Object, optional: true, default: {} },
+        confirm: { type: Function, optional: true },
+        cancel: { type: Function, optional: true },
+        close: { type: Function, optional: true },
+        isConfirmBtnShown: { type: Boolean, optional: true },
+        paymentMethod: { type: Object, optional: true },
         qrCode: { type: String },
-        line: { type: Object, optional: true, default: null },
+        line: { type: Object, optional: true },
+    };
+    static defaultProps = {
+        confirm: () => {},
+        cancel: () => {},
+        close: () => {},
+        isConfirmBtnShown: true,
+        paymentMethod: {},
+        line: {},
     };
 
     confirm() {
