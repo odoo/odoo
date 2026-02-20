@@ -27,6 +27,17 @@
             </field>
         </record>
 
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.view.search.inherit.mrp</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="product_tag_ids" position="after">
+                    <field name="used_in"/>
+                </field>
+            </field>
+        </record>
+
         <record id="mrp_product_product_search_view" model="ir.ui.view">
             <field name="name">mrp.product.product.search</field>
             <field name="model">product.product</field>

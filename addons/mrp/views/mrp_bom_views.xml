@@ -12,7 +12,7 @@
             <field name="name">mrp.bom.byproduct.form</field>
             <field name="model">mrp.bom.byproduct</field>
             <field name="arch" type="xml">
-                <form string="Byproduct">
+                <form string="Byproduct" create="0" edit="0">
                     <group>
                         <field name="allowed_operation_ids" invisible="1"/>
                         <field name="company_id"/>
@@ -22,9 +22,9 @@
                             <field name="product_qty"/>
                             <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         </div>
-                        <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        <field name="operation_id" groups="mrp.group_mrp_routings"/>
                         <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     </group>
                 </form>
             </field>
@@ -295,18 +295,13 @@
             <field name="name">mrp.bom.line.view.list</field>
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
-                <list create="False" delete="False" action="action_open_parent_bom" type="object">
-                    <field name="bom_product_tmpl_id"/>
-                    <field name="bom_code" optional="show"/>
-                    <field name="bom_type"/>
-                    <field name="bom_product_id" groups="product.group_product_variant" optional="hide"/>
-                    <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
-                    <field name="bom_product_qty" string="Quantity" optional="hide"/>
-                    <field name="bom_product_uom_id" string="Unit" groups="uom.group_uom" optional="hide"/>
-                    <field name="product_id" string="Component Variant" column_invisible="context.get('component_variant_count') == 1"/>
-                    <field name="product_qty" string="Component Quantity" optional="hide" width="130px"/>
-                    <field name="uom_id" string="Component Unit" groups="uom.group_uom" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <list create="0" multi_edit="1" action="action_open_parent_bom" type="object">
+                    <field name="bom_id" readonly="1" string="Bill of Material"/>
+                    <field name="product_id" string="Product" context="{'default_is_storable': True}"/>
+                    <field name="product_qty"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="operation_id" readonly="1" optional="hide" groups="mrp.group_mrp_routings"/>
+                    <field name="bom_product_template_attribute_value_ids" readonly="1" optional="hide" groups="product.group_product_variant" widget="many2many_tags"/>
                 </list>
             </field>
         </record>
@@ -317,7 +312,7 @@
             <field name="arch" type="xml">
                 <search string="Search BoM Line">
                     <field name="bom_code" string="Bill of Materials" filter_domain="['|', ('bom_code', 'ilike', self), ('bom_product_tmpl_id', 'ilike', self)]"/>
-                    <field name="bom_product_tmpl_id" string="Product"/>
+                    <field name="product_id" string="Product"/>
                     <filter string="Manufacturing" name="normal" domain="[('bom_type', '=', 'normal')]"/>
                     <filter string="Kit" name="phantom" domain="[('bom_type', '=', 'phantom')]"/>
                     <separator/>
@@ -352,10 +347,10 @@
                                 <label for="product_qty" string="Quantity"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="uom_id" options="{'no_open':True,'no_create':True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                 </div>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                             </group>
                             <group string="Operation">
                                 <field name="company_id" invisible="1"/>
@@ -381,6 +376,23 @@
             <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- Force empty -->
+        </record>
+
+        <record id="action_open_bom_lines" model="ir.actions.server">
+            <field name="name">Show BoM Lines</field>
+            <field name="model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = {
+                    'type': 'ir.actions.act_window',
+                    'name': 'BoM Lines',
+                    'res_model': 'mrp.bom.line',
+                    'views': [(env.ref('mrp.mrp_bom_line_view_list').id, 'list')],
+                    'domain': [('bom_id', 'in', env.context.get('active_ids'))],
+                }
+            </field>
         </record>
     </data>
 </odoo>

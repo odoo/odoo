@@ -703,10 +703,7 @@ class MrpBomLine(models.Model):
     tracking = fields.Selection(related='product_id.tracking')
     bom_code = fields.Char(related='bom_id.code')
     bom_type = fields.Selection(related='bom_id.type')
-    bom_product_id = fields.Many2one(related='bom_id.product_id')
     bom_product_tmpl_id = fields.Many2one(related='bom_id.product_tmpl_id')
-    bom_product_qty = fields.Float(related='bom_id.product_qty', string="BoM Quantity")
-    bom_product_uom_id = fields.Many2one(related='bom_id.uom_id', string="BoM Unit")
 
     _bom_qty_zero = models.Constraint(
         'CHECK (product_qty>=0)',
@@ -750,6 +747,17 @@ class MrpBomLine(models.Model):
             if 'product_id' in values and 'uom_id' not in values:
                 values['uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         return super(MrpBomLine, self).create(vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'product_id' in vals:
+            self.bom_id._check_bom_cycle()
+        self.bom_id._set_outdated_bom_in_productions()
+        return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_and_update_outdated_bom(self):
+        self.bom_id._set_outdated_bom_in_productions()
 
     def _skip_bom_line(self, product, never_attribute_values=False):
         """ Control if a BoM line should be produced, can be inherited to add custom control.
@@ -800,6 +808,15 @@ class MrpBomLine(models.Model):
             'search_view_id': self.env.ref('product.product_document_search').ids
         }
 
+    def action_open_parent_bom(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.bom',
+            'res_id': self.bom_id.id,
+            'view_mode': 'form',
+        }
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
@@ -807,16 +824,6 @@ class MrpBomLine(models.Model):
     def action_add_from_catalog(self):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
         return bom.with_context(child_field='bom_line_ids').action_add_from_catalog()
-
-    def action_open_parent_bom(self, *args):
-        return {
-            'res_model': 'mrp.bom',
-            'type': 'ir.actions.act_window',
-            'views': [[False, 'form']],
-            'view_mode': 'form',
-            'res_id': self.bom_id.id,
-            'target': 'current',
-        }
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:

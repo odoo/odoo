@@ -5,6 +5,7 @@ from datetime import timedelta
 import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 PY_OPERATORS = {
@@ -31,6 +32,7 @@ class ProductTemplate(models.Model):
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
+    used_in = fields.Many2one('product.template', search='_search_used_in', store=False)
 
     def _compute_bom_count(self):
         for product in self:
@@ -53,6 +55,16 @@ class ProductTemplate(models.Model):
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('type', '=', 'phantom'), ('active', '=', True)])
         return [('id', 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
+
+    def _search_used_in(self, operator, value):
+        if tuple(value) == (False,):
+            bom_domain = [('bom_line_ids', '=' if operator == 'in' else '!=', False)]
+        elif operator in Domain.NEGATIVE_OPERATORS:
+            boms_with_searched_component = self.env['mrp.bom']._search([('bom_line_ids.product_tmpl_id', 'in', value)])
+            bom_domain = [('id', 'not in', boms_with_searched_component)]
+        else:
+            bom_domain = [('bom_line_ids.product_tmpl_id', 'in', value)]
+        return [('id', 'in', self.env['mrp.bom']._search(bom_domain).subselect('product_tmpl_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -80,12 +92,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_line_action_used_in_boms")
         action['domain'] = [('product_tmpl_id', '=', self.id)]
-        action['context'] = {
-            'component_variant_count': len(
-                self.product_variant_ids.filtered(lambda variant: variant.bom_line_ids)
-            ),
-            'search_default_bom_active': True,
-        }
+        action['context'] = {'search_default_bom_active': True}
         return action
 
     def _compute_mrp_product_qty(self):
@@ -133,6 +140,7 @@ class ProductProduct(models.Model):
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
+    used_in = fields.Many2one('product.product', search='_search_used_in', store=False)
 
     # Catalog related fields
     product_catalog_product_is_in_bom = fields.Boolean(
@@ -220,6 +228,23 @@ class ProductProduct(models.Model):
         ]).move_raw_ids.product_id.ids
         return [('id', operator, product_ids)]
 
+    def _search_used_in(self, operator, value):
+        if tuple(value) == (False,):
+            bom_domain = Domain('bom_line_ids', '=' if operator == 'in' else '!=', False)
+        elif operator in Domain.NEGATIVE_OPERATORS:
+            boms_with_searched_component = self.env['mrp.bom']._search([('bom_line_ids.product_id', 'in', value)])
+            bom_domain = Domain('id', 'not in', boms_with_searched_component)
+        else:
+            bom_domain = Domain('bom_line_ids.product_id', 'in', value)
+
+        bom_product_query = self.env['mrp.bom']._search(bom_domain & Domain('product_id', '!=', False))
+        bom_tmpl_query = self.env['mrp.bom']._search(bom_domain & Domain('product_id', '=', False))
+
+        return [
+            '|', ('id', 'in', bom_product_query.subselect('product_id')),
+            ('product_tmpl_id', 'in', bom_tmpl_query.subselect('product_tmpl_id')),
+        ]
+
     def write(self, vals):
         if 'active' in vals:
             self.filtered(lambda p: p.active != vals['active']).with_context(active_test=False).variant_bom_ids.write({
@@ -249,12 +274,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_line_action_used_in_boms")
         action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {
-            'component_variant_count': len(
-                self.product_tmpl_id.product_variant_ids.filtered(lambda variant: variant.bom_line_ids)
-            ),
-            'search_default_bom_active': True,
-        }
+        action['context'] = {'search_default_bom_active': True}
         return action
 
     def _compute_mrp_product_qty(self):
