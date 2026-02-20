@@ -125,7 +125,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
                 'compute_price': 'formula'
             })]
         })
-        self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
+        self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman', watch=True)
 
     def test_04_product_configurator_single_custom_value(self):
         # Prepare relevant test data

@@ -378,6 +378,157 @@ class ProductTemplate(models.Model):
                     }
         return res
 
+    def _get_basic_product_information(
+        self, product_or_template, pricelist, combination, **kwargs
+    ):
+        """ Override of `sale` to append website data and apply taxes.
+
+        :param product.product|product.template product_or_template: The product for which to seek
+            information.
+        :param product.pricelist pricelist: The pricelist to use.
+        :param product.template.attribute.value combination: The combination of the product.
+        :param res.currency|None currency: The currency of the transaction.
+        :param datetime|None date: The date of the `sale.order`, to compute the price at the right
+            rate.
+        :param dict kwargs: Locally unused data passed to `super`.
+        :rtype: dict
+        :return: A dict with the following structure:
+            {
+                ...  # fields from `super`.
+                'price': float,
+                'can_be_sold': bool,
+                'category_name': str,
+                'currency_name': str,
+                'strikethrough_price': float,  # if there's a strikethrough_price to display.
+            }
+        """
+        currency = kwargs.get('currency')
+        date = kwargs.get('date')
+        basic_product_information = super()._get_basic_product_information(
+            product_or_template.with_context(display_default_code=not self.env.context.get('website_id')),
+            pricelist,
+            combination,
+            **kwargs,
+        )
+
+        if request and request.is_frontend:
+            website = request.website.with_context(self.env.context)
+            has_zero_price = float_is_zero(
+                basic_product_information['price'], precision_rounding=currency.rounding
+            )
+            basic_product_information['can_be_sold'] = not (
+                website.prevent_sale and has_zero_price
+            )
+            # Don't compute the strikethrough price if there's a custom price (i.e. if `price_info`
+            # is populated).
+            strikethrough_price = self._get_strikethrough_price(
+                product_or_template.with_context(
+                    **product_or_template._get_product_price_context(combination)
+                ),
+                currency,
+                date,
+                basic_product_information['price'],
+                basic_product_information['pricelist_rule_id'],
+            ) if 'price_info' not in basic_product_information else None
+            if strikethrough_price:
+                basic_product_information['strikethrough_price'] = strikethrough_price
+        return basic_product_information
+
+    def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):
+        """ Override of `sale` to apply taxes.
+
+        :param product.template.attribute.value ptav: The product template attribute value for which
+            to compute the extra price.
+        :param res.currency currency: The currency to compute the extra price in.
+        :param datetime date: The date to compute the extra price at.
+        :param product.product|product.template product_or_template: The product on which the
+            product template attribute value applies.
+        :rtype: float
+        :return: The extra price for the product template attribute value.
+        """
+        price_extra = super()._get_ptav_price_extra(ptav, currency, date, product_or_template)
+        if self.env.context.get('website_id'):
+            product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+                self.env.company
+            )
+            if product_taxes:
+                taxes = request.fiscal_position.map_tax(product_taxes)
+            return self._apply_taxes_to_price(price_extra, currency, product_taxes, taxes, product_or_template)
+        return price_extra
+
+    def _get_strikethrough_price(self, product_or_template, currency, date, price, pricelist_rule_id=None):
+        """ Return the strikethrough price of the product, if there is one.
+
+        :param product.product|product.template product_or_template: The product for which to
+            compute the strikethrough price.
+        :param res.currency currency: The currency to compute the strikethrough price in.
+        :param datetime date: The date to compute the strikethrough price at.
+        :param float price: The actual price of the product.
+        :rtype: float|None
+        :return: The strikethrough price of the product, if there is one.
+        """
+        pricelist_rule = self.pricelist_rule_ids.browse(pricelist_rule_id)
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+                self.env.company
+        )
+        if product_taxes:
+            taxes = request.fiscal_position.map_tax(product_taxes)
+
+        # First, try to use the base price as the strikethrough price.
+        # Apply taxes before comparing it to the actual price.
+        if pricelist_rule._show_discount_on_shop():
+            pricelist_base_price = self._apply_taxes_to_price(
+                pricelist_rule._compute_price_before_discount(
+                    product=product_or_template,
+                    quantity=1.0,
+                    uom=product_or_template.uom_id,
+                    date=date,
+                    currency=currency,
+                ),
+                currency,
+                product_taxes,
+                taxes,
+                product_or_template,
+            )
+            # Only show the base price if it's greater than the actual price.
+            if currency.compare_amounts(pricelist_base_price, price) == 1:
+                return pricelist_base_price
+
+        # Second, try to use `compare_list_price` as the strikethrough price.
+        # Don't apply taxes since this price should always be displayed as is.
+        if (
+            self.env['res.groups']._is_feature_enabled('website_sale.group_product_price_comparison')
+            and product_or_template.compare_list_price
+        ):
+            compare_list_price = product_or_template.currency_id._convert(
+                from_amount=product_or_template.compare_list_price,
+                to_currency=currency,
+                company=self.env.company,
+                date=date,
+                round=False,
+            )
+            # Only show `compare_list_price` if it's greater than the actual price.
+            if currency.compare_amounts(compare_list_price, price) == 1:
+                return compare_list_price
+        return None
+
+    def _should_show_product(self, product_template):
+        """ Override of `sale` to only show products that can be added to the cart.
+
+        :param product.template product_template: The product being checked.
+        :rtype: bool
+        :return: Whether the product should be shown in the configurator.
+        """
+        should_show_product = super()._should_show_product(product_template)
+        if request and request.is_frontend:
+            website = request.website.with_context(self.env.context)
+            return (
+                should_show_product
+                and product_template._is_add_to_cart_possible()
+                and product_template.filtered_domain(website.domain)
+            )
+        return should_show_product
+
     def _get_sales_prices(self, website):
         if not self:
             return {}
@@ -980,8 +1131,8 @@ class ProductTemplate(models.Model):
     def _get_contextual_pricelist(self):
         """ Override to fallback on website current pricelist """
         pricelist = super()._get_contextual_pricelist()
-        if request and request.is_frontend and not pricelist:
-            return request.pricelist
+        if self.env.context.get('website_id') and not pricelist:
+            return self.website_id.pricelist_ids
         return pricelist
 
     def _website_show_quick_add(self):

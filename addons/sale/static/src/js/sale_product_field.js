@@ -186,15 +186,24 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data[this.props.name];
     }
 
-    async _onProductTemplateUpdate() {
+    async _getPreloadedConfigData() {
         const result = await this.orm.call(
             'product.template',
-            'get_single_product_variant',
+            'get_configurator_init_data',
             [this.props.record.data.product_template_id.id],
             {
+                quantity: this.props.record.data.product_uom_qty,
                 context: this.props.context,
+                ptav_ids: this._getVariantPtavIds(this.props.record.data),
+                product_uom_id: this.props.record.data.product_uom_id.id,
+                ...this._getAdditionalRpcParams(),
             }
         );
+        return result;
+    }
+
+    async _onProductTemplateUpdate() {
+        const result = await this._getPreloadedConfigData();
         if (result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 if (result.is_combo) {
@@ -203,7 +212,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                     });
                     this._openComboConfigurator(false, result.has_optional_products);
                 } else if (result.has_optional_products) {
-                    this._openProductConfigurator();
+                    this._openProductConfigurator({
+                        preloadedData: result.preloaded_config_data
+                    });
                 } else {
                     await this.props.record.update({
                         product_id: { id: result.product_id, display_name: result.product_name },
@@ -212,7 +223,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 }
             }
         } else if (!result.mode || result.mode === 'configurator') {
-            this._openProductConfigurator();
+            this._openProductConfigurator({
+                preloadedData: result.preloaded_config_data
+            });
         } else {
             // only triggered when sale_product_matrix is installed.
             this._openGridConfigurator();
@@ -227,11 +240,15 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         if (this.isCombo) {
             this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
-            this._openProductConfigurator(true);
+            this._openProductConfigurator({edit: true});
         }
     }
 
-    async _openProductConfigurator(edit = false, selectedComboItems = []) {
+    async _openProductConfigurator({
+        edit = false,
+        selectedComboItems = [],
+        preloadedData = {},
+    } = {}) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
@@ -249,6 +266,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: saleOrderLine.product_template_id.id,
             ptavIds: ptavIds,
+            preloadedData: preloadedData,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
             productUOMId: saleOrderLine.product_uom_id.id,
@@ -365,7 +383,10 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             const selectedComboProducts = selectedComboItems.map(
                 item => ({ name: item.product.display_name })
             );
-            await this._openProductConfigurator(false, selectedComboProducts);
+            await this._openProductConfigurator({
+                edit: false,
+                selectedComboItems: selectedComboProducts
+            });
         }
     }
 

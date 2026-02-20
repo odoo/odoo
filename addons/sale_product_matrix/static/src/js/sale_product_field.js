@@ -16,7 +16,11 @@ patch(SaleOrderLineProductField.prototype, {
         if (edit && this.props.record.data.product_add_mode == 'matrix') {
             this._openGridConfigurator(true);
         } else {
-            return super._openProductConfigurator(...arguments);
+            const result = await this._getPreloadedConfigData();
+            return super._openProductConfigurator({
+                preloadedData: result.preloaded_config_data,
+                ...arguments,
+            });
         }
     },
 });

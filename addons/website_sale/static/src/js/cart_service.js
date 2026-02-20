@@ -203,17 +203,18 @@ export class CartService {
                 ...rest
             });
         }
-
-        const shouldShowProductConfigurator = await this.rpc(
+        const result = await this.rpc(
             '/website_sale/should_show_product_configurator',
             {
                 product_template_id: productTemplateId,
                 ptav_ids: ptavs,
                 is_product_configured: isConfigured,
+                quantity: quantity,
             }
         );
-        if (shouldShowProductConfigurator) {
+        if (result) {
             return this._openProductConfigurator(
+                result.preloaded_config_data,
                 productTemplateId,
                 quantity,
                 uomId,
@@ -334,6 +335,7 @@ export class CartService {
      * @returns {Number} - The product's quantity added to the cart.
      */
     async _openProductConfigurator(
+        preloadedData,
         productTemplateId,
         quantity,
         uomId,
@@ -346,6 +348,7 @@ export class CartService {
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: productTemplateId,
                 ptavIds: combination,
+                preloadedData,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({
                     id: customPtav.custom_product_template_attribute_value_id,
                     value: customPtav.custom_value,

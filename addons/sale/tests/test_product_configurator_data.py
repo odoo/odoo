@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
+
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -12,24 +14,17 @@ from odoo.addons.sale.tests.common import SaleCommon
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
 
     def request_get_values(self, product_template, ptav_ids=None):
-        base_url = product_template.get_base_url()
-        response = self.url_open(
-            url=base_url + '/sale/product_configurator/get_values',
-            json={
-                'params': {
-                    'product_template_id': product_template.id,
-                    'quantity': 1.0,
-                    'currency_id': 1,
-                    'so_date': str(self.env.cr.now()),
-                    'product_uom_id': None,
-                    'company_id': None,
-                    'pricelist_id': None,
-                    'ptav_ids': ptav_ids,
-                    'only_main_product': False,
-                },
-            }
+        return product_template.sale_product_configurator_get_values(
+            product_template_id=product_template.id,
+            quantity=1.0,
+            currency_id=self.env.company.currency_id.id,
+            so_date=fields.Datetime.now().isoformat(),
+            product_uom_id=None,
+            company_id=None,
+            pricelist_id=None,
+            ptav_ids=ptav_ids,
+            only_main_product=False,
         )
-        return response.json()['result']
 
     def create_product_template_with_2_attributes(self):
         return self.env['product.template'].create({
@@ -205,7 +200,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             self.assertIn(archived_ptav.id, combination)
 
         # When requested combination contains inactive ptav check that exclusions contains it
-        self.assertIn(str(archived_ptav.id), result['products'][0]['exclusions'])
+        self.assertIn(archived_ptav.id, result['products'][0]['exclusions'])
 
     def test_excluded_inactive_ptav(self):
         product_template = self.create_product_template_with_2_attributes()
@@ -226,32 +221,32 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         result = self.request_get_values(product_template)
         # The PTAVs should be mutually excluded
         self.assertEqual(result['products'][0]['exclusions']
-                         [str(ptav_with_exclusion.id)], [ptav_excluded.id])
+                         [ptav_with_exclusion.id], [ptav_excluded.id])
         self.assertEqual(result['products'][0]['exclusions']
-                         [str(ptav_excluded.id)], [ptav_with_exclusion.id])
+                         [ptav_excluded.id], [ptav_with_exclusion.id])
 
         ptav_with_exclusion.write({'ptav_active': False})
         result = self.request_get_values(product_template)
         # The inactive PTAV should not be in the product exclusions dict
-        self.assertFalse(str(ptav_with_exclusion.id) in result['products'][0]['exclusions'])
+        self.assertFalse(ptav_with_exclusion.id in result['products'][0]['exclusions'])
         # The inactive PTAV should not be in the exclusions of the excluded PTAV
-        self.assertEqual(result['products'][0]['exclusions'][str(ptav_excluded.id)], [])
+        self.assertEqual(result['products'][0]['exclusions'][ptav_excluded.id], [])
 
         ptav_with_exclusion.write({'ptav_active': True})
         ptav_excluded.write({'ptav_active': False})
         result = self.request_get_values(product_template)
         # The excluded inactive PTAV should not be in the exclusions of the first PTAV
-        self.assertEqual(result['products'][0]['exclusions'][str(ptav_with_exclusion.id)], [])
+        self.assertEqual(result['products'][0]['exclusions'][ptav_with_exclusion.id], [])
         # The excluded inactive PTAV should not be in the product exclusions dict
-        self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
+        self.assertFalse(ptav_excluded.id in result['products'][0]['exclusions'])
 
         ptav_with_exclusion.write({'ptav_active': False})
         ptav_excluded.write({'ptav_active': False})
         result = self.request_get_values(product_template)
 
         # The inactive PTAVs should not be in the product exclusions dict
-        self.assertFalse(str(ptav_with_exclusion.id) in result['products'][0]['exclusions'])
-        self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
+        self.assertFalse(ptav_with_exclusion.id in result['products'][0]['exclusions'])
+        self.assertFalse(ptav_excluded.id in result['products'][0]['exclusions'])
 
     def test_ptal_values_set_for_no_variant_atribute(self):
         '''
