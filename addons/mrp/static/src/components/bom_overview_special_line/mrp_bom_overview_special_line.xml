@@ -13,12 +13,10 @@
             </span>
         </td>
         <td name="quantity" class="text-end">
-            <span t-if="props.type == 'operations'" t-esc="formatFloatTime(data.operations_time)"/>
+            <span t-if="props.type == 'operations'" t-esc="formatDuration(data.operations_time, {'unit': 'minutes'})"/>
             <span t-elif="props.type == 'byproducts'" t-esc="formatFloat(data.byproducts_total, {'digits': [false, precision]})"/>
         </td>
-        <td name="uom" t-if="showUom" class="text-start">
-            <span t-if="props.type == 'operations'">Minutes</span>
-        </td>
+        <td name="uom" t-if="showUom" class="text-start"/>
         <td name="free_to_use" t-if="forecastMode"/>
         <td name="status" t-if="forecastMode"/>
         <td name="lead_time" t-if="forecastMode"/>
