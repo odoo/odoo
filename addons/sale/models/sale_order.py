@@ -282,6 +282,7 @@ class SaleOrder(models.Model):
         compute='_compute_sale_warning_text')
 
     # Payment fields
+    transaction_count = fields.Integer(compute='_compute_transaction_count')
     transaction_ids = fields.Many2many(
         comodel_name='payment.transaction',
         relation='sale_order_transaction_rel', column1='sale_order_id', column2='transaction_id',
@@ -637,6 +638,14 @@ class SaleOrder(models.Model):
             invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
+
+    @api.depends('transaction_ids')
+    def _compute_transaction_count(self):
+        if not self.env.user.has_group('account.group_account_invoice'):
+            self.transaction_count = 0
+            return
+        for order in self:
+            order.transaction_count = len(order.transaction_ids)
 
     def _search_invoice_ids(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
@@ -1598,6 +1607,16 @@ class SaleOrder(models.Model):
                 'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
             })
         action['context'] = context
+        return action
+
+    def action_view_payment_transaction(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')
+        if len(self.transaction_ids) == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.transaction_ids.id
+            action['views'] = []
+        else:
+            action['domain'] = [('id', 'in', self.transaction_ids.ids)]
         return action
 
     def _get_invoice_grouping_keys(self):

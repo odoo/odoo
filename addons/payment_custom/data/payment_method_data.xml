@@ -12,5 +12,10 @@
         <field name="support_manual_capture">none</field>
         <field name="support_refund">none</field>
     </record>
-
+    <!-- Account Payment method -->
+    <record id="account_payment_method_wire_transfer" model="account.payment.method">
+       <field name="name">Wire Transfer</field>
+        <field name="code">wire_transfer</field>
+        <field name="payment_type">inbound</field>
+    </record>
 </odoo>
