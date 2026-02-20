@@ -31,6 +31,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBuilder } from "@website/builder/website_builder";
+import { RPCError } from "@web/core/network/rpc";
 
 defineWebsiteModels();
 
@@ -597,4 +598,55 @@ test("Modifying an element inside '.o_not_editable' should not mark this element
     await contains(`:iframe .test`).click();
     await contains("[data-class-action='x']").click();
     expect(":iframe [data-oe-model='model']").not.toHaveClass("o_dirty");
+});
+
+test("Validation errors are caught on save", async () => {
+    onRpc("ir.ui.view", "save", () => {
+        const error = new RPCError();
+        error.exceptionName = "odoo.exceptions.ValidationError";
+        error.message = "ValidationError";
+        error.data = {
+            name: "ValidationError",
+            message: "Validation Error",
+        };
+        return Promise.reject(error);
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <h2 class="test-target">
+            <span>Text</span>
+        </h2>
+    `);
+    // Change the span text content and save
+    const el = queryOne(":iframe .test-target");
+    setSelection({ anchorNode: el.childNodes[0], anchorOffset: 1 });
+    await insertText(getEditor(), "x");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(
+        ".o_notification_manager .o_notification_content:contains('An error occurred while updating a field. Validation Error')"
+    ).toHaveCount(1);
+});
+
+test("Errors different than validation errors are not caught on save", async () => {
+    expect.errors(1);
+    onRpc("ir.ui.view", "save", () => {
+        const error = new RPCError();
+        error.exceptionName = "odoo.exceptions.AnotherError";
+        error.message = "Another Error";
+        error.data = {
+            name: "AnotherError",
+            message: "Another Error",
+        };
+        return Promise.reject(error);
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <h2 class="test-target">
+            <span>Text</span>
+        </h2>
+    `);
+    // Change the span text content and save
+    const el = queryOne(":iframe .test-target");
+    setSelection({ anchorNode: el.childNodes[0], anchorOffset: 1 });
+    await insertText(getEditor(), "x");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifyErrors(["Another Error"]);
 });

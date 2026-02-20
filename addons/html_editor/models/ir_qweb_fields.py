@@ -85,7 +85,7 @@ class IrQwebField(models.AbstractModel):
         return attrs
 
     def value_from_string(self, value):
-        return value
+        return value if value != "\u200B" else None
 
     @api.model
     def from_html(self, model, field, element):
