@@ -31,7 +31,7 @@ class CrmIapLeadMiningRequest(models.Model):
             return 'opportunity'
 
     def _default_country_ids(self):
-        return self.env.user.company_id.country_id
+        return self.env.company.country_id
 
     name = fields.Char(string='Request Number', required=True, readonly=True, default=lambda self: _('New'), copy=False)
     state = fields.Selection([('draft', 'Draft'), ('error', 'Error'), ('done', 'Done')], string='Status', required=True, default='draft')
