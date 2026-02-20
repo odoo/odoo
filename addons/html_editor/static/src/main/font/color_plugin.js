@@ -264,6 +264,9 @@ export class ColorPlugin extends Plugin {
 
         const hexColor = rgbaToHex(color).toLowerCase();
         const selectedNodes = targetedNodes.filter((node) => {
+            if (!(this.checkPredicates("is_formattable_node_predicates", node) ?? true)) {
+                return false;
+            }
             if (mode === "backgroundColor" && color) {
                 return !closestElement(node, "table.o_selected_table");
             }
