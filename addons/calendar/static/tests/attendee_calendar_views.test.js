@@ -1,5 +1,6 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, expect, queryAllTexts, test } from "@odoo/hoot";
+import { runAllTimers } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
@@ -17,6 +18,7 @@ import {
     findDateColumn,
     findTimeRow,
 } from "@web/../tests/views/calendar/calendar_test_helpers";
+import { user } from "@web/core/user";
 
 defineCalendarModels();
 preloadBundle("web.fullcalendar_lib");
@@ -63,6 +65,7 @@ async function selectTimeStart(startDateTime) {
 beforeEach(async () => {
     mockDate("2016-12-12 08:00:00", 0);
     const { env: pyEnv } = await makeMockServer();
+    user.updateUserSettings("calendar_show_activities", true); // init show activities in calendar setting
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Partner 1" },
         { name: "Partner 2" },
@@ -93,6 +96,58 @@ beforeEach(async () => {
             stop: "2016-12-12 14:55:05",
             attendee_ids: [serverData.attendeeIds[0], serverData.attendeeIds[1]],
             partner_ids: [serverState.partnerId, partnerId_1],
+        },
+    ]);
+    // Create activities on different models
+    pyEnv["mail.activity"].create([
+        {
+            can_write: true,
+            date_deadline: "2016-12-11 00:00:00",
+            state: "overdue",
+            summary: "Activity 1",
+            user_id: user.userId,
+        },
+        {
+            can_write: true,
+            date_deadline: "2016-12-12 10:55:05",
+            state: "today",
+            summary: "Activity 2",
+            user_id: user.userId,
+        },
+        {
+            // Should have a res record link
+            can_write: true,
+            date_deadline: "2016-12-12 10:55:05",
+            res_id: partnerId_2,
+            res_model: "res.partner",
+            res_name: "Partner 2",
+            state: "today",
+            summary: "Activity 3",
+            user_id: user.userId,
+        },
+        {
+            // User id is not the current user, shouldn't appear
+            can_write: true,
+            date_deadline: "2016-12-12 10:55:05",
+            state: "today",
+            summary: "Activity 4",
+            user_id: user.userId + 1,
+        },
+        {
+            can_write: true,
+            date_deadline: "2016-12-13 00:00:00",
+            state: "planned",
+            summary: "Activity 5",
+            user_id: user.userId,
+        },
+        {
+            // Activity done (automatically archived), shouldn't appear
+            active: false,
+            can_write: true,
+            date_deadline: "2016-12-13 00:00:00",
+            state: "done",
+            summary: "Activity 6",
+            user_id: user.userId,
         },
     ]);
 });
@@ -144,4 +199,66 @@ test("Default duration rendering", async () => {
     expect("div[name='stop'] div").toHaveText("Dec 15, 6:15 PM", {
         message: "The duration should be 3.25 hours",
     });
+});
+
+test.tags("desktop");
+test("Activity events rendering and popover", async () => {
+    const pyEnv = MockServer.current.env;
+    onRpc("res.partner", "get_attendee_detail", () => []);
+    onRpc("/calendar/check_credentials", () => ({}));
+    onRpc("res.users", "check_synchronization_status", () => ({}));
+    onRpc("set_res_users_settings", (args) => {
+        if ("calendar_show_activities" in args.kwargs.new_settings) {
+            expect.step("calendar_show_activities");
+        }
+        return args.kwargs.new_settings;
+    });
+    await mountView({ type: "calendar", resModel: "calendar.event", arch });
+
+    // Check activity events rendering (3 activity events: overdue, today and planned)
+    // Done activities and other users activities are not displayed.
+    expect(".fc-event.o_activity_event").toHaveCount(3);
+    expect("td[data-date='2016-12-11'] .o_activity_event:contains('Activity 1')").toHaveCount(1);
+    expect(
+        "td[data-date='2016-12-12'] .o_activity_event:contains('2 pending activities')"
+    ).toHaveCount(1);
+    expect("td[data-date='2016-12-13'] .o_activity_event:contains('Activity 5')").toHaveCount(1);
+    // Check activity calendar side panel filter
+    expect(".o_calendar_sidepanel input#show_activities_checkbox").toHaveProperty("checked", true);
+    await contains(".o_calendar_sidepanel input#show_activities_checkbox").click(); // Hide activities
+    expect.verifySteps(["calendar_show_activities"]);
+    expect(".fc-event.o_activity_event").toHaveCount(0);
+    await contains(".o_calendar_sidepanel input#show_activities_checkbox").click(); // Show activities
+    expect.verifySteps(["calendar_show_activities"]);
+    expect(".fc-event.o_activity_event").toHaveCount(3);
+    // Check activity popover rendering
+    await contains(".o_activity_event:contains('2 pending activities')").click();
+    await runAllTimers();
+    expect(".o_cw_activity_popover").toHaveCount(1);
+    expect(queryAllTexts(".o-mail-ActivityListPopoverItem-name")).toEqual([
+        "Activity 2",
+        "Activity 3",
+    ]);
+    const a2_selector = ".o-mail-ActivityListPopoverItem:contains(Activity 2) ";
+    const a3_selector = ".o-mail-ActivityListPopoverItem:contains(Activity 3) ";
+    expect(a2_selector + ".text-action").toHaveCount(0); // no res record link
+    expect(a3_selector + ".text-action").toHaveText("Partner 2"); // res record link
+    // Check activity popover done and cancel actions
+    await contains(a2_selector + ".o-mail-ActivityListPopoverItem-markAsDone").click();
+    expect(a2_selector + ".o-mail-ActivityMarkAsDone").toHaveCount(1);
+    await contains(a2_selector + "button:text(Done)").click(); // Activity 2 marked done
+    expect(a2_selector).toHaveCount(0);
+    await contains(a3_selector + ".o-mail-ActivityListPopoverItem-cancel").click(); // Activity 3 cancelled
+    expect(a3_selector).toHaveCount(0);
+    // Check activity popover auto closing (no activity left for the day) and calendar view update
+    expect(".o_cw_activity_popover").toHaveCount(0);
+    expect(".fc-event.o_activity_event").toHaveCount(2);
+    // Check activity records have been updated
+    // Activity 2: Archived and set done
+    // Activity 3: Cancelled = unlinked
+    const a2 = pyEnv["mail.activity"].browse(2)[0];
+    expect(a2.active).toBe(false);
+    expect(a2.state).toBe("done");
+    const a3 = pyEnv["mail.activity"].browse(3)[0];
+    expect(a3).toBe(undefined);
 });

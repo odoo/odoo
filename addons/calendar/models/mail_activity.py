@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from ast import literal_eval
 from datetime import UTC
 
 from odoo import models, fields, tools, _
@@ -32,6 +33,10 @@ class MailActivity(models.Model):
 
         return res
 
+    def action_cancel(self):
+        res = super().action_cancel()
+        return self.check_keep_modal_open_on_activity_actions(res)
+
     def action_create_calendar_event(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
@@ -51,6 +56,10 @@ class MailActivity(models.Model):
         }
         return action
 
+    def action_done(self):
+        res = super().action_done()
+        return self.check_keep_modal_open_on_activity_actions(res)
+
     def _action_done(self, feedback=False, attachment_ids=False):
         # Add feedback to the internal event 'notes', which is not synchronized with the activity's 'note'
         if feedback:
@@ -61,6 +70,36 @@ class MailActivity(models.Model):
                 event.write({'notes': notes})
         return super()._action_done(feedback=feedback, attachment_ids=attachment_ids)
 
+    def action_reschedule_today(self):
+        res = super().action_reschedule_today()
+        return self.check_keep_modal_open_on_activity_actions(res)
+
+    def action_reschedule_tomorrow(self):
+        res = super().action_reschedule_tomorrow()
+        return self.check_keep_modal_open_on_activity_actions(res)
+
+    def action_reschedule_nextweek(self):
+        res = super().action_reschedule_nextweek()
+        return self.check_keep_modal_open_on_activity_actions(res)
+
+    def check_keep_modal_open_on_activity_actions(self, fallback):
+        """ Goal: When doing an action in the activities list modal (Done, Reschedule, Cancel),
+        instead of closing the modal, keeping it open with the current activities (cf "activity_ids" context key).
+        If it's not the case, fallback on expected result.
+        Used notably in the user activity list popovers in the calendar view.
+        """
+        if not self.env.context.get("keep_modal_open_on_activity_actions"):
+            return fallback
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_mail_activity_view_tree_open_target")
+        action_context = literal_eval(action.get("context", "{}"))
+        activity_ids = self.env.context.get("activity_ids", [])
+        action["domain"] = [("id", "in", activity_ids)]
+        action["context"] = {
+            **action_context,
+            "activity_ids": activity_ids,
+        }
+        return action
+
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')
         res = self.unlink()
@@ -70,3 +109,4 @@ class MailActivity(models.Model):
     def _store_activity_fields(self, res: Store.FieldList):
         super()._store_activity_fields(res)
         res.attr("calendar_event_id")
+        res.extend(["res_name"])

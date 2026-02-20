@@ -29,10 +29,15 @@ export class MailActivity extends mailModels.MailActivity {
     _to_store(store) {
         super._to_store(...arguments);
         for (const activity of this) {
-            if (activity.calendar_event_id) {
-                store._add_record_fields(this.browse(activity.id), {
-                    calendar_event_id: activity.calendar_event_id,
-                });
+            const fieldsToStore = ["calendar_event_id", "res_name"];
+            const storeData = fieldsToStore.reduce((acc, key) => {
+                if (key in activity) {
+                    acc[key] = activity[key];
+                }
+                return acc;
+            }, {});
+            if (Object.keys(storeData).length) {
+                store._add_record_fields(this.browse(activity.id), storeData);
             }
         }
     }

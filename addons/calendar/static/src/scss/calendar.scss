@@ -25,6 +25,17 @@
     }
 }
 
+.o_cw_activity_popover .o-mail-ActivityListPopoverItem {
+    // Adjust spacings to prevent buttons box-shadow from overflowing the item container
+    .btn-link {
+        margin: map-get($spacers, 1);
+        padding-right: map-get($spacers, 1);
+        padding-left: map-get($spacers, 1);
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
 .o_field_many2manyattendeeexpandable .o_field_tags {
     flex-direction: column;
 
@@ -76,6 +87,18 @@
     &.o_attendee_status_declined, &.o_event_striked {
         .fc-event-main {
             text-decoration: line-through;
+        }
+    }
+
+    &.o_activity_event {
+        // For the user activity events, use the user color with
+        // a slight change so that activities can be spotted
+        // more easily in the calendar view.
+        @for $i from 1 through length($o-colors-complete) {
+            $color: nth($o-colors-complete, $i);
+            &.o_calendar_color_#{$i - 1} {
+                --fc-event-bg-color: #{mix($o-white, $color, 80%)};
+            }
         }
     }
 }

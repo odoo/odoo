@@ -43,6 +43,7 @@ export class MailActivityListRescheduleDropdown extends Component {
         await this.action.doActionButton({
             type: "object",
             name: actionName,
+            context: this.props.record.context,
             resModel: this.props.record.resModel,
             resId: this.props.record.resId,
             onClose: async () => {
