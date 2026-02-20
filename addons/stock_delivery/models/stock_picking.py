@@ -73,9 +73,10 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
+            packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
             picking.shipping_weight = (
                 picking.weight_bulk +
-                sum(pack.shipping_weight or pack.with_context(picking_id=picking.id).weight for pack in picking.package_ids.sudo())
+                sum(pack.shipping_weight or packages_weight[pack] for pack in picking.move_line_ids.result_package_id)
             )
 
     def _get_default_weight_uom(self):

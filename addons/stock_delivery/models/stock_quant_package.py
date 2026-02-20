@@ -10,10 +10,16 @@ class StockQuantPackage(models.Model):
 
     @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):
-        if self.env.context.get('picking_id'):
+        package_weight = self.sudo()._get_weight(self.env.context.get('picking_id'))
+        for package in self:
+            package.weight = package_weight[package]
+
+    def _get_weight(self, picking_id=False):
+        res = {}
+        if picking_id:
             package_weights = defaultdict(float)
             res_groups = self.env['stock.move.line']._read_group(
-                [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', self.env.context['picking_id'])],
+                [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', picking_id)],
                 ['result_package_id', 'product_id', 'product_uom_id', 'quantity'],
                 ['__count'],
             )
@@ -26,11 +32,12 @@ class StockQuantPackage(models.Model):
         for package in self:
             weight = package.package_type_id.base_weight or 0.0
             if self.env.context.get('picking_id'):
-                package.weight = weight + package_weights[package.id]
+                res[package] = weight + package_weights[package.id]
             else:
                 for quant in package.quant_ids:
                     weight += quant.quantity * quant.product_id.weight
-                package.weight = weight
+                res[package] = weight
+        return res
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
