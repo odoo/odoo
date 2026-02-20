@@ -25,25 +25,26 @@ class ResPartner(models.Model):
     # the specific pricelist to compute property_product_pricelist
     # this company dependent field shouldn't have any fallback in ir.default
     specific_property_product_pricelist = fields.Many2one(
+        string="Assigned Pricelist",
         comodel_name='product.pricelist',
         company_dependent=True,
     )
 
-    is_pricelist_computed = fields.Boolean( 
-    string="Is Pricelist Computed",
-    default=False,
+    is_pricelist_manually_set = fields.Boolean(
+        string="Is Pricelist Manually Set",
+        compute="_compute_is_pricelist_manually_set"
     )
 
+    @api.depends_context('company')
+    @api.depends('property_product_pricelist', 'specific_property_product_pricelist')
+    def _compute_is_pricelist_manually_set(self):
+        defaults = self.env['product.pricelist']._get_country_pricelist_multi(self.country_id.ids)
+        for partner in self:
+            default_for_country = defaults.get(partner.country_id.id)
+            partner.is_pricelist_manually_set = (
+                partner.property_product_pricelist != default_for_country
+            )
 
-    def write(self, values):
-        if 'property_product_pricelist' in values:
-            for partner in self:
-                old_value = partner.property_product_pricelist.id
-                new_value = values.get('property_product_pricelist')
-                if old_value != new_value:
-                    partner.is_pricelist_computed = True
-        return super().write(values)
-        
     @api.depends('country_id', 'specific_property_product_pricelist')
     @api.depends_context('company', 'country_code')
     def _compute_product_pricelist(self):
