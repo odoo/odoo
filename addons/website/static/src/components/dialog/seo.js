@@ -414,7 +414,8 @@ export class OptimizeSEODialog extends Component {
             this.canEditSeo = this.data.can_edit_seo;
             this.canEditDescription = this.canEditSeo && 'website_meta_description' in this.data;
             this.canEditTitle = this.canEditSeo && 'website_meta_title' in this.data;
-            this.canEditUrl = this.canEditSeo && 'seo_name' in this.data;
+            // The URL can be edited only if it contains soe_name or seo_name_default as slug.
+            this.canEditUrl = this.canEditSeo && new URL(path).pathname.includes(this.data.seo_name || this.data.seo_name_default);
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
@@ -504,6 +505,8 @@ export class OptimizeSEODialog extends Component {
                 'website_id': this.website.currentWebsite.id,
             },
         });
-        this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
+        this.website.goToWebsite({
+            path: data.seo_name ? this.url.replace(this.previousSeoName || this.seoNameDefault, data.seo_name) : this.url
+        });
     }
 }
