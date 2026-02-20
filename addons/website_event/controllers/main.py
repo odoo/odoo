@@ -409,7 +409,10 @@ class WebsiteEventController(http.Controller):
                 registration_index, field_name = key_values
                 if field_name not in registration_fields:
                     continue
-                registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                # Only cast when needed, as it might crash here for custom inputs in overrides
+                if isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
+                    value = int(value) or False
+                registrations.setdefault(registration_index, dict())[field_name] = value
                 continue
 
             if len(key_values) != 3:
