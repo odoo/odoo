@@ -26,11 +26,23 @@ class GoogleAuth(http.Controller):
                 service,
                 redirect_uri=f'{base_url}/google_account/authentication'
             )
-            service_field = 'res_users_settings_id'
-            if service_field in request.env.user:
-                request.env.user[service_field]._set_google_auth_tokens(access_token, refresh_token, ttl)
+            if (
+                service in request.env
+                and hasattr(request.env[service], '_set_google_auth_tokens')
+                and callable(request.env[service]._set_google_auth_tokens)
+            ):
+                request.env[service]._set_google_auth_tokens(
+                    request.env.user,
+                    access_token,
+                    refresh_token,
+                    ttl
+            )
             else:
-                raise Warning('No callback field for service <%s>' % service)
+                service_field = 'res_users_settings_id'
+                if service_field in request.env.user:
+                    request.env.user[service_field]._set_google_auth_tokens(access_token, refresh_token, ttl)
+                else:
+                    raise Warning('No callback field for service <%s>' % service)
             return request.redirect(url_return)
         elif kw.get('error'):
             return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
