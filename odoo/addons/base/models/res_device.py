@@ -93,15 +93,18 @@ class ResDeviceLog(models.Model):
         # no longer exists on the filesystem
         query = SQL("""
             DELETE FROM res_device_log log1
-            WHERE EXISTS (
-                SELECT 1 FROM res_device_log log2
-                WHERE
-                    log1.session_identifier = log2.session_identifier
-                    AND log1.ip_address = log2.ip_address
-                    AND log1.user_agent = log2.user_agent
-                    AND log1.last_activity < log2.last_activity
-            )
+            USING res_device_log log2
+            WHERE
+                log1.session_identifier = log2.session_identifier
+                AND log1.user_agent = log2.user_agent
+                AND log1.ip_address = log2.ip_address
+                AND log1.last_activity < log2.last_activity
         """)
+        if cron_lastcall := self.env.context.get('lastcall'):
+            query = SQL(
+                '%s AND log2.last_activity >= %s',
+                query, cron_lastcall,
+            )
 
         # Hard GC:
         # Delete device logs if the last activity has been exceeded by a defined
