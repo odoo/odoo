@@ -997,15 +997,15 @@ Please change the quantity done or the rounding precision in your settings.""",
             lot_qties = [1] * len(lot_names)
 
         vals_list = []
+        loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
+        product = self.env['product.product'].browse(default_vals['product_id'])
         for lot, qty in zip(lot_names, lot_qties):
             if not lot.get('quantity'):
                 lot['quantity'] = qty
-            loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
-            product = self.env['product.product'].browse(default_vals['product_id'])
-            loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
+            putaway_loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
             vals_list.append({**default_vals,
                              **lot,
-                             'location_dest_id': loc_dest.id,
+                             'location_dest_id': putaway_loc_dest.id,
                              'product_uom_id': product.uom_id.id,
                             })
         if default_vals.get('picking_type_id'):
@@ -1022,9 +1022,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'id': value,
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
-        first_number = product.lot_sequence_id.number_next_actual - product.lot_sequence_id.number_increment
-        if (first_lot and first_lot == product.lot_sequence_id.get_next_char(first_number)):
-            product.lot_sequence_id.sudo().write({'number_next_actual': first_number + len(lot_qties)})
+        if product.lot_sequence_id:
+            first_number = product.lot_sequence_id.number_next_actual - product.lot_sequence_id.number_increment
+            if (first_lot and first_lot == product.lot_sequence_id.get_next_char(first_number)):
+                product.lot_sequence_id.sudo().write({'number_next_actual': first_number + len(lot_qties)})
         return vals_list
 
     def _push_apply(self):
