@@ -8,21 +8,22 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 04:38+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-24 12:15+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_payment/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_payment
 #. odoo-python
@@ -152,6 +153,11 @@ msgid "A token is required to create a new payment transaction."
 msgstr "새 결제 거래를 생성하려면 토큰이 필요합니다."
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
+msgid "All Pricelists"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Amount"
@@ -166,6 +172,11 @@ msgstr "환불 가능 금액"
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
 msgid "Amount Due"
 msgstr "지불해야 할 금액"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Amount of"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -348,7 +359,7 @@ msgid "Invoices Count"
 msgstr "청구서 수"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+#: model:portal.entry,name:account_payment.portal_entry_overdue_invoices
 msgid "Invoices to pay"
 msgstr "지불할 청구서"
 
@@ -403,6 +414,13 @@ msgstr ""
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
 msgstr "환경설정에서 온라인 결제 옵션이 활성화되어 있지 않습니다."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_payment_provider__available_pricelist_ids
+msgid ""
+"Only allow this payment provider when the partner's pricelist matches one of "
+"these."
+msgstr ""
 
 #. module: account_payment
 #. odoo-python
@@ -479,12 +497,12 @@ msgstr "결제 전표"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "결제 수단"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Method Line"
-msgstr ""
+msgstr "결제 수단 항목"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_method_menu
@@ -530,6 +548,11 @@ msgstr "결제 거래"
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
 msgstr "연체된 청구서에 대한 금액을 지불하려면 로그인하세요"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__available_pricelist_ids
+msgid "Pricelists"
+msgstr ""
 
 #. module: account_payment
 #. odoo-python
@@ -774,6 +797,17 @@ msgid "has been applied."
 msgstr "적용되었습니다."
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "is already paid on this invoice, please make sure to not pay twice."
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "기한 초과"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid "pricelist not allowed"
+msgstr ""

@@ -7,23 +7,23 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-21 14:44+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-07 12:17+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/delivery/"
-"nl/>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"delivery/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: delivery
 #. odoo-python
@@ -97,7 +97,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Delivery Description</strong>"
-msgstr ""
+msgstr "<strong>Beschrijving van de levering</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -130,7 +130,7 @@ msgstr "Toevoegen"
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
-msgstr ""
+msgstr "Een leveringsmethode toevoegen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -204,14 +204,14 @@ msgstr "Vervoerder"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
 msgid "Cash On Delivery"
-msgstr "Cash on Delivery"
+msgstr "Betaling bij levering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__allow_cash_on_delivery
 #: model:payment.method,name:delivery.payment_method_cash_on_delivery
 #: model:payment.provider,name:delivery.payment_provider_cod
 msgid "Cash on Delivery"
-msgstr "Cash on Delivery"
+msgstr "Betaling bij levering"
 
 #. module: delivery
 #. odoo-javascript
@@ -312,6 +312,11 @@ msgid "Define a new delivery method"
 msgstr "Definieer een nieuwe verzendwijze"
 
 #. module: delivery
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr "Verzendkosten"
@@ -333,12 +338,12 @@ msgstr "Afleverbericht"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Delivery Method"
-msgstr "Verzendwijze"
+msgstr "Leveringsmethode"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "Wizard voor het selecteren van de leveringsmethode"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -386,6 +391,8 @@ msgid ""
 "Delivery method %(name)s cannot have the same tag in both Must Have Tags and "
 "Excluded Tags."
 msgstr ""
+"Leveringsmethode %(name)s kan niet dezelfde label hebben in zowel "
+"'Verplichte labels' als 'Uitgesloten labels'."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -393,6 +400,9 @@ msgid ""
 "Delivery method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Details over de leveringsmethode moeten onderaan verkooporders en in de "
+"bevestigingsmails worden vermeld. Bijvoorbeeld instructies die klanten "
+"moeten volgen."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -400,6 +410,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery methods to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Postcodevoorvoegsels voor levering worden toegewezen aan leveringsmethoden "
+"om te beperken voor welke postcodes deze beschikbaar is."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -416,11 +428,6 @@ msgstr "Bestemming"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
 msgstr "Bepaal de weergave volgorde"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "Discard"
-msgstr "Negeren"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -504,6 +511,8 @@ msgid ""
 "Filling this form allows you to make the delivery method available according "
 "to the content of the order or its destination."
 msgstr ""
+"Door dit formulier in te vullen kun je de leveringsmethode beschikbaar maken "
+"op basis van de inhoud van de bestelling of de bestemming ervan."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -806,6 +815,11 @@ msgid ""
 "lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. "
 "'100$' will only match '100' and not '1000')"
 msgstr ""
+"Voorvoegsels van postcodes waarop deze leveringsmethode van toepassing is. "
+"Houd er rekening mee dat reguliere expressies kunnen worden gebruikt om "
+"landen met verschillende postcodelengtes te ondersteunen, d.w.z. dat '$' aan "
+"het einde van het voorvoegsel kan worden toegevoegd om de exacte postcode te "
+"matchen (bijv. '100$' komt alleen overeen met '100' en niet met '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -1120,6 +1134,8 @@ msgid ""
 "You cannot delete this product category as it is used on the products linked "
 "to delivery methods."
 msgstr ""
+"Je kunt deze productcategorie niet verwijderen, omdat deze wordt gebruikt "
+"voor producten die gekoppeld zijn aan leveringsmethoden."
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod

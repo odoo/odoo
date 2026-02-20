@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-17 19:01+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -22,7 +22,6 @@ msgstr ""
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__display_name
-#: model:ir.model.fields,field_description:sale_project_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__display_name
 msgid "Display Name"
@@ -30,26 +29,15 @@ msgstr "표시명"
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__id
-#: model:ir.model.fields,field_description:sale_project_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sale_project_stock
-#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
-msgid "No stock move found"
-msgstr "재고이동을 찾을수 없습니다"
-
-#. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_project_project
 msgid "Project"
 msgstr "프로젝트"
-
-#. module: sale_project_stock
-#: model:ir.model,name:sale_project_stock.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "판매 주문 내역"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_move
@@ -90,23 +78,6 @@ msgstr ""
 "은 재고 피킹을 진행하기 전에 확인해야 합니다."
 
 #. module: sale_project_stock
-#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
-msgid ""
-"This menu gives you the full traceability of inventory\n"
-"                operations on a specific product. You can filter on the "
-"product\n"
-"                to see all the past or future movements for the product."
-msgstr ""
-"이 메뉴는 재고의 전체 추적 가능성을 제공합니다.\n"
-"                특정 품목에 대한 작업. 품목에 대한 과거 또는 미래의\n"
-"                움직임을 모두 보려면 품목을 필터링 할 수 있습니다."
-
-#. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_picking
 msgid "Transfer"
 msgstr "출고"
-
-#. module: sale_project_stock
-#: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
-msgid "Transfers"
-msgstr "이동"

@@ -3,23 +3,23 @@
 # * sale_gelato
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 18:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:16+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "sale_gelato/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
@@ -67,6 +67,48 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Xin chào <t t-out=\"object.partner_id.name or "
+"''\">Brandon Freeman</t>,<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        Chúng tôi vui mừng thông báo rằng đơn hàng của bạn "
+"đang được vận chuyển.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-"
+"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Mã số theo dõi của bạn là <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Mã số theo dõi của bạn là:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                    <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        Chúng tôi vui mừng thông báo rằng đơn hàng của bạn "
+"đã được giao.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    Cảm ơn bạn!\n"
+"                    <t t-if=\"object.user_id.name\">\n"
+"                        <br/>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\">Mitchell Admin</t></"
+"div>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -204,23 +246,23 @@ msgstr "Mã bí mật Webhook"
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/controlers/main.py:0
+#: code:addons/sale_gelato/controllers/main.py:0
 msgid ""
-"Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
-"(gelato_message)s"
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
+"%(gelato_message)s"
 msgstr ""
-"Gelato không thể tiếp tục thực hiện đơn hàng %(order_reference)s: %"
-"(gelato_message)s"
+"Gelato không thể tiếp tục thực hiện đơn hàng %(order_reference)s: "
+"%(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/controlers/main.py:0
+#: code:addons/sale_gelato/controllers/main.py:0
 msgid "Gelato has canceled order %(reference)s."
 msgstr ""
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/controlers/main.py:0
+#: code:addons/sale_gelato/controllers/main.py:0
 msgid "Gelato has returned order %(reference)s."
 msgstr "Gelato đã hoàn trả đơn hàng %(reference)s."
 
@@ -380,13 +422,25 @@ msgstr "Tham chiếu mẫu"
 
 #. module: sale_gelato
 #. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "The address is incorrect."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The delivery method is not available for this order."
 msgstr "Phương thức vận chuyển này không khả dụng cho đơn hàng này."
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/models/sale_order.py:0
+#: code:addons/sale_gelato/models/res_partner.py:0
+msgid "The following address fields are too long: %s"
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/res_partner.py:0
 msgid "The following required address fields are missing: %s"
 msgstr "Các trường địa chỉ bắt buộc sau đây bị thiếu: %s"
 
@@ -418,13 +472,15 @@ msgstr ""
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
-msgid "Unable to confirm the order %s on Gelato."
+msgid ""
+"Unable to confirm the order %(order_reference)s on Gelato.%(error_message)s"
 msgstr ""
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
-msgid "Unable to delete the order %s on Gelato."
+msgid ""
+"Unable to delete the order %(order_reference)s on Gelato.%(error_message)s"
 msgstr ""
 
 #. module: sale_gelato

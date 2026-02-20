@@ -7,16 +7,16 @@
 # Abe Manyo, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 07:58+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:20+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_event/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -454,8 +454,7 @@ msgid "All"
 msgstr "Semua"
 
 #. module: website_event
-#. odoo-python
-#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All Countries"
 msgstr "Semua Negara"
 
@@ -466,11 +465,6 @@ msgstr "Semua Negara"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "All Events"
 msgstr "Semua Acara"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_location
-msgid "All countries"
-msgstr "Semua negara"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -508,14 +502,14 @@ msgstr "Penulis"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Publikasi otomatis pada"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag_category__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Secara otomatis publikasi halaman pada tanggal dan waktu yang dipilih."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
@@ -536,7 +530,7 @@ msgstr "Blog Post"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "Breadcrumb Terlihat"
 
 #. module: website_event
 #. odoo-python
@@ -556,12 +550,6 @@ msgstr "Link-Link Kalender"
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "Dapat Dipublikasikan"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Cancel"
-msgstr "Batal"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -701,8 +689,15 @@ msgid "Description"
 msgstr "Deskripsi"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Discard"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -811,6 +806,11 @@ msgid "Event Registrations"
 msgstr "Pendaftaran Acara"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr "Slot Acara"
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
@@ -852,7 +852,7 @@ msgstr "Acara dipublikasikan"
 #: model:mail.message.subtype,description:website_event.mt_event_scheduled
 #: model:mail.message.subtype,name:website_event.mt_event_scheduled
 msgid "Event scheduled"
-msgstr ""
+msgstr "Acara dijadwalkan"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -864,7 +864,7 @@ msgstr "Acara yang tidak dipublikasikan"
 #: model:mail.message.subtype,description:website_event.mt_event_unscheduled
 #: model:mail.message.subtype,name:website_event.mt_event_unscheduled
 msgid "Event unscheduled"
-msgstr ""
+msgstr "Acara dibatalkan jadwalnya"
 
 #. module: website_event
 #. odoo-javascript
@@ -1035,6 +1035,7 @@ msgstr "Dari mana Anda mendengar tentang acara ini?"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1045,6 +1046,21 @@ msgstr "Dari mana Anda mendengar tentang acara ini?"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid ""
+"If enabled, online events will be included when user filters by country."
+msgstr ""
+"Bila diaktifkan, acara-acara online akan diikutsertakan saat user memfilter "
+"berdasarkan negara."
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid "Include online"
+msgstr "Termasuk online"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -1207,7 +1223,7 @@ msgstr "Acara baru"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "Next"
-msgstr "Next"
+msgstr "Berikutnya"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
@@ -1353,7 +1369,7 @@ msgstr "Terpublikasi"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__published_date
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Tanggal publikasi"
 
 #. module: website_event
 #. odoo-javascript
@@ -1980,6 +1996,11 @@ msgstr "tersedia)"
 #: code:addons/website_event/models/event_event.py:0
 msgid "date_end"
 msgstr "date_end"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates

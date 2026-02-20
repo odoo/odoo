@@ -8,15 +8,15 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-28 14:27+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-16 08:22+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_landed_costs/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgstr "Aktivitätsausnahme-Dekoration"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitätspläne"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
@@ -93,6 +93,16 @@ msgstr "Zusätzliche Kosten"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
 msgstr "Zusätzliche Einstandskosten"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_move.py:0
+msgid ""
+"Additional landed costs:\n"
+"%(landed_cost)s"
+msgstr ""
+"Zusätzliche Einstandskosten:\n"
+"%(landed_cost)s"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
@@ -567,7 +577,7 @@ msgstr "Kommissionierung"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__pickings_count
 msgid "Pickings Count"
-msgstr ""
+msgstr "Anzahl Kommissionierungen"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -718,7 +728,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Line"
-msgstr ""
+msgstr "Bewertungsanpassungszeile"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -766,17 +776,5 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/product.py:0
 msgid ""
 "You cannot change the product type or disable landed cost option because the "
-"product is used in an account move line."
+"product is used in a journal item."
 msgstr ""
-"Sie können die Produktart nicht ändern oder die Einstandskostenoption "
-"deaktivieren, da das Produkt in einer Kontobuchungszeile verwendet wird."
-
-#. module: stock_landed_costs
-#. odoo-python
-#: code:addons/stock_landed_costs/models/stock_move.py:0
-msgid ""
-"including landed costs:\n"
-"%(landed_cost)s"
-msgstr ""
-"einschließlich Einstandskosten:\n"
-"%(landed_cost)s"

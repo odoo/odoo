@@ -4,15 +4,15 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-13 13:12+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-07 12:25+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "html_builder/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: html_builder
 #. odoo-javascript
@@ -62,9 +62,19 @@ msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/operation_plugin.js:0
+msgid ""
+"A technical issue occurred in the builder, you should save or discard your "
+"changes."
+msgstr ""
+"W programie do tworzenia stron wystąpił problem techniczny. Należy zapisać "
+"lub odrzucić wprowadzone zmiany."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "Active"
-msgstr ""
+msgstr "Aktywny"
 
 #. module: html_builder
 #. odoo-javascript
@@ -75,9 +85,9 @@ msgstr "Dodaj"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/plugins/add_product_option.xml:0
+#: code:addons/html_builder/static/src/plugins/add_product_option.js:0
 msgid "Add Product"
-msgstr "Dodaj Produkt"
+msgstr "Dodaj produkt"
 
 #. module: html_builder
 #. odoo-javascript
@@ -89,13 +99,13 @@ msgstr "Dodaj niestandardową czcionkę"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_option.xml:0
 msgid "Add a background image"
-msgstr ""
+msgstr "Dodaj obraz tła"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.xml:0
 msgid "Add a record to the list"
-msgstr ""
+msgstr "Dodaj zapis do listy"
 
 #. module: html_builder
 #. odoo-javascript
@@ -202,10 +212,28 @@ msgstr "Wyrównaj do dołu"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Align Center"
+msgstr "Wyśrodkuj"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Align Left"
+msgstr "Wyrównaj do lewej"
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/vertical_alignment_option.xml:0
 #: code:addons/html_builder/static/src/plugins/vertical_justify_option.xml:0
 msgid "Align Middle"
 msgstr "Wyrównaj do środka"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Align Right"
+msgstr "Wyrównaj do prawej"
 
 #. module: html_builder
 #. odoo-javascript
@@ -217,6 +245,7 @@ msgstr "Wyrównaj do góry"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
 msgid "Alignment"
@@ -238,17 +267,17 @@ msgstr "Alt tag"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
 msgid ""
-"Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%"
-"(close_span)s"
+"Anchor copied to clipboard%(br)s%(open_span)sLink: "
+"%(anchor_link)s%(close_span)s"
 msgstr ""
-"Kotwica skopiowana do schowka%(br)s%(open_span)sLink: %(anchor_link)s%"
-"(close_span)s"
+"Kotwica skopiowana do schowka%(br)s%(open_span)sLink: "
+"%(anchor_link)s%(close_span)s"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.xml:0
 msgid "Anchor name"
-msgstr "Nazwa odnośnika"
+msgstr "Nazwa kotwy"
 
 #. module: html_builder
 #. odoo-javascript
@@ -329,12 +358,14 @@ msgid ""
 "Are you sure you want to delete %s from your list of custom blocks?\n"
 "Deleting it will remove it for all users."
 msgstr ""
+"Czy na pewno chcesz usunąć „ %s ” z listy bloków niestandardowych?\n"
+"Usunięcie spowoduje jego usunięcie dla wszystkich użytkowników."
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/media_size_option.xml:0
 msgid "Auto"
-msgstr ""
+msgstr "Automatyczny"
 
 #. module: html_builder
 #. odoo-javascript
@@ -358,7 +389,7 @@ msgstr "Kształty tła"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.xml:0
 msgid "Background color"
-msgstr ""
+msgstr "Kolor tła"
 
 #. module: html_builder
 #. odoo-javascript
@@ -533,7 +564,7 @@ msgstr "Kleksy"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/utils/utils.js:0
 msgid "Block"
-msgstr "Blokuj"
+msgstr "Blok"
 
 #. module: html_builder
 #. odoo-javascript
@@ -576,7 +607,7 @@ msgstr "Bloczki 03"
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Blur"
-msgstr "Smuga"
+msgstr "Rozmycie"
 
 #. module: html_builder
 #. odoo-javascript
@@ -700,6 +731,7 @@ msgstr "Wyrazisty 12"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 #: code:addons/html_builder/static/src/plugins/cta_badge_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 msgid "Border"
@@ -769,7 +801,7 @@ msgstr "Pędzel 4"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Brushed"
-msgstr "Przeczesane"
+msgstr "Muśnięte"
 
 #. module: html_builder
 #. odoo-javascript
@@ -780,29 +812,24 @@ msgstr "Przycisk"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/custom_inner_snippet.xml:0
-msgid "Cancel"
-msgstr "Anuluj"
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
 msgid "Center"
-msgstr "Centrum"
+msgstr "Środek"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/select_many2x.js:0
 msgid "Choose a record..."
-msgstr "Wybierz zapis"
+msgstr "Wybierz zapis..."
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.xml:0
 msgid "Choose an anchor name"
-msgstr "Wybierz nazwę odnośnika"
+msgstr "Wybierz nazwę kotwy"
 
 #. module: html_builder
 #. odoo-javascript
@@ -826,7 +853,7 @@ msgstr "Obieg"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_position_overlay.xml:0
 msgid "Click and drag the image to adjust its position!"
-msgstr ""
+msgstr "Kliknij i przeciągnij obraz, aby dostosować jego położenie!"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1100,14 +1127,15 @@ msgstr "Przytnij obrazek"
 #: code:addons/html_builder/static/src/core/select_number_column.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Custom"
-msgstr "Własne"
+msgstr "Niestandardowe"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Custom %s"
-msgstr "Własny %s"
+msgstr "Niestandardowy %s"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1181,19 +1209,19 @@ msgstr "Usuń %(snippetTitle)s"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_fontfamilypicker.js:0
 msgid "Delete & Reload"
-msgstr ""
+msgstr "Usuń i ponownie załaduj"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Delete Block"
-msgstr ""
+msgstr "Usuń blok"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_fontfamilypicker.js:0
 msgid "Delete Font"
-msgstr ""
+msgstr "Usuń czcionkę"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1205,7 +1233,7 @@ msgstr "Usuń element"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Delete this block?"
-msgstr ""
+msgstr "Usunąć ten blok?"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1242,7 +1270,7 @@ msgstr "Diamond (R)"
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.xml:0
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_position_overlay.xml:0
-#: code:addons/html_builder/static/src/snippets/snippet_viewer.js:0
+#: code:addons/html_builder/static/src/sidebar/custom_inner_snippet.xml:0
 msgid "Discard"
 msgstr "Odrzuć"
 
@@ -1250,7 +1278,7 @@ msgstr "Odrzuć"
 #: model:ir.model.fields,field_description:html_builder.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:html_builder.field_ir_ui_view__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nazwa wyświetlana"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1262,7 +1290,7 @@ msgstr "Czy chcesz zainstalować aplikację %s?"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Door"
-msgstr "Door"
+msgstr "Drzwi"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1274,7 +1302,7 @@ msgstr "Door (R)"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/border_configurator_option.xml:0
 msgid "Dotted"
-msgstr "Wykropkowany"
+msgstr "Kropkowany"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1358,6 +1386,7 @@ msgstr "EarlyBird"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
 #: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Edit"
 msgstr "Edytuj"
 
@@ -1383,25 +1412,31 @@ msgstr "Szmaragd (R)"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Exclude all"
-msgstr ""
+msgstr "Wyklucz wszystko"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Exclude record"
-msgstr ""
+msgstr "Wyklucz rekord"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Excluded records"
-msgstr ""
+msgstr "Wykluczone rekordy"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 msgid "Exclusion"
 msgstr "Wykluczenie"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
+msgid "Fill"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -1414,13 +1449,19 @@ msgstr "Filtr"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Flag"
-msgstr "Oznacz"
+msgstr "Flaga"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/drop_zone_plugin.js:0
 msgid "For technical reasons, this block cannot be dropped here"
 msgstr "Z przyczyn technicznych ten blok nie może zostać tutaj upuszczony"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/utils/utils.js:0
+msgid "Form"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -1468,13 +1509,13 @@ msgstr "Galaxy S #6"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Gem"
-msgstr "Gem"
+msgstr "Klejnot"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Gem (R)"
-msgstr "Gem (R)"
+msgstr "Klejnot (R)"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1618,20 +1659,20 @@ msgstr "Hexagon (R)"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Horizontal and Vertical offset"
-msgstr ""
+msgstr "Przesunięcie poziome i pionowe"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
 msgid "Horizontal flip"
-msgstr ""
+msgstr "Odwrócenie w poziomie"
 
 #. module: html_builder
 #: model:ir.model.fields,field_description:html_builder.field_ir_qweb__id
 #: model:ir.model.fields,field_description:html_builder.field_ir_ui_view__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1651,31 +1692,33 @@ msgstr "Obraz"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "Inactive"
-msgstr ""
+msgstr "Nieaktywny"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Include all"
-msgstr ""
+msgstr "Uwzględnij wszystkie"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Include record"
-msgstr ""
+msgstr "Zawrzyj rekord"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Included records"
-msgstr ""
+msgstr "Zawarte rekordy"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_format_option.xml:0
 msgid "Increase for more detail, decrease for speed"
 msgstr ""
+"Zwiększ, aby uzyskać więcej szczegółów, zmniejsz, aby uzyskać większą "
+"prędkość"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1719,7 +1762,7 @@ msgstr "Wstawka"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/sidebar/snippet.xml:0
 msgid "Install"
-msgstr "Instaluj"
+msgstr "Zainstaluj"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1736,12 +1779,6 @@ msgstr "Niewidoczne elementy"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/core/building_blocks/builder_list.js:0
-msgid "Item"
-msgstr "Element"
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Kayak"
 msgstr "Kajak"
@@ -1750,7 +1787,7 @@ msgstr "Kajak"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Keep it"
-msgstr ""
+msgstr "Zachowaj"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1761,6 +1798,8 @@ msgstr "Labirynt"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Large"
 msgstr "Duży"
 
@@ -1773,6 +1812,7 @@ msgstr "Warstwowo"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
@@ -1821,7 +1861,7 @@ msgstr "Liniowo"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.js:0
 msgid "Link Anchor"
-msgstr "Odnośnik"
+msgstr "Kotwa linku"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1851,7 +1891,7 @@ msgstr "Kolor główny"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Manage Records"
-msgstr ""
+msgstr "Zarządzaj rekordami"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1863,13 +1903,14 @@ msgstr "Kruk"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/replace_media_option.xml:0
 msgid "Media"
-msgstr "Mediów"
+msgstr "Media"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Medium"
-msgstr "Medium"
+msgstr "Średni"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1983,7 +2024,7 @@ msgstr "Żaden blok tej kategorii nie może zostać usunięty na tej stronie."
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "No record."
-msgstr ""
+msgstr "Brak rekordów."
 
 #. module: html_builder
 #. odoo-javascript
@@ -1998,6 +2039,7 @@ msgstr "Nie znaleziono fragmentów"
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.js:0
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option_plugin.js:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "None"
@@ -2006,6 +2048,7 @@ msgstr "Brak"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Normal"
 msgstr "Zwykły"
 
@@ -2013,7 +2056,7 @@ msgstr "Zwykły"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Offset"
-msgstr ""
+msgstr "Przesunięcie"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2031,7 +2074,7 @@ msgstr "Otwórz w nowym oknie"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.xml:0
 msgid "Open the record list manager"
-msgstr ""
+msgstr "Otwórz menedżera listy rekordów"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2068,6 +2111,12 @@ msgstr "Organiczna kreska"
 #: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
 msgid "Outset"
 msgstr "Początek"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
+msgid "Outset/Inset"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -2212,7 +2261,7 @@ msgstr "Jakość"
 #. module: html_builder
 #: model:ir.model,name:html_builder.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2291,20 +2340,20 @@ msgstr "Usuń"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_image.xml:0
 msgid "Remove image"
-msgstr ""
+msgstr "Usuń obraz"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_option.xml:0
 msgid "Remove the background image"
-msgstr ""
+msgstr "Usuń obraz tła"
 
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
 msgid "Remove the shape"
-msgstr ""
+msgstr "Usuń kształt"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2316,7 +2365,7 @@ msgstr "Usuń ten blok"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/snippets/snippet_viewer.xml:0
 msgid "Rename"
-msgstr ""
+msgstr "Zmień nazwę"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2389,6 +2438,7 @@ msgstr "Zresetuj transformację"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/block_alignment_option.xml:0
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/text_alignment_option.xml:0
 msgid "Right"
@@ -2459,7 +2509,7 @@ msgstr "Ekran"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list_dialog.xml:0
 msgid "Search"
-msgstr ""
+msgstr "Wyszukaj"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2514,6 +2564,7 @@ msgstr "Cień"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.xml:0
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
 msgid "Shape"
 msgstr "Kształt"
@@ -2562,9 +2613,11 @@ msgstr "Shuriken (R)"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_size.xml:0
 #: code:addons/html_builder/static/src/plugins/image/media_size_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Size"
 msgstr "Rozmiar"
 
@@ -2578,6 +2631,8 @@ msgstr "Ukośny"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/font/font_plugin.js:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/shadow_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Small"
 msgstr "Mały"
 
@@ -2591,7 +2646,7 @@ msgstr "Śnieg"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/border_configurator_option.xml:0
 msgid "Solid"
-msgstr "Solidny"
+msgstr "Jednolity"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2841,6 +2896,7 @@ msgstr "Tetris"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 msgid "Text"
 msgstr "Tekst"
 
@@ -2871,6 +2927,8 @@ msgid ""
 "This change will be applied after saving and reloading the page. Are you "
 "sure you want to continue?"
 msgstr ""
+"Ta zmiana zostanie zastosowana po zapisaniu i ponownym załadowaniu strony. "
+"Czy na pewno chcesz kontynuować?"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2980,8 +3038,15 @@ msgstr "Potrójna pigułka"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/alert_option.xml:0
+#: code:addons/html_builder/static/src/plugins/button_style_option.xml:0
 msgid "Type"
 msgstr "Typ"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
+msgid "Unalign"
+msgstr "Cofnij wyrównanie"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2993,7 +3058,7 @@ msgstr "Odznacz"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.xml:0
 msgid "Update the list with all records and sort it alphabetically"
-msgstr ""
+msgstr "Zaktualizuj listę o wszystkie rekordy i posortuj ją alfabetycznie"
 
 #. module: html_builder
 #. odoo-javascript
@@ -3020,7 +3085,7 @@ msgstr "Pionowe wyrównanie"
 #: code:addons/html_builder/static/src/plugins/background_option/background_shape_option.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
 msgid "Vertical flip"
-msgstr ""
+msgstr "Odwrócenie pionowe"
 
 #. module: html_builder
 #. odoo-javascript
@@ -3031,7 +3096,7 @@ msgstr "Wideo"
 #. module: html_builder
 #: model:ir.model,name:html_builder.model_ir_ui_view
 msgid "View"
-msgstr ""
+msgstr "Widok"
 
 #. module: html_builder
 #. odoo-javascript
@@ -3174,11 +3239,23 @@ msgstr "Kompresja WebP nie jest obsługiwana w tej przeglądarce"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/utils/utils.js:0
+msgid "Website"
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_position_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/width_option.xml:0
 msgid "Width"
 msgstr "Szerokość"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
+msgid "Will remove the crop factor"
+msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
@@ -3209,7 +3286,7 @@ msgstr "auto"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_sliding_panel.xml:0
 msgid "close"
-msgstr ""
+msgstr "zamknij"
 
 #. module: html_builder
 #. odoo-javascript

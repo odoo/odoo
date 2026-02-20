@@ -8,21 +8,22 @@
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:06+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "delivery/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: delivery
 #. odoo-python
@@ -132,7 +133,7 @@ msgstr "Tambah"
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
-msgstr ""
+msgstr "Tambahkan metode pengiriman"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -314,6 +315,11 @@ msgid "Define a new delivery method"
 msgstr "Tentukan metode pengiriman baru"
 
 #. module: delivery
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr "Biaya pengiriman"
@@ -340,7 +346,7 @@ msgstr "Metode Pengiriman"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "Wizard Pemilihan Metode Pengiriman"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -388,6 +394,8 @@ msgid ""
 "Delivery method %(name)s cannot have the same tag in both Must Have Tags and "
 "Excluded Tags."
 msgstr ""
+"Metode pengiriman %(name)s tidak boleh memiliki tag yang sama di Harus "
+"Memiliki dan Tag yang Dikecualikan."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -418,11 +426,6 @@ msgstr "Tujuan"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
 msgstr "Menentukan urutan tampilan"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "Discard"
-msgstr "Buang"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -768,7 +771,7 @@ msgstr "Penyedia Pembayaran"
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transaksi Tagihan"
+msgstr "Transaksi Pembayaran"
 
 #. module: delivery
 #. odoo-javascript
@@ -804,6 +807,11 @@ msgid ""
 "lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. "
 "'100$' will only match '100' and not '1000')"
 msgstr ""
+"Awalan kode zip yang berlaku untuk metode pengiriman ini. Ingat bahwa "
+"regular expression dapat digunakan untuk mendukung negara dengan panjang "
+"kode zip yang beragam, contoh. '$' dapat ditambahkan ke akhir awalan untuk "
+"mencocokkan zip secara tepat (contoh. '100$' hanya akan mencocokkan '100' "
+"dan bukan '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -1118,6 +1126,8 @@ msgid ""
 "You cannot delete this product category as it is used on the products linked "
 "to delivery methods."
 msgstr ""
+"Anda tidak dapat menghapus kategori produk ini karena digunakan di produk "
+"terhubung ke metode pengiriman."
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod

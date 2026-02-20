@@ -3,23 +3,23 @@
 # * website_profile
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-10-07 23:38+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-24 12:41+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/website_profile/es_419/>\n"
+"odoo-s19-1/website_profile/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -34,7 +34,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_profile/models/res_users.py:0
 msgid "%(company_name)s Profile validation"
-msgstr ""
+msgstr "%(company_name)s Validación del perfil"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -54,13 +54,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
 msgstr ". Intente otra búsqueda."
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
-msgid ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</a>"
-msgstr ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">Regrese al sitio web.</a>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -169,6 +162,25 @@ msgid ""
 "                            Thanks for your participation!\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                            Hola, <t t-out=\"object.name or ''\">Marc Demo</"
+"t>:<br/><br/>\n"
+"                            Para poder acceder al sitio web de \"<t t-"
+"out=\"object.company_id.name or ''\">TuEmpresa</t>\" deberás validar tu "
+"correo electrónico.\n"
+"                            Para hacerlo, haz clic en el botón a "
+"continuación:\n"
+"                            <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                    Validar mi cuenta\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            Gracias.\n"
+"            </t>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -210,12 +222,12 @@ msgstr "Todo el tiempo"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Publicar de forma automática el"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Publica la página de forma automática en la fecha y hora elegidas."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -255,6 +267,18 @@ msgstr "Biografía"
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
 msgid "Can Publish"
 msgstr "Puede publicar"
+
+#. module: website_profile
+#. odoo-javascript
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"No puedes cambiar el país si ya hay documentos para tu cuenta. Contáctanos "
+"para realizar esta operación."
 
 #. module: website_profile
 #. odoo-javascript
@@ -432,7 +456,7 @@ msgstr "Perfil público"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Fecha de publicación"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -444,6 +468,11 @@ msgstr "Rangos"
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Ranks and Badges"
 msgstr "Rangos e insignias"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
+msgid "Return to the website."
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -503,6 +532,12 @@ msgid "Update"
 msgstr "Actualizar"
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+msgid "Update failed."
+msgstr "Ocurrió un error con la actualización."
+
+#. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
 msgid "User"
 msgstr "Usuario"
@@ -549,12 +584,12 @@ msgstr "URL absoluta del sitio web"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website
 msgid "Website Link"
-msgstr ""
+msgstr "Enlace del sitio web"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Descripción completa del sitio web del contacto"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url

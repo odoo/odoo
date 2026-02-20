@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-12-03 17:13+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -136,33 +136,6 @@ msgid "Agreement Validity:"
 msgstr "Valabilitate acord:"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_ids
-msgid "Alternative POs"
-msgstr "Comenzi alternative"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-msgid "Alternative Purchase Order"
-msgstr "Comandă de achiziție alternativă"
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid "Alternative Purchase Orders"
-msgstr ""
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid "Alternative Warning"
-msgstr "Alternativă avertizare"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-msgid "Alternatives"
-msgstr "Alternative"
-
-#. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
 msgstr "Un exemplu de acord de achiziție este o comandă cadru."
@@ -210,15 +183,9 @@ msgid "Buyer"
 msgstr "Cumpărător"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_create_alternative_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel"
 msgstr "Anulează"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid "Cancel Alternatives"
-msgstr "Anulează alternative"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
@@ -230,26 +197,6 @@ msgstr "Anulat"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr "Anulat de acordul asociat acestei cotații."
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-msgid "Choose"
-msgstr "Alege"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_ids
-msgid "Choose a vendor for alternative PO"
-msgstr "Alegeți un furnizor pentru comanda alternativă"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-msgid "Clear"
-msgstr "Golește"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-msgid "Clear Selected"
-msgstr "Golește selectate"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -273,37 +220,6 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__company_currency_id
-msgid "Company Currency"
-msgstr "Moneda companiei"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__price_total_cc
-msgid "Company Subtotal"
-msgstr "Subtotal companie"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-msgid "Company Total"
-msgstr "Total companie"
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid "Compare Order Lines"
-msgstr "Comparați liniile de comandă"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-msgid "Compare Product Lines"
-msgstr "Comparați liniile de produse"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_res_config_settings
-msgid "Config Settings"
-msgstr "Setări de configurare"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
 msgstr "Confirmă"
@@ -314,47 +230,13 @@ msgid "Confirmed"
 msgstr "Confirmat"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
-msgid "Copy Products"
-msgstr "Copiază produse"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_create_alternative_form
-msgid "Create Alternative"
-msgstr "Creează alternativă"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-msgid ""
-"Create a call for tender by adding alternative requests for quotation to "
-"different vendors.                                 Make your choice by "
-"selecting the best combination of lead time, OTD and/or total "
-"amount.                                 By comparing product lines you can "
-"also decide to order some products from one vendor and others from another "
-"vendor."
-msgstr ""
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid "Create alternative"
-msgstr "Creează alternativă"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__create_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__create_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_date
 msgid "Created on"
 msgstr "Creat în"
@@ -381,21 +263,12 @@ msgid "Description"
 msgstr "Descriere"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid "Discard"
-msgstr "Renunță"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -478,13 +351,9 @@ msgstr "Are mesaj"
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__id
-#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -510,37 +379,18 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
-msgid ""
-"If this is checked, the product quantities of the original PO will be copied"
-msgstr ""
-"Dacă aceasta este bifată, cantitățile de produse ale comenzii originale vor "
-"fi copiate"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
 msgid "Is Follower"
 msgstr "Este urmăritor"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid "Keep Alternatives"
-msgstr "Păstrează alternative"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__write_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__write_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
@@ -549,21 +399,6 @@ msgstr "Ultima actualizare pe"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Late Activities"
 msgstr "Activități întârziate"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form_purchase_requisition
-msgid "Link RFQs together and compare them"
-msgstr "Leagă cererile de ofertă și compară-le"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-msgid "Link to Existing RfQ"
-msgstr "Legătură cu cererea de ofertă existentă"
-
-#. module: purchase_requisition
-#: model:res.groups,name:purchase_requisition.group_purchase_alternatives
-msgid "Manage Purchase Alternatives"
-msgstr "Gestionează alternativele de achiziție"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -637,12 +472,6 @@ msgid "Next Activity Type"
 msgstr "Tip de activitate urmatoare"
 
 #. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid "Nothing to clear"
-msgstr "Nimic de golit"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Număr de acțiuni"
@@ -668,11 +497,6 @@ msgid "Number of messages with delivery error"
 msgstr "Numărul de mesaje cu eroare de livrare"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__order_ids
-msgid "Order"
-msgstr "Comandă"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Ordered"
@@ -687,21 +511,6 @@ msgstr "Data comenzii"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Orders"
 msgstr "Comenzi"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
-msgid "Origin Po"
-msgstr "Comanda originară"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_order__alternative_po_ids
-msgid "Other potential purchase orders for purchasing products"
-msgstr "Alte comenzi de achiziție potențiale pentru achiziționarea produselor"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
-msgid "POs to Confirm"
-msgstr "Comenzi de achiziție de confirmat"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
@@ -746,16 +555,6 @@ msgid "Purchase Agreements"
 msgstr "Acorduri achiziție"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__group_purchase_alternatives
-msgid "Purchase Alternatives"
-msgstr "Alternative de achiziție"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__purchase_group_id
-msgid "Purchase Group"
-msgstr "Grup de achiziție"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
 msgstr "Comandă de achiziție"
@@ -764,11 +563,6 @@ msgstr "Comandă de achiziție"
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
 msgstr "Linie comandă de achiziție"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-msgid "Purchase Order Lines"
-msgstr "Linii comandă de achizție"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
@@ -830,9 +624,6 @@ msgstr "Evaluări"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__reference
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Reference"
@@ -875,20 +666,6 @@ msgstr ""
 "Afișează toate înregistrările a căror dată a următoarei activități a trecut"
 
 #. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid "Some not cleared"
-msgstr "Unele nu au fost golite"
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid ""
-"Some quantities were not cleared because their status is not a RFQ status."
-msgstr ""
-"Unele cantități nu au fost golite deoarece starea lor nu este o stare RFQ."
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_start
 msgid "Start Date"
 msgstr "Data de început"
@@ -929,25 +706,9 @@ msgid "Supplier Pricelist"
 msgstr "Lista de preturi Furnizor"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_order_group
-msgid "Technical model to group PO for call to tenders"
-msgstr "Model tehnic pentru gruparea comenzilor de achiziție pentru licitații"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
 msgstr "Termeni și condiții"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
-msgid "The original PO that this alternative PO is being created for."
-msgstr "Comanda originală pentru care se creează această comandă alternativă."
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid "There are no quantities to clear."
-msgstr "Nu există cantități de golit."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -980,7 +741,6 @@ msgid "Today Activities"
 msgstr "Activitățile de astăzi"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Total"
 msgstr "Total"
@@ -991,7 +751,7 @@ msgid "Type of the exception activity on record."
 msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__uom_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit"
 msgstr "Unitate"
@@ -1004,35 +764,8 @@ msgstr "Preț unitar"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__partner_ids
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Vendor"
 msgstr "Furnizor"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg
-msgid "Warning Messages"
-msgstr "Mesaje de avertizare"
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid ""
-"Warning for %(partner)s:\n"
-"%(warning_message)s\n"
-msgstr ""
-"Avertizare pentru %(partner)s:\n"
-"%(warning_message)s\n"
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid ""
-"Warning for %(product)s:\n"
-"%(warning_message)s\n"
-msgstr ""
-"Avertizare pentru %(product)s:\n"
-"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1049,24 +782,6 @@ msgstr "Mesaje Website"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
 msgstr "Istoric comunicare website"
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
-msgid "What about the alternative Requests for Quotations?"
-msgstr "Cum rămâne cu cererile alternative de cotații?"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
-msgid "Wizard in case PO still has open alternative requests for quotation"
-msgstr ""
-"Asistent în cazul în care comanda de achiziție are încă cereri de ofertă "
-"alternative deschise"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
-msgid "Wizard to preset values for alternative PO"
-msgstr "Asistent pentru a seta valorile pentru comanda alternativă"
 
 #. module: purchase_requisition
 #. odoo-python

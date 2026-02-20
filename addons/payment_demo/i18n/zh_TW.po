@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-09-16 08:10+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -21,40 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: payment_demo
-#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
-msgid ""
-"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
-"                    <option value=\"done\" title=\"Successful payment\">\n"
-"                        Successful\n"
-"                    </option>\n"
-"                    <option value=\"pending\" title=\"Payment processing\">\n"
-"                        Pending\n"
-"                    </option>\n"
-"                    <option value=\"cancel\" title=\"Payment cancelled by "
-"customer\">\n"
-"                        Cancelled\n"
-"                    </option>\n"
-"                    <option value=\"error\" title=\"Processing error\">\n"
-"                        Error\n"
-"                    </option>\n"
-"                </select>"
-msgstr ""
-"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
-"                    <option value=\"done\" title=\"付款成功\">\n"
-"                        成功\n"
-"                    </option>\n"
-"                    <option value=\"pending\" title=\"付款處理中\">\n"
-"                        待處理\n"
-"                    </option>\n"
-"                    <option value=\"cancel\" title=\"客戶已取消付款\">\n"
-"                        已取消\n"
-"                    </option>\n"
-"                    <option value=\"error\" title=\"處理錯誤\">\n"
-"                        錯誤\n"
-"                    </option>\n"
-"                </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -122,6 +88,11 @@ msgid "Canceled"
 msgstr "已取消"
 
 #. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "Cancelled"
+msgstr ""
+
+#. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
 msgstr "手動獲取金額"
@@ -183,6 +154,7 @@ msgstr "顯示名稱"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Error"
 msgstr "錯誤"
 
@@ -225,6 +197,16 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "Payment cancelled by customer"
+msgstr ""
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "Payment processing"
+msgstr ""
+
+#. module: payment_demo
 #. odoo-javascript
 #: code:addons/payment_demo/static/src/interactions/payment_demo_mixin.js:0
 msgid "Payment processing failed"
@@ -256,8 +238,14 @@ msgstr "使用此付款方式進行的付款，將模擬一個處理<b>錯誤</b
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Pending"
 msgstr "暫停"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "Processing error"
+msgstr ""
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -268,6 +256,16 @@ msgstr "設為錯誤"
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
 msgstr "模擬狀態"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "Successful"
+msgstr ""
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "Successful payment"
+msgstr ""
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-09-16 04:38+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -135,12 +135,6 @@ msgstr "단, csv 파일도 사용 가능"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr "가져오기를 진행하려면 '계속하기'를 클릭하여 %s 행에서 계속 진행합니다."
@@ -155,8 +149,8 @@ msgstr "열 %(column)s에 잘못된 값이 포함되어 있습니다(값: %(valu
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr ""
 "열 %(column)s에 잘못된 값이 있습니다. %(line)d 항목 오류: %(error)s가 발생했"
 "습니다."
@@ -184,8 +178,8 @@ msgstr "의견"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"URL을 검색 할 수 없습니다 : %(url)s [%(field_name)s: L%(line_number)d]: %"
-"(error)s"
+"URL을 검색 할 수 없습니다 : %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -248,6 +242,12 @@ msgid "Delay after each batch"
 msgstr "각 일괄 가져오기 후 지연"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
@@ -305,8 +305,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "레코드를 가져오는 동안 오류가 발생했습니다: 모든 행에 동일한 수의 항목이 있어"
 "야 합니다. 제목 행에는 %(title_row_entries)d개의 항목이 있고, 첫 번째 데이터 "
@@ -371,8 +371,8 @@ msgstr "파일 크기가 설정된 최대 값을 초과합니다 (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "raw 바이너리(base64 아님)로 가져오거나 검사할 파일"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

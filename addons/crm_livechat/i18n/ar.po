@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 13:38+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -53,11 +53,6 @@ msgid "Create Lead"
 msgstr "إنشاء عميل مهتم"
 
 #. module: crm_livechat
-#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead_and_forward
-msgid "Create Lead & Forward"
-msgstr "إنشاء العميل المهتم وإعادة توجيهه"
-
-#. module: crm_livechat
 #. odoo-javascript
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
@@ -67,21 +62,14 @@ msgstr "إنشاء عميل مهتم جديد (/lead مسمى العميل ال�
 #. odoo-python
 #: code:addons/crm_livechat/models/discuss_channel.py:0
 msgid ""
-"Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
-"(i_end)s%(pre_end)s"
+"Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead "
+"title%(i_end)s%(pre_end)s"
 msgstr ""
 
 #. module: crm_livechat
 #: model:ir.model,website_form_label:crm_livechat.model_crm_lead
 msgid "Create an Opportunity"
 msgstr "إنشاء فرصة"
-
-#. module: crm_livechat
-#. odoo-python
-#: code:addons/crm_livechat/models/chatbot_script_step.py:0
-#: code:addons/crm_livechat/models/discuss_channel.py:0
-msgid "Created a new lead: %s"
-msgstr "تم إنشاء عميل مهتم جديد: %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_discuss_channel
@@ -218,6 +206,12 @@ msgstr ""
 msgid ""
 "You cannot update a lead and link it to a channel you don't have access to."
 msgstr "لا يمكنك تحديث عميل مهتم وربطه بقناة لا يمكنك الوصول إليها."
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid "created a new lead: %s"
+msgstr ""
 
 #. module: crm_livechat
 #. odoo-javascript

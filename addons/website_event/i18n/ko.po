@@ -7,16 +7,16 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-02 14:54+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:47+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_event/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -216,6 +216,15 @@ msgid ""
 "long-arrow-right\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
+"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
+"                   <strong> 별빛 속의 하모니</strong>\n"
+"                    <span class=\"text-muted\">2025년 8월 23일 - 오후 8:15</"
+"span>\n"
+"                    <span class=\"text-primary\">등록하기 <i class=\"fa fa-"
+"long-arrow-right\" role=\"presentation\"/></span>\n"
+"               </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -331,7 +340,7 @@ msgstr "<strong>위치</strong>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "<strong>Los Angeles, CA, United States</strong>"
-msgstr ""
+msgstr "<strong>Los Angeles, CA, United States</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
@@ -453,8 +462,7 @@ msgid "All"
 msgstr "전체"
 
 #. module: website_event
-#. odoo-python
-#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All Countries"
 msgstr "모든 국가"
 
@@ -465,11 +473,6 @@ msgstr "모든 국가"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "All Events"
 msgstr "모든 일정"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_location
-msgid "All countries"
-msgstr "모든 국가"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -506,7 +509,7 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "자동 게시"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__publish_on
@@ -534,7 +537,7 @@ msgstr "블로그 게시물"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "이동 경로 공개"
 
 #. module: website_event
 #. odoo-python
@@ -554,12 +557,6 @@ msgstr "캘린더 링크"
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "게시 가능"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Cancel"
-msgstr "취소"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -699,8 +696,15 @@ msgid "Description"
 msgstr "설명"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Discard"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -775,7 +779,7 @@ msgstr "행사 정보"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "행사 정보 <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
@@ -807,6 +811,11 @@ msgstr "행사 등록 링크"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
 msgstr "행사 등록"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr "행사 슬롯"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -850,7 +859,7 @@ msgstr "행사 게시"
 #: model:mail.message.subtype,description:website_event.mt_event_scheduled
 #: model:mail.message.subtype,name:website_event.mt_event_scheduled
 msgid "Event scheduled"
-msgstr ""
+msgstr "예정 행사"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -862,7 +871,7 @@ msgstr "행사 게시안함"
 #: model:mail.message.subtype,description:website_event.mt_event_unscheduled
 #: model:mail.message.subtype,name:website_event.mt_event_unscheduled
 msgid "Event unscheduled"
-msgstr ""
+msgstr "미예정 행사"
 
 #. module: website_event
 #. odoo-javascript
@@ -952,7 +961,7 @@ msgstr "바닥글 표시"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "티켓 예매 <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1031,6 +1040,7 @@ msgstr "이 행사에 대해 어떻게 알게 되셨나요?"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1041,6 +1051,19 @@ msgstr "이 행사에 대해 어떻게 알게 되셨나요?"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid ""
+"If enabled, online events will be included when user filters by country."
+msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
+msgid "Include online"
+msgstr "온라인 포함"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -1333,7 +1356,7 @@ msgstr "게시"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Publish on"
-msgstr ""
+msgstr "게시일"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1347,7 +1370,7 @@ msgstr "게시 완료"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__published_date
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__published_date
 msgid "Published date"
-msgstr ""
+msgstr "게시일"
 
 #. module: website_event
 #. odoo-javascript
@@ -1402,13 +1425,13 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
 msgid "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
-msgstr ""
+msgstr "등록 <i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
 "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-msgstr ""
+msgstr "등록 <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -1532,7 +1555,7 @@ msgstr "견본"
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_tree_view
 msgid "Scheduled"
-msgstr ""
+msgstr "예약됨"
 
 #. module: website_event
 #. odoo-python
@@ -1544,7 +1567,7 @@ msgstr "예정된 행사"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Scheduled for"
-msgstr ""
+msgstr "다음으로 예정:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -1740,7 +1763,7 @@ msgstr "상단 표시줄 필터"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Unschedule"
-msgstr ""
+msgstr "일정 취소"
 
 #. module: website_event
 #. odoo-python
@@ -1968,6 +1991,11 @@ msgstr "사용 가능)"
 #: code:addons/website_event/models/event_event.py:0
 msgid "date_end"
 msgstr "date_end"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates

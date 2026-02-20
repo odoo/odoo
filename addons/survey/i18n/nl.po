@@ -7,17 +7,17 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:42+0000\n"
+"PO-Revision-Date: 2026-01-31 12:48+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/survey/nl/"
-">\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/survey/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,17 +229,17 @@ msgstr "<br/> <span>door</span>"
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
+"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
+"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
+"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -266,17 +266,17 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
+"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We gebruiken het logo van het bedrijf dat de enquête "
 "heeft gemaakt (om meerdere bedrijven te ondersteunen) -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
+"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
+"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certificering: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedbackformulier</t>\n"
@@ -332,8 +332,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object."
+"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -370,8 +370,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Beantwoord de enquête voor <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Beantwoord de enquête voor <t t-out=\"format_date(object."
+"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wensen je veel succes!\n"
@@ -490,7 +490,7 @@ msgstr "<span class=\"mx-1\">-</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span class=\"mx-2 o_form_label\">to</span>"
-msgstr ""
+msgstr "<span class=\"mx-2 o_form_label\">tot</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -774,7 +774,7 @@ msgstr "Activiteit uitzondering decoratie"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_plans_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Activiteitenplannen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
@@ -786,7 +786,7 @@ msgstr "Activiteitsfase"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -966,7 +966,7 @@ msgstr "Arthur B. McDonald"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Ask something..."
-msgstr ""
+msgstr "Stel een vraag..."
 
 #. module: survey
 #. odoo-python
@@ -1071,12 +1071,12 @@ msgstr "Avicii"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Background"
-msgstr ""
+msgstr "Achtergrond"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_filename
 msgid "Background Filename"
-msgstr ""
+msgstr "Achtergrond Bestandsnaam"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__background_image
@@ -1135,7 +1135,7 @@ msgstr "Kabinet met deuren"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_can_answer
 msgid "Can Answer Current Question"
-msgstr ""
+msgstr "Kan huidige vraag beantwoorden"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
@@ -1244,7 +1244,7 @@ msgstr "Gecertificeerd e-mailsjabloon"
 #: model:ir.actions.act_window,name:survey.survey_user_input_action_certified
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_certified_participants
 msgid "Certified Participants"
-msgstr ""
+msgstr "Gecertificeerde deelnemers"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -1711,7 +1711,7 @@ msgstr "Gedetailleerde antwoorden"
 #. module: survey
 #: model:ir.model,name:survey.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col2
@@ -1882,7 +1882,7 @@ msgstr "Finale scorebord"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Final Scoreboard"
-msgstr ""
+msgstr "Eindstand"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug2
@@ -2238,7 +2238,8 @@ msgstr "Indien aangevinkt kunnen gebruikers terug naar vorige pagina's."
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
-"Indien aangevinkt moeten gebruikers aanmelden, zelfs met een geldig token."
+"AIs dit is aangevinkt moeten gebruikers inloggen voor ze antwoorden, zelfs "
+"met een geldig token."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_container
@@ -2339,7 +2340,7 @@ msgstr "Bijwerkingsvlag voor gehele getallen"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Intro Message"
-msgstr ""
+msgstr "Introductiebericht"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
@@ -2480,12 +2481,12 @@ msgstr "Kim Jong-hyun"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_answers_value
 msgid "Kpi Nbr Of Answers Value"
-msgstr ""
+msgstr "Kpi-waarde Aantal antwoorden"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_certified_participants_value
 msgid "Kpi Nbr Of Certified Participants Value"
-msgstr ""
+msgstr "Kpi-waarde Aantal gecertificeerde deelnemers"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug1
@@ -2501,12 +2502,12 @@ msgstr "Label volgorde"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "Label for %s"
-msgstr ""
+msgstr "Label voor %s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Labels"
-msgstr ""
+msgstr "Labels"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__matrix_row_ids
@@ -2680,7 +2681,7 @@ msgstr "Login vereist"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__text_box
 msgid "Long Text"
-msgstr ""
+msgstr "Lange tekst"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
@@ -2717,7 +2718,7 @@ msgstr "Matrix Type"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label_placeholder
 msgid "Max Label Placeholder"
-msgstr ""
+msgstr "Placeholder Max Label"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_date
@@ -2791,7 +2792,7 @@ msgstr "Berichten"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min_label_placeholder
 msgid "Min Label Placeholder"
-msgstr ""
+msgstr "Placeholder voor Min label"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2857,7 +2858,7 @@ msgstr "Teide (Spanje - Tenerife)"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__multiple_choice
 msgid "Multi-Select"
-msgstr ""
+msgstr "Meervoudige selectie"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
@@ -2988,7 +2989,7 @@ msgstr "Geen pogingen over."
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.survey_user_input_action_certified
 msgid "No certified participant yet!"
-msgstr ""
+msgstr "Nog geen gecertificeerde deelnemer!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3019,7 +3020,7 @@ msgstr "Nee, het is te klein voor het menselijk oog."
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "No, wait a minute"
-msgstr ""
+msgstr "Nee, wacht even"
 
 #. module: survey
 #. odoo-javascript
@@ -3224,7 +3225,7 @@ msgstr "Open sectie"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Option Name"
-msgstr ""
+msgstr "Optienaam"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3250,6 +3251,8 @@ msgid ""
 "Optional: provide extra guidelines, instructions, pictures... here, to help "
 "attendees answer"
 msgstr ""
+"Optioneel: geef hier extra richtlijnen, instructies, afbeeldingen, enz. om "
+"deelnemers te helpen bij het beantwoorden van de vragen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3595,7 +3598,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
 msgid "Quiz Passed"
-msgstr ""
+msgstr "Quiz geslaagd"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -3748,7 +3751,7 @@ msgstr "SMS fout bij versturen"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as nickname"
-msgstr ""
+msgstr "Opslaan als bijnaam"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
@@ -3763,7 +3766,7 @@ msgstr "Schaal"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale Maximim Value (0 to 10)"
-msgstr ""
+msgstr "Maximale schaalwaarde (0 tot 10)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label
@@ -3793,7 +3796,7 @@ msgstr "Minimale waarde van de schaal (0 tot 10)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale Range"
-msgstr ""
+msgstr "Schaalbereik"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_scale
@@ -3829,7 +3832,7 @@ msgstr "Scorewaarde voor een juist antwoord op deze vraag."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Scoreboard"
-msgstr ""
+msgstr "Scorebord"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_scored_question
@@ -3876,7 +3879,7 @@ msgstr "Zoek vraag"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey User Inputs"
-msgstr "Gebruikersinvoer van enquête zoeken"
+msgstr "Gebruikersinputs van enquête zoeken"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
@@ -3998,12 +4001,12 @@ msgstr "Deel een enquête"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Shared with"
-msgstr ""
+msgstr "Gedeeld met"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
 msgid "Short Text"
-msgstr ""
+msgstr "Korte tekst"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_table_pagination
@@ -4031,7 +4034,7 @@ msgstr "Toon finale scorebord"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Show Final Scoreboard"
-msgstr ""
+msgstr "Eindstand weergeven"
 
 #. module: survey
 #. odoo-javascript
@@ -4049,7 +4052,7 @@ msgstr "Toon resultaten"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Show Scoreboard"
-msgstr ""
+msgstr "Scorebord weergeven"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
@@ -4070,7 +4073,7 @@ msgstr "Laat ze dia's zien met een heleboel tekst die ze snel moeten lezen"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
 msgid "Single-Select"
-msgstr ""
+msgstr "Enkelvoudige selectie"
 
 #. module: survey
 #. odoo-python
@@ -4193,7 +4196,7 @@ msgstr "Indienen"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "Submit survey"
-msgstr ""
+msgstr "Enquête indienen"
 
 #. module: survey
 #. odoo-javascript
@@ -4202,6 +4205,8 @@ msgid ""
 "Submit your survey? Once it's out, it is like a letter in the mail: it "
 "cannot be recalled."
 msgstr ""
+"Enquête indienen? Als deze eenmaal is verstuurd, is het net als een brief "
+"per post: Je kunt deze niet meer terugroepen."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__success_count
@@ -4351,7 +4356,7 @@ msgstr "Enquête gebruikers invoerregel"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_tree
 msgid "Survey User inputs"
-msgstr "Enquête gebruikers invoeren"
+msgstr "Enquête gebruikers inputs"
 
 #. module: survey
 #. odoo-python
@@ -5028,7 +5033,7 @@ msgstr "Bevestig invoer"
 #: code:addons/survey/static/src/question_page/question_page_one2many_field.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_error_msg
 msgid "Validation Error"
-msgstr "Bevestiging fout"
+msgstr "Validatiefout"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_label
@@ -5059,7 +5064,7 @@ msgstr "Wachtend op deelnemers..."
 #. odoo-python
 #: code:addons/survey/controllers/main.py:0
 msgid "We do not accept submissions for this question anymore."
-msgstr ""
+msgstr "We accepteren geen inzendingen meer voor deze vraag."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -5080,7 +5085,7 @@ msgstr "Websiteberichten"
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
 #: model:ir.model.fields,help:survey.field_survey_user_input__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: survey
 #. odoo-python
@@ -5264,7 +5269,7 @@ msgstr "Ja"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "Yes, submit"
-msgstr ""
+msgstr "Ja, verzenden"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q3_sug1

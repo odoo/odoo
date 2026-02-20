@@ -3,15 +3,15 @@
 # * project_todo
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:57+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-14 08:56+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "project_todo/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,11 @@ msgid ""
 "Send invitations #event @Mitchell !\n"
 "        </span>"
 msgstr ""
+"<br/>\n"
+"    <span style=\"font-size: 14px;\">\n"
+"        Zorg ervoor dat je het juiste formaat en de juiste volgorde "
+"gebruikt. Bijvoorbeeld: Stuur uitnodigingen #event @Mitchell!\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -139,6 +144,10 @@ msgid ""
 "        </span>\n"
 "        <br/>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Gebruik deze trefwoorden in de titel om je taken te stroomlijnen:\n"
+"   </span>\n"
+"    <br/>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -325,6 +334,10 @@ msgid ""
 "                </span>\n"
 "                Mark the to-do as urgent"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!!!:</font>\n"
+"            </span>\n"
+"            Markeer de To-do als Dringend"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -334,6 +347,10 @@ msgid ""
 "                </span>\n"
 "                Mark the to-do as high priority"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!!:</font>\n"
+"            </span>\n"
+"            Markeer de To-do als Hoge prioriteit"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -343,6 +360,10 @@ msgid ""
 "                </span>\n"
 "                Mark the to-do as medium priority"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!:</font>\n"
+"            </span>\n"
+"            Markeer de To-do als Gemiddelde prioriteit"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -352,6 +373,10 @@ msgid ""
 "                </span>\n"
 "                Add tags to categorize the to-do"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">#labels:</font>\n"
+"            </span>\n"
+"            Voeg labels toe om de To-do's te categoriseren"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -361,6 +386,9 @@ msgid ""
 "                </span>\n"
 "                Assign the to-do to a specific user"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">@gebruiker:</font>\n"
+"            </span>Wijs de To-do toe aan een specifieke gebruiker"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -395,7 +423,7 @@ msgstr "To-do toevoegen"
 
 #. module: project_todo
 #. odoo-javascript
-#: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
+#: code:addons/project_todo/static/src/core/web/activity_menu_patch.js:0
 msgid "Add a To-Do"
 msgstr "Voeg een To-do toe"
 
@@ -501,12 +529,6 @@ msgid "Delete"
 msgstr "Verwijderen"
 
 #. module: project_todo
-#: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
-#: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
-msgid "Discard"
-msgstr "Negeren"
-
-#. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__display_name
 #: model:ir.model.fields,field_description:project_todo.field_project_task__display_name
 #: model:ir.model.fields,field_description:project_todo.field_res_users__display_name
@@ -521,7 +543,7 @@ msgstr "Vervaldatum"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Enhance Your To-Dos with Shortcuts &amp;#9889;"
-msgstr ""
+msgstr "Verbeter je To-do's met snelkoppelingen &amp;#9889;"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -663,7 +685,7 @@ msgstr "Taak"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 msgid "Task Title..."
-msgstr ""
+msgstr "Titel van de taak..."
 
 #. module: project_todo
 #. odoo-javascript
@@ -681,7 +703,7 @@ msgstr ""
 #: code:addons/project_todo/models/res_users.py:0
 #: code:addons/project_todo/static/src/webclient/share_target/todo_share_target_item.js:0
 msgid "To-Do"
-msgstr "To-Do"
+msgstr "To-do"
 
 #. module: project_todo
 #: model:ir.ui.menu,name:project_todo.menu_todo_todos
@@ -750,6 +772,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Gebruik deze trefwoorden in de titel om nieuwe taken in te stellen:\n"
+"\n"
+"        30h Wijs 30 uur toe aan de taak\n"
+"        #label Stel labels in op de taak\n"
+"        @gebruiker Wijs de taak toe aan een gebruiker\n"
+"        ! Geef de taak een gemiddelde prioriteit\n"
+"        !! Geef de taak een hoge prioriteit\n"
+"        !!! Geef de taak een urgente prioriteit\n"
+"\n"
+"        Zorg ervoor dat je de juiste indeling en volgorde gebruikt, bv.: "
+"Verbeter het configuratiescherm 5h #feature #v16 @Mitchell !"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -765,6 +798,19 @@ msgid ""
 "                             Ensure you follow the correct format and order. "
 "For example: \"Send invitations #event @Mitchell !\""
 msgstr ""
+"Gebruik deze trefwoorden in de titel om je To-do's te stroomlijnen:\n"
+"\n"
+"                             #labels: Voeg labels toe om de To-do te "
+"categoriseren.\n"
+"                             @gebruiker: Wijs de To-do toe aan een "
+"specifieke gebruiker.\n"
+"                             !: Markeer de To-do als gemiddelde prioriteit.\n"
+"                             !!: Markeer de To-do als hoge prioriteit.\n"
+"                             !!!: Markeer de To-do als dringend.\n"
+"\n"
+"                             Zorg ervoor dat je de juiste indeling en "
+"volgorde aanhoudt. Bijvoorbeeld: \"Uitnodigingen versturen #evenement "
+"@Mitchell !\""
 
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_res_users

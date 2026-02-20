@@ -7,16 +7,16 @@
 # Martin Trigaux, 2022
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:51+0000\n"
+"PO-Revision-Date: 2026-02-14 12:20+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "survey/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -228,17 +228,17 @@ msgstr "<br/> <span>oleh</span>"
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
+"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
+"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
+"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -265,17 +265,17 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
+"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- Kami menggunakan logo perusahaan yang membuat survei "
 "(untuk menangani kasus multi company) -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
+"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
+"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Sertifikasi: <t t-out=\"object.survey_id.display_name or "
 "''\">Formulir Feedback</t>\n"
@@ -331,8 +331,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object."
+"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -370,8 +370,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Silakan jawab survei untuk <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Silakan jawab survei untuk <t t-out=\"format_date(object."
+"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -781,7 +781,7 @@ msgstr "Dekorasi Pengecualian Aktivitas"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_plans_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Rencana-Rencana Kegiatan"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
@@ -1087,7 +1087,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_filename
 msgid "Background Filename"
-msgstr ""
+msgstr "Nama file background"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__background_image
@@ -1146,7 +1146,7 @@ msgstr "Kabinet dengan Pintu"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_can_answer
 msgid "Can Answer Current Question"
-msgstr ""
+msgstr "Dapat Menjawab Pertanyaan Saat Ini"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
@@ -1254,7 +1254,7 @@ msgstr "Templat Email Bersertifikasi"
 #: model:ir.actions.act_window,name:survey.survey_user_input_action_certified
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_certified_participants
 msgid "Certified Participants"
-msgstr ""
+msgstr "Peserta Bersertifikasi"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -1718,7 +1718,7 @@ msgstr "Jawaban Detail"
 #. module: survey
 #: model:ir.model,name:survey.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Digest"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col2
@@ -1959,7 +1959,7 @@ msgstr "Kumpulkan feedback dari karyawan dan pelanggan Anda"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__survey_session_speed_rating_time_limit
 msgid "General Time limit (seconds)"
-msgstr ""
+msgstr "Batas Waktu umum (detik)"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2
@@ -2483,12 +2483,12 @@ msgstr "Kim Jong-hyun"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_answers_value
 msgid "Kpi Nbr Of Answers Value"
-msgstr ""
+msgstr "Kpi Nbr Of Answers Value"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_certified_participants_value
 msgid "Kpi Nbr Of Certified Participants Value"
-msgstr ""
+msgstr "Kpi Nbr Of Certified Participants Value"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug1
@@ -2504,7 +2504,7 @@ msgstr "Label rangka Urutan"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "Label for %s"
-msgstr ""
+msgstr "Label untuk %s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2684,7 +2684,7 @@ msgstr "Masuk diwajibkan"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__text_box
 msgid "Long Text"
-msgstr ""
+msgstr "Teks Panjang"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
@@ -2722,7 +2722,7 @@ msgstr "Matrix Jenis"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label_placeholder
 msgid "Max Label Placeholder"
-msgstr ""
+msgstr "Placeholder Label Maks"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_date
@@ -2796,7 +2796,7 @@ msgstr "Pesan"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min_label_placeholder
 msgid "Min Label Placeholder"
-msgstr ""
+msgstr "Placeholder Label Min"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2862,7 +2862,7 @@ msgstr "Mount Teide (Spain - Tenerife)"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__multiple_choice
 msgid "Multi-Select"
-msgstr ""
+msgstr "Pilihan Ganda"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
@@ -2929,7 +2929,7 @@ msgstr "Partisipasi baru selesai."
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Next"
-msgstr "Next"
+msgstr "Berikutnya"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_calendar_event_id
@@ -3024,7 +3024,7 @@ msgstr "Tidak, itu terlalu kecil untuk mata manusia."
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "No, wait a minute"
-msgstr ""
+msgstr "Tidak, tunggu sebentar"
 
 #. module: survey
 #. odoo-javascript
@@ -3246,6 +3246,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) untuk dipilih saat mengirimkan email. "
+"Bila tidak ditetapkan, bahasa utama partner akan digunakan. Ini biasanya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"contoh. {{ object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3599,7 +3603,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
 msgid "Quiz Passed"
-msgstr ""
+msgstr "Lolos Quiz"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -3752,7 +3756,7 @@ msgstr "Kesalahan Pengiriman SMS`"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as nickname"
-msgstr ""
+msgstr "Simpan sebagai nickname"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
@@ -4006,7 +4010,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
 msgid "Short Text"
-msgstr ""
+msgstr "Teks Singkat"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_table_pagination
@@ -4034,7 +4038,7 @@ msgstr "Tunjukkan Leaderboard Final"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Show Final Scoreboard"
-msgstr ""
+msgstr "Tunjukkan Scoreboard Final"
 
 #. module: survey
 #. odoo-javascript
@@ -4052,7 +4056,7 @@ msgstr "Tunjukkan Hasil"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Show Scoreboard"
-msgstr ""
+msgstr "Tunjukkan Scoreboard"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
@@ -4075,7 +4079,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
 msgid "Single-Select"
-msgstr ""
+msgstr "Pilihan Tunggal"
 
 #. module: survey
 #. odoo-python
@@ -4198,7 +4202,7 @@ msgstr "Menyerahkan"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "Submit survey"
-msgstr ""
+msgstr "Serahkan survei"
 
 #. module: survey
 #. odoo-javascript
@@ -4207,6 +4211,8 @@ msgid ""
 "Submit your survey? Once it's out, it is like a letter in the mail: it "
 "cannot be recalled."
 msgstr ""
+"Serahkan survei Anda? Setelah diserahkan, akan menjadi surat pos: tidak "
+"dapat dipanggil kembali."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__success_count
@@ -4557,7 +4563,7 @@ msgid ""
 "accounts for them or allow external signup in configuration."
 msgstr ""
 "Penerima berikut tidak memiliki akun user: %s. Anda harus membuat akun user "
-"untuk mereka atau mengizinkan pendaftaran eksternal di konfigurasi,"
+"untuk mereka atau mengizinkan pendaftaran eksternal di konfigurasi."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row1
@@ -5065,7 +5071,7 @@ msgstr "Menunggu peserta..."
 #. odoo-python
 #: code:addons/survey/controllers/main.py:0
 msgid "We do not accept submissions for this question anymore."
-msgstr ""
+msgstr "Kami tidak menerima masukan untuk pertanyaan ini lagi."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -5270,7 +5276,7 @@ msgstr "Ya"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "Yes, submit"
-msgstr ""
+msgstr "Ya, serahkan"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q3_sug1

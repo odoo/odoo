@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-09-16 21:35+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
@@ -44,14 +44,17 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's %(action_name)s"
+msgid "%(name)s's Actual Margins"
 msgstr ""
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Sales Order Items"
-msgstr "%(name)s försäljningsorderposter"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-dollar text-success\" "
+"invisible=\"actual_margin &lt; 0\" title=\"On Track\"/>\n"
+"                    <i class=\"fa fa-fw o_button_icon fa-dollar text-"
+"danger\" invisible=\"actual_margin &gt;= 0\" title=\"Off Track\"/>"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -125,6 +128,11 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "<span class=\"o_stat_text\">Actual Margin</span>"
+msgstr ""
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
 msgstr ""
 
@@ -134,19 +142,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Säljorder</span>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
-msgid ""
-"<span name=\"rating_status_helper\">\n"
-"                    <span invisible=\"rating_status == 'periodic'\">A rating "
-"request will be sent as soon as a task reaches this stage, provided the "
-"project is billable.</span>\n"
-"                    <span invisible=\"rating_status == 'stage'\">Rating "
-"requests will be sent as long as the task remains in this stage, provided "
-"the project is billable.</span>\n"
-"                </span>"
-msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -159,8 +154,8 @@ msgstr "<span>)</span>"
 msgid ""
 "A project must be defined on the quotation %(order)s or on the form of "
 "products creating a task on order.\n"
-"The following product need a project in which to put its task: %"
-"(product_name)s"
+"The following product need a project in which to put its task: "
+"%(product_name)s"
 msgstr ""
 
 #. module: sale_project
@@ -196,6 +191,17 @@ msgstr ""
 "  - Lagerförflyttningar: kvantiteten kommer från bekräftade plockningar\n"
 
 #. module: sale_project
+#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
+#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
+msgid "Actual Margins"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
@@ -215,6 +221,31 @@ msgid "Billable"
 msgstr "Fakturerbar"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
+msgid "Billable Type"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
+msgid "Billed Manually"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
+msgid "Billed at a Fixed price"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
+msgid "Billed on Milestones"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
+msgid "Billed on Timesheets"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Cancelled"
@@ -231,18 +262,6 @@ msgstr ""
 msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
-msgstr ""
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Cost of Goods Sold"
-msgstr ""
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Cost of Goods Sold Items"
 msgstr ""
 
 #. module: sale_project
@@ -345,22 +364,9 @@ msgid "Customer"
 msgstr "Kund"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Customer Invoices"
-msgstr "Kundfakturor"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
 msgstr "Definieras vid offerttillfället"
-
-#. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
-msgid "Delivered"
-msgstr "Levererade"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
@@ -368,12 +374,7 @@ msgid "Digital Marketing Campaign (project)"
 msgstr "Digital marknadsföringskampanj (projekt)"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
-msgid "Discard"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
 #: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
@@ -383,7 +384,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
 #: model:ir.model.fields,field_description:sale_project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__display_name
-#: model:ir.model.fields,field_description:sale_project.field_project_update__display_name
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
@@ -404,12 +404,6 @@ msgid "Done"
 msgstr "Klar"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Down Payments"
-msgstr "Delbetalningar"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
 msgstr "Tomt projekt"
@@ -420,7 +414,7 @@ msgid "Flooring Services"
 msgstr "Tjänster för golvbeläggning"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_account_move__id
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:sale_project.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_project.field_product_product__id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__id
@@ -430,7 +424,6 @@ msgstr "Tjänster för golvbeläggning"
 #: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
 #: model:ir.model.fields,field_description:sale_project.field_project_task_type__id
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__id
-#: model:ir.model.fields,field_description:sale_project.field_project_update__id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
@@ -446,12 +439,6 @@ msgid "In Progress"
 msgstr "Pågående"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-msgid "Internal link"
-msgstr ""
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
@@ -464,17 +451,11 @@ msgid "Invoice your time and material to customers"
 msgstr "Fakturera er tid och material till kunder"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
-msgid "Invoiced"
-msgstr "Fakturerad"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices_dashboard
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoices"
 msgstr "Fakturor"
 
@@ -484,20 +465,9 @@ msgid "Invoicing Policy"
 msgstr "Faktureringspolicy"
 
 #. module: sale_project
-#: model:ir.model,name:sale_project.model_account_move
-msgid "Journal Entry"
-msgstr "Verifikat"
-
-#. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
 msgid "Journal Item"
 msgstr "Transaktion"
-
-#. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-msgid "Load more"
-msgstr "Ladda mer"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -516,12 +486,6 @@ msgstr ""
 "relaterade tidrapporten.\n"
 "Skapa en uppgift och spåra timmar: Skapa en uppgift vid validering av "
 "försäljningsordern och spåra arbetstimmar."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Materials"
-msgstr "Material"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -548,6 +512,11 @@ msgid "New project"
 msgstr ""
 
 #. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
+msgid "Non-Billable"
+msgstr ""
+
+#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -565,10 +534,14 @@ msgid "Office Furniture Set (task)"
 msgstr "Kontorsmöbelset (uppgift)"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Other Services"
-msgstr "Andra tjänster"
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_other_costs
+msgid "Other Costs"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__11_other_revenues
+msgid "Other Revenues"
+msgstr ""
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -670,11 +643,6 @@ msgid "Project Template create Wizard"
 msgstr ""
 
 #. module: sale_project
-#: model:ir.model,name:sale_project.model_project_update
-msgid "Project Update"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
 msgstr "Projektets försäljningsorder"
@@ -694,6 +662,26 @@ msgstr "Kvantitet (%)"
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
 msgstr "Offertmallrad"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
+msgid "Revenues Fixed Price"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
+msgid "Revenues Manual"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
+msgid "Revenues Milestones"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__03_timesheet_revenues
+msgid "Revenues Timesheets"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
@@ -763,13 +751,11 @@ msgstr ""
 "varje tidrapportpost individuellt."
 
 #. module: sale_project
-#. odoo-javascript
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items_dashboard
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales Order Items"
 msgstr "Orderposter"
 
@@ -779,8 +765,6 @@ msgid "Sales Order Line"
 msgstr "Orderrad"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders_dashboard
 msgid "Sales Orders"
@@ -836,11 +820,9 @@ msgid "Service Invoicing Policy"
 msgstr "Tjänstens faktureringspolicy"
 
 #. module: sale_project
-#. odoo-javascript
-#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
-#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
-msgid "Sold"
-msgstr "Såld"
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__10_service_revenues
+msgid "Service Revenues"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
@@ -973,6 +955,7 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Vendor Bills"
 msgstr "Leverantörsfakturor"
 

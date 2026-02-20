@@ -19,15 +19,15 @@
 # Piotr Strębski <strebski@gmail.com>, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-10-29 11:39+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:04+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_payment/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_payment
 #. odoo-python
@@ -94,12 +94,12 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/>Zapłacone"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Opłacono"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/>Oczekujące"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Oczekuje"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -136,15 +136,14 @@ msgid ""
 msgstr ""
 "<strong>Uwaga!</strong>Trwa proces zwrotu pieniędzy za tę płatność.\n"
 "Poczekaj chwilę na jego przetworzenie. Jeśli po kilku minutach zwrot nadal "
-"jest w toku\n"
-"po kilku minutach, sprawdź konfigurację swojego dostawcy płatności."
+"jest w toku, sprawdź konfigurację swojego dostawcy płatności."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
 msgstr ""
-"Zniżka zostanie zastosowana, jeśli klient zapłaci przed dniem %s włącznie."
+"Zniżka zostanie zastosowana, jeśli klient zapłaci przed datą %s włącznie."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -168,6 +167,11 @@ msgid "A token is required to create a new payment transaction."
 msgstr "Do utworzenia nowej transakcji płatniczej wymagany jest token."
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
+msgid "All Pricelists"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Amount"
@@ -182,6 +186,11 @@ msgstr "Kwota dostępna do zwrotu"
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
 msgid "Amount Due"
 msgstr "Należność"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Amount of"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -239,7 +248,7 @@ msgstr "Waluta"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
 msgid "Discount Date"
-msgstr "Data rabatu"
+msgstr "Data zniżki"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
@@ -336,8 +345,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"W trybie testowym przez testowy interfejs płatniczy przetwarzane są fałszywe "
-"płatności.\n"
+"Testowe płatności przetwarzane są w trybie testowym przez testowy interfejs "
+"płatniczy.\n"
 "Ten tryb jest zalecany podczas konfigurowania dostawcy."
 
 #. module: account_payment
@@ -368,7 +377,7 @@ msgid "Invoices Count"
 msgstr "Liczba faktur"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+#: model:portal.entry,name:account_payment.portal_entry_overdue_invoices
 msgid "Invoices to pay"
 msgstr "Faktury do opłacenia"
 
@@ -395,7 +404,7 @@ msgstr "Data ostatniej aktualizacji"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr "Maksymalna dopuszczalny zwrot"
+msgstr "Maksymalny dopuszczalny zwrot"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
@@ -427,6 +436,13 @@ msgid "Online payment option is not enabled in Configuration."
 msgstr "Opcja płatności online nie jest włączona w konfiguracji."
 
 #. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_payment_provider__available_pricelist_ids
+msgid ""
+"Only allow this payment provider when the partner's pricelist matches one of "
+"these."
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
@@ -447,7 +463,7 @@ msgstr "Zaległe faktury powinny mieć tego samego partnera."
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
 msgid "Partial"
-msgstr "Częściowo"
+msgstr "Częściowy"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -501,12 +517,12 @@ msgstr "Dziennik płatności"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Metoda płatności"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Method Line"
-msgstr ""
+msgstr "Pozycja metody płatności"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_method_menu
@@ -517,7 +533,7 @@ msgstr "Metody płatności"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "Dostawca płatności"
+msgstr "Operator płatności"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
@@ -540,18 +556,23 @@ msgstr "Tokeny płatności"
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
-msgstr "Transakcja płatności"
+msgstr "Transakcja płatnicza"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr "Transakcje płatności"
+msgstr "Transakcje płatnicze"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
 msgstr "Zaloguj się, aby opłacić zaległe faktury"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__available_pricelist_ids
+msgid "Pricelists"
+msgstr ""
 
 #. module: account_payment
 #. odoo-python
@@ -563,7 +584,7 @@ msgstr "Dostawca"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Reference"
-msgstr "Odnośnik"
+msgstr "Referencja"
 
 #. module: account_payment
 #. odoo-python
@@ -739,7 +760,7 @@ msgstr "Transakcje"
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
 msgid "Unsupported"
-msgstr "Niewspierana"
+msgstr "Nieobsługiwana"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -760,9 +781,9 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Nie możesz usunąć metody płatności, która jest powiązana z dostawcą w trybie "
-"włączenia lub trybie testowym.\n"
-"Powiązany/-i dostawca/-y: %s"
+"Nie możesz usunąć metody płatności, która jest powiązana z operatorem w "
+"trybie włączenia lub trybie testowym.\n"
+"Powiązany/-i operator/-zy: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -795,7 +816,7 @@ msgstr "do zapłaty za %s dni"
 #. odoo-javascript
 #: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "due today"
-msgstr "Do zapłaty dziś"
+msgstr "do zapłaty dziś"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -803,6 +824,17 @@ msgid "has been applied."
 msgstr "został zastosowany."
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "is already paid on this invoice, please make sure to not pay twice."
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
-msgstr "Zaległa"
+msgstr "zaległa"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid "pricelist not allowed"
+msgstr ""

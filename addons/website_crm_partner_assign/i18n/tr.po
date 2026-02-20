@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-28 06:09+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -52,20 +52,17 @@ msgid "%s's Opportunity"
 msgstr "%s'in Fırsatı"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.countries_setting
 msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                There are no matching partners found for the selected "
-"country. Displaying results across all countries instead."
+"            There are no matching partners found for the selected country. "
+"Displaying results across all countries instead."
 msgstr ""
-"<i class=\"fa fa-info-circle me-2\"/>\n"
-"                Seçilen ülke için eşleşen hiçbir iş ortağı bulunamadı. Bunun "
-"yerine tüm ülkelerden sonuçlar gösteriliyor."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -82,19 +79,9 @@ msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil me-1\"/>Düzenle"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
-msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to resellers"
-msgstr "<i class=\"oi oi-chevron-left me-2\"/>Bayilere geri dönün"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "<option>Countries...</option>"
-msgstr "<option>Ülkeler...</option>"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "<option>States...</option>"
-msgstr "<option>Eyaletler...</option>"
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
+msgid "<i class=\"oi oi-chevron-left me-2\"/>Back"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -190,13 +177,13 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">You need to fill up the next action and contact the "
-"customer before accepting the lead</span>"
+"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
+"none;\">You need to fill up the next action and contact the customer before "
+"accepting the lead</span>"
 msgstr ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">Müşteri adayını kabul etmeden önce bir sonraki "
-"eylemi doldurmalı ve müşteriyle iletişime geçmelisiniz</span>"
+"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
+"none;\">Müşteri adayını kabul etmeden önce bir sonraki eylemi doldurmalı ve "
+"müşteriyle iletişime geçmelisiniz</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -207,6 +194,11 @@ msgstr "<span class=\"text-muted\"> - </span>"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "<span> at </span>"
 msgstr "<span> de </span>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
+msgid "<span>Find a partner</span>"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -241,25 +233,24 @@ msgid ""
 "href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject "
 "Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name "
 "or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name "
-"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and "
-"lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</"
-"t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
+"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id']."
+"country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-"
+"out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
 "Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> "
 "</li><br/>\n"
 "</ol>\n"
 "<t t-if=\"ctx.get('partner_in_portal')\">\n"
-"    Please connect to your <a t-att-href=\"'%s?db=%s' % "
-"(object.get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get "
-"details. On each lead are two buttons on the top left corner that you should "
-"press after having contacted the lead: \"I'm interested\" &amp; \"I'm not "
+"    Please connect to your <a t-att-href=\"'%s?db=%s' % (object."
+"get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get details. "
+"On each lead are two buttons on the top left corner that you should press "
+"after having contacted the lead: \"I'm interested\" &amp; \"I'm not "
 "interested\".<br/>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
 "    You do not have yet a portal access to our database. Please contact\n"
 "    <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email "
-"and 'your account manager %s (%s)' % "
-"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or "
-"'us'\">us</t>.<br/>\n"
+"and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+"ctx['partner_id'].user_id.email) or 'us'\">us</t>.<br/>\n"
 "</t>\n"
 "The lead will be sent to another partner if you do not contact the lead "
 "before 20 days.<br/><br/>\n"
@@ -297,8 +288,6 @@ msgid "Add an opportunity"
 msgstr "Fırsat ekle"
 
 #. module: website_crm_partner_assign
-#. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Address"
 msgstr "Adres"
@@ -309,18 +298,13 @@ msgid "Address:"
 msgstr "Adres:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "All Categories"
-msgstr "Tüm Kategoriler"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "All Countries"
 msgstr "Tüm Ülkeler"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "All Industries"
 msgstr "Tüm Sanayiler"
 
@@ -351,19 +335,9 @@ msgid "Assigned Partner:"
 msgstr "Atanan İş Ortağı:"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__publish_on
-msgid "Auto publish on"
-msgstr ""
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "Automatic Assignment"
 msgstr "Otomatik Atama"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__publish_on
-msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
@@ -371,7 +345,7 @@ msgid "Automatically sanitized HTML contents"
 msgstr "Otomatik olarak ayıklanan HTML içeriği"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
 msgid "Back to resellers list"
 msgstr "Bayi listesine dön"
 
@@ -386,25 +360,12 @@ msgid "Campaign:"
 msgstr "Kampanya:"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__can_publish
-msgid "Can Publish"
-msgstr "Yayınlanabilir"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "City"
 msgstr "Semt/İlçe"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -433,12 +394,6 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: website_crm_partner_assign
-#. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/partner_page_option.xml:0
-msgid "Contact Details"
-msgstr "Kontak Ayrıntıları"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -454,6 +409,17 @@ msgstr "Kişi İsmi"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Contents"
 msgstr "İçerikler"
+
+#. module: website_crm_partner_assign
+#. odoo-javascript
+#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.xml:0
+msgid "Countries"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "Countries..."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__country_id
@@ -515,13 +481,6 @@ msgid "Customer:"
 msgstr "Müşteri:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
-msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
-msgstr ""
-"TÜM PARTNERLER İÇİN KULLANILABİLİR HALE GETİRMEK AMACIYLA YAPI BLOKLARINI "
-"BURAYA BIRAKIN"
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Date"
@@ -548,10 +507,18 @@ msgid "Details Next Activity"
 msgstr "Sonraki Faaliyet Detayları"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "Discard"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
@@ -568,11 +535,6 @@ msgstr "İlgili Kişiyi Düzenle"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Opportunity"
 msgstr "Fırsatı Düzenle"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Edit to add a short description"
-msgstr "Kısa bir açıklama eklemek için düzenleyin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -604,37 +566,23 @@ msgid "Expected Revenue"
 msgstr "Beklenen Gelir"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Filter by category"
-msgstr "Kategoriye göre filtreleyin"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.countries_setting
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "Filter by country"
 msgstr "Ülkeye göre filtreleyin"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "Filter by industry"
 msgstr "Sektöre göre filtrele"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Filters"
-msgstr "Filtreler"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Find a reseller"
-msgstr "Partner bulun"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,description:website_crm_partner_assign.portal_entry_leads
 msgid "Follow and convert your leads"
 msgstr "Adayları takip edin ve müşteriye dönüştürün"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,description:website_crm_partner_assign.portal_entry_opportunities
 msgid "Follow and convert your opportunities"
 msgstr "Fırsatları takip edin ve müşteriye dönüştürün"
 
@@ -699,11 +647,6 @@ msgstr ""
 "anlamına gelir.)"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Go to reseller"
-msgstr "Satıcıya gidin"
-
-#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
 msgid "Grade"
 msgstr "Derece"
@@ -746,6 +689,7 @@ msgstr "İlgilenmiyorum"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_portal_entry__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
@@ -775,11 +719,6 @@ msgstr "Uygulayan"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date
 msgid "Invoice Account Date"
 msgstr "Fatura Hesap Tarihi"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__is_published
-msgid "Is Published"
-msgstr "Yayınlandı"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__write_uid
@@ -855,7 +794,7 @@ msgid "Lead forward to partner"
 msgstr "İş Ortağı İlet"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,name:website_crm_partner_assign.portal_entry_leads
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
@@ -941,11 +880,6 @@ msgid "No more partner available"
 msgstr "Daha fazla iş ortağı mevcut değil"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "No results found for \""
-msgstr "\" için sonuç bulunamadı"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "Not allowed to update the following field(s): %s."
@@ -962,12 +896,12 @@ msgstr ""
 "ortağına sahip kullanıcılar düzenleyebilir."
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "Open industries dropdown"
 msgstr "Sektörler açılır menüsünü aç"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,name:website_crm_partner_assign.portal_entry_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Opportunities"
@@ -1034,12 +968,6 @@ msgid "Partner Location"
 msgstr "İş Ortağı Konumu"
 
 #. module: website_crm_partner_assign
-#. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/partner_page_option_plugin.js:0
-msgid "Partner Page"
-msgstr "Partner Sayfası"
-
-#. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_partner_pages_list
 msgid "Partner Pages"
 msgstr ""
@@ -1060,8 +988,6 @@ msgid "Partner not interested"
 msgstr "İş ortağı ilgilenmiyor"
 
 #. module: website_crm_partner_assign
-#. odoo-python
-#: code:addons/website_crm_partner_assign/controllers/main.py:0
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_partners_pages
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_pages_tree_view
@@ -1104,9 +1030,9 @@ msgid "Planned Revenue"
 msgstr "Planlanan Gelir"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Please check back soon."
-msgstr "Lütfen kısa süre sonra tekrar kontrol edin."
+#: model:ir.model,name:website_crm_partner_assign.model_portal_entry
+msgid "Portal Entry"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1119,11 +1045,6 @@ msgstr "Öncelik:"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Probability"
 msgstr "Olasılık"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__published_date
-msgid "Published date"
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1170,7 +1091,6 @@ msgstr "Referanslar"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "Resellers"
 msgstr "Bayiler"
 
@@ -1190,32 +1110,12 @@ msgid "Salesperson:"
 msgstr "Satış Temsilcisi:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Search"
-msgstr "Arama"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "Search by name or address"
-msgstr "İsim veya adrese göre arama"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "See all resellers"
-msgstr "Tüm bayileri görün"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "See categories filters"
-msgstr "Kategori filtrelerini görün"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "See countries filters"
 msgstr "Ülke filtrelerini görün"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.industries_setting
 msgid "See industries filters"
 msgstr "Sektör filtrelerini gör"
 
@@ -1277,6 +1177,11 @@ msgstr "Aşama:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "States..."
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Street"
 msgstr "Sokak/Cadde"
 
@@ -1295,16 +1200,6 @@ msgstr "Etiketler"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:0
 msgid "The Forward Email Template is not in the database"
 msgstr "İletilen Eposta Şablonu veritabanında yok"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
-msgid "The full absolute URL to access the document through the website."
-msgstr "Belgeye web sitesi üzerinden erişmek için tam mutlak URL."
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
-msgid "The full relative URL to access the document through the website."
-msgstr "Belgeye web sitesi üzerinden erişmek için tam göreli URL."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1362,35 +1257,15 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_published
-msgid "Visible on current website"
-msgstr "Mevcut web sitesinde görülebilir"
-
-#. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "Warning"
 msgstr "Uyarı"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "We're expanding our partner network."
-msgstr "Partner ağımızı genişletiyoruz."
-
-#. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_website
 msgid "Website"
 msgstr "Websitesi"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
-msgid "Website Absolute URL"
-msgstr "Web Sitesi Mutlak URL"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
-msgid "Website URL"
-msgstr "Web Sitesi URL Adresi"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1449,7 +1324,7 @@ msgid "at"
 msgstr "de"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "in"
 msgstr "ile"
 
@@ -1467,16 +1342,6 @@ msgstr "boylam"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "on"
 msgstr ":"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "reference"
-msgstr "referans"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "references"
-msgstr "referanslar"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned

@@ -3,36 +3,32 @@
 # * account_debit_note
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 17:30+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:22+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_debit_note/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr "<span class=\"o_stat_text\">Opravné daňové doklady</span>"
+msgstr "<span class=\"o_stat_text\">Vrubopisy</span>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr "Průvodce přidáním opravného daňového dokladu"
-
-#. module: account_debit_note
-#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
-msgid "Cancel"
-msgstr "Zrušit"
+msgstr "Průvodce přidáním vrubopisu"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -40,6 +36,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "debit notes made from this journal"
 msgstr ""
+"Zaškrtněte toto políčko, pokud nechcete sdílet stejnou sekvenci pro faktury "
+"a vrubopisy vytvořená z tohoto deníku."
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -55,7 +53,7 @@ msgstr "Kód země"
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Create Debit Note"
-msgstr "Vytvořit opravný daňový doklad"
+msgstr "Vytvořit vrubopis"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
@@ -72,13 +70,13 @@ msgstr "Vytvořeno dne"
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "Debit Note"
-msgstr "Opravný daňový doklad"
+msgstr "Vrubopis"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
-msgstr "Datum opravného daňového dokladu"
+msgstr "Datum vrubopisu"
 
 #. module: account_debit_note
 #. odoo-python
@@ -88,12 +86,12 @@ msgstr "Datum opravného daňového dokladu"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_ids
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
 msgid "Debit Notes"
-msgstr "Opravné daňové doklady"
+msgstr "Vrubopisy"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
 msgid "Dedicated Debit Note Sequence"
-msgstr ""
+msgstr "Sekvence vyhrazených vrubopisů"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
@@ -113,7 +111,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
-"Je-li pole prázdné, použije se deník účetního záznamu, který se opravuje."
+"Je-li pole prázdné, použije se deník účetního záznamu, který má být opraven."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -122,7 +120,7 @@ msgid ""
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
 "V případě, že potřebujete provést úpravy pro každou položku, můžete je "
-"zkopírovat. Tyto řádky se nezkopírují na dodatečný opravný daňový doklad. "
+"zkopírovat. Tyto řádky se nezkopírují na dodatečný vrubopis. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -163,7 +161,7 @@ msgstr "Typ záznamu"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 msgid "Number of Debit Notes"
-msgstr "Počet opravných daňových dokladů"
+msgstr "Počet vrubopisu"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
@@ -188,7 +186,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr "Opravné daňové doklady, vytvořené pro tuto fakturu"
+msgstr "Vrubopisy vytvořené pro tuto fakturu"
 
 #. module: account_debit_note
 #. odoo-python
@@ -208,7 +206,7 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
-"Můžete vytvořit opravný daňový doklad pouze pro zákaznickou fakturu, "
+"Můžete vytvořit vrubopis pouze pro zákaznickou fakturu, zákaznický dobropis, "
 "dodavatelskou fakturu, nebo jiný vydaný či přijatý opravný daňový doklad."
 
 #. module: account_debit_note
@@ -224,11 +222,11 @@ msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit "
 "note."
 msgstr ""
-"Nemůžete vytvořit opravný daňový doklad na fakturu, na kterou je již napojen "
-"jiný opravný daňový doklad."
+"Nemůžete vytvořit vrubopis na fakturu, na kterou je již napojen jiný opravný "
+"daňový doklad."
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "debit_origin_id"
-msgstr ""
+msgstr "debit_origin_id"

@@ -7,28 +7,23 @@
 # Sarah Park, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-11-16 22:43+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-31 12:48+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_mass_mailing/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
-msgid "<font class=\"text-white\">|</font>"
-msgstr "<font class=\"text-white\">|</font>"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_benefits_popup
@@ -36,6 +31,8 @@ msgid ""
 "<i class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Curated Industry "
 "Insights"
 msgstr ""
+"<i class=\"fa fa-check text-o-color-1\" role=\"img\"/>    엄선된 전문적인 인"
+"사이트"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_benefits_popup
@@ -66,6 +63,9 @@ msgid ""
 "                                        <span class=\"s_website_form_mark\"> "
 "*</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">이메일</span>\n"
+"                                        <span class=\"s_website_form_mark\"> "
+"*</span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -94,6 +94,9 @@ msgid ""
 "                                        <span class=\"s_website_form_mark\"> "
 "*</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">이름</span>\n"
+"                                        <span class=\"s_website_form_mark\"> "
+"*</span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -146,20 +149,10 @@ msgid "Close"
 msgstr "닫기"
 
 #. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_res_company
-msgid "Company"
-msgstr ""
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
 msgstr "연락처"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
-msgid "Display Name"
-msgstr "표시명"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -207,11 +200,6 @@ msgstr ""
 "보세요."
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
-msgid "ID"
-msgstr "ID"
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "John Smith"
@@ -246,7 +234,7 @@ msgstr "뉴스레터"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
 msgid "Newsletter Aside"
-msgstr ""
+msgstr "뉴스레터 부록"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
@@ -282,13 +270,13 @@ msgstr "뉴스레터 팝업"
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_translation_option_plugin.js:0
 msgid "Newsletter block"
-msgstr ""
+msgstr "뉴스레터 블록"
 
 #. module: website_mass_mailing
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_translation_option_plugin.js:0
 msgid "Newsletter popup"
-msgstr ""
+msgstr "뉴스레터 팝업"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -308,14 +296,15 @@ msgstr "없음"
 
 #. module: website_mass_mailing
 #. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/interactions/subscribe_list_missing_error.xml:0
+msgid "Pick one or remove this block."
+msgstr ""
+
+#. module: website_mass_mailing
+#. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.xml:0
 msgid "Placeholder"
 msgstr "자리 표시자"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
-msgid "Popup"
-msgstr "팝업"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -376,6 +365,12 @@ msgstr "등록해 주셔서 감사합니다!"
 #: code:addons/website_mass_mailing/controllers/main.py:0
 msgid "Thanks for subscribing!"
 msgstr "구독해 주셔서 감사합니다!"
+
+#. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/interactions/subscribe_list_missing_error.xml:0
+msgid "This block is not linked to an active Newsletter."
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside

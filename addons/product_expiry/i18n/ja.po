@@ -7,23 +7,23 @@
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-18 12:16+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-02-07 12:28+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "product_expiry/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product_expiry
 #. odoo-python
@@ -41,8 +41,8 @@ msgstr "\t--使用期限切れ--"
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
-"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
-"\">Expiring</span>\n"
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; "
+"expiration_date)\">Expiring</span>\n"
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
@@ -195,14 +195,9 @@ msgid "Description"
 msgstr "説明"
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
-msgid "Discard"
-msgstr "破棄"
-
-#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr "配送伝票に使用期限を記載"
+msgstr "納品伝票に使用期限を記載"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -249,7 +244,7 @@ msgstr "使用期限日"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
 msgid "Expiration dates will appear on the delivery slip"
-msgstr "配送伝票に使用期限が表示されます"
+msgstr "納品伝票に使用期限が表示されます"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -294,18 +289,18 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"予測数量(受注数量 - 受注数量+入庫数量−除去予定数量)\n"
-"単一のストックロケーションを持つコンテキストでは、このロケーションに格納され"
-"ている製品、またはその子製品が含まれます。\n"
-"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに保管されている製品"
-"またはその子製品が含まれます。\n"
-"それ以外の場合は、「内部」タイプの在庫ロケーションに保管されている製品が含ま"
-"れます。"
+"予測数量(在庫数量 − 出庫予定数 ＋ 入庫予定数 − 除去予定数量として算出)\n"
+"単一の在庫ロケーションの文脈では、そのロケーションおよびその下位ロケーション"
+"に保管されている商品が含まれます。\n"
+"単一の倉庫の文脈では、その倉庫の在庫ロケーションおよびその下位ロケーションに"
+"保管されている商品が含まれます。\n"
+"それ以外の場合は、「内部」タイプのすべての在庫ロケーションに保管されている商"
+"品が含まれます。"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
 msgid "Forecasted Quantity"
-msgstr "見通し数量"
+msgstr "予測数量"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
@@ -331,7 +326,7 @@ msgstr "ID"
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
 msgid "Include expiration dates on delivery slip"
-msgstr "配送伝票に使用期限を記載"
+msgstr "納品伝票に使用期限を記載"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
@@ -380,8 +375,8 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
-"removed from the stock and not be counted in the Fresh On Hand Stock "
-"anymore.It will be computed on the lot/serial number."
+"removed from the stock and not be counted in the Fresh On Hand Stock anymore."
+"It will be computed on the lot/serial number."
 msgstr ""
 "賞味期限の何日前から在庫から除外し、「使用可能な手持在庫」にカウントしないよ"
 "うにするかの日数。ロット番号/シリアル番号を基に計算されます。"
@@ -440,7 +435,7 @@ msgstr "プロダクトバリアント"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "在庫数量"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -480,7 +475,7 @@ msgstr "在庫補充レポート"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_rule
 msgid "Stock Rule"
-msgstr "在庫規則"
+msgstr "在庫ルール"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert

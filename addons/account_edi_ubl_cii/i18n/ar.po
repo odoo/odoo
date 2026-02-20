@@ -4,15 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-10-30 11:57+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:04+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_edi_ubl_cii/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -65,16 +65,6 @@ msgid "AS2 exchange"
 msgstr "AS2 exchange"
 
 #. module: account_edi_ubl_cii
-#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
-msgid "Account Move Send"
-msgstr "إرسال حركة الحساب"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
-msgid "Account Move Send Wizard"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
 msgid "Albania VAT"
 msgstr "Albania VAT"
@@ -94,8 +84,8 @@ msgstr "Articles 226 items 11 to 15 Directive 2006/112/EN"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"At least one of the following fields %(field_list)s is required on %"
-"(record)s."
+"At least one of the following fields %(field_list)s is required on "
+"%(record)s."
 msgstr ""
 "حقل واحد على الأقل من الحقول التالية %(field_list)s مطلوب في %(record)s."
 
@@ -108,7 +98,7 @@ msgstr "مرفق"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
 msgid "Australia (BIS Billing 3.0 A-NZ)"
-msgstr ""
+msgstr "Australia (BIS Billing 3.0 A-NZ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
@@ -144,7 +134,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "Base helpers for UBL"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0208
@@ -251,8 +241,8 @@ msgid ""
 "Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, "
 "Phone: %(phone)s, Email: %(email)s"
 msgstr ""
-"تعذر استرداد الشريك مع التفاصيل: الاسم:%(name)s، ضريبة القيمة المضافة: %"
-"(vat)s، رقم الهاتف: %(phone)s، عنوان البريد الإلكتروني: %(email)s"
+"تعذر استرداد الشريك مع التفاصيل: الاسم:%(name)s، ضريبة القيمة المضافة: "
+"%(vat)s، رقم الهاتف: %(phone)s، عنوان البريد الإلكتروني: %(email)s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -322,7 +312,7 @@ msgstr "Directorates of the European Commission"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
-msgstr ""
+msgstr "خصم"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__display_name
@@ -581,7 +571,7 @@ msgstr "Indirizzo di Posta Elettronica Certificata"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Install Chorus Pro"
-msgstr ""
+msgstr "Install Chorus Pro"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -715,6 +705,12 @@ msgid "Malta VAT"
 msgstr "Malta VAT"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "Missing '_title' for multi-level constraints."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9940
 msgid "Monaco VAT"
 msgstr "Monaco VAT"
@@ -774,6 +770,12 @@ msgid "Odoo"
 msgstr "أودو"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "Other Errors:"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Peppol Address"
 msgstr "Peppol Address"
@@ -816,7 +818,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid ""
 "Please install the french Chorus pro module to have all the specific rules."
-msgstr ""
+msgstr "يرجى تثبيت وحدة Chorus pro الفرنسية للحصول على جميع القواعد المحددة."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -880,14 +882,24 @@ msgid "San Marino VAT"
 msgstr "San Marino VAT"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Send Invoice Wizard"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9948
 msgid "Serbia VAT"
 msgstr "Serbia VAT"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
 msgid "Singapore (BIS Billing 3.0 SG)"
-msgstr ""
+msgstr "Singapore (BIS Billing 3.0 SG)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
@@ -948,12 +960,22 @@ msgstr "رمز فئة الضريبة"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason
 msgid "Tax Exemption Reason"
-msgstr ""
+msgstr "سبب الإعفاء الضريبي"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid "Tax Exemption Reason Code"
 msgstr "رمز سبب الإعفاء الضريبي"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
+"line '%(line)s'."
+msgstr ""
+"تعذر استرداد الضريبة ذات الاستحقاق المطابق: '%(exigibility)s' للسطر "
+"'%(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1042,12 +1064,24 @@ msgstr "الحقل 'رقم الحساب السليم' مطلوب في الحسا
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "The following bank account numbers got retrieved during the import : %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr "لقد تم تحويل الفاتورة إلى إشعار دائن وقد تمت إعادة الكميات."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid "The prepaid amount of %s corresponds to the withholding tax applied."
+msgstr "The prepaid amount of %s corresponds to the withholding tax applied."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason_code
@@ -1129,7 +1163,7 @@ msgstr "United Kingdom VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unspported file type via %s"
-msgstr ""
+msgstr "Unspported file type via %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
@@ -1415,6 +1449,22 @@ msgstr ""
 "Directive 2006/112/EC"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-144
+msgid ""
+"VATEX-EU-144 - Exempt based on article 144 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-144 - Exempt based on article 144 of Council Directive 2006/112/EC"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-146-1e
+msgid ""
+"VATEX-EU-146-1E - Exempt based on article 146 section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-146-1E - Exempt based on article 146 section 1 (e) of Council "
+"Directive 2006/112/EC"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
 msgid ""
 "VATEX-EU-148 - Exempt based on article 148 of Council Directive 2006/112/EC"
@@ -1546,6 +1596,20 @@ msgstr ""
 "Directive 2006/112/EC"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-153
+msgid ""
+"VATEX-EU-153 - Exempt based on article 153 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-153 - Exempt based on article 153 of Council Directive 2006/112/EC"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-159
+msgid ""
+"VATEX-EU-159 - Exempt based on article 159 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-159 - Exempt based on article 159 of Council Directive 2006/112/EC"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
 msgid ""
 "VATEX-EU-309 - Exempt based on article 309 of Council Directive 2006/112/EC"
@@ -1606,6 +1670,222 @@ msgid "VATEX-EU-O - Not subject to VAT"
 msgstr "VATEX-EU-O - Not subject to VAT"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-298sexdeciesa
+msgid ""
+"VATEX-FR-298SEXDECIESA - Exempt based on article 298 sexdecies A of the Code "
+"Général des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-298SEXDECIESA - Exempt based on article 298 sexdecies A of the Code "
+"Général des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-ae
+msgid ""
+"VATEX-FR-AE - Exempt based on 2 of article 283 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-AE - Exempt based on 2 of article 283 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-1
+msgid ""
+"VATEX-FR-CGI261-1 - Exempt based on 1 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-1 - Exempt based on 1 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-2
+msgid ""
+"VATEX-FR-CGI261-2 - Exempt based on 2 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-2 - Exempt based on 2 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-3
+msgid ""
+"VATEX-FR-CGI261-3 - Exempt based on 3 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-3 - Exempt based on 3 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-4
+msgid ""
+"VATEX-FR-CGI261-4 - Exempt based on 4 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-4 - Exempt based on 4 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-5
+msgid ""
+"VATEX-FR-CGI261-5 - Exempt based on 5 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-5 - Exempt based on 5 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-7
+msgid ""
+"VATEX-FR-CGI261-7 - Exempt based on 7 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-7 - Exempt based on 7 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-8
+msgid ""
+"VATEX-FR-CGI261-8 - Exempt based on 8 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261-8 - Exempt based on 8 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261a
+msgid ""
+"VATEX-FR-CGI261A - Exempt based on article 261 A of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261A - Exempt based on article 261 A of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261b
+msgid ""
+"VATEX-FR-CGI261B - Exempt based on article 261 B of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261B - Exempt based on article 261 B of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-1
+msgid ""
+"VATEX-FR-CGI261C-1 - Exempt based on 1° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261C-1 - Exempt based on 1° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-2
+msgid ""
+"VATEX-FR-CGI261C-2 - Exempt based on 2° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261C-2 - Exempt based on 2° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-3
+msgid ""
+"VATEX-FR-CGI261C-3 - Exempt based on 3° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261C-3 - Exempt based on 3° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-1
+msgid ""
+"VATEX-FR-CGI261D-1 - Exempt based on 1° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261D-1 - Exempt based on 1° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-1bis
+msgid ""
+"VATEX-FR-CGI261D-1BIS - Exempt based on 1°bis of article 261 D of the Code "
+"Général des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261D-1BIS - Exempt based on 1°bis of article 261 D of the Code "
+"Général des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-2
+msgid ""
+"VATEX-FR-CGI261D-2 - Exempt based on 2° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261D-2 - Exempt based on 2° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-3
+msgid ""
+"VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-4
+msgid ""
+"VATEX-FR-CGI261D-4 - Exempt based on 4° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261D-4 - Exempt based on 4° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261e-1
+msgid ""
+"VATEX-FR-CGI261E-1 - Exempt based on 1° of article 261 E of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261E-1 - Exempt based on 1° of article 261 E of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261e-2
+msgid ""
+"VATEX-FR-CGI261E-2 - Exempt based on 2° of article 261 E of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI261E-2 - Exempt based on 2° of article 261 E of the Code Général "
+"des Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi275
+msgid ""
+"VATEX-FR-CGI275 - Exempt based on article 275 of the Code Général des Impôts "
+"(CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI275 - Exempt based on article 275 of the Code Général des Impôts "
+"(CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi277a
+msgid ""
+"VATEX-FR-CGI277A - Exempt based on article 277 A of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI277A - Exempt based on article 277 A of the Code Général des "
+"Impôts (CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi295
+msgid ""
+"VATEX-FR-CGI295 - Exempt based on article 295 of the Code Général des Impôts "
+"(CGI ; General tax code)"
+msgstr ""
+"VATEX-FR-CGI295 - Exempt based on article 295 of the Code Général des Impôts "
+"(CGI ; General tax code)"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cnwvat
 msgid ""
 "VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier "
@@ -1660,6 +1940,22 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__z
 msgid "Z - Zero rated goods"
 msgstr "Z - Zero rated goods"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+"customer '%s'."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+"company '%s'."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format

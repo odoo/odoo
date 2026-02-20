@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-16 15:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
@@ -49,12 +49,11 @@ msgid ""
 "                        To gain access to your account, you can use the "
 "following link:\n"
 "                        <div style=\"margin: 32px 0px 32px 0px;\">\n"
-"                            <a t-attf-href=\"/web/login?"
-"auth_login={{object.email}}\" t-attf-style=\"background-color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
-"8px 16px; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
-"font-size:13px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object."
+"email}}\" t-attf-style=\"background-color: {{object.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -111,23 +110,23 @@ msgid ""
 "        Accept invitation\n"
 "    </a>\n"
 "</div>\n"
-"<b>  This link will remain valid during <t t-"
-"out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
-"or 144)//24\"/> days </b> <br/>\n"
+"<b>  This link will remain valid during <t t-out=\"(object.env['ir."
+"config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') or "
+"144)//24\"/> days </b> <br/>\n"
 "<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
 "Your Odoo domain is: <b><a t-att-href=\"website_url\" t-out=\"website_url or "
 "''\">http://yourcompany.odoo.com</a></b><br/>\n"
-"Your sign in email is: <b><a t-attf-href=\"/web/login?"
-"login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
-"''\">mark.brown23@example.com</a></b><br/><br/>\n"
+"Your sign in email is: <b><a t-attf-href=\"/web/login?login={{ object."
+"email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark."
+"brown23@example.com</a></b><br/><br/>\n"
 "Never heard of Odoo? It’s an all-in-one business software loved by 12+ "
 "million users. It will considerably improve your experience at work and "
 "increase your productivity.\n"
 "<br/><br/>\n"
 "Have a look at the <a href=\"https://www.odoo.com/page/tour?"
-"utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo Tour</a> to "
-"discover the tool.\n"
+"utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: {{object."
+"company_id.email_secondary_color or '#875A7B'}};\">Odoo Tour</a> to discover "
+"the tool.\n"
 "<br/><br/>\n"
 "Enjoy Odoo!<br/>\n"
 "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
@@ -199,12 +198,6 @@ msgid "Config Settings"
 msgstr "تنظیمات پیکربندی"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.fields
-#, fuzzy
-msgid "Confirm Password"
-msgstr "تأیید گذرواژه"
-
-#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
 msgstr "تایید شده"
@@ -213,6 +206,12 @@ msgstr "تایید شده"
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
 msgstr "مخاطب"
+
+#. module: auth_signup
+#. odoo-javascript
+#: code:addons/auth_signup/static/src/components/signup.xml:0
+msgid "Copy Reset Password Link"
+msgstr ""
 
 #. module: auth_signup
 #. odoo-python
@@ -242,21 +241,9 @@ msgid "Create a Customer"
 msgstr "ایجاد مشتری"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
-#, fuzzy
-msgid "Customer Account"
-msgstr "حساب مشتری"
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
 msgstr "عزیز"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-#, fuzzy
-msgid "Default Access Rights"
-msgstr "دسترسی‌های پیش‌فرض"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
@@ -282,12 +269,6 @@ msgstr "ایمیل"
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "فعال‌سازی بازنشانی گذرواژه از صفحه ورود"
-
-#. module: auth_signup
-#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
-#, fuzzy
-msgid "Free sign up"
-msgstr "ثبت‌نام رایگان"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -331,6 +312,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "برای مشاهده اسناد، به مشتریان خود اجازه ورود دهید."
 
 #. module: auth_signup
+#. odoo-javascript
+#: code:addons/auth_signup/static/src/components/signup.js:0
+msgid "Link copied to clipboard!"
+msgstr ""
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
 msgstr "دموی مارچ"
@@ -364,6 +351,12 @@ msgid "On invitation"
 msgstr "با دعوتنامه"
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "Only administrators can generate reset password link."
+msgstr ""
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
 msgstr "گذرواژه"
@@ -390,12 +383,6 @@ msgstr "ارسال دستورالعمل‌های بازنشانی گذرواژه
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Passwords do not match; please retype them."
 msgstr "گذرواژه مطابقت ندارد؛ دوباره تلاش کنید."
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
-#, fuzzy
-msgid "Registration successful."
-msgstr "ثبت‌نام با موفقیت انجام شد."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -447,12 +434,6 @@ msgstr "پس از دعوت، برای کاربر جدید  ارسال شد"
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
 msgstr "برای کاربری که خود اقدام به ثبت‌نام در پورتال کرده است، ارسال شد"
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
-#, fuzzy
-msgid "Settings: New Portal Sign Up"
-msgstr "تنظیمات: ثبت‌نام جدید در پورتال"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
@@ -577,6 +558,12 @@ msgstr "به {{ object.company_id.name }} خوش آمدید!"
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "You cannot perform this action on an archived user."
 msgstr "نمی‌توانید این عملیات را روی یک کاربر بایگانی‌شده انجام دهید."
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "You cannot perform this action on your own user."
+msgstr ""
 
 #. module: auth_signup
 #. odoo-python
