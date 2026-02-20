@@ -6,6 +6,7 @@ import pprint
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
+from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_authorize import const
@@ -42,6 +43,12 @@ class PaymentProvider(models.Model):
         string="API Client Key",
         help="The public client key. To generate directly from Odoo or from Authorize.Net backend.",
         copy=False,
+    )
+    authorize_webhook_id = fields.Char(
+        string="Webhook ID",
+        help="The ID of the webhook created in Authorize.Net.",
+        copy=False,
+        groups='base.group_system',
     )
 
     # === CONSTRAINT METHODS ===#
@@ -103,6 +110,36 @@ class PaymentProvider(models.Model):
         self.available_currency_ids = [Command.set(currency.ids)]
         self.authorize_client_key = res_content.get('publicClientKey')
 
+    def action_authorize_create_webhook(self):
+        """Create a webhook in Authorize.Net for transaction notifications.
+
+        Note: `self.ensure_one()`
+
+        :return: A notification action to display the result.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        webhook_url = urls.urljoin(
+            self.get_base_url(), '/payment/authorize/webhook'
+        )
+        response = self._send_api_request('POST', '/rest/v1/webhooks', json={
+            'name': self.company_id.name,
+            'url': webhook_url,
+            'eventTypes': const.HANDLED_WEBHOOK_EVENTS,
+            'status': 'active',
+        })
+        self.authorize_webhook_id = response.get('webhookId')
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': self.env._("Your Authorize.Net webhook was successfully set up!"),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
+
     # === BUSINESS METHODS ===#
 
     def _get_validation_amount(self):
@@ -133,3 +170,19 @@ class PaymentProvider(models.Model):
             'client_key': self.authorize_client_key,
         }
         return json.dumps(inline_form_values)
+
+    def _build_request_url(self, endpoint, **kwargs):
+        """Override of `payment` to build the full URL for Authorize.Net REST API."""
+        if self.code != 'authorize':
+            return super()._build_request_url(endpoint, **kwargs)
+
+        if self.state == 'enabled':
+            return f'https://api.authorize.net{endpoint}'
+        return f'https://apitest.authorize.net{endpoint}'
+
+    def _build_request_auth(self, **kwargs):
+        """Override of `payment` to build HTTP Basic Auth for Authorize.Net REST API."""
+        if self.code != 'authorize':
+            return super()._build_request_auth(**kwargs)
+
+        return self.authorize_login, self.authorize_transaction_key

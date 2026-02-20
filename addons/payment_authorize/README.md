@@ -22,14 +22,16 @@ passed to the Accept.js SDK, the solution qualifies for SAQ A-EP.
 - Tokenization with or without payment
 - Full manual capture
 - Full refunds
+- Webhook notifications
 
 ## Missing features
 
 - Partial manual capture
-- Webhook notifications: not available
 
 ## Module history
 
+- `19.3`
+  - Webhook support is added for delayed payments synchronization. odoo/odoo#235070
 - `16.1`
   - The "Authorize Currency" field is replaced by the generic "Currencies" field of `payment`.
     odoo/odoo#101018
