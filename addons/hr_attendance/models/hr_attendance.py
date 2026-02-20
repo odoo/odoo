@@ -296,24 +296,17 @@ class HrAttendance(models.Model):
         attendances_by_ruleset = defaultdict(lambda: self.env['hr.attendance'])
         for employee, emp_attendance in attendances_by_employee.items():
             for attendance in emp_attendance:
-                attendance_intervals = Intervals([(
-                    utc.localize(attendance.check_in),
-                    utc.localize(attendance.check_out),
-                    self.env['hr.version'])])
-                inter = Intervals(version_periods_by_employee[employee]) & attendance_intervals
-                if not inter:
-                    continue
-                version = inter._items[0][2]
-                ruleset = version.ruleset_id
-                if ruleset:
-                    attendances_by_ruleset[ruleset] += attendance
+                version_sudo = employee.sudo()._get_version(attendance._get_localized_times()[0])
+                ruleset_sudo = version_sudo.ruleset_id
+                if ruleset_sudo:
+                    attendances_by_ruleset[ruleset_sudo] += attendance
         employees = all_attendances.employee_id
         schedules_intervals_by_employee = employees._get_schedules_by_employee_by_work_type(min_check_in, max_check_out, version_periods_by_employee)
         overtime_vals_list = []
-        for ruleset, ruleset_attendances in attendances_by_ruleset.items():
+        for ruleset_sudo, ruleset_attendances in attendances_by_ruleset.items():
             attendances_dates = list(chain(*ruleset_attendances._get_dates().values()))
             overtime_vals_list.extend(
-                ruleset.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
+                ruleset_sudo.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
             )
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
