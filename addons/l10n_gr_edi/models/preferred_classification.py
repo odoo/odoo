@@ -244,6 +244,9 @@ CLASSIFICATION_MAP = {
         'category2_11': 'all_above',
         'category2_95': 'blank',
     },
+    '9.3': {
+        'category3': 'blank',
+    },
     '11.1': {
         'category1_1': ('E3_561_003', 'E3_561_004', 'E3_561_005', 'E3_561_006', 'E3_561_007'),
         'category1_2': ('E3_561_003', 'E3_561_004', 'E3_561_005', 'E3_561_006', 'E3_561_007'),
@@ -533,6 +536,7 @@ INVOICE_TYPES_SELECTION = [
     ('7.1', '7.1 - Contract – Income'),
     ('8.1', '8.1 - Rents – Income'),
     ('8.2', '8.2 - Special Record – Accommodation Tax Collection/Payment Receipt'),
+    ('9.3', '9.3 - Dispatch Note'),
     ('11.1', '11.1 - Retail Sales Receipt'),
     ('11.2', '11.2 - Service Rendered Receipt'),
     ('11.3', '11.3 - Simplified Invoice'),
@@ -574,6 +578,7 @@ CLASSIFICATION_CATEGORY_SELECTION = [
     ('category1_9', '1.9 - Future fiscal years income'),
     ('category1_10', '1.10 - Other Income Adjustment/Regularisation Entries'),
     ('category1_95', '1.95 - Other Income-related Information'),
+    ('category3', '3 - Delivery'),
 
     # Expense classification categories
     ('category2_1', '2.1 - Commodity Purchases'),
@@ -766,6 +771,34 @@ PAYMENT_METHOD_SELECTION = [
     ('7', '7 - POS / e-POS'),
 ]
 
+MOVE_PURPOSE_SELECTION = [
+    ('1', '1 - Sale'),
+    ('2', '2 - Sales on Behalf of Third Parties'),
+    ('3', '3 - Sampling'),
+    ('4', '4 - Exhibition'),
+    ('5', '5 - Return'),
+    ('6', '6 - Keeping'),
+    ('7', '7 - Edit - Assembly'),
+    ('8', '8 - Between Entity Branches'),
+    ('9', '9 - Purchase'),
+    ('10', '10 - Supply of ships and aircraft'),
+    ('11', '11 - Free distribution'),
+    ('12', '12 - Warranty'),
+    ('13', '13 - Loan'),
+    ('14', '14 - Storage by Third Party'),
+    ('15', '15 - Return from Custody'),
+    ('16', '16 - Recycling'),
+    ('17', '17 - Destruction of waste material'),
+    ('18', '18 - Fixed Asset Movement (Internal Circulation)'),
+    ('19', '19 - Other Movements'),
+]
+
+MEASUREMENT_UNIT_SELECTION = [
+    ('1', 'Units'),
+    ('2', 'kg'),
+    ('3', 'L'),
+]
+
 INVOICE_TYPES_HAVE_INCOME = (
     '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '2.1', '2.2', '2.3', '2.4', '3.1', '3.2', '5.1', '5.2', '6.1', '6.2',
     '7.1', '8.1', '8.2', '11.1', '11.2', '11.3', '11.4', '11.5', '17.3', '17.4',
@@ -779,7 +812,7 @@ INVOICE_TYPES_HAVE_EXPENSE = (
 
 CLASSIFICATION_CATEGORY_INCOME = (
     'category1_1', 'category1_2', 'category1_3', 'category1_4', 'category1_5', 'category1_6', 'category1_7',
-    'category1_8', 'category1_9', 'category1_10', 'category1_95',
+    'category1_8', 'category1_9', 'category1_10', 'category1_95', 'category3',
 )
 
 CLASSIFICATION_CATEGORY_EXPENSE = (
@@ -830,7 +863,13 @@ TYPES_WITH_FORBIDDEN_CLASSIFICATION = ('3.2',)
 
 TYPES_WITH_MANDATORY_DETAIL_TYPE = ('1.5',)
 
-TYPES_WITH_VAT_CATEGORY_8 = ('3.1', '3.2', '8.1', '8.2', '17.3', '17.4')
+TYPES_WITH_VAT_CATEGORY_8 = ('3.1', '3.2', '8.1', '8.2', '9.3', '17.3', '17.4')
+
+# TYPES_WITH_FORBIDDEN_AMOUNT = ('9.3')
+
+# TYPES_WITH_MANDATORY_ISSUER = ('9.3')
+
+# TYPES_WITH_MANDATORY_ITEM_DESCR = ('9.3')
 
 COMBINATIONS_WITH_POSSIBLE_EMPTY_TYPE = (('1.1', 'category1_95'), ('3.2', 'category1_95'), ('5.1', 'category1_95'))
 
@@ -912,7 +951,7 @@ class PreferredClassification(models.Model):
         if inv_type and CLASSIFICATION_MAP[inv_type] != 'associate':
             if category_type == '1':  # get only income categories
                 available_cls_category = ','.join(category for category in CLASSIFICATION_MAP[inv_type]
-                                                  if category[:9] == 'category1')
+                                                  if category[:9] == 'category1' or category == 'category3')
             elif category_type == '2':  # get only expense categories
                 available_cls_category = ','.join(category for category in CLASSIFICATION_MAP[inv_type]
                                                   if category[:9] == 'category2')

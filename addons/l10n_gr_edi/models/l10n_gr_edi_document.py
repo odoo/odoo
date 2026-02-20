@@ -73,10 +73,13 @@ class GreeceEDIDocument(models.Model):
     _order = 'datetime DESC, id DESC'
 
     move_id = fields.Many2one(comodel_name='account.move', ondelete='cascade')
+    picking_id = fields.Many2one(comodel_name='stock.picking', ondelete='cascade')
     state = fields.Selection(
         selection=[
             ('invoice_sent', "Invoice sent"),
             ('invoice_error', "Invoice send failed"),
+            ('delivery_note_sent', "Delivery note sent"),
+            ('delivery_note_error', "Delivery note send failed"),
             ('bill_fetched', "Expense classification ready to send"),
             ('bill_sent', "Expense classification sent"),
             ('bill_error', "Expense classification send failed"),

@@ -142,7 +142,7 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         invoice = self._create_mydata_invoice(inv_type='1.1', cls_category='', cls_type='')
         self.assertRecordValues(invoice, [{
             'l10n_gr_edi_available_inv_type': '1.1,1.2,1.3,1.4,1.5,1.6,2.1,2.2,2.3,2.4,3.1,3.2,5.1,5.2,'
-                                              '6.1,6.2,7.1,8.1,8.2,11.1,11.2,11.3,11.4,11.5,17.3,17.4',
+                                              '6.1,6.2,7.1,8.1,8.2,9.3,11.1,11.2,11.3,11.4,11.5,17.3,17.4',
         }])
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'l10n_gr_edi_available_cls_category': 'category1_1,category1_2,category1_3,category1_4,category1_5,'

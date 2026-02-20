@@ -2,6 +2,7 @@ from lxml import etree
 from urllib.parse import urlencode
 
 from odoo import api, fields, models, _
+from odoo.addons.l10n_gr_edi import utils
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
 from odoo.tools.sql import column_exists, create_column
@@ -365,8 +366,11 @@ class AccountMove(models.Model):
         })
 
         if issuer_not_from_greece:
+            # street_detail = utils.street_split(self.company_id.street)
             values.update({
                 'issuer_name': self.company_id.name.encode('ISO-8859-7'),
+                # 'issuer_street': street_detail.get('street_name'),
+                # 'issuer_number': street_detail.get('street_number'),
                 'issuer_postal_code': self.company_id.zip,
                 'issuer_city': (self.company_id.city or "").encode('ISO-8859-7') or None,
             })
@@ -381,7 +385,10 @@ class AccountMove(models.Model):
                 values['counterpart_name'] = self.commercial_partner_id.name.encode('ISO-8859-7')
 
         if inv_type_require_counterpart or (inv_type_allows_counterpart and partner_not_from_greece):
+            # street_detail = utils.street_split(self.commercial_partner_id.street)
             values.update({
+                # 'counterpart_street': street_detail.get('street_name'),
+                # 'counterpart_number': street_detail.get('street_number'),
                 'counterpart_postal_code': self.commercial_partner_id.zip,
                 'counterpart_city': (self.commercial_partner_id.city or "").encode('ISO-8859-7') or None,
             })
@@ -508,6 +515,7 @@ class AccountMove(models.Model):
         for move in self.sorted(key='id'):
             details = []
             base_lines, _tax_lines = move._get_rounded_base_and_tax_lines()
+            # inv_type_needs_zero_value = move.l10n_gr_edi_inv_type in TYPES_WITH_FORBIDDEN_AMOUNT
 
             for line_no, base_line in enumerate(base_lines, start=1):
                 line = base_line['record']
@@ -524,12 +532,14 @@ class AccountMove(models.Model):
                 details.append({
                     'line_number': line_no,
                     'quantity': line.quantity if move.l10n_gr_edi_inv_type not in TYPES_WITH_FORBIDDEN_QUANTITY else '',
-                    'detail_type': line.l10n_gr_edi_detail_type or '',
+                    'unit_of_measure': line.l10n_gr_edi_measurement_unit if move.l10n_gr_edi_is_delivery_note else '',
+                    # 'item_description': line.product_id.name if move.l10n_gr_edi_inv_type in TYPES_WITH_MANDATORY_ITEM_DESCR else '',
+                    # 'detail_type': line.l10n_gr_edi_detail_type or '',
                     'net_value': base_line['tax_details']['raw_total_excluded'],
                     'vat_amount': sum(tax_data['tax_amount'] for tax_data in base_line['tax_details']['taxes_data']),
                     'vat_category': vat_category,
                     'vat_exemption_category': vat_exemption_category,
-                    **self._l10n_gr_edi_common_base_line_details_values(base_line),
+                    **move._l10n_gr_edi_common_base_line_details_values(base_line),
                 })
 
             invoice_values = {
@@ -540,6 +550,17 @@ class AccountMove(models.Model):
                 'header_invoice_type': move.l10n_gr_edi_inv_type,
                 'header_currency': move.currency_id.name,
                 'header_correlate': move.l10n_gr_edi_correlation_id.l10n_gr_edi_mark or '',
+                # 'is_delivery_note': 'true' if move.l10n_gr_edi_is_delivery_note else '',
+                # 'move_purpose': move.l10n_gr_edi_move_purpose,
+                # 'other_move_purpose_title': move.l10n_gr_edi_other_move_purpose,
+                # 'loading_street': move.l10n_gr_edi_loading_address_street,
+                # 'loading_number': move.l10n_gr_edi_loading_address_number,
+                # 'loading_postal_code': move.l10n_gr_edi_loading_address_zip,
+                # 'loading_city': move.l10n_gr_edi_loading_address_city,
+                # 'delivery_street': move.l10n_gr_edi_delivery_address_street,
+                # 'delivery_number': move.l10n_gr_edi_delivery_address_number,
+                # 'delivery_postal_code': move.l10n_gr_edi_delivery_address_zip,
+                # 'delivery_city': move.l10n_gr_edi_delivery_address_city,
                 'details': details,
                 'summary_total_net_value': move.amount_untaxed,
                 'summary_total_vat_amount': move.amount_tax,
@@ -750,8 +771,8 @@ class AccountMove(models.Model):
     def l10n_gr_edi_try_send_invoices(self):
         moves_to_send = self.env['account.move']
         for move in self:
-            if error := move._l10n_gr_edi_get_pre_error_string():
-                move._l10n_gr_edi_create_error_document({'error': error})
+            if error := move._l10n_gr_edi_get_pre_error_dict():
+                move._l10n_gr_edi_create_error_document({'error': utils.get_pre_error_string(error)})
             else:
                 moves_to_send |= move
 
@@ -762,8 +783,8 @@ class AccountMove(models.Model):
     def l10n_gr_edi_try_send_expense_classification(self):
         moves_to_send = self.env['account.move']
         for move in self:
-            if error_message := move._l10n_gr_edi_get_pre_error_string():
-                move._l10n_gr_edi_create_error_document({'error': error_message})
+            if error_message := move._l10n_gr_edi_get_pre_error_dict():
+                move._l10n_gr_edi_create_error_document({'error': utils.get_pre_error_string(error_message)})
 
                 # Simulate the error handling behavior on invoice's send and print wizard.
                 # If we're only sending one bill, raise the warning error immediately.

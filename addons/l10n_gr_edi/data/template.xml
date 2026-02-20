@@ -14,6 +14,8 @@
                     <branch t-out="invoice_vals['issuer_branch']"/>
                     <name t-out="invoice_vals['issuer_name']"/>
                     <address>
+                        <street t-out="invoice_vals['issuer_street']"/>
+                        <number t-out="invoice_vals['issuer_number']"/>
                         <postalCode t-out="invoice_vals['issuer_postal_code']"/>
                         <city t-out="invoice_vals['issuer_city']"/>
                     </address>
@@ -24,6 +26,8 @@
                     <branch t-out="invoice_vals['counterpart_branch']"/>
                     <name t-out="invoice_vals['counterpart_name']"/>
                     <address>
+                        <street t-out="invoice_vals['counterpart_street']"/>
+                        <number t-out="invoice_vals['counterpart_number']"/>
                         <postalCode t-out="invoice_vals['counterpart_postal_code']"/>
                         <city t-out="invoice_vals['counterpart_city']"/>
                     </address>
@@ -35,6 +39,22 @@
                     <invoiceType t-out="invoice_vals['header_invoice_type']"/>
                     <currency t-out="invoice_vals['header_currency']"/>
                     <correlatedInvoices t-out="invoice_vals['header_correlate']"/>
+                    <movePurpose t-out="invoice_vals['move_purpose']"/>
+                    <movePurposeLabel t-out="invoice_vals['other_move_purpose_title']"/>
+                    <otherDeliveryNoteHeader>
+                        <loadingAddress>
+                            <street t-out="invoice_vals['loading_street']"/>
+                            <number t-out="invoice_vals['loading_number']"/>
+                            <postalCode t-out="invoice_vals['loading_postal_code']"/>
+                            <city t-out="invoice_vals['loading_city']"/>
+                        </loadingAddress>
+                        <deliveryAddress>
+                            <street t-out="invoice_vals['delivery_street']"/>
+                            <number t-out="invoice_vals['delivery_number']"/>
+                            <postalCode t-out="invoice_vals['delivery_postal_code']"/>
+                            <city t-out="invoice_vals['delivery_city']"/>
+                        </deliveryAddress>
+                    </otherDeliveryNoteHeader>
                 </invoiceHeader>
                 <paymentMethods>
                     <paymentMethodDetails t-foreach="invoice_vals['payment_details']" t-as="payment_detail">
@@ -44,7 +64,9 @@
                 </paymentMethods>
                 <invoiceDetails t-foreach="invoice_vals['details']" t-as="detail">
                     <lineNumber t-out="detail['line_number']"/>
+                    <itemDescr t-out="detail['item_description']"/>
                     <quantity t-out="detail['quantity']"/>
+                    <measurementUnit t-out="detail['unit_of_measure']"/>
                     <invoiceDetailType t-out="detail['detail_type']"/>
                     <netValue t-out="detail['net_value']"/>
                     <vatCategory t-out="detail['vat_category']"/>
