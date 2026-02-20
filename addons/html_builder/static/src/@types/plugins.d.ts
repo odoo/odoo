@@ -1,7 +1,7 @@
 declare module "plugins" {
     import { AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
     import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, on_current_options_containers_changed_handlers, clone_disabled_reason_processors, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_processors } from "@html_builder/core/builder_options_plugin";
+    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, on_current_options_containers_changed_handlers, clone_disabled_reason_providers, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_providers } from "@html_builder/core/builder_options_plugin";
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
@@ -113,18 +113,18 @@ declare module "plugins" {
         is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
 
         // Processors
-        clone_disabled_reason_processors: clone_disabled_reason_processors;
-        remove_disabled_reason_processors: remove_disabled_reason_processors;
         snippet_preview_dialog_stylesheets_processors: snippet_preview_dialog_stylesheets_processors;
 
         // Providers
         background_filter_target_providers: background_filter_target_providers;
         background_shape_groups_providers: background_shape_groups_providers;
         background_shape_target_providers: background_shape_target_providers;
+        clone_disabled_reason_providers: clone_disabled_reason_providers;
         default_shape_providers: default_shape_providers;
         dirty_els_providers: dirty_els_providers;
         image_shape_groups_providers: image_shape_groups_providers;
         options_container_top_buttons_providers: options_container_top_buttons_providers;
+        remove_disabled_reason_providers: remove_disabled_reason_providers;
         target_element_providers: target_element_providers;
 
         // Data

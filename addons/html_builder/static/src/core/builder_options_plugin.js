@@ -92,9 +92,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 /**
  * @typedef {((
- *      reasons: Array<string|Markup|LazyTranslatedString>,
  *      el: HTMLElement
- * ) => Array<string|Markup|LazyTranslatedString>)[]} clone_disabled_reason_processors
+ * ) => string|Markup|LazyTranslatedString|undefined)[]} clone_disabled_reason_providers
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
@@ -107,9 +106,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 /**
  * @typedef {((
- *      reasons: Array<string|Markup|LazyTranslatedString>,
  *      el: HTMLElement
- * ) => Array<string|Markup|LazyTranslatedString>)[]} remove_disabled_reason_processors
+ * ) => string|Markup|LazyTranslatedString|undefined)[]} remove_disabled_reason_providers
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
@@ -428,7 +426,8 @@ export class BuilderOptionsPlugin extends Plugin {
         const parentEl = el.parentElement;
         const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
-        const keepOptions = this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
+        const keepOptions =
+            this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
         if (isInnerSnippet && isAloneInColumn && !keepOptions) {
             return false;
         }
@@ -443,7 +442,9 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getOptionsContainerTopButtons(el) {
         const buttons = [];
-        for (const getContainerButtons of this.getResource("options_container_top_buttons_providers")) {
+        for (const getContainerButtons of this.getResource(
+            "options_container_top_buttons_providers"
+        )) {
             buttons.push(...getContainerButtons(el));
             for (const button of buttons) {
                 const handler = button.handler;
@@ -534,13 +535,19 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getRemoveDisabledReason(el) {
         return (
-            this.processThrough("remove_disabled_reason_processors", [], el).join(" ") || undefined
+            this.getResource("remove_disabled_reason_providers")
+                .map((p) => p(el))
+                .filter(Boolean)
+                .join(" ") || undefined
         );
     }
 
     getCloneDisabledReason(el) {
         return (
-            this.processThrough("clone_disabled_reason_processors", [], el).join(" ") || undefined
+            this.getResource("clone_disabled_reason_providers")
+                .map((p) => p(el))
+                .filter(Boolean)
+                .join(" ") || undefined
         );
     }
 

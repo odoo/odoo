@@ -114,33 +114,29 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
         ],
-        clone_disabled_reason_processors: (reasons, el) => {
+        clone_disabled_reason_providers: (el) => {
             if (
                 el.classList.contains("s_website_form_field") &&
                 !el.classList.contains("s_website_form_custom")
             ) {
-                reasons.push(_t("You cannot duplicate this field."));
+                return _t("You cannot duplicate this field.");
             }
-            return reasons;
         },
-        remove_disabled_reason_processors: (reasons, el) => {
+        remove_disabled_reason_providers: (el) => {
             if (el.classList.contains("s_website_form_model_required")) {
                 const models = this.modelsCache.get();
                 const modelName = el.closest("form")?.dataset.model_name;
                 const model = models?.find((model) => model.model === modelName);
                 const fieldName = getFieldName(el);
-                reasons.push(
-                    model
+                return model
                         ? _t(
                               'The field "%(fieldName)s" is mandatory for the action "%(actionName)s".',
                               { fieldName, actionName: model.website_form_label }
                           )
                         : _t("The field “%(fieldName)s” is mandatory for the selected action.", {
                               fieldName,
-                          })
-                );
+                          });
             }
-            return reasons;
         },
         builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
         builder_actions: {
