@@ -6,6 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { App, Component } from "@odoo/owl";
 import { templates } from "@web/core/assets";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
+import { PlacesAutoComplete } from "@website/components/googleplaces_autocomplete/places_autocomplete";
 
 /**
  * Allows to load anchors from a page.
@@ -71,6 +72,31 @@ function autocompleteWithPages(input, options= {}) {
         owlApp.destroy();
         container.remove();
     }
+}
+
+function autocompleteWithGPS(input, options = {}) {
+    const owlApp = new App(PlacesAutoComplete, {
+        env: Component.env,
+        dev: Component.env.debug,
+        templates,
+        props: {
+            targetDropdown: input,
+            contentWindow: options.contentWindow,
+            onPlaceSelected: options.onPlaceSelected,
+            onError: options.onError,
+        },
+        translatableAttributes: ["data-tooltip"],
+        translateFn: _t,
+    });
+
+    const container = document.createElement("div");
+    container.classList.add("ui-widget", "ui-autocomplete", "ui-widget-content", "border-0");
+    document.body.appendChild(container);
+    owlApp.mount(container);
+    return () => {
+        owlApp.destroy();
+        container.remove();
+    };
 }
 
 /**
@@ -464,6 +490,7 @@ export function cloneContentEls(content, keepScripts = false) {
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
+    autocompleteWithGPS: autocompleteWithGPS,
     onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
     sendRequest: sendRequest,

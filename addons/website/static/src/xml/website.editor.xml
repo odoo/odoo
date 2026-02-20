@@ -138,6 +138,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-2">
+                <label class="col-sm-2 col-form-label" for="map_id">Map ID</label>
+                <div class="col">
+                    <input type="text" class="form-control" id="map_id_input" t-model="this.state.mapId" placeholder="Map ID"/>
+                    <div class="small form-text text-muted">
+                        <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/map-ids/get-map-id">
+                            <i class="oi oi-arrow-right"/>
+                            Get a Map ID
+                        </a>
+                    </div>
+                </div>
+            </div>
             <t t-set-slot="footer">
                 <button t-on-click="onClickSave" class="btn btn-primary">Save</button>
                 <button class="btn" t-on-click="() => this.props.close()">Cancel</button>
