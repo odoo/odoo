@@ -92,12 +92,12 @@ const discussChannelPatch = {
         if (this.livechatShouldAskLeaveConfirmation) {
             this.store.env.services.dialog.add(MessageConfirmDialog, {
                 message: this.newestPersistentOfAllMessage,
-                confirmText: _t("Leave Conversation"),
+                confirmText: _t("Close Conversation"),
                 onConfirm: async () => await super.leaveChannel(...arguments),
                 prompt: _t("Here's the most recent message:"),
                 size: "xl",
                 title: _t(
-                    "Leaving will end the live chat with %(channel_name)s. Are you sure you want to continue?",
+                    "Closing this will end the live chat with %(channel_name)s. Are you sure you want to continue?",
                     { channel_name: this.displayName }
                 ),
             });

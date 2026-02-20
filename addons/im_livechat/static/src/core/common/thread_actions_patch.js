@@ -1,4 +1,6 @@
 import { ThreadAction, threadActionsRegistry } from "@mail/core/common/thread_actions";
+
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadAction.prototype, {
@@ -56,5 +58,20 @@ patch(threadActionsRegistry.get("call"), {
             return super.condition(...arguments) && !channel.livechat_end_dt;
         }
         return super.condition(...arguments);
+    },
+});
+
+patch(threadActionsRegistry.get("leave"), {
+    name(args) {
+        const { channel } = args;
+        if (
+            channel?.channel_type === "livechat" &&
+            !channel.channel_member_ids.some(
+                (m) => m.livechat_member_type === "agent" && m.notEq(channel.self_member_id)
+            )
+        ) {
+            return _t("Close Conversation");
+        }
+        return _t("Leave Channel");
     },
 });

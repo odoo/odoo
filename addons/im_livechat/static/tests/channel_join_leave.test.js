@@ -89,17 +89,17 @@ test("from the discuss app", async () => {
     await click("[title='Chat Actions']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "guest_1" }],
     });
-    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click(".o-dropdown-item:contains('Close Conversation')");
     await contains(
-        ".modal-header:has(:text('Leaving will end the live chat with guest_1. Are you sure you want to continue?'))"
+        ".modal-header:has(:text('Closing this will end the live chat with guest_1. Are you sure you want to continue?'))"
     );
     await contains(".modal-body .o-mail-Message-body:has(:text('Last message from guest_1'))");
-    await click("button:contains(Leave Conversation)");
+    await click("button:contains(Close Conversation)");
     await contains(".o-mail-DiscussSidebarChannel", { text: "guest_1", count: 0 });
     await click("[title='Chat Actions']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "guest_2" }],
     });
-    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click(".o-dropdown-item:contains('Close Conversation')");
     await contains(".o-mail-DiscussSidebarChannel", { text: "guest_2", count: 0 });
     await click("[title='Leave HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
