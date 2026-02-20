@@ -346,7 +346,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee.resource_calendar_id = calendar
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
-            leave_form.holiday_status_id = self.leave_type
+            leave_form.holiday_status_id = self.work_entry_type
             # even week, works 2 hours
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
@@ -360,7 +360,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
-            leave_form.holiday_status_id = self.leave_type
+            leave_form.holiday_status_id = self.work_entry_type
             # odd week, works 4 hours
             leave_form.request_date_from = date(2019, 9, 9)
             leave_form.request_date_to = date(2019, 9, 9)
@@ -388,7 +388,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee.resource_calendar_id = calendar
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
-            leave_form.holiday_status_id = self.leave_type
+            leave_form.holiday_status_id = self.work_entry_type
             # even week, does not work
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)

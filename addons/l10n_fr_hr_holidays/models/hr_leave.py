@@ -62,15 +62,8 @@ class HrLeave(models.Model):
             # work_entry_type_request_unit = 'half_day' allows us to choose between `am` and `pm`
             # In a case where we work from mon-wed and request a half day in the morning
             # we do not want to push date_to since the next work attendance is actually in the afternoon
-            date_from_dayofweek = str(date_from.weekday())
-            date_from_weektype = False
-            if self.resource_calendar_id.two_weeks_calendar:
-                date_from_weektype = str(self.env['resource.calendar.attendance'].get_week_type(date_from))
             # Fetch the attendances we care about
-            attendance_ids = self.resource_calendar_id.attendance_ids.filtered(lambda a:
-                a.dayofweek == date_from_dayofweek and
-                a.week_type == date_from_weektype
-            )
+            attendance_ids = self.resource_calendar_id.attendance_ids._filter_by_date(date_from)
             if len(attendance_ids) == 2:
                 # The employee took the morning off on a day where he works the afternoon aswell
                 return (date_from, date_to)
