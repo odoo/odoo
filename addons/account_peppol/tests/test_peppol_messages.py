@@ -489,3 +489,76 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         transaction._invoice_sale_orders()
 
         self.assertRecordValues(partner, [{'account_peppol_verification_label': 'valid'}])
+
+    def test_peppol_after_pdf_generation(self):
+        """
+        Test that the Peppol option is available and works after the PDF generation
+        It should generate the UBL/CII xml and send it to Peppol
+        """
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+
+        wizard_email = self.create_send_and_print(
+            move,
+            checkbox_send_mail=True,
+            checkbox_ubl_cii_xml=False,
+            checkbox_send_peppol=False,
+        )
+        wizard_email.action_send_and_print()
+        self.assertTrue(move.invoice_pdf_report_id)
+
+        wizard_peppol = self.create_send_and_print(move)
+        self.assertTrue(wizard_peppol.enable_peppol)
+        wizard_peppol.checkbox_send_peppol = True
+        self.assertRecordValues(wizard_peppol, [{'checkbox_ubl_cii_xml': True, 'enable_ubl_cii_xml': True}])
+        wizard_peppol.action_send_and_print()
+
+        self.assertTrue('Peppol' in move.message_ids[0].preview, 'The last message should be about Peppol')
+        self.assertRecordValues(move.message_ids[0].attachment_ids, [{
+            'name': 'INV_2023_00001_ubl_bis3.xml',
+            'mimetype': 'application/xml',
+        }])
+
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertRecordValues(move, [{
+                'peppol_move_state': 'done',
+                'peppol_message_uuid': FAKE_UUID[0],
+            }],
+        )
+        self.assertTrue(move.ubl_cii_xml_id)
+
+    def test_peppol_after_xml_generation(self):
+        """
+        Test that the Peppol option is available and works after the UBL/CII xml generation
+        """
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+
+        wizard_email = self.create_send_and_print(
+            move,
+            checkbox_send_mail=True,
+            checkbox_ubl_cii_xml=True,
+            checkbox_send_peppol=False,
+        )
+        wizard_email.action_send_and_print()
+        self.assertTrue(move.invoice_pdf_report_id)
+        self.assertTrue(move.ubl_cii_xml_id)
+
+        wizard_peppol = self.create_send_and_print(move)
+        self.assertTrue(wizard_peppol.enable_peppol)
+        wizard_peppol.checkbox_send_peppol = True
+        self.assertRecordValues(wizard_peppol, [{'checkbox_ubl_cii_xml': False, 'enable_ubl_cii_xml': False}])
+        wizard_peppol.action_send_and_print()
+
+        self.assertTrue('Peppol' in move.message_ids[0].preview, 'The last message should be about Peppol')
+        self.assertRecordValues(move.message_ids[0].attachment_ids, [{
+            'name': 'INV_2023_00001_ubl_bis3.xml',
+            'mimetype': 'application/xml',
+        }])
+
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertRecordValues(move, [{
+                'peppol_move_state': 'done',
+                'peppol_message_uuid': FAKE_UUID[0],
+            }],
+        )

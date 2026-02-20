@@ -68,6 +68,14 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.enable_ubl_cii_xml = any(m._need_ubl_cii_xml() for m in wizard.move_ids)
 
+    @api.model
+    def _need_invoice_document(self, invoice):
+        result = super()._need_invoice_document(invoice)
+        invoice_data = self.env.context.get('invoice_data')
+        if invoice_data and invoice_data['ubl_cii_xml'] and invoice._need_ubl_cii_xml():
+            return True
+        return result
+
     @api.depends('checkbox_ubl_cii_xml')
     def _compute_mail_attachments_widget(self):
         # EXTENDS 'account' - add depends
@@ -224,7 +232,7 @@ class AccountMoveSend(models.TransientModel):
             return
 
         # Read pdf content.
-        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data.get('proforma_pdf_attachment_values') or invoice.invoice_pdf_report_id
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
