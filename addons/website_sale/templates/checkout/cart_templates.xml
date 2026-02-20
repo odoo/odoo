@@ -103,7 +103,7 @@
                                         <t t-set="combination_name" t-value="line._get_combination_name()"/>
                                         <span t-if="combination_name" class="d-none d-md-inline h6 text-muted mb-1">-</span>
                                         <div
-                                            t-if="combination_name or line.product_template_id._has_multiple_uoms()"
+                                            t-if="combination_name or line.product_id._has_multiple_uoms()"
                                             class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
                                         >
                                             <span
@@ -112,7 +112,7 @@
                                                 t-out="combination_name"
                                             />
                                             <span
-                                                t-if="line.product_template_id._has_multiple_uoms()"
+                                                t-if="line.product_id._has_multiple_uoms()"
                                                 class="badge bg-light mb-1"
                                                 t-out="line.product_uom_id.name"
                                             />
@@ -427,7 +427,7 @@
                                     </ul>
                                 </div>
                                 <small
-                                    t-if="order_line.product_template_id._has_multiple_uoms()"
+                                    t-if="order_line.product_id._has_multiple_uoms()"
                                     t-out="order_line.product_uom_id.name"
                                     class="badge mt-1 bg-light"
                                 />

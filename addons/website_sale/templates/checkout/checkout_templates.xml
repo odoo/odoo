@@ -381,7 +381,7 @@
                                 <span class="text-wrap" t-out="line._get_line_header()"/>
                                 <p class="text-muted small mb-0" t-out="line._get_combination_name()"/>
                                 <span
-                                    t-if="line.product_template_id._has_multiple_uoms()"
+                                    t-if="line.product_id._has_multiple_uoms()"
                                     class="badge mt-1 bg-light"
                                     t-out="line.product_uom_id.name"
                                 />

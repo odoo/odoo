@@ -64,6 +64,7 @@ class ProductProduct(models.Model):
 
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
+    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales", domain="[('id', '!=', uom_id)]")
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
@@ -1194,3 +1195,16 @@ class ProductProduct(models.Model):
         """ Hook to handle an UoM modification. Avoid recomputation and just replace the
         many2one field on the impacted models."""
         return True
+
+    def _has_multiple_uoms(self) -> bool:
+        if self.type == 'combo':
+            return False
+        return self.env['res.groups']._is_feature_enabled('uom.group_uom') and len(
+            self._get_available_uoms()
+        ) > 1
+
+    def _get_available_uoms(self):
+        if not self:
+            return self.env['uom.uom']
+        self.ensure_one()
+        return self.uom_id | self.uom_ids

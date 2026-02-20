@@ -136,7 +136,7 @@
 
                                     <t name="variant_info">
                                         <div
-                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or product._has_multiple_uoms()) and 'd-none' or ''}}"
+                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or (product_variant and product_variant._has_multiple_uoms())) and 'd-none' or ''}}"
                                         >
                                             <t t-call="website_sale.variants"
                                                 ul_class.f="flex-column"
@@ -430,34 +430,7 @@
                 </li>
             </t>
         </ul>
-        <ul
-            t-if="product._has_multiple_uoms()"
-            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
-        >
-            <li>
-                <!-- Separate template to reduce views duplication -->
-                <t t-call="website_sale.packaging_title"/>
-                <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
-                    <t t-set="product_uoms" t-value="product._get_available_uoms()"/>
-                    <t t-foreach="product_uoms" t-as="uom">
-                        <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
-                        <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
-                            <input
-                                class="position-absolute opacity-0 cursor-pointer"
-                                type="radio"
-                                t-att-checked="is_main_uom"
-                                name="uom_id"
-                                t-att-value="uom.id"
-                                t-attf-id="uom-{{uom.id}}"
-                                t-att-autocomplete="off"/>
-                            <label class="radio_input_value cursor-pointer" t-attf-for="uom-{{uom.id}}">
-                                <span t-field="uom.name"/>
-                            </label>
-                        </li>
-                    </t>
-                </ul>
-            </li>
-        </ul>
+        <t t-call="website_sale.product_packaging_selector"/>
     </template>
 
     <template id="website_sale.badge_extra_price" name="Badge Extra Price">
@@ -489,6 +462,38 @@
 
     <template id="website_sale.packaging_title" name="Packaging title">
         <h6 class="attribute_name mb-2">Packaging</h6>
+    </template>
+
+    <template id="website_sale.product_packaging_selector" name="Product Packaging Selector">
+        <div class="o_wsale_packaging_selector">
+            <ul
+                t-if="product_variant and product_variant._has_multiple_uoms()"
+                t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
+            >
+                <li>
+                    <t t-call="website_sale.packaging_title"/>
+                    <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
+                        <t t-set="product_uoms" t-value="product_variant._get_available_uoms()"/>
+                        <t t-foreach="product_uoms" t-as="uom">
+                            <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
+                            <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
+                                <input
+                                    class="position-absolute opacity-0 cursor-pointer"
+                                    type="radio"
+                                    t-att-checked="is_main_uom"
+                                    name="uom_id"
+                                    t-att-value="uom.id"
+                                    t-attf-id="uom-{{uom.id}}"
+                                    t-att-autocomplete="off"/>
+                                <label class="radio_input_value cursor-pointer" t-attf-for="uom-{{uom.id}}">
+                                    <span t-field="uom.name"/>
+                                </label>
+                            </li>
+                        </t>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </template>
 
     <template id="website_sale.product_title">
