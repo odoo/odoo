@@ -26,7 +26,7 @@ def _configure_tim_lib(lib_name: str) -> bool:
         return True
     zip_path = drivers_path / "ctep.zip"
     helpers.download_from_url(f"https://download.odoo.com/master/posbox/iotbox/{source_zip_name}", zip_path)
-    helpers.unzip_file(zip_path, drivers_path)
+    helpers.unzip_file(zip_path, drivers_path / "tim")
 
     # Make TIM SDK dependency libraries visible for the linker
     if IS_WINDOWS:
