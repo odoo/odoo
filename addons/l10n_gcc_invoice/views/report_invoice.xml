@@ -181,6 +181,9 @@
                     <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="ltr">2024-01-01</span>
                 </td>
             </xpath>
+            <xpath expr="//div[@id='total_payment_term_details_table']//td/ancestor::t[1]" position="inside">
+                <div id="early_payment_discount" t-if="0"/>
+            </xpath>
              <xpath expr="//div[@id='total_payment_term_details_table']//div[@id='early_payment_discount']" position="before">
                 <div name="td_payment_term_ar" t-if="display_in_ar" t-translation="off">
                     <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
