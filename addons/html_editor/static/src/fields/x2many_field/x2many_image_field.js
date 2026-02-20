@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ImageField, imageField } from "@web/views/fields/image/image_field";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getVideoUrl } from "@html_editor/utils/url";
+import { saveSingleAttachment } from "@web/core/utils/image_library";
 
 export class X2ManyImageField extends ImageField {
     static template = "html_editor.ImageField";
@@ -17,42 +18,31 @@ export class X2ManyImageField extends ImageField {
      * standard behavior of opening file input box in order to update a record.
      */
     onFileEdit(ev) {
+        this.dialog.add(CustomMediaDialog, this.mediaDialogProps);
+    }
+
+    get mediaDialogProps() {
         const isVideo = this.props.record.data.video_url;
         let mediaEl;
         if (isVideo) {
             mediaEl = document.createElement("img");
             mediaEl.dataset.src = this.props.record.data.video_url;
         }
-        this.dialog.add(CustomMediaDialog, {
+        return {
             visibleTabs: ["IMAGES", "VIDEOS"],
             media: mediaEl,
             activeTab: isVideo ? "VIDEOS" : "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
-        });
+        };
     }
-
-    async onImageSave(attachment) {
-        const attachmentRecord = await this.orm.searchRead(
-            "ir.attachment",
-            [["id", "=", attachment[0].id]],
-            ["id", "datas", "name"],
-            {}
-        );
-        if (!attachmentRecord[0].datas) {
-            // URL type attachments are mostly demo records which don't have any ir.attachment datas
-            // TODO: make it work with URL type attachments
-            return this.notification.add(
-                `Cannot add URL type attachment "${attachmentRecord[0].name}". Please try to reupload this image.`,
-                {
-                    type: "warning",
-                }
-            );
-        }
-        await this.props.record.update({
-            [this.props.name]: attachmentRecord[0].datas,
-            name: attachmentRecord[0].name,
+    async onImageSave(attachments) {
+        await saveSingleAttachment(this.env, {
+            attachment: attachments[0],
+            targetRecord: this.props.record,
+            targetFieldName: this.props.name,
+            changeRecordName: true,
         });
     }
 

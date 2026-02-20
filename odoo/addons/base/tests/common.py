@@ -203,6 +203,23 @@ class HttpCaseWithUserDemo(HttpCase):
                 'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
+    def _filter_attachments_fields(self, /, *attachments_data):
+        """ Remove store attachment data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        for data in attachments_data:
+            if 'ai.agent' not in self.env:
+                data.pop("access_token", None)
+                data.pop("description", None)
+                data.pop("image_src", None)
+                data.pop("image_height", None)
+                data.pop("image_width", None)
+                data.pop("original_id", None)
+                data.pop("public", None)
+                data.pop("res_model", None)
+                data.pop("res_id", None)
+        return list(attachments_data)
+
 
 class SavepointCaseWithUserDemo(TransactionCase):
 

@@ -1,4 +1,8 @@
-import { isCSSVariable, setBuilderCSSVariables, getBgImageURLFromEl } from "@html_builder/utils/utils_css";
+import {
+    isCSSVariable,
+    setBuilderCSSVariables,
+    getBgImageURLFromEl,
+} from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
@@ -14,7 +18,6 @@ import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { loadImage } from "@html_editor/utils/image_processing";
-
 /**
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
@@ -481,7 +484,7 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "history", "customizeWebsite"];
+    static dependencies = ["builderActions", "history", "customizeWebsite", "media"];
     isApplied() {
         return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
     }
@@ -524,16 +527,21 @@ export class ToggleBodyBgImageAction extends BuilderAction {
         });
     }
     async apply({ editingElement: el } = {}) {
-        const getAction = this.dependencies.builderActions.getAction;
-        const { type: currentType, image: currentImage } = this.getCurrentConfig();
-        const oldConfig = { type: currentType, image: currentImage };
-
-        const imageEl = await getAction("replaceBgImage").load({ el });
-        if (!imageEl) {
-            return;
-        }
-        const newConfig = { type: currentType, image: imageEl.src };
-        await this.applyConfig(oldConfig, newConfig);
+        await this.dependencies.media.openMediaDialog(
+            this.getMediaDialogProps({ editingElement: el })
+        );
+    }
+    getMediaDialogProps({ editingElement }) {
+        return {
+            onlyImages: true,
+            node: editingElement,
+            save: async (imageEl) => {
+                const { type: currentType, image: currentImage } = this.getCurrentConfig();
+                const oldConfig = { type: currentType, image: currentImage };
+                const newConfig = { type: currentType, image: imageEl.src };
+                await this.applyConfig(oldConfig, newConfig);
+            },
+        };
     }
     async clean() {
         const { type: currentType, image: currentImage } = this.getCurrentConfig();
