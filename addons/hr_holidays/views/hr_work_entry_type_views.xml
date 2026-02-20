@@ -58,8 +58,8 @@
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
-                            <field name="requires_allocation" widget="checkbox"/>
-                            <field name="employee_requests" widget="checkbox" invisible="not requires_allocation"/>
+                            <field name="requires_allocation"/>
+                            <field name="employee_requests" invisible="not requires_allocation"/>
                             <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation"/>
                         </group>
                     </group>
