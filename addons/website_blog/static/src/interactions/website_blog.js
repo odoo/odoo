@@ -1,15 +1,18 @@
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { verifyHttpsUrl } from "@website/utils/misc";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { BlogNavSheet } from "./components/blog_nav_sheet";
 
 export class WebsiteBlog extends Interaction {
     static selector = ".website_blog";
     dynamicContent = {
+        ".o_wblog_sheet_trigger": {
+            "t-on-click": this.onBlogSheetTriggerClick,
+        },
         ".o_wblog_next_button": {
             "t-on-click.prevent": this.onNextBlogClick,
             "t-on-keydown": this.onNextBlogKeydown,
@@ -22,6 +25,16 @@ export class WebsiteBlog extends Interaction {
                 "t-on-click.prevent": this.onShareArticleClick,
             },
     };
+
+    onBlogSheetTriggerClick() {
+        const navEl = this.el.querySelector(".o_wblog_category");
+        const blogs = [...navEl.querySelectorAll("a")].map((a) => ({
+            name: a.textContent.trim(),
+            href: a.getAttribute("href"),
+            active: a.classList.contains("active"),
+        }));
+        this.services.bottom_sheet.add(this.el, BlogNavSheet, { blogs });
+    }
 
     /**
      * @param {MouseEvent} ev
