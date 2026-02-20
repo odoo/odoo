@@ -1,4 +1,7 @@
 .o_kanban_project_tasks .o_kanban_renderer {
+    flex-grow:1;
+
+
     .oe_kanban_bottom_right > div.o_field_many2many_avatar_user[name="user_ids"] {
         margin-left: 6px;
     }
@@ -18,3 +21,13 @@
         @include o-kanban-css-filter(success-done, rgba(25, 135, 84, 1));
     }
 }
+    .modal-body
+    {
+        display:flex;
+        .o_kanban_project_tasks{
+        flex-grow:1;
+        .o_content{
+            height:100%
+        }
+    }
+    }
