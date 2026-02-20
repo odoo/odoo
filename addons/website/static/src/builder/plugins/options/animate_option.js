@@ -9,7 +9,7 @@ import {
 } from "@html_builder/plugins/image/replace_media_option";
 
 /**
- * @typedef {((el: HTMLElement) => Promise<boolean>)[]} can_have_hover_effect_async_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
  */
 
 export class AnimateOption extends BaseOptionComponent {
@@ -85,8 +85,9 @@ export class AnimateOption extends BaseOptionComponent {
         return hasDirection;
     }
     async canHaveHoverEffect(el) {
-        const proms = this.getResource("can_have_hover_effect_async_predicates").map((p) => p(el));
-        const settledProms = await Promise.all(proms);
-        return settledProms.length && settledProms.every(Boolean);
+        const proms = this.getResource("hover_effect_image_dataset_providers").map((p) => p(el));
+        const datasets = await Promise.all(proms);
+        const dataset = Object.assign({}, ...datasets);
+        return this.checkPredicates("can_have_hover_effect_predicates", el, dataset) ?? false;
     }
 }

@@ -89,7 +89,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         },
         on_will_process_image_handlers: this.processImageWarmup.bind(this),
         on_image_processed_handlers: this.processImagePost.bind(this),
-        can_have_hover_effect_async_predicates: (el) => this.canHaveHoverEffect(el),
+        can_have_hover_effect_predicates: (el, dataset) => this.canHaveHoverEffect(el, dataset),
+        hover_effect_image_dataset_providers: async (imgEl) =>
+            Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl)),
         image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
     };
     setup() {
@@ -101,8 +103,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
         }
     }
-    async canHaveHoverEffect(imgEl) {
-        const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+    canHaveHoverEffect(imgEl, dataset) {
         return (
             imgEl.tagName === "IMG" &&
             !this.isDeviceShape(imgEl) &&

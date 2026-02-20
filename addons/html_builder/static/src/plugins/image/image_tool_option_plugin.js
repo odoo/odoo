@@ -106,14 +106,17 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
-        can_have_hover_effect_async_predicates: (el) => this.canHaveHoverEffect(el),
+        can_have_hover_effect_predicates: (el, dataset) => this.canHaveHoverEffect(el, dataset),
         normalize_processors: this.migrateImages.bind(this),
+        hover_effect_image_dataset_providers: async (imgEl) => ({
+            isCorsProtected: await isImageCorsProtected(imgEl),
+        }),
     };
     setup() {
         this.htmlStyle = getHtmlStyle(this.document);
     }
-    async canHaveHoverEffect(imgEl) {
-        return imgEl.tagName === "IMG" && !(await isImageCorsProtected(imgEl));
+    canHaveHoverEffect(imgEl, dataset) {
+        return imgEl.tagName === "IMG" && !dataset.isCorsProtected;
     }
     migrateImages(rootEl) {
         for (const el of selectElements(
