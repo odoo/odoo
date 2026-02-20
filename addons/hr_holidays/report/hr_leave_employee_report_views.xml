@@ -15,7 +15,7 @@
     <record id="hr_leave_employee_report_view_graph" model="ir.ui.view">
         <field name="model">hr.leave.employee.report</field>
         <field name="arch" type="xml">
-            <graph>
+            <graph disable_linking="True">
                 <field name="color" invisible="1"/>
                 <field name="employee_id"/>
                 <field name="number_of_days" string="Number of Days" type='measure'/>
