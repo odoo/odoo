@@ -267,11 +267,11 @@ class MemoryCollector(_BasePeriodicCollector):
     name = 'memory'
     _store = 'others'
     _min_interval = 0.01  # minimum interval allowed
-    _default_interval = 1
+    _default_interval = 0.1
 
     def start(self):
         _lock.acquire()
-        tracemalloc.start()
+        tracemalloc.start(5)
         super().start()
 
     def add(self, entry=None, frame=None, check_limit=True):
