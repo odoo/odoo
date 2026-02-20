@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from collections import defaultdict
 import itertools
 import json
 from datetime import datetime
@@ -477,21 +478,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         product_variants = dict(zip(products, (variant_by_id.get(vid, Product) for vid in product_variant_ids)))
 
         ProductAttribute = request.env['product.attribute']
+        pavs_per_attribute = defaultdict(list)
         if products:
-            # get all products without limit
-            attributes_grouped = request.env['product.template.attribute.line']._read_group(
+            grouped_pavs = request.env['product.attribute.value']._read_group(
                 domain=[
-                    ('product_tmpl_id', 'in', search_product.ids),
+                    ('pav_attribute_line_ids.product_tmpl_id.id', 'in', search_product.ids),
                     ('attribute_id.visibility', '=', 'visible'),
                 ],
                 groupby=['attribute_id'],
-                order='attribute_id'
+                order='attribute_id',
+                aggregates=['id:recordset'],
             )
-            attribute_ids = [attribute.id for attribute, in attributes_grouped]
-            attributes = ProductAttribute.browse(attribute_ids)
+            for attribute, pavs in grouped_pavs:
+                pavs_per_attribute[attribute] = pavs
+            attributes = pavs_per_attribute.keys()
+
         else:
             attributes = ProductAttribute.browse(attribute_ids).sorted()
-
         products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
@@ -530,6 +533,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda: products._get_previewed_attribute_values(category, product_query_params),
             ),
         }
+        if pavs_per_attribute:
+            values['pavs_per_attribute'] = pavs_per_attribute
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price
             values['max_price'] = max_price or available_max_price
