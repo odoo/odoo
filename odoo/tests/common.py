@@ -2786,6 +2786,8 @@ def tagged(*tags):
     exclude = {t[1:] for t in tags if t.startswith('-')}
 
     def tags_decorator(obj):
+        if 'at_install' in include and 'post_install' not in include:
+            exclude.add('post_install')
         obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
         at_install = 'at_install' in obj.test_tags
         post_install = 'post_install' in obj.test_tags

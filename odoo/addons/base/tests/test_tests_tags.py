@@ -21,6 +21,16 @@ class TestSetTags(TransactionCase):
         self.assertEqual(fc.test_tags, {'post_install', 'standard'})
         self.assertEqual(fc.test_module, 'base')
 
+    def test_set_tags_at_install_explicitly(self):
+        @tagged('at_install')
+        class FakeClass(TransactionCase):
+            pass
+
+        fc = FakeClass()
+
+        self.assertEqual(fc.test_tags, {'at_install', 'standard'})
+        self.assertEqual(fc.test_module, 'base')
+
     def test_set_tags_not_decorated(self):
         """Test that a TransactionCase has some test_tags by default"""
 
