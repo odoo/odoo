@@ -1123,3 +1123,14 @@ export function productIsNotSnoozed(product_name) {
         },
     ];
 }
+
+export function saveOrder() {
+    return [
+        clickReview(),
+        {
+            content: "save order",
+            trigger: ".pads .fa-upload",
+            run: "click",
+        },
+    ];
+}
