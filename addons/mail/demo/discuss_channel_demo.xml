@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record model="discuss.channel.member" id="channel_member_channel_admin_partner_admin">
+            <field name="is_favorite" eval="True"/>
+        </record>
+
+        <record model="discuss.channel.member" id="channel_member_general_channel_for_admin">
+            <field name="is_favorite" eval="True"/>
+        </record>
 
         <!-- Discussion groups, done in 2 steps to remove creator from followers -->
         <record model="discuss.channel" id="mail.channel_1">
