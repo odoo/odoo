@@ -529,7 +529,7 @@ export class AddPageDialog extends Component {
                 websiteId: this.props.websiteId,
             });
         }
-        this.props.onAddPage();
+        this.props.onAddPage({ createdUrl: data.url });
         this.props.close();
     }
 
