@@ -18,5 +18,14 @@
             <field name="interval_number">4</field>
             <field name="interval_type">hours</field>
         </record>
+
+        <record id="hr_attendance_check_out_specific_time_cron" model="ir.cron">
+            <field name="name">Attendance: Automatically check-out employees (Specific Time)</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_auto_check_out_specific_time()</field>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+        </record>
     </data>
 </odoo>

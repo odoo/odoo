@@ -21,7 +21,9 @@ class ResConfigSettings(models.TransientModel):
     attendance_from_systray = fields.Boolean(related="company_id.attendance_from_systray", readonly=False)
     attendance_overtime_validation = fields.Selection(related="company_id.attendance_overtime_validation", readonly=False)
     auto_check_out = fields.Boolean(related="company_id.auto_check_out", readonly=False)
+    auto_check_out_mode = fields.Selection(related="company_id.auto_check_out_mode", readonly=False)
     auto_check_out_tolerance = fields.Float(related="company_id.auto_check_out_tolerance", readonly=False)
+    auto_check_out_specific_time = fields.Float(related="company_id.auto_check_out_specific_time", readonly=False)
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
 
