@@ -262,7 +262,7 @@ export class DescriptionScreen extends Component {
         } else {
             let synonymMatches = this.state.industries.filter((val, index) => {
                 // To match, every term should be contained in the synonym
-                for (const candidate of [...(val.synonyms || "").split(this.splitRegex)]) {
+                for (const candidate of [...(val.synonyms || "").split(/[|,]/)]) {
                     // Check if industry label has already matched
                     if (
                         terms.every((term) => candidate.toLowerCase().includes(term)) &&
@@ -316,7 +316,7 @@ export class DescriptionScreen extends Component {
             let bitIndex = 0;
             while (bitIndex < matchTermOrder.labelBits.length) {
                 const currentBit = matchTermOrder.labelBits[bitIndex];
-                const splitBits = currentBit.split(new RegExp(`(${escapeRegExp(term)})`));
+                const splitBits = currentBit.split(new RegExp(`(${escapeRegExp(term)})`, "i"));
                 matchTermOrder.labelBits.splice(bitIndex, 1, ...splitBits);
                 bitIndex += splitBits.length;
             }
