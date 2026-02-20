@@ -20,7 +20,7 @@ test("buttonToShow", async () => {
     store.router.activeSlot = "cart";
     expect(comp.buttonToShow).toMatchObject({ label: "Order", disabled: false });
     // With valid payment method
-    models["pos.payment.method"].create({ use_payment_terminal: "stripe" });
+    models["pos.payment.method"].create({ payment_provider: "stripe" });
     expect(comp.buttonToShow).toMatchObject({ label: "Pay", disabled: false });
 });
 

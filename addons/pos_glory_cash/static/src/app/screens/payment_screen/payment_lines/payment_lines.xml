@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('electronic_payment')]" position="after">
+        <xpath expr="//div[hasclass('paymentline_status')]" position="after">
             <div t-if="line.payment_method_id.payment_method_type === 'glory_cash'" class="d-flex flex-column gap-3">
-                <t t-set="glory" t-value="line.payment_method_id.payment_terminal"/>
+                <t t-set="glory" t-value="line.payment_method_id.payment_interface"/>
 
                 <div class="d-flex gap-2 mt-3 fs-4">
                     <strong>Cash machine status:</strong>
@@ -54,13 +54,11 @@
                 </div>
             </div>
         </xpath>
-        <xpath expr="//div[contains(text(), 'Request sent')]" position="replace">
-            <div class="electronic_status d-flex gap-2">
-                <span class="flex-grow-1">Request sent</span>
-                <t t-if="line.payment_method_id.payment_method_type === 'glory_cash'">
-                    <strong>Cash inserted:</strong>
-                    <t t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
-                </t>
+        <xpath expr="//div[hasclass('paymentline_status_title')]" position="after">
+            <div t-if="['waiting', 'waiting_cancel', 'waiting_capture'].includes(state.id) and line.payment_method_id.payment_method_type === 'glory_cash'"
+                class="d-flex align-items-center justify-content-between pb-3 px-4 fs-4">
+                <span>Cash inserted</span>
+                <span t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
             </div>
         </xpath>
     </t>

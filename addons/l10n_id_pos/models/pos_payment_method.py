@@ -11,7 +11,7 @@ class PosPaymentMethod(models.Model):
 
         For all qris_invoice_details linked to the transaction, check the payment status
         """
-        if self.payment_method_type != 'qr_code' or self.qr_code_method != 'id_qr':
+        if self.payment_method_type != 'bank_qr_code' or self.qr_code_method != 'id_qr':
             return True
         trx = self.env['l10n_id.qris.transaction']._get_latest_transaction('pos.order', trx_uuid)
         if not trx:

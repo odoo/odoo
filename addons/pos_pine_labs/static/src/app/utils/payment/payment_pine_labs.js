@@ -18,8 +18,8 @@ export class PaymentPineLabs extends PaymentInterface {
         this.payment_stopped = false;
     }
 
-    sendPaymentRequest(cid) {
-        super.sendPaymentRequest(cid);
+    sendPaymentRequest(line) {
+        super.sendPaymentRequest(...arguments);
         return this._processPineLabs();
     }
 
@@ -27,8 +27,8 @@ export class PaymentPineLabs extends PaymentInterface {
         return this.pos.getPendingPaymentLine("pine_labs");
     }
 
-    sendPaymentCancel(order, cid) {
-        super.sendPaymentCancel(order, cid);
+    sendPaymentCancel(line) {
+        super.sendPaymentCancel(...arguments);
         return this._pineLabsCancel();
     }
 
@@ -37,7 +37,6 @@ export class PaymentPineLabs extends PaymentInterface {
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
             .catch((error) => {
                 const line = this.pendingPineLabsPaymentLine();
-                this.pos.paymentTerminalInProgress = false;
                 if (line) {
                     line.setPaymentStatus("force_done");
                 }
@@ -162,7 +161,7 @@ export class PaymentPineLabs extends PaymentInterface {
         const order = this.pos.getOrder();
         const paymentLine = order.getSelectedPaymentline();
         const sequenceNumber = order.payment_ids.filter(
-            (pi) => pi.payment_method_id.use_payment_terminal === "pine_labs"
+            (pi) => pi.payment_method_id.payment_provider === "pine_labs"
         ).length;
         if (paymentLine.amount < 0) {
             this._showError(_t("Cannot process transactions with negative amount."));
@@ -263,4 +262,4 @@ export class PaymentPineLabs extends PaymentInterface {
     }
 }
 
-registry.category("electronic_payment_interfaces").add("pine_labs", PaymentPineLabs);
+registry.category("pos_payment_providers").add("pine_labs", PaymentPineLabs);

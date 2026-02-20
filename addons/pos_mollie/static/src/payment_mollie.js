@@ -29,10 +29,9 @@ export class PaymentMollie extends PaymentInterface {
         });
     }
 
-    async sendPaymentRequest(uuid) {
-        const paymentLine = this.pos.getOrder().getPaymentlineByUuid(uuid);
-        if (paymentLine.amount < 0) {
-            const originalPaymentId = this._findOriginalPaymentId(paymentLine);
+    async sendPaymentRequest(line) {
+        if (line.amount < 0) {
+            const originalPaymentId = this._findOriginalPaymentId(line);
             if (!originalPaymentId) {
                 this._showMollieError(
                     _t("You can only refund an order that was paid for with Mollie.")
@@ -40,18 +39,17 @@ export class PaymentMollie extends PaymentInterface {
                 return false;
             }
 
-            return this._createMollieRefund(paymentLine, originalPaymentId);
+            return this._createMollieRefund(line, originalPaymentId);
         }
 
-        return this._createMolliePayment(paymentLine);
+        return this._createMolliePayment(line);
     }
 
-    async sendPaymentCancel(order, uuid) {
-        const paymentLine = this.pos.getOrder().getPaymentlineByUuid(uuid);
+    async sendPaymentCancel(line) {
         try {
             await this.callPaymentMethod("mollie_cancel_payment", [
                 this.payment_method_id.id,
-                paymentLine.transaction_id,
+                line.transaction_id,
             ]);
             return true;
         } catch (error) {
@@ -124,7 +122,7 @@ export class PaymentMollie extends PaymentInterface {
         const amountDue = Math.abs(currentOrder.remainingDue);
         const matchedPaymentLine = orderToRefund.payment_ids.find(
             (line) =>
-                line.payment_method_id.use_payment_terminal === "mollie" && line.amount <= amountDue
+                line.payment_method_id.payment_provider === "mollie" && line.amount <= amountDue
         );
 
         return matchedPaymentLine?.transaction_id ?? null;

@@ -128,7 +128,7 @@ export class PosConfig extends models.ServerModel {
             warehouse_id: false,
             route_id: false,
             picking_policy: "direct",
-            auto_validate_terminal_payment: true,
+            auto_validate_electronic_payment: true,
             trusted_config_ids: [],
             show_product_images: true,
             show_category_images: true,

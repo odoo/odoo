@@ -25,7 +25,7 @@ PosPaymentMethod._records = [
         image: false,
         sequence: 1,
         payment_method_type: "none",
-        use_payment_terminal: false,
+        payment_provider: false,
         default_qr: false,
         is_online_payment: true,
     },

@@ -152,14 +152,15 @@ export function createFloatingOrder() {
     return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
 }
 
-function _hasFloatingOrder(name, yes) {
+function _hasFloatingOrder(name, yes, click) {
     const negateIfNecessary = (trigger) => (yes ? trigger : negate(trigger));
     return [
         {
             isActive: ["desktop"],
             trigger: negateIfNecessary(
-                `.pos-topheader .floating-order-container:contains('${name}')`
+                `.pos-topheader .floating-order-container button:contains('${name}')`
             ),
+            run: click ? "click" : undefined,
         },
         {
             isActive: ["mobile"],
@@ -169,8 +170,9 @@ function _hasFloatingOrder(name, yes) {
         {
             isActive: ["mobile"],
             trigger: negateIfNecessary(
-                `.modal-header:contains(Choose an order) ~ .modal-body .floating-order-container:contains('${name}')`
+                `.modal-header:contains(Choose an order) ~ .modal-body .floating-order-container button:contains('${name}')`
             ),
+            run: click ? "click" : undefined,
         },
         {
             isActive: ["mobile"],
@@ -183,9 +185,11 @@ function _hasFloatingOrder(name, yes) {
 export function hasFloatingOrder(name) {
     return _hasFloatingOrder(name, true);
 }
-
 export function noFloatingOrder(name) {
     return _hasFloatingOrder(name, false);
+}
+export function clickFloatingOrder(name) {
+    return _hasFloatingOrder(name, true, true);
 }
 export function clickOrders() {
     return { trigger: ".pos-leftheader .orders-button", run: "click" };

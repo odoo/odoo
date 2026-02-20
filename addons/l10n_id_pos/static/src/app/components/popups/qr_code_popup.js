@@ -4,6 +4,14 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
+patch(QRPopup, {
+    props: {
+        ...QRPopup.props,
+        paymentMethod: { type: Object, optional: true },
+        order: { type: Object, optional: true },
+    },
+});
+
 patch(QRPopup.prototype, {
     setup() {
         super.setup(...arguments);
@@ -11,17 +19,23 @@ patch(QRPopup.prototype, {
     },
 
     async confirm() {
-        // Verify whether the payment has been recieved by QRIS
+        if (!this.props.paymentMethod?.id || !this.props.order?.uuid) {
+            this.env.services.dialog.add(AlertDialog, {
+                title: _t("Verification Error"),
+                body: _t("We couldn't verify the QRIS payment. Please try again."),
+            });
+            this.setButtonsDisabled(false);
+            return false;
+        }
 
+        // Verify whether the payment has been received by QRIS
         this.setButtonsDisabled(true);
 
-        const pm_line = this.props.line;
         let result;
-
         try {
             result = await this.orm.call("pos.payment.method", "l10n_id_verify_qris_status", [
-                [pm_line.payment_method_id.id],
-                pm_line.pos_order_id.uuid,
+                [this.props.paymentMethod.id],
+                this.props.order.uuid,
             ]);
         } catch {
             this.env.services.dialog.add(AlertDialog, {

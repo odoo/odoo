@@ -268,7 +268,7 @@ export class PaymentStripe extends PaymentInterface {
         var line = order.getPaymentlineByUuid(uuid);
         return (
             this.pos.config.set_tip_after_payment &&
-            line.payment_method_id.use_payment_terminal === "stripe" &&
+            line.payment_method_id.payment_provider === "stripe" &&
             line.card_type !== "interac" &&
             (!line.card_type || !line.card_type.includes("eftpos"))
         );
@@ -308,12 +308,11 @@ export class PaymentStripe extends PaymentInterface {
         }
     }
 
-    async sendPaymentRequest(uuid) {
+    async sendPaymentRequest(line) {
         /**
          * Override
          */
         await super.sendPaymentRequest(...arguments);
-        const line = this.pos.getOrder().getSelectedPaymentline();
         const isRefund = line.amount < 0;
 
         if (isRefund && !line.uiState.stripePaymentIdToRefund) {
@@ -343,12 +342,11 @@ export class PaymentStripe extends PaymentInterface {
         }
     }
 
-    async sendPaymentCancel(order, uuid) {
+    async sendPaymentCancel(line) {
         /**
          * Override
          */
         super.sendPaymentCancel(...arguments);
-        const line = this.pos.getOrder().getSelectedPaymentline();
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
             line.setPaymentStatus("retry");
@@ -387,4 +385,4 @@ export class PaymentStripe extends PaymentInterface {
     }
 }
 
-registry.category("electronic_payment_interfaces").add("stripe", PaymentStripe);
+registry.category("pos_payment_providers").add("stripe", PaymentStripe);

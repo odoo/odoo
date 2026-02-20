@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='pos_fast_payment_method_ids']" position="attributes">
-                <attribute name="domain">[('id', 'in', pos_payment_method_ids), ('use_payment_terminal', '=', False), ('split_transactions', '=', False), ('is_online_payment', '=', False)]</attribute>
+                <attribute name="domain">[('id', 'in', pos_payment_method_ids), ('payment_provider', '=', False), ('split_transactions', '=', False), ('is_online_payment', '=', False)]</attribute>
             </xpath>
         </field>
     </record>

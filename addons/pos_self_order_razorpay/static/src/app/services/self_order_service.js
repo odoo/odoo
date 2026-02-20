@@ -7,7 +7,7 @@ patch(SelfOrder.prototype, {
         await super.setup(...arguments);
 
         const razorpayPaymentMethod = this.models["pos.payment.method"].find(
-            (p) => p.use_payment_terminal === "razorpay"
+            (p) => p.payment_provider === "razorpay"
         );
 
         if (razorpayPaymentMethod) {

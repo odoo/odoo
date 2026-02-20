@@ -6,6 +6,15 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
+const _getPaymentlineSelector = ({ name, amount, nth, selected } = {}) => {
+    const selectedSelector = selected ? ".selected" : "";
+    const nameSelector = name ? `:has(.payment-name:contains("${name}"))` : "";
+    const amountSelector = amount ? `:has(.payment-amount:contains("${amount}"))` : "";
+    const nthSelector = nth ? `:nth-of-type(${nth})` : "";
+
+    return `.paymentlines .paymentline${nthSelector}${selectedSelector}${nameSelector}${amountSelector}`;
+};
+
 /**
  * Clicks on the payment method and then performs checks if necessary.
  *
@@ -70,7 +79,7 @@ export function clickCancelButton() {
     return [
         {
             content: "Cancel the ongoing payment request currently being processed.",
-            trigger: ".paymentlines .paymentline .send_payment_cancel",
+            trigger: ".paymentline_status_actions .paymentline_status_actions_button_cancel",
             run: "click",
         },
     ];
@@ -79,7 +88,7 @@ export function clickRetryButton() {
     return [
         {
             content: "Retry sending the payment request using the payment terminal.",
-            trigger: ".paymentlines .paymentline .send_payment_request:contains('Retry')",
+            trigger: ".paymentline_status_actions .paymentline_status_actions_button_retry",
             run: "click",
         },
     ];
@@ -88,25 +97,59 @@ export function clickRefundButton() {
     return [
         {
             content: "Initiate a refund request for the selected order.",
-            trigger: ".paymentlines .send_refund_request:contains('Refund')",
+            trigger: ".paymentline_status_actions .paymentline_status_actions_button_refund",
             run: "click",
         },
     ];
 }
+export function clickForceDoneButton() {
+    return [
+        {
+            content: "Force mark the payment as completed, regardless of its current status.",
+            trigger: ".paymentline_status_actions .paymentline_status_actions_button_force_done",
+            run: "click",
+        },
+    ];
+}
+
+export function hasActionState(actionStateId) {
+    return {
+        content: `check if paymentline has the action state '${actionStateId}'`,
+        trigger: `.paymentline_status .paymentline_status_title_${actionStateId}`,
+    };
+}
+
 /**
  * Click the paymentline having the given payment method name and amount.
  * @param {String} name payment method
  * @param {String} amount
  */
-export function clickPaymentline(name, amount) {
+export function clickPaymentline(name, amount, nth, selected) {
     return [
         {
             content: `click ${name} paymentline with ${amount} amount`,
-            trigger: `.paymentlines .paymentline .payment-infos:contains("${name}"):has(.payment-amount:contains("${amount}"))`,
+            trigger: _getPaymentlineSelector({ name, amount, nth, selected }) + " .payment-infos",
             run: "click",
         },
     ];
 }
+export function countPaymentlinesIs(count) {
+    return [
+        {
+            content: `there are ${count} paymentlines`,
+            trigger: `.paymentlines .paymentline:nth-of-type(${count})`,
+            run: () => {
+                const paymentlines = document.querySelectorAll(".paymentlines .paymentline");
+                if (paymentlines.length !== count) {
+                    throw new Error(
+                        `Expected ${count} paymentlines, but found ${paymentlines.length}.`
+                    );
+                }
+            },
+        },
+    ];
+}
+
 export function clickInvoiceButton() {
     return [
         {
@@ -193,10 +236,10 @@ export function clickTipButton() {
  * enterPaymentLineAmount("Bank", "100", true, { remaining: "50.0", change: "20.0" });
  */
 export function enterPaymentLineAmount(lineName, keys, isCheckNeeded = false, options = {}) {
-    const { remaining = null, change = null, amount = null } = options;
+    const { remaining = null, change = null, amount = null, nth = null } = options;
     const step = [
         ...clickNumpad(keys.split("").join(" ")),
-        ...fillPaymentLineAmountMobile(lineName, keys),
+        ...fillPaymentLineAmountMobile(lineName, keys, nth),
     ];
 
     if (isCheckNeeded) {
@@ -213,12 +256,13 @@ export function enterPaymentLineAmount(lineName, keys, isCheckNeeded = false, op
 
     return step;
 }
-export function fillPaymentLineAmountMobile(lineName, keys) {
+export function fillPaymentLineAmountMobile(lineName, keys, nth = null) {
+    const nthSelector = nth ? `:nth-of-type(${nth})` : "";
     return [
         {
             isActive: ["mobile"],
             content: "click payment line",
-            trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
+            trigger: `.paymentlines .paymentline${nthSelector} .payment-infos:contains("${lineName}")`,
             run: "click",
         },
         ...NumberPopup.enterValue(keys).map((step) => ({
@@ -433,4 +477,54 @@ export function isInvoiceButtonUnchecked() {
             trigger: ".js_invoice:not(.highlight)",
         },
     ];
+}
+
+// ----- QR POPUP ----- //
+export function qrPopupIsShown(amount) {
+    const amountSelector = amount ? ` .qr-code-amount:contains('${amount}')` : "";
+    return {
+        content: "QR code popup is shown",
+        trigger: `.modal .modal-content.o_qr_popup${amountSelector}`,
+    };
+}
+
+export function qrPopupIsNotShown() {
+    return {
+        content: "QR code popup is not shown",
+        trigger: negate(".modal .modal-content.o_qr_popup"),
+    };
+}
+
+export function confirmQrPopup() {
+    return {
+        content: "confirm QR code popup",
+        trigger: ".o_qr_popup .qr-code-popup-footer .confirm-button",
+        run: "click",
+    };
+}
+
+export function closeQrPopup() {
+    return {
+        content: "close QR code popup",
+        trigger: ".o_qr_popup .qr-code-popup-footer .cancel-button",
+        run: "click",
+    };
+}
+
+export function showQrPopup(opts) {
+    return [
+        qrPopupIsNotShown(),
+        {
+            content: `open QR code popup from paymentline (opts: ${JSON.stringify(opts)})`,
+            trigger: ` ${_getPaymentlineSelector(opts)} .paymentline_show_qr_code`,
+            run: "click",
+        },
+    ];
+}
+
+export function showQrPopupIsDisabled(opts) {
+    return {
+        content: `open QR code popup from paymentline is disabled (opts: ${JSON.stringify(opts)})`,
+        trigger: ` ${_getPaymentlineSelector(opts)} .paymentline_show_qr_code[disabled]`,
+    };
 }

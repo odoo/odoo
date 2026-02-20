@@ -3,13 +3,12 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
-        if (paymentMethod.use_payment_terminal === "stripe" && this.isRefundOrder) {
+        if (paymentMethod.payment_provider === "stripe" && this.isRefundOrder) {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
             const amountDue = Math.abs(this.currentOrder.remainingDue);
             const matchedPaymentLine = refundedOrder?.payment_ids.find(
                 (line) =>
-                    line.payment_method_id.use_payment_terminal === "stripe" &&
-                    line.amount >= amountDue
+                    line.payment_method_id.payment_provider === "stripe" && line.amount >= amountDue
             );
             if (matchedPaymentLine) {
                 const paymentLineAddedSuccessfully = await super.addNewPaymentLine(paymentMethod);

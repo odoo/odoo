@@ -24,7 +24,7 @@
     max-width: 50px;
     max-height: 50px;
     vertical-align: middle;
-    
+
     @include media-breakpoint-down(sm) {
       max-width: 32px;
       max-height: 32px;
@@ -41,10 +41,13 @@
     }
 }
 
-.paymentline.selected {
-  background: $o-component-active-bg;
-  border: $border-width solid $o-component-active-border;
-  color: $o-component-active-color;
+.paymentline {
+  border: $border-width solid $border-color;
+  &.selected {
+    background: $o-component-active-bg;
+    border-color: $o-component-active-border;
+    color: $o-component-active-color;
+  }
 }
 
 @keyframes fadeInOut {

@@ -16,17 +16,17 @@ export class PaymentRazorpay extends PaymentInterface {
         this.payment_stopped = false;
     }
 
-    sendPaymentRequest(cid) {
-        super.sendPaymentRequest(cid);
-        return this._processRazorpay(cid);
+    sendPaymentRequest(line) {
+        super.sendPaymentRequest(...arguments);
+        return this._processRazorpay(line.uuid);
     }
 
     pendingRazorpayline() {
         return this.pos.getPendingPaymentLine("razorpay");
     }
 
-    sendPaymentCancel(order, cid) {
-        super.sendPaymentCancel(order, cid);
+    sendPaymentCancel(line) {
+        super.sendPaymentCancel(...arguments);
         return this._razorpayCancel();
     }
 
@@ -306,4 +306,4 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 }
 
-registry.category("electronic_payment_interfaces").add("razorpay", PaymentRazorpay);
+registry.category("pos_payment_providers").add("razorpay", PaymentRazorpay);

@@ -72,12 +72,12 @@ const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
 
 const adyenWebhookStep = (isRefund = false) => ({
     content: "Waiting for Adyen payment to be processed",
-    trigger: `.electronic_status:contains('${
+    trigger: `.paymentline_status_title:contains('${
         isRefund ? "Refund in process" : "Waiting for card"
     }')`,
     run: async function () {
-        const payment_terminal =
-            posmodel.getPendingPaymentLine("adyen").payment_method_id.payment_terminal;
+        const payment_interface =
+            posmodel.getPendingPaymentLine("adyen").payment_method_id.payment_interface;
         // The fact that we are shown the `Waiting for card` status means that the
         // request for payment has been sent to the adyen server ( in this case the mocked server )
         // and the server replied with an `ok` response.
@@ -93,7 +93,7 @@ const adyenWebhookStep = (isRefund = false) => ({
             body: JSON.stringify(
                 response_from_adyen_on_pos_webhook(
                     posmodel.config.current_session_id.id,
-                    payment_terminal.most_recent_service_id
+                    payment_interface.most_recent_service_id
                 )
             ),
         });

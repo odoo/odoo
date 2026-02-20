@@ -29,7 +29,7 @@
             'l10n_in_pos/static/tests/tours/**/*',
         ],
         'point_of_sale.customer_display_assets': [
-            'l10n_in_pos/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml',
+            'l10n_in_pos/static/src/app/components/popups/qr_code_popup/*',
         ]
     },
     'author': 'Odoo S.A.',

@@ -201,6 +201,13 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
 
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
+            {
+                content: "wait for 200 ms",
+                trigger: "body",
+                run: async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 200));
+                },
+            },
             PaymentScreen.clickValidate(),
             // Edit payment button shouldn't be available for posted orders
             negateStep({ trigger: ".feedback-screen .edit-order-payment:contains(Edit Payment)" }),

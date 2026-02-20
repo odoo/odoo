@@ -3,6 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosPaymentMethod.prototype, {
     _load_pos_self_data_read(records) {
-        return records.filter((record) => record.use_payment_terminal);
+        return records.filter((record) => record.payment_provider);
     },
 });

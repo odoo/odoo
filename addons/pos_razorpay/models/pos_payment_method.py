@@ -13,8 +13,8 @@ class PosPaymentMethod(models.Model):
     razorpay_api_key = fields.Char(string='Razorpay API Key', help='Used when connecting to Razorpay: https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/', groups='point_of_sale.group_pos_manager')
     razorpay_test_mode = fields.Boolean(string='Razorpay Test Mode', default=False, help='Turn it on when in Test Mode')
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('razorpay', 'Razorpay')]
+    def _get_terminal_provider_selection(self):
+        return super()._get_terminal_provider_selection() + [('razorpay', 'Razorpay')]
 
     def razorpay_make_refund_request(self, data):
         razorpay = RazorpayPosRequest(self)
@@ -117,7 +117,7 @@ class PosPaymentMethod(models.Model):
         errorMessage = response.get('errorMessage') or default_error_msg
         return {'errorMessage': str(errorMessage)}
 
-    @api.constrains('use_payment_terminal')
+    @api.constrains('payment_provider')
     def _check_razorpay_terminal(self):
-        if any(record.use_payment_terminal == 'razorpay' and record.company_id.currency_id.name != 'INR' for record in self):
+        if any(record.payment_provider == 'razorpay' and record.company_id.currency_id.name != 'INR' for record in self):
             raise UserError(_('This Payment Terminal is only valid for INR Currency'))

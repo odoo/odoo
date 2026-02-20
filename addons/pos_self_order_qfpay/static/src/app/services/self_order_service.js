@@ -7,7 +7,7 @@ patch(SelfOrder.prototype, {
         await super.setup(...arguments);
 
         const QFPayPaymentMethod = this.models["pos.payment.method"].find(
-            (p) => p.use_payment_terminal === "qfpay"
+            (p) => p.payment_provider === "qfpay"
         );
 
         if (QFPayPaymentMethod) {

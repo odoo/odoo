@@ -22,7 +22,7 @@ class TestRazorPayPoS(TestPointOfSaleHttpCommon):
             {
                 "name": "RazorPay",
                 "payment_method_type": "terminal",
-                "use_payment_terminal": "razorpay",
+                "payment_provider": "razorpay",
                 "razorpay_tid": "my_razorpay_device_serial_no",
                 "razorpay_allowed_payment_modes": "card",
                 "razorpay_username": "my_razorpay_username",

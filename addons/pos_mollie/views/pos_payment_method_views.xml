@@ -5,9 +5,9 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_payment_terminal']" position="after">
-                <field name="mollie_payment_provider_id" invisible="use_payment_terminal != 'mollie'" required="use_payment_terminal == 'mollie'"/>
-                <field name="mollie_terminal_id" invisible="use_payment_terminal != 'mollie'" required="use_payment_terminal == 'mollie'"/>
+            <xpath expr="//field[@name='payment_provider']" position="after">
+                <field name="mollie_payment_provider_id" invisible="payment_provider != 'mollie'" required="payment_provider == 'mollie'"/>
+                <field name="mollie_terminal_id" invisible="payment_provider != 'mollie'" required="payment_provider == 'mollie'"/>
             </xpath>
         </field>
     </record>

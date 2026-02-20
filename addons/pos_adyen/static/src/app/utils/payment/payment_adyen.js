@@ -15,17 +15,17 @@ export class PaymentAdyen extends PaymentInterface {
             const pendingLine = this.pos.getPendingPaymentLine("adyen");
 
             if (pendingLine) {
-                pendingLine.payment_method_id.payment_terminal.handleAdyenStatusResponse();
+                pendingLine.payment_method_id.payment_interface.handleAdyenStatusResponse();
             }
         });
     }
 
-    sendPaymentRequest(uuid) {
-        super.sendPaymentRequest(uuid);
-        return this._adyenPay(uuid);
+    sendPaymentRequest(line) {
+        super.sendPaymentRequest(...arguments);
+        return this._adyenPay(line.uuid);
     }
-    sendPaymentCancel(order, uuid) {
-        super.sendPaymentCancel(order, uuid);
+    sendPaymentCancel(line) {
+        super.sendPaymentCancel(...arguments);
         return this._adyenCancel();
     }
 
@@ -423,4 +423,4 @@ export class PaymentAdyen extends PaymentInterface {
     }
 }
 
-registry.category("electronic_payment_interfaces").add("adyen", PaymentAdyen);
+registry.category("pos_payment_providers").add("adyen", PaymentAdyen);

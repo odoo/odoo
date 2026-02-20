@@ -6,7 +6,7 @@ patch(PaymentPage.prototype, {
         const paymentMethod = this.selfOrder.models["pos.payment.method"].find(
             (p) => p.id === this.state.paymentMethodId
         );
-        if (paymentMethod.use_payment_terminal === "pine_labs") {
+        if (paymentMethod.payment_provider === "pine_labs") {
             this.selfOrder.paymentError = false;
             await this.selfOrder.pineLabs.startPayment(this.selfOrder.currentOrder);
         } else {

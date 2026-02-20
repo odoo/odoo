@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv } from "../utils";
+import { getFilledOrder, setupPosEnv, createPaymentLine } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 
 definePosModels();
@@ -23,6 +23,36 @@ test("uiState", async () => {
         requiredPartnerDetails: {},
         tip: { type: false, value: false },
     });
+});
+
+test("canSendPaymentRequest", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card1 = store.models["pos.payment.method"].get(2);
+    const card2 = store.models["pos.payment.method"].create({ ...card1, id: 1004, name: "Card 2" });
+    card1.payment_method_type = "card_type_1";
+    card2.payment_method_type = "card_type_2";
+
+    const success = { status: true, message: "" };
+    const failure = {
+        status: false,
+        message: "There is already an electronic payment in progress.",
+    };
+
+    // No existing processing payment
+    expect(order.canSendPaymentRequest({ paymentMethod: card1 })).toEqual(success);
+
+    // Same type but already processing
+    const paymentline = createPaymentLine(store, order, card1);
+    paymentline.payment_status = "waitingCard";
+    expect(order.canSendPaymentRequest({ paymentMethod: card1 })).toEqual(failure);
+
+    // Can send the request while processing if it's the same payment line
+    expect(order.canSendPaymentRequest({ paymentline })).toEqual(success);
+
+    // Same type but none processing
+    paymentline.payment_status = "pending";
+    expect(order.canSendPaymentRequest({ paymentMethod: card1 })).toEqual(success);
 });
 
 test("totalQuantity", async () => {

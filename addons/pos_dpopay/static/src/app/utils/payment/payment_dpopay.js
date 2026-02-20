@@ -21,16 +21,14 @@ export class PaymentDPOPay extends PaymentInterface {
         this.pollingInProgress = false;
     }
 
-    sendPaymentRequest(cid) {
-        super.sendPaymentRequest(cid);
+    sendPaymentRequest(line) {
+        super.sendPaymentRequest(...arguments);
         return this._processPaymentRequest();
     }
 
-    sendPaymentCancel(order, cid) {
-        super.sendPaymentCancel(order, cid);
-        return this._cancelPaymentRequest({
-            sourceId: order.getSelectedPaymentline().transaction_id,
-        });
+    sendPaymentCancel(line) {
+        super.sendPaymentCancel(...arguments);
+        return this._cancelPaymentRequest({ sourceId: line.transaction_id });
     }
 
     async _processPaymentRequest() {
@@ -269,7 +267,6 @@ export class PaymentDPOPay extends PaymentInterface {
             ]);
         } catch (error) {
             const line = this._pendingDPOPaymentLine();
-            this.pos.paymentTerminalInProgress = false;
             if (line) {
                 line.setPaymentStatus("force_done");
             }

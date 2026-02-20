@@ -17,7 +17,7 @@ class TestQFPayPoS(TestPointOfSaleHttpCommon):
                     "name": "QFPay",
                     "qfpay_pos_key": "my_qfpay_pos_key",
                     "qfpay_notification_key": "my_qfpay_notification_key",
-                    "use_payment_terminal": "qfpay",
+                    "payment_provider": "qfpay",
                     "payment_method_type": "terminal",
                     "qfpay_payment_type": "card_payment",
                     "journal_id": cls.bank_journal.id,

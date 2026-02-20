@@ -22,7 +22,7 @@ export const useVivaApp = (validateCallback) => {
      */
     const use = (pm) => {
         const isAndroid = navigator.userAgent.toLowerCase().includes("android");
-        return isAndroid && pm.use_payment_terminal === "viva_com";
+        return isAndroid && pm.payment_provider === "viva_com";
     };
 
     /**
@@ -46,7 +46,7 @@ export const useVivaApp = (validateCallback) => {
         await pos.syncAllOrders({ orders: [order] });
         const line = pos
             .getOrder()
-            .payment_ids.find((l) => l.payment_method_id.use_payment_terminal === "viva_com");
+            .payment_ids.find((l) => l.payment_method_id.payment_provider === "viva_com");
 
         if (status === "success") {
             line.payment_status = "done";
@@ -154,7 +154,7 @@ export const useVivaApp = (validateCallback) => {
         }
         const isAndroid = navigator.userAgent.toLowerCase().includes("android");
         const usingApp = window.localStorage.getItem("vivawallet_app_answer") === "true";
-        const isVivaMethod = line.payment_method_id.use_payment_terminal === "viva_com";
+        const isVivaMethod = line.payment_method_id.payment_provider === "viva_com";
 
         return isAndroid && usingApp && isVivaMethod;
     };

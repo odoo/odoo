@@ -9,7 +9,7 @@ class PosOrder(models.Model):
     def action_pos_order_paid(self):
         res = super().action_pos_order_paid()
         if not self.config_id.set_tip_after_payment:
-            payment_lines = self.payment_ids.filtered(lambda line: line.payment_method_id.use_payment_terminal == 'adyen')
+            payment_lines = self.payment_ids.filtered(lambda line: line.payment_method_id.payment_provider == 'adyen')
             for payment_line in payment_lines:
                 payment_line._adyen_capture()
         return res
