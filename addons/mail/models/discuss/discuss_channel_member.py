@@ -368,7 +368,7 @@ class DiscussChannelMember(models.Model):
             partner_fields=lambda res: (
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields"),
+                res.from_method("_store_im_status_fields") if res.is_for_internal_users() else None,
                 res.from_method("_store_mention_fields"),
             ),
             guest_fields="_store_guest_fields",

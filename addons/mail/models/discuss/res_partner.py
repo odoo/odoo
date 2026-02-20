@@ -145,7 +145,7 @@ class ResPartner(models.Model):
         store.add(
             partners,
             lambda res: (
-                res.from_method("_store_partner_fields"),
+                res.from_method("_store_partner_fields") if res.is_for_internal_users() else None,
                 res.from_method("_store_mention_fields"),
             ),
         )

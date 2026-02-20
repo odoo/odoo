@@ -123,8 +123,9 @@ class MailGuest(models.Model):
 
     def _store_guest_fields(self, res: Store.FieldList):
         self._store_avatar_fields(res)
-        res.attr("im_status")
-        res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
+        if res.is_for_internal_users():
+            res.attr("im_status")
+            res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
