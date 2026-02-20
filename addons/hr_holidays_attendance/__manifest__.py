@@ -23,6 +23,9 @@ Convert employee's extra hours to leave allocations.
         'web.assets_backend': [
             'hr_holidays_attendance/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'hr_holidays_attendance/static/tests/tours/*.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

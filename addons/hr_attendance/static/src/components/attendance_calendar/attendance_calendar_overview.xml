@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.AttendanceCalendarOverview">
+        <div class="o_attendance_info_bar">
+            <div class="o_attendance_info_card">
+                <strong class="o_attendance_info_label">Worked Time</strong>
+                <div class="o_attendance_info_value text-primary">
+                    <span class="o_attendance_info_number"><t t-out="floatTime(state.workedHours)"/></span>
+                    <span class="o_attendance_info_unit">Hours</span>
+                </div>
+            </div>
+
+            <div t-if="displayExtraHours" class="o_attendance_info_card">
+                <strong class="o_attendance_info_label">Extra Time</strong>
+                <div class="o_attendance_info_value text-primary">
+                    <span class="o_attendance_info_number"><t t-out="floatTime(state.extraHours)"/></span>
+                    <span class="o_attendance_info_unit">Hours</span>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
