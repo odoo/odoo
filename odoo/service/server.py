@@ -816,7 +816,7 @@ class GeventServer(CommonServer):
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
             self.httpd.serve_forever()
-        except Exception:
+        except BaseException:
             _logger.exception("Evented Service (longpolling): uncaught error during main loop")
             raise
 
@@ -1306,7 +1306,7 @@ class Worker(object):
                 if not self.alive:
                     break
                 self.process_work()
-        except Exception:
+        except BaseException:
             _logger.exception("Worker %s (%s) Exception occurred, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)
 
