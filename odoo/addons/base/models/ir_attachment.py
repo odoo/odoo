@@ -71,7 +71,7 @@ class IrAttachment(models.Model):
     External attachment storage
     ---------------------------
 
-    The computed field ``datas`` is implemented using ``_file_read``,
+    The computed field ``raw`` is implemented using ``_file_read``,
     ``_file_write`` and ``_file_delete``, which can be overridden to implement
     other storage engines. Such methods should check for other location pseudo
     uri (example: hdfs://hadoopserver).
@@ -277,7 +277,7 @@ class IrAttachment(models.Model):
         self._set_attachment_data(lambda a: a.raw or EMPTY_BINARY)
 
     def _inverse_datas(self):
-        warnings.warn("Since 20.0, assign directly to ir.attachment.raw instead of datas", DeprecationWarning)
+        warnings.warn("Assign directly to ir.attachment.raw instead of datas", DeprecationWarning)
         self._set_attachment_data(lambda attach: BinaryBytes(base64.b64decode(attach.datas or b'')))
 
     def _set_attachment_data(self, get_data):
@@ -285,7 +285,7 @@ class IrAttachment(models.Model):
         checksum_raw_map = {}
 
         for attach in self:
-            # compute the fields that depend on datas
+            # compute the fields that depend on raw
             bin_data = get_data(attach)
             vals = self._get_datas_related_values(bin_data, attach.mimetype)
             if bin_data:
@@ -329,8 +329,8 @@ class IrAttachment(models.Model):
         return values
 
     def _compute_checksum(self, bin_data):
-        """ compute the checksum for the given datas
-            :param bin_data : datas in its binary form
+        """ compute the checksum for the given bytes
+            :param bin_data : data in its binary form
         """
         # an empty file has a checksum too (for caching)
         return hashlib.sha1(bin_data or b'').hexdigest()
@@ -498,7 +498,7 @@ class IrAttachment(models.Model):
         for attachment in self:
             # restrict writing on attachments that could be served by the
             # ir.http's dispatch exception handling
-            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
+            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_raw as user
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
@@ -760,7 +760,7 @@ class IrAttachment(models.Model):
     def create(self, vals_list):
         record_tuple_set = set()
 
-        # remove computed field depending of datas
+        # remove computed field depending of raw
         vals_list = [{
             key: value
             for key, value

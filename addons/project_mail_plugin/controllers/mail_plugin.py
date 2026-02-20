@@ -168,7 +168,7 @@ class MailPluginController(mail_plugin.MailPluginController):
         if attachments:
             request.env["ir.attachment"].create([{
                 "name": name,
-                "datas": content,
+                "raw": content,
                 "res_model": task._name,
                 "res_id": task.id,
             } for name, content in attachments])

@@ -796,12 +796,12 @@ class MailTemplate(models.Model):
                     attachments_values = [
                         (0, 0, {
                             'name': name,
-                            'datas': datas,
+                            'raw': content,
                             'type': 'binary',
                             'res_model': 'mail.message',
                             'res_id': mail.mail_message_id.id,
                         })
-                        for (name, datas) in attachments
+                        for (name, content) in attachments
                     ]
                     mail.with_context(default_type=None).write({'attachment_ids': attachments_values})
 
