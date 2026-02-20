@@ -72,6 +72,7 @@ export class TicketScreen extends Component {
     }
     //#region LIFECYCLE METHODS
     onMounted() {
+        this.pos.toRefundLines = {};
         setTimeout(() => {
             // Show updated list of synced orders when going back to the screen.
             this.onFilterSelected(this._state.ui.filter);
@@ -118,6 +119,7 @@ export class TicketScreen extends Component {
     onClickOrder(clickedOrder) {
         this._state.ui.selectedOrder = clickedOrder;
         this.numberBuffer.reset();
+        this.pos.toRefundLines = {};
         if ((!clickedOrder || clickedOrder.locked) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
             const firstLine = this._state.ui.selectedOrder.get_orderlines()[0];
@@ -300,15 +302,9 @@ export class TicketScreen extends Component {
             return;
         }
 
-        // The order that will contain the refund orderlines.
-        // Use the destinationOrder from props if the order to refund has the same
-        // partner as the destinationOrder.
-        const destinationOrder =
-            this.props.destinationOrder &&
-            partner === this.props.destinationOrder.get_partner() &&
-            !this.pos.doNotAllowRefundAndSales()
-                ? this.props.destinationOrder
-                : this._getEmptyOrder(partner);
+        // DestinationOrder props make no sense since we cannot add several refund orderlines from
+        // different orders into the same destination order, so we just get an empty order.
+        const destinationOrder = this._getEmptyOrder(partner);
 
         // Add orderline for each toRefundDetail to the destinationOrder.
         const originalToDestinationLineMap = new Map();
