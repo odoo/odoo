@@ -340,7 +340,10 @@ class ResCompany(models.Model):
             return False
         am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
         state_tracking = closing.message_ids.sudo().tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
-        return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
+        create_date = state_tracking[-1:].create_date
+        if create_date and create_date.date() == closing.date:
+            return create_date
+        return fields.Datetime.to_datetime(closing.date)
 
     def _save_closing_id(self, move_id):
         self.ensure_one()

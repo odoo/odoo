@@ -764,6 +764,43 @@ class TestStockValuation(TestStockValuationCommon):
         self._make_in_move(product, 1, unit_cost=77)
         self.assertEqual(product.standard_price, 77)
 
+    def test_post_multiple_stock_valuation_closings_in_past(self):
+        """
+        Ensure multiple stock valuation closings with different accounting dates in the past
+        can be posted.
+
+        Example scenario:
+        - Move 1: Accounting date = today - 4 days
+        - Move 2: Accounting date = today - 2 days
+        - First closing: at_date = today - 3 days
+        - Second closing: at_date = today - 1 day
+        Both closings should post successfully and calculate the correct valuation amounts.
+        """
+        self.env = self.env['base'].with_context(
+            tracking_disable=False,
+            mail_create_nolog=False,
+            mail_notrack=False,
+        ).env
+
+        product = self.product_fifo
+        today = Datetime.now()
+        with freeze_time(today - timedelta(days=4)):
+            move = self._make_in_move(product, 1, 10, create_picking=True, owner=self.env.company.partner_id)
+        with freeze_time(today - timedelta(days=2)):
+            move_2 = self._make_in_move(product, 1, 10, create_picking=True, owner=self.env.company.partner_id)
+
+        closing_move = self.env['account.move'].browse(move.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=3)))['res_id'])
+        self.env.cr.flush()
+        closing_move._post()
+        self.env.cr.flush()
+        closing_move_2 = self.env['account.move'].browse(move_2.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=1)))['res_id'])
+        closing_move_2._post()
+
+        self.assertEqual(move.value, 10)
+        self.assertEqual(closing_move.amount_total, 10)
+        self.assertEqual(move_2.value, 10)
+        self.assertEqual(closing_move_2.amount_total, 10)
+
     def test_create_done_move(self):
         """Stock Move created directly in Done state must impact de valuation."""
         product = self.product_avco
