@@ -807,11 +807,6 @@ registry.category("web_tour.tours").add("test_no_kitchen_confirmation_for_deposi
             ProductScreen.clickPartnerButton(),
             PartnerList.clickPartnerOptions("A powerful PoS man!"),
             PartnerList.clickDropDownItemText("Deposit money"),
-            {
-                content: "select payment method for deposit money",
-                trigger: ".o_dialog .selection-item:contains('bank')",
-                run: "click",
-            },
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.fillPaymentLineAmountMobile("bank", "10.0"),
             PaymentScreen.clickValidate(),
