@@ -48,6 +48,52 @@ sudo timedatectl set-timezone America/Mexico_City   # Ajustar según tu ubicaci�
 sudo dpkg-reconfigure locales                        # Seleccionar es_MX.UTF-8 o es_ES.UTF-8
 ```
 
+2. El comando de "Sincronización Total"
+Antes de editar archivos, prueba este comando "mágico" que suele forzar a Ubuntu a nivelar las versiones que tienes en conflicto:
+
+Bash
+sudo apt update && sudo apt full-upgrade -y
+Si esto termina sin errores, intenta instalar las dependencias de Odoo de nuevo. Si vuelve a fallar con el error de bzip2, pasamos a la cirugía:
+
+3. Reparar el archivo de fuentes (Si es necesario)
+Si en el paso 1 viste que faltaban repositorios, vamos a editarlos:
+
+Bash
+sudo nano /etc/apt/sources.list.d/ubuntu.sources
+Asegúrate de que el bloque principal se vea parecido a este (especialmente la línea de Suites):
+
+Plaintext
+Types: deb
+URIs: http://ports.ubuntu.com/ubuntu-ports
+Suites: noble noble-updates noble-backports noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+(Guarda con Ctrl+O, Enter y sal con Ctrl+X).
+
+4. La solución definitiva (Descarga Manual)
+Si el sistema sigue terco diciendo que no puede descargar la versión compatible, vamos a forzarlo bajando los paquetes de los servidores oficiales de Ubuntu para ARM64 (la arquitectura de tu Pi 5):
+
+Ejecuta estos comandos uno por uno:
+
+Bash
+# 1. Descargamos las versiones que coinciden (build0.1)
+wget http://ports.ubuntu.com/pool/main/b/bzip2/libbz2-1.0_1.0.8-5.1build0.1_arm64.deb
+wget http://ports.ubuntu.com/pool/main/b/bzip2/bzip2_1.0.8-5.1build0.1_arm64.deb
+
+# 2. Instalamos ambos manualmente
+sudo dpkg -i libbz2-1.0_1.0.8-5.1build0.1_arm64.deb bzip2_1.0.8-5.1build0.1_arm64.deb
+
+# 3. Corregimos cualquier fleco que haya quedado
+sudo apt install -f
+¿Por qué tanto lío con bzip2?
+Odoo necesita esta herramienta para manejar archivos comprimidos. Como tu Raspberry Pi 5 es una "joya" tecnológica reciente, a veces los espejos de software (mirrors) tardan unos días en sincronizar perfectamente el binario con su librería. Al instalarlos manualmente con dpkg, saltamos ese error de "no se puede descargar".
+
+Una vez que logres pasar esto:
+Ya puedes retomar el comando de instalación de dependencias de Odoo:
+sudo apt install python3-pip python3-dev python3-venv libxml2-dev ... (etcétera).
+
+¿Te funcionó la descarga manual con el comando wget? Si es así, ¡ya tienes el camino libre para instalar Odoo!
+
 ### 5. Instalar paquetes base del sistema
 
 ```bash
