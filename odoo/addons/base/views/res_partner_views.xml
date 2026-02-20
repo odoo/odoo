@@ -136,8 +136,8 @@
                             <div class="d-flex flex-column flex-grow-1">
                                 <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                                 <h1 class="mb-0 w-md-75">
-                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
-                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
+                                    <field id="company" options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
+                                    <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
                                 </h1>
                                 <div class="d-flex align-items-baseline w-md-50">
                                     <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
