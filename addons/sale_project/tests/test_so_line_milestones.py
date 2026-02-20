@@ -239,6 +239,35 @@ class TestSoLineMilestones(TestSaleCommon):
         self.assertEqual({m.quantity_percentage for m in project.milestone_ids}, {0.25}, "All milestones of the generated project should have a quantity percentage of 25%.")
         self.assertTrue(project.allow_milestones, "The project should allow milestones as it was created from a product configured to create milestones.")
 
+    def test_project_template_with_custom_milestones(self):
+        """
+        If a milestone product has a project template with configured milestones, and each milestone has
+        a custom quantity percentage, use those instead of setting a quantity equally for all milestones.
+        """
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template',
+            'allow_milestones': True,
+        })
+        self.env['project.milestone'].create([{
+            'project_id': project_template.id,
+            'name': str(i),
+            'quantity_percentage': round(0.1 * (i + 1), 2),
+        } for i in range(4)])
+        self.product_delivery_milestones1.project_template_id = project_template.id
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_milestones1.id,
+            'product_uom_qty': 20,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+
+        project = sale_order.project_ids
+        self.assertEqual({m.quantity_percentage for m in project.milestone_ids}, {0.1, 0.2, 0.3, 0.4}, "All milestones of the generated project should have a custom quantity percentage.")
+
     def test_project_template_with_milestones_multiple_products(self):
         """
         If multiple products use the same project template, which has configured milestones, use the first product
