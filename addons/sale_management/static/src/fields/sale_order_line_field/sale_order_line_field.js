@@ -15,16 +15,17 @@ patch(SaleOrderLineListRenderer.prototype, {
      * Disable "Hide Composition" and "Hide Prices" buttons for optional sections and their
      * subsections.
      */
-    disableCompositionButton(record) {
+    get disableCompositionButton() {
         return (
-            super.disableCompositionButton(record) ||
-            this.shouldCollapse(record, 'is_optional', true)
+            super.disableCompositionButton
+            || this.shouldCollapse(this.record, 'is_optional', true)
         );
     },
 
-    disablePricesButton(record) {
+    get disablePricesButton() {
         return (
-            super.disablePricesButton(record) || this.shouldCollapse(record, 'is_optional', true)
+            super.disablePricesButton
+            || this.shouldCollapse(this.record, 'is_optional', true)
         );
     },
 
@@ -34,11 +35,11 @@ patch(SaleOrderLineListRenderer.prototype, {
      *  - Parent section hides prices or composition
      *  - Section itself hides prices or composition
      */
-    disableOptionalButton(record) {
+    get disableOptionalButton() {
         return (
-            this.shouldCollapse(record, 'is_optional')
-            || this.shouldCollapse(record, 'collapse_prices', true)
-            || this.shouldCollapse(record, 'collapse_composition', true)
+            this.shouldCollapse(this.record, 'is_optional')
+            || this.shouldCollapse(this.record, 'collapse_prices', true)
+            || this.shouldCollapse(this.record, 'collapse_composition', true)
         );
     },
 

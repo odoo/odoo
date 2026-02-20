@@ -109,22 +109,20 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return SHOW_ALL_ITEMS_TOOLTIP;
     }
 
-    hidePrices(record) {
-        return record.data.collapse_prices;
+    get hidePrices() {
+        return this.record.data.collapse_prices;
     }
 
-    hideComposition(record) {
-        return record.data.collapse_composition;
+    get hideComposition() {
+        return this.record.data.collapse_composition;
     }
 
-    disablePricesButton(record) {
-        return (
-            this.shouldCollapse(record, 'collapse_prices') || this.disableCompositionButton(record)
-        );
+    get disablePricesButton() {
+        return this.shouldCollapse(this.record, 'collapse_prices') || this.disableCompositionButton;
     }
 
-    disableCompositionButton(record) {
-        return this.shouldCollapse(record, 'collapse_composition');
+    get disableCompositionButton() {
+        return this.shouldCollapse(this.record, 'collapse_composition');
     }
 
     get sectionColumns() {
@@ -292,12 +290,14 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     isSectionOrNote(record = null) {
+        record = record || this.record;
         return [DISPLAY_TYPES.SECTION, DISPLAY_TYPES.SUBSECTION, DISPLAY_TYPES.NOTE].includes(
             record.data.display_type
         );
     }
 
     isSection(record = null) {
+        record = record || this.record;
         return [DISPLAY_TYPES.SECTION, DISPLAY_TYPES.SUBSECTION].includes(record.data.display_type);
     }
 
