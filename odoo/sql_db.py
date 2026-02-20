@@ -107,7 +107,7 @@ class Savepoint:
         self.name = str(uuid.uuid1())
         self._cr = cr
         self.closed: bool = False
-        cr.execute('SAVEPOINT "%s"' % self.name)
+        cr.execute(SQL("SAVEPOINT %s", SQL.identifier(self.name)))
 
     def __enter__(self):
         return self
@@ -120,12 +120,12 @@ class Savepoint:
             self._close(rollback)
 
     def rollback(self):
-        self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
+        self._cr.execute(SQL("ROLLBACK TO SAVEPOINT %s", SQL.identifier(self.name)))
 
     def _close(self, rollback: bool):
         if rollback:
             self.rollback()
-        self._cr.execute('RELEASE SAVEPOINT "%s"' % self.name)
+        self._cr.execute(SQL("RELEASE SAVEPOINT %s", SQL.identifier(self.name)))
         self.closed = True
 
 
