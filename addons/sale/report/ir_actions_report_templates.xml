@@ -145,7 +145,7 @@
                                 name="tr_section"
                                 t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'"
                             >
-                                <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
+                                <t t-set="show_section_total" t-value="(is_section or not line.parent_id.collapse_prices) and not line.is_downpayment"/>
                                 <t
                                     t-set="section_name_colspan"
                                     t-value="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
