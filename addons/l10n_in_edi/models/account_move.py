@@ -633,7 +633,7 @@ class AccountMove(models.Model):
         line_ids = []
         global_discount_line_ids = []
         grouping_lines = self.invoice_line_ids.grouped(
-            lambda l: l.display_type == 'product' and (l._l10n_in_is_global_discount() and 'global_discount' or 'lines')
+            lambda l: l.display_type in ('product', 'downpayment') and (l._l10n_in_is_global_discount() and 'global_discount' or 'lines')
         )
         default_line = self.env['account.move.line'].browse()
         lines = grouping_lines.get('lines', default_line)

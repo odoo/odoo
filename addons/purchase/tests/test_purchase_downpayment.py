@@ -32,9 +32,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
         self.assertRecordValues(generated_bill.invoice_line_ids, [
             # pylint: disable=C0326
-            {'product_id': self.product_order.id, 'display_type': 'product',      'quantity': 10, 'is_downpayment': False, 'balance': 10.0 * self.product_order.standard_price},
-            {'product_id': False,                 'display_type': 'line_section', 'quantity': 0,  'is_downpayment': True,  'balance': 0.0},
-            {'product_id': False,                 'display_type': 'product',      'quantity': -1, 'is_downpayment': True,  'balance': -69.0},
+            {'product_id': self.product_order.id, 'display_type': 'product',      'quantity': 10, 'balance': 10.0 * self.product_order.standard_price},
+            {'product_id': False,                 'display_type': 'line_section', 'quantity': 0,  'balance': 0.0},
+            {'product_id': False,                 'display_type': 'downpayment',  'quantity': -1, 'balance': -69.0},
         ])
 
         # Normal flow: New bill with negative down payment line
@@ -119,7 +119,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             {'account_id': account_expense.id, 'debit': 235.0, 'credit': 0},
             {'account_id': accrued_wizard.account_id.id, 'debit': 0, 'credit': 235.0},
         ])
-        self.assertFalse(self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids.filtered(lambda l: l.is_downpayment))
+        self.assertFalse(self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids.filtered(lambda l: l.display_type == 'downpayment'))
 
     def test_downpayment_exchange_rate(self):
         self.env['res.currency.rate'].create({'currency_id': self.other_currency.id, 'rate': 1.5, 'name': fields.Date.subtract(fields.Date.today(), days=1)})

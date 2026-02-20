@@ -415,7 +415,7 @@ class AccountMove(models.Model):
                 'records': self.filtered(
                     lambda m: any(
                         len(l.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)) != 1
-                        for l in m.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+                        for l in m.invoice_line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment'))
                     )
                 ),
                 'message': _('Please set exactly one VAT tax on each invoice line!'),
@@ -876,12 +876,12 @@ class AccountMove(models.Model):
             lambda m: m.l10n_hu_invoice_chain_index and m.l10n_hu_invoice_chain_index < self.l10n_hu_invoice_chain_index
         )
         first_line_number = sum(
-            len(move.line_ids.filtered(lambda l: l.display_type in ['product', 'rounding']))
+            len(move.line_ids.filtered(lambda l: l.display_type in ['product', 'downpayment', 'rounding']))
             for move in prev_chain_invoices
         ) + 1
 
         for (line_number, line) in enumerate(
-            self.line_ids.filtered(lambda l: l.display_type in ['product', 'rounding']).sorted(lambda l: l.display_type),
+            self.line_ids.filtered(lambda l: l.display_type in ['product', 'downpayment', 'rounding']).sorted('sequence'),
             start=first_line_number,
         ):
             line_values = {
@@ -893,7 +893,7 @@ class AccountMove(models.Model):
                 'lineDescription': line.name.replace('\n', ' '),
             }
 
-            if 'is_downpayment' in line and line.is_downpayment:
+            if line.display_type == 'downpayment':
                 # Advance and final invoices.
                 line_values['advanceIndicator'] = True
 
@@ -913,7 +913,7 @@ class AccountMove(models.Model):
                             'advanceExchangeRate': last_reconciled_payment._l10n_hu_get_currency_rate(),
                         })
 
-            if line.display_type == 'product':
+            if line.display_type in ('product', 'downpayment'):
                 vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
 
                 if line.quantity == 0.0 or line.discount == 100.0:

@@ -1411,8 +1411,8 @@ class TestSaleToInvoice(TestSaleCommon):
             for invoice in sale_order.invoice_ids:
                 self.assertEqual(len(invoice.line_ids), 2, 'Downpayment invoice line should be created')
                 self.assertRecordValues(invoice.line_ids, [
-                    {'debit': 0, 'credit': 50, 'balance': -50, 'is_downpayment': True, 'account_type': 'income', 'display_type': 'product'},
-                    {'debit': 50, 'credit': 0, 'balance': 50, 'is_downpayment': False, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
+                    {'debit': 0, 'credit': 50, 'balance': -50, 'account_type': 'income', 'display_type': 'downpayment'},
+                    {'debit': 50, 'credit': 0, 'balance': 50, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
                 ])
 
             payment = self.env['sale.advance.payment.inv'].create({
@@ -1428,11 +1428,11 @@ class TestSaleToInvoice(TestSaleCommon):
         invoice_no_storno = max(sale_order_no_storno.invoice_ids)
         self.assertEqual(len(invoice_no_storno.line_ids), 5, 'Invoice line should be created')
         self.assertRecordValues(invoice_no_storno.line_ids, [
-            {'debit': 0, 'credit': 600.0, 'balance': -600.0, 'is_downpayment': False, 'account_type': 'income', 'display_type': 'product'},
-            {'debit': 0, 'credit': 0, 'balance': 0, 'is_downpayment': False, 'account_type': False, 'display_type': 'line_section'},
-            {'debit': 50.0, 'credit': 0, 'balance': 50.0, 'is_downpayment': True, 'account_type': 'income', 'display_type': 'product'},
-            {'debit': 50.0, 'credit': 0, 'balance': 50.0, 'is_downpayment': True, 'account_type': 'income', 'display_type': 'product'},
-            {'debit': 500.0, 'credit': 0, 'balance': 500.0, 'is_downpayment': False, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
+            {'debit': 0, 'credit': 600.0, 'balance': -600.0, 'account_type': 'income', 'display_type': 'product'},
+            {'debit': 0, 'credit': 0, 'balance': 0, 'account_type': False, 'display_type': 'line_section'},
+            {'debit': 50.0, 'credit': 0, 'balance': 50.0, 'account_type': 'income', 'display_type': 'downpayment'},
+            {'debit': 50.0, 'credit': 0, 'balance': 50.0, 'account_type': 'income', 'display_type': 'downpayment'},
+            {'debit': 500.0, 'credit': 0, 'balance': 500.0, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
         ])
 
         self.env.company.account_storno = True
@@ -1440,11 +1440,11 @@ class TestSaleToInvoice(TestSaleCommon):
         invoice_storno = max(sale_order_storno.invoice_ids)
         self.assertEqual(len(invoice_storno.line_ids), 5, 'Invoice line should be created')
         self.assertRecordValues(invoice_storno.line_ids, [
-            {'debit': 0.0, 'credit': 600.0, 'balance': -600.0, 'is_downpayment': False, 'account_type': 'income', 'display_type': 'product'},
-            {'debit': 0.0, 'credit': 0.0, 'balance': 0.0, 'is_downpayment': False, 'account_type': False, 'display_type': 'line_section'},
-            {'debit': 0.0, 'credit': -50.0, 'balance': 50.0, 'is_downpayment': True, 'account_type': 'income', 'display_type': 'product'},
-            {'debit': 0.0, 'credit': -50.0, 'balance': 50.0, 'is_downpayment': True, 'account_type': 'income', 'display_type': 'product'},
-            {'debit': 500.0, 'credit': 0.0, 'balance': 500.0, 'is_downpayment': False, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
+            {'debit': 0.0, 'credit': 600.0, 'balance': -600.0, 'account_type': 'income', 'display_type': 'product'},
+            {'debit': 0.0, 'credit': 0.0, 'balance': 0.0, 'account_type': False, 'display_type': 'line_section'},
+            {'debit': 0.0, 'credit': -50.0, 'balance': 50.0, 'account_type': 'income', 'display_type': 'downpayment'},
+            {'debit': 0.0, 'credit': -50.0, 'balance': 50.0, 'account_type': 'income', 'display_type': 'downpayment'},
+            {'debit': 500.0, 'credit': 0.0, 'balance': 500.0, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
         ])
 
     def test_negative_amount_storno(self):

@@ -166,7 +166,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 order_lines = lines.with_context(accrual_entry_date=accrual_entry_date).filtered(
                     # We only want non-comment lines (no sections, notes, ...) and include all lines
                     # for purchase orders but exclude downpayment lines for sales orders.
-                    lambda l: not l.display_type and not l.is_downpayment and
+                    lambda l: not l.display_type and
                     l.id in order.order_line.ids and
                     fields.Float.compare(
                         l.amount_to_invoice_at_date,
