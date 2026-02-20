@@ -18,7 +18,7 @@ import {
 } from "@html_editor/main/media/image_post_process_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { getMimetype } from "@html_editor/utils/image";
+import { getFetchedMimetype, getMimetype } from "@html_editor/utils/image";
 
 /**
  * @typedef {((dataset: DOMStringMap) => string)[]} default_shape_handlers
@@ -86,11 +86,12 @@ export class ImageShapeOptionPlugin extends Plugin {
     }
     async canHaveHoverEffect(imgEl) {
         const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+        const isImageSupportedForShapes = await this.asyncIsImageSupportedForShapes(imgEl, dataset);
         return (
             imgEl.tagName === "IMG" &&
             !this.isDeviceShape(imgEl) &&
             !this.isAnimableShape(dataset.shape) &&
-            this.isImageSupportedForShapes(imgEl, dataset)
+            isImageSupportedForShapes
         );
     }
     isDeviceShape(img) {
@@ -110,6 +111,17 @@ export class ImageShapeOptionPlugin extends Plugin {
             return false;
         }
         return isImageSupportedForProcessing(getMimetype(img, dataset));
+    }
+    // TODO: this has been introduced for stable policy. In master, remove it
+    // and adapt 'isImageSupportedForShapes'.
+    async asyncIsImageSupportedForShapes(img, dataset = img.dataset) {
+        if (!!dataset.hoverEffect || !!dataset.shape) {
+            return true;
+        }
+        if (!dataset.originalId) {
+            return false;
+        }
+        return isImageSupportedForProcessing(await getFetchedMimetype(img, dataset));
     }
     async getShapeSvgText(shapeName) {
         // Compatibility with old shapes.
