@@ -31,7 +31,7 @@ class EmptyGeoDB:
         raise geoip2.errors.AddressNotFoundError(ip)
 
 
-@functools.lru_cache(1)
+@functools.cache
 def _geoip_city_db():
     try:
         return geoip2.database.Reader(config['geoip_city_db'])
@@ -43,7 +43,7 @@ def _geoip_city_db():
         return EmptyGeoDB()
 
 
-@functools.lru_cache(1)
+@functools.cache
 def _geoip_country_db():
     try:
         return geoip2.database.Reader(config['geoip_country_db'])

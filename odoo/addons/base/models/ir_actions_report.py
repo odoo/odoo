@@ -89,7 +89,7 @@ class WkhtmlInfo(typing.NamedTuple):
     wkhtmltoimage_version: tuple[str, ...] | None
 
 
-@functools.lru_cache(1)
+@functools.cache
 def _wkhtml() -> WkhtmlInfo:
     state = 'install'
     bin_path = 'wkhtmltopdf'
