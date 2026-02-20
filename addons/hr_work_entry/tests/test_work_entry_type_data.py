@@ -5,6 +5,7 @@ from odoo.release import version_info
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+
 @tagged('-at_install', 'post_install', 'post_install_l10n')
 class TestWorkEntryTypeData(TransactionCase):
 
@@ -42,3 +43,31 @@ class TestWorkEntryTypeData(TransactionCase):
             for code in generic_codes:
                 if not self.env['hr.work.entry.type'].search_count([('code', '=', code), ('country_id', '=', country.id)], limit=1):
                     raise ValidationError("Missing generic work entry redefinition with code %s for %s" % (code, country.name))
+
+    def test_work_entry_type_calendar_creation(self):
+        """
+        This is to test the implemention of automatically populating newly created
+        work calendar with the default work calendar.
+        """
+        default_calendar = self.env['resource.calendar'].create({
+            'name': '40 hours/week',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40,
+            'attendance_ids': [
+                (0, 0, {'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': 9}),
+                (0, 0, {'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': 2}),
+                (0, 0, {'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': 3}),
+                (0, 0, {'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': 1}),
+                (0, 0, {'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': 5}),
+            ],
+        })
+        # Assigning the created calendar to the company resource calendar
+        self.env.company.resource_calendar_id = default_calendar
+
+        cloned_calendar = self.env['resource.calendar'].create({
+            'name': 'Cloned 40hr/week',
+        })
+        msg = "The created work schedule does not match the resource schedule of the company"
+        self.assertEqual(len(default_calendar.attendance_ids), len(cloned_calendar.attendance_ids), msg)
+        for day in range(len(cloned_calendar.attendance_ids)):
+            self.assertEqual(cloned_calendar.attendance_ids[day].work_entry_type_id, default_calendar.attendance_ids[day].work_entry_type_id, msg)

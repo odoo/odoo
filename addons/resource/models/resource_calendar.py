@@ -692,14 +692,7 @@ class ResourceCalendar(models.Model):
         """ return a copy of the company's calendar attendance or default 40 hours/week """
         if company_id and (attendances := company_id.resource_calendar_id.attendance_ids):
             return [
-                Command.create({
-                    'dayofweek': attendance.dayofweek,
-                    'week_type': attendance.week_type,
-                    'duration_hours': attendance.duration_hours,
-                    'hour_from': attendance.hour_from,
-                    'hour_to': attendance.hour_to,
-                })
-                for attendance in attendances
+                Command.create(attendance._copy_attendance_vals()) for attendance in attendances
             ]
         return [
             Command.create({'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
