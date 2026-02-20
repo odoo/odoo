@@ -1672,7 +1672,7 @@ export class HistoryPlugin extends Plugin {
      * @param {Function} operation
      * @returns {PreviewableOperation}
      */
-    makePreviewableAsyncOperation(operation) {
+    makePreviewableAsyncOperation(operation, batchable = false) {
         let revertOperation = () => {};
 
         return {
@@ -1718,7 +1718,7 @@ export class HistoryPlugin extends Plugin {
                 if (this.isDestroyed) {
                     return;
                 }
-                this.addStep();
+                this.addStep({ batchable: batchable });
             },
             revert: async () => {
                 await revertOperation();

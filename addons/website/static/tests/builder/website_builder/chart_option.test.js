@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, advanceTime } from "@odoo/hoot";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -7,6 +7,18 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { animationFrame, press, queryFirst } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
+
+const openChartSlidingPanel = async () => {
+    await contains("[data-label='Values'] button.o-hb-btn").click();
+    await advanceTime(200);
+    await animationFrame();
+};
+
+const closeChartSlidingPanel = async () => {
+    await contains(".hb-sliding-panel-label button[aria-label='close']").click();
+    await advanceTime(200);
+    await animationFrame();
+};
 
 const chartTemplate = (type, data) => `
     <div class="s_chart" data-snippet="s_chart" data-name="Chart" data-type="${type}" data-legend-position="none" data-tooltip-display="false" data-border-width="2"
@@ -73,22 +85,23 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
+        await openChartSlidingPanel();
         await contains(
-            ".options-container table [data-action-id=updateDatasetLabel]:last input"
+            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:last input"
         ).click();
         await animationFrame();
         expect(
-            ".options-container [data-label='Dataset Color'] button.o_we_color_preview"
+            ".hb-sliding-panel [data-label='Dataset Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(74, 123, 140)",
         });
         expect(
-            ".options-container table [data-action-id=updateDatasetLabel]:last input"
+            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:last input"
         ).toHaveStyle({
             border: "2px solid rgb(74, 123, 140)",
         });
         expect(
-            ".options-container table [data-action-id=updateDatasetValue]:first input"
+            ".hb-sliding-panel table [data-action-id=updateDatasetValue]:first input"
         ).toHaveAttribute("style", "");
     });
     test("Bar chart => border color set as fallback for border on header input", async () => {
@@ -96,27 +109,28 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
+        await openChartSlidingPanel();
         await contains(
-            ".options-container table [data-action-id=updateDatasetLabel]:first input"
+            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:first input"
         ).click();
         await animationFrame();
         expect(
-            ".options-container [data-label='Dataset Color'] button.o_we_color_preview"
+            ".hb-sliding-panel [data-label='Dataset Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgba(255, 255, 255, 0)",
         });
         expect(
-            ".options-container [data-label='Dataset Border'] button.o_we_color_preview"
+            ".hb-sliding-panel [data-label='Dataset Border'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(255, 127, 80)",
         });
         expect(
-            ".options-container table [data-action-id=updateDatasetLabel]:first input"
+            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:first input"
         ).toHaveStyle({
             border: "2px solid rgb(255, 127, 80)",
         });
         expect(
-            ".options-container table [data-action-id=updateDatasetValue]:first input"
+            ".hb-sliding-panel table [data-action-id=updateDatasetValue]:first input"
         ).toHaveAttribute("style", "");
     });
     test("Pie chart => background color set as border on individual data inputs", async () => {
@@ -124,22 +138,23 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
+        await openChartSlidingPanel();
         await contains(
-            ".options-container table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
+            ".hb-sliding-panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
         ).click();
         await animationFrame();
+        expect(".hb-sliding-panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
+            {
+                backgroundColor: "rgb(74, 123, 140)",
+            }
+        );
         expect(
-            ".options-container [data-label='Data Color'] button.o_we_color_preview"
-        ).toHaveStyle({
-            backgroundColor: "rgb(74, 123, 140)",
-        });
-        expect(
-            ".options-container table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
+            ".hb-sliding-panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
         ).toHaveStyle({
             border: "2px solid rgb(74, 123, 140)",
         });
         expect(
-            ".options-container table th:nth-child(3) [data-action-id=updateDatasetLabel]:first input"
+            ".hb-sliding-panel table th:nth-child(3) [data-action-id=updateDatasetLabel]:first input"
         ).toHaveAttribute("style", "");
     });
     test("Pie chart => border color set as fallback for border on individual data inputs", async () => {
@@ -147,27 +162,28 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
+        await openChartSlidingPanel();
         await contains(
-            ".options-container table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
+            ".hb-sliding-panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
         ).click();
         await animationFrame();
+        expect(".hb-sliding-panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
+            {
+                backgroundColor: "rgba(255, 255, 255, 0)",
+            }
+        );
         expect(
-            ".options-container [data-label='Data Color'] button.o_we_color_preview"
-        ).toHaveStyle({
-            backgroundColor: "rgba(255, 255, 255, 0)",
-        });
-        expect(
-            ".options-container [data-label='Data Border'] button.o_we_color_preview"
+            ".hb-sliding-panel [data-label='Data Border'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(255, 127, 80)",
         });
         expect(
-            ".options-container table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
+            ".hb-sliding-panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
         ).toHaveStyle({
             border: "2px solid rgb(255, 127, 80)",
         });
         expect(
-            ".options-container table th:nth-child(2) [data-action-id=updateDatasetLabel]:first input"
+            ".hb-sliding-panel table th:nth-child(2) [data-action-id=updateDatasetLabel]:first input"
         ).toHaveAttribute("style", "");
     });
 });
@@ -177,19 +193,18 @@ describe("Add & Delete buttons", () => {
         const type = "bar";
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
-        expect(".options-container table [data-action-id=removeColumn]:first").toHaveClass(
+        await openChartSlidingPanel();
+        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".options-container table [data-action-id=removeRow]:first").toHaveClass(
+        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        await contains(
-            ".options-container table [data-action-id=updateDatasetValue]:first"
-        ).hover();
-        expect(".options-container table [data-action-id=removeColumn]:first").not.toHaveClass(
+        await contains(".hb-sliding-panel table [data-action-id=updateDatasetValue]:first").hover();
+        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".options-container table [data-action-id=removeRow]:first").not.toHaveClass(
+        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
     });
@@ -197,19 +212,18 @@ describe("Add & Delete buttons", () => {
         const type = "bar";
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
-        expect(".options-container table [data-action-id=removeColumn]:first").toHaveClass(
+        await openChartSlidingPanel();
+        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".options-container table [data-action-id=removeRow]:first").toHaveClass(
+        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        await contains(
-            ".options-container table [data-action-id=updateDatasetValue]:first"
-        ).focus();
-        expect(".options-container table [data-action-id=removeColumn]:first").not.toHaveClass(
+        await contains(".hb-sliding-panel table [data-action-id=updateDatasetValue]:first").focus();
+        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".options-container table [data-action-id=removeRow]:first").not.toHaveClass(
+        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
     });
@@ -220,11 +234,12 @@ describe("Add & Delete buttons", () => {
         expect(data.labels).toHaveLength(3);
         expect(data.datasets[0].data).toHaveLength(3);
         await contains(":iframe .s_chart").click();
-        await contains(".options-container table [data-action-id=addRow]").click();
+        await openChartSlidingPanel();
+        await contains(".hb-sliding-panel table [data-action-id=addRow]").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.labels).toHaveLength(4);
         expect(data.datasets[0].data).toHaveLength(4);
-        expect(".options-container table tbody tr").toHaveCount(5);
+        expect(".hb-sliding-panel table tbody tr").toHaveCount(5);
     });
     test("Adding a column updates the data and available cells", async () => {
         const type = "bar";
@@ -232,11 +247,12 @@ describe("Add & Delete buttons", () => {
         let data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(2);
         await contains(":iframe .s_chart").click();
-        await contains(".options-container table [data-action-id=addColumn]").click();
+        await openChartSlidingPanel();
+        await contains(".hb-sliding-panel table [data-action-id=addColumn]").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(3);
-        expect(".options-container table thead tr th").toHaveCount(5);
-        expect(".options-container table tbody tr:first td").toHaveCount(4);
+        expect(".hb-sliding-panel table thead tr th").toHaveCount(5);
+        expect(".hb-sliding-panel table tbody tr:first td").toHaveCount(4);
     });
     test("Deleting a row updates the data and available cells", async () => {
         const type = "bar";
@@ -246,12 +262,13 @@ describe("Add & Delete buttons", () => {
         expect(data.datasets[0].data).toHaveLength(3);
         expect(data.labels[0]).toBe("First");
         await contains(":iframe .s_chart").click();
-        await contains(".options-container table [data-action-id=removeRow]:first").click();
+        await openChartSlidingPanel();
+        await contains(".hb-sliding-panel table [data-action-id=removeRow]:first").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.labels).toHaveLength(2);
         expect(data.datasets[0].data).toHaveLength(2);
         expect(data.labels[0]).toBe("Second");
-        expect(".options-container table tbody tr").toHaveCount(3);
+        expect(".hb-sliding-panel table tbody tr").toHaveCount(3);
     });
     test("Deleting a column updates the data and available cells", async () => {
         const type = "bar";
@@ -260,11 +277,12 @@ describe("Add & Delete buttons", () => {
         expect(data.datasets).toHaveLength(2);
         expect(data.datasets[0].label).toBe("One");
         await contains(":iframe .s_chart").click();
-        await contains(".options-container table [data-action-id=removeColumn]:first").click();
+        await openChartSlidingPanel();
+        await contains(".hb-sliding-panel table [data-action-id=removeColumn]:first").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(1);
-        expect(".options-container table thead tr th").toHaveCount(3);
-        expect(".options-container table tbody tr:first td").toHaveCount(2);
+        expect(".hb-sliding-panel table thead tr th").toHaveCount(3);
+        expect(".hb-sliding-panel table tbody tr:first td").toHaveCount(2);
         expect(data.datasets[0].label).toBe("Two");
     });
     test("Cannot delete column if there is only 1 dataset", async () => {
@@ -283,7 +301,8 @@ describe("Add & Delete buttons", () => {
             })
         );
         await contains(":iframe .s_chart").click();
-        expect(".options-container table [data-action-id=removeColumn]").toHaveCount(0);
+        await openChartSlidingPanel();
+        expect(".hb-sliding-panel table [data-action-id=removeColumn]").toHaveCount(0);
     });
     test("Cannot delete row if there is only 1 label", async () => {
         await setupWebsiteBuilder(
@@ -308,16 +327,18 @@ describe("Add & Delete buttons", () => {
             })
         );
         await contains(":iframe .s_chart").click();
-        expect(".options-container table [data-action-id=removeRow]").toHaveCount(0);
+        await openChartSlidingPanel();
+        expect(".hb-sliding-panel table [data-action-id=removeRow]").toHaveCount(0);
     });
     test("Tab to a delete row button and enter to validate", async () => {
         const type = "bar";
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
+        await openChartSlidingPanel();
         let data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.labels).toHaveLength(3);
         expect(data.labels[0]).toBe("First");
-        await contains(".options-container table tbody input").focus();
+        await contains(".hb-sliding-panel table tbody input").focus();
         await press("Tab");
         await press("Tab");
         await press("Tab");
@@ -330,10 +351,11 @@ describe("Add & Delete buttons", () => {
         const type = "bar";
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
+        await openChartSlidingPanel();
         let data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(2);
         expect(data.datasets[0].label).toBe("One");
-        await contains(".options-container table tbody tr:eq(2) input:last").focus();
+        await contains(".hb-sliding-panel table tbody tr:eq(2) input:last").focus();
         await press("Tab"); // remove row button
         await press("Tab"); // add row button
         await press("Tab");
@@ -348,16 +370,19 @@ test("Focusing input displays related data color/data border colorpickers", asyn
     const type = "bar";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Data Color']").not.toHaveCount();
-    expect(".options-container [data-label='Data Border']").not.toHaveCount();
-    expect(".options-container [data-label='Dataset Color']").toBeVisible();
-    expect(".options-container [data-label='Dataset Border']").toBeVisible();
+    await openChartSlidingPanel();
+    expect(".hb-sliding-panel [data-label='Data Color']").not.toHaveCount();
+    expect(".hb-sliding-panel [data-label='Data Border']").not.toHaveCount();
+    expect(".hb-sliding-panel [data-label='Dataset Color']").toBeVisible();
+    expect(".hb-sliding-panel [data-label='Dataset Border']").toBeVisible();
+    await closeChartSlidingPanel();
     await contains(".options-container [data-label='Type'] button.o-dropdown").click();
     await contains(".o_popover [data-action-id='setChartType'][data-action-value='pie']").click();
-    expect(".options-container [data-label='Data Color']").toBeVisible();
-    expect(".options-container [data-label='Data Border']").toBeVisible();
-    expect(".options-container [data-label='Dataset Color']").not.toHaveCount();
-    expect(".options-container [data-label='Dataset Border']").not.toHaveCount();
+    await openChartSlidingPanel();
+    expect(".hb-sliding-panel [data-label='Data Color']").toBeVisible();
+    expect(".hb-sliding-panel [data-label='Data Border']").toBeVisible();
+    expect(".hb-sliding-panel [data-label='Dataset Color']").not.toHaveCount();
+    expect(".hb-sliding-panel [data-label='Dataset Border']").not.toHaveCount();
 });
 
 test("CSS colors and CSS custom variables are correctly computed", async () => {
@@ -371,11 +396,12 @@ test("CSS colors and CSS custom variables are correctly computed", async () => {
             }`,
     });
     await contains(":iframe .s_chart").click();
-    await contains(".options-container table tbody input:eq(1)").click();
-    expect(".options-container [data-label='Dataset Color'] .o_we_color_preview").toHaveStyle({
+    await openChartSlidingPanel();
+    await contains(".hb-sliding-panel table tbody input:eq(1)").click();
+    expect(".hb-sliding-panel [data-label='Dataset Color'] .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 0, 0)",
     });
-    expect(".options-container [data-label='Dataset Border'] .o_we_color_preview").toHaveStyle({
+    expect(".hb-sliding-panel [data-label='Dataset Border'] .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 127, 80)",
     });
 });
@@ -385,7 +411,9 @@ test("Stacked option is only available with more than 1 dataset", async () => {
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     expect(".options-container [data-label='Stacked']").toBeVisible();
-    await contains(".options-container table [data-action-id=removeColumn]").click();
+    await openChartSlidingPanel();
+    await contains(".hb-sliding-panel table [data-action-id=removeColumn]").click();
+    await closeChartSlidingPanel();
     expect(".options-container [data-label='Stacked']").not.toHaveCount();
 });
 
@@ -393,28 +421,29 @@ test("Adding a new column/row displays the color pickers of the cell in new colu
     const type = "pie";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Data Color']").toBeVisible();
-    const prevColor = queryFirst(".options-container [data-label='Data Color'] .o_we_color_preview")
+    await openChartSlidingPanel();
+    expect(".hb-sliding-panel [data-label='Data Color']").toBeVisible();
+    const prevColor = queryFirst(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview")
         .style.backgroundColor;
 
-    await contains(".options-container button.add_column").click();
-    expect(".options-container [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+    await contains(".hb-sliding-panel button.add_column").click();
+    expect(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
         backgroundColor: prevColor,
     });
     const columnColor = queryFirst(
-        ".options-container [data-label='Data Color'] .o_we_color_preview"
+        ".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview"
     ).style.backgroundColor;
-    expect(".options-container table tbody tr:first-child td:nth-child(4) input").toHaveStyle({
+    expect(".hb-sliding-panel table tbody tr:first-child td:nth-child(4) input").toHaveStyle({
         border: `2px solid ${columnColor}`,
     });
 
-    await contains(".options-container button.add_row").click();
-    expect(".options-container [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+    await contains(".hb-sliding-panel button.add_row").click();
+    expect(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
         backgroundColor: columnColor,
     });
-    const rowColor = queryFirst(".options-container [data-label='Data Color'] .o_we_color_preview")
+    const rowColor = queryFirst(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview")
         .style.backgroundColor;
-    expect(".options-container table tbody tr:nth-child(4) td:nth-child(2) input").toHaveStyle({
+    expect(".hb-sliding-panel table tbody tr:nth-child(4) td:nth-child(2) input").toHaveStyle({
         border: `2px solid ${rowColor}`,
     });
 });
@@ -423,26 +452,27 @@ test("Removing a row with the current cell resets the current cell", async () =>
     const type = "pie";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Data Color']").toBeVisible();
+    await openChartSlidingPanel();
+    expect(".hb-sliding-panel [data-label='Data Color']").toBeVisible();
 
     const defaultColor = queryFirst(
-        ".options-container [data-label='Data Color'] .o_we_color_preview"
+        ".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview"
     ).style.backgroundColor;
 
-    await contains(".options-container table tbody tr:nth-child(1) td:nth-child(3) input").click();
+    await contains(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(3) input").click();
     const focusedCellColor = queryFirst(
-        ".options-container [data-label='Data Color'] .o_we_color_preview"
+        ".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview"
     ).style.backgroundColor;
-    expect(".options-container table tbody tr:nth-child(1) td:nth-child(3) input").toHaveStyle({
+    expect(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(3) input").toHaveStyle({
         border: `2px solid ${focusedCellColor}`,
     });
 
     await contains(
-        ".options-container table tbody tr:last-child td:nth-child(3) button.o_builder_matrix_remove_col"
+        ".hb-sliding-panel table tbody tr:last-child td:nth-child(3) button.o_builder_matrix_remove_col"
     ).click();
     // After removal, the current cell should reset to default (first dataset, first data point)
     // The color picker should now reflect the default cell's color
-    expect(".options-container [data-label='Data Color'] .o_we_color_preview").toHaveStyle({
+    expect(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview").toHaveStyle({
         backgroundColor: defaultColor,
     });
 });
