@@ -115,6 +115,8 @@ class LoyaltyProgram(models.Model):
         help="The end date is included in the validity period of this program",
     )
     limit_usage = fields.Boolean(string="Limit Usage")
+    once_per_user = fields.Boolean(string="Once per user")
+    user_ids = fields.Many2many(comodel_name='res.partner', string="Users")
     max_usage = fields.Integer()
     # Dictates when the points can be used:
     # current: if the order gives enough points on that order, the reward may directly be claimed, points lost otherwise
@@ -389,8 +391,7 @@ class LoyaltyProgram(models.Model):
                     'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
-                    'discount_applicability': 'specific',
-                    'discount_product_ids': first_sale_product,
+                    'discount_applicability': 'order',
                     'discount_mode': 'percent',
                     'discount': 10,
                 })],
