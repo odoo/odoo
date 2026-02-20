@@ -97,7 +97,7 @@ class ProgressBarState {
                 count: group.count - bars.map((r) => r.count).reduce((a, b) => a + b, 0),
                 value: FALSE,
                 string: _t("Other"),
-                color: "200",
+                color: "300",
             });
 
             // Update activeBars count and aggreagates

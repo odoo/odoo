@@ -74,7 +74,7 @@ export function getKanbanColumnDropdownMenu(columnIndex = 0, ignoreFolded = fals
 export function getKanbanColumnTooltips(columnIndex) {
     queryAllAttributes;
     const root = columnIndex >= 0 && getKanbanColumn(columnIndex);
-    return queryAllAttributes(".o_column_progress .progress-bar", "data-tooltip", { root });
+    return queryAllAttributes(".o_column_progress .progress-bar.o_bar_has_records", "data-tooltip", { root });
 }
 
 export function getKanbanCounters() {
@@ -86,7 +86,7 @@ export function getKanbanCounters() {
  */
 export function getKanbanProgressBars(columnIndex = 0) {
     const column = getKanbanColumn(columnIndex);
-    return queryAll(".o_column_progress .progress-bar", { root: column });
+    return queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: column });
 }
 
 /**

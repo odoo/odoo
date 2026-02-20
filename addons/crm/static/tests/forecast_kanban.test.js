@@ -334,7 +334,7 @@ test("Forecast drag&drop and add column", async () => {
 
     const getProgressBarsColors = () =>
         queryAll(".o_column_progress").map((columnProgressEl) =>
-            queryAll(".progress-bar", { root: columnProgressEl }).map((progressBarEl) =>
+            queryAll(".progress-bar.o_bar_has_records", { root: columnProgressEl }).map((progressBarEl) =>
                 [...progressBarEl.classList].find((htmlClass) => htmlClass.startsWith("bg-"))
             )
         );

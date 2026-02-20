@@ -5,11 +5,13 @@
         <div class="o_column_progress progress bg-300 w-75" t-att-class="offlineService.offline ? 'opacity-50 pe-none': ''">
             <t t-set="maxWidth" t-value="100 - Math.max(0, props.progressBar.bars.filter(x => x.count > 0).length - 1) * 5"/>
             <t t-foreach="props.progressBar.bars" t-as="bar" t-key="bar.value">
-                <t t-set="progressWidth" t-value="Math.max(5, bar.count / (props.group.count or 1) * 100)"/>
-                <div t-if="bar.count > 0"
-                    role="progressbar"
-                    class="progress-bar o_bar_has_records cursor-pointer"
-                    t-att-class="{ 'progress-bar-animated progress-bar-striped': props.progressBar.activeBar === bar.value, 'border border-white': !props.group.isFolded and props.progressBar.activeBar }"
+                <t t-set="progressWidth" t-value="bar.count > 0 ? Math.max(5, bar.count / (props.group.count or 1) * 100) : 0"/>
+                <div role="progressbar"
+                    class="progress-bar"
+                    t-att-class="{
+                        'o_bar_has_records cursor-pointer': bar.count > 0,
+                        'progress-bar-animated progress-bar-striped': props.progressBar.activeBar === bar.value,
+                    }"
                     t-attf-class="bg-{{ bar.color }}"
                     t-attf-style="width: {{ Math.min(progressWidth, maxWidth) }}%;"
                     aria-valuemin="0"
@@ -17,8 +19,8 @@
                     t-att-aria-valuenow="bar.count"
                     aria-label="Progress bar"
                     t-attf-data-tooltip="{{ bar.count }} {{ bar.string }}"
-                    data-tooltip-delay="0"
-                    t-on-click="() => this.onBarClick(bar)"
+                    t-att-data-tooltip-delay="bar.count > 0 ? 0 : undefined"
+                    t-on-click="() => bar.count > 0 and this.onBarClick(bar)"
                 />
             </t>
         </div>

@@ -1,26 +1,15 @@
 .o_progressbar {
-    .o_progress {
-        width: 100px;
-        height: 15px;
-        border: 1px solid $o-gray-300;
-        background-color: $o-view-background-color;
-    }
+    --ProgressBarField-width: 150px;
+    --ProgressBarField-min-width: 35px;
+    --ProgressBarField-height: #{map-get($spacers, 2)};
 
-    .o_progressbar_value input {
-        // Prevent the input to grow and deteriorate the visibility
-        width: 45px;
-        min-width: 45px;
-        transition: width .2s;
-    }
-}
+    color: $body-color;
 
-.o_form_view {
-    .o_progressbar_value input {
-        &:focus-within {
-            // To improve the edition of the value, the
-            // input grows to the full available width
-            width: 100%;
-        }
+    .progress {
+        --#{$prefix}progress-height: var(--ProgressBarField-height);
+
+        flex-basis: var(--ProgressBarField-width);
+        min-width: var(--ProgressBarField-min-width);
     }
 }
 
@@ -29,24 +18,12 @@
         text-align: left !important;
     }
 
-    .o_data_cell {
-        .o_progressbar {
-            // Force progress bars to respect table's layout
-            display: table-row;
-            justify-content: start;
-            .o_rtl & {
-                justify-content: flex-end;
-                text-align: right;
-            }
-            .o_progressbar_value {
-                span {
-                    min-width: 1.5rem;
-                    text-align: end;
-                }
-                span:last-child{
-                    text-align: start;
-                }
-            }
+    .o_data_cell .o_progressbar {
+        width: 100%;
+
+        .o_rtl & {
+            justify-content: flex-end;
+            text-align: right;
         }
     }
 }
