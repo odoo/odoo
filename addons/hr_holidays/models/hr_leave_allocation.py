@@ -4,6 +4,7 @@
 from calendar import monthrange
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
+from lxml import etree
 
 from odoo import api, fields, models, _
 from odoo.tools import format_date
@@ -1028,3 +1029,16 @@ class HrLeaveAllocation(models.Model):
             self.check_access('read')
             return super(HrLeaveAllocation, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        result = super().get_view(view_id=view_id, view_type=view_type, **options)
+
+        doc = etree.XML(result["arch"])
+        if doc.get("js_class") == "hr_holidays_payslip_list":
+            if self.env.user.company_id.id != self.env.company.id:
+                for node in doc.xpath("//list"):
+                    node.set("create", "false")
+                result["arch"] = etree.tostring(doc, encoding="unicode")
+
+        return result
