@@ -102,5 +102,34 @@ registerWebsitePreviewTour(
             content: "Check the blog info is available",
             trigger: ":iframe #o_wblog_post_info",
         },
+        {
+            content: "Go to 'All' blogs",
+            trigger: ":iframe a[href='/blog']",
+            run: "click",
+        },
+        {
+            content: "Click on the first blog post.",
+            trigger: ":iframe a:contains('First Post')",
+            run: "click",
+        },
+        {
+            content: "Verify next post elements are not editable.",
+            trigger: ":iframe #o_wblog_post_footer",
+            run() {
+                const nextPostNameEl = this.anchor.querySelector(
+                    "div.o_wblog_post_name.o_not_editable"
+                );
+                const nextPostSubtitleEl = this.anchor.querySelector(
+                    "div.o_wblog_post_subtitle.o_not_editable"
+                );
+                const nextPostCoverEl = this.anchor.querySelector(
+                    ".o_record_cover_container.o_we_no_overlay"
+                );
+
+                if (!nextPostNameEl || !nextPostSubtitleEl || !nextPostCoverEl) {
+                    throw new Error("Next post elements should be not editable.");
+                }
+            },
+        },
     ]
 );

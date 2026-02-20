@@ -342,14 +342,14 @@ list of filtered posts (by date or tag).
                             <div class="flex-grow-1 pe-3">
                                 <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1">Read Next</span>
                                 <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
-                                    <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2 o_wblog_post_name"/>
-                                    <div t-field="next_post.subtitle" placeholder="Subtitle" class="lead o_wblog_post_subtitle"/>
+                                    <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2 o_wblog_post_name o_not_editable"/>
+                                    <div t-field="next_post.subtitle" placeholder="Subtitle" class="lead o_wblog_post_subtitle o_not_editable"/>
                                 </a>
                             </div>
                             <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25 flex-shrink-0">
                                 <t t-call="website.record_cover">
                                     <t t-set="_record" t-value="next_post"/>
-                                    <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
+                                    <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100 o_we_no_overlay'"/>
                                 </t>
                             </a>
                         </div>
