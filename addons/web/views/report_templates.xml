@@ -538,6 +538,7 @@
                 </tbody>
             </table>
         </div>
+<<<<<<< f0ae3a7d8d07ffc995b5f2e65eecbdf81608a62d
         <t t-set="customized_address_layout">
             <table class="o_ignore_layout_styling table table-borderless mb-0">
                 <tbody>
@@ -560,6 +561,51 @@
         <t t-call="web.external_layout_body"
             hide_title="True"
             customized_address_layout="customized_address_layout">
+||||||| 526346aa2f7507037716c8a5834c86e5ad2a17f8
+        <t t-call="web.external_layout_body">
+            <t t-set="hide_title" t-value="True"/>
+            <t t-set="customized_address_layout">
+                <table class="o_ignore_layout_styling table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
+                                <t t-call="web.address_layout" custom_layout_address="True"/>
+                            </td>
+                            <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                                <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                            </td>
+                        </tr>
+                        <tr t-if="information_block">
+                            <td colspan="2" class="align-bottom p-0">
+                                <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+=======
+        <t t-call="web.external_layout_body">
+            <t t-set="hide_title" t-value="True"/>
+            <t t-set="customized_address_layout">
+                <table class="o_ignore_layout_styling table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="p-0">
+                                <t t-call="web.address_layout" custom_layout_address="True"/>
+                            </td>
+                            <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                                <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                            </td>
+                        </tr>
+                        <tr t-if="information_block">
+                            <td colspan="2" class="align-bottom p-0">
+                                <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+>>>>>>> 82232357708a176fa4a6e58338881cd40af97398
             <t t-out="0"/>
         </t>
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
@@ -711,8 +757,8 @@
             </table>
         </div>
         <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
-            <h2 class="text-center" t-out="layout_document_title"/>
-            <t t-call="web.address_layout" custom_layout_address="True" information_block="False"/>
+            <h2 t-attf-class="text-center {{'mb-4' if information_block else ''}}" t-out="layout_document_title"/>
+            <t t-call="web.address_layout" custom_layout_address="True"/>
             <t t-out="0"/>
         </t>
         <div t-attf-class="o_company_#{company.id}_layout footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
