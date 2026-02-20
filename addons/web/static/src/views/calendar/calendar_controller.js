@@ -282,6 +282,7 @@ export class CalendarController extends Component {
     getQuickCreateFormViewProps(record) {
         const rawRecord = this.model.buildRawRecord(record);
         const context = this.model.makeContextDefaults(rawRecord);
+        context.is_quick_create_form = true;
         return {
             resModel: this.model.resModel,
             viewId: this.model.quickCreateFormViewId,
