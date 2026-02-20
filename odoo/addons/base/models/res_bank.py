@@ -5,7 +5,9 @@ import re
 from collections.abc import Iterable
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools.misc import clean_context
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -107,7 +109,7 @@ class ResPartnerBank(models.Model):
         """ To be overridden by subclasses in order to support other account_types.
         """
         return 'bank'
-    
+
     def name_get(self):
         return [(acc.id, '{} - {}'.format(acc.acc_number, acc.bank_id.name) if acc.bank_id else acc.acc_number)
                 for acc in self]
@@ -129,3 +131,39 @@ class ResPartnerBank(models.Model):
                 args[pos] = ('sanitized_acc_number', op, value)
             pos += 1
         return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
+
+    def _find_or_create_bank_account(self, account_number, partner, company, allow_company_account_creation=False, extra_create_vals=None):
+        """Find a bank account for the given partner and number. Create it if it doesn't exist.
+
+        Manage different corner cases:
+        - make sure that we don't try to create the bank number if we look for it but it exists restricted in another
+          company; because of the unique constraint
+        - make sure that we don't create a bank account number for one of the database's companies, unless
+          `allow_company_account_creation` is specified
+
+        :param account_number: the bank account number to search for (or to create)
+        :param partner: the partner linked to the account number
+        :param company: the company that the bank needs to be accessible from (only for searching)
+        :param allow_company_account_creation: whether we disable the protection to create an account for our own
+                companies
+        :param extra_create_vals: values to be added when creating the account, but not to write if the account was
+                found and e.g. modified manually beforehands
+        """
+        bank_account = self.env['res.partner.bank'].sudo().with_context(active_test=False).search([
+            ('acc_number', '=', account_number),
+            ('partner_id', 'child_of', partner.id),
+        ])
+        if not bank_account:
+            if not allow_company_account_creation and partner.id in self.env['res.company']._get_company_partner_ids():
+                raise UserError(_(
+                    "Please add your own bank account manually: %(account_number)s (%(partner)s)",
+                    account_number=account_number,
+                    partner=partner.display_name,
+                ))
+            bank_account = self.env['res.partner.bank'].with_context(clean_context(self.env.context)).create({
+                **(extra_create_vals or {}),
+                'acc_number': account_number,
+                'partner_id': partner.id,
+                'allow_out_payment': False,
+            })
+        return bank_account.filtered(lambda x: x.company_id.id in (False, company.id if company else False) and x.active).sudo(False)
