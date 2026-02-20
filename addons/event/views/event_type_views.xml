@@ -7,6 +7,9 @@
         <field name="model">event.type</field>
         <field name="arch" type="xml">
             <form string="Event Category">
+               <header>
+                    <button name="action_create_event" string="Create event" class="oe_highlight" type="object"/>
+               </header>
                <sheet>
                     <div class="oe_title" name="event_type_title">
                         <label for="name" string="Event Template"/>

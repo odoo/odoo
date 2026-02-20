@@ -71,7 +71,7 @@ class EventEvent(models.Model):
         return self.env['event.type']._default_question_ids()
 
     name = fields.Char(string='Event', translate=True, required=True)
-    note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
+    note = fields.Html(string='Note')
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
@@ -90,11 +90,8 @@ class EventEvent(models.Model):
         'event.type', string='Template', ondelete='set null',
         help="Choose a template to auto-fill tickets, communications, descriptions and other fields.")
     event_mail_ids = fields.One2many(
-        'event.mail', 'event_id', string='Mail Schedule', copy=True,
-        compute='_compute_event_mail_ids', readonly=False, store=True)
-    tag_ids = fields.Many2many(
-        'event.tag', string="Tags", readonly=False,
-        store=True, compute="_compute_tag_ids")
+        'event.mail', 'event_id', string='Mail Schedule', copy=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags")
     # properties
     registration_properties_definition = fields.PropertiesDefinition('Registration Properties')
     # Kanban fields
@@ -110,7 +107,6 @@ class EventEvent(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees',
-        compute='_compute_seats_max', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this number the registrations are not accepted. "
         "If the event has multiple slots, this maximum number is applied per slot.")
     seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
@@ -136,8 +132,7 @@ class EventEvent(models.Model):
     event_slot_ids = fields.One2many("event.slot", "event_id", "Slots", copy=True)
     event_slot_count = fields.Integer("Slots Count", compute="_compute_event_slot_count")
     event_ticket_ids = fields.One2many(
-        'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
-        compute='_compute_event_ticket_ids', readonly=False, store=True, precompute=True)
+        'event.event.ticket', 'event_id', string='Event Ticket', copy=True)
     event_registrations_started = fields.Boolean(
         'Registrations started', compute='_compute_event_registrations_started',
         help="registrations have started if the current datetime is after the earliest starting date of tickets."
@@ -157,7 +152,6 @@ class EventEvent(models.Model):
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Display Timezone', required=True,
-        compute='_compute_date_tz', precompute=True, readonly=False, store=True,
         help="Indicates the timezone in which the event dates/times will be displayed on the website.")
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True,
         help="When the event is scheduled to take place (expressed in your local timezone on the form view).")
@@ -195,11 +189,10 @@ class EventEvent(models.Model):
         ], default='A6', required=True)
     badge_image = fields.Image('Badge Background', max_width=1024, max_height=1024)
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
-        compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions
     question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
-        string='Questions', compute='_compute_question_ids', readonly=False, store=True, precompute=True)
+        string='Questions')
     general_question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
         string='General Questions', domain=[('once_per_order', '=', True)])
     specific_question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
@@ -214,38 +207,6 @@ class EventEvent(models.Model):
         """Get the URL to use to redirect to the event, overriden in website for fallback."""
         for event in self:
             event.event_share_url = event.event_url
-
-    @api.depends('event_type_id')
-    def _compute_question_ids(self):
-        """ Update event questions from its event type. Depends are set only on
-        event_type_id itself to emulate an onchange. Changing event type content
-        itself should not trigger this method.
-
-        When synchronizing questions:
-
-          * lines with no registered answers for the event are removed;
-          * type lines are added;
-        """
-        for event in self:
-            questions_tokeep_ids = []
-            if self._origin.question_ids:
-                # Keep questions with attendee answers for the event.
-                questions_tokeep_ids.extend(
-                    (event.registration_ids.registration_answer_ids.question_id & self._origin.question_ids).ids
-                )
-
-            if not event.event_type_id and not questions_tokeep_ids:
-                event.question_ids = self._default_question_ids()
-                continue
-
-            if questions_tokeep_ids:
-                questions_toremove = event._origin.question_ids.filtered(
-                    lambda question: question.id not in questions_tokeep_ids)
-                command = [(3, question.id) for question in questions_toremove]
-            else:
-                command = [(5, 0)]
-            event.question_ids = command
-            event.question_ids = [Command.link(question_id.id) for question_id in event.event_type_id.question_ids]
 
     @api.depends('event_slot_count', 'is_multi_slots', 'seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
@@ -404,14 +365,6 @@ class EventEvent(models.Model):
             return NotImplemented
         return [('date_end', '<=', fields.Datetime.now())]
 
-    @api.depends('event_type_id')
-    def _compute_date_tz(self):
-        for event in self:
-            if event.event_type_id.default_timezone:
-                event.date_tz = event.event_type_id.default_timezone
-            if not event.date_tz:
-                event.date_tz = self.env.user.tz or 'UTC'
-
     @api.depends("event_slot_ids")
     def _compute_event_slot_count(self):
         slot_count_per_event = dict(self.env['event.slot']._read_group(
@@ -445,123 +398,11 @@ class EventEvent(models.Model):
 
     # seats
 
-    @api.depends('event_type_id')
-    def _compute_seats_max(self):
-        """ Update event configuration from its event type. Depends are set only
-        on event_type_id itself, not its sub fields. Purpose is to emulate an
-        onchange: if event type is changed, update event configuration. Changing
-        event type content itself should not trigger this method. """
-        for event in self:
-            if not event.event_type_id:
-                event.seats_max = event.seats_max or 0
-            else:
-                event.seats_max = event.event_type_id.seats_max or 0
-
-    @api.depends('event_type_id')
-    def _compute_seats_limited(self):
-        """ Update event configuration from its event type. Depends are set only
-        on event_type_id itself, not its sub fields. Purpose is to emulate an
-        onchange: if event type is changed, update event configuration. Changing
-        event type content itself should not trigger this method. """
-        for event in self:
-            if event.event_type_id.has_seats_limitation != event.seats_limited:
-                event.seats_limited = event.event_type_id.has_seats_limitation
-            if not event.seats_limited:
-                event.seats_limited = False
-
-    @api.depends('event_type_id')
-    def _compute_event_mail_ids(self):
-        """ Update event configuration from its event type. Depends are set only
-        on event_type_id itself, not its sub fields. Purpose is to emulate an
-        onchange: if event type is changed, update event configuration. Changing
-        event type content itself should not trigger this method.
-
-        When synchronizing mails:
-
-          * lines that are not sent and have no registrations linked are remove;
-          * type lines are added;
-        """
-        for event in self:
-            if not event.event_type_id and not event.event_mail_ids:
-                event.event_mail_ids = self._default_event_mail_ids()
-                continue
-
-            # lines to keep: those with already sent emails or registrations
-            mails_to_remove = event.event_mail_ids.filtered(
-                lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_registration_ids)
-            )
-            command = [Command.unlink(mail.id) for mail in mails_to_remove]
-
-            # lines to add: those which do not have the exact copy available in lines to keep
-            if event.event_type_id.event_type_mail_ids:
-                mails_to_keep_vals = {frozendict(mail._prepare_event_mail_values()) for mail in event.event_mail_ids - mails_to_remove}
-                for mail in event.event_type_id.event_type_mail_ids:
-                    mail_values = frozendict(mail._prepare_event_mail_values())
-                    if mail_values not in mails_to_keep_vals:
-                        command.append(Command.create(mail_values))
-            if command:
-                event.event_mail_ids = command
-
-    @api.depends('event_type_id')
-    def _compute_tag_ids(self):
-        """ Update event configuration from its event type. Depends are set only
-        on event_type_id itself, not its sub fields. Purpose is to emulate an
-        onchange: if event type is changed, update event configuration. Changing
-        event type content itself should not trigger this method. """
-        for event in self:
-            if not event.tag_ids and event.event_type_id.tag_ids:
-                event.tag_ids = event.event_type_id.tag_ids
-
-    @api.depends('event_type_id')
-    def _compute_event_ticket_ids(self):
-        """ Update event configuration from its event type. Depends are set only
-        on event_type_id itself, not its sub fields. Purpose is to emulate an
-        onchange: if event type is changed, update event configuration. Changing
-        event type content itself should not trigger this method.
-
-        When synchronizing tickets:
-
-          * lines that have no registrations linked are remove;
-          * type lines are added;
-
-        Note that updating event_ticket_ids triggers _compute_start_sale_date
-        (start_sale_datetime computation) so ensure result to avoid cache miss.
-        """
-        for event in self:
-            if not event.event_type_id and not event.event_ticket_ids:
-                event.event_ticket_ids = False
-                continue
-
-            # lines to keep: those with existing registrations
-            tickets_to_remove = event.event_ticket_ids.filtered(lambda ticket: not ticket._origin.registration_ids)
-            command = [Command.unlink(ticket.id) for ticket in tickets_to_remove]
-            if event.event_type_id.event_type_ticket_ids:
-                command += [
-                    Command.create({
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
-                    }) for line in event.event_type_id.event_type_ticket_ids
-                ]
-            event.event_ticket_ids = command
-
-    @api.depends('event_type_id')
-    def _compute_note(self):
-        for event in self:
-            if event.event_type_id and not is_html_empty(event.event_type_id.note):
-                event.note = event.event_type_id.note
-
     @api.depends('stage_id')
     def _compute_kanban_state(self):
         for task in self:
             if task.kanban_state != 'cancel':
                 task.kanban_state = 'normal'
-
-    @api.depends('event_type_id')
-    def _compute_ticket_instructions(self):
-        for event in self:
-            if is_html_empty(event.ticket_instructions) and not \
-               is_html_empty(event.event_type_id.ticket_instructions):
-                event.ticket_instructions = event.event_type_id.ticket_instructions
 
     @api.depends('address_id')
     def _compute_address_inline(self):

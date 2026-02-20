@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 
 
@@ -60,3 +60,25 @@ class EventType(models.Model):
         for template in self:
             if not template.has_seats_limitation:
                 template.seats_max = 0
+
+    def action_create_event(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'event.event',
+            'view_mode': 'form',
+            'context': {
+                'default_date_tz': self.default_timezone,
+                'default_event_mail_ids': [
+                    Command.create(mail._prepare_event_mail_values()) for mail in self.event_type_mail_ids
+                ],
+                'default_event_ticket_ids': [
+                    Command.create(type_ticket._prepare_event_ticket_values()) for type_ticket in self.event_type_ticket_ids
+                ],
+                'default_question_ids': self.question_ids.ids,
+                'default_note': self.note,
+                'default_seats_limited': self.has_seats_limitation,
+                'default_seats_max': self.seats_max,
+                'default_tag_ids': self.tag_ids.ids,
+                'default_ticket_instructions': self.ticket_instructions,
+            },
+        }
