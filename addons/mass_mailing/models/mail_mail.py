@@ -60,7 +60,7 @@ class MailMail(models.Model):
         if not self.res_id or not self.mailing_id:
             return email_list
 
-        base_url = self.mailing_id.get_base_url()
+        base_url = self.env[self.model].browse(self.res_id).get_base_url() if self.model else self.mailing_id.get_base_url()
         for email_values in email_list:
             if not email_values['email_to']:
                 continue
