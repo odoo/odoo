@@ -1,6 +1,7 @@
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BlogNavSheet } from "./blog_nav_sheet";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -10,6 +11,9 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 export class WebsiteBlog extends Interaction {
     static selector = ".website_blog";
     dynamicContent = {
+        ".o_wblog_sheet_trigger": {
+            "t-on-click": this.onBlogSheetTriggerClick,
+        },
         ".o_wblog_next_button": {
             "t-on-click.prevent": this.onNextBlogClick,
             "t-on-keydown": this.onNextBlogKeydown,
@@ -28,6 +32,16 @@ export class WebsiteBlog extends Interaction {
                 }),
             }
     };
+
+    onBlogSheetTriggerClick() {
+        const navEl = this.el.querySelector(".o_wblog_category");
+        const blogs = [...navEl.querySelectorAll("a")].map((a) => ({
+            name: a.textContent.trim(),
+            href: a.getAttribute("href"),
+            active: a.classList.contains("active"),
+        }));
+        this.services.bottom_sheet.add(this.el, BlogNavSheet, { blogs });
+    }
 
     setup() {
         this.defaultPosition = this._isCompactListOrSplitGridView() ? 0 : 16;

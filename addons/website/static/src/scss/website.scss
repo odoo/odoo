@@ -3384,3 +3384,17 @@ input[value*="data-oe-translation-source-sha"] {
 img.o_image_popup {
     cursor: pointer;
 }
+
+// Specific styles for the BottomSheet component when it is used in the frontend
+body.bottom-sheet-open {
+    --BottomSheetStatusBar__entry-background--active: #{$primary-bg-subtle};
+    --BottomSheetStatusBar__entry-color--active: #{$primary};
+    --BottomSheetStatusBar__entry-caret--active: #{$primary};
+
+    // Prevent the wrapwrap from being scrollable when a bottom sheet is open
+    // This mimics the overflow: hidden applied to o_action_manager in the backend
+    #wrapwrap {
+        max-height: 100%;
+        overflow: hidden;
+    }
+}

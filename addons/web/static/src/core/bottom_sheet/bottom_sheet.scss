@@ -213,7 +213,7 @@
         &::after {
             @include o-position-absolute(50%, $list-group-item-padding-x);
             transform: translateY(-50%);
-            color: $o-action;
+            color: var(--BottomSheetStatusBar__entry-caret--active, $o-action);
             // .fa
             text-rendering: auto;
             font: normal normal normal 14px/1 FontAwesome;

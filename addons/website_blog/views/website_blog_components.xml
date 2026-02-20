@@ -5,7 +5,6 @@
 <!-- ======   Template: Blogs Navbar   =========================================
 ============================================================================ -->
 <template id="blogs_nav" name="Blogs Bar Template">
-    <t t-set="wblog_nav_offcanvas" t-value="len(blogs) > 4"/>
     <t t-set="wblog_all_title_string">All Blogs</t>
 
     <div t-attf-class="#{(opt_blog_fullwidth or opt_blog_split_grid_view) and 'container-fluid' or 'container'}">
@@ -28,64 +27,12 @@
             <a t-if="blog" href="/blog" t-attf-class="btn btn-link d-lg-none flex-shrink-0 me-auto ps-0">
                 <i class="oi oi-chevron-left me-1" role="img"/>All blogs
             </a>
-            <div t-if="len(blogs) > 1" t-attf-class="order-last d-lg-none flex-shrink-0 #{not wblog_nav_offcanvas and 'dropdown min-w-0'}">
-                <t t-if="wblog_nav_offcanvas">
-                    <a class="btn btn-light"
-                       role="button"
-                       t-att-title="blog.name if blog else wblog_all_title_string"
-                       data-bs-toggle="offcanvas"
-                       data-bs-target="#o_wblog_offcanvas"
-                       aria-controls="o_wblog_offcanvas">
-                        <i class="fa fa-bars" role="img"/>
-                    </a>
-                    <div id="o_wblog_offcanvas" class="offcanvas offcanvas-bottom h-auto" tabindex="-1" aria-labelledby="o_wblog_offcanvas_label">
-                        <div class="offcanvas-header">
-                            <h2 id="o_wblog_offcanvas_label" class="offcanvas-title my-0 h5-fs">Blogs</h2>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
-                        </div>
-                        <div class="offcanvas-body">
-                            <ul class="list-unstyled">
-                                <li class="p-2">
-                                    <a href="/blog" t-attf-class="{{(not blog) and 'active d-flex justify-content-between'}}" t-att-title="wblog_all_title_string">
-                                        All
-                                        <i class="fa fa-check" role="img"/>
-                                    </a>
-                                </li>
-                                <li t-foreach="blogs" t-as="nav_blog" class="p-2">
-                                    <a t-attf-href="/blog/#{slug(nav_blog)}"
-                                       t-attf-class="{{(blog and nav_blog.id == blog.id) and 'active d-flex justify-content-between' or ' text-reset'}}"
-                                       t-att-title="nav_blog.name">
-                                        <span t-out="nav_blog.name"/>
-                                        <i t-if="(blog and nav_blog.id == blog.id)" class="fa fa-check" role="img"/>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </t>
-                <t t-else="">
-                    <a class="btn btn-light dropdown-toggle d-flex align-items-center justify-content-between"
-                       role="button"
-                       t-att-title="blog.name if blog else wblog_all_title_string"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        <span t-if="blog" class="text-truncate" t-out="blog.name"/>
-                        <span t-else="" class="text-truncate">All</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a href="/blog" t-attf-class="dropdown-item #{(not blog) and 'active'}" title="All Blogs">All</a>
-                        </li>
-                        <li t-foreach="blogs" t-as="nav_blog">
-                            <a t-attf-href="/blog/#{slug(nav_blog)}"
-                               t-attf-class="dropdown-item #{(blog and nav_blog.id == blog.id) and 'active' or ''}"
-                               t-att-title="nav_blog.name">
-                                <span t-out="nav_blog.name"/>
-                            </a>
-                        </li>
-                    </ul>
-                </t>
-            </div>
+            <button t-if="len(blogs) > 1" class="btn btn-light o_wblog_sheet_trigger order-last d-lg-none flex-shrink-0"
+                    type="button"
+                    t-att-title="blog.name if blog else wblog_all_title_string"
+                    aria-haspopup="dialog">
+                <i class="fa fa-bars" role="img"/>
+            </button>
             <!-- 'Search Box Mobile' -->
             <t t-if="len(blogs) == 1 or not blog">
                 <t t-call="website.website_search_box_input"
