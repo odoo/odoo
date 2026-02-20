@@ -86,6 +86,16 @@ describe("restaurant pos_store.js", () => {
         expect(store.getPendingOrder().orderToUpdate).toHaveLength(0);
     });
 
+    test("getOrderChanges", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.product"].get(5);
+        product.display_name = "001 TEST";
+        await getFilledOrder(store);
+        const result = store.getOrderChanges();
+        const [line] = Object.values(result.orderlines);
+        expect(line.basic_name).toBe("TEST");
+    });
+
     describe("class DevicesSynchronisation", () => {
         test("Synchronization for a filled table has arrived", async () => {
             // If a local order is already create on a table when another device send another order
