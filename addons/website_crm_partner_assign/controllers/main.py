@@ -33,6 +33,51 @@ class WebsiteAccount(CustomerPortal):
             ('type', '=', 'opportunity')
         ]
 
+    def _create_or_update_address(
+        self,
+        partner_sudo,
+        address_type='billing',
+        use_delivery_as_billing=False,
+        callback='/my/addresses',
+        required_fields=False,
+        verify_address_values=True,
+        **form_data,
+    ):
+        # Pass a shallow copy of form_data because _parse_form_data mutates it by popping fields
+        address_values, _extra_form_data = self._parse_form_data({**form_data})
+
+        # Check if the address has changed (only makes sense for existing partners)
+        is_address_changed = False
+        if partner_sudo:
+            geo_address_values = {
+                key: address_values[key]
+                for key in ['street', 'zip', 'city', 'state_id', 'country_id']
+                if key in address_values
+            }
+            is_address_changed = not self._are_same_addresses(geo_address_values, partner_sudo)
+
+        # Call original method to perform creation or update using unmodified form_data to ensure correct processing
+        partner_sudo, feedback_dict = super()._create_or_update_address(
+            partner_sudo,
+            address_type=address_type,
+            use_delivery_as_billing=use_delivery_as_billing,
+            callback=callback,
+            required_fields=required_fields,
+            verify_address_values=verify_address_values,
+            **form_data,
+        )
+
+        # If the address was updated, recompute the partner's location (latitude and longitude),
+        # but only if a partner level (grade) is assigned and the partner previously had geolocation set.
+        # This prevents losing geolocation data, which is used for forwarding leads.
+        if (
+            is_address_changed
+            and partner_sudo.grade_id
+            and partner_sudo.date_localization
+        ):
+            partner_sudo.geo_localize()
+        return partner_sudo, feedback_dict
+
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         CrmLead = request.env['crm.lead']
