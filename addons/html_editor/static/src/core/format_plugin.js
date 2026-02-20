@@ -249,7 +249,9 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(isTextNode);
+        const targetedTextNodes = targetedNodes.filter(
+            (node) => isTextNode(node) && this.dependencies.selection.isNodeEditable(node)
+        );
         const isFormatted = formatsSpecs[format].isFormatted;
         return (
             targetedTextNodes.length &&
