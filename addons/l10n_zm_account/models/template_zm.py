@@ -10,7 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('zm')
     def _get_zm_template_data(self):
         return {
-            'code_digits': 7,
+            'code_digits': '0',
             'property_account_receivable_id': 'zm_account_8000000',
             'property_account_payable_id': 'zm_account_9000000',
         }

@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('sk')
     def _get_sk_template_data(self):
         return {
-            'code_digits': '6',
+            'code_digits': '0',
             'use_storno_accounting': True,
             'property_account_receivable_id': 'chart_sk_311000',
             'property_account_payable_id': 'chart_sk_321000',

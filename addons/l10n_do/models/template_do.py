@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('do')
     def _get_do_template_data(self):
         return {
-            'code_digits': '8',
+            'code_digits': '0',
             'property_account_receivable_id': 'l10n_do_11030201',
             'property_account_payable_id': 'l10n_do_21010200',
             'property_stock_valuation_account_id': 'l10n_do_11050100',

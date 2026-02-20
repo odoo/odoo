@@ -36,7 +36,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
         'views/account_account_views.xml',
-        'views/account_group_views.xml',
         'views/account_journal_views.xml',
         'views/account_account_tag_views.xml',
         'views/account_bank_statement_views.xml',

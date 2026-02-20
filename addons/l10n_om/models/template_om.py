@@ -16,7 +16,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_id': 'om_account_400101',
             'property_stock_valuation_account_id': 'om_account_100502',
             'property_stock_account_production_cost_id': 'om_account_100505',
-            'code_digits': '6',
+            'code_digits': '0',
         }
 
     @template('om', 'res.company')

@@ -328,6 +328,10 @@
                     <field name="invoice_date"/>
                     <field name="date"/>
                     <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', raw_value), ('debit', '=', raw_value)]"/>
+                    <filter name="account_with_children"
+                            string="Account (with children)"
+                            domain="[('account_id', 'child_of', context.get('active_id'))]"
+                            invisible="1"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>

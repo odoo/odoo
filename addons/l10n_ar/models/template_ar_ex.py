@@ -11,7 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': _('Argentine Generic Chart of Accounts for Exempt Individuals'),
             'parent': 'ar_base',
-            'code_digits': '12',
+            'code_digits': '0',
             'sequence': 2,
         }
 

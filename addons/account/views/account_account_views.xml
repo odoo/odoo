@@ -35,22 +35,21 @@
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
-                                    <div class="col col-md-8">
+                                    <div class="col mw-25">
+                                        <label for="code" string="Code"/>
+                                        <div>
+                                            <field name="placeholder_code" invisible="1"/>
+                                            <field name="code"
+                                                   placeholder="e.g. 101000"
+                                                   options="{'placeholder_field': 'placeholder_code'}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col mw-50">
                                         <label for="name" string="Account Name"/>
                                         <div>
                                             <field name="name"
                                                    placeholder="e.g. Current Assets"
-                                                   style="width:80% !important;"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col col-md-auto">
-                                        <label for="code" string="Code"/>
-                                        <div>
-                                            <field name="placeholder_code" invisible="1"/>
-                                            <field name="code" placeholder="e.g. 101000" class="oe_inline"
-                                                   options="{'placeholder_field': 'placeholder_code'}"/>
+                                                   default_focus="1"/>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +67,7 @@
                                         <field name="internal_group" invisible="1" readonly="1"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" string="Currency" placeholder="Any currency"/>
                                         <field name="active" widget="boolean_toggle"/>
-                                        <field name="group_id" groups="base.group_no_one"/>
+                                        <field name="parent_id" placeholder="Root account"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </group>
@@ -96,12 +95,13 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <list create="1" delete="1" multi_edit="1" string="Chart of accounts">
+                <list create="1" delete="1" multi_edit="1" string="Chart of accounts" js_class="account_hierarchy_list" decoration-muted="not active">
+                    <field name="parent_path" column_invisible="1"/>
                     <field name="placeholder_code" column_invisible="1"/>
                     <field name="code" string="Code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
                     <field name="name"/>
                     <field name="account_type" widget="account_type_selection"/>
-                    <field name="group_id" optional="hide"/>
+                    <field name="parent_id" optional="hide"/>
                     <field name="internal_group" column_invisible="True"/>
                     <field name="reconcile" widget="boolean_toggle" invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')"/>
                     <field name="active" optional="hide" widget="boolean_toggle"/>
@@ -191,6 +191,7 @@
             <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
+            <field name="context">{'include_inactive_account_parents': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new account

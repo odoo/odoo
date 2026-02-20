@@ -149,12 +149,6 @@
         <field name="domain_force">[('company_ids', 'parent_of', company_ids)]</field>
     </record>
 
-    <record id="account_group_comp_rule" model="ir.rule">
-        <field name="name">Account Group multi-company</field>
-        <field name="model_id" ref="model_account_group"/>
-        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
-    </record>
-
     <record id="tax_group_comp_rule" model="ir.rule">
         <field name="name">Tax group multi-company</field>
         <field name="model_id" ref="model_account_tax_group"/>

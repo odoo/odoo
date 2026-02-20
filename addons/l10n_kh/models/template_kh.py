@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('kh')
     def _get_kh_template_data(self):
         return {
-            'code_digits': '5',
+            'code_digits': '0',
             'property_account_receivable_id': 'l10n_kh_account_10500',
             'property_account_payable_id': 'l10n_kh_account_20300',
             'property_stock_valuation_account_id': 'l10n_kh_account_10200',
