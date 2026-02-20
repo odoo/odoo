@@ -56,12 +56,78 @@
     </template>
 
     <!-- Added by another template so that it can be disabled if needed -->
+    <template id="footer_country_selector" inherit_id="portal.frontend_layout" name="Footer Country Selector">
+        <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="inside">
+            <t id="country_selector_call"
+                t-call="portal.country_selector"
+                _div_classes="(_div_classes or '') + ' dropup'"/>
+        </xpath>
+    </template>
+
+    <template id="footer_currency_selector" inherit_id="portal.frontend_layout" name="Footer Currency Selector">
+        <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="inside">
+            <t id="currency_selector_call"
+                t-call="portal.currency_selector"
+                _div_classes="(_div_classes or '') + ' dropup'"/>
+        </xpath>
+    </template>
+
     <template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
         <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="after">
             <t id="language_selector_call"
                 t-call="portal.language_selector"
                 _div_classes="(_div_classes or '') + ' dropup'"/>
         </xpath>
+    </template>
+
+    <template id="country_selector" name="Country Selector">
+        <t t-set="website_sale_countries" t-value="website.get_available_countries()"/>
+        <t t-set="country_selector_visible" t-value="len(website_sale_countries) &gt; 1"/>
+        <div t-attf-class="#{_div_classes} d-print-none" t-if="country_selector_visible">
+            <t t-set="active_country" t-value="request.country"/>
+            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                <span t-attf-class="#{_txt_class}" t-out="active_country.name"/>
+            </button>
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
+                <t t-foreach="website_sale_countries" t-as="co">
+                    <a t-attf-class="dropdown-item"
+                       t-att-aria-current="request.country"
+                       t-att-href="'/shop/change_country/%s' % co.id"
+                       role="menuitem">
+                        <span t-out="co.name" t-attf-class="#{_txt_class}"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="currency_selector" name="Currency Selector">
+        <t t-set="currencies" t-value="website.get_available_currencies()"/>
+        <t t-set="currency_selector_visible" t-value="len(currencies) &gt; 1"/>
+        <div t-attf-class="#{_div_classes} d-print-none" t-if="currency_selector_visible">
+            <t t-set="active_currency" t-value="request.pricelist.currency_id"/>
+            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                <span t-attf-class="#{_txt_class}" t-out="active_currency.name"/>
+            </button>
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
+                <t t-foreach="currencies" t-as="cu">
+                    <a t-attf-class="dropdown-item"
+                       t-att-aria-current="request.pricelist.currency_id"
+                       t-att-href="'/shop/change_currency/%s' % cu.id"
+                       role="menuitem">
+                        <span t-out="cu.name" t-attf-class="#{_txt_class}"/>
+                    </a>
+                </t>
+            </div>
+        </div>
     </template>
 
     <template id="language_selector" name="Language Selector">

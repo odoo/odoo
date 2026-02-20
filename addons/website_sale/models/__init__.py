@@ -26,6 +26,7 @@ from . import (
     product_wishlist,
     res_company,
     res_config_settings,
+    res_country_group,
     res_partner,
     res_users,
     sale_order,

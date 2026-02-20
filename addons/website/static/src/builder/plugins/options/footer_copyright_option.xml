@@ -15,6 +15,19 @@
                 nullValue: 'NULL',
             }"/>
     </BuilderRow>
+    <BuilderRow label.translate="Country Selector">
+        <BuilderSelect id="'footer_country_selector_opt'" preview="false" action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{ views: [] }">None</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ views: ['portal.footer_country_selector'] }">Display</BuilderSelectItem>
+            <!--TODO-PDA by default, when installing the db, view is active but not displayed. Displayed after None then Display.-->
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Pricelist Selector">
+        <BuilderSelect id="'footer_currency_selector_opt'" preview="false" action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{ views: [] }">None</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ views: ['portal.footer_currency_selector'] }">Display</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
     <t t-if="this.languages.length > 1">
         <BuilderRow label.translate="Language Selector">
             <BuilderSelect id="'footer_language_selector_opt'" preview="false" action="'websiteConfig'">

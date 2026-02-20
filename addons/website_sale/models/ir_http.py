@@ -30,5 +30,6 @@ class IrHttp(models.AbstractModel):
         # lazy to make sure those are only evaluated when requested
         # All those records are sudoed !
         request.cart = lazy(request.website._get_and_cache_current_cart)
+        request.country = lazy(request.website._get_and_cache_current_country)
         request.fiscal_position = lazy(request.website._get_and_cache_current_fiscal_position)
         request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
