@@ -158,6 +158,12 @@
 
         .carousel-control-prev, .carousel-control-next {
             border-radius: $btn-border-radius;
+
+            &:focus-visible {
+                .carousel-control-prev-icon, .carousel-control-next-icon {
+                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                }
+            }
         }
 
         .carousel-control-prev-icon, .carousel-control-next-icon {
