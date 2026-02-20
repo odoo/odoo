@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import textwrap
 from collections import defaultdict
 from operator import itemgetter
 
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.tools.translate import html_translate
 
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
@@ -135,6 +134,8 @@ class ForumForum(models.Model):
     has_pending_post = fields.Boolean(string='Has pending post', compute='_compute_has_pending_post')
     can_moderate = fields.Boolean(string="Is a moderator", compute="_compute_can_moderate")
 
+    can_access = fields.Boolean("Has Access", compute='_compute_can_access', search='_search_can_access')
+
     # tags
     tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
     tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
@@ -145,6 +146,45 @@ class ForumForum(models.Model):
         for record in self:
             if record.id:
                 record.website_url = '/forum/%s' % self.env['ir.http']._slug(record)
+
+    @api.depends_context('uid')
+    @api.depends('privacy', 'authorized_group_id')
+    def _compute_can_access(self):
+        """Compute the read access of the forums' posts for the current user."""
+        if self.env.user._is_admin():
+            self.can_access = True
+            return
+
+        if self.env.user.has_group('base.group_public'):
+            public_forum = self.filtered(lambda f: f.privacy == 'public')
+            public_forum.can_access = True
+            (self - public_forum).can_access = False
+            return
+
+        accessible = self.filtered(lambda f: (
+            f.privacy in {'public', 'connected'}
+            or (
+                f.privacy == 'private'
+                and f.authorized_group_id in self.env.user.all_group_ids
+            )
+        ))
+        accessible.can_access = True
+        (self - accessible).can_access = False
+
+    def _search_can_access(self, operator, value):
+        if operator != '=' or value is not True:
+            raise NotImplementedError()
+
+        if self.env.user._is_admin():
+            return Domain.TRUE
+
+        if self.env.user.has_group('base.group_public'):
+            return [('privacy', '=', 'public')]
+
+        return (
+            Domain([('privacy', 'in', ['public', 'connected'])])
+            | Domain([('privacy', '=', 'private'), ('authorized_group_id', 'in', self.env.user.all_group_ids.ids)])
+        )
 
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
@@ -201,9 +241,9 @@ class ForumForum(models.Model):
             [('forum_id', 'in', self.ids), ('parent_id', '=', False), ('state', '=', 'active')],
             groupby=['forum_id'], aggregates=['id:max'],
         )
-        forum_to_last_post_id = {forum.id: last_post_id for forum, last_post_id in last_forums_posts}
+        forum_to_last_post = dict(last_forums_posts)
         for forum in self:
-            forum.last_post_id = forum_to_last_post_id.get(forum.id, False)
+            forum.last_post_id = forum_to_last_post.get(forum, False)
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
@@ -213,7 +253,7 @@ class ForumForum(models.Model):
             self.update(default_stats)
             return
 
-        result = {cid: dict(default_stats) for cid in self.ids}
+        result = defaultdict(default_stats.copy)
         read_group_res = self.env['forum.post']._read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id'],

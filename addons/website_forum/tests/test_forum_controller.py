@@ -47,7 +47,10 @@ class TestForumController(TestForumCommon):
                 if user != self.user_public:
                     self.env.user.karma = self.minimum_karma_allowing_to_post
                     # Like a post on forum 2 and verify that forum 2 is now in "my other forum"
-                    employee_2_forum_2_post.favourite_ids += self.env.user
+                    karma = self.env.user.karma
+                    employee_2_forum_2_post.with_user(self.env.user).user_favourite = True
+                    self.assertEqual(self.env.user.karma, karma)
+                    self.assertIn(self.env.user, employee_2_forum_2_post.sudo().favourite_ids)
                     self.assertEqual(self._get_my_other_forums(self.forum_1), self.forum_2)
                     self.assertFalse(self._get_my_other_forums(self.forum_2))
                     # Check similarly with posting and also checking that we don't see forum of website 2
@@ -62,5 +65,6 @@ class TestForumController(TestForumCommon):
                 if user != self.user_public:
                     self.assertFalse(self._get_my_other_forums(self.forum_1_website_2))
                     self.assertEqual(self._get_my_other_forums(self.forum_2_website_2), self.forum_1_website_2)
-                    employee_2_website_2_forum_2_post.favourite_ids += self.env.user
+                    employee_2_website_2_forum_2_post.with_user(self.env.user).user_favourite = True
+                    self.assertIn(self.env.user, employee_2_website_2_forum_2_post.sudo().favourite_ids)
                     self.assertEqual(self._get_my_other_forums(self.forum_1_website_2), self.forum_2_website_2)

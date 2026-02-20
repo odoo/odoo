@@ -103,6 +103,11 @@ class TestPostInternals(TestForumCommon):
         })
         self.assertTrue(questions_post.uid_has_answered)
 
+        # Can add in favorite even if not enough karma to edit
+        self.user_employee.karma = 1
+        questions_post.with_user(self.user_employee).user_favourite = True
+        self.assertEqual(self.user_employee.karma, 1)
+
 
 @tagged('forum_internals')
 @tagged('at_install', '-post_install')  # LEGACY at_install

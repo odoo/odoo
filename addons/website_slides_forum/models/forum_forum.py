@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class ForumForum(models.Model):
@@ -11,6 +12,49 @@ class ForumForum(models.Model):
     slide_channel_id = fields.Many2one('slide.channel', 'Course', compute='_compute_slide_channel_id', store=True)
     visibility = fields.Selection(related='slide_channel_id.visibility', help="Forum linked to a Course, the visibility is the one applied on the course.")
     image_1920 = fields.Image('Image', compute='_compute_image_1920', store=True, readonly=False)
+
+    @api.depends('slide_channel_ids.visibility', 'slide_channel_ids.website_published', 'slide_channel_ids.visibility', 'slide_channel_ids.is_member')
+    def _compute_can_access(self):
+        """Extend the access on the forum based on the channels."""
+        super()._compute_can_access()
+        if self.env.user.has_group('website_slides.group_website_slides_officer'):
+            self.can_access = True
+            return
+
+        if self.env.user.has_group('base.group_public'):
+            self.filtered(lambda f: any(
+                c.website_published and c.visibility == 'public'
+                for c in f.slide_channel_ids
+            )).can_access = True
+            return
+
+        self.filtered(lambda f: any(
+            c.website_published and (c.visibility in {'public', 'connected'} or c.is_member)
+            for c in f.slide_channel_ids
+        )).can_access = True
+
+    def _search_can_access(self, operator, value):
+        if operator != '=' or value is not True:
+            raise NotImplementedError()
+
+        domain = super()._search_can_access(operator, value)
+
+        if self.env.user.has_group('website_slides.group_website_slides_officer'):
+            return Domain.TRUE
+
+        if self.env.user.has_group('base.group_public'):
+            return Domain(domain) | Domain([
+                ('slide_channel_id.website_published', '=', True),
+                ('slide_channel_id.visibility', '=', 'public'),
+            ])
+
+        return Domain(domain) | (
+            Domain([('slide_channel_id.website_published', '=', True)])
+            & (
+                Domain([('slide_channel_id.visibility', 'in', ('public', 'connected'))])
+                | Domain([('slide_channel_id.is_member', '=', True)])
+            )
+        )
 
     @api.depends('slide_channel_ids')
     def _compute_slide_channel_id(self):

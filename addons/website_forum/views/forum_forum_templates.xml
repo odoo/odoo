@@ -259,14 +259,12 @@
         <div class="row g-0 mt-3 mb-5" t-if="tags">
             <div class="col-3 pe-3 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
                 <span t-attf-class="#{ 'd-block' if env.user._is_public() else 'd-flex align-items-baseline'}">
-                    <t t-call="website_forum.follow"
-                        email="user_id.email"
+                    <t t-call="website_forum.follow_button"
                         object="tag"
-                        icons_design="True"
                         div_class.f="d-inline"
                         btn_classes.f="px-2"
                         follow_btn_classes.f="opacity-50"/>
-                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
+                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.is_follower else 'text-muted' }"
                        t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
                         <t t-out="tag.name"/>&amp;nbsp;
                         <span class="small">(<t t-out="tag.posts_count"/>)</span>
