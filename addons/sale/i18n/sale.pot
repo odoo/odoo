@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.2a1\n"
+"Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2026-02-04 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -556,13 +556,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr ""
@@ -585,12 +578,6 @@ msgid ""
 "<span class=\"o_stat_value text-muted\">\n"
 "                                Outgoing\n"
 "                            </span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
-#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-msgid "<span groups=\"!uom.group_uom\">Sold</span>"
 msgstr ""
 
 #. module: sale
@@ -658,6 +645,11 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong>Contact</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Delivery Date</strong>"
 msgstr ""
 
@@ -674,11 +666,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Incoterm</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong>Salesperson</strong>"
 msgstr ""
 
 #. module: sale
@@ -982,6 +969,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+msgid "Analytic Account"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
 msgstr ""
@@ -1248,6 +1240,11 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
 msgid "Categories"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+msgid "Category"
 msgstr ""
 
 #. module: sale
@@ -1666,6 +1663,12 @@ msgid "Customer Industry"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line__order_id
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
+msgid "Customer Order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
 msgstr ""
@@ -1713,6 +1716,8 @@ msgid "DHL Express Connector"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Date"
 msgstr ""
@@ -1853,6 +1858,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Description"
 msgstr ""
@@ -2169,6 +2175,11 @@ msgid "Expiration Date:"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+msgid "Expired"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
 msgid "Extra Tax Data"
 msgstr ""
@@ -2188,6 +2199,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+msgid "Financial Account"
 msgstr ""
 
 #. module: sale
@@ -2571,6 +2587,12 @@ msgid "Invalid signature data."
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+msgid "Invoice"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_move.py:0
 msgid "Invoice %s paid"
@@ -2617,6 +2639,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
+msgid "Invoice created from related SO line"
 msgstr ""
 
 #. module: sale
@@ -2999,6 +3026,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Move Up"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+msgid "My"
 msgstr ""
 
 #. module: sale
@@ -3420,6 +3452,11 @@ msgid "Partially Delivered"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+msgid "Partner"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
 msgstr ""
@@ -3623,6 +3660,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_tmpl_id
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3781,6 +3819,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 msgid "Quantity"
 msgstr ""
 
@@ -3930,6 +3969,12 @@ msgid "Recompute all taxes based on this fiscal position"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Reference"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
@@ -4063,6 +4108,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Sale Order"
 msgstr ""
 
@@ -4202,6 +4248,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 msgid "Sales Order Line"
 msgstr ""
 
@@ -4236,6 +4283,7 @@ msgid "Sales Order(s)"
 msgstr ""
 
 #. module: sale
+#: model:account.analytic.plan,name:sale.analytic_plan_sale_orders
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
@@ -4433,6 +4481,24 @@ msgid "Sequence"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__service_line_count
+#: model:ir.model.fields,field_description:sale.field_account_move__service_line_count
+msgid "Service Line Count"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+msgid "Services"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_service_material
+#: model:ir.ui.menu,name:sale.menu_service_material
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
+msgid "Services & Material"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr ""
@@ -4529,6 +4595,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold"
 msgstr ""
 
@@ -5101,6 +5169,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+msgid "Today"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Today Activities"
 msgstr ""
@@ -5201,6 +5274,13 @@ msgid "UTM Campaign"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move__utm_reference
+#: model:ir.model.fields,field_description:sale.field_sale_order__utm_reference
+#: model:ir.model.fields,field_description:sale.field_sale_report__utm_reference
+msgid "UTM Reference"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
@@ -5239,6 +5319,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
 msgid "Untaxed Amount"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_delivered_amount
+msgid "Untaxed Amount Delivered"
 msgstr ""
 
 #. module: sale
@@ -5337,6 +5422,11 @@ msgstr ""
 msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Values set here are company-specific."
 msgstr ""
 
 #. module: sale
@@ -5483,8 +5573,20 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/account_analytic_line.py:0
+msgid "You cannot modify already invoiced services."
+msgstr ""
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "You cannot modify the product of this order line."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/account_analytic_line.py:0
+msgid "You cannot remove already invoiced services."
 msgstr ""
 
 #. module: sale
@@ -5492,6 +5594,12 @@ msgstr ""
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/account_analytic_line.py:0
+msgid "You cannot set a negative quantity on services."
 msgstr ""
 
 #. module: sale

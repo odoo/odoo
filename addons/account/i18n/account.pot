@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.2a1\n"
+"Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:35+0000\n"
-"PO-Revision-Date: 2026-02-04 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"PO-Revision-Date: 2026-02-20 09:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -748,13 +748,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted behavior.</span>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
@@ -1328,12 +1321,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<span>1.00</span>\n"
-"                                                            <span groups=\"uom.group_uom\">Units</span>"
+msgid "<span>1.00</span>"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>1</span>"
 msgstr ""
@@ -1349,6 +1341,7 @@ msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>=</span>"
 msgstr ""
@@ -1821,7 +1814,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
-msgid "A Ledger group name must be unique per company."
+msgid "A Ledger group name must be unique."
 msgstr ""
 
 #. module: account
@@ -2160,26 +2153,6 @@ msgid "Account Move Count"
 msgstr ""
 
 #. module: account
-#: model:ir.model,name:account.model_account_move_reversal
-msgid "Account Move Reversal"
-msgstr ""
-
-#. module: account
-#: model:ir.model,name:account.model_account_move_send
-msgid "Account Move Send"
-msgstr ""
-
-#. module: account
-#: model:ir.model,name:account.model_account_move_send_batch_wizard
-msgid "Account Move Send Batch Wizard"
-msgstr ""
-
-#. module: account
-#: model:ir.model,name:account.model_account_move_send_wizard
-msgid "Account Move Send Wizard"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -2277,6 +2250,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__account_type
 #: model:ir.model.fields,help:account.field_account_move_line__account_type
+#: model:ir.model.fields,help:account.field_account_payment__outstanding_account_type
 msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening"
@@ -2577,6 +2551,41 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued total"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_buildings
+msgid "Accumulated Amortization - Buildings"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_furniture
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_improvements
+msgid "Accumulated Amortization - Improvements"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_machines
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_other_property
+msgid "Accumulated Amortization - Other Property"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_technology
+msgid "Accumulated Amortization - Technology"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_depreciation_vehicles
+msgid "Accumulated Amortization - Vehicles"
 msgstr ""
 
 #. module: account
@@ -3066,6 +3075,7 @@ msgid "Allow to configure taxes using cash basis"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
 msgid "Allowed Uom"
 msgstr ""
@@ -3190,6 +3200,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Amount in Currency"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay"
+" twice."
 msgstr ""
 
 #. module: account
@@ -3839,7 +3857,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_149
+#: model:account.account,name:account.2_bank_journal_default_account_163
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -4562,7 +4580,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_160
+#: model:account.account,name:account.1_cash_journal_default_account_174
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4575,12 +4593,12 @@ msgid "Cash Account"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_157
+#: model:account.account,name:account.1_cash_journal_default_account_171
 msgid "Cash Bakery"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_159
+#: model:account.account,name:account.1_cash_journal_default_account_173
 msgid "Cash Bar"
 msgstr ""
 
@@ -4622,7 +4640,7 @@ msgid "Cash Basis Transition Account"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_156
+#: model:account.account,name:account.1_cash_journal_default_account_170
 msgid "Cash Clothes Shop"
 msgstr ""
 
@@ -4684,7 +4702,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_155
+#: model:account.account,name:account.1_cash_journal_default_account_169
 msgid "Cash Furn. Shop"
 msgstr ""
 
@@ -4695,7 +4713,7 @@ msgid "Cash Registers"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_158
+#: model:account.account,name:account.1_cash_journal_default_account_172
 msgid "Cash Restaurant"
 msgstr ""
 
@@ -4792,6 +4810,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_account_form
 #: model:ir.model.fields,field_description:account.field_account_report__chart_template
@@ -4828,7 +4847,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "Check them"
+msgid "Check payments"
 msgstr ""
 
 #. module: account
@@ -5055,7 +5074,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_group__company_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_journal__company_id
-#: model:ir.model.fields,field_description:account.field_account_journal_group__company_id
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__company_id
 #: model:ir.model.fields,field_description:account.field_account_move__company_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__company_id
@@ -5871,8 +5889,44 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
+msgid "Cumulated balance for the account."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_buildings
+msgid "Cumulative amortization recorded for building assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_technology
+msgid "Cumulative amortization recorded for capitalized technology assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_furniture
+msgid "Cumulative amortization recorded for furniture and fixture assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_improvements
 msgid ""
-"Cumulated balance depending on the domain and the order chosen in the view."
+"Cumulative amortization recorded for leasehold or property improvements."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_machines
+msgid "Cumulative amortization recorded for machinery and tool assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_other_property
+msgid ""
+"Cumulative amortization recorded for other depreciable property assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_depreciation_vehicles
+msgid "Cumulative amortization recorded for vehicle assets."
 msgstr ""
 
 #. module: account
@@ -6508,13 +6562,6 @@ msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_journal_group__company_id
-msgid ""
-"Define which company can select the multi-ledger in report filters. If none "
-"is provided, available for all companies"
-msgstr ""
-
-#. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
 msgstr ""
@@ -6607,6 +6654,41 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_buildings
+msgid "Depreciation Expense - Buildings"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_furniture
+msgid "Depreciation Expense - Furniture & Fixtures"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_improvements
+msgid "Depreciation Expense - Improvements"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_machines
+msgid "Depreciation Expense - Machines & Tools"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_other_property
+msgid "Depreciation Expense - Other Property"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_technology
+msgid "Depreciation Expense - Technology"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.2_account_account_us_expense_vehicles
+msgid "Depreciation Expense - Vehicles"
 msgstr ""
 
 #. module: account
@@ -7686,6 +7768,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_move.py:0
 msgid "Even magicians can't post nothing!"
 msgstr ""
@@ -7722,10 +7805,8 @@ msgid "Exception"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model:account.journal,name:account.1_exch
 #: model:account.journal,name:account.2_exch
 msgid "Exchange Difference"
@@ -7737,8 +7818,30 @@ msgid "Exchange Gain or Loss Journal"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Exchange Loss"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Exchange Profit"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate
+msgid "Exchange Rate"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate_currency_code
+msgid "Exchange Rate Currency Code"
 msgstr ""
 
 #. module: account
@@ -7755,11 +7858,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
 msgid "Exclude this journal item from follow-up reports."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
-msgid "Excluded Journals"
 msgstr ""
 
 #. module: account
@@ -7908,15 +8006,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
 msgid ""
-"Factor to apply on the account move lines generated from this distribution "
-"line"
+"Factor to apply on the journal items generated from this distribution line"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
 msgid ""
-"Factor to apply on the account move lines generated from this distribution "
-"line, in percents"
+"Factor to apply on the journal items generated from this distribution line, "
+"in percents"
 msgstr ""
 
 #. module: account
@@ -8091,6 +8188,7 @@ msgid "Fiscal Localization"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__use_fiscal_periods
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Periods"
 msgstr ""
@@ -8715,6 +8813,12 @@ msgid "Has Invalid Statements"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__has_ledger
+#: model:ir.model.fields,field_description:account.field_res_company__has_ledger
+msgid "Has Ledger"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_message
 #: model:ir.model.fields,field_description:account.field_account_journal__has_message
@@ -9309,12 +9413,6 @@ msgid "In Payment"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_payment__state__in_process
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "In Process"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "In order for it to be admissible,"
 msgstr ""
@@ -9386,6 +9484,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_group__included_journal_ids
+msgid "Included Journals"
 msgstr ""
 
 #. module: account
@@ -10371,6 +10474,11 @@ msgid "Journal Entry Info"
 msgstr ""
 
 #. module: account
+#: model:ir.model,name:account.model_account_move_reversal
+msgid "Journal Entry Reversal"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__move_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10492,6 +10600,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr ""
 
@@ -10764,14 +10873,10 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
+#: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__journal_group_id
 msgid "Ledger"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__journal_group_ids
-msgid "Ledger Group"
 msgstr ""
 
 #. module: account
@@ -10935,6 +11040,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_loan_extract
 msgid "Loans Digitization"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Local Gaap"
 msgstr ""
 
 #. module: account
@@ -11179,6 +11289,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Margin Analysis"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.server,name:account.action_mark_payment_as_reconciled
+msgid "Mark as Reconciled"
 msgstr ""
 
 #. module: account
@@ -12191,14 +12306,6 @@ msgid "Onboarding Step"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't"
-" change it anymore."
-msgstr ""
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid ""
@@ -12682,6 +12789,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__paid
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__paid
 #: model:mail.message.subtype,name:account.mt_invoice_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Paid"
 msgstr ""
@@ -13066,6 +13174,12 @@ msgid "Payment Type"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "Payment must be in paid state to be reconciled."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Payment terms"
 msgstr ""
@@ -13160,6 +13274,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "Payments linked to an Asset Cash account cannot be reconciled."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
@@ -13239,6 +13359,41 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_buildings
+msgid "Periodic depreciation expense for building assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_technology
+msgid "Periodic depreciation expense for capitalized technology assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_furniture
+msgid "Periodic depreciation expense for furniture and fixture assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_improvements
+msgid "Periodic depreciation expense for leasehold or property improvements."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_machines
+msgid "Periodic depreciation expense for machinery and tool assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_other_property
+msgid "Periodic depreciation expense for other depreciable property assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_expense_vehicles
+msgid "Periodic depreciation expense for vehicle assets."
 msgstr ""
 
 #. module: account
@@ -13336,6 +13491,7 @@ msgid "Portal Access URL"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Post"
@@ -13349,6 +13505,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Post Difference In"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
+msgid "Post Entry?"
 msgstr ""
 
 #. module: account
@@ -13956,6 +14117,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
+#: model:ir.model.fields.selection,name:account.selection__account_payment__state__reconciled
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
 msgstr ""
@@ -14904,6 +15066,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "See exchange information"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "See items"
 msgstr ""
@@ -15001,6 +15169,16 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__incoming_einvoice_notification_email
 msgid "Send Copy To"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_account_move_send_batch_wizard
+msgid "Send Invoice Batch Wizard"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_account_move_send_wizard
+msgid "Send Invoice Wizard"
 msgstr ""
 
 #. module: account
@@ -15314,6 +15492,11 @@ msgstr ""
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
 msgid "Share"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
 msgstr ""
 
 #. module: account
@@ -16781,6 +16964,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr ""
@@ -16924,6 +17115,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
 msgstr ""
 
 #. module: account
@@ -17427,12 +17626,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/wizard/account_payment_register.py:0
-msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
 msgstr ""
@@ -17578,6 +17771,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__income_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__income_account_id
 msgid "This account will be used when validating a customer invoice."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
+msgid ""
+"This action is irreversible: the credit/debit cannot be modified again from "
+"this screen."
 msgstr ""
 
 #. module: account
@@ -18235,6 +18435,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_journal__type
 #: model:ir.model.fields,field_description:account.field_account_move__move_type
 #: model:ir.model.fields,field_description:account.field_account_move_line__move_type
+#: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_type
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__account_type
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__account_type
 msgid "Type"
@@ -18345,6 +18546,11 @@ msgid "Unit Price:"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Units"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr ""
@@ -18406,6 +18612,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__unreconciled_paid_amount
+msgid "Unreconciled Paid Amount"
 msgstr ""
 
 #. module: account
@@ -18709,13 +18920,13 @@ msgid "Valid for"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-msgid "Validate"
+#: model:ir.model,name:account.model_validate_account_move
+msgid "Validate Journal Entry"
 msgstr ""
 
 #. module: account
-#: model:ir.model,name:account.model_validate_account_move
-msgid "Validate Account Move"
+#: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
+msgid "Validate and Post"
 msgstr ""
 
 #. module: account
@@ -18908,7 +19119,6 @@ msgid "View Partner(s)"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Visible to all"
 msgstr ""
@@ -19107,6 +19317,14 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You are about to unsubscribe"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
+"You are attempting to validate opening entries belonging to another company."
+" Please switch to the correct company."
 msgstr ""
 
 #. module: account
@@ -19341,6 +19559,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19478,7 +19703,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"You cannot edit the journal of an account move if it has been posted once, "
+"You cannot edit the journal of a journal entry if it has been posted once, "
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
@@ -19487,7 +19712,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"You cannot edit the journal of an account move with a sequence number "
+"You cannot edit the journal of a journal entry with a sequence number "
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
@@ -19649,6 +19874,13 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
 msgstr ""
 
 #. module: account

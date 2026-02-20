@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.2a1\n"
+"Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:37+0000\n"
-"PO-Revision-Date: 2026-02-04 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-02-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/formatters.js:0
 msgid "%s records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
+msgid "%s to schedule"
 msgstr ""
 
 #. module: web
@@ -453,16 +460,6 @@ msgid "<i class=\"fa fa-repeat\"/> Reset"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
-"                                        <option value=\"tabs\">Separated (one per tab)</option>\n"
-"                                        <option value=\"temporal\">Temporal (experimental)</option>\n"
-"                                    </select>\n"
-"                                    <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
-msgstr ""
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 3,613.50</span>"
 msgstr ""
@@ -530,6 +527,15 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">15%</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid ""
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
+"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all "
+"samples.<br/>It can lead to partially invalid result in case of concurrent "
+"profiles.<br/>Use with caution </span>"
 msgstr ""
 
 #. module: web
@@ -884,6 +890,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
 msgstr ""
@@ -1133,12 +1140,6 @@ msgstr ""
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
-msgid "Are you sure that you want to duplicate all the selected records?"
 msgstr ""
 
 #. module: web
@@ -1898,7 +1899,6 @@ msgstr ""
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
 #: code:addons/web/static/src/core/session/check_identity.xml:0
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Confirm"
 msgstr ""
@@ -2204,12 +2204,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/search/custom_group_by_item/custom_group_by_item.xml:0
 msgid "Custom Group"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_model.js:0
-msgid "Custom filter"
 msgstr ""
 
 #. module: web
@@ -2587,12 +2581,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
-msgid "Display seconds"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Display the domain using facets"
 msgstr ""
@@ -2745,10 +2733,17 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Duplicate"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+msgid "Duplicate Records"
 msgstr ""
 
 #. module: web
@@ -3336,12 +3331,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.xml:0
-msgid "Good job, everything is scheduled!"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 #: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
 msgid "Google Slide Viewer"
@@ -3483,6 +3472,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Hours"
 msgstr ""
 
 #. module: web
@@ -4413,6 +4408,12 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max tooltip"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Max value"
 msgstr ""
 
@@ -4513,6 +4514,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Minimal precision"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float/float_field.js:0
+msgid "Minimum Digits"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Minutes"
 msgstr ""
 
 #. module: web
@@ -5051,8 +5064,21 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
+msgid "Nothing to schedule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 msgid "Number of files"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Numeric"
 msgstr ""
 
 #. module: web
@@ -5715,8 +5741,21 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
+msgid "Properties Definition"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Property %s"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
+msgid "Property 1"
 msgstr ""
 
 #. module: web
@@ -6315,6 +6354,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Seconds"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_basic.js:0
 msgid "Security"
 msgstr ""
@@ -6461,6 +6506,11 @@ msgid "Send Email"
 msgstr ""
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid "Separated (one per tab)"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid "Separator"
@@ -6600,6 +6650,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Show seconds"
 msgstr ""
 
@@ -6955,6 +7006,11 @@ msgid "Template:"
 msgstr ""
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid "Temporal (experimental)"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
@@ -7223,12 +7279,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.xml:0
-msgid "To Schedule"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 msgid "To next categories"
 msgstr ""
@@ -7475,6 +7525,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 msgid "Unfold"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Unit"
 msgstr ""
 
 #. module: web
@@ -8010,6 +8066,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "Yes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+msgid ""
+"You are about to create a copy of every selected record.\n"
+"Are you sure you want to proceed?"
 msgstr ""
 
 #. module: web

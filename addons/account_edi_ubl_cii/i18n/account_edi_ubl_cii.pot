@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.2a1\n"
+"Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:35+0000\n"
-"PO-Revision-Date: 2026-02-04 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -53,16 +53,6 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
 msgid "AS2 exchange"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
-msgid "Account Move Send"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
-msgid "Account Move Send Wizard"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -862,8 +852,18 @@ msgid "San Marino VAT"
 msgstr ""
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Send Invoice Wizard"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9948
 msgid "Serbia VAT"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -1022,6 +1022,13 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"The following bank account numbers got retrieved during the import : %s"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -1738,6 +1745,22 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__z
 msgid "Z - Zero rated goods"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+"customer '%s'."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+"company '%s'."
 msgstr ""
 
 #. module: account_edi_ubl_cii
