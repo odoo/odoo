@@ -249,7 +249,7 @@ class TestItEdiImport(TestItEdi):
             self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads({
                 '999999999': {
                     'filename': filename,
-                    'file': self.fake_test_content,
+                    'file': self.fake_test_content.decode(),
                     'key': str(uuid.uuid4()),
                 }},
                 self.proxy_user,
@@ -278,7 +278,7 @@ class TestItEdiImport(TestItEdi):
             self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads({
                 '999999999': {
                     'filename': filename,
-                    'file': fake_bill_content,
+                    'file': fake_bill_content.decode(),
                     'key': str(uuid.uuid4()),
                 }},
                 self.proxy_user,
@@ -322,7 +322,7 @@ class TestItEdiImport(TestItEdi):
             self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads(
                 {'999999999': {
                     'filename': filename,
-                    'file': self.fake_test_content,
+                    'file': self.fake_test_content.decode(),
                     'key': str(uuid.uuid4()),
                 }},
                 self.proxy_user,
@@ -362,7 +362,7 @@ class TestItEdiImport(TestItEdi):
                 processed = self.env['account.move']._l10n_it_edi_process_downloads({
                     '999999999': {
                         'filename': filename,
-                        'file': self.fake_test_content,
+                        'file': self.fake_test_content.decode(),
                         'key': str(uuid.uuid4()),
                     }},
                     proxy_user,

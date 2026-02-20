@@ -376,7 +376,7 @@ class AccountMove(models.Model):
             }
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
-        self.l10n_it_edi_attachment_file = attachment_vals['raw']
+        self.l10n_it_edi_attachment_file = BinaryBytes(attachment_vals['raw'])
         self.l10n_it_edi_attachment_name = attachment_vals['name']
         self.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
         self.message_post(attachments=[(self.l10n_it_edi_attachment_name, attachment_vals['raw'])])
@@ -886,7 +886,7 @@ class AccountMove(models.Model):
             'balance_multiplicator': -1 if self.is_inbound() else 1,
             'abs': abs,
             'pdf_name': pdf_values['name'] if pdf_values else False,
-            'pdf': pdf_values['raw'] if pdf_values else False,
+            'pdf': base64.b64encode(pdf_values['raw']).decode() if pdf_values else False,
             'withholding_values': withholding_values,
             'pension_fund_values': pension_fund_values,
         }
