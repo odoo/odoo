@@ -152,31 +152,8 @@ patch(ProductScreen.prototype, {
             return;
         }
 
-        const globalIdentificationAnswers = {};
-        const identificationQuestionTypes = ["name", "email", "phone", "company_name"];
-
-        const { globalSimpleChoice, globalTextAnswer } = Object.entries(result.byOrder).reduce(
-            (acc, [questionId, answer]) => {
-                const question = this.pos.models["event.question"].get(parseInt(questionId));
-                if (
-                    question.question_type === "simple_choice" &&
-                    this.pos.models["event.question.answer"].get(parseInt(answer))
-                ) {
-                    acc.globalSimpleChoice[questionId] = answer;
-                } else if (answer) {
-                    acc.globalTextAnswer[questionId] = answer;
-                    if (
-                        identificationQuestionTypes.includes(question.question_type) &&
-                        !(question.question_type in globalIdentificationAnswers)
-                    ) {
-                        globalIdentificationAnswers[question.question_type] = answer;
-                    }
-                }
-
-                return acc;
-            },
-            { globalSimpleChoice: {}, globalTextAnswer: {} }
-        );
+        const { textAnswer: globalTextAnswer, userData: globalUserData } =
+            this.extractRegistrationData(result.byOrder);
 
         for (const [ticketId, data] of Object.entries(result.byRegistration)) {
             const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
@@ -191,49 +168,10 @@ patch(ProductScreen.prototype, {
             });
 
             for (const registration of data) {
-                // Global answers have precedence for identification question types.
-                const userData = { ...globalIdentificationAnswers };
-                for (const [questionId, answer] of Object.entries(registration)) {
-                    const question = this.pos.models["event.question"].get(parseInt(questionId));
+                const { textAnswer, userData } = this.extractRegistrationData(registration, {
+                    ...globalUserData,
+                });
 
-                    if (
-                        !question ||
-                        !answer ||
-                        !identificationQuestionTypes.includes(question.question_type) ||
-                        question.question_type in userData
-                    ) {
-                        continue;
-                    }
-
-                    if (question.question_type === "email") {
-                        userData.email = answer;
-                    } else if (question.question_type === "phone") {
-                        userData.phone = answer;
-                    } else if (question.question_type === "name") {
-                        userData.name = answer;
-                    } else if (question.question_type === "company_name") {
-                        userData.company_name = answer;
-                    }
-                }
-
-                const { simpleChoice, textAnswer } = Object.entries(registration).reduce(
-                    (acc, [questionId, answer]) => {
-                        const question = this.pos.models["event.question"].get(
-                            parseInt(questionId)
-                        );
-                        if (
-                            question.question_type === "simple_choice" &&
-                            this.pos.models["event.question.answer"].get(parseInt(answer))
-                        ) {
-                            acc.simpleChoice[questionId] = answer;
-                        } else if (answer) {
-                            acc.textAnswer[questionId] = answer;
-                        }
-
-                        return acc;
-                    },
-                    { simpleChoice: {}, textAnswer: {} }
-                );
                 // This will throw an error on creation if not possible (python constraint)
                 this.pos.models["event.registration"].create({
                     ...userData,
@@ -242,35 +180,48 @@ patch(ProductScreen.prototype, {
                     event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
-                    registration_answer_ids: Object.entries({
-                        ...textAnswer,
-                        ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                    registration_answer_ids: this.createRegistrationAnswer(
+                        Object.entries({ ...textAnswer, ...globalTextAnswer })
+                    ),
                 });
             }
         }
+    },
+    createRegistrationAnswer(textAnswers) {
+        return textAnswers.map(([questionId, answer]) => {
+            const ansId = this.pos.models["event.question.answer"].get(parseInt(answer));
+            return [
+                "create",
+                {
+                    question_id: this.pos.models["event.question"].get(parseInt(questionId)),
+                    ...(ansId ? { value_answer_id: ansId } : { value_text_box: answer }),
+                },
+            ];
+        });
+    },
+    extractRegistrationData(questions, userData = {}) {
+        const IDENTIFICATION_QUESTION_TYPES = new Set(["name", "email", "phone", "company_name"]);
+
+        return Object.entries(questions).reduce(
+            (acc, [qId, answer]) => {
+                if (!answer) {
+                    return acc;
+                }
+
+                const question = this.pos.models["event.question"].get(parseInt(qId));
+                if (!question) {
+                    return acc;
+                }
+
+                acc.textAnswer[qId] = answer;
+                if (IDENTIFICATION_QUESTION_TYPES.has(question.question_type)) {
+                    userData[question.question_type] ??= answer;
+                }
+
+                return acc;
+            },
+            { textAnswer: {}, userData }
+        );
     },
     onMouseDown(event, product) {
         if (product.event_id) {

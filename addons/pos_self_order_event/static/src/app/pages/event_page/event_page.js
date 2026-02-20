@@ -406,8 +406,10 @@ export class EventPage extends Component {
                 event_slot_id: this.event.is_multi_slots ? this.state.selectedSlot : null,
                 pos_order_line_id: line,
                 partner_id: this.selfOrder.currentOrder.partner_id,
-                registration_answer_ids: this.formatTextAnswers(textAnswer),
-                registration_answer_choice_ids: this.formatChoiceAnswers(simpleChoice),
+                registration_answer_ids: [
+                    ...this.formatTextAnswers(textAnswer),
+                    ...this.formatChoiceAnswers(simpleChoice),
+                ],
             });
         }
     }
@@ -427,8 +429,7 @@ export class EventPage extends Component {
             }
             if (question.question_type === "simple_choice") {
                 simpleChoice[questionId] = value;
-            }
-            if (value) {
+            } else if (value) {
                 textAnswer[questionId] = value;
             }
         }
