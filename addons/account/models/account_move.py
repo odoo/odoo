@@ -5667,6 +5667,15 @@ class AccountMove(models.Model):
         to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
         return to_reverse._reverse_moves(cancel=True)
 
+    def _get_lines_with_wrong_partner(self):
+        self.ensure_one()
+        if not self.is_invoice():
+            return self.env['account.move.line']
+        return self.line_ids.filtered(lambda aml:
+            aml.partner_id != self.commercial_partner_id
+            and aml.display_type not in ('line_section', 'line_subsection', 'line_note')
+        )
+
     def _post(self, soft=True):
         """Post/Validate the documents.
 
@@ -5815,10 +5824,7 @@ class AccountMove(models.Model):
         for invoice in to_post:
             # Fix inconsistencies that may occure if the OCR has been editing the invoice at the same time of a user. We force the
             # partner on the lines to be the same as the one on the move, because that's the only one the user can see/edit.
-            wrong_lines = invoice.is_invoice() and invoice.line_ids.filtered(lambda aml:
-                aml.partner_id != invoice.commercial_partner_id
-                and aml.display_type not in ('line_section', 'line_subsection', 'line_note')
-            )
+            wrong_lines = invoice._get_lines_with_wrong_partner()
             if wrong_lines:
                 wrong_lines.write({'partner_id': invoice.commercial_partner_id.id})
 
