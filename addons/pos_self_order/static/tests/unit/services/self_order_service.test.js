@@ -1,4 +1,4 @@
-import { test, describe, expect } from "@odoo/hoot";
+import { test, describe, expect, beforeEach } from "@odoo/hoot";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -375,4 +375,120 @@ test("resetCategorySelection", async () => {
     expect(store.currentCategory.id).toBe(ctg2.id);
     await store.confirmOrder();
     expect(store.currentCategory.id).toBe(ctg1.id);
+});
+
+describe("getKioskPrintingCategoriesChanges", () => {
+    beforeEach(async () => {
+        const store = await setupSelfPosEnv();
+        store.config.self_ordering_mode = "kiosk";
+
+        const cat1 = store.models["pos.category"].get(1);
+        const cat2 = store.models["pos.category"].get(2);
+        const cat3 = store.models["pos.category"].get(3);
+
+        const comboTemplate = store.models["product.template"].get(7);
+        comboTemplate.pos_categ_ids = [cat3];
+        comboTemplate.product_variant_ids[0].pos_categ_ids = [cat3];
+
+        const comboItem1 = comboTemplate.combo_ids[1].combo_item_ids[0];
+        const comboItem2 = comboTemplate.combo_ids[0].combo_item_ids[0];
+
+        comboItem1.product_id.pos_categ_ids = [cat1];
+        comboItem1.product_id.product_tmpl_id.pos_categ_ids = [cat1];
+
+        comboItem2.product_id.pos_categ_ids = [cat2];
+        comboItem2.product_id.product_tmpl_id.pos_categ_ids = [cat2];
+
+        const testProduct1 = store.models["product.template"].get(5);
+        testProduct1.pos_categ_ids = [cat1];
+        testProduct1.product_variant_ids[0].pos_categ_ids = [cat1];
+
+        const testProduct2 = store.models["product.template"].get(6);
+        testProduct2.pos_categ_ids = [cat2, cat3];
+        testProduct2.product_variant_ids[0].pos_categ_ids = [cat2, cat3];
+
+        const comboValues = [
+            {
+                combo_item_id: comboItem1,
+                qty: 1,
+            },
+            {
+                combo_item_id: comboItem2,
+                qty: 1,
+            },
+        ];
+        store.addToCart(comboTemplate, 1, "", {}, {}, comboValues);
+        store.addToCart(testProduct1, 1);
+        store.addToCart(testProduct2, 1);
+
+        const orderLines = store.currentOrder.lines;
+        expect(orderLines[0].product_id.pos_categ_ids[0]).toBe(cat3);
+        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat1);
+        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[3].product_id.pos_categ_ids[0]).toBe(cat1);
+        expect(orderLines[4].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[4].product_id.pos_categ_ids[1]).toBe(cat3);
+
+        this.store = store;
+        this.cat1 = cat1;
+        this.cat2 = cat2;
+        this.comboTemplateCat = cat3;
+
+        this.comboTemplate = comboTemplate;
+        this.comboProduct1 = comboItem1.product_id;
+        this.comboProduct2 = comboItem2.product_id;
+
+        this.testProduct1 = testProduct1;
+        this.testProduct2 = testProduct2;
+    });
+
+    test("all matching lines", async () => {
+        const orderLines = this.store._getKioskPrintingCategoriesChanges(this.store.currentOrder, [
+            this.cat1,
+            this.cat2,
+        ]);
+        expect(orderLines.length).toBe(5);
+        expect(orderLines[0].product_id.id).toBe(this.comboTemplate.id);
+        expect(orderLines[1].product_id.id).toBe(this.comboProduct1.id);
+        expect(orderLines[2].product_id.id).toBe(this.comboProduct2.id);
+
+        expect(orderLines[3].product_id.id).toBe(this.testProduct1.id);
+        expect(orderLines[4].product_id.id).toBe(this.testProduct2.id);
+    });
+
+    test("combo lines and other lines are filtered", async () => {
+        let orderLines = this.store._getKioskPrintingCategoriesChanges(this.store.currentOrder, [
+            this.cat1,
+        ]);
+
+        expect(orderLines.length).toBe(3);
+        expect(orderLines[0].product_id.id).toBe(this.comboTemplate.id);
+        expect(orderLines[1].product_id.id).toBe(this.comboProduct1.id);
+        expect(orderLines[2].product_id.id).toBe(this.testProduct1.id);
+
+        orderLines = this.store._getKioskPrintingCategoriesChanges(this.store.currentOrder, [
+            this.cat2,
+        ]);
+        expect(orderLines.length).toBe(3);
+        expect(orderLines[0].product_id.id).toBe(this.comboTemplate.id);
+        expect(orderLines[1].product_id.id).toBe(this.comboProduct2.id);
+        expect(orderLines[2].product_id.id).toBe(this.testProduct2.id);
+    });
+
+    test("no category matches", async () => {
+        const orderLines = this.store._getKioskPrintingCategoriesChanges(this.store.currentOrder, [
+            { id: 999 },
+        ]);
+
+        expect(orderLines.length).toBe(0);
+    });
+
+    test("ignores combo root category", async () => {
+        // The combo root category is not taken into account for printing, only the categories of the combo items are.
+        const orderLines = this.store._getKioskPrintingCategoriesChanges(this.store.currentOrder, [
+            this.comboTemplateCat,
+        ]);
+        expect(orderLines.length).toBe(1);
+        expect(orderLines[0].product_id.id).toBe(this.testProduct2.id);
+    });
 });
