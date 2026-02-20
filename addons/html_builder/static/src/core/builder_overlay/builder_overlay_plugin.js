@@ -195,6 +195,13 @@ export class BuilderOverlayPlugin extends Plugin {
             return;
         }
         this.removeHoverOverlay();
+        // Don't create a hover overlay for an element already tracked as an
+        // active overlay. When `removeHoverOverlay` is later called for this
+        // hover overlay, it would unobserve the element, breaking resize
+        // detection for the active overlay.
+        if (this.overlays.some((overlay) => overlay.overlayTarget === el)) {
+            return;
+        }
         const overlay = new BuilderOverlay(el, {
             iframe: this.iframe,
             overlayContainer: this.overlayContainer,

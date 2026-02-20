@@ -31,6 +31,26 @@ test("Show an overlay when hovering an element with options", async () => {
     expect(".oe_overlay.o_hover_overlay").toHaveRect(":iframe .col-lg-3");
 });
 
+test("Do not show hover overlay on an already active element", async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+    await contains(":iframe section").click();
+    expect(".oe_overlay.oe_active").toHaveCount(1);
+    expect(".oe_overlay.oe_active").toHaveRect(":iframe section");
+
+    await contains(":iframe section").hover();
+    expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+});
+
 test("Toggle the overlays when clicking on an option element", async () => {
     // TODO improve when more options will be defined.
     await setupWebsiteBuilder(`
