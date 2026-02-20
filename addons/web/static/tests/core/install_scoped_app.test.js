@@ -74,7 +74,7 @@ test("Installation page displays the app info correctly", async () => {
     expect("button.btn-primary").toHaveCount(1);
     expect("button.btn-primary").toHaveText("Install");
     await contains(".fa-pencil").click();
-    await contains("input").edit("<Otto&");
+    await contains("input").edit("<Otto&", { confirm: "blur" });
     expect.verifySteps(["URL replace"]);
 });
 
