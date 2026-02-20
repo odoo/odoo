@@ -1,6 +1,4 @@
-import base64
 import logging
-import json
 import re
 
 from contextlib import contextmanager
@@ -10,7 +8,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
-from odoo.tools import float_compare, SQL
+from odoo.tools import SQL
 from odoo.tools.date_utils import get_month
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
@@ -568,7 +566,7 @@ class AccountMove(models.Model):
                 self.payment_reference or self.name,
                 ("Payment for %s" % self.name))
             barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120, quiet=False)
-            return image_data_uri(base64.b64encode(barcode))
+            return image_data_uri(barcode)
         return super()._generate_qr_code(silent_errors)
 
     def _l10n_in_get_hsn_summary_table(self):

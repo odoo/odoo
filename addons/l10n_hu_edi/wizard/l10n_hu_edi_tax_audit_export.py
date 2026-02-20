@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import contextlib
 import io
 import zipfile
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 
 
 class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
@@ -98,7 +98,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
                     for invoice in invoices.sorted(lambda i: i.create_date):
                         if invoice.l10n_hu_edi_state:
                             # Case 1: An XML was already generated for this invoice.
-                            invoice_xml = base64.b64decode(invoice.l10n_hu_edi_attachment)
+                            invoice_xml = invoice.l10n_hu_edi_attachment
                         else:
                             # Case 2: No XML was generated for this invoice.
                             if not invoice.l10n_hu_invoice_chain_index:
@@ -107,7 +107,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
 
                         filename = f'{invoice.name.replace("/", "_")}.xml'
                         zf.writestr(filename, invoice_xml)
-            self.export_file = base64.b64encode(buf.getvalue())
+            self.export_file = BinaryBytes(buf.getvalue())
 
         return {
             'type': 'ir.actions.act_window',

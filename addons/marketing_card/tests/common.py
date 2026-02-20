@@ -4,6 +4,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.tests import BaseCase, TransactionCase
+from odoo.tools import BinaryBytes
 from odoo.addons.base.models.ir_actions_report import IrActionsReport
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -76,7 +77,7 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
         cls.partners = cls.env['res.partner'].create([
             {'name': 'John', 'email': 'john93@trombino.scope'},
             {'name': 'Bob', 'email': 'bob@justbob.me',
-             'phone': '+32 123 446 789', 'image_1920': base64.b64encode(VALID_JPEG),
+             'phone': '+32 123 446 789', 'image_1920': BinaryBytes(VALID_JPEG),
              },
         ])
 
@@ -92,15 +93,15 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
         </style>
     </head>
     <body>
-    <div id="body" t-attf-style="background-image: url('data:image/png;base64,{{card_campaign.content_background or card_campaign.card_template_id.default_background}}');">
+    <div id="body" t-attf-style="background-image: url('data:image/png;base64,{{(card_campaign.content_background or card_campaign.card_template_id.default_background).to_base64()}}');">
                 <span id="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"/>
                 <span id="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"/>
                 <span id="button" t-out="card_campaign.content_button">Button</span>
                 <span id="section" t-out="values['section']"/>
                 <span id="sub_section1" t-out="values['sub_section1']"/>
                 <span id="sub_section2" t-out="values['sub_section2']"/>
-                <img id="image1" t-if="values['image1']" t-attf-src="data:image/png;base64,{{values['image1']}}"/>
-                <img id="image2" t-if="values['image2']" t-attf-src="data:image/png;base64,{{values['image2']}}"/>
+                <img id="image1" t-if="values['image1']" t-attf-src="data:image/png;base64,{{values['image1'].to_base64()}}"/>
+                <img id="image2" t-if="values['image2']" t-attf-src="data:image/png;base64,{{values['image2'].to_base64()}}"/>
     </div>
     </body>
 </html>

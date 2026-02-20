@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import datetime
 import io
 import logging
@@ -14,7 +13,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
-from odoo.tools import html2plaintext, sql
+from odoo.tools import BinaryBytes, html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
 
 _logger = logging.getLogger(__name__)
@@ -508,7 +507,7 @@ class SlideSlide(models.Model):
     @api.onchange('document_binary_content')
     def _on_change_document_binary_content(self):
         if self.slide_category == 'document' and self.source_type == 'local_file' and self.document_binary_content:
-            completion_time = self._get_completion_time_pdf(base64.b64decode(self.document_binary_content))
+            completion_time = self._get_completion_time_pdf(self.document_binary_content.content)
             if completion_time:
                 self.completion_time = completion_time
 
@@ -1034,7 +1033,7 @@ class SlideSlide(models.Model):
             if image_url_only:
                 slide_metadata['image_url'] = thumbnail_url
             else:
-                slide_metadata['image_1920'] = base64.b64encode(
+                slide_metadata['image_1920'] = BinaryBytes(
                     requests.get(thumbnail_url, timeout=3).content
                 )
 
@@ -1109,7 +1108,7 @@ class SlideSlide(models.Model):
             if image_url_only:
                 slide_metadata['image_url'] = thumbnail_url
             else:
-                slide_metadata['image_1920'] = base64.b64encode(
+                slide_metadata['image_1920'] = BinaryBytes(
                     requests.get(thumbnail_url, timeout=3).content
                 )
 
@@ -1230,7 +1229,7 @@ class SlideSlide(models.Model):
             if image_url_only:
                 slide_metadata['image_url'] = thumbnail_url
             else:
-                slide_metadata['image_1920'] = base64.b64encode(
+                slide_metadata['image_1920'] = BinaryBytes(
                     requests.get(thumbnail_url, timeout=3).content
                 )
 

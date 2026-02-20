@@ -3,12 +3,12 @@
 from psycopg2 import IntegrityError
 from werkzeug.urls import url_unquote_plus
 
-from odoo.addons.base.tests.files import PNG_B64
+from odoo.addons.base.tests.files import PNG_RAW
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, HttpCase
 from odoo.tests.common import users
-from odoo.tools import mute_logger
+from odoo.tools import BinaryBytes, mute_logger
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -66,7 +66,7 @@ class TestResources(common.SlidesCase, HttpCase):
             'file_name': 'test.png',
             'resource_type': 'file',
             # A file for which _odoo_guess_mimetype and python_magic can detect the mime type: a png file
-            'data': PNG_B64,
+            'data': BinaryBytes(PNG_RAW),
             'slide_id': self.slide.id,
         })
         self.authenticate(self.env.user.login, self.env.user.login)

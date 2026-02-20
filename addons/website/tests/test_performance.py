@@ -2,12 +2,12 @@
 
 import logging
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
-from odoo.addons.base.tests.files import PNG_B64
+from odoo.addons.base.tests.files import PNG_RAW
 
 from contextlib import closing
 
 from odoo.sql_db import categorize_query
-from odoo.tools import mute_logger
+from odoo.tools import BinaryBytes, mute_logger
 from odoo.tests.common import tagged
 
 
@@ -125,7 +125,7 @@ class TestStandardPerformance(UtilPerf):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['res.users'].browse(2).image_1920 = PNG_B64
+        cls.env['res.users'].browse(2).image_1920 = BinaryBytes(PNG_RAW)
 
     @mute_logger('odoo.http')
     def test_10_perf_sql_img_controller(self):

@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import io
 from contextlib import contextmanager
 
 from PIL import Image
 
 from odoo.fields import Command
-from odoo.tools import lazy
+from odoo.tools import BinaryBytes, lazy
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.http_routing.tests.common import MockRequest as websiteMockRequest
@@ -155,4 +154,4 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
         f = io.BytesIO()
         Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
         f.seek(0)
-        return base64.b64encode(f.read())
+        return BinaryBytes(f.read())

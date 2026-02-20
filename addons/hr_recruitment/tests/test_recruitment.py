@@ -389,7 +389,7 @@ class TestRecruitment(MailCase, TransactionCase):
             ('res_model', '=', employee_applicant['res_model']),
             ('res_id', '=', employee_applicant['res_id']),
         ])
-        self.assertEqual(applicant_attachment['raw'], attachment_employee_applicant['raw'])
+        self.assertEqual(applicant_attachment.raw.content, attachment_employee_applicant.raw.content)
 
     def test_other_applications_count(self):
         """

@@ -215,7 +215,7 @@ class AccountMoveSend(models.AbstractModel):
         Inside CreditNote, the ProjectReference element is not used in xml.
         So we look for OriginatorDocumentReference instead.
         """
-        tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
+        tree = etree.fromstring(bytes(invoice_data['ubl_cii_xml_attachment_values']['raw']))
 
         localname = etree.QName(tree).localname
         anchor_xpath = {
@@ -251,7 +251,7 @@ class AccountMoveSend(models.AbstractModel):
         ] if invoice_data.get('mail_attachments_widget') else []
         attachments_to_embed.append({
             'filename': pdf_values['name'],
-            'raw': pdf_values['raw'],
+            'raw': bytes(pdf_values['raw']),
             'mimetype': pdf_values['mimetype'],
             'document_type_node': doc_type_code_node,
         })

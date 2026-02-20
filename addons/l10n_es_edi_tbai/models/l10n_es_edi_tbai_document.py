@@ -20,7 +20,7 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     cleanup_xml_signature,
 )
 from odoo.exceptions import UserError
-from odoo.tools import get_lang
+from odoo.tools import BinaryBytes, get_lang
 from odoo.tools.float_utils import float_repr, float_round
 from odoo.tools.xml_utils import cleanup_xml_node
 
@@ -265,7 +265,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             xml_to_send = self._generate_final_xml_bi(freelancer=freelancer)
             lroe_str = etree.tostring(xml_to_send)
         else:
-            lroe_str = self.xml_attachment_id.raw
+            lroe_str = self.xml_attachment_id.raw.content
 
         lroe_bytes = gzip.compress(lroe_str)
 
@@ -710,7 +710,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         values = {
             'dsig': {
                 'document_id': document_id,
-                'x509_certificate': base64.encodebytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())).decode(),
+                'x509_certificate': BinaryBytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())),
                 'public_modulus': n.decode(),
                 'public_exponent': e.decode(),
                 'iso_now': datetime.now().isoformat(),
@@ -720,7 +720,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 'reference_uri': "Reference-" + document_id,
                 'sigpolicy_url': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_url'),
                 'sigpolicy_digest': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_digest'),
-                'sigcertif_digest': certificate_sudo._get_fingerprint_bytes(formatting='base64').decode(),
+                'sigcertif_digest': BinaryBytes(certificate_sudo._get_fingerprint_bytes(formatting='raw')),
                 'x509_issuer_description': issuer,
                 'x509_serial_number': int(certificate_sudo.serial_number),
             }
@@ -872,4 +872,4 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         doc = self.xml_attachment_id
         if not doc:
             return None
-        return etree.fromstring(doc.raw.decode('utf-8'))
+        return etree.fromstring(doc.raw.content.decode('utf-8'))

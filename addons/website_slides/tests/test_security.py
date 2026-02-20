@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 
-from odoo.addons.base.tests.files import PNG_B64, PNG_RAW
+from odoo.addons.base.tests.files import PNG_RAW
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, HttpCase
-from odoo.tools import mute_logger
+from odoo.tools import BinaryBytes, mute_logger
 
 
 @tagged('security')
@@ -331,7 +330,7 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
                 'channel_id': self.channel.id,
                 'slide_category': 'infographic',
                 'is_published': True,
-                'binary_content': PNG_B64,
+                'binary_content': BinaryBytes(PNG_RAW),
                 'is_preview': True,
             },
             {
@@ -339,7 +338,7 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
                 'channel_id': self.channel.id,
                 'slide_category': 'document',
                 'is_published': True,
-                'binary_content': base64.b64encode(b'bar'),
+                'binary_content': BinaryBytes(b'bar'),
                 'is_preview': True,
             },
         ])
@@ -579,7 +578,7 @@ class TestAccessFeatures(common.SlidesCase):
             'name': 'Image',
             'slide_id': self.slide_3.id,
             'resource_type': 'file',
-            'data': base64.b64encode(b'Some content')
+            'data': BinaryBytes(b'Some content')
         }
         resource1, resource2 = self.env['slide.slide.resource'].with_user(self.user_officer).create(
             [resource_values for _ in range(2)])

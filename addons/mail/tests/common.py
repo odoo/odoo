@@ -110,6 +110,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             }
             res = build_email_origin(model, email_from, email_to, subject, body, **kwargs)
             data['EmailMessage'] = res
+            if attachments := data.get('attachments'):
+                data['attachments'] = [(name, data.content, mime) for name, data, mime in attachments]
             self._mails.append(data)
             return res
 
@@ -655,7 +657,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                             f'Attachment {attachment_info["name"]} not found in attachments',
                         )
                         if attachment_info.get('raw'):
-                            self.assertEqual(attachment[1], attachment_info['raw'])
+                            self.assertEqual(attachment[1].raw.content, attachment_info['raw'])
                         if attachment_info.get('type'):
                             self.assertEqual(attachment[2], attachment_info['type'])
                     self.assertEqual(len(expected_fvalue), len(mail.attachment_ids))

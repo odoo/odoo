@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from collections import defaultdict
 from os.path import join as opj
 import re
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import BinaryBytes, file_open
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -61,8 +60,8 @@ class IrUiMenu(models.Model):
         path_info = path.split(',')
         icon_path = opj(path_info[0], path_info[1])
         try:
-            with tools.file_open(icon_path, 'rb', filter_ext=('.png', '.gif', '.ico', '.jfif', '.jpeg', '.jpg', '.svg', '.webp')) as icon_file:
-                return base64.encodebytes(icon_file.read())
+            with file_open(icon_path, 'rb', filter_ext=('.png', '.gif', '.ico', '.jfif', '.jpeg', '.jpg', '.svg', '.webp')) as f:
+                return BinaryBytes(f.read())
         except FileNotFoundError:
             return False
 
@@ -169,6 +168,7 @@ class IrUiMenu(models.Model):
         """
         if web_icon and len(web_icon.split(',')) == 2:
             return self._read_image(web_icon)
+        return False
 
     def unlink(self):
         # Detach children and promote them to top-level, because it would be unwise to
@@ -253,10 +253,14 @@ class IrUiMenu(models.Model):
 
         xmlids = visible_menus._get_menuitems_xmlids()
         icon_attachments = self.env['ir.attachment'].sudo().search_fetch(
-            domain=[('res_model', '=', 'ir.ui.menu'),
-                    ('res_id', 'in', visible_menus._ids),
-                    ('res_field', '=', 'web_icon_data')],
-            field_names=['res_id', 'datas', 'mimetype'])
+            domain=[
+                ('res_model', '=', 'ir.ui.menu'),
+                ('res_id', 'in', visible_menus._ids),
+                ('res_field', '=', 'web_icon_data'),
+            ],
+            field_names=['res_id', 'raw', 'mimetype'],
+            order='res_id',
+        )
         icon_attachments_res_id = {attachment.res_id: attachment for attachment in icon_attachments}
 
         menus_dict = {}
@@ -281,7 +285,7 @@ class IrUiMenu(models.Model):
                 'action_model': action_model,
                 'action_id': action_id,
                 'web_icon': menu.web_icon,
-                'web_icon_data': attachment.datas.decode() if attachment else False,
+                'web_icon_data': attachment.raw.to_base64() if attachment else False,
                 'web_icon_data_mimetype': attachment.mimetype if attachment else False,
                 'xmlid': xmlids.get(menu_id, ""),
             }

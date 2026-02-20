@@ -304,7 +304,7 @@
 <!-- Blog Post Author (optional) -->
 <template id="website_blog.s_dynamic_snippet_template_author" name="Blog Post Author">
     <div t-if="blog_posts_post_author_active" class="s_blog_posts_post_author d-inline-flex align-items-center">
-        <img class="o_avatar me-2 rounded-pill" t-attf-src="data:image/png;base64,{{record.author_avatar}}" t-if="record.author_avatar"/>
+        <img class="o_avatar me-2 rounded-pill" t-attf-src="data:image/png;base64,{{record.author_avatar.to_base64()}}" t-if="record.author_avatar"/>
         <span t-field="record.author_id.name"/>
     </div>
 </template>

@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-import base64
-from io import BytesIO
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class BaseImportModule(models.TransientModel):
@@ -19,10 +16,8 @@ class BaseImportModule(models.TransientModel):
     def import_module(self):
         self.ensure_one()
         IrModule = self.env['ir.module.module']
-        zip_data = base64.decodebytes(self.module_file)
-        fp = BytesIO()
-        fp.write(zip_data)
-        res = IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
+        with self.module_file.open() as file:
+            IrModule._import_zipfile(file, force=self.force, with_demo=self.with_demo)
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
@@ -30,7 +25,7 @@ class BaseImportModule(models.TransientModel):
         }
 
     def get_dependencies_to_install_names(self):
-        module_ids, _not_found = self.env['ir.module.module']._get_missing_dependencies_modules(base64.decodebytes(self.module_file))
+        module_ids, _not_found = self.env['ir.module.module']._get_missing_dependencies_modules(self.module_file)
         return module_ids.mapped('name')
 
     def action_module_open(self):

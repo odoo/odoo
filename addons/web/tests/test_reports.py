@@ -71,7 +71,7 @@ class TestReports(odoo.tests.HttpCase):
             result.get('uid'), admin.id, 'wkhtmltopdf is not fetching the image as the user printing the report'
         )
         self.assertEqual(result.get('record_id'), image.id, 'wkhtmltopdf did not fetch the expected record')
-        self.assertEqual(result.get('data'), PNG_B64, 'wkhtmltopdf did not fetch the right image content')
+        self.assertEqual(result.get('data').content, PNG_B64, 'wkhtmltopdf did not fetch the right image content')
 
         # 2. Request the report as public, who has no acess to the image
         self.logout()

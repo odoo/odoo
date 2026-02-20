@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import logging
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.tools import BinaryBytes
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -13,11 +15,14 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 _logger = logging.getLogger(__name__)
 
 ATTACHMENT_DATA = [
-    b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKqf3geEAAA//8EGgIyYKYzzgAAAABJRU5ErkJggg==",
-    b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKqvvQEEAAA//8EBQI0GMlQsAAAAABJRU5ErkJggg==",
-    b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKKLakBBAAA//8ChwFQsvFlAwAAAABJRU5ErkJggg==",
-    b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGJqkdoACAAA//8CfAFRzSyOUAAAAABJRU5ErkJggg==",
-    b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGLSfxgICAAA//8CrAFkoLBhpQAAAABJRU5ErkJggg==",
+    BinaryBytes(base64.b64decode(b))
+    for b in (
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKqf3geEAAA//8EGgIyYKYzzgAAAABJRU5ErkJggg==",
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKqvvQEEAAA//8EBQI0GMlQsAAAAABJRU5ErkJggg==",
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKKLakBBAAA//8ChwFQsvFlAwAAAABJRU5ErkJggg==",
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGJqkdoACAAA//8CfAFRzSyOUAAAAABJRU5ErkJggg==",
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGLSfxgICAAA//8CrAFkoLBhpQAAAABJRU5ErkJggg==",
+    )
 ]
 ATTACHMENT_COUNT = 5
 
@@ -38,7 +43,7 @@ class TestProductPictureController(HttpCase):
 
         cls.attachments = cls.env['ir.attachment'].create([
             {
-                'datas': ATTACHMENT_DATA[i],
+                'raw': ATTACHMENT_DATA[i],
                 'name': f'image0{i}.gif',
                 'public': True
             }
@@ -55,7 +60,7 @@ class TestProductPictureController(HttpCase):
 
     def _get_product_image_data(self):
         return [
-            (hasattr(image, 'video_url') and image.video_url) or image.image_1920
+            (hasattr(image, 'video_url') and image.video_url) or image.image_1920.content
             for image in self.product._get_images()
         ]
 
@@ -67,8 +72,8 @@ class TestProductPictureController(HttpCase):
         for i, image in enumerate(self.product.product_template_image_ids):
             # Check if all names are now in the product
             self.assertIn(image.name, self.attachments.mapped('name'))
-            # Check if image datas are the same
-            self.assertEqual(image.image_1920, ATTACHMENT_DATA[i])
+            # Check if image content are the same
+            self.assertEqual(image.image_1920.content, ATTACHMENT_DATA[i].content)
         # Check if exactly ATTACHMENT_COUNT images were saved (no dupes/misses?)
         self.assertEqual(ATTACHMENT_COUNT, len(self.product.product_template_image_ids))
 
@@ -136,7 +141,7 @@ class TestProductPictureController(HttpCase):
             # Trigger the reordering of product.image records based on their sequence.
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
-            self.assertEqual(self.product.image_1920, i3)
+            self.assertEqual(self.product.image_1920.content, i3)
 
     def test_resequence_image_left(self):
         self._create_product_images()
@@ -182,7 +187,7 @@ class TestProductPictureController(HttpCase):
             )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
-            self.assertEqual(self.product.image_1920, i2)
+            self.assertEqual(self.product.image_1920.content, i2)
 
     def test_resequence_video_left(self):
         self._create_product_images()

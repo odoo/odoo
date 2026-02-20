@@ -222,7 +222,7 @@ class TestUBLNL(TestUBLCommon):
                 'tax_ids': [Command.set([self.tax_10_fixed.id, self.tax_7_purchase.id])]
             }]
         )
-        amount = etree.fromstring(invoice.ubl_cii_xml_id.raw).find('.//{*}LegalMonetaryTotal/{*}LineExtensionAmount').text
+        amount = etree.fromstring(invoice.ubl_cii_xml_id.raw.content).find('.//{*}LegalMonetaryTotal/{*}LineExtensionAmount').text
         self.assertEqual(amount, '60.00')
 
     ####################################################

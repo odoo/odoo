@@ -8,7 +8,7 @@ class IrModuleCase(TransactionCase):
     def test_missing_module_icon(self):
         module = self.env["ir.module.module"].create({"name": "missing"})
         base = self.env["ir.module.module"].search([("name", "=", "base")])
-        self.assertEqual(base.icon_image, module.icon_image)
+        self.assertEqual(base.icon_image.content, module.icon_image.content)
 
     @mute_logger("odoo.modules.module")
     def test_new_module_icon(self):

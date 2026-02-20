@@ -72,7 +72,7 @@ class TestIrQweb(TransactionCase):
         html = view.with_context(webp_as_jpg=True)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
         tree = etree.fromstring(html)
         img = tree.find("img")
-        self.assertEqual(img.get("src"), f"data:image/png;base64,{jpeg_attach.datas.decode()}")
+        self.assertEqual(img.get("src"), f"data:image/png;base64,{jpeg_attach.raw.to_base64()}")
 
     def test_image_svg(self):
         image = """<?xml version='1.0' encoding='UTF-8' ?>

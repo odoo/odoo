@@ -209,10 +209,6 @@ class SalePdfFormField(models.Model):
             [('document_type', '=', doc_type)]
         )
         existing_form_fields_name = existing_form_fields.mapped('name')
-        return_bin_size = self.env.context.get('bin_size')
-        if return_bin_size:
-            # guarantees that bin_size is always set to False
-            records = records.with_context(bin_size=False)
 
         for document in records:
             if document.raw:

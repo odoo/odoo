@@ -1,5 +1,3 @@
-import base64
-
 from stdnum.in_ import pan
 from odoo import api, fields, models, _
 
@@ -78,7 +76,7 @@ class L10nInPanEntity(models.Model):
                     body=_("TDS Certificate Added"),
                     message_type='notification',
                     subtype_xmlid='mail.mt_note',
-                    attachments=[(rec.tds_certificate_filename, base64.b64decode(vals['tds_certificate']))]
+                    attachments=[(rec.tds_certificate_filename, rec.tds_certificate.content)]
                 )
         return res
 
