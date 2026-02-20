@@ -8,12 +8,18 @@
                     <t t-if="combo.qty_free > 0">
                         <h5 class="text-muted ms-2 mb-0">
                             <t t-esc="this.getSelectedComboItemsText(combo)"/>
+<<<<<<< bc84c2c2b39532a5958fcb05c56bf81189750c8f
                             <span class="fst-italic"> included</span>
                         </h5>
                     </t>
                     <t t-else="">
                         <h5 class="text-muted ms-2 mb-0">
                             <span class="fst-italic">As from <t t-esc="env.utils.formatCurrency(combo.base_price)"/></span>
+||||||| bc790e13ddf3ceacead40cc6ff8d27f1a5f5364d
+                            <span class="fst-italic"> free</span>
+=======
+                            <span class="fst-italic"> included</span>
+>>>>>>> f3777320e15e3c126de1a23db0110950b0cf1876
                         </h5>
                     </t>
                 </div>
