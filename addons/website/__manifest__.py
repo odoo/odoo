@@ -247,7 +247,7 @@
             # Activated on-demand by website.ripple_effect_js.
             ('remove', 'website/static/src/interactions/ripple_effect.js'),
             ('remove', 'website/static/src/core/website_edit_service.js'),
-            ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            ('replace', 'web/static/src/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/snippets/**/*.js',
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
@@ -262,9 +262,7 @@
             'web/static/src/core/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/js/tours/tour_utils.js',
-            'website/static/src/js/content/website_root.js',
             'website/static/src/js/content/compatibility.js',
-            'website/static/src/js/content/snippets.animation.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
@@ -355,7 +353,6 @@
             'website/static/src/components/website_loader/website_loader.dark.scss'
         ],
         'web.assets_unit_tests': [
-            'web/static/src/legacy/js/public/minimal_dom.js',
             'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js',
             'website/static/tests/core/**/*',
             'website/static/tests/helpers.js',
@@ -370,10 +367,9 @@
         'web.assets_unit_tests_setup': [
             'html_builder/static/src/utils/scrolling.js',
             'web/static/src/legacy/js/core/class.js',
-            'web/static/src/legacy/js/public/lazyloader.js',
-            'web/static/src/legacy/js/public/minimal_dom.js',
-            'web/static/src/legacy/js/public/public_widget.js',
-            'web/static/src/legacy/js/public/public_root.js',
+            'web/static/src/public/utils.js',
+            'web/static/src/public/lazyloader.js',
+            'web/static/src/public/public_root.js',
             'website/static/lib/multirange/*.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/core/**/*',
