@@ -34,12 +34,6 @@ class HrVersion(models.Model):
         address = self.env.company.partner_id.address_get(['default'])
         return address['default'] if address else False
 
-    def _default_salary_structure(self):
-        return (
-                self.env['hr.payroll.structure.type'].sudo().search([('country_id', '=', self.env.company.country_id.id)], limit=1)
-                or self.env['hr.payroll.structure.type'].sudo().search([('country_id', '=', False)], limit=1)
-        )
-
     company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False,
                                  store=True, default=lambda self: self.env.company, tracking=1)
     employee_id = fields.Many2one(
@@ -173,16 +167,12 @@ class HrVersion(models.Model):
         'hr.version', string="Contract Template", groups="hr.group_hr_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', False)]", tracking=1,
         help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.")
-    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type",
-                                        compute="_compute_structure_type_id", readonly=False, store=True, tracking=1,
-                                        groups="hr.group_hr_manager", default=_default_salary_structure)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee", groups="hr.group_hr_user")
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     wage = fields.Monetary('Wage', tracking=1, help="Employee's monthly gross wage.", aggregator="avg",
                            groups="hr.group_hr_manager")
-    # [XBO] TODO: remove me in master
-    company_country_id = fields.Many2one('res.country', string="Company country",
-                                         related='company_id.country_id', readonly=True)
+    company_country_id = fields.Many2one(
+        'res.country', string="Company country", related='company_id.country_id', store=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=1,
                                        groups="hr.group_hr_manager")
@@ -449,7 +439,7 @@ class HrVersion(models.Model):
     def _get_whitelist_fields_from_template(self):
         # Add here any field that you want to copy from a contract template
         # Those fields should have tracking=1 in hr.version to see the change
-        return ['job_id', 'department_id', 'contract_type_id', 'structure_type_id', 'wage', 'resource_calendar_id', 'hr_responsible_id']
+        return ['job_id', 'department_id', 'contract_type_id', 'wage', 'resource_calendar_id', 'hr_responsible_id']
 
     def get_values_from_contract_template(self, contract_template_id):
         if not contract_template_id:
@@ -526,24 +516,6 @@ class HrVersion(models.Model):
             return [('id', 'in', user_employee.ids)]
         return [('department_id', 'child_of', user_employee.department_id.ids)]
 
-    @api.depends('company_id')
-    def _compute_structure_type_id(self):
-
-        default_structure_by_country = {}
-
-        def _default_salary_structure(country_id):
-            default_structure = default_structure_by_country.get(country_id)
-            if default_structure is None:
-                default_structure = default_structure_by_country[country_id] = (
-                    self.env['hr.payroll.structure.type'].search([('country_id', '=', country_id)], limit=1)
-                    or self.env['hr.payroll.structure.type'].search([('country_id', '=', False)], limit=1)
-                )
-            return default_structure
-
-        for version in self:
-            if not version.structure_type_id or (version.structure_type_id.country_id and version.structure_type_id.country_id != version.company_id.country_id):
-                version.structure_type_id = _default_salary_structure(version.company_id.country_id.id)
-
     @api.depends('distance_home_work', 'distance_home_work_unit')
     def _compute_km_home_work(self):
         for version in self:
@@ -617,11 +589,6 @@ class HrVersion(models.Model):
     def _get_salary_costs_factor(self):
         self.ensure_one()
         return 12.0
-
-    def _is_struct_from_country(self, country_code):
-        self.ensure_one()
-        self_sudo = self.sudo()
-        return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
 
     def _get_tz(self):
         self.ensure_one()

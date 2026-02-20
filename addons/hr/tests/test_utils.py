@@ -10,7 +10,6 @@ def get_admin_employee(env, additional_values=None):
         'user_id': env.ref('base.user_admin').id,
         'department_id': env.ref('hr.dep_administration').id,
         'address_id': env.ref('base.main_partner').id,
-        'structure_type_id': env.ref('hr.structure_type_employee').id,
         'company_id': env.ref('base.main_company').id,
         **additional_values,
     })
