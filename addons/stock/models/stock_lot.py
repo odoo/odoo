@@ -351,10 +351,10 @@ class StockLot(models.Model):
         while lots_to_propagate:
             lot_id = lots_to_propagate.pop()
 
-            parent_ids = parent_map[lot_id]
-            for parent_id in parent_ids:
-                if not delivery_by_lot[lot_id].issubset(delivery_by_lot[parent_id]):
-                    delivery_by_lot[parent_id].update(delivery_by_lot[lot_id])
+            for parent_id in parent_map.get(lot_id, []):
+                new_deliveries = delivery_by_lot[lot_id] - delivery_by_lot[parent_id]
+                if new_deliveries:
+                    delivery_by_lot[parent_id].update(new_deliveries)
                     lots_to_propagate.add(parent_id)
 
         return {lot_id: list(delivery_by_lot[lot_id]) for lot_id in delivery_by_lot}
