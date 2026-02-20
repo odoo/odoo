@@ -90,9 +90,15 @@ export class MediaDialog extends Component {
             return this.props.activeTab;
         }
         if (this.props.media) {
-            const correspondingTab = Object.keys(this.tabs).find((id) =>
-                this.tabs[id].Component.tagNames.includes(this.props.media.tagName)
-            );
+            const correspondingTab =
+                Object.keys(this.tabs).find((id) =>
+                    this.tabs[id].Component.mediaSpecificClasses.some((cls) =>
+                        [...this.props.media.classList].includes(cls)
+                    )
+                ) ||
+                Object.keys(this.tabs).find((id) =>
+                    this.tabs[id].Component.tagNames.includes(this.props.media.tagName)
+                );
             if (correspondingTab) {
                 return correspondingTab;
             }
