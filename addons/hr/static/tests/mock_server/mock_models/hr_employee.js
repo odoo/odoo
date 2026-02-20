@@ -1,3 +1,4 @@
+import { Domain } from "@web/core/domain";
 import { fields, models } from "@web/../tests/web_test_helpers";
 
 export class HrEmployee extends models.ServerModel {
@@ -12,6 +13,37 @@ export class HrEmployee extends models.ServerModel {
 
     _get_store_avatar_card_fields() {
         return this.env["hr.employee.public"]._get_store_avatar_card_fields();
+    }
+
+    _get_employee_working_periods(employeeIds, start_time, end_time) {
+        const working_periods = Object.fromEntries([...employeeIds].map((id) => [id, []]));
+        if (employeeIds.size) {
+            const hr_contract_read_group = this.env["hr.version"].formatted_read_group(
+                new Domain([["employee_id", "in", [...employeeIds]]]).toList(),
+                ["employee_id", "contract_date_start:day", "contract_date_end:day"],
+                [],
+                "",
+                "",
+                ""
+            );
+            hr_contract_read_group.forEach((contract) => {
+                const employee_id = contract.employee_id[0];
+                working_periods[employee_id].push({
+                    start: contract["contract_date_start:day"][1],
+                    end: contract["contract_date_end:day"][1],
+                });
+            });
+            employeeIds
+                .difference(new Set(hr_contract_read_group.map((a) => a.employee_id[0])))
+                .forEach((employee_id) => {
+                    working_periods[employee_id].push({
+                        start: start_time,
+                        end: end_time,
+                    });
+                });
+        }
+
+        return working_periods;
     }
 
     _views = {
