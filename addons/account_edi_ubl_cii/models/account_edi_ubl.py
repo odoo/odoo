@@ -926,7 +926,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             'cbc:ItemClassificationCode': {
                 '_text': unspsc_code.code,
-                'listID': 'UNSPSC',
+                'listID': 'TST',
                 'listVersionID': None,
             }
         }
@@ -935,7 +935,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             'cbc:ItemClassificationCode': {
                 '_text': cpv_code.code,
-                'listID': 'CPV',
+                'listID': 'STI',
                 'listVersionID': None,
             }
         }
