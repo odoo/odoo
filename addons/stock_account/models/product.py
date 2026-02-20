@@ -155,8 +155,8 @@ class ProductProduct(models.Model):
         total_value_by_company_id = {}
         lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
         for company in self.env.companies:
-            std_price_by_product_id = {}
-            total_value_by_product_id = {}
+            std_price_by_product_id = defaultdict(float)
+            total_value_by_product_id = defaultdict(float)
 
             products = self.with_company(company.id).with_context(allowed_company_ids=company.ids)
             products = products._with_valuation_context()
@@ -339,8 +339,8 @@ class ProductProduct(models.Model):
         return std_price_by_product_id, value_by_product_id
 
     def _run_average_batch(self, at_date=None, lot=None, force_recompute=False):
-        std_price_by_product_id = {}
-        value_by_product_id = {}
+        std_price_by_product_id = defaultdict(float)
+        value_by_product_id = defaultdict(float)
         quantity_by_product_id = {}
 
         if not at_date and not force_recompute:
