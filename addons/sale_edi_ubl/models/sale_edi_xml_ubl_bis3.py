@@ -42,6 +42,39 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         self._add_sale_order_monetary_total_nodes(document_node, vals)
         return document_node
 
+    def _setup_base_lines(self, vals):
+        AccountTax = self.env['account.tax']
+        sale_order = vals['sale_order']
+        company = sale_order.company_id
+        base_lines = vals['base_lines'] = [line._prepare_base_line_for_taxes_computation() for line in sale_order.order_line.filtered(lambda line: not line.display_type)]
+        AccountTax._add_tax_details_in_base_lines(base_lines, company)
+        AccountTax._round_base_lines_tax_details(base_lines, company)
+
+        # CEN-EN16931 layer.
+        # [BR-27]-The Item net price (BT-146) shall NOT be negative.
+        self._ubl_turn_base_lines_price_unit_as_always_positive(vals)
+
+        # PINT layer.
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
+            base_lines=vals['base_lines'],
+            company=company,
+            vals=vals,
+        )
+
+        # Sub-dictionaries to store UBL-related values along the whole process.
+        vals['_ubl_values'] = {}
+        for base_line in vals['base_lines']:
+            base_line['_ubl_values'] = {}
+
+        # Global rounding of tax_details using 6 digits.
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+
     def _add_sale_order_config_vals(self, vals):
         sale_order = vals['sale_order']
         supplier = sale_order.company_id.partner_id.commercial_partner_id
@@ -69,14 +102,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         })
 
     def _add_sale_order_base_lines_vals(self, vals):
-        sale_order = vals['sale_order']
-        AccountTax = self.env['account.tax']
-
-        base_lines = [line._prepare_base_line_for_taxes_computation() for line in sale_order.order_line.filtered(lambda line: not line.display_type)]
-        AccountTax._add_tax_details_in_base_lines(base_lines, sale_order.company_id)
-        AccountTax._round_base_lines_tax_details(base_lines, sale_order.company_id)
-
-        vals['base_lines'] = base_lines
+        pass
 
     def _add_sale_order_currency_vals(self, vals):
         self._add_document_currency_vals(vals)
@@ -252,15 +278,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             },
         }
         self._ubl_add_line_allowance_charge_nodes(sub_vals)
-
-        # Discount.
-        self._ubl_add_line_allowance_charge_nodes_for_discount(sub_vals)
-
-        # Recycling contribution taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals)
-
-        # Excise taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
 
     def _add_sale_order_line_item_nodes(self, line_node, vals):
         # OVERRIDE
