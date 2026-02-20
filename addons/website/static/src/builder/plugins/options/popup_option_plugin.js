@@ -21,6 +21,16 @@ export class PopupCookiesOption extends BaseOptionComponent {
     static applyTo = ".modal";
 }
 
+function getPopupContainerFromSelectors(editable, selectors) {
+    for (const selector of selectors) {
+        const containerEl = editable.querySelector(selector);
+        if (containerEl) {
+            return containerEl;
+        }
+    }
+    return null;
+}
+
 class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
     static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
@@ -53,9 +63,12 @@ class PopupOptionPlugin extends Plugin {
             return popupModalChildrenEls.every((child) => child.matches(".s_popup_close"));
         },
         on_cloned_handlers: this.onCloned.bind(this),
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_snippet_dropped_handlers: withSequence(0, this.onSnippetDropped.bind(this)),
+        // TODO remove when popup dragging from the page is disabled.
+        on_element_dropped_handlers: withSequence(0, this.onElementDropped.bind(this)),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
+        popup_container_selectors: withSequence(10, "main .oe_structure.o_savable"),
     };
 
     onCloned({ cloneEl }) {
@@ -66,6 +79,7 @@ class PopupOptionPlugin extends Plugin {
 
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
+            this.relocatePopup(snippetEl);
             this.assignUniqueID(snippetEl);
             this.dependencies.history.addCustomMutation({
                 apply: () => {
@@ -93,6 +107,26 @@ class PopupOptionPlugin extends Plugin {
     assignUniqueID(editingElement) {
         editingElement.closest(".s_popup").id = `sPopup${Date.now()}`;
     }
+
+    onElementDropped({ droppedEl }) {
+        if (droppedEl.matches(".s_popup")) {
+            this.relocatePopup(droppedEl);
+        }
+    }
+
+    relocatePopup(editingElement) {
+        const popupEl = editingElement.closest(".s_popup");
+        if (popupEl.closest("#o_shared_blocks")) {
+            return;
+        }
+        const containerEl = getPopupContainerFromSelectors(
+            this.editable,
+            this.getResource("popup_container_selectors")
+        );
+        if (containerEl) {
+            containerEl.insertAdjacentElement("afterbegin", popupEl);
+        }
+    }
 }
 
 // Moves the snippet in #o_shared_blocks to be common to all pages
@@ -106,10 +140,17 @@ export class MoveBlockAction extends BuilderAction {
             : value === "currentPage";
     }
     apply({ editingElement, value }) {
-        const selector = value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_savable";
-        const whereEl = this.editable.querySelector(selector);
         const popupEl = editingElement.closest(".s_popup");
-        whereEl.insertAdjacentElement("afterbegin", popupEl);
+        const whereEl =
+            value === "allPages"
+                ? this.editable.querySelector("#o_shared_blocks")
+                : getPopupContainerFromSelectors(
+                      this.editable,
+                      this.getResource("popup_container_selectors")
+                  );
+        if (whereEl) {
+            whereEl.insertAdjacentElement("afterbegin", popupEl);
+        }
     }
 }
 export class SetBackdropAction extends BuilderAction {
