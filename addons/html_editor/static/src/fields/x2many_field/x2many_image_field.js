@@ -3,9 +3,19 @@ import { useService } from "@web/core/utils/hooks";
 import { ImageField, imageField } from "@web/views/fields/image/image_field";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getVideoUrl } from "@html_editor/utils/url";
+import { save } from "@web/core/utils/image_library"
 
 export class X2ManyImageField extends ImageField {
     static template = "html_editor.ImageField";
+    static props = {
+        ...ImageField.props,
+        visibleTabs: { type: Array, optional: true }
+    };
+    static defaultProps = {
+        ...ImageField.defaultProps,
+        visibleTabs: ["IMAGES", "VIDEOS"],
+    };
+
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -17,43 +27,31 @@ export class X2ManyImageField extends ImageField {
      * standard behavior of opening file input box in order to update a record.
      */
     onFileEdit(ev) {
-        const isVideo = this.props.record.data.video_url;
+        this.dialog.add(CustomMediaDialog, this.mediaDialogProps);
+    }
+
+    get mediaDialogProps() {
+        const isVideo = "VIDEOS" in this.props.visibleTabs && this.props.record.data.video_url;
         let mediaEl;
         if (isVideo) {
             mediaEl = document.createElement("img");
             mediaEl.dataset.src = this.props.record.data.video_url;
         }
-        this.dialog.add(CustomMediaDialog, {
-            visibleTabs: ["IMAGES", "VIDEOS"],
+        return {
+            visibleTabs: this.props.visibleTabs,
             media: mediaEl,
             activeTab: isVideo ? "VIDEOS" : "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
-        });
+        };
     }
-
     async onImageSave(attachment) {
-        const attachmentRecord = await this.orm.searchRead(
-            "ir.attachment",
-            [["id", "=", attachment[0].id]],
-            ["id", "datas", "name"],
-            {}
-        );
-        if (!attachmentRecord[0].datas) {
-            // URL type attachments are mostly demo records which don't have any ir.attachment datas
-            // TODO: make it work with URL type attachments
-            return this.notification.add(
-                `Cannot add URL type attachment "${attachmentRecord[0].name}". Please try to reupload this image.`,
-                {
-                    type: "warning",
-                }
-            );
-        }
-        await this.props.record.update({
-            [this.props.name]: attachmentRecord[0].datas,
-            name: attachmentRecord[0].name,
-        });
+        await save(this.env, {
+            attachments: attachment,
+            targetRecord: this.props.record,
+            targetFieldName: this.props.name,
+        })
     }
 
     async onVideoSave(videoInfo) {
@@ -73,6 +71,12 @@ export class X2ManyImageField extends ImageField {
 export const x2ManyImageField = {
     ...imageField,
     component: X2ManyImageField,
+    extractProps({ options }) {
+        return {
+            ...imageField.extractProps(...arguments),
+            visibleTabs: options.visible_tabs,
+        };
+    },
 };
 
 registry.category("fields").add("x2_many_image", x2ManyImageField);
