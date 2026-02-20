@@ -7,7 +7,6 @@ import {
 registerWebsitePreviewTour(
     "background_color_gradient_precedence",
     {
-        url: "/",
         edition: true,
     },
     () => [

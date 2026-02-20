@@ -8,7 +8,6 @@ registerWebsitePreviewTour(
     "snippet_version_1",
     {
         edition: true,
-        url: "/",
     },
     () => [
         ...insertSnippet({

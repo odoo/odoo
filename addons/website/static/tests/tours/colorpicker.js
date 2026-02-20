@@ -44,7 +44,6 @@ registerWebsitePreviewTour(
     "website_background_colorpicker",
     {
         edition: true,
-        url: "/",
     },
     () => [
         ...insertSnippet({

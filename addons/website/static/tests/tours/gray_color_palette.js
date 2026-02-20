@@ -12,7 +12,6 @@ function waitForCSSReload() {
 registerWebsitePreviewTour(
     "website_gray_color_palette",
     {
-        url: "/",
         edition: true,
     },
     () => [

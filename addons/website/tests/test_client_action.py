@@ -24,4 +24,4 @@ class TestClientAction(HttpCaseWithWebsiteUser):
         self.start_tour(page.url, 'client_action_redirect', login='website_user', timeout=180)
 
     def test_02_client_action_iframe_fallback(self):
-        self.start_tour('/@/', 'client_action_iframe_fallback', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/'), 'client_action_iframe_fallback', login='admin')

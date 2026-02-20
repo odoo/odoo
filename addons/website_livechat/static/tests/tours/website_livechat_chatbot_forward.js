@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
-    url: "/",
     steps: () => [
         {
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",

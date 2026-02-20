@@ -214,9 +214,9 @@ class TestHttpCustomSnippet(HttpCase):
                 </t>
             """,
         })
-        custom_page = Page.create({
+        Page.create({
             'view_id': custom_page_view.id,
             'url': '/custom-page',
         })
 
-        self.start_tour(f'{custom_page.url}', 'editable_root_as_custom_snippet', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/custom-page", True), 'editable_root_as_custom_snippet', login='admin')

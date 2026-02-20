@@ -63,7 +63,6 @@ const makeSteps = (steps = []) => [
 registerWebsitePreviewTour(
     "website_no_action_no_dirty_page",
     {
-        url: "/",
         edition: true,
     },
     () => makeSteps()
@@ -72,7 +71,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_no_dirty_page",
     {
-        url: "/",
         edition: true,
     },
     () =>
@@ -119,7 +117,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_no_dirty_lazy_image",
     {
-        url: "/",
         edition: true,
     },
     () => [

@@ -212,7 +212,6 @@ function getAllFontSizesTestSteps() {
 registerWebsitePreviewTour(
     "website_text_font_size",
     {
-        url: "/",
         edition: true,
     },
     () => [

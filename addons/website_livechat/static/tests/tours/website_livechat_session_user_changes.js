@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_logout_after_chat_start", {
-    url: "/",
     steps: () => [
         {
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",

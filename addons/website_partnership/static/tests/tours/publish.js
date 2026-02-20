@@ -10,7 +10,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 
 registerWebsitePreviewTour('test_can_publish_partner', {
     edition: false,
-    url: '/partners',
 }, () => [
     stepUtils.waitIframeIsReady(),
 {
@@ -43,7 +42,6 @@ registerWebsitePreviewTour('test_can_publish_partner', {
 
 registerWebsitePreviewTour('test_cannot_publish_partner', {
     edition: false,
-    url: '/partners',
 }, () => [
     stepUtils.waitIframeIsReady(),
 {

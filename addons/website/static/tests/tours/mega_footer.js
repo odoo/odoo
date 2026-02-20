@@ -10,7 +10,6 @@ import {
 registerWebsitePreviewTour(
     "mega_footer",
     {
-        url: "/",
         edition: true,
     },
     () => [

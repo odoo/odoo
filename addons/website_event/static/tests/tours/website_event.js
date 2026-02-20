@@ -112,10 +112,7 @@ function websiteEditEventTourSteps() {
     ];
 }
 
-registerWebsitePreviewTour(
-    "website_event_tour",
-    {
-        url: "/",
-    },
-    () => [...websiteCreateEventTourSteps(), ...websiteEditEventTourSteps()]
-);
+registerWebsitePreviewTour("website_event_tour", {}, () => [
+    ...websiteCreateEventTourSteps(),
+    ...websiteEditEventTourSteps(),
+]);

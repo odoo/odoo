@@ -10,7 +10,6 @@ import {
 registerWebsitePreviewTour(
     "donation_snippet_edition",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -24,7 +23,6 @@ registerWebsitePreviewTour(
 );
 
 registry.category("web_tour.tours").add("donation_snippet_use", {
-    url: "/",
     steps: () => [
         // -- Testing the minimum amount --
         {
@@ -120,7 +118,6 @@ registry.category("web_tour.tours").add("donation_snippet_use", {
 registerWebsitePreviewTour(
     "donation_snippet_edition_2",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -136,7 +133,6 @@ registerWebsitePreviewTour(
 );
 
 registry.category("web_tour.tours").add("donation_snippet_use_2", {
-    url: "/",
     steps: () => [
         {
             content: "Click on $10 button",

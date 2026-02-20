@@ -8,7 +8,7 @@ class TestForm(HttpCase):
 
     def test_form_conditional_visibility_record_field(self):
         self.start_tour(
-            self.env['website'].get_client_action_url('/test_website/model_item/1'),
+            self.env['website'].get_client_action_url('/test_website/model_item/1', True),
             'test_form_conditional_visibility_record_field',
             login='admin',
         )

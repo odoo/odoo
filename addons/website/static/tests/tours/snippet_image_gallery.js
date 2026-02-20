@@ -15,7 +15,6 @@ import {
 registerWebsitePreviewTour(
     "snippet_image_gallery",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -36,7 +35,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "snippet_image_gallery_remove",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -97,7 +95,6 @@ registerWebsitePreviewTour(
     "snippet_image_gallery_reorder",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -180,7 +177,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "snippet_image_gallery_thumbnail_update",
     {
-        url: "/",
         edition: true,
     },
     () => [

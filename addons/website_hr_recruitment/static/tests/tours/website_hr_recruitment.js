@@ -73,9 +73,7 @@ registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
     }),
 ]});
 
-registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
-    url: '/jobs',
-}, () => [
+registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
     stepUtils.waitIframeIsReady(),
 {
     content: 'Go to the Guru job page',

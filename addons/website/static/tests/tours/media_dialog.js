@@ -9,7 +9,6 @@ registerWebsitePreviewTour(
     "website_media_dialog_undraw",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -44,7 +43,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_media_dialog_external_library",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -167,7 +165,6 @@ registerWebsitePreviewTour(
     "website_media_dialog_image_shape",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -209,7 +206,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_media_dialog_insert_media",
     {
-        url: "/",
         edition: true,
     },
     () => [

@@ -39,7 +39,6 @@ const isSnippetHidden = () => [
 registerWebsitePreviewTour(
     "blog_posts_dynamic_snippet_edit",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -57,24 +56,12 @@ registerWebsitePreviewTour(
     ]
 );
 
-registerWebsitePreviewTour(
-    "blog_posts_dynamic_snippet_empty",
-    {
-        url: "/",
-    },
-    isSnippetHidden
-);
+registerWebsitePreviewTour("blog_posts_dynamic_snippet_empty", {}, isSnippetHidden);
 
-registerWebsitePreviewTour(
-    "blog_posts_dynamic_snippet_misconfigured",
+registerWebsitePreviewTour("blog_posts_dynamic_snippet_misconfigured", {}, () => [
+    ...isSnippetHidden(),
     {
-        url: "/",
+        content: "Check that the snippet 'missing option' warning is visible",
+        trigger: ":iframe .s_dynamic_snippet_blog_posts .missing_option_warning",
     },
-    () => [
-        ...isSnippetHidden(),
-        {
-            content: "Check that the snippet 'missing option' warning is visible",
-            trigger: ":iframe .s_dynamic_snippet_blog_posts .missing_option_warning",
-        },
-    ]
-);
+]);

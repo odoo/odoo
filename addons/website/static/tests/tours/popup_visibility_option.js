@@ -3,7 +3,6 @@ import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tou
 registerWebsitePreviewTour(
     "website_popup_visibility_option",
     {
-        url: "/",
         edition: true,
     },
     () => [

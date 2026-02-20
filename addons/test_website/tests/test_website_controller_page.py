@@ -161,10 +161,10 @@ class TestWebsiteControllerPage(HttpCase):
 
     def test_default_layout(self):
         self.assertEqual(self.listing_controller_page.default_layout, 'grid')
-        self.start_tour('/model/exposed-model', 'website_controller_page_listing_layout', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/model/exposed-model', True), 'website_controller_page_listing_layout', login='admin')
         self.assertEqual(self.listing_controller_page.default_layout, 'list')
         #check that the user that has not previously interacted with the layout switcher will prompt on the default layout
-        self.start_tour('/model/exposed-model', 'website_controller_page_default_page_check', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/model/exposed-model', False), 'website_controller_page_default_page_check', login='admin')
 
     def test_model_constrains(self):
         def get_model_meta_params(model_name):

@@ -33,7 +33,6 @@ const oldWriteText = browser.navigator.clipboard.writeText;
 registerWebsitePreviewTour(
     "snippet_editor_panel_options",
     {
-        url: "/",
         edition: true,
     },
     () => [

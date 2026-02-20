@@ -17,7 +17,6 @@ const carouselInnerSelector = ":iframe .carousel-inner";
 registerWebsitePreviewTour(
     "carousel_content_removal",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -83,7 +82,6 @@ const checkSlides = (number, position) => {
 registerWebsitePreviewTour(
     "snippet_carousel",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -176,7 +174,6 @@ registerWebsitePreviewTour(
     "snippet_carousel_clickable_slides",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [

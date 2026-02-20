@@ -12,7 +12,6 @@ registerWebsitePreviewTour(
     "editable_root_as_custom_snippet",
     {
         edition: true,
-        url: "/custom-page",
     },
     () => [
         ...clickOnSnippet(

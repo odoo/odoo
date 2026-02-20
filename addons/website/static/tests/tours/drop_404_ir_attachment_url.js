@@ -8,7 +8,6 @@ import { onceAllImagesLoaded } from "@website/utils/images";
 registerWebsitePreviewTour(
     "drop_404_ir_attachment_url",
     {
-        url: "/",
         edition: true,
     },
     () => [

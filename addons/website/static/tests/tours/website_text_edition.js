@@ -12,7 +12,6 @@ const WEBSITE_MAIN_COLOR = "#ABCDEF";
 registerWebsitePreviewTour(
     "website_text_edition",
     {
-        url: "/",
         edition: true,
     },
     () => [

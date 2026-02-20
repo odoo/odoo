@@ -4,7 +4,6 @@ import { patch } from "@web/core/utils/patch";
 registerWebsitePreviewTour(
     "website_font_family",
     {
-        url: "/",
         edition: true,
     },
     () => [

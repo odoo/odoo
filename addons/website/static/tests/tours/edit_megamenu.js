@@ -30,7 +30,6 @@ const toggleMegaMenu = (stepOptions) =>
 registerWebsitePreviewTour(
     "edit_megamenu",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -138,7 +137,6 @@ registerWebsitePreviewTour(
     "megamenu_active_nav_link",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -212,7 +210,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "edit_megamenu_big_icons_subtitles",
     {
-        url: "/",
         edition: true,
     },
     () => [
