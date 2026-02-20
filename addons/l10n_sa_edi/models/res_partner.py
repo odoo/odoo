@@ -22,6 +22,7 @@ class ResPartner(models.Model):
     ], default="OTH", string="Identification Scheme", help="Additional Identification scheme for Seller/Buyer")
 
     l10n_sa_edi_additional_identification_number = fields.Char("Identification Number (SA)", help="Additional Identification Number for Seller/Buyer")
+    l10n_sa_edi_additional_identification_visibility = fields.Boolean(compute='_compute_l10n_sa_edi_additional_identification_visibility')
 
     @api.model
     def _commercial_fields(self):
@@ -33,3 +34,7 @@ class ResPartner(models.Model):
     def _address_fields(self):
         return super()._address_fields() + ['l10n_sa_edi_building_number',
                                             'l10n_sa_edi_plot_identification']
+
+    @api.depends_context('company')
+    def _compute_l10n_sa_edi_additional_identification_visibility(self):
+        self.l10n_sa_edi_additional_identification_visibility = self.env.company.country_code == 'SA'
