@@ -1,6 +1,6 @@
 import re
-
-from odoo.upgrade_code.tools_js_expressions import aggregate_vars, update_template
+from odoo.upgrade_code.tools_etree import update_etree
+from odoo.upgrade_code.tools_js_expressions import update_template, VariableAggregator
 
 EXCLUDED_FILES = (
     'addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -10,211 +10,6 @@ EXCLUDED_FILES = (
     'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
     'html_builder/static/tests/custom_tab/builder_components/builder_row.test.js',  # Test has weird string formatting syntax easier to skip
 )
-
-
-class JSTooling:
-    @staticmethod
-    def is_commented(content: str, position: int) -> bool:
-        """Checks if the word at the given position is on a commented line.
-
-        Args:
-            content: The full file content.
-            position: The index of the word to check.
-
-        Returns:
-            True if the line starts with //, /* or /** before the position.
-        """
-        # We look back to the start of the current line
-        line_start = content.rfind('\n', 0, position) + 1
-        line_text = content[line_start:position].lstrip()
-        return '//' in line_text or '/*' in line_text or '/**' in line_text or line_text.startswith("*")
-
-    @staticmethod
-    def has_active_usage(content: str, word: str) -> bool:
-        """Checks if a word is used outside of a comment line.
-
-        Args:
-            content: The file content.
-            word: The word to look for (e.g., 'useEffect').
-
-        Returns:
-            True if at least one usage is not commented out.
-        """
-        for match in re.finditer(rf'\b{word}\b', content):
-            if not JSTooling.is_commented(content, match.start()):
-                return True
-        return False
-
-    @staticmethod
-    def replace_usage(content: str, old_name: str, new_name: str) -> str:
-        """Replaces usage ONLY if the line is not a comment.
-
-        Args:
-            content: The file content.
-            old_name: Original variable name.
-            new_name: New variable name.
-
-        Returns:
-            The updated content.
-        """
-        def replacer(match):
-            if JSTooling.is_commented(content, match.start()):
-                return match.group(0)  # Return unchanged
-            return new_name
-
-        return re.sub(rf'\b{old_name}\b', replacer, content)
-
-    @staticmethod
-    def add_import(content: str, name: str, source: str) -> str:
-        """Adds a named import to a specific source.
-
-        If the source already exists, appends the name and preserves multiline
-        formatting if the original import was multiline.
-
-        Args:
-            content: The JS file content.
-            name: The name of the hook or variable to import.
-            source: The library source (e.g., '@odoo/owl').
-
-        Returns:
-            The updated file content.
-        """
-        pattern = rf'import\s*\{{([^}}]*)\}}\s*from\s*(["\']){source}\2;?'
-        match = re.search(pattern, content, re.DOTALL)
-
-        if match:
-            raw_content = match.group(1)
-            quote = match.group(2)
-            is_multiline = '\n' in raw_content
-            names = [n.strip() for n in raw_content.split(',') if n.strip()]
-
-            if name not in names:
-                names.append(name)
-                names.sort()  # Alphabetical order for consistency
-
-                if is_multiline:
-                    formatted = ',\n    '.join(names)
-                    new_import = f'import {{\n    {formatted},\n}} from {quote}{source}{quote};'
-                else:
-                    new_import = f'import {{ {", ".join(names)} }} from {quote}{source}{quote};'
-
-                return content[:match.start()] + new_import + content[match.end():]
-            return content
-
-        return f'import {{ {name} }} from "{source}";\n{content}'
-
-    @staticmethod
-    def remove_import(content: str, name: str, source: str) -> str:
-        """Removes a named import from a source.
-
-        Deletes the entire line if no imports are left.
-        Handles multiline formatting during cleanup.
-
-        Args:
-            content: The JS file content.
-            name: The name of the import to remove.
-            source: The library source.
-
-        Returns:
-            The updated file content.
-        """
-        pattern = rf'import\s*\{{([^}}]*)\}}\s*from\s*(["\']){source}\2;?\n?'
-
-        def replacer(match):
-            raw_content = match.group(1)
-            quote = match.group(2)
-            is_multiline = '\n' in raw_content
-            names = [n.strip() for n in raw_content.split(',') if n.strip()]
-
-            if name in names:
-                names.remove(name)
-
-            if not names:
-                return ""  # Line is removed if no names left
-
-            if is_multiline and len(names) > 1:
-                formatted = ',\n    '.join(names)
-                return f'import {{\n    {formatted},\n}} from {quote}{source}{quote};\n'
-            else:
-                return f'import {{ {", ".join(names)} }} from {quote}{source}{quote};\n'
-
-        return re.sub(pattern, replacer, content, flags=re.DOTALL)
-
-    @staticmethod
-    def transform_xml_literals(content: str, transform_func: callable) -> str:
-        """Finds all xml`template` literals and applies a transformation function.
-
-        Args:
-            content: The JS file content.
-            transform_func: Function to apply to the inner XML string.
-
-        Returns:
-            The JS content with transformed XML templates.
-        """
-        pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
-
-        def replacer(match: re.Match) -> str:
-            prefix = match.group(1)
-            xml_content = match.group(2)
-            suffix = match.group(3)
-            return f"{prefix}{transform_func(xml_content)}{suffix}"
-
-        return pattern.sub(replacer, content)
-
-    @staticmethod
-    def transform_js_string_literals(content: str, transform_func: callable) -> str:
-        """Finds JS string literals ('...', "...", `...`) and applies a transformation function.
-
-        Args:
-            content: The JS file content.
-            transform_func: Function to apply to the inner string.
-
-        Returns:
-            The JS content with transformed string literals.
-        """
-        pattern = re.compile(
-            r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"|`(?:\\.|[^`\\])*`",
-            re.DOTALL,
-        )
-
-        def replacer(match: re.Match) -> str:
-            literal = match.group(0)
-            delimiter = literal[0]
-            inner = literal[1:-1]
-            return delimiter + transform_func(inner) + delimiter
-
-        return pattern.sub(replacer, content)
-
-    @staticmethod
-    def transform_arch_templates(content: str, transform_func: callable) -> str:
-        """Finds arch: `...` or arch = `...` template literals and applies a transform
-        function to the inner XML string.
-        """
-        pattern = re.compile(r"(\barch\b\s*(?:[:=])\s*`)(.*?)(`)", re.DOTALL)
-
-        def replacer(match: re.Match) -> str:
-            prefix = match.group(1)
-            xml_content = match.group(2)
-            suffix = match.group(3)
-            return f"{prefix}{transform_func(xml_content)}{suffix}"
-
-        return pattern.sub(replacer, content)
-
-    @staticmethod
-    def clean_whitespace(content: str) -> str:
-        """Removes trailing whitespace and lines containing only spaces.
-
-        Args:
-            content: The file content.
-
-        Returns:
-            Cleaned content.
-        """
-        # Delete spaces on lines that only contain spaces
-        content = re.sub(r'^[ \t]+$', '', content, flags=re.MULTILINE)
-        # Delete trailing whitespace at the end of lines
-        content = re.sub(r'[ \t]+$', '', content, flags=re.MULTILINE)
-        return content
 
 
 class MigrationCollector:
@@ -299,9 +94,9 @@ MAIL_WHITELIST = {
 }
 EVENT_WHITELIST = {
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
-    "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+    # "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
 }
-THIS_TARGETS = ["sale"]
+THIS_TARGETS = ["event"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
@@ -312,21 +107,27 @@ def upgrade_this(file_manager, log_info, log_error):
         and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
     ]
 
-    all_vars = {
+    white_vars = {
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
     }  # vars defined inside template, eg. using t-set
-    all_vars = all_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
-    t_call_inner = {}  # vars defined under t-call
+    white_vars = white_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
 
     # Iteration 1: Gather all variables
-    for fileno, file in enumerate(all_files, start=1):
-        t_call_outer = aggregate_vars(file.content, all_vars, t_call_inner)
+    aggregator = VariableAggregator()
+    for _, file in enumerate(all_files, start=1):
+        def callback(tree):
+            aggregator.aggregate_inside_vars(tree)
+            aggregator.aggregate_call_vars(tree)
+
+        update_etree(file.content, callback)
+
+    aggregator.all_vars = aggregator.all_vars | white_vars
 
     # Iteration 2: Update templates
     for fileno, file in enumerate(all_files, start=1):
         try:
-            file.content = update_template(file.path._str, file.content, THIS_TARGETS, all_vars, t_call_inner, t_call_outer)
+            file.content = update_template(file.path._str, file.content, THIS_TARGETS, aggregator)
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
 
@@ -341,8 +142,8 @@ def upgrade_this_in_js(file_manager, log_info, log_error):
     ]
 
     pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
-    for fileno, file in enumerate(test_files, start=1):
-        # add warning for clients who have ${} inside fragments
+    for _, file in enumerate(test_files, start=1):
+        # TODO add warning for clients who have ${} inside fragments
         if THIS_TARGETS and not any(
             f"/{module}/" in file.path._str or f"/{module}_" in file.path._str
             for module in THIS_TARGETS
@@ -377,6 +178,6 @@ def upgrade(file_manager) -> str:
     collector = MigrationCollector()
 
     collector.run_sub("Migrating this. in xml templates", upgrade_this, file_manager)
-    collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, file_manager)
+    # collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, file_manager)
 
     return collector.get_final_logs()
