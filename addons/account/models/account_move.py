@@ -57,6 +57,7 @@ PAYMENT_STATE_SELECTION = [
         ('invoicing_legacy', 'Invoicing App Legacy'),
 ]
 REVIEW_STATE_SELECTION = [
+    ('no_review', "No Review"),
     ('todo', "To Review"),
     ('reviewed', "Reviewed"),
     ('supervised', "Supervised"),
@@ -314,6 +315,8 @@ class AccountMove(models.Model):
     review_state = fields.Selection(
         string="Review",
         selection=REVIEW_STATE_SELECTION,
+        required=True,
+        default='no_review',
         tracking=True, copy=False,
     )
     posted_before = fields.Boolean(copy=False)
@@ -3877,6 +3880,7 @@ class AccountMove(models.Model):
             'invoice_payment_term_id',
             'currency_id',
             'invoice_cash_rounding_id',
+            'account_id',
         ]
 
         is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
@@ -3886,17 +3890,17 @@ class AccountMove(models.Model):
         for move in self:
             modified_accounting_fields = self._field_will_change_list(move, vals, unmodifiable_fields)
             if vals.get('state') == 'draft' and (
-                ((move.review_state == 'reviewed' or not move.review_state) and not is_user_able_to_review)
+                ((move.review_state in ['no_review', 'reviewed']) and not is_user_able_to_review)
                 or (move.review_state == 'supervised' and not is_user_able_to_supervise)
             ):
                 raise ValidationError(_("This entry has already been reviewed. You need the bookkeeper role to change it."))
             if (vals.get('state') == 'posted' and move.auto_post == 'no') or vals.get('auto_post', 'no') != 'no':
                 if is_user_able_to_review:
-                    if move.review_state:
+                    if move.review_state != 'no_review':
                         move_ids_review_done.append(move.id)
                 else:
                     move_ids_review_todo.append(move.id)
-            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised') and modified_accounting_fields:
+            if not is_user_able_to_review and move.review_state in ('no_review', 'reviewed', 'supervised') and modified_accounting_fields:
                 move_ids_review_todo.append(move.id)
 
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
