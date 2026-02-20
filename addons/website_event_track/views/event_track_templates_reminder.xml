@@ -20,4 +20,44 @@
     </div>
 </template>
 
+<template id="email_reminder_modal">
+    <div id="modal_email_reminder" class="o_wetrack_js_modal_email_reminder">
+        <div class="modal fade modal_shown show" data-bs-backdrop="static" data-bs-keyboard="false"
+             tabindex="-1" aria-labelledby="staticBackdropLabel" style="display: block;" aria-modal="true"
+             role="dialog">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div class="modal-dialog">
+                <form id="email_reminder_form"
+                      t-attf-action="/event/add_session_email_reminder" method="post"
+                      class="js_website_submit_form">
+                    <div class="modal-content">
+                        <div class="modal-header align-items-center">
+                            <h4 class="modal-title">Add reminder via email</h4>
+                            <button type="button" class="btn-close o_form_button_cancel" onclidata-bs-dismiss="modal"
+                                    aria-label="Close"/>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12 mt-2 text-start">
+                                    <label class="fs-6">Email*</label>
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input class="form-control" type="email" t-attf-name="email" autocomplete="off" required="required"/>
+                                    <input type="hidden"  name="track_id" t-att-value="track_id"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top">
+                            <button type="button" class="btn btn-secondary o_form_button_cancel"
+                                    data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-submit">Confirm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
 </odoo>
