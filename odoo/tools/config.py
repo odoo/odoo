@@ -4,19 +4,21 @@ import collections
 import configparser as ConfigParser
 import errno
 import functools
+import glob
 import logging
 import optparse
-import glob
 import os
 import sys
 import tempfile
 import warnings
-from os.path import expandvars, expanduser, abspath, realpath, normcase
-from odoo import release
-from odoo.tools.func import classproperty
-from . import appdirs
+from os.path import abspath, expanduser, expandvars, normcase, realpath
 
 from passlib.context import CryptContext
+
+from odoo import release
+from odoo.tools.func import classproperty
+
+from . import appdirs
 
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'],
@@ -24,7 +26,7 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 
 _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
-optparse._ = str  # disable gettext
+optparse._ = str  # disable gettext  # ty:ignore[unresolved-attribute]
 
 ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
@@ -34,7 +36,7 @@ REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 class _Empty:
     def __repr__(self):
         return ''
-EMPTY = _Empty()
+EMPTY = _Empty()  # noqa: E305
 
 
 class OdooOptionParser(optparse.OptionParser):
@@ -48,14 +50,13 @@ class OdooOptionParser(optparse.OptionParser):
             in self._long_opt.items()
             if long_opt.startswith(opt)
         ]
-        possible_targets = set(p[1] for p in possibilities)
-        if len(possible_targets) == 1:
+        if len({p[1] for p in possibilities}) == 1:
             return possibilities[0][0]
         return super()._match_long_opt(opt)
 
 
 class _OdooOption(optparse.Option):
-    config = None  # must be overriden
+    config: "configmanager"
 
     TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma',
              'addons_path', 'upgrade_path', 'pre_upgrade_scripts', 'without_demo']
@@ -119,7 +120,7 @@ class _OdooOption(optparse.Option):
             self.const = const
             for opt in self._short_opts + self._long_opts:
                 self.config.optional_options[opt] = self
-        if env_name is None and is_new_option and self.file_loadable:
+        if env_name is None and is_new_option and self.file_loadable and self.dest:
             # generate an env_name for file_loadable settings that are in the index
             self.env_name = 'ODOO_' + self.dest.upper()
         elif env_name and not is_new_option:
@@ -140,7 +141,8 @@ class _FileOnlyOption(_OdooOption):
 
     def _check_opt_strings(self, opts):
         if opts:
-            raise TypeError("No option can be supplied")
+            e = "No option can be supplied"
+            raise TypeError(e)
 
     def _set_opt_strings(self, opts):
         return
@@ -166,7 +168,7 @@ def _deduplicate_loggers(loggers):
     # which is what we want and expect. Output order should not matter as
     # there are no duplicates within the output sequence
     return (
-        '{}:{}'.format(logger, level)
+        f'{logger}:{level}'
         for logger, level in dict(it.split(':') for it in loggers).items()
     )
 
@@ -233,13 +235,14 @@ class configmanager:
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
         group.add_option("-i", "--init", dest="init", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
-        group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
+        group.add_option("-u", "--update", dest="update", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--reinit", dest="reinit", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="reinitialize one or more modules (comma-separated list), requires -d")
         group.add_option("--with-demo", dest="with_demo", action='store_true', my_default=False,
                          help="install demo data in new databases")
-        group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
+        group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', const=True,
+                         nargs='?',  # ty:ignore[invalid-argument-type]
                          help="don't install demo data in new databases (default)")
         group.add_option("--skip-auto-install", dest="skip_auto_install", action="store_true", my_default=False,
                          help="skip the automatic installation of modules marked as auto_install")
@@ -553,12 +556,12 @@ class configmanager:
         for loglevel, message, args, kwargs in cls._log_entries:
             _dangerous_logger.log(loglevel, message, *args, **kwargs)
         cls._log_entries.clear()
-        cls._log = _dangerous_logger.log
+        cls._log = _dangerous_logger.log  # ty:ignore[invalid-assignment]
 
         for message, args, kwargs in cls._warn_entries:
             warnings.warn(message, *args, **kwargs, stacklevel=1)
         cls._warn_entries.clear()
-        cls._warn = warnings.warn
+        cls._warn = warnings.warn  # ty:ignore[invalid-assignment]
 
     def parse_config(self, args: list[str] | None = None, *, setup_logging: bool | None = None) -> None:
         """ Parse the configuration file (if any) and the command-line
@@ -594,7 +597,7 @@ class configmanager:
         modules.module.initialize_sys_path()
         return opt
 
-    def _parse_config(self, args=None):
+    def _parse_config(self, args=()):
         # preprocess the args to add support for nargs='?'
         for arg_no, arg in enumerate(args or ()):
             if option := self.optional_options.get(arg):
@@ -693,7 +696,7 @@ class configmanager:
         self._runtime_options['update'] = {'base': True} if 'all' in self['update'] else dict.fromkeys(self['update'], True)
 
         # TODO saas-22.1: remove support for the empty db_replica_host
-        if self['db_replica_host'] == '':
+        if self['db_replica_host'] == '':  # noqa: PLC1901
             self._runtime_options['db_replica_host'] = None
             if 'replica' not in self['dev_mode']:
                 # Conditional warning so it is possible to have a single
@@ -926,7 +929,7 @@ class configmanager:
                     self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self['config'])
                     continue
                 self._file_options[name] = self.parse(name, value)
-        except IOError:
+        except OSError:
             pass
         except ConfigParser.NoSectionError:
             pass
@@ -958,7 +961,7 @@ class configmanager:
                     p.write(file)
                 if not rc_exists:
                     os.chmod(self['config'], 0o600)
-            except IOError:
+            except OSError:
                 sys.stderr.write("ERROR: couldn't write the config file\n")
 
         except OSError:
