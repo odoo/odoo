@@ -40,7 +40,7 @@ class StockLot(models.Model):
             elif valuated_product.cost_method == 'average':
                 lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
             else:
-                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False)) * qty_valued / qty_available
             lot.avg_cost = lot.total_value / qty_valued if qty_valued else 0.0
 
     # TODO: remove avg cost column in master and merge the two compute methods
