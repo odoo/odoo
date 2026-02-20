@@ -287,7 +287,7 @@ class ResPartnerBank(models.Model):
         # EXTENDS base res.partner.bank
         to_trust = [vals.get('allow_out_payment') for vals in vals_list]
         for vals in vals_list:
-            vals['allow_out_payment']
+            vals['allow_out_payment'] = False
 
         for vals in vals_list:
             if (partner_id := vals.get('partner_id')) and (acc_number := vals.get('acc_number')):
