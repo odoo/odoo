@@ -619,13 +619,13 @@ class IrModuleModule(models.Model):
                 "for help."
             )
 
-        # raise error if database is updating for module operations
-        if self.search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
-            raise UserError(_("Odoo is currently processing another module operation.\n"
-                               "Please try again later or contact your system administrator."))
+        self.env.cr.execute("SET LOCAL lock_timeout = '3s'")
+
         try:
+            # raise error if database is updating for module operations
+            self.env.cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading')) NOWAIT")
             # raise error if another transaction is trying to schedule module operations concurrently
-            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE NOWAIT")
+            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
             raise UserError(_("Odoo is currently processing another module operation.\n"
                                "Please try again later or contact your system administrator."))
@@ -634,7 +634,7 @@ class IrModuleModule(models.Model):
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
             # during execution, the lock won't be released until timeout.
-            self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE NOWAIT")
+            self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE")
         except psycopg2.OperationalError:
             raise UserError(_("Odoo is currently processing a scheduled action.\n"
                               "Module operations are not possible at this time, "

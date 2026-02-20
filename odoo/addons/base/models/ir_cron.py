@@ -279,7 +279,7 @@ class IrCron(models.Model):
         # because the db has zombie states and we force a call to
         # reset_module_states.
         from odoo.modules.loading import reset_modules_state  # noqa: PLC0415
-        reset_modules_state(cr.dbname)
+        reset_modules_state(cr)
 
     @staticmethod
     def _get_ready_sql_condition(cr: BaseCursor) -> SQL:
