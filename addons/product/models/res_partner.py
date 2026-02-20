@@ -19,14 +19,31 @@ class ResPartner(models.Model):
         company_dependent=False,  # behave like company dependent field but is not company_dependent
         domain=lambda self: [('company_id', 'in', (self.env.company.id, False))],
         help="Used for sales to the current partner",
+        tracking=True,
     )
 
     # the specific pricelist to compute property_product_pricelist
     # this company dependent field shouldn't have any fallback in ir.default
     specific_property_product_pricelist = fields.Many2one(
+        string="Assigned Pricelist",
         comodel_name='product.pricelist',
         company_dependent=True,
     )
+
+    is_pricelist_manually_set = fields.Boolean(
+        string="Is Pricelist Manually Set",
+        compute="_compute_is_pricelist_manually_set"
+    )
+
+    @api.depends_context('company')
+    @api.depends('property_product_pricelist', 'specific_property_product_pricelist')
+    def _compute_is_pricelist_manually_set(self):
+        defaults = self.env['product.pricelist']._get_country_pricelist_multi(self.country_id.ids)
+        for partner in self:
+            default_for_country = defaults.get(partner.country_id.id)
+            partner.is_pricelist_manually_set = (
+                partner.property_product_pricelist != default_for_country
+            )
 
     @api.depends('country_id', 'specific_property_product_pricelist')
     @api.depends_context('company', 'country_code')

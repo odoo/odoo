@@ -7,7 +7,11 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <group name="sale">
-                    <field name="property_product_pricelist" groups="product.group_product_pricelist"/>
+                    <field
+                        name="property_product_pricelist"
+                        groups="product.group_product_pricelist"
+                        decoration-muted="not is_pricelist_manually_set"
+                    />
                 </group>
             </field>
         </record>
