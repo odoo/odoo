@@ -1050,8 +1050,14 @@ class DiscussChannel(models.Model):
         if message_type not in ["notification", "user_notification"]:
             # sudo: discuss.channel - write to discuss.channel is not accessible for most users
             self.sudo().last_interest_dt = fields.Datetime.now()
-        if "everyone" in kwargs.pop("special_mentions", []):
-            partner_ids = list(OrderedSet((partner_ids or []) + self.channel_member_ids.partner_id.ids))
+        if special_mentions := kwargs.pop("special_mentions", []):
+            partners = self.env['res.partner'].browse(partner_ids or [])
+            partner_members = self.channel_member_ids.partner_id
+            if "everyone" in special_mentions:
+                partners |= partner_members
+            if "here" in special_mentions:
+                partners |= partner_members.filtered(lambda p: "offline" not in p.im_status)
+            partner_ids = partners.ids
         if partner_ids:
             kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
         # mail_post_autofollow=False is necessary to prevent adding followers

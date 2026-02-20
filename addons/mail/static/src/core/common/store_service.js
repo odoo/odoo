@@ -92,7 +92,14 @@ export class Store extends BaseStore {
             label: "everyone",
             channel_types: ["channel", "group"],
             displayName: "Everyone",
-            description: _t("Notify everyone"),
+            description: _t("Notify all members of this conversation"),
+        },
+        {
+            isSpecial: true,
+            label: "here",
+            channel_types: ["channel", "group"],
+            displayName: "Here",
+            description: _t("Notify all members of this conversation who are online"),
         },
     ];
 
