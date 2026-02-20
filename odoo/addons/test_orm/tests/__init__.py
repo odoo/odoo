@@ -8,7 +8,7 @@ from . import (
     test_cache,
     test_models_access,
     test_models_company_checks,
-    test_create,
+    test_models_create,
     test_domain,
     test_domain_expression,
     test_fields,
