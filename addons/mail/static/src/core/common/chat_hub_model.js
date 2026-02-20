@@ -119,10 +119,10 @@ export class ChatHub extends Record {
         /** @param {import("models").Channel[]} channels */
         const insertChatWindows = (channels) =>
             channels
-                .filter((channel) => channel?.exists())
+                .filter((channel) => this._shouldInsertChatWindow(channel))
                 .map((channel) => this.store.ChatWindow.insert({ channel }));
         const toFold = insertChatWindows(foldChannels);
-        const toOpen = insertChatWindows(openChannels);
+        const toOpen = this._prepareChatWindowsToOpen(insertChatWindows(openChannels));
         // close first to make room for others
         for (const chatWindow of [...this.opened, ...this.folded]) {
             if (chatWindow.notIn(toOpen) && chatWindow.notIn(toFold)) {
@@ -132,6 +132,19 @@ export class ChatHub extends Record {
         // folded before opened because if there are too many opened they will be added to folded
         this.folded = toFold;
         this.opened = toOpen;
+    }
+
+    /** @param {import("models").DiscussChannel} channel */
+    _shouldInsertChatWindow(channel) {
+        return channel?.exists();
+    }
+
+    /**
+     * @param {import("models").ChatWindow[]} toOpen
+     * @returns {import("models").ChatWindow[]}
+     */
+    _prepareChatWindowsToOpen(toOpen) {
+        return toOpen;
     }
 
     get maxOpened() {

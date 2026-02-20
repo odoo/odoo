@@ -18,7 +18,7 @@ declare module "models" {
         hasWelcomeMessage: Readonly<boolean>;
         isLastMessageFromCustomer: Readonly<boolean>;
         livechatWelcomeMessage: Message;
-        readyToSwapDeferred: Deferred;
+        readyToSwapDeferred: PromiseWithResolvers<void>;
         requested_by_operator: boolean;
     }
 }

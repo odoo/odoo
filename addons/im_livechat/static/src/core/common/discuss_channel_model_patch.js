@@ -14,6 +14,9 @@ const discussChannelPatch = {
         this.livechat_agent_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsAgentHistory",
         });
+        this.livechat_bot_history_ids = fields.Many("im_livechat.channel.member.history", {
+            inverse: "channelAsBotHistory",
+        });
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "channel_ids" });
         this.livechat_channel_member_history_ids = fields.Many(
             "im_livechat.channel.member.history",
@@ -73,10 +76,12 @@ const discussChannelPatch = {
             })
             .map((m) => m.name);
         if (!memberNames.length) {
-            const histories =
-                selfMemberType === "visitor"
+            let histories = this.livechat_customer_history_ids;
+            if (selfMemberType === "visitor") {
+                histories = this.livechat_agent_history_ids.length
                     ? this.livechat_agent_history_ids
-                    : this.livechat_customer_history_ids;
+                    : this.livechat_bot_history_ids;
+            }
             memberNames = histories
                 .map((h) => this.getPersonaName(h.partner_id || h.guest_id))
                 .filter(Boolean);

@@ -30,9 +30,7 @@ export class LivechatService {
 
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {{
-     * "mail.store": import("@mail/core/common/store_service").Store
-     * }} services
+     * @param {import("services").ServiceFactories} services
      */
     setup(env, services) {
         this.env = env;
@@ -62,7 +60,7 @@ export class LivechatService {
      * Persist the livechat thread if it is not done yet and swap it with the
      * temporary thread.
      *
-     * @returns {Promise<import("models").Thread|undefined>}
+     * @returns {Promise<import("models").DiscussChannel|undefined>}
      */
     async persist(thread) {
         if (!thread.isTransient) {
@@ -76,17 +74,19 @@ export class LivechatService {
         }
         savedChannel.fetchNewMessages();
         this.env.services["mail.store"].initialize();
-        savedChannel.readyToSwapDeferred.then(async () => {
-            if (!savedChannel?.exists()) {
-                return;
-            }
-            // Do not load unread messages: new messages were loaded to avoid
-            // flickering, we do not want another load that would result in the
-            // same issue.
-            savedChannel.scrollUnread = false;
-            temporaryThread.channel.chatWindow?.close();
-            savedChannel.openChatWindow({ focus: true });
-        });
+        savedChannel.readyToSwapDeferred.promise
+            .then(async () => {
+                if (!savedChannel?.exists()) {
+                    return;
+                }
+                // Do not load unread messages: new messages were loaded to avoid
+                // flickering, we do not want another load that would result in the
+                // same issue.
+                savedChannel.scrollUnread = false;
+                temporaryThread.channel.chatWindow?.close();
+                savedChannel.openChatWindow({ focus: true });
+            })
+            .finally(() => (savedChannel.readyToSwapDeferred = null));
         return savedChannel;
     }
 
@@ -102,7 +102,7 @@ export class LivechatService {
      * @param {object} param0
      * @param {boolean} [param0.persist=false]
      * @param {import("models").Thread} [param0.originThread]
-     * @returns {Promise<import("models").Thread>}
+     * @returns {Promise<import("models").DiscussChannel>}
      */
     async _createChannel({ originThread, persist = false, options = {} }) {
         const { store_data, channel_id } = await rpc(
@@ -124,6 +124,9 @@ export class LivechatService {
         }
         this.store.insert(store_data);
         const channel = this.store["discuss.channel"].get(channel_id);
+        if (!channel.isTransient) {
+            channel.readyToSwapDeferred = Promise.withResolvers();
+        }
         const ONE_DAY_TTL = 60 * 60 * 24;
         // The channel has just been created and only has one agent member
         const agent = channel.livechat_channel_member_history_ids.find(
