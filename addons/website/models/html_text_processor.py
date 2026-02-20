@@ -39,6 +39,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
             html_translated_content={},
             html_hashes_to_tags_and_attributes={},
             html_string_to_wrapping_tags={},
+            html_placeholder_cache={},
         )
 
     def _get_processing_cache(self, cache_key):
@@ -230,6 +231,11 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         if not html_string or not html_string.strip():
             return self, html_string
 
+        placeholder_cache = self._get_processing_cache('html_placeholder_cache')
+        cached_placeholder = placeholder_cache.get(html_string)
+        if cached_placeholder:
+            return self, cached_placeholder
+
         tree = etree.fromstring(f'<div>{html_string}</div>')
 
         # Identifying one or more wrapping tags that enclose the entire HTML
@@ -295,6 +301,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         # strip newlines and double-spaces, which would confuse IAP (without
         # this, it does not perform any replacement for some reason).
         result = xml_translate.get_text_content(res.strip())
+        updated_processor = updated_processor._update_processing_cache('html_placeholder_cache', {html_string: result})
         return updated_processor, result
 
     def _format_replacement(self, html_string, generated_content):
@@ -309,13 +316,17 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         :return: The text with HTML tags re-applied.
         :rtype: str
         """
-        replacement = generated_content.get(self._compute_placeholder(html_string)[1])
+        processor, placeholder = self._compute_placeholder(html_string)
+        if not placeholder:
+            return html_string
+
+        replacement = generated_content.get(placeholder)
         if not replacement:
             return html_string
 
         # Get state from context
-        hashes_to_tags_and_attributes = self._get_processing_cache('html_hashes_to_tags_and_attributes')
-        html_string_to_wrapping_tags = self._get_processing_cache('html_string_to_wrapping_tags')
+        hashes_to_tags_and_attributes = processor._get_processing_cache('html_hashes_to_tags_and_attributes')
+        html_string_to_wrapping_tags = processor._get_processing_cache('html_string_to_wrapping_tags')
 
         # Replace #[string](hash) with <tag>...</tag> based on stored tag
         # and attribute information

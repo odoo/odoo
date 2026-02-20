@@ -1364,6 +1364,7 @@ class Website(Home):
 
     def _load_resources(self, file_type, views, bundles_restriction, only_user_custom_files):
         AssetsUtils = request.env['website.assets']
+        IrQweb = request.env["ir.qweb"]
 
         files_data_by_bundle = []
         t_call_assets_attribute = 't-js'
@@ -1376,8 +1377,14 @@ class Website(Home):
 
         # First check the t-call-assets used in the related views
         url_infos = dict()
+        asset_content_cache = {}
+        view_arch_cache = {}
         for v in views:
-            for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
+            arch_tree = view_arch_cache.get(v["id"])
+            if arch_tree is None:
+                arch_tree = etree.fromstring(v["arch"])
+                view_arch_cache[v["id"]] = arch_tree
+            for asset_call_node in arch_tree.xpath("//t[@t-call-assets]"):
                 attr = asset_call_node.get(t_call_assets_attribute)
                 if attr and not json.loads(attr.lower()):
                     continue
@@ -1385,7 +1392,11 @@ class Website(Home):
 
                 # Loop through bundle files to search for file info
                 files_data = []
-                for file_info in request.env["ir.qweb"]._get_asset_content(asset_name)[0]:
+                asset_files = asset_content_cache.get(asset_name)
+                if asset_files is None:
+                    asset_files = IrQweb._get_asset_content(asset_name)[0]
+                    asset_content_cache[asset_name] = asset_files
+                for file_info in asset_files:
                     if file_info["url"].rpartition('.')[2] != file_type:
                         continue
                     url = file_info["url"]

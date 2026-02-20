@@ -3,6 +3,7 @@
 import base64
 import re
 import requests
+from collections.abc import Mapping
 
 from werkzeug.urls import url_parse
 
@@ -129,8 +130,12 @@ class WebsiteAssets(models.AbstractModel):
             if custom_attachments is None:
                 attachment = self._get_custom_attachment(url)
             else:
-                attachment = custom_attachments.filtered(lambda r: r.url == url)
-            return attachment and base64.b64decode(attachment.datas) or False
+                if isinstance(custom_attachments, Mapping):
+                    attachment = custom_attachments.get(url)
+                else:
+                    attachment = next((att for att in custom_attachments if att.url == url), None)
+
+            return attachment and attachment.raw
 
         # If the file is not yet customized, the content is found by reading
         # the local file
@@ -332,13 +337,13 @@ class WebsiteAssets(models.AbstractModel):
         if self.env.user.has_group('website.group_website_designer'):
             self = self.sudo()
         website = self.env['website'].get_current_website()
-        res = self.env["ir.attachment"].search([("url", op, custom_url)])
+        res = self.env["ir.attachment"].search([("url", op, custom_url), ("website_id", "=", website.id)])
         # It is guaranteed that the attachment we are looking for has a website_id.
         # When we serve an attachment we normally serve the ones which have the right website_id
         # or no website_id at all (which means "available to all websites", of
         # course if they are marked "public"). But this does not apply in this
         # case of customized asset files.
-        return res.with_context(website_id=website.id).filtered(lambda x: x.website_id == website)
+        return res
 
     @api.model
     def _get_custom_asset(self, custom_url):

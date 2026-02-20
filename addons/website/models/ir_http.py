@@ -114,8 +114,21 @@ class IrHttp(models.AbstractModel):
         return len(rewrites)
 
     def _get_rewrites(self, website_id):
-        domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
-        return  {x.url_from: x for x in self.env['website.rewrite'].sudo().search(domain)}
+        domain = [
+            ('redirect_type', 'in', ('308', '404')),
+            '|',
+            ('website_id', '=', False),
+            ('website_id', '=', website_id)
+        ]
+        cache = self.env.cr.cache.setdefault('website_rewrites_cache', {})
+        rewrites = cache.get(website_id)
+        if rewrites is None:
+            rewrites = {
+                rewrite.url_from: rewrite.sudo(False)
+                for rewrite in self.env['website.rewrite'].sudo().search(domain)
+            }
+            cache[website_id] = rewrites
+        return rewrites
 
     def _generate_routing_rules(self, modules, converters):
         if not request:
@@ -126,9 +139,13 @@ class IrHttp(models.AbstractModel):
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
 
+        if not rewrites:
+            yield from super()._generate_routing_rules(modules, converters)
+            return
+
         for url, endpoint in super()._generate_routing_rules(modules, converters):
-            if url in rewrites:
-                rewrite = rewrites[url]
+            rewrite = rewrites.get(url)
+            if rewrite:
                 url_to = rewrite.url_to
                 if rewrite.redirect_type == '308':
                     logger.debug('Add rule %s for %s' % (url_to, website_id))
