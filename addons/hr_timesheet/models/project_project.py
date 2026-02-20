@@ -2,7 +2,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, ValidationError
+from odoo.exceptions import RedirectWarning
 from odoo.tools import SQL, float_round
 from odoo.tools.translate import _
 
@@ -10,9 +10,7 @@ from odoo.tools.translate import _
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean(
-        "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
-        default=True)
+    allow_timesheets = fields.Boolean("Timesheets", default=True)
     account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
@@ -45,11 +43,6 @@ class ProjectProject(models.Model):
     def _compute_timesheet_encode_uom_id(self):
         for project in self:
             project.timesheet_encode_uom_id = project.company_id.timesheet_encode_uom_id or self.env.company.timesheet_encode_uom_id
-
-    @api.depends('account_id')
-    def _compute_allow_timesheets(self):
-        without_account = self.filtered(lambda t: t._origin and not t.account_id)
-        without_account.update({'allow_timesheets': False})
 
     @api.depends('company_id')
     def _compute_is_internal_project(self):
@@ -151,16 +144,6 @@ class ProjectProject(models.Model):
             HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
         )""")
         return [('id', operator, sql)]
-
-    @api.constrains('allow_timesheets', 'account_id')
-    def _check_allow_timesheet(self):
-        for project in self:
-            if project.allow_timesheets and not project.account_id and not project.is_template:
-                project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-                raise ValidationError(_(
-                    "To use the timesheets feature, you need an analytic account for your project. Please set one up in the plan '%(plan_name)s' or turn off the timesheets feature.",
-                    plan_name=project_plan.name
-                ))
 
     @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
     def _compute_total_timesheet_time(self):

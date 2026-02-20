@@ -1,5 +1,5 @@
 import { expect, test, beforeEach } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, edit, animationFrame } from "@odoo/hoot-dom";
 import {
     mountView,
     contains,
@@ -19,6 +19,8 @@ beforeEach(() => {
         {
             id: 1,
             name: "Project 1",
+            account_id: 101,
+            allow_timesheets: true,
             allow_milestones: false,
             allow_task_dependencies: false,
             allow_recurring_tasks: false,
@@ -225,4 +227,43 @@ test("reload the page when allow_recurring_tasks is disabled on all projects", a
         "check_features_enabled",
         "reload_context",
     ]);
+});
+
+test.tags("desktop");
+test("project.project (form): removing analytic account shows confirm dialog and sets allow_timesheets to false on confirm", async () => {
+    await mountView({
+        resModel: "project.project",
+        resId: 1,
+        type: "form",
+        arch: `
+            <form js_class="project_project_form">
+                <group>
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="allow_timesheets"/>
+                </group>
+            </form>`,
+    });
+
+    expect('.o_field_widget[name="allow_timesheets"] input[type="checkbox"]').toBeChecked();
+    expect('.o_field_widget[name="account_id"] input').toHaveValue("Test Analytic Account");
+
+    await click('.o_field_widget[name="account_id"] input');
+    await edit("");
+    await click('.o_field_widget[name="name"] input');
+
+    expect('.o_field_widget[name="account_id"] input').toHaveValue("");
+    expect('.o_field_widget[name="allow_timesheets"] input[type="checkbox"]').toBeChecked();
+
+    await animationFrame();
+
+    await contains(".o_form_button_save").click();
+
+    await contains('.o_dialog .btn-primary').click();
+    await animationFrame();
+
+    expect('.o_field_widget[name="allow_timesheets"] input[type="checkbox"]').not.toBeChecked();
+    expect('.o_field_widget[name="account_id"] input').toHaveValue("");
+
+    expect.verifySteps(["check_features_enabled", "web_save"]);
 });
