@@ -24,7 +24,10 @@ class AccountMoveSendWizard(models.TransientModel):
                 if peppol_partner.peppol_verification_state == 'not_valid':
                     addendum_disable_reason = _(' (Customer not on Peppol)')
                 elif peppol_partner.peppol_verification_state == 'not_verified':
-                    addendum_disable_reason = _(' (no VAT)')
+                    addendum_disable_reason = _(
+                        ' (no %(eas)s)',
+                        eas=peppol_partner.peppol_eas_label or _('Peppol VAT number')
+                    )
                 else:
                     addendum_disable_reason = ''
                 vals_not_valid = {'readonly': True, 'checked': False} if addendum_disable_reason else {}
