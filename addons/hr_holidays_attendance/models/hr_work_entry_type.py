@@ -23,6 +23,8 @@ class HrWorkEntryType(models.Model):
         if not unspent_overtime:
             return super()._compute_display_name()
 
+        unspent_overtime = self.env['hr.leave']._get_deductible_employee_overtime(employee)[employee]
+
         overtime_leaves = self.filtered(lambda l_type: l_type.overtime_deductible and not l_type.requires_allocation)
         for work_entry_type in overtime_leaves:
             work_entry_type.display_name = "%(name)s (%(count)s)" % {
