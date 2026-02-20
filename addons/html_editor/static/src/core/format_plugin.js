@@ -642,7 +642,11 @@ export class FormatPlugin extends Plugin {
             if (!selection.isCollapsed) {
                 return;
             }
-            const element = closestElement(selection.anchorNode);
+            // `a` tags are special cases here. In some situations, we end up with a link
+            // containing the `data-oe-zws-empty-inline` attribute and select its `boundariesIn`.
+            // When typing, the link element gets removed automatically (Chrome), whereas
+            // other inline tags would be preserved.
+            const element = closestElement(selection.anchorNode, ":not(a)");
             if (element.hasAttribute("data-oe-zws-empty-inline")) {
                 // Select its ZWS content to make sure the text will be
                 // inserted inside the element, and not before (outside) it.
