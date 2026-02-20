@@ -1243,6 +1243,14 @@ class ProjectProject(models.Model):
             config["params"]["callback_data"] = {
                 "method": "create_template_from_project_undo_callback",
                 "args": [self.id, callbacks],
+                "post_action": {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "type": "success",
+                        "message": self.env._("Template converted back to regular project."),
+                    },
+                },
             }
         return {
             "type": "ir.actions.client",
@@ -1257,6 +1265,7 @@ class ProjectProject(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
+                "type": "success",
                 "message": self.env._("Template converted back to regular project."),
                 "next": {
                     "type": "ir.actions.client",
