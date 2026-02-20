@@ -321,7 +321,11 @@ export class GeneratePrinterData {
             );
         }
 
-        if (orderChange.internal_note || orderChange.general_customer_note) {
+        // Print a separate order note ticket only if no other tickets exist
+        if (
+            !receiptsData.length &&
+            (orderChange.internal_note || orderChange.general_customer_note)
+        ) {
             receiptsData.push(this.preparePreparationGroupedData({ title: "", data: [] }));
         }
         return receiptsData;
@@ -370,7 +374,7 @@ export class GeneratePrinterData {
                         reprint: Boolean(reprint),
                         time: DateTime.now().toFormat("HH:mm"),
                         internal_note: getStrNotes(change.internal_note) || false,
-                        general_customer_note: orderChange.general_customer_note || false,
+                        general_customer_note: change.general_customer_note || false,
                         employee_name: order.employee_id?.name || order.user_id?.name || false,
                         preset_time: order.presetDateTime || false,
                     },
