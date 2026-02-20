@@ -75,12 +75,10 @@ declare module "plugins" {
         // Handlers
         on_content_manually_updated_handlers: on_content_manually_updated_handlers;
         on_dynamic_snippet_template_updated_handlers: on_dynamic_snippet_template_updated_handlers;
-        on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
-        on_visibility_toggled_handlers: on_visibility_toggled_handlers;
         on_hover_animation_mode_cleaned_handlers: on_hover_animation_mode_cleaned_handlers;
         on_hover_animation_mode_applied_handlers: on_hover_animation_mode_applied_handlers;
-
-        // Overrides
+        on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
+        on_visibility_toggled_handlers: on_visibility_toggled_handlers;
 
         // Predicates
         can_have_hover_effect_async_predicates: can_have_hover_effect_async_predicates;
