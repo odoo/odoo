@@ -263,9 +263,7 @@ test("default thread rendering", async () => {
     await contains("button:text('History')");
     await contains(".o-mail-DiscussSidebar-item:has(:text('General'))");
     await contains("button.o-active:text('Inbox')");
-    await contains(
-        ".o-mail-Thread:text('Congratulations, your inbox is empty New messages appear here.')"
-    );
+    await contains(".o-mail-Thread .o-mail-EmptyInbox");
     await click("button:text('Bookmarks')");
     await contains("button.o-active:text('Bookmarks')");
     await contains(

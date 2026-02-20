@@ -77,7 +77,7 @@ test("sanity check", async () => {
     await openDiscuss("mail.box_inbox");
     await waitStoreFetch(["channels_as_member", "/mail/inbox/messages"]);
     await contains(".o-mail-DiscussSidebar");
-    await contains("h4:contains('Congratulations, your inbox is empty')");
+    await contains(".o-mail-EmptyInbox");
 });
 
 test.tags("focus required");
@@ -1012,11 +1012,11 @@ test('messages marked as read move to "History" mailbox', async () => {
     await contains(".o-mail-Thread h4:text('No history messages')");
     await click("button:has(:text('Inbox'))");
     await contains("button.o-active:has(:text('Inbox'))");
-    await contains(".o-mail-Thread h4:text('Congratulations, your inbox is empty')", { count: 0 });
+    await contains(".o-mail-Thread .o-mail-EmptyInbox", { count: 0 });
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
     await click("button:text('Mark all read')");
     await contains("button.o-active:has(:text('Inbox'))");
-    await contains(".o-mail-Thread h4:text('Congratulations, your inbox is empty')");
+    await contains(".o-mail-Thread .o-mail-EmptyInbox");
     await click("button:text('History')");
     await contains("button.o-active:text('History')");
     await contains(".o-mail-Thread h4:text('No history messages')", { count: 0 });
@@ -1958,7 +1958,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
     await contains(".o-mail-MessagingMenu-navbar button.active:text('Inbox')");
     await contains("button.active.o-active:text('Inbox')");
-    await contains("h4:text('Congratulations, your inbox is empty')");
+    await contains(".o-mail-EmptyInbox");
 });
 
 test("composer should be focused automatically after clicking on the send button", async () => {
