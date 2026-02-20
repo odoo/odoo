@@ -68,6 +68,8 @@ export class CarouselSlider extends Interaction {
         for (const itemEl of this.el.querySelectorAll(".carousel-item")) {
             const isActive = itemEl.classList.contains("active");
             itemEl.classList.add("active");
+            const imageEl = itemEl.querySelector("img");
+            imageEl?.removeAttribute("loading");
             const height = itemEl.getBoundingClientRect().height;
             if (height > this.maxHeight || this.maxHeight === undefined) {
                 this.maxHeight = height;
