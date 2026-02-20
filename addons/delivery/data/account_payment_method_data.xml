@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Create the payment method from data as `cash_on_delivery` is a custom provider. -->
+    <record id="account_payment_method_cash_on_delivery_in" model="account.payment.method">
+        <field name="name">Cash on Delivery</field>
+        <field name="code">cash_on_delivery</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>

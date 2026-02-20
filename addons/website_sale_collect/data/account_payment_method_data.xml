@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Create the payment method from data as `on_site` is a custom provider. -->
+    <record id="account_payment_method_on_site_in" model="account.payment.method">
+        <field name="name">Pay on Site</field>
+        <field name="code">on_site</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>
