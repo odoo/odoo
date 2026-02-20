@@ -1138,6 +1138,7 @@ export function clickBreakCombo() {
         },
     ];
 }
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
 
 export function selectFilter(name) {
     return [
@@ -1154,3 +1155,22 @@ export function selectFilter(name) {
         },
     ];
 }
+||||||| c330b5247e6507bf2cb2865fe707a498b72e370d
+=======
+export function productIsSnoozed(product_name) {
+    return [
+        {
+            trigger: `article.product.opacity-50:has(.product-name:contains('${product_name}'))`,
+            content: "Check that the product card is grayed out",
+        },
+    ];
+}
+export function productIsNotSnoozed(product_name) {
+    return [
+        {
+            trigger: `article.product:not(.opacity-50):has(.product-name:contains('${product_name}'))`,
+            content: "Check that the product card is not grayed out",
+        },
+    ];
+}
+>>>>>>> e1b8b9025f73116174b0b21fe36f25343424584b

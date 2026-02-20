@@ -18,7 +18,12 @@ import {
 } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
 import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_printer_data";
+||||||| c330b5247e6507bf2cb2865fe707a498b72e370d
+=======
+import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
+>>>>>>> e1b8b9025f73116174b0b21fe36f25343424584b
 
 export class SelfOrder extends Reactive {
     static serviceDependencies = [
@@ -72,6 +77,7 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
+        this.snoozedProductTracker = new SnoozedProductTracker();
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -81,6 +87,19 @@ export class SelfOrder extends Reactive {
         }
 
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
+        this.data.connectWebSocket("SNOOZE_CHANGED", async (payload) => {
+            const { deleted_ids, records } = payload;
+            if (deleted_ids) {
+                const snoozeModel = this.models["pos.product.template.snooze"];
+                snoozeModel.deleteMany(
+                    deleted_ids.map((id) => snoozeModel.get(id)).filter(Boolean)
+                );
+            }
+            if (records.length > 0) {
+                await this.models.connectNewData({ "pos.product.template.snooze": records });
+            }
+            this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
+        });
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
             const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
             const existingProductIds = this.models["product.template"].filter((tmpl) =>
@@ -479,6 +498,7 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
+        this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
         this.initProducts();
         this._initLanguages();
         this.initHardware();
@@ -497,6 +517,108 @@ export class SelfOrder extends Reactive {
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
     }
 
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
+||||||| c330b5247e6507bf2cb2865fe707a498b72e370d
+    createPrinter(printer) {
+        if (printer.printer_type === "epson_epos") {
+            return new EpsonPrinter({ printer: printer });
+        }
+    }
+
+    async printKioskChanges(access_token = "") {
+        const order = access_token
+            ? this.models["pos.order"].find((o) => o.access_token === access_token)
+            : this.currentOrder;
+
+        const orderData = order.getOrderData();
+        const changes = changesToOrder(order, this.config.preparationCategories);
+        for (const printer of this.kitchenPrinters) {
+            const orderlines = filterChangeByCategories(
+                printer.config.product_categories_ids.map((c) => c.id),
+                changes,
+                this.models
+            ).new;
+            if (orderlines.length > 0) {
+                const printingChanges = {
+                    ...orderData,
+                    changes: {
+                        title: _t("NEW"),
+                        data: orderlines,
+                    },
+                };
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: printingChanges,
+                });
+                await printer.printReceipt(receipt);
+            }
+            if (orderData.general_customer_note) {
+                const printingChanges = {
+                    ...orderData,
+                    changes: {
+                        title: "",
+                        data: [],
+                    },
+                };
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: printingChanges,
+                });
+                await printer.printReceipt(receipt);
+            }
+        }
+    }
+=======
+    isProductSnoozed(product) {
+        return this.snoozedProductTracker.isProductSnoozed(product);
+    }
+
+    createPrinter(printer) {
+        if (printer.printer_type === "epson_epos") {
+            return new EpsonPrinter({ printer: printer });
+        }
+    }
+
+    async printKioskChanges(access_token = "") {
+        const order = access_token
+            ? this.models["pos.order"].find((o) => o.access_token === access_token)
+            : this.currentOrder;
+
+        const orderData = order.getOrderData();
+        const changes = changesToOrder(order, this.config.preparationCategories);
+        for (const printer of this.kitchenPrinters) {
+            const orderlines = filterChangeByCategories(
+                printer.config.product_categories_ids.map((c) => c.id),
+                changes,
+                this.models
+            ).new;
+            if (orderlines.length > 0) {
+                const printingChanges = {
+                    ...orderData,
+                    changes: {
+                        title: _t("NEW"),
+                        data: orderlines,
+                    },
+                };
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: printingChanges,
+                });
+                await printer.printReceipt(receipt);
+            }
+            if (orderData.general_customer_note) {
+                const printingChanges = {
+                    ...orderData,
+                    changes: {
+                        title: "",
+                        data: [],
+                    },
+                };
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: printingChanges,
+                });
+                await printer.printReceipt(receipt);
+            }
+        }
+    }
+>>>>>>> e1b8b9025f73116174b0b21fe36f25343424584b
     async initKioskData() {
         if (this.session && this.access_token) {
             this.ordering = true;

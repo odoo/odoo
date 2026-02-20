@@ -120,6 +120,9 @@ export class ProductListPage extends Component {
         if (product.pos_categ_ids.length === 0) {
             return true;
         }
+        if (this.selfOrder.isProductSnoozed(product)) {
+            return false;
+        }
         return product.pos_categ_ids.some((categ) => this.selfOrder.isCategoryAvailable(categ.id));
     }
 
