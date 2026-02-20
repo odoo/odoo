@@ -9,6 +9,10 @@ class HrAttendanceOvertimeRule(models.Model):
     _inherit = 'hr.attendance.overtime.rule'
 
     compensable_as_leave = fields.Boolean("Give back as time off", default=False)
+    timing_type = fields.Selection(selection_add=[
+        ('leave', "When employee is off"),
+        ('public_leave', "On a Public holiday"),
+    ])
 
     def _extra_overtime_vals(self):
         if not self:

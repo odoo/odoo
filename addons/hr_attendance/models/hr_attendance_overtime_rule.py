@@ -69,8 +69,6 @@ class HrAttendanceOvertimeRule(models.Model):
     timing_type = fields.Selection([
         ('work_days', "On any working day"),
         ('non_work_days', "On any non-working day"),
-        ('leave', "When employee is off"),
-        ('public_leave', "On a Public holiday"),
         ('schedule', "Outside of a specific schedule"),
     ], default='work_days')
     timing_start = fields.Float("From", default=0)
