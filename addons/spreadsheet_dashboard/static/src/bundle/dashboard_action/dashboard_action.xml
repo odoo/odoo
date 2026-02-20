@@ -59,7 +59,7 @@
     </div>
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Collapsed">
-        <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer" t-on-click="toggleSidebar">
+        <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer d-print-none" t-on-click="toggleSidebar">
             <div class="d-flex">
                 <button class="btn btn-light btn-sm m-1 mb-2 p-2">
                     <i class="fa fa-angle-double-right"/>
@@ -74,7 +74,7 @@
     </t>
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
-        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative">
+        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative d-print-none">
             <button t-if="!env.isSmall and loader.getActiveDashboard()" class="btn btn-light btn-sm end-0 m-1 mb-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
                 <i class="fa fa-fw fa-angle-double-left"/>
             </button>

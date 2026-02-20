@@ -9,7 +9,6 @@ import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_c
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
-import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
@@ -74,7 +73,6 @@ export class SpreadsheetDashboardAction extends Component {
                 dashboardLoader: this.loader.getState(),
             }),
         });
-        useSpreadsheetPrint(() => this.loader.getActiveDashboard()?.model);
         /** @type {{ sidebarExpanded: boolean}} */
         this.state = useState({ sidebarExpanded: true });
         this.searchBarToggler = useSearchBarToggler();

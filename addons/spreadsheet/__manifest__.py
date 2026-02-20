@@ -28,9 +28,6 @@
             ('remove', 'spreadsheet/static/src/assets_backend/**/*'),
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*'),
         ],
-        'spreadsheet.assets_print': [
-            'spreadsheet/static/src/print_assets/**/*',
-        ],
         'spreadsheet.public_spreadsheet': [
             ('include', 'web.assets_frontend_minimal'),
             ('include', 'web._assets_helpers'), # bootstrap variables
@@ -88,7 +85,6 @@
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/assets_backend/**/*',
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*.scss'),
-            ('remove', 'spreadsheet/static/src/print_assets/**/*'),
         ],
         'web.assets_unit_tests': [
             'spreadsheet/static/tests/**/*',

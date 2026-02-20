@@ -4,7 +4,7 @@
     <t t-name="spreadsheet.PublicReadonlySpreadsheet">
         <div t-if="showFilterButton"
             t-on-click="toggleGlobalFilters"
-            class="o-public-spreadsheet-filter-button position-absolute bg-white fw-bold my-0 mx-3 p-2 fs-6 rounded">
+            class="o-public-spreadsheet-filter-button position-absolute bg-white fw-bold my-0 mx-3 p-2 fs-6 rounded d-print-none">
             <t t-call="o-spreadsheet-Icon.GLOBAL_FILTERS"/>
             <span class="ps-1">Show Filters</span>
         </div>
