@@ -1105,6 +1105,8 @@ class MailMessage(models.Model):
                 )
             )
         for record in records:
+            if not record.exists():
+                continue
             store.add(record, record_fields, as_thread=True)
         if for_current_user:
             fields.append("starred")
