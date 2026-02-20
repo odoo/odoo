@@ -39,86 +39,93 @@
 
                     <!-- HIDE this div in create_mode (when '+ New Shop' is clicked in the general settings.) -->
                     <div class="row mt16 o_settings_container" invisible="context.get('pos_config_create_mode', False)">
-                        <setting
-                                title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form."
-                                string="Log in with Employees"
-                                help="Allow to log and switch between selected Employees">
-                            <field name="module_pos_hr" readonly="has_active_session" />
-                            <div class="content-group mt16" invisible="not module_pos_hr">
-                                <div class="text-warning" id="warning_text_employees">
-                                    Save this page and come back here to set up the feature.
-                                </div>
-                            </div>
-                        </setting>
-                        <setting id="other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box">
-                            <field name="other_devices" />
-                            <div class="content-group" invisible="not other_devices">
-                                <div class="row mb-2">
-                                    <div class="col-lg-6">
-                                        <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" class="w-100 pt-1" />
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <widget name="point_of_sale_test_epos" />
-                                    </div>
-                                </div>
-                                <div class="row" invisible="epson_printer_ip in [False, '']">
-                                    <div class="col-lg-6 o_light_label">
-                                        <label string="Link Cashdrawer" for="iface_cashdrawer"/>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <field name="iface_cashdrawer"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="alert" class="alert alert-warning" invisible="not iface_print_via_proxy or not other_devices or epson_printer_ip in [False, '']">
-                                The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
-                            </div>
-                        </setting>
-                        <setting string="IoT Box" help="Connect devices using an IoT Box">
-                                <field name="is_posbox" />
-                                <div class="content-group pos_iot_config ms-3" invisible="not is_posbox">
-                                    <div class="row">
-                                        <div class="col-lg-4 o_light_label">
-                                            <label string="IoT Box IP Address" for="proxy_ip"/>
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <field name="proxy_ip"/>
+                        <notebook>
+                            <page string="Configuration" name="configuration">
+                                <setting
+                                        title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form."
+                                        string="Log in with Employees"
+                                        help="Allow to log and switch between selected Employees">
+                                    <field name="module_pos_hr" readonly="has_active_session" />
+                                    <div class="content-group mt16" invisible="not module_pos_hr">
+                                        <div class="text-warning" id="warning_text_employees">
+                                            Save this page and come back here to set up the feature.
                                         </div>
                                     </div>
-                                    <div class="row iot_barcode_scanner">
-                                        <div class="col-lg-5 o_light_label">
-                                            <label string="Scanner" for="iface_scan_via_proxy"/>
+                                </setting>
+                                <setting id="other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box">
+                                    <field name="other_devices" />
+                                    <div class="content-group" invisible="not other_devices">
+                                        <div class="row mb-2">
+                                            <div class="col-lg-6">
+                                                <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" class="w-100 pt-1" />
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <widget name="point_of_sale_test_epos" />
+                                            </div>
                                         </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_scan_via_proxy"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-5 o_light_label">
-                                            <label string="Electronic Scale" for="iface_electronic_scale"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_electronic_scale"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-5 o_light_label">
-                                            <label string="Receipt Printer" for="iface_print_via_proxy"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_print_via_proxy"/>
-                                       </div>
-                                    </div>
-                                    <div class="row" invisible="not iface_print_via_proxy">
-                                        <div class="col-lg-5 o_light_label ps-4">
-                                            <label string="Cashdrawer" for="iface_cashdrawer"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_cashdrawer"/>
+                                        <div class="row" invisible="epson_printer_ip in [False, '']">
+                                            <div class="col-lg-6 o_light_label">
+                                                <label string="Link Cashdrawer" for="iface_cashdrawer"/>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <field name="iface_cashdrawer"/>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                        </setting>
+                                    <div role="alert" class="alert alert-warning" invisible="not iface_print_via_proxy or not other_devices or epson_printer_ip in [False, '']">
+                                        The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
+                                    </div>
+                                </setting>
+                                <setting string="IoT Box" help="Connect devices using an IoT Box">
+                                        <field name="is_posbox" />
+                                        <div class="content-group pos_iot_config ms-3" invisible="not is_posbox">
+                                            <div class="row">
+                                                <div class="col-lg-4 o_light_label">
+                                                    <label string="IoT Box IP Address" for="proxy_ip"/>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <field name="proxy_ip"/>
+                                                </div>
+                                            </div>
+                                            <div class="row iot_barcode_scanner">
+                                                <div class="col-lg-5 o_light_label">
+                                                    <label string="Scanner" for="iface_scan_via_proxy"/>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    <field name="iface_scan_via_proxy"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-5 o_light_label">
+                                                    <label string="Electronic Scale" for="iface_electronic_scale"/>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    <field name="iface_electronic_scale"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-5 o_light_label">
+                                                    <label string="Receipt Printer" for="iface_print_via_proxy"/>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    <field name="iface_print_via_proxy"/>
+                                               </div>
+                                            </div>
+                                            <div class="row" invisible="not iface_print_via_proxy">
+                                                <div class="col-lg-5 o_light_label ps-4">
+                                                    <label string="Cashdrawer" for="iface_cashdrawer"/>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    <field name="iface_cashdrawer"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </setting>
+                            </page>
+                            <page name="checklist" string="Check list">
+                                <widget name="lna_checklist" />
+                            </page>
+                        </notebook>
                         <div groups="base.group_system">
                             <p>
                                 More settings: <a href="#" name="%(action_pos_configuration)d" type="action" class="btn-link o_form_uri" role="button">Configurations > Settings</a>

@@ -183,6 +183,22 @@ export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// Checks whether an ip address is on the local network. So one of the ranges:
+// 10.0.0.0 - 10.255.255.255
+// 172.16.0.0 - 172.16.255.255
+// 192.168.0.0 - 192.168.255.255
+export function isPrivateIp(ip) {
+    if (!ip) {
+        return false;
+    }
+    const blocks = ip.split(".");
+    return (
+        blocks[0] == "10" ||
+        (blocks[0] == "172" && blocks[1] == "16") ||
+        (blocks[0] == "192" && blocks[1] == "168")
+    );
+}
+
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
 
 export async function getImageDataUrl(imageUrl) {
