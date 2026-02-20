@@ -1,9 +1,22 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { bold, resetSize, setColor, insertText } from "../_helpers/user_actions";
+import {
+    bold,
+    insertText,
+    resetSize,
+    setColor,
+    simulateArrowKeyPress,
+} from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
-import { press, queryAll, manuallyDispatchProgrammaticEvent, click } from "@odoo/hoot-dom";
+import {
+    click,
+    keyDown,
+    keyUp,
+    press,
+    queryAll,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
 
@@ -2230,5 +2243,302 @@ describe("deselecting table", () => {
             </table>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
+    });
+});
+
+function table5x5(diff, selected = []) {
+    const defaultCells = {
+        selectionPlaceholder: `<p data-selection-placeholder=""><br></p>`,
+        C3: `<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>`,
+    };
+    const rows = [];
+    for (const row of [1, 2, 3, 4, 5]) {
+        const cols = [];
+        for (const col of "ABCDE") {
+            const cellName = `${col}${row}`;
+            let value = defaultCells[cellName] || cellName;
+            const diffFn = diff[cellName];
+            if (diffFn) {
+                value = diffFn(value);
+            }
+            const selectedTdClass = selected.includes(cellName) ? ' class="o_selected_td"' : "";
+            cols.push(`<td${selectedTdClass}>${value}</td>`);
+        }
+        rows.push(`<tr>${cols.join("")}</tr>`);
+    }
+    const placeholder = diff.selectionPlaceholder || defaultCells.selectionPlaceholder;
+    const selectedClass = selected.length ? ' class="o_selected_table"' : "";
+    return unformat(`${placeholder}<table${selectedClass}><tbody>
+        ${rows.join("")}
+    </tbody></table>${placeholder}`);
+}
+describe("keyboard navigation with multiline", () => {
+    describe("move", () => {
+        test("should reach above cell when pressing up from text's first line", async () => {
+            const { el } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P1L1", "P1[]L1"),
+                })
+            );
+            const events = await press("ArrowUp");
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C2: () => "C2[]",
+                })
+            );
+        });
+        test("should allow default text navigation when pressing up from text's second line", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P1L2", "P1[]L2"),
+                })
+            );
+            await simulateArrowKeyPress(editor, "ArrowUp");
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C3: (value) => value.replace("P1L1", "P1[]L1"),
+                })
+            );
+        });
+        test("should reach cell below when pressing down from text's last line", async () => {
+            const { el } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L2", "P2[]L2"),
+                })
+            );
+            const events = await press("ArrowDown");
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C4: () => "[]C4",
+                })
+            );
+        });
+        test("should allow default text navigation when pressing down from text's non-last line", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L1", "P2[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, "ArrowDown");
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C3: (value) => value.replace("P2L2", "P2[]L2"),
+                })
+            );
+        });
+        test("should reach begin of cell when pressing Ctrl+ArrowUp", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L1", "P2[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Control", "ArrowUp"]);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C3: (value) => value.replace("<div", "[]<div"),
+                })
+            );
+        });
+        test("should reach end of cell when pressing Ctrl+ArrowDown", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L1", "P2[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Control", "ArrowDown"]);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C3: (value) => value.replace("P2L2</div>", "P2L2</div>[]"),
+                })
+            );
+        });
+    });
+    describe("select", () => {
+        test("should select current cell when pressing shift+up from text's first line", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P1L1", "P1[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Shift", "ArrowUp"]);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P1L1", "P1[]L1"),
+                    },
+                    ["C3"]
+                )
+            );
+        });
+        test("should allow default text selection when pressing shift+up from text's second line", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P1L2", "P1[]L2"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Shift", "ArrowUp"]);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C3: (value) => value.replace("P1L1", "P1]L1").replace("P1L2", "P1[L2"),
+                })
+            );
+        });
+        test("should select current cell when pressing shift+down from text's last line", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L2", "P2[]L2"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Shift", "ArrowDown"]);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P2L2", "P2[]L2"),
+                    },
+                    ["C3"]
+                )
+            );
+        });
+        test("should allow default text selection when pressing shift+down from text's non-last line", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L1", "P2[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Shift", "ArrowDown"]);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C3: (value) => value.replace("P2L1", "P2[L1").replace("P2L2", "P2]L2"),
+                })
+            );
+        });
+        test("should select whole cell when pressing Ctrl+Shift+ArrowUp", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L1", "P2[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Control", "Shift", "ArrowUp"]);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P2L1", "P2[]L1"),
+                    },
+                    ["C3"]
+                )
+            );
+        });
+        test("should select whole cell when pressing Ctrl+Shift+ArrowDown", async () => {
+            const { el, editor } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L1", "P2[]L1"),
+                })
+            );
+            await simulateArrowKeyPress(editor, ["Control", "Shift", "ArrowDown"]);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P2L1", "P2[]L1"),
+                    },
+                    ["C3"]
+                )
+            );
+        });
+    });
+    describe("select then move", () => {
+        test("should move from reached selection (upwards)", async () => {
+            const { el } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P1L1", "P1[]L1"),
+                })
+            );
+            await keyDown("Shift");
+            let events = await press("ArrowUp");
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P1L1", "P1[]L1"),
+                    },
+                    ["C3"]
+                )
+            );
+            events = await press("ArrowUp");
+            await keyUp("Shift");
+            await tick();
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C2: () => "]C2",
+                        C3: (value) => value.replace("P1L1", "P1[L1"),
+                    },
+                    ["C3", "C2"]
+                )
+            );
+            events = await press("ArrowUp");
+            await tick();
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C1: () => "C1[]",
+                })
+            );
+        });
+        test("should move from reached selection (downwards)", async () => {
+            const { el } = await setupEditor(
+                table5x5({
+                    selectionPlaceholder: "",
+                    C3: (value) => value.replace("P2L2", "P2[]L2"),
+                })
+            );
+            await keyDown("Shift");
+            let events = await press("ArrowDown");
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P2L2", "P2[]L2"),
+                    },
+                    ["C3"]
+                )
+            );
+            events = await press("ArrowDown");
+            await keyUp("Shift");
+            await tick();
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5(
+                    {
+                        C3: (value) => value.replace("P2L2", "P2[L2"),
+                        C4: () => "]C4",
+                    },
+                    ["C3", "C4"]
+                )
+            );
+            events = await press("ArrowDown");
+            await tick();
+            expect(events[0].defaultPrevented).toBe(true);
+            expect(getContent(el)).toBe(
+                table5x5({
+                    C5: () => "[]C5",
+                })
+            );
+        });
     });
 });

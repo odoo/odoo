@@ -539,6 +539,17 @@ export class SelectionPlugin extends Plugin {
             focusOffset,
             direction
         );
+        const isFocusNodeLine = (scope = "*", which = "first") => {
+            const focusScope = closestElement(focusNode, scope);
+            if (focusScope === null) {
+                return undefined;
+            }
+            const preserveSelection = this.preserveSelection();
+            selection.modify("move", which === "first" ? "backward" : "forward", "line");
+            const reachedScope = closestElement(selection.focusNode, scope);
+            preserveSelection.restore();
+            return reachedScope !== focusScope;
+        };
 
         const selectionData = {
             documentSelection: documentSelection,
@@ -546,6 +557,7 @@ export class SelectionPlugin extends Plugin {
             documentSelectionIsInEditable: documentSelectionIsInEditable,
             currentSelectionIsInEditable:
                 documentSelectionIsInEditable && this.focusEditableDocument,
+            isFocusNodeLine: isFocusNodeLine,
         };
 
         Object.defineProperty(selectionData, "deepEditableSelection", {
