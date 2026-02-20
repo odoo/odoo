@@ -177,7 +177,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         chart_template_mapping = self._get_chart_template_mapping()[template_code]
         if not company.country_id:
-            company.country_id = chart_template_mapping.get('country_id')
+            company.with_context(skip_l10n_installation=True).country_id = chart_template_mapping.get('country_id')
 
         module_name = chart_template_mapping.get('module')
         module = self.env['ir.module.module'].search([('name', '=', module_name), ('state', '=', 'uninstalled')])

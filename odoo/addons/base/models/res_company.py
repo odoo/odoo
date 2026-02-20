@@ -388,7 +388,7 @@ class Company(models.Model):
                 for fname in sorted(changed):
                     branches[fname] = company[fname]
 
-        if companies_needs_l10n:
+        if companies_needs_l10n and not self._context.get('skip_l10n_installation'):
             companies_needs_l10n.install_l10n_modules()
 
         # invalidate company cache to recompute address based on updated partner
