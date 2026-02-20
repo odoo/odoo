@@ -84,6 +84,11 @@
             <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="after">
                 <field name="l10n_tr_original_invoice_date" string="Original Invoice Date" invisible="country_code != 'TR' or move_type != 'out_refund' or reversed_entry_id" required="country_code == 'TR' and not reversed_entry_id and move_type == 'out_refund'"/>
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert" invisible="not l10n_tr_zero_vat_warning">
+                    For 0% EX VAT on sales invoices, an exemption reason is required. Odoo has set the default as "351 - Other Non-Exempt VAT"
+                </div>
+            </xpath>
         </field>
     </record>
 
