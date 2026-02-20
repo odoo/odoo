@@ -13,7 +13,7 @@ const DiscussSidebarCategoryPatch = {
     open() {
         if (this.category.id === "channels") {
             this.actionService.doAction({
-                name: _t("Public Channels"),
+                name: _t("Channels"),
                 type: "ir.actions.act_window",
                 res_model: "discuss.channel",
                 views: [

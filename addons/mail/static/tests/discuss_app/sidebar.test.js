@@ -302,7 +302,7 @@ test("sidebar: basic chat rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Demo')");
     await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await click("[title='Chat Actions']");
-    await waitFor(".o-dropdown-item:count(7)", { timeout: 3000 });
+    await waitFor(".o-dropdown-item:count(6)", { timeout: 3000 });
     await waitFor(".o-mail-ActionList-group:count(4)");
     const group = range(0, 4).map((i) => `.o-mail-ActionList-group:eq(${i})`);
     await waitFor(`${group[0]} .o-dropdown-item:count(2)`);
@@ -311,9 +311,8 @@ test("sidebar: basic chat rendering", async () => {
     await waitFor(`${group[1]} .o-dropdown-item:count(2)`);
     await waitFor(`${group[1]} .o-dropdown-item:eq(0):text('Invite People')`);
     await waitFor(`${group[1]} .o-dropdown-item:eq(1):text('Add to Favorites')`);
-    await waitFor(`${group[2]} .o-dropdown-item:count(2)`);
+    await waitFor(`${group[2]} .o-dropdown-item:count(1)`);
     await waitFor(`${group[2]} .o-dropdown-item:eq(0):text('Notification Settings')`);
-    await waitFor(`${group[2]} .o-dropdown-item:eq(1):text('Advanced Settings')`);
     await waitFor(`${group[3]} .o-dropdown-item:count(1)`);
     await waitFor(`${group[3]} .o-dropdown-item:text('Hide Until New Message')`);
     await contains(".o-mail-DiscussSidebarChannel .badge", { count: 0 });
@@ -972,7 +971,7 @@ test("Do no channel_info after unpin", async () => {
     await waitStoreFetch("discuss.channel");
     await openDiscuss(channelId);
     await click("[title='Chat Actions']");
-    await click(".o-dropdown-item:contains('Advanced Settings')");
+    await click(".o-dropdown-item:contains('Notification Settings')");
     rpc("/mail/message/post", {
         thread_id: channelId,
         thread_model: "discuss.channel",
