@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_event.EventConfiguratorPopup">
-        <Dialog title="dialogTitle">
+        <Dialog title="this.dialogTitle">
             <div class="o_event_configurator_popup">
                 <div t-if="this.props.slotResult?.slotName"
                     class="d-flex justify-content-center text-primary fs-3 pt-2 pb-3">
@@ -26,7 +26,7 @@
                             </span>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <span t-esc="env.utils.formatCurrency(ticket.price)" />
+                            <span t-esc="this.env.utils.formatCurrency(ticket.price)" />
                             <NumericInput class="'w-100'" tModel="[this.state[ticket.id], 'qty']" min="0"/>
                         </div>
                     </div>
@@ -34,8 +34,8 @@
                 </t>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-secondary" t-on-click="cancel">Discard</button>
-                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="this.cancel">Discard</button>
+                <button class="btn btn-primary" t-on-click="this.confirm">Confirm</button>
             </t>
         </Dialog>
     </t>
