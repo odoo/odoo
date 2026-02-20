@@ -338,8 +338,8 @@ class MicrosoftSync(models.AbstractModel):
         :return: synchronized odoo
         """
         existing = microsoft_events.match_with_odoo_events(self.env)
-        cancelled = microsoft_events.cancelled()
-        new = microsoft_events - existing - cancelled
+        new = microsoft_events - existing - microsoft_events.cancelled()
+        cancelled = existing.cancelled()
         new_recurrence = new.filter(lambda e: e.is_recurrent())
 
         # create new events and reccurrences
