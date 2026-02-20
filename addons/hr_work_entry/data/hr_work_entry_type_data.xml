@@ -1338,6 +1338,33 @@
         <field name="country_id" ref="base.bd"/>
     </record>
 
+    <record id="work_entry_type_night_work" model="hr.work.entry.type">
+        <field name="name">Night Work</field>
+        <field name="code">WORK_NIGHT</field>
+        <field name="display_code">NW</field>
+        <field name="color">1</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_shift_work" model="hr.work.entry.type">
+        <field name="name">Shift Work</field>
+        <field name="code">WORK_SHIFT</field>
+        <field name="display_code">SW</field>
+        <field name="color">2</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_night_shift_work" model="hr.work.entry.type">
+        <field name="name">Night Shift Work</field>
+        <field name="code">WORK_NIGHT_SHIFT</field>
+        <field name="display_code">NSW</field>
+        <field name="color">3</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
 <!-- CH : Switzerland -->
     <record id="ch_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Attendance</field>
