@@ -24,20 +24,25 @@ patch(PosOrder.prototype, {
         return false;
     },
     /**
-     * If the order is empty (there are no products)
-     * and all "pay_later" payments are negative,
-     * we are settling a customer's account.
      * If the module pos_settle_due is not installed,
-     * the function always returns false (since "pay_later" doesn't exist)
+     * the function always returns false (since "isSettleDueLine" doesn't exist)
      * @returns {boolean} true if the current order is a settlement, else false
      */
     is_settlement() {
+        return !!this.lines.filter((line) => line.isSettleDueLine?.()).length;
+    },
+
+    /**
+     * Before validating the order, is_settling_account is set to True.
+     * Once the order is validated and before sending the request to api,
+     * is_settling_account property is not there anymore, thus checking lines
+     * If the module pos_settle_due is not installed,
+     * the function always returns false (since "isDepositLine or is_settling_account" doesn't exist)
+     * @returns {boolean} true if the current order is a deposit, else false
+     */
+    is_deposit_order() {
         return (
-            this.isEmpty() &&
-            !!this.payment_ids.filter(
-                (paymentline) =>
-                    paymentline.payment_method_id.type === "pay_later" && paymentline.amount < 0
-            ).length
+            this.is_settling_account || !!this.lines.filter((line) => line.isDepositLine?.()).length
         );
     },
 
