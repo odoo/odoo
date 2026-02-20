@@ -160,7 +160,8 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self:
             state = 'out_of_working_hour'
             if employee.company_id.hr_presence_control_login:
-                if employee.user_id._is_user_available():
+                if employee.user_id._is_user_available() \
+                        or employee.user_id == self.env.user:  # necessary on first page load when `im_status` hasn't been updated yet
                     state = 'present'
                 elif 'offline' in str(employee.user_id.im_status) and employee.id in working_now_list:
                     state = 'absent'
