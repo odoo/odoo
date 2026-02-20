@@ -368,6 +368,7 @@ structure.
 import base64
 import contextlib
 import fnmatch
+import glob
 import io
 import logging
 import math
@@ -388,13 +389,13 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
-from odoo.modules import registry
+from odoo.modules import get_module_path, registry
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import file_open, str2bool
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
@@ -2662,7 +2663,11 @@ class IrQWeb(models.AbstractModel):
         """
         Returns the list of bundles to pregenerate.
         """
+        js_views_bundles, css_views_bundles = self._get_bundles_from_views()
+        lazy_bundles = self._get_lazy_bundles_from_js()
+        return (js_views_bundles | lazy_bundles, css_views_bundles | lazy_bundles)
 
+    def _get_bundles_from_views(self):
         views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
@@ -2676,6 +2681,19 @@ class IrQWeb(models.AbstractModel):
                 if css:
                     css_bundles.add(asset)
         return (js_bundles, css_bundles)
+
+    def _get_lazy_bundles_from_js(self):
+        modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+        lazy_bundle_regex = re.compile(r'loadBundle\(["\'`]([\w\.-]+)["\'`]\)')
+        bundles = set()
+        for modroot in map(get_module_path, modules):
+            for fname in glob.iglob('**/static/src/**/*.js', root_dir=modroot, recursive=True):
+                with file_open(fname) as f:
+                    fcontent = f.read()
+                    if match := lazy_bundle_regex.search(fcontent):
+                        bundles.add(match[1])
+        return bundles
+
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.
