@@ -170,12 +170,22 @@ class PortalAccount(CustomerPortal):
                 return request.make_response(zip_content, headers)
 
         elif report_type in ('html', 'pdf', 'text'):
+<<<<<<< 20a32afe81b6730b8d6836a4e1bad1b479286a47
             has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
             request.update_context(proforma_invoice=not has_generated_invoice)
             # Use the template set on the related partner if there is.
             # This is not perfect as the invoice can still have been computed with another template, but it's a slight fix/imp for stable.
             pdf_report_name = invoice_sudo.partner_id.invoice_template_pdf_report_id.report_name or 'account.account_invoices'
             return self._show_report(model=invoice_sudo, report_type=report_type, report_ref=pdf_report_name, download=download)
+||||||| 873192a642fb94790bfe4ebfd91b8277f757cb64
+            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
+            request.update_context(proforma_invoice=not has_generated_invoice)
+            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
+=======
+            proforma = not invoice_sudo.invoice_pdf_report_id and invoice_sudo.is_sale_document()
+            request.update_context(proforma_invoice=proforma)
+            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
+>>>>>>> 3d593fb60367fb11deea476030418cacb0de1144
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
         return request.render("account.portal_invoice_page", values)
