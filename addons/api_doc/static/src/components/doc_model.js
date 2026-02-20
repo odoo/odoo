@@ -242,7 +242,7 @@ export class DocModel extends Component {
                     },
                     {
                         type: TABLE_TYPES.Tooltip,
-                        value: fieldData.help,
+                        value: fieldData.help || "",
                     },
                     {
                         type: TABLE_TYPES.Code,

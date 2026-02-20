@@ -42,13 +42,13 @@
                         t-on-click="(ev) => this.showSubTable(ev, row.subData)"
                     />
 
-                    <t t-if="row and row.type == 'tooltip'">
+                    <t t-if="row and row.type == 'tooltip' and !!row.value">
                         <i
-                            class="fa fa-question-circle"
+                            class="fa fa-question-circle p-1 "
                             aria-hidden="true"
                             t-if="row.value"
-                            t-on-mouseover="(ev) => this.showDynamicTooltip(ev, row.value)"
-                            t-on-mouseleave="() => this.hideDynamicTooltip()"
+                            t-on-mouseenter="(ev) => this.showDynamicTooltip(ev, row.value)"
+                            t-on-mouseleave="() => this.scheduleHide()"
                         ></i>
                     </t>
                     <t t-else="" t-tag="getTag(row)" t-att-class="getClass(row)" t-out="getValue(row)"/>
@@ -87,9 +87,11 @@
         <DocTable data="state.subTable"/>
     </div>
     <div
-        class="o-doc-dynamic-tooltip"
+        class="o-doc-dynamic-tooltip p-3 border overflow-auto"
         t-att-style="state.tooltipStyle"
         t-ref="tooltipRef"
+        t-on-mouseenter="() => this.cancelHide()"
+        t-on-mouseleave="() => this.scheduleHide()"
     >
         <t t-out="state.tooltipContent"/>
     </div>

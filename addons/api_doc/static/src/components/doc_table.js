@@ -46,52 +46,47 @@ export class DocTable extends Component {
     }
 
     showDynamicTooltip(event, content) {
-        if (this.hideTooltipTimeout) {
-            clearTimeout(this.hideTooltipTimeout);
-            this.hideTooltipTimeout = null;
-        }
+        this.cancelHide();
         this.state.tooltipContent = content;
         const triggerRect = event.target.getBoundingClientRect();
-        this.state.tooltipStyle = `
-            opacity: 0;
-            pointer-events: none;
-        `;
+
         requestAnimationFrame(() => {
             if (!this.tooltipRef.el) {
                 return;
             }
-            const tooltipRect = this.tooltipRef.el.getBoundingClientRect();
-            const top = triggerRect.top - tooltipRect.height - 10;
-            const left = triggerRect.left - tooltipRect.width / 2;
+            const top = triggerRect.top;
+            const left = triggerRect.left + 20;
+
             this.state.tooltipStyle = `
                 top: ${top}px;
                 left: ${left}px;
-                position: fixed;
                 opacity: 1;
                 pointer-events: auto;
             `;
-            this.state.lastTooltipTop = top;
-            this.state.lastTooltipLeft = left;
         });
     }
 
-    hideDynamicTooltip() {
+    scheduleHide() {
+        this.hideTooltipTimeout = setTimeout(() => {
+            this.state.tooltipStyle = `
+                top: ${this.tooltipRef.el ? this.tooltipRef.el.style.top : 0};
+                left: ${this.tooltipRef.el ? this.tooltipRef.el.style.left : 0};
+                opacity: 0;
+                pointer-events: none;
+            `;
+            setTimeout(() => {
+                if (this.state.tooltipStyle.includes('opacity: 0')) {
+                    this.state.tooltipContent = "";
+                }
+            }, 200);
+        }, 100);
+    }
+
+    cancelHide() {
         if (this.hideTooltipTimeout) {
             clearTimeout(this.hideTooltipTimeout);
             this.hideTooltipTimeout = null;
         }
-        const top = this.state.lastTooltipTop;
-        const left = this.state.lastTooltipLeft;
-        this.state.tooltipStyle = `
-            top: ${top}px;
-            left: ${left}px;
-            position: fixed;
-            opacity: 0;
-            pointer-events: none;
-        `;
-        this.hideTooltipTimeout = setTimeout(() => {
-            this.state.tooltipContent = "";
-        }, 200);
     }
 
     computeItems() {
