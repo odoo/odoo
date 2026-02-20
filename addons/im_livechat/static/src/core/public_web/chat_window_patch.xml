@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='content']" position="inside">
+            <BusConnectionAlert/>
+        </xpath>
+    </t>
+</templates>
