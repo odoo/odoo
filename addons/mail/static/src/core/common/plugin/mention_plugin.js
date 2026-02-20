@@ -6,7 +6,7 @@ export class MentionPlugin extends Plugin {
     static id = "mention";
     static dependencies = ["baseContainer", "selection", "history"];
     resources = {
-        selectionchange_handlers: this.detectMentions.bind(this),
+        on_selectionchange_handlers: this.detectMentions.bind(this),
         is_node_editable_predicates: (node) => {
             for (const { selector } of this.MENTION_SELECTORS) {
                 if (closestElement(node, selector)) {

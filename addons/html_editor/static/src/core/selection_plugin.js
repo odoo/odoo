@@ -162,16 +162,16 @@ function scrollToSelection(selection) {
  */
 
 /**
- * @typedef {((selectionData: SelectionData) => void)[]} selectionchange_handlers
- * @typedef {(() => void)[]} selection_leave_handlers
+ * @typedef {((selectionData: SelectionData) => void)[]} on_selectionchange_handlers
+ * @typedef {(() => void)[]} on_selection_leave_handlers
  *
  * @typedef {((ev: PointerEvent) => void | true)[]} double_click_overrides
  * @typedef {((ev: PointerEvent) => void | true)[]} triple_click_overrides
  * @typedef {((selection: EditorSelection) => boolean)[]} fix_selection_on_editable_root_overrides
  *
- * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean)[]} fully_selected_node_predicates
- * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean)[]} intangible_char_for_keyboard_navigation_predicates
- * @typedef {((node: Node) => boolean)[]} is_node_editable_predicates
+ * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean | undefined)[]} is_node_fully_selected_predicates
+ * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} is_char_tangible_for_keyboard_navigation_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_node_editable_predicates
  *
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
  */
@@ -240,7 +240,7 @@ export class SelectionPlugin extends Plugin {
         if (this.document !== document) {
             const focusEditable = () => {
                 this.focusEditableDocument = true;
-                this.dispatchTo("selection_enter_handlers");
+                this.trigger("on_selection_enter_handlers");
             };
             const unFocusEditable = (ev) => {
                 if (this.focusEditableDocument) {
@@ -253,7 +253,7 @@ export class SelectionPlugin extends Plugin {
                         return;
                     }
                     this.focusEditableDocument = false;
-                    this.dispatchTo("selection_leave_handlers");
+                    this.trigger("on_selection_leave_handlers");
                 }
             };
             this.addDomListener(this.document, "focusin", focusEditable, { capture: true });
@@ -324,7 +324,7 @@ export class SelectionPlugin extends Plugin {
         if (this.fixSelectionOnEditableRoot(selectionData)) {
             return;
         }
-        this.dispatchTo("selectionchange_handlers", selectionData);
+        this.trigger("on_selectionchange_handlers", selectionData);
     }
 
     /**
@@ -794,9 +794,8 @@ export class SelectionPlugin extends Plugin {
         const lastLeafNode = lastLeaf(node);
         return (
             // Custom rules
-            this.getResource("fully_selected_node_predicates").some((cb) =>
-                cb(node, selection, range)
-            ) ||
+            (this.checkPredicates("is_node_fully_selected_predicates", node, selection, range) ??
+                false) ||
             // Default rule
             (range.isPointInRange(firstLeafNode, 0) &&
                 range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode)))
@@ -846,7 +845,7 @@ export class SelectionPlugin extends Plugin {
                     (node === selection.anchorNode || node === selection.focusNode))
         );
 
-        const modifiers = [
+        const processors = [
             // Remove the editable from the list
             (nodes) => (nodes[0] === this.editable ? nodes.slice(1) : nodes),
             // Filter out text nodes that have no content selected
@@ -858,13 +857,12 @@ export class SelectionPlugin extends Plugin {
                     return nodes.filter((node) => !edgeTextNodes.has(node));
                 }
             },
-            // Custom modifiers
-            ...this.getResource("targeted_nodes_processors"),
         ];
-        for (const modifier of modifiers) {
-            targetedNodes = modifier(targetedNodes);
+        for (const processor of processors) {
+            targetedNodes = processor(targetedNodes);
         }
-        return targetedNodes;
+        // Custom modifiers
+        return this.processThrough("targeted_nodes_processors", targetedNodes);
     }
 
     /**
@@ -1037,16 +1035,19 @@ export class SelectionPlugin extends Plugin {
                     ? ["anchorNode", "anchorOffset"]
                     : ["focusNode", "focusOffset"];
 
-            // Whether the character next to the cursor should be skipped.
-            const shouldSkipCallbacks = this.getResource(
-                "intangible_char_for_keyboard_navigation_predicates"
-            );
             let adjacentCharacter = getAdjacentCharacter(
                 selection[edgeNode],
                 selection[edgeOffset],
                 domDirection
             );
-            let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
+            // Whether the character next to the cursor should be skipped.
+            let shouldSkip = !(
+                this.checkPredicates(
+                    "is_char_tangible_for_keyboard_navigation_predicates",
+                    ev,
+                    adjacentCharacter
+                ) ?? true
+            );
 
             while (shouldSkip) {
                 const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
@@ -1064,7 +1065,14 @@ export class SelectionPlugin extends Plugin {
 
                 shouldSkip =
                     hasSelectionChanged &&
-                    shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+                    !(
+                        this.checkPredicates(
+                            "is_char_tangible_for_keyboard_navigation_predicates",
+                            ev,
+                            adjacentCharacter,
+                            lastSkippedChar
+                        ) ?? true
+                    );
             }
         }
 
@@ -1102,13 +1110,10 @@ export class SelectionPlugin extends Plugin {
     }
 
     isNodeEditable(node) {
-        const results = this.getResource("is_node_editable_predicates")
-            .map((p) => p(node))
-            .filter((r) => r !== undefined);
-        if (!results.length) {
-            return node.parentElement?.isContentEditable;
-        }
-        return results.every((r) => r);
+        return (
+            this.checkPredicates("is_node_editable_predicates", node) ??
+            !!node.parentElement?.isContentEditable
+        );
     }
 
     focusEditable() {

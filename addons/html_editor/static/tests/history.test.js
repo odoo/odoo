@@ -23,7 +23,7 @@ describe("reset", () => {
         const TestPlugin = class extends Plugin {
             static id = "test";
             resources = {
-                normalize_handlers: () => {
+                normalize_processors: () => {
                     this.editable.firstChild.setAttribute("data-test-normalize", "1");
                 },
             };
@@ -647,18 +647,18 @@ describe("shortcut", () => {
         expect(getContent(el)).toBe("<p>b[]</p>");
     });
 
-    test("use handleNewRecords resource", async () => {
+    test("use on_new_records_handled_handlers resource", async () => {
         const onChange = () => {
             expect.step("onchange");
         };
         const resources = {
-            handleNewRecords: () => {
+            on_new_records_handled_handlers: () => {
                 expect.step("handleNewRecords");
             },
-            content_updated_handlers: () => {
+            on_content_updated_handlers: () => {
                 expect.step("contentUpdated");
             },
-            normalize_handlers: (root) => {
+            normalize_processors: (root) => {
                 expect.step("normalize");
                 root.classList.add("test");
             },
@@ -688,7 +688,7 @@ describe("destroy", () => {
             static dependencies = ["history", "dom"];
             static id = "test";
             resources = {
-                savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+                is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
             };
             isMutationRecordSavable(record) {
                 if (
@@ -700,7 +700,6 @@ describe("destroy", () => {
                     expect.step("dispatch");
                     return false;
                 }
-                return true;
             }
             destroy() {
                 this.dependencies.dom.insert(

@@ -86,9 +86,9 @@ export class CarouselOptionPlugin extends Plugin {
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        get_gallery_items_handlers: this.getGalleryItems.bind(this),
-        reorder_items_handlers: this.reorderCarouselItems.bind(this),
-        before_save_handlers: this.restoreCarousels.bind(this),
+        gallery_items_providers: this.getGalleryItems.bind(this),
+        reorder_items_processors: this.reorderCarouselItems.bind(this),
+        on_will_save_handlers: this.restoreCarousels.bind(this),
         is_unremovable_selector: carouselItemOptionSelector,
     };
 

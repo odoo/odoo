@@ -8,7 +8,7 @@ class BootstrapOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        savable_mutation_record_predicates: this.filterBootstrapMutations.bind(this),
+        is_mutation_record_savable_predicates: this.filterBootstrapMutations.bind(this),
     };
 
     /**
@@ -24,38 +24,42 @@ class BootstrapOptionPlugin extends Plugin {
         const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
 
         if (record.type === "classList") {
-            // Do not record when showing/hiding a dropdown.
             if (record.target.matches(".dropdown-toggle, .dropdown-menu")) {
-                return !dropdownClasses.includes(record.className);
+                // Do not record when showing/hiding a dropdown.
+                if (dropdownClasses.includes(record.className)) {
+                    return false;
+                }
+            } else if (record.target.matches(".offcanvas, .offcanvas-backdrop")) {
+                // Do not record when showing/hiding an offcanvas.
+                if (offcanvasClasses.includes(record.className)) {
+                    return false;
+                }
             }
-            // Do not record when showing/hiding an offcanvas.
-            if (record.target.matches(".offcanvas, .offcanvas-backdrop")) {
-                return !offcanvasClasses.includes(record.className);
-            }
-            return true;
-        }
-        if (record.type === "attributes") {
-            // Do not record when showing/hiding a dropdown.
+        } else if (record.type === "attributes") {
             if (record.target.matches(".dropdown-menu")) {
-                return !dropdownMenuAttributes.includes(record.attributeName);
+                // Do not record when showing/hiding a dropdown.
+                if (dropdownMenuAttributes.includes(record.attributeName)) {
+                    return false;
+                }
+            } else if (record.target.matches(".dropdown-toggle")) {
+                if (dropdownToggleAttributes.includes(record.attributeName)) {
+                    return false;
+                }
+            } else if (record.target.matches(".offcanvas")) {
+                // Do not record when showing/hiding an offcanvas.
+                if (offcanvasAttributes.includes(record.attributeName)) {
+                    return false;
+                }
             }
-            if (record.target.matches(".dropdown-toggle")) {
-                return !dropdownToggleAttributes.includes(record.attributeName);
-            }
-            // Do not record when showing/hiding an offcanvas.
-            if (record.target.matches(".offcanvas")) {
-                return !offcanvasAttributes.includes(record.attributeName);
-            }
-            return true;
-        }
-        if (record.type === "childList") {
+        } else if (record.type === "childList") {
             const addedOrRemovedNode = (record.addedTrees[0] || record.removedTrees[0]).node;
             // Do not record the addition/removal of the offcanvas backdrop.
-            return !(
+            if (
                 isElement(addedOrRemovedNode) && addedOrRemovedNode.matches(".offcanvas-backdrop")
-            );
+            ) {
+                return false;
+            }
         }
-        return true;
     }
 }
 

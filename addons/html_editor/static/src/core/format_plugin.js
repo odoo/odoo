@@ -52,11 +52,11 @@ function isFormatted(formatPlugin, format) {
  * @typedef {((formatName: string, options: {
  *      formatProps: object,
  *      applyStyle: boolean,
- * }) => void | boolean)[]} format_selection_handlers
- * @typedef {(() => void)[]} remove_all_formats_handlers
+ * }) => void | boolean)[]} on_will_format_selection_handlers
+ * @typedef {(() => void)[]} on_all_formats_removed_handlers
  *
- * @typedef {((className: string) => boolean)[]} format_class_predicates
- * @typedef {((node: Node) => boolean)[]} has_format_predicates
+ * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
  */
 
 export class FormatPlugin extends Plugin {
@@ -183,14 +183,21 @@ export class FormatPlugin extends Plugin {
             }),
         ],
         /** Handlers */
-        beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        normalize_handlers: this.normalize.bind(this),
-        selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
-        before_set_tag_handlers: this.removeFontSizeFormat.bind(this),
+        on_beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
+        on_selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
+        on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
-        intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
+        /** Processors */
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        normalize_processors: this.normalize.bind(this),
+
+        /** Predicates */
+        is_char_tangible_for_keyboard_navigation_predicates: (_, char) => {
+            if (char === "\u200b") {
+                return false;
+            }
+        },
     };
 
     /**
@@ -232,7 +239,7 @@ export class FormatPlugin extends Plugin {
     removeAllFormats() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
-        this.dispatchTo("remove_all_formats_handlers");
+        this.trigger("on_all_formats_removed_handlers");
         this.dependencies.history.addStep();
     }
 
@@ -285,13 +292,13 @@ export class FormatPlugin extends Plugin {
                 return true;
             }
         }
-        return targetedNodes.some((node) =>
-            this.getResource("has_format_predicates").some((predicate) => predicate(node))
+        return targetedNodes.some(
+            (node) => this.checkPredicates("has_format_predicates", node) ?? false
         );
     }
 
     formatSelection(formatName, options) {
-        this.dispatchTo("format_selection_handlers", formatName, options);
+        this.trigger("on_will_format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
         }
@@ -362,8 +369,9 @@ export class FormatPlugin extends Plugin {
             // Remove the format on all inline ancestors until a block or an element
             // with a class that is not indicated as splittable.
             const isClassListSplittable = (classList) =>
-                [...classList].every((className) =>
-                    this.getResource("format_class_predicates").some((cb) => cb(className))
+                [...classList].every(
+                    (className) =>
+                        this.checkPredicates("is_format_class_predicates", className) ?? false
                 );
 
             while (
@@ -509,7 +517,7 @@ export class FormatPlugin extends Plugin {
         this.mergeAdjacentInlines(root);
     }
 
-    cleanForSave({ root, preserveSelection = false } = {}) {
+    cleanForSave(root, { preserveSelection = false } = {}) {
         for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
             let currentElement = element.parentElement;
             this.cleanElement(element, { preserveSelection });
@@ -566,8 +574,8 @@ export class FormatPlugin extends Plugin {
             return;
         }
         if (
-            ![...element.classList].every((c) =>
-                this.getResource("format_class_predicates").some((p) => p(c))
+            ![...element.classList].every(
+                (c) => this.checkPredicates("is_format_class_predicates", c) ?? false
             )
         ) {
             // Original comment from web_editor:
@@ -690,7 +698,7 @@ export class FormatPlugin extends Plugin {
     shouldBeMergedWithPreviousSibling(node) {
         const isMergeable = (node) =>
             FORMATTABLE_TAGS.includes(node.nodeName) &&
-            !this.getResource("unsplittable_node_predicates").some((predicate) => predicate(node));
+            (this.checkPredicates("is_node_splittable_predicates", node) ?? true);
         let previousSibling = node.previousSibling;
         if (node.matches("code.o_inline_code")) {
             while (

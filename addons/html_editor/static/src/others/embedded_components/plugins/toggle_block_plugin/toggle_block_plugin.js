@@ -52,7 +52,7 @@ export class ToggleBlockPlugin extends Plugin {
             ),
         ],
         move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
-        selection_blocker_predicates: (blocker) => {
+        is_selection_blocker_predicates: (blocker) => {
             // Prevent the insertion of selection placeholders around toggle blocks.
             if (
                 blocker.nodeType === Node.ELEMENT_NODE &&
@@ -87,7 +87,7 @@ export class ToggleBlockPlugin extends Plugin {
             },
         ],
 
-        normalize_handlers: withSequence(Infinity, this.normalize.bind(this)),
+        normalize_processors: withSequence(Infinity, this.normalize.bind(this)),
 
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
         delete_forward_overrides: this.handleDeleteForward.bind(this),
@@ -95,7 +95,7 @@ export class ToggleBlockPlugin extends Plugin {
         split_element_block_overrides: withSequence(1, this.handleSplitElementBlock.bind(this)),
         tab_overrides: this.handleTab.bind(this),
 
-        power_buttons_visibility_predicates: this.showPowerButtons.bind(this),
+        should_show_power_buttons_predicates: this.showPowerButtons.bind(this),
 
         before_insert_processors: this.handleInsert.bind(this),
     };
@@ -598,9 +598,8 @@ export class ToggleBlockPlugin extends Plugin {
     }
 
     showPowerButtons(selection) {
-        return (
-            selection.isCollapsed &&
-            !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`)
-        );
+        if (selection.isCollapsed) {
+            return !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`);
+        }
     }
 }

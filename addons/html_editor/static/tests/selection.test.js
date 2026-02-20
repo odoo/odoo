@@ -40,7 +40,7 @@ test("plugins should be notified when ranges are removed", async () => {
     class TestPlugin extends Plugin {
         static id = "test";
         resources = {
-            selectionchange_handlers: () => count++,
+            on_selectionchange_handlers: () => count++,
         };
     }
 
@@ -1298,7 +1298,7 @@ describe("crash fixes", () => {
         class TestPlugin extends Plugin {
             static id = "test";
             resources = {
-                selectionchange_handlers: withSequence(-1, (selectionData) => {
+                on_selectionchange_handlers: withSequence(-1, (selectionData) => {
                     const { anchorNode } = selectionData.editableSelection;
                     anchorNode.parentElement.remove();
                 }),

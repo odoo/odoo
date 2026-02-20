@@ -64,8 +64,8 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  */
 
 /**
- * @typedef {(() => void)[]} before_delete_handlers
- * @typedef {(() => void)[]} delete_handlers
+ * @typedef {(() => void)[]} on_will_delete_handlers
+ * @typedef {(() => void)[]} on_deleted_handlers
  *
  * @typedef {((range: RangeLike) => void | true)[]} delete_backward_overrides
  * @typedef {((range: RangeLike) => void | true)[]} delete_backward_word_overrides
@@ -75,8 +75,8 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * @typedef {((range: RangeLike) => void | true)[]} delete_forward_line_overrides
  * @typedef {((range: RangeLike) => void | true)[]} delete_range_overrides
  *
- * @typedef {((node: Node) => boolean)[]} functional_empty_node_predicates
- * @typedef {((node: Node) => boolean)[]} is_empty_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_functional_empty_node_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_node_empty_predicates
  *
  * @typedef {((node: Node) => Node[])[]} removable_descendants_providers
  *
@@ -86,11 +86,17 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * The `root` argument is used by some predicates in which a node is
  * conditionally unremovable (e.g. a table cell is only removable if its
  * ancestor table is also being removed).
- * @typedef {((node: Node, root: HTMLElement) => boolean)[]} unremovable_node_predicates
+ * @typedef {((node: Node, root: HTMLElement) => boolean | undefined)[]} is_node_removable_predicates
  */
 
 // @todo @phoenix: move these predicates to different plugins
-export const unremovableNodePredicates = [(node) => node.classList?.contains("oe_unremovable")];
+export const removableNodePredicates = [
+    (node) => {
+        if (node.classList?.contains("oe_unremovable")) {
+            return false;
+        }
+    },
+];
 
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
@@ -122,12 +128,12 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
         ],
         /** Handlers */
-        beforeinput_handlers: [
+        on_beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
-        input_handlers: (ev) => this.onAndroidChromeInput?.(ev),
-        selectionchange_handlers: withSequence(5, () => this.onAndroidChromeSelectionChange?.()),
+        on_input_handlers: (ev) => this.onAndroidChromeInput?.(ev),
+        on_selectionchange_handlers: withSequence(5, () => this.onAndroidChromeSelectionChange?.()),
         /** Overrides */
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
@@ -136,8 +142,12 @@ export class DeletePlugin extends Plugin {
         delete_forward_word_overrides: this.deleteForwardUnmergeable.bind(this),
         delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
-        unremovable_node_predicates: unremovableNodePredicates,
-        invalid_for_base_container_predicates: (node) => this.isUnremovable(node, this.editable),
+        is_node_removable_predicates: removableNodePredicates,
+        is_valid_for_base_container_predicates: (node) => {
+            if (this.isUnremovable(node, this.editable)) {
+                return false;
+            }
+        },
     };
 
     setup() {
@@ -241,7 +251,7 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
-        this.dispatchTo("before_delete_handlers");
+        this.trigger("on_will_delete_handlers");
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -252,7 +262,7 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-        this.dispatchTo("delete_handlers");
+        this.trigger("on_deleted_handlers");
         this.dependencies.history.addStep({ batchable: true });
     }
 
@@ -632,7 +642,7 @@ export class DeletePlugin extends Plugin {
     // conditionally unremovable (e.g. a table cell is only removable if its
     // ancestor table is also being removed).
     isUnremovable(node, root = undefined) {
-        return this.getResource("unremovable_node_predicates").some((p) => p(node, root));
+        return !(this.checkPredicates("is_node_removable_predicates", node, root) ?? true);
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -755,7 +765,7 @@ export class DeletePlugin extends Plugin {
      * merge are reverse operations from one another).
      */
     isUnmergeable(node) {
-        return this.getResource("unsplittable_node_predicates").some((p) => p(node));
+        return !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
     }
 
     joinBlocks(left, right, commonAncestor) {
@@ -1221,11 +1231,7 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        if (
-            this.getResource("functional_empty_node_predicates").some((predicate) =>
-                predicate(leaf)
-            )
-        ) {
+        if (this.checkPredicates("is_functional_empty_node_predicates", leaf) ?? false) {
             return false;
         }
         if (isEmpty(leaf) || isZWS(leaf)) {
@@ -1319,9 +1325,9 @@ export class DeletePlugin extends Plugin {
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
             if (!selection.isCollapsed) {
-                this.dispatchTo("before_delete_handlers");
+                this.trigger("on_will_delete_handlers");
                 this.deleteSelection(selection);
-                this.dispatchTo("delete_handlers");
+                this.trigger("on_deleted_handlers");
             }
             // Default behavior: insert text and trigger input event
         }
@@ -1388,7 +1394,7 @@ export class DeletePlugin extends Plugin {
 
         if (
             (isEmpty(closestUnmergeable) ||
-                this.getResource("is_empty_predicates").some((p) => p(closestUnmergeable))) &&
+                (this.checkPredicates("is_node_empty_predicates", closestUnmergeable) ?? false)) &&
             !this.isUnremovable(closestUnmergeable)
         ) {
             closestUnmergeable.remove();

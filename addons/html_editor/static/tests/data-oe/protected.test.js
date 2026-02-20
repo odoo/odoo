@@ -628,7 +628,7 @@ test("protected plugin is robust against other plugins which can filter mutation
     class FilterPlugin extends Plugin {
         static id = "filterPlugin";
         resources = {
-            savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+            is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
         };
         isMutationRecordSavable(record) {
             if (
@@ -639,7 +639,6 @@ test("protected plugin is robust against other plugins which can filter mutation
                 // Artificially hide the removal of `a` node
                 return false;
             }
-            return true;
         }
     }
     const { editor, el, plugins } = await setupEditor(

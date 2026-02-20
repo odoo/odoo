@@ -22,7 +22,7 @@ class ColorStylePlugin extends Plugin {
             );
             return true;
         }),
-        apply_custom_css_style: withSequence(20, this.applyColorStyle.bind(this)),
+        apply_custom_css_style_overrides: withSequence(20, this.applyColorStyle.bind(this)),
     };
     /**
      * @param {Object} context
@@ -39,7 +39,7 @@ class ColorStylePlugin extends Plugin {
                 value = `bg-${match[1]}`;
             }
             this.dependencies.color.colorElement(editingElement, value, "backgroundColor", params);
-            this.dispatchTo("on_bg_color_updated_handlers", editingElement);
+            this.trigger("on_bg_color_updated_handlers", editingElement);
             return true;
         } else if (styleName === "color") {
             const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);

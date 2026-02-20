@@ -162,8 +162,8 @@ class SocialMediaOptionPlugin extends Plugin {
             EditSocialMediaLinkAction,
             AddSocialMediaLinkAction,
         },
-        normalize_handlers: this.normalize.bind(this),
-        save_handlers: this.saveRecordedSocialMedia.bind(this),
+        normalize_processors: this.normalize.bind(this),
+        on_will_reset_history_after_saving_handlers: this.saveRecordedSocialMedia.bind(this),
         content_not_editable_selectors: [".s_share"],
         content_editable_selectors: [
             ".s_share a > i",

@@ -17,7 +17,7 @@ class MassMailingLayoutColumnPlugin extends Plugin {
     resources = {
         mark_color_level_selector_params: [{ selector: ".o_mail_snippet_general" }],
         builder_options: [withSequence(before(WIDTH), MassMailingLayoutColumnOption)],
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
     };
 
     normalize(element) {

@@ -17,7 +17,10 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     static id = "compatibilityInlineBorderRemoval";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        apply_custom_css_style: withSequence(20, this.removeInlineBorderIfNecessary.bind(this)),
+        apply_custom_css_style_overrides: withSequence(
+            20,
+            this.removeInlineBorderIfNecessary.bind(this)
+        ),
     };
 
     // The border-width/radius calculation using --box-border-width/radius

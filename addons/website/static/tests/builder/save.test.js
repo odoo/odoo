@@ -231,7 +231,7 @@ test("preview shouldn't let o_dirty", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            normalize_handlers: (root) => {
+            normalize_processors: (root) => {
                 const el = root.querySelector(".test-option");
                 if (editorIsStart && el.dataset.applied !== "true") {
                     // apply a mutation when we remove the preview
@@ -481,7 +481,7 @@ describe("Add Language", () => {
             class extends Plugin {
                 static id = "test";
                 resources = {
-                    save_handlers: async () => {
+                    on_will_reset_history_after_saving_handlers: async () => {
                         await deferSave.promise;
                         throw "save fails for the test";
                     },
@@ -540,7 +540,7 @@ test("attempt to prevent closing window with unsaved changes", async () => {
     addPlugin(
         class extends Plugin {
             static id = "test";
-            resources = { save_handlers: () => deferSave.promise };
+            resources = { on_will_reset_history_after_saving_handlers: () => deferSave.promise };
         }
     );
     setupSaveAndReloadIframe();

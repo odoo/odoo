@@ -9,12 +9,12 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
  * @typedef {((
  *      activeItemEl: HTMLElement,
  *      optionName: string
- * ) => HTMLElement[])[]} get_gallery_items_handlers
+ * ) => HTMLElement[])[]} gallery_items_providers
  * @typedef {((
  *      activeItemEl: HTMLElement,
  *      itemEls: HTMLElement[],
  *      optionName: string
- * ) => void)[]} reorder_items_handlers
+ * ) => void)[]} reorder_items_processors
  */
 
 export class GalleryElementOption extends BaseOptionComponent {
@@ -66,10 +66,7 @@ export class SetGalleryElementPositionAction extends BuilderAction {
 
         // Get the items to reorder.
         activeItemEl = activeItemEl.closest("a") || activeItemEl;
-        const itemEls = [];
-        for (const getGalleryItems of this.getResource("get_gallery_items_handlers")) {
-            itemEls.push(...getGalleryItems(activeItemEl, optionName));
-        }
+        const itemEls = this.getResource("gallery_items_providers").flatMap((fn) => fn(activeItemEl, optionName));
 
         // Reorder the items.
         const oldPosition = itemEls.indexOf(activeItemEl);
@@ -95,7 +92,7 @@ export class SetGalleryElementPositionAction extends BuilderAction {
         }
 
         // Update the DOM with the new items order.
-        this.dispatchTo("reorder_items_handlers", activeItemEl, itemEls, optionName);
+        this.processThrough("reorder_items_processors", activeItemEl, itemEls, optionName);
     }
 }
 

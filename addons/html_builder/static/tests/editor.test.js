@@ -60,7 +60,7 @@ test("unsplittable node predicates should not crash when called with text node a
     const textNode = editor.editable.querySelector("p").firstChild;
     expect(isTextNode(textNode)).toBe(true);
     expect(() =>
-        editor.resources.unsplittable_node_predicates.forEach((p) => p(textNode))
+        editor.resources.is_node_splittable_predicates.forEach((p) => p(textNode))
     ).not.toThrow();
 });
 

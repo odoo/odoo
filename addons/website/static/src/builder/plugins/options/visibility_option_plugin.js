@@ -42,7 +42,7 @@ class VisibilityOptionPlugin extends Plugin {
             ForceVisibleAction,
             ToggleDeviceVisibilityAction,
         },
-        normalize_handlers: this.normalizeCSSSelectors.bind(this),
+        normalize_processors: this.normalizeCSSSelectors.bind(this),
         visibility_selector_parameters: [
             {
                 saveAttribute: "visibilityValueCountry",
@@ -215,7 +215,7 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
                 editingElement.classList.remove("o_snippet_override_invisible");
             },
         });
-        this.dispatchTo("on_visibility_toggled_handlers", editingElement);
+        this.trigger("on_visibility_toggled_handlers", editingElement);
     }
     clean({ editingElement }) {
         editingElement.classList.remove(
@@ -234,7 +234,7 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
             },
             revert: () => {},
         });
-        this.dispatchTo("on_visibility_toggled_handlers", editingElement);
+        this.trigger("on_visibility_toggled_handlers", editingElement);
     }
     isApplied({ editingElement, params: { mainParam: visibilityParam } }) {
         const classList = [...editingElement.classList];

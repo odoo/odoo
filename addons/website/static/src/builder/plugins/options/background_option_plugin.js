@@ -122,7 +122,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
             loadResult: "",
             params: { ...params, forceClean: true },
         });
-        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+        this.trigger("on_bg_image_hidden_handlers", editingElement);
     }
 }
 
@@ -138,7 +138,7 @@ export class ToggleBgVideoAction extends BuilderAction {
             params: params,
             loadResult: loadResult,
         });
-        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+        this.trigger("on_bg_image_hidden_handlers", editingElement);
     }
     isApplied({ editingElement }) {
         return editingElement.classList.contains("o_background_video");

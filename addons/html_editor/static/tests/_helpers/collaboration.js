@@ -78,10 +78,10 @@ export const setupMultiEditor = async (spec) => {
                 collaboration: { peerId },
                 resources: {
                     ...spec.resources,
-                    collaboration_step_added_handlers: (step) => {
+                    on_collaboration_step_added_handlers: (step) => {
                         peerInfo.steps.push(step);
                     },
-                    history_missing_parent_step_handlers: (params) => {
+                    on_history_missing_parent_step_handlers: (params) => {
                         historyMissingParentSteps(peerInfos, peerInfo, params);
                     },
                 },

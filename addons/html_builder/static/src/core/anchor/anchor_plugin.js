@@ -35,7 +35,7 @@ export class AnchorPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),
-        get_options_container_top_buttons: withSequence(
+        options_container_top_buttons_providers: withSequence(
             0,
             this.getOptionsContainerTopButtons.bind(this)
         ),

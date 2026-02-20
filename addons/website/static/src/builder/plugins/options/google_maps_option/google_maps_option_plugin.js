@@ -59,7 +59,11 @@ export class GoogleMapsOptionPlugin extends Plugin {
             ResetMapColorAction,
         },
         // TODO remove when the snippet will have a "Height" option.
-        keep_overlay_options: (el) => el.matches(".s_google_map"),
+        should_keep_overlay_options_predicates: (el) => {
+            if (el.matches(".s_google_map")) {
+                return true;
+            }
+        },
     };
 
     setup() {
@@ -160,7 +164,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
                 editingElement.dataset.mapGps = coordinates;
                 editingElement.dataset.pinAddress = place.formatted_address;
                 // Restart interactions to re-render the map.
-                this.dispatchTo("content_manually_updated_handlers", editingElement);
+                this.trigger("on_content_manually_updated_handlers", editingElement);
                 this.dependencies.history.addStep();
             }
         }

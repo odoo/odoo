@@ -45,18 +45,20 @@ export class SeparatorPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.handleSelectionInHr.bind(this),
-        deselect_custom_selected_nodes_handlers: this.deselectHR.bind(this),
-        clean_handlers: this.deselectHR.bind(this),
-        clean_for_save_handlers: ({ root }) => {
+        on_selectionchange_handlers: this.handleSelectionInHr.bind(this),
+        on_clean_handlers: this.deselectHR.bind(this),
+
+        /** Processors */
+        clean_for_save_processors: (root) => {
             this.deselectHR(root);
         },
+        deselect_custom_selected_nodes_processors: this.deselectHR.bind(this),
     };
 
     insertSeparator() {
         let selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const block = closestBlock(selection.startContainer);
-        this.dispatchTo("before_insert_separator_handlers", block);
+        this.trigger("on_will_insert_separator_handlers", block);
         selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const element = closestElement(selection.startContainer, paragraphRelatedElementsSelector);
 

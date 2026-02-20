@@ -8,7 +8,7 @@ import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
- * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
+ * @typedef {((editableEls: HTMLElement[]) => void)[]} on_nodes_marked_translatable_handlers
  */
 
 const TRANSLATED_ATTRS = ["placeholder", "title", "alt", "value"];
@@ -53,9 +53,9 @@ export class TranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        get_dirty_els: this.getDirtyTranslations.bind(this),
-        after_setup_editor_handlers: () => {
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        dirty_els_providers: this.getDirtyTranslations.bind(this),
+        after_setup_editor_overrides: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
             );
@@ -75,7 +75,7 @@ export class TranslationPlugin extends Plugin {
             }
             return true;
         },
-        start_edition_handlers: withSequence(5, () => {
+        on_editor_started_handlers: withSequence(5, () => {
             this.prepareTranslation();
         }),
         system_classes: ["o_savable_attribute"],
@@ -305,7 +305,7 @@ export class TranslationPlugin extends Plugin {
                 });
             });
         }
-        this.dispatchTo("mark_translatable_nodes", this.editableEls);
+        this.trigger("on_nodes_marked_translatable_handlers", this.editableEls);
     }
 
     parseTranslationEl(translationHtml) {
@@ -350,7 +350,7 @@ export class TranslationPlugin extends Plugin {
         return dirtyEls;
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         root.querySelectorAll(".o_savable_attribute").forEach((el) => {
             el.classList.remove("o_savable_attribute");
         });

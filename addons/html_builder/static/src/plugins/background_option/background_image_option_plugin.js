@@ -10,10 +10,10 @@ import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 
 /**
- * @typedef {((editingElement: HTMLElement) => void)[]} on_bg_image_hide_handlers
+ * @typedef {((editingElement: HTMLElement) => void)[]} on_bg_image_hidden_handlers
  *
  * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_filter_target_providers
- * @typedef {((el: HTMLElement) => HTMLElement)[]} get_target_element_providers
+ * @typedef {((el: HTMLElement) => HTMLElement)[]} target_element_providers
  */
 
 export class BackgroundImageOptionPlugin extends Plugin {
@@ -37,7 +37,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         },
         content_not_editable_selectors: ".o_we_bg_filter",
         system_node_selectors: ".o_we_bg_filter",
-        get_target_element_providers: withSequence(5, (el) => el),
+        target_element_providers: withSequence(5, (el) => el),
     };
     /**
      * Transfers the background-image and the dataset information relative to
@@ -70,7 +70,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         oldEditingEl.classList.remove("o_bg_img_opt_repeat");
         oldEditingEl.style.removeProperty("background-size");
         const filterColorAction = this.dependencies.builderActions.getAction("selectFilterColor");
-        const editingElement = this.getResource("get_target_element_providers")[0](oldEditingEl);
+        const editingElement = this.getResource("target_element_providers")[0](oldEditingEl);
         const filter = filterColorAction.getValue({ editingElement });
         this.setImageBackground(oldEditingEl, "");
         if (filter) {
@@ -140,7 +140,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         if (backgroundURL) {
             el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
-            const editingElement = this.getResource("get_target_element_providers")[0](el);
+            const editingElement = this.getResource("target_element_providers")[0](el);
             this.dependencies.builderActions
                 .getAction("selectFilterColor")
                 .apply({ editingElement });
@@ -174,7 +174,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         // remove background size to avoid repeating gradient
         editingElement.classList.remove("o_bg_img_opt_repeat");
         editingElement.style.removeProperty("background-size");
-        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+        this.trigger("on_bg_image_hidden_handlers", editingElement);
     }
 }
 

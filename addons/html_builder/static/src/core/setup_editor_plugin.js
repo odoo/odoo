@@ -9,8 +9,8 @@ import { _t } from "@web/core/l10n/translation";
  */
 
 /**
- * @typedef {(() => void | true)[]} after_setup_editor_handlers
- * @typedef {(() => void)[]} before_setup_editor_handlers
+ * @typedef {(() => void | true)[]} after_setup_editor_overrides
+ * @typedef {(() => void)[]} on_will_setup_editor_handlers
  *
  * @typedef {CSSSelector[]} savable_selectors
  */
@@ -20,10 +20,14 @@ export class SetupEditorPlugin extends Plugin {
     static shared = ["getSavableAreas"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         closest_savable_providers: withSequence(10, (el) => el.closest(".o_savable")),
         savable_selectors: "[data-oe-model]",
-        unremovable_node_predicates: (node) => node.classList?.contains("o_savable"),
+        is_node_removable_predicates: (node) => {
+            if (node.classList?.contains("o_savable")) {
+                return false;
+            }
+        },
         on_removed_handlers: this.cleanupEmptyStructures.bind(this),
     };
 
@@ -37,7 +41,7 @@ export class SetupEditorPlugin extends Plugin {
             "#wrap .o_homepage_editor_welcome_message"
         );
         welcomeMessageEl?.remove();
-        this.dispatchTo("before_setup_editor_handlers");
+        this.trigger("on_will_setup_editor_handlers");
         const savableSelectors = this.getResource("savable_selectors").join(", ");
         const savableEls = [...this.editable.querySelectorAll(savableSelectors)].filter((el) =>
             this.isSavableElement(el)
@@ -45,7 +49,7 @@ export class SetupEditorPlugin extends Plugin {
         for (const savableEl of savableEls) {
             savableEl.classList.add("o_savable");
         }
-        if (this.delegateTo("after_setup_editor_handlers")) {
+        if (this.delegateTo("after_setup_editor_overrides")) {
             return;
         }
 
@@ -64,7 +68,7 @@ export class SetupEditorPlugin extends Plugin {
         }
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
         }

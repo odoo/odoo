@@ -22,11 +22,15 @@ export class MegaMenuOptionPlugin extends Plugin {
             dropIn: ".o_mega_menu nav",
             dropNear: ".o_mega_menu .nav-link",
         },
-        save_handlers: this.saveMegaMenuClasses.bind(this),
+        on_will_reset_history_after_saving_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selector: ".o_mega_menu > section",
-        unsplittable_node_predicates: (node) =>
-            node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link"), //avoid merge
+        is_node_splittable_predicates: (node) => {
+            //avoid merge
+            if (node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link")) {
+                return false;
+            }
+        },
     };
 
     getTemplatePrefix() {

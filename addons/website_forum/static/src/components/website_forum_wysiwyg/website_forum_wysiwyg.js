@@ -61,8 +61,8 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             Plugins: this.props.fullEdit ? FULL_EDIT_PLUGINS : BASIC_PLUGINS,
             content: this.getTextAreaContent(),
             resources: {
-                start_edition_handlers: () => this.cleanImageClasses(this.editor.editable),
-                clean_for_save_handlers: ({ root }) => this.cleanImageClasses(root),
+                on_editor_started_handlers: () => this.cleanImageClasses(this.editor.editable),
+                clean_for_save_processors: (root) => this.cleanImageClasses(root),
             },
             defaultLinkAttributes: { rel: "ugc noreferrer noopener", target: "_blank" },
             dropImageAsAttachment: true,

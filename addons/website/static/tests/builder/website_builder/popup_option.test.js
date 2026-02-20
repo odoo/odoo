@@ -65,8 +65,11 @@ describe("Popup options: popup in page before edit", () => {
                     //   modal, and verifies that it did not add mutations
                     // TODO: once the service website_edit runs during the
                     // tests, this plugin should be removed
-                    savable_mutation_record_predicates: (record) =>
-                        !(record.target.matches?.(".s_popup") && record.className === "d-none"),
+                    is_mutation_record_savable_predicates: (record) => {
+                        if (record.target.matches?.(".s_popup") && record.className === "d-none") {
+                            return false;
+                        }
+                    },
                 };
             }
         );

@@ -43,7 +43,7 @@ const IMAGE_SIZE = [
 
 /**
  * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
- * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_predicates
+ * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_providers
  */
 
 export class ImagePlugin extends Plugin {
@@ -211,10 +211,10 @@ export class ImagePlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateImageParams.bind(this),
-        post_undo_handlers: this.updateImageParams.bind(this),
-        post_redo_handlers: this.updateImageParams.bind(this),
-        on_media_dialog_saved_handlers: async (elements) => {
+        on_selectionchange_handlers: this.updateImageParams.bind(this),
+        on_undone_handlers: this.updateImageParams.bind(this),
+        on_redone_handlers: this.updateImageParams.bind(this),
+        on_will_save_media_dialog_handlers: async (elements) => {
             for (const element of elements) {
                 if (element && element.tagName === "IMG") {
                     this.resetImageTransformation(element, { addStep: false });
@@ -300,7 +300,7 @@ export class ImagePlugin extends Plugin {
         }
         let imageName;
         // Keep the result from the first predicate that returns something.
-        this.getResource("image_name_predicates").find((p) => {
+        this.getResource("image_name_providers").find((p) => {
             imageName = p(targetedImg);
             return imageName;
         });
@@ -364,8 +364,8 @@ export class ImagePlugin extends Plugin {
                 description: _t("Embed the image in the document."),
                 icon: "fa-image",
                 run: () => {
-                    this.dispatchTo(
-                        "before_paste_handlers",
+                    this.trigger(
+                        "on_will_paste_handlers",
                         this.dependencies.selection.getEditableSelection()
                     );
                     const img = this.document.createElement("IMG");

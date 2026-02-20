@@ -15,11 +15,11 @@ export class PopupVisibilityPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        target_show: this.onTargetShow.bind(this),
-        target_hide: this.onTargetHide.bind(this),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        on_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
-        on_reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),
+        on_target_shown_handlers: this.onTargetShow.bind(this),
+        on_target_hidden_handlers: this.onTargetHide.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        on_will_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
+        on_target_revealed_handlers: this.hidePopupsWithoutTarget.bind(this),
     };
 
     setup() {
@@ -70,7 +70,7 @@ export class PopupVisibilityPlugin extends Plugin {
         }
     }
 
-    cleanForSave({ root: rootEl }) {
+    cleanForSave(rootEl) {
         // Hide the popups manually, as we cannot rely on the `onTargetHide`
         // flow since the cleaned popup is a clone and is not in the DOM.
         for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {

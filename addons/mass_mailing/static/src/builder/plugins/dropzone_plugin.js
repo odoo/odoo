@@ -54,7 +54,11 @@ class DropzonePlugin extends Plugin {
         ],
         // Prevent dropping as phrasingContent siblings (reduces the amount of drop zones for
         // HR block).
-        filter_for_sibling_dropzone_predicates: (el) => isPhrasingContent(el),
+        is_valid_for_sibling_dropzone_predicates: (el) => {
+            if (isPhrasingContent(el)) {
+                return false;
+            }
+        },
     };
 
     get noOptionsSelector() {

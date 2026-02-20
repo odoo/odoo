@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
-import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
+import { removableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
+import { isUnremovableQWebElement } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -22,20 +22,33 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
  * }) => void)[]} on_removed_handlers
  * @typedef {((toRemoveEl: HTMLElement) => void)[]} on_will_remove_handlers
  *
- * @typedef {((el: HTMLElement) => boolean)[]} empty_node_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_node_empty_predicates
  *
  * @typedef {CSSSelector[]} is_unremovable_selector
  */
 
-const unremovableNodePredicates = [
-    (node) => !isEditable(node.parentNode),
+const removableNodePredicates = [
+    (node) => {
+        if (!isEditable(node.parentNode)) {
+            return false;
+        }
+    },
     ...deletePluginPredicates,
-    qwebPluginPredicate,
-    (node) => node.parentNode.matches('[data-oe-type="image"]'),
+    (node) => {
+        if (isUnremovableQWebElement(node)) {
+            return false;
+        }
+    },
+    (node) => {
+        if (node.parentNode.matches('[data-oe-type="image"]')) {
+            return false;
+        }
+    },
 ];
 
 export function isRemovable(el) {
-    return !unremovableNodePredicates.some((p) => p(el));
+    // TODO: This way of using preidcates is error-prone. Prefer using `checkPredicates`.
+    return removableNodePredicates.every((p) => p(el) ?? true);
 }
 
 export class RemovePlugin extends Plugin {
@@ -46,13 +59,15 @@ export class RemovePlugin extends Plugin {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        empty_node_predicates: (el) => {
+        is_node_empty_predicates: (el) => {
             const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
-            return (
+            if (
                 el.textContent.trim() === "" &&
                 (!systemNodeSelectors ||
                     [...el.children].every((child) => closestElement(child, systemNodeSelectors)))
-            );
+            ) {
+                return true;
+            }
         },
     };
     static shared = ["removeElement"];
@@ -65,7 +80,11 @@ export class RemovePlugin extends Plugin {
             unremovableSelectors.push(unremovableSelector);
         }
         if (unremovableSelectors.length) {
-            unremovableNodePredicates.push((node) => node.matches(unremovableSelectors.join(", ")));
+            removableNodePredicates.push((node) => {
+                if (node.matches(unremovableSelectors.join(", "))) {
+                    return false;
+                }
+            });
         }
     }
 
@@ -91,7 +110,7 @@ export class RemovePlugin extends Plugin {
 
     isEmptyAndRemovable(el, optionsTargetEls) {
         return (
-            this.getResource("empty_node_predicates").some((predicate) => predicate(el)) &&
+            (this.checkPredicates("is_node_empty_predicates", el) ?? false) &&
             !el.classList.contains("oe_structure") &&
             !el.parentElement.classList.contains("carousel-item") &&
             (!optionsTargetEls.includes(el) ||
@@ -115,7 +134,7 @@ export class RemovePlugin extends Plugin {
         const originPreviousEl = toRemoveEl.previousElementSibling;
         const originNextEl = toRemoveEl.nextElementSibling;
         const nextTargetEl = this.removeCurrentTarget(toRemoveEl, optionTargetEls);
-        this.dispatchTo("on_removed_handlers", {
+        this.trigger("on_removed_handlers", {
             removedEl: toRemoveEl,
             nextTargetEl,
             originPreviousEl,
@@ -137,7 +156,7 @@ export class RemovePlugin extends Plugin {
      * @returns {HTMLElement}
      */
     removeCurrentTarget(toRemoveEl, optionsTargetEls) {
-        this.dispatchTo("on_will_remove_handlers", toRemoveEl);
+        this.trigger("on_will_remove_handlers", toRemoveEl);
 
         // Get the parent and the previous and next visible siblings.
         let parentEl = toRemoveEl.parentElement;

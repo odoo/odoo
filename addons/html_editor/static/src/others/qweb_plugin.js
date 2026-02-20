@@ -38,22 +38,37 @@ export class QWebPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
-        clean_for_save_handlers: ({ root }) => {
+        on_selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
+
+        /** Processors */
+        clean_for_save_processors: (root) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll(PROTECTED_QWEB_SELECTOR)) {
                 element.removeAttribute("contenteditable");
                 delete element.dataset.oeProtected;
             }
         },
-        normalize_handlers: withSequence(0, this.normalize.bind(this)),
+        normalize_processors: withSequence(0, this.normalize.bind(this)),
+        clipboard_content_processors: this.clearDataAttributes.bind(this),
+
+        /** Predicates */
+        is_node_removable_predicates: (node) => {
+            if (isUnremovableQWebElement(node)) {
+                return false;
+            }
+        },
+        is_node_splittable_predicates: (node) => {
+            if (isUnsplittableQWebElement(node)) {
+                return false;
+            }
+        },
+        is_empty_link_legit_predicates: (linkEl) => {
+            if (linkEl.getAttributeNames().some((name) => name.startsWith("t-"))) {
+                return true;
+            }
+        },
 
         system_attributes: QWEB_DATA_ATTRIBUTES,
-        unremovable_node_predicates: isUnremovableQWebElement,
-        unsplittable_node_predicates: isUnsplittableQWebElement,
-        clipboard_content_processors: this.clearDataAttributes.bind(this),
-        legit_empty_link_predicates: (linkEl) =>
-            linkEl.getAttributeNames().some((name) => name.startsWith("t-")),
     };
 
     setup() {

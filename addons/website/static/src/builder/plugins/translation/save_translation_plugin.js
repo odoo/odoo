@@ -9,14 +9,14 @@ export class SaveTranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        pre_save_handlers: this.saveDelayTranslations.bind(this),
+        on_will_save_handlers: this.saveDelayTranslations.bind(this),
         save_elements_overrides: withSequence(20, this.saveTranslationElements.bind(this)),
     };
 
-    async saveDelayTranslations(groupedDirtyElements) {
+    async saveDelayTranslations(root = this.editable, groupedDirtyElements) {
         // Don't take dirty elements as they will be saved
         const cleanDelayTranslationEls = [
-            ...this.editable.querySelectorAll(".o_delay_translation:not(.o_dirty)"),
+            ...root.querySelectorAll(".o_delay_translation:not(.o_dirty)"),
         ];
         const groupedDelayTranslationElements =
             this.dependencies.savePlugin.groupElements(cleanDelayTranslationEls);

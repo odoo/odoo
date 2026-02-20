@@ -28,7 +28,7 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an info banner"),
                 icon: "fa-info-circle",
                 isAvailable: (selection) =>
-                    !this.delegateTo("banner_command_disable_predicates", selection),
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
@@ -39,7 +39,7 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a success banner"),
                 icon: "fa-check-circle",
                 isAvailable: (selection) =>
-                    !this.delegateTo("banner_command_disable_predicates", selection),
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
@@ -50,7 +50,7 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a warning banner"),
                 icon: "fa-exclamation-triangle",
                 isAvailable: (selection) =>
-                    !this.delegateTo("banner_command_disable_predicates", selection),
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
@@ -61,7 +61,7 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a danger banner"),
                 icon: "fa-exclamation-circle",
                 isAvailable: (selection) =>
-                    !this.delegateTo("banner_command_disable_predicates", selection),
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
@@ -72,7 +72,7 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a monospace banner"),
                 icon: "fa-laptop",
                 isAvailable: (selection) =>
-                    !this.delegateTo("banner_command_disable_predicates", selection),
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
                 run: () => {
                     this.insertBanner(
                         _t("Monospace Banner"),
@@ -83,9 +83,14 @@ export class BannerPlugin extends Plugin {
                 },
             },
         ],
-        banner_command_disable_predicates: (selection) =>
-            !isHtmlContentSupported(selection) ||
-            closestElement(selection.anchorNode, ".o_editor_banner"),
+        is_banner_command_available_predicates: (selection) => {
+            if (
+                !isHtmlContentSupported(selection) ||
+                closestElement(selection.anchorNode, ".o_editor_banner")
+            ) {
+                return false;
+            }
+        },
         powerbox_categories: withSequence(20, { id: "banner", name: _t("Banner") }),
         powerbox_items: [
             {
@@ -109,8 +114,11 @@ export class BannerPlugin extends Plugin {
                 categoryId: "banner",
             },
         ],
-        power_buttons_visibility_predicates: ({ anchorNode }) =>
-            !closestElement(anchorNode, ".o_editor_banner"),
+        should_show_power_buttons_predicates: ({ anchorNode }) => {
+            if (closestElement(anchorNode, ".o_editor_banner")) {
+                return false;
+            }
+        },
         move_node_blacklist_selectors: ".o_editor_banner *",
         move_node_whitelist_selectors: ".o_editor_banner",
 

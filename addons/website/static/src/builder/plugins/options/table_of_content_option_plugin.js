@@ -39,14 +39,14 @@ class TableOfContentOptionPlugin extends Plugin {
         builder_actions: {
             NavbarPositionAction,
         },
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
         // Prevent dropping a table of content inside another table of content.
         dropzone_selector: {
             selector: ".s_table_of_content",
             excludeAncestor: ".s_table_of_content",
         },
         // Only allow moving main parts of the table of content by using arrows.
-        is_draggable_handlers: (el) => {
+        is_draggable_predicates: (el) => {
             if (
                 el.matches(
                     ".s_table_of_content .s_table_of_content_navbar_wrap, .s_table_of_content .s_table_of_content_main"
@@ -54,7 +54,6 @@ class TableOfContentOptionPlugin extends Plugin {
             ) {
                 return false;
             }
-            return true;
         },
         is_unremovable_selector: ".s_table_of_content_navbar_wrap, .s_table_of_content_main",
         content_not_editable_selectors: ".s_table_of_content_navbar",

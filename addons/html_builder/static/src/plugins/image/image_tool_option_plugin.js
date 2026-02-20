@@ -60,7 +60,7 @@ class ImageToolOptionPlugin extends Plugin {
             SetNewWindowAction,
             AltAction,
         },
-        on_media_dialog_saved_handlers: async (elements, { node }) => {
+        on_will_save_media_dialog_handlers: async (elements, { node }) => {
             for (const image of elements) {
                 if (image && image.tagName === "IMG") {
                     const updateImageAttributes =
@@ -106,8 +106,8 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
-        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
-        normalize_handlers: this.migrateImages.bind(this),
+        can_have_hover_effect_async_predicates: (el) => this.canHaveHoverEffect(el),
+        normalize_processors: this.migrateImages.bind(this),
     };
     setup() {
         this.htmlStyle = getHtmlStyle(this.document);

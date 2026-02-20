@@ -32,12 +32,10 @@ export class SyntaxHighlightingPlugin extends Plugin {
         system_attributes: "data-syntax-highlighting-autofocus",
 
         /** Handlers */
-        mount_component_handlers: this.setupNewCodeBlock.bind(this),
-        normalize_handlers: (root) => this.addCodeBlocks(root, true),
-        post_undo_handlers: () => this.addCodeBlocks(this.editable, true),
-        post_redo_handlers: () => this.addCodeBlocks(this.editable, true),
-        clean_for_save_handlers: withSequence(0, ({ root }) => this.cleanForSave(root)),
-        before_set_tag_handlers: (el, newTagName, cursors) => {
+        on_will_mount_component_handlers: this.setupNewCodeBlock.bind(this),
+        on_undone_handlers: () => this.addCodeBlocks(this.editable, true),
+        on_redone_handlers: () => this.addCodeBlocks(this.editable, true),
+        on_will_set_tag_handlers: (el, newTagName, cursors) => {
             if (newTagName.toLowerCase() === "pre") {
                 // Remove invisible whitespace that would become visible in a `<pre>` element.
                 removeInvisibleWhitespace(el, cursors);
@@ -45,6 +43,8 @@ export class SyntaxHighlightingPlugin extends Plugin {
         },
 
         /** Processors */
+        clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),
+        normalize_processors: (root) => this.addCodeBlocks(root, true),
         clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),
     };
 

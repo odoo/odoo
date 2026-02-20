@@ -291,19 +291,19 @@ export class FontPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: [
+        on_selectionchange_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
-        post_undo_handlers: [
+        on_undone_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
-        post_redo_handlers: [
+        on_redone_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
 
         /** Overrides */
         split_element_block_overrides: [
@@ -318,8 +318,11 @@ export class FontPlugin extends Plugin {
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_processors: this.handleInsertWithinPre.bind(this),
 
-        format_class_predicates: (className) =>
-            [...FONT_SIZE_CLASSES, "o_default_font_size"].includes(className),
+        is_format_class_predicates: (className) => {
+            if ([...FONT_SIZE_CLASSES, "o_default_font_size"].includes(className)) {
+                return true;
+            }
+        },
     };
 
     setup() {
@@ -613,9 +616,10 @@ export class FontPlugin extends Plugin {
         if (block.nodeName !== "PRE") {
             return insertContainer;
         }
-        for (const cb of this.getResource("before_insert_within_pre_processors")) {
-            insertContainer = cb(insertContainer);
-        }
+        insertContainer = this.processThrough(
+            "before_insert_within_pre_processors",
+            insertContainer
+        );
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
         let linebreak;

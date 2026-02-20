@@ -20,10 +20,10 @@ class WebsiteParallaxPlugin extends Plugin {
         builder_actions: {
             SetParallaxTypeAction,
         },
-        on_bg_image_hide_handlers: this.onBgImageHide.bind(this),
+        on_bg_image_hidden_handlers: this.onBgImageHide.bind(this),
         content_not_editable_selectors: ".s_parallax_bg, section.s_parallax > .oe_structure",
         system_node_selectors: ".s_parallax_bg, .s_parallax_bg_wrap",
-        get_target_element_providers: withSequence(1, this.getTargetElement),
+        target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
         this.backgroundOptionClasses = filterExtends(

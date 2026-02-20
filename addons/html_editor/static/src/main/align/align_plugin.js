@@ -60,13 +60,17 @@ export class AlignPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateAlignmentParams.bind(this),
-        post_undo_handlers: this.updateAlignmentParams.bind(this),
-        post_redo_handlers: this.updateAlignmentParams.bind(this),
-        remove_all_formats_handlers: this.setAlignment.bind(this),
+        on_selectionchange_handlers: this.updateAlignmentParams.bind(this),
+        on_undone_handlers: this.updateAlignmentParams.bind(this),
+        on_redone_handlers: this.updateAlignmentParams.bind(this),
+        on_all_formats_removed_handlers: this.setAlignment.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => closestBlock(node)?.style.textAlign,
+        has_format_predicates: (node) => {
+            if (closestBlock(node)?.style.textAlign) {
+                return true;
+            }
+        },
     };
 
     setup() {

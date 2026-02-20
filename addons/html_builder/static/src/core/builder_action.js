@@ -50,10 +50,16 @@ export class BuilderAction {
         this.dependencies = context.dependencies;
         /** @type { EditorContext['getResource'] } **/
         this.getResource = context.getResource;
-        /** @type { EditorContext['dispatchTo'] } **/
-        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['trigger'] } **/
+        this.trigger = context.trigger;
+        /** @type { EditorContext['triggerAsync'] } **/
+        this.triggerAsync = context.triggerAsync;
         /** @type { EditorContext['delegateTo'] } **/
         this.delegateTo = context.delegateTo;
+        /** @type { EditorContext['processThrough'] } **/
+        this.processThrough = context.processThrough;
+        /** @type { EditorContext['checkPredicates'] } **/
+        this.checkPredicates = context.checkPredicates;
 
         this.setup();
 

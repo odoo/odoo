@@ -22,11 +22,11 @@ export class SelectionPlaceholderPlugin extends Plugin {
     static id = "selectionPlaceholder";
     static dependencies = ["baseContainer", "history", "selection"];
     resources = {
-        external_history_step_handlers: this.updatePlaceholders.bind(this),
-        normalize_handlers: withSequence(100, this.updatePlaceholders.bind(this)),
-        step_added_handlers: this.updatePlaceholders.bind(this),
-        selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
-        clean_for_save_handlers: withSequence(0, ({ root }) => {
+        on_external_history_step_added_handlers: this.updatePlaceholders.bind(this),
+        normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
+        on_step_added_handlers: this.updatePlaceholders.bind(this),
+        on_selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
+        clean_for_save_processors: withSequence(0, (root) => {
             for (const placeholder of root.querySelectorAll(PLACEHOLDER_SELECTOR)) {
                 placeholder.remove();
             }
@@ -37,7 +37,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        selection_blocker_predicates: (blocker) => {
+        is_selection_blocker_predicates: (blocker) => {
             if (
                 (blocker.nodeType === Node.ELEMENT_NODE &&
                     blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
@@ -48,15 +48,18 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        selection_placeholder_container_predicates: (container) => {
+        can_contain_selection_placeholder_predicates: (container) => {
             if (!container.isContentEditable || !allowsParagraphRelatedElements(container)) {
                 return false;
             } else if (container.getAttribute("contenteditable") === "true") {
                 return true;
             }
         },
-        power_buttons_visibility_predicates: ({ anchorNode }) =>
-            !closestElement(anchorNode, PLACEHOLDER_SELECTOR),
+        should_show_power_buttons_predicates: ({ anchorNode }) => {
+            if (closestElement(anchorNode, PLACEHOLDER_SELECTOR)) {
+                return false;
+            }
+        },
         move_node_blacklist_selectors: PLACEHOLDER_SELECTOR,
         system_node_selectors: PLACEHOLDER_SELECTOR,
         system_classes: BLINKER_CLASS,
@@ -79,15 +82,12 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * everywhere we need them, and absent wherever they are not useful.
      */
     updatePlaceholders() {
-        const checkPredicate = (resourceId, node) => {
-            const results = this.getResource(resourceId)
-                .map((p) => p(node))
-                .filter((result) => result !== undefined);
-            return !!results.length && results.every(Boolean);
-        };
-        const isSelectionBlocker = (node) => checkPredicate("selection_blocker_predicates", node);
-        const placeholderParents = selectElements(this.editable, "*").filter((container) =>
-            checkPredicate("selection_placeholder_container_predicates", container)
+        const isSelectionBlocker = (node) =>
+            this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
+        const placeholderParents = selectElements(this.editable, "*").filter(
+            (container) =>
+                this.checkPredicates("can_contain_selection_placeholder_predicates", container) ??
+                false
         );
 
         // 1. Update current placeholders.

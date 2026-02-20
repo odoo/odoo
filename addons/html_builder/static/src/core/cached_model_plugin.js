@@ -15,7 +15,7 @@ export class CachedModelPlugin extends Plugin {
     static dependencies = ["history"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        save_handlers: this.savePendingRecords.bind(this),
+        on_will_reset_history_after_saving_handlers: this.savePendingRecords.bind(this),
     };
     setup() {
         this.ormReadCache = new Cache(

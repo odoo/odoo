@@ -289,7 +289,7 @@ export class MovePlugin extends Plugin {
                 this.overlayTarget
             );
         }
-        this.dispatchTo("on_element_arrow_moved_handlers", {
+        this.trigger("on_element_arrow_moved_handlers", {
             movedEl: this.overlayTarget,
             dragState,
         });

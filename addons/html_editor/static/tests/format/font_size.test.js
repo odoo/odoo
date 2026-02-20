@@ -164,7 +164,11 @@ test("should apply font size in unsplittable span without class", async () => {
     class AddUnsplittableRulePlugin extends Plugin {
         static id = "addUnsplittableRule";
         resources = {
-            unsplittable_node_predicates: (node) => node.getAttribute?.("t") === "unsplittable",
+            is_node_splittable_predicates: (node) => {
+                if (node.getAttribute?.("t") === "unsplittable") {
+                    return false;
+                }
+            },
         };
     }
     await testEditor({

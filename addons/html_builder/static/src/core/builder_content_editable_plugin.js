@@ -23,7 +23,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             "section > .container-fluid",
             ".o_savable",
         ],
-        valid_contenteditable_predicates: this.isValidContentEditable.bind(this),
+        is_valid_contenteditable_predicates: this.isValidContentEditable.bind(this),
         content_editable_providers: this.getContentEditableEls.bind(this),
         content_not_editable_providers: this.getContentNotEditableEls.bind(this),
         contenteditable_to_remove_selector: "[contenteditable]",
@@ -56,11 +56,13 @@ export class BuilderContentEditablePlugin extends Plugin {
             }
             return !notEditableEl.closest("[data-snippet]");
         };
-        return (
-            !contentEditableEl.matches("input, [data-oe-readonly]") &&
-            contentEditableEl.closest(".o_savable") &&
-            !isDescendantOfNotEditableNotSnippet(contentEditableEl)
-        );
+        if (
+            contentEditableEl.matches("input, [data-oe-readonly]") ||
+            !contentEditableEl.closest(".o_savable") ||
+            isDescendantOfNotEditableNotSnippet(contentEditableEl)
+        ) {
+            return false;
+        }
     }
 }
 registry

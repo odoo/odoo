@@ -17,7 +17,7 @@ export class MediaWebsitePlugin extends Plugin {
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_replaced_media_handlers: ({ newMediaEl }) =>
+        on_media_replaced_handlers: ({ newMediaEl }) =>
             // Activate the new media options.
             this.dependencies.builderOptions.setNextTarget(newMediaEl),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -98,8 +98,9 @@ export class MediaWebsitePlugin extends Plugin {
         const sel = this.dependencies.selection.getEditableSelection();
         const editableEl =
             closestElement(mediaEl || sel.startContainer, ".o_savable") || this.editable;
-        const params = { node: mediaEl };
-        this.dispatchTo("replace_media_dialog_params_handlers", params);
+        const params = this.processThrough("replace_media_dialog_params_processors", {
+            node: mediaEl,
+        });
         await this.dependencies.media.openMediaDialog(params, editableEl);
     }
 

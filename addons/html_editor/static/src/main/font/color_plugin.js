@@ -37,7 +37,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @typedef {((element: HTMLElement, cssProp: string, color: string, params: Object) => boolean)[]} apply_color_style_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} color_apply_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
- * @typedef {((color: string) => string)[]} get_background_color_processors
+ * @typedef {((color: string) => string)[]} background_color_processors
  *
  * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_getters
  */
@@ -65,17 +65,24 @@ export class ColorPlugin extends Plugin {
             },
         ],
         /** Handlers */
-        remove_all_formats_handlers: this.removeAllColor.bind(this),
+        on_all_formats_removed_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 
         /** Predicates */
-        has_format_predicates: [
-            (node) => hasColor(closestElement(node), "color"),
-            (node) => hasColor(closestElement(node), "backgroundColor"),
-        ],
-        format_class_predicates: (className) =>
-            TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
-        normalize_handlers: this.normalize.bind(this),
+        has_format_predicates: (node) => {
+            const el = closestElement(node);
+            if (hasColor(el, "color") || hasColor(el, "backgroundColor")) {
+                return true;
+            }
+        },
+        is_format_class_predicates: (className) => {
+            if (TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className)) {
+                return true;
+            }
+        },
+
+        /** Processors */
+        normalize_processors: this.normalize.bind(this),
     };
 
     normalize(root) {
@@ -93,10 +100,10 @@ export class ColorPlugin extends Plugin {
         const hasGradient = isColorGradient(gradient);
         const hasTextGradientClass = el.classList.contains("text-gradient");
 
-        let backgroundColor = elStyle.backgroundColor;
-        for (const processor of this.getResource("get_background_color_processors")) {
-            backgroundColor = processor(backgroundColor);
-        }
+        const backgroundColor = this.processThrough(
+            "background_color_processors",
+            elStyle.backgroundColor
+        );
 
         return {
             color: hasGradient && hasTextGradientClass ? gradient : rgbaToHex(elStyle.color),
@@ -146,9 +153,7 @@ export class ColorPlugin extends Plugin {
     applyColor(color, mode, previewMode = false) {
         this.dependencies.selection.selectAroundNonEditable();
         if (mode === "backgroundColor") {
-            for (const processor of this.getResource("apply_background_color_processors")) {
-                color = processor(color, mode);
-            }
+            color = this.processThrough("apply_background_color_processors", color, mode);
         }
         if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
             return;

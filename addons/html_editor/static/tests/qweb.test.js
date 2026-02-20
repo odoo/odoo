@@ -13,7 +13,7 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { dispatchCleanForSave } from "./_helpers/dispatch";
+import { processThroughCleanForSave } from "./_helpers/dispatch";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
 describe("qweb picker", () => {
@@ -44,13 +44,13 @@ describe("qweb picker", () => {
                 '<p data-selection-placeholder=""><br></p>'
         );
 
-        dispatchCleanForSave(editor, { root: el });
+        processThroughCleanForSave(editor, el);
         expect(getContent(el)).toBe(`<div><t t-if="test">yes</t><t t-else="">no</t></div>`);
     });
 
     test("plugin's dom markers are not savable", async () => {
         const resources = {
-            handleNewRecords: () => {
+            on_new_records_handled_handlers: () => {
                 expect.step("handleNewRecords");
             },
         };

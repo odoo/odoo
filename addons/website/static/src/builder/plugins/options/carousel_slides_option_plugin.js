@@ -20,9 +20,17 @@ export class CarouselSlidesOptionPlugin extends Plugin {
             MakeSlideClickableAction,
             SetSlideAnchorUrlAction,
         },
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        legit_empty_link_predicates: (linkEl) => linkEl.matches(".carousel-item a.slide-link"),
-        show_overlay_buttons_of_ancestor_predicates: (el) => el.matches("div.carousel-item"),
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        is_empty_link_legit_predicates: (linkEl) => {
+            if (linkEl.matches(".carousel-item a.slide-link")) {
+                return true;
+            }
+        },
+        should_show_overlay_buttons_of_ancestor_predicates: (el) => {
+            if (el.matches("div.carousel-item")) {
+                return true;
+            }
+        },
     };
 
     /**
@@ -35,7 +43,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
      *
      * @param {HTMLElement} root
      */
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         const noLinkSlideEls = root.querySelectorAll(
             ".carousel-item.clickable-slide:not(:has(.slide-link))"
         );

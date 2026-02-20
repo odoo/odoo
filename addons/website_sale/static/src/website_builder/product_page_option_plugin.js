@@ -28,8 +28,8 @@ class ProductPageOptionPlugin extends Plugin {
             ProductAddExtraImageAction,
             ProductRemoveAllExtraImagesAction,
         },
-        clean_for_save_handlers: ({ root: el }) => {
-            // TODO the content of this clean_for_save_handlers should probably
+        clean_for_save_processors: (el) => {
+            // TODO the content of this clean_for_save_processors should probably
             // be a generic thing for the whole editor.
 
             // Make sure that if the user removes the whole text of the

@@ -39,7 +39,7 @@ import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/u
 import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
-import { cleanHints, dispatchCleanForSave } from "./_helpers/dispatch";
+import { cleanHints, processThroughCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -865,7 +865,7 @@ describe("Mount processing", () => {
             static id = "simple";
             static dependencies = ["selection", "embeddedComponents", "dom", "history"];
             resources = {
-                mount_component_handlers: this.setupNewComponent.bind(this),
+                on_will_mount_component_handlers: this.setupNewComponent.bind(this),
             };
 
             setupNewComponent({ name, env }) {
@@ -991,8 +991,7 @@ describe("In-editor manipulations", () => {
                 config: getConfig([embedding("counter", Counter)]),
             }
         );
-        const clone = el.cloneNode(true);
-        dispatchCleanForSave(editor, { root: clone });
+        const clone = processThroughCleanForSave(editor, el.cloneNode(true));
         expect(getContent(clone)).toBe(`<div><p>a</p></div><div data-embedded="counter"></div>`);
     });
 
@@ -1028,7 +1027,7 @@ describe("In-editor manipulations", () => {
             `<div data-embedded="unknown"><p>UNKNOWN</p></div>`,
             { config: getConfig([]) }
         );
-        dispatchCleanForSave(editor, { root: el });
+        processThroughCleanForSave(editor, el);
         expect(getContent(el)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
     });
 
@@ -1235,8 +1234,7 @@ describe("editable descendants", () => {
                 ]),
             }
         );
-        const clone = el.cloneNode(true);
-        dispatchCleanForSave(editor, { root: clone });
+        const clone = processThroughCleanForSave(editor, el.cloneNode(true));
         expect(getContent(clone)).toBe(
             unformat(`
                 <div data-embedded="wrapper">

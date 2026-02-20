@@ -61,10 +61,10 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /**
- * @typedef {((containers: BuilderOptionContainer[]) => void)[]} change_current_options_containers_listeners
- * @typedef {((newTargetEl: HTMLElement) => void)[]} on_restore_containers_handlers
+ * @typedef {((containers: BuilderOptionContainer[]) => void)[]} on_current_options_containers_changed_handlers
+ * @typedef {((newTargetEl: HTMLElement) => void)[]} on_will_restore_containers_handlers
  *
- * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} get_options_container_top_buttons
+ * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} options_container_top_buttons_providers
  *
  * @typedef {{
  *     Component: Component;
@@ -88,28 +88,36 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  *      editableOnly?: boolean;
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
- * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} should_keep_overlay_options_predicates
  */
 /**
- * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_providers
+ * @typedef {((
+ *      reasons: Array<string|Markup|LazyTranslatedString>,
+ *      el: HTMLElement
+ * ) => Array<string|Markup|LazyTranslatedString>)[]} clone_disabled_reason_processors
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
  * Example:
  *
- *     ({ el, reasons }) => {
+ *     (reasons, el) => {
  *         reasons.push(`I hate ${el.dataset.name}`);
+ *         return reasons;
  *     }
  */
 /**
- * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} remove_disabled_reason_providers
+ * @typedef {((
+ *      reasons: Array<string|Markup|LazyTranslatedString>,
+ *      el: HTMLElement
+ * ) => Array<string|Markup|LazyTranslatedString>)[]} remove_disabled_reason_processors
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
  * Example:
  *
- *     ({ el, reasons }) => {
+ *     (reasons, el) => {
  *         reasons.push(`I hate ${el.dataset.name}`);
+ *         return reasons;
  *     }
  */
 
@@ -134,18 +142,18 @@ export class BuilderOptionsPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        before_add_step_handlers: this.onWillAddStep.bind(this),
-        step_added_handlers: this.onStepAdded.bind(this),
-        post_undo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
-        post_redo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        start_edition_handlers: () => {
+        on_will_add_step_handlers: this.onWillAddStep.bind(this),
+        on_step_added_handlers: this.onStepAdded.bind(this),
+        on_undone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
+        on_redone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        on_editor_started_handlers: () => {
             if (this.config.initialTarget) {
                 const el = this.editable.querySelector(this.config.initialTarget);
                 this.updateContainers(el);
             }
         },
-        get_options_container_top_buttons: (el) => {
+        options_container_top_buttons_providers: (el) => {
             const buttons = [];
             if (el.matches("section")) {
                 buttons.push({
@@ -307,7 +315,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         this.lastContainers = newContainers;
-        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
 
     getTarget() {
@@ -317,7 +325,7 @@ export class BuilderOptionsPlugin extends Plugin {
     deactivateContainers() {
         this.target = null;
         this.lastContainers = [];
-        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
 
     closestWithOption(el) {
@@ -420,7 +428,7 @@ export class BuilderOptionsPlugin extends Plugin {
         const parentEl = el.parentElement;
         const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
-        const keepOptions = this.delegateTo("keep_overlay_options", el);
+        const keepOptions = this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
         if (isInnerSnippet && isAloneInColumn && !keepOptions) {
             return false;
         }
@@ -435,7 +443,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getOptionsContainerTopButtons(el) {
         const buttons = [];
-        for (const getContainerButtons of this.getResource("get_options_container_top_buttons")) {
+        for (const getContainerButtons of this.getResource("options_container_top_buttons_providers")) {
             buttons.push(...getContainerButtons(el));
             for (const button of buttons) {
                 const handler = button.handler;
@@ -450,7 +458,7 @@ export class BuilderOptionsPlugin extends Plugin {
         return buttons;
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const Option of this.builderOptions) {
             const { selector, exclude, cleanForSave } = Option;
             if (!cleanForSave) {
@@ -511,7 +519,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 targetEl = nextTarget;
             }
             if (targetEl) {
-                this.dispatchTo("on_restore_containers_handlers", targetEl);
+                this.trigger("on_will_restore_containers_handlers", targetEl);
                 this.updateContainers(targetEl, { forceUpdate: true });
                 // Scroll to the target if not visible.
                 if (!isElementInViewport(targetEl)) {
@@ -525,15 +533,15 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     getRemoveDisabledReason(el) {
-        const reasons = [];
-        this.dispatchTo("remove_disabled_reason_providers", { el, reasons });
-        return reasons.length ? reasons.join(" ") : undefined;
+        return (
+            this.processThrough("remove_disabled_reason_processors", [], el).join(" ") || undefined
+        );
     }
 
     getCloneDisabledReason(el) {
-        const reasons = [];
-        this.dispatchTo("clone_disabled_reason_providers", { el, reasons });
-        return reasons.length ? reasons.join(" ") : undefined;
+        return (
+            this.processThrough("clone_disabled_reason_processors", [], el).join(" ") || undefined
+        );
     }
 
     patchBuilderOptions({ target_name, target_element, method, value }) {

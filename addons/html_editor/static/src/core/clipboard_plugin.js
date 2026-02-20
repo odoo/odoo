@@ -20,7 +20,7 @@ import { isHtmlContentSupported } from "./selection_plugin";
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
  *
- * @typedef {(() => boolean)[]} bypass_paste_image_files
+ * @typedef {(() => boolean | undefined)[]} should_bypass_paste_image_files_predicates
  */
 
 const CLIPBOARD_BLACKLISTS = {
@@ -106,9 +106,9 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  */
 
 /**
- * @typedef {((img: HTMLImageElement) => void)[]} added_image_handlers
- * @typedef {(() => void)[]} after_paste_handlers
- * @typedef {(() => void)[]} before_paste_handlers
+ * @typedef {((img: HTMLImageElement) => void)[]} on_image_added_handlers
+ * @typedef {(() => void)[]} on_pasted_handlers
+ * @typedef {(() => void)[]} on_will_paste_handlers
  *
  * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
  *
@@ -143,7 +143,7 @@ export class ClipboardPlugin extends Plugin {
 
     onCut(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
-        this.dispatchTo("before_cut_handlers", selection);
+        this.trigger("on_will_cut_handlers", selection);
         this.onCopy(ev);
         this.dependencies.history.stageSelection();
         this.dependencies.delete.deleteSelection();
@@ -168,15 +168,17 @@ export class ClipboardPlugin extends Plugin {
             return;
         }
         // Prepare text content for clipboard.
-        let textContent = selection.textContent();
-        for (const processor of this.getResource("clipboard_text_processors")) {
-            textContent = processor(textContent);
-        }
+        const textContent = this.processThrough(
+            "clipboard_text_processors",
+            selection.textContent()
+        );
 
         // Prepare html content for clipboard.
-        for (const processor of this.getResource("clipboard_content_processors")) {
-            clonedContents = processor(clonedContents, selection) || clonedContents;
-        }
+        clonedContents = this.processThrough(
+            "clipboard_content_processors",
+            clonedContents,
+            selection
+        );
         this.dependencies.dom.removeSystemProperties(clonedContents);
         fillHtmlTransferData(ev, transferObjectProperty, clonedContents, {
             setEditorTransferData:
@@ -201,7 +203,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.dependencies.history.stageSelection();
 
-        this.dispatchTo("before_paste_handlers", selection, ev);
+        this.trigger("on_will_paste_handlers", selection, ev);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
@@ -210,7 +212,7 @@ export class ClipboardPlugin extends Plugin {
             this.handlePasteHtml(selection, ev.clipboardData) ||
             this.handlePasteText(selection, ev.clipboardData);
 
-        this.dispatchTo("after_paste_handlers", selection);
+        this.trigger("on_pasted_handlers", selection);
         this.dependencies.history.addStep();
     }
     /**
@@ -250,9 +252,10 @@ export class ClipboardPlugin extends Plugin {
      * @param {DataTransfer} clipboardData
      */
     handlePasteHtml(selection, clipboardData) {
-        const files = this.delegateTo("bypass_paste_image_files")
-            ? []
-            : getImageFiles(clipboardData);
+        const files =
+            this.checkPredicates("should_bypass_paste_image_files_predicates") ?? false
+                ? []
+                : getImageFiles(clipboardData);
         const clipboardHtml = clipboardData.getData("text/html");
         const textContent = clipboardData.getData("text/plain");
         if (ONLY_LINK_REGEX.test(textContent)) {
@@ -366,7 +369,7 @@ export class ClipboardPlugin extends Plugin {
         for (const tableElement of container.querySelectorAll("table")) {
             tableElement.classList.add("table", "table-bordered", "o_table");
         }
-        if (this.delegateTo("bypass_paste_image_files")) {
+        if (this.checkPredicates("should_bypass_paste_image_files_predicates") ?? false) {
             for (const imgElement of container.querySelectorAll("img")) {
                 imgElement.remove();
             }
@@ -613,7 +616,7 @@ export class ClipboardPlugin extends Plugin {
      */
     onDragStart(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
-        this.dispatchTo("before_drag_handlers", selection);
+        this.trigger("on_will_drag_handlers", selection);
         this.setSelectionTransferData(ev, "dataTransfer");
     }
     /**
@@ -705,7 +708,7 @@ export class ClipboardPlugin extends Plugin {
         for (const imageFile of imageFiles) {
             const imageNode = this.document.createElement("img");
             imageNode.classList.add("img-fluid");
-            this.dispatchTo("added_image_handlers", imageNode);
+            this.trigger("on_image_added_handlers", imageNode);
             imageNode.dataset.fileName = imageFile.name;
             promises.push(
                 getImageUrl(imageFile).then((url) => {

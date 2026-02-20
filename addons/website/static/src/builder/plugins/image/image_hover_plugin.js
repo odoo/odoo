@@ -23,9 +23,9 @@ export class ImageHoverPlugin extends Plugin {
             SetHoverEffectStrokeWidthAction,
         },
         system_attributes: ["data-original-src-before-hover"],
-        default_shape_handlers: (dataset) =>
+        default_shape_providers: (dataset) =>
             dataset.hoverEffect && "html_builder/geometric/geo_square",
-        post_compute_shape_listeners: async (svg, params) => {
+        on_shape_computed_handlers: async (svg, params) => {
             let rgba = null;
             let rbg = null;
             let opacity = null;
@@ -139,8 +139,8 @@ export class ImageHoverPlugin extends Plugin {
                 }
             }
         },
-        remove_hover_effect_handlers: this.removeHoverEffect.bind(this),
-        set_hover_effect_handlers: this.setHoverEffect.bind(this),
+        on_hover_animation_mode_cleaned_handlers: this.removeHoverEffect.bind(this),
+        on_hover_animation_mode_applied_handlers: this.setHoverEffect.bind(this),
     };
 
     defaultHoverEffectIntensity = 20;

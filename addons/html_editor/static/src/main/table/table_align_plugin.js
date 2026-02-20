@@ -60,13 +60,17 @@ export class TableAlignPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateVerticalAlignParams.bind(this),
-        post_undo_handlers: this.updateVerticalAlignParams.bind(this),
-        post_redo_handlers: this.updateVerticalAlignParams.bind(this),
-        remove_all_formats_handlers: this.setVerticalAlignment.bind(this),
+        on_selectionchange_handlers: this.updateVerticalAlignParams.bind(this),
+        on_undone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_redone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_all_formats_removed_handlers: this.setVerticalAlignment.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => closestElement(node, "td, th")?.style.verticalAlign,
+        has_format_predicates: (node) => {
+            if (closestElement(node, "td, th")?.style.verticalAlign) {
+                return true;
+            }
+        },
     };
 
     setup() {

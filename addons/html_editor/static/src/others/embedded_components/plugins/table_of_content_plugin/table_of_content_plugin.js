@@ -30,14 +30,20 @@ export class TableOfContentPlugin extends Plugin {
         ],
 
         /** Handlers */
-        restore_savepoint_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        history_reset_from_steps_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        step_added_handlers: ({ stepCommonAncestor }) =>
+        on_savepoint_restored_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        on_history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        on_history_reset_from_steps_handlers: () =>
+            this.delayedUpdateTableOfContents(this.editable),
+        on_step_added_handlers: ({ stepCommonAncestor }) =>
             this.delayedUpdateTableOfContents(stepCommonAncestor),
-        external_step_added_handlers: this.delayedUpdateTableOfContents.bind(this, this.editable),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        mount_component_handlers: this.setupNewToc.bind(this),
+        on_external_step_added_handlers: this.delayedUpdateTableOfContents.bind(
+            this,
+            this.editable
+        ),
+        on_will_mount_component_handlers: this.setupNewToc.bind(this),
+
+        /** Processors */
+        clean_for_save_processors: this.cleanForSave.bind(this),
 
         system_classes: ["o_embedded_toc_header_highlight"],
     };
@@ -57,7 +63,7 @@ export class TableOfContentPlugin extends Plugin {
     /**
      * @param {HTMLElement} root
      */
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const el of root.querySelectorAll(".o_embedded_toc_header_highlight")) {
             el.classList.remove("o_embedded_toc_header_highlight");
         }

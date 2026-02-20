@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -66,7 +62,7 @@ function isUnremovableTableComponent(node, root) {
  */
 
 /**
- * @typedef {((el: HTMLElement) => void)[]} deselect_custom_selected_nodes_handlers
+ * @typedef {((el: HTMLElement) => void)[]} deselect_custom_selected_nodes_processors
  */
 
 /**
@@ -112,6 +108,8 @@ export class TablePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
+
+        /** Providers */
         toolbar_namespace_providers: [
             withSequence(
                 90,
@@ -121,12 +119,18 @@ export class TablePlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateSelectionTable.bind(this),
-        clipboard_content_processors: this.processContentForClipboard.bind(this),
-        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
-        before_line_break_handlers: this.resetTableSelection.bind(this),
-        before_split_block_handlers: this.resetTableSelection.bind(this),
+        on_selectionchange_handlers: this.updateSelectionTable.bind(this),
+        on_will_break_line_handlers: this.resetTableSelection.bind(this),
+        on_will_split_block_handlers: this.resetTableSelection.bind(this),
+
+        /** Processors */
         before_insert_processors: this.handleTableInsert.bind(this),
+        clean_for_save_processors: (root) => {
+            this.deselectTable(root);
+        },
+        normalize_processors: this.distributeTableColorsToAllCells.bind(this),
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
+        targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
@@ -134,25 +138,37 @@ export class TablePlugin extends Plugin {
         delete_range_overrides: this.handleDeleteRange.bind(this),
         color_apply_overrides: this.applyTableColor.bind(this),
 
-        unremovable_node_predicates: isUnremovableTableComponent,
-        unsplittable_node_predicates: (node) =>
-            node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
-        fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
-        targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
-        move_node_whitelist_selectors: "table",
-        selection_blocker_predicates: (node) => {
+        /** Predicates */
+        is_node_removable_predicates: (node, root) => {
+            if (isUnremovableTableComponent(node, root)) {
+                return false;
+            }
+        },
+        is_node_splittable_predicates: (node) => {
+            if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
+                return false;
+            }
+        },
+        is_node_fully_selected_predicates: (node) => {
+            if (closestElement(node, ".o_selected_td")) {
+                return true;
+            }
+        },
+        is_selection_blocker_predicates: (node) => {
             if (node.nodeName === "TABLE") {
                 return true;
             }
         },
-        selection_placeholder_container_predicates: (container) => {
+        can_contain_selection_placeholder_predicates: (container) => {
             if (container.nodeName === "TABLE") {
                 return false;
             } else if (["TD", "TH"].includes(container.nodeName)) {
                 return true;
             }
         },
-        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
+
+        /** Selectors */
+        move_node_whitelist_selectors: "table",
     };
 
     setup() {
@@ -1051,7 +1067,7 @@ export class TablePlugin extends Plugin {
                     table.classList.toggle("o_selected_table", true);
                     for (const td of getTableCells(table)) {
                         td.classList.toggle("o_selected_td", true);
-                        this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
+                        this.processThrough("deselect_custom_selected_nodes_processors", td);
                     }
                 }
             }
@@ -1256,7 +1272,7 @@ export class TablePlugin extends Plugin {
                 (_, index) => index >= minColIndex && index <= maxColIndex
             )) {
                 td.classList.toggle("o_selected_td", true);
-                this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
+                this.processThrough("deselect_custom_selected_nodes_processors", td);
             }
         }
     }

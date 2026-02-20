@@ -139,35 +139,35 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  */
 
 /**
- * @typedef {((record: HistoryMutationRecord) => void)[]} attribute_change_handlers
- * @typedef {(() => void)[]} before_add_step_handlers
- * @typedef {((records: HistoryMutationRecord[]) => void)[]} before_filter_mutation_record_handlers
- * @typedef {((root: HTMLElement) => void)[]} content_updated_handlers
- * @typedef {(() => void)[]} external_step_added_handlers
- * @typedef {((records: HistoryMutationRecord[], currentOperation: "original"|"undo"|"redo"|"restore") => void)[]} handleNewRecords
- * @typedef {(() => void)[]} history_cleaned_handlers
- * @typedef {(() => void)[]} history_reset_handlers
- * @typedef {(() => void)[]} history_reset_from_steps_handlers
- * @typedef {((revertedStep: HistoryStep) => void)[]} post_redo_handlers
- * @typedef {((revertedStep: HistoryStep) => void)[]} post_undo_handlers
- * @typedef {(() => void)[]} restore_savepoint_handlers
- * @typedef {((arg: { step: HistoryStep, stepCommonAncestor: HTMLElement, isPreviewing: boolean }) => void)[]} step_added_handlers
+ * @typedef {((record: HistoryMutationRecord) => void)[]} on_attribute_changed_handlers
+ * @typedef {(() => void)[]} on_will_add_step_handlers
+ * @typedef {((records: HistoryMutationRecord[]) => void)[]} on_will_filter_mutation_record_handlers
+ * @typedef {((root: HTMLElement) => void)[]} on_content_updated_handlers
+ * @typedef {(() => void)[]} on_external_step_added_handlers
+ * @typedef {((records: HistoryMutationRecord[], currentOperation: "original"|"undo"|"redo"|"restore") => void)[]} on_new_records_handled_handlers
+ * @typedef {(() => void)[]} on_history_cleaned_handlers
+ * @typedef {(() => void)[]} on_history_reset_handlers
+ * @typedef {(() => void)[]} on_history_reset_from_steps_handlers
+ * @typedef {((revertedStep: HistoryStep) => void)[]} on_redone_handlers
+ * @typedef {((revertedStep: HistoryStep) => void)[]} on_undone_handlers
+ * @typedef {(() => void)[]} on_savepoint_restored_handlers
+ * @typedef {((arg: { step: HistoryStep, stepCommonAncestor: HTMLElement, isPreviewing: boolean }) => void)[]} on_step_added_handlers
  *
- * @typedef {((record: HistoryMutationRecord) => boolean)[]} savable_mutation_record_predicates
- * @typedef {((step: HistoryStep) => boolean)[]} unreversible_step_predicates
+ * @typedef {((record: HistoryMutationRecord) => boolean | undefined)[]} is_mutation_record_savable_predicates
+ * @typedef {((step: HistoryStep) => boolean | undefined)[]} is_step_reversible_predicates
  *
  * @typedef {((
+ *    value: string,
  *    arg: {
  *      target: Node,
  *      attributeName: string,
  *      oldValue: string,
- *      value: string,
  *      reverse: boolean,
  *    },
  *    options: { forNewStep: boolean }
  *  ) => void)[]} attribute_change_processors
  * @typedef {((step: HistoryStep) => HistoryStep)[]} history_step_processors
- * @typedef {((node: Node, childTreesToSerialize: Tree[]) => Tree[])[]} serializable_descendants_processors
+ * @typedef {((childTreesToSerialize: Tree[], node: Node) => Tree[])[]} serializable_descendants_processors
  * @typedef {((node: Node, attributeName: string, attributeValue: string) => boolean)[]} set_attribute_overrides
  */
 
@@ -241,7 +241,7 @@ export class HistoryPlugin extends Plugin {
             { hotkey: "control+y", commandId: "historyRedo", global: true },
             { hotkey: "control+shift+z", commandId: "historyRedo", global: true },
         ],
-        start_edition_handlers: () => {
+        on_editor_started_handlers: () => {
             this.enableObserver();
             this.reset(this.config.content);
         },
@@ -289,7 +289,7 @@ export class HistoryPlugin extends Plugin {
         /** @type { WeakMap<Node, { attributes: Map<string, string>, classList: Map<string, boolean>, characterData: Map<string, string> }> } */
         this.lastObservedState = new WeakMap();
         this.setNodeId(this.editable);
-        this.dispatchTo("history_cleaned_handlers");
+        this.trigger("on_history_cleaned_handlers");
     }
     /**
      * @param {string} id
@@ -307,7 +307,7 @@ export class HistoryPlugin extends Plugin {
         this.clean();
         this.stageSelection();
         this.steps.push(this.makeSnapshotStep());
-        this.dispatchTo("history_reset_handlers", content);
+        this.trigger("on_history_reset_handlers", content);
     }
     /**
      * @param { HistoryStep[] } steps
@@ -322,9 +322,9 @@ export class HistoryPlugin extends Plugin {
             }
             this.steps = steps;
             // todo: to test
-            this.dispatchTo("history_reset_from_steps_handlers");
+            this.trigger("on_history_reset_from_steps_handlers");
         });
-        this.dispatchTo("history_reset_from_steps_handlers");
+        this.trigger("on_history_reset_from_steps_handlers");
     }
     makeSnapshotStep() {
         return {
@@ -355,10 +355,7 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryStep } step
      */
     processHistoryStep(step) {
-        for (const fn of this.getResource("history_step_processors")) {
-            step = fn(step);
-        }
-        return step;
+        return this.processThrough("history_step_processors", step);
     }
 
     enableObserver() {
@@ -444,7 +441,7 @@ export class HistoryPlugin extends Plugin {
         this.stageRecords(records);
         records
             .filter(({ type }) => type === "attributes")
-            .forEach((record) => this.dispatchTo("attribute_change_handlers", record));
+            .forEach((record) => this.trigger("on_attribute_changed_handlers", record));
         return records;
     }
 
@@ -479,7 +476,7 @@ export class HistoryPlugin extends Plugin {
         if (!root) {
             return;
         }
-        this.dispatchTo("content_updated_handlers", root);
+        this.trigger("on_content_updated_handlers", root);
     }
 
     /**
@@ -493,9 +490,9 @@ export class HistoryPlugin extends Plugin {
             // `undoOperation`
             if (dispatch) {
                 const stepType = this.currentStep.type;
-                this.dispatchTo("handleNewRecords", processedRecords, stepType);
+                this.trigger("on_new_records_handled_handlers", processedRecords, stepType);
             }
-            // Process potential new records adds by handleNewRecords.
+            // Process potential new records adds by on_new_records_handled_handlers.
             this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
         }
@@ -751,9 +748,9 @@ export class HistoryPlugin extends Plugin {
      * @returns {HistoryMutationRecord[]}
      */
     filterAndAdjustHistoryMutationRecords(records) {
-        this.dispatchTo("before_filter_mutation_record_handlers", records);
-        const savableRecordPredicates = this.getResource("savable_mutation_record_predicates");
-        const isRecordSavable = (record) => savableRecordPredicates.every((p) => p(record));
+        this.trigger("on_will_filter_mutation_record_handlers", records);
+        const isRecordSavable = (record) =>
+            this.checkPredicates("is_mutation_record_savable_predicates", record) ?? true;
         const result = [];
         for (const record of records) {
             if (!this.isObservedNode(record.target)) {
@@ -1096,7 +1093,7 @@ export class HistoryPlugin extends Plugin {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
-        this.dispatchTo("normalize_handlers", stepCommonAncestor, type);
+        this.processThrough("normalize_processors", stepCommonAncestor, type);
         this.handleObserverRecords(false);
         if (currentMutationsCount === currentStep.mutations.length) {
             // If there was no registered mutation during the normalization step,
@@ -1114,7 +1111,7 @@ export class HistoryPlugin extends Plugin {
         this.steps.push(currentStep);
         // @todo @phoenix add this in the linkzws plugin.
         // this._setLinkZws();
-        this.dispatchTo("before_add_step_handlers");
+        this.trigger("on_will_add_step_handlers");
         if (extraStepInfos) {
             currentStep.extraStepInfos = extraStepInfos;
         }
@@ -1130,7 +1127,7 @@ export class HistoryPlugin extends Plugin {
             extraStepInfos: {},
         });
         this.stageSelection();
-        this.dispatchTo("step_added_handlers", {
+        this.trigger("on_step_added_handlers", {
             step: currentStep,
             stepCommonAncestor,
             isPreviewing: this.isPreviewing,
@@ -1174,7 +1171,7 @@ export class HistoryPlugin extends Plugin {
             });
             // Consider the last position of the history as an undo.
         }
-        this.dispatchTo("post_undo_handlers", revertedStep);
+        this.trigger("on_undone_handlers", revertedStep);
     }
     redo() {
         this.handleObserverRecords();
@@ -1202,7 +1199,7 @@ export class HistoryPlugin extends Plugin {
                 extraStepInfos: revertedStep.extraStepInfos,
             });
         }
-        this.dispatchTo("post_redo_handlers", revertedStep);
+        this.trigger("on_redone_handlers", revertedStep);
     }
     /**
      * @param { SerializedSelection } selection
@@ -1311,9 +1308,7 @@ export class HistoryPlugin extends Plugin {
         if (!step) {
             return false;
         }
-        return !this.getResource("unreversible_step_predicates").some((predicate) =>
-            predicate(step)
-        );
+        return this.checkPredicates("is_step_reversible_predicates", step) ?? true;
     }
     /**
      * Get the step index in the history to redo.
@@ -1372,8 +1367,8 @@ export class HistoryPlugin extends Plugin {
                 this.revertMutations(stepToRevert.mutations);
             }
             this.applyMutations(newStep.mutations);
-            this.dispatchTo(
-                "normalize_handlers",
+            this.processThrough(
+                "normalize_processors",
                 this.getMutationsRoot(newStep.mutations) || this.editable
             );
             this.steps.splice(index, 0, newStep);
@@ -1382,7 +1377,7 @@ export class HistoryPlugin extends Plugin {
             }
             // Reapply the uncommited draft, since this is not an operation which should cancel it
             this.applyMutations(this.currentStep.mutations);
-            this.dispatchTo("external_step_added_handlers");
+            this.trigger("on_external_step_added_handlers");
         });
     }
     /**
@@ -1420,19 +1415,17 @@ export class HistoryPlugin extends Plugin {
                 case "attributes": {
                     const node = this.nodeMap.getNode(mutation.nodeId);
                     if (node) {
-                        let value = mutation.value;
-                        for (const cb of this.getResource("attribute_change_processors")) {
-                            value = cb(
-                                {
-                                    target: node,
-                                    attributeName: mutation.attributeName,
-                                    oldValue: mutation.oldValue,
-                                    value,
-                                    reverse,
-                                },
-                                { forNewStep }
-                            );
-                        }
+                        const { value } = this.processThrough(
+                            "attribute_change_processors",
+                            {
+                                target: node,
+                                attributeName: mutation.attributeName,
+                                oldValue: mutation.oldValue,
+                                value: mutation.value,
+                                reverse,
+                            },
+                            { forNewStep }
+                        );
                         this.setAttribute(node, mutation.attributeName, value);
                     }
                     break;
@@ -1626,7 +1619,7 @@ export class HistoryPlugin extends Plugin {
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
             selectionToRestore.restore();
             this.currentStep.extraStepInfos = extraToRestore;
-            this.dispatchTo("restore_savepoint_handlers");
+            this.trigger("on_savepoint_restored_handlers");
         };
     }
     /**
@@ -1875,10 +1868,11 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            let childTreesToSerialize = tree.children;
-            for (const cb of this.getResource("serializable_descendants_processors")) {
-                childTreesToSerialize = cb(node, childTreesToSerialize);
-            }
+            const childTreesToSerialize = this.processThrough(
+                "serializable_descendants_processors",
+                tree.children,
+                node
+            );
             result.tagName = node.tagName;
             result.attributes = Object.fromEntries(
                 [...node.attributes].map((attr) => [attr.name, attr.value])

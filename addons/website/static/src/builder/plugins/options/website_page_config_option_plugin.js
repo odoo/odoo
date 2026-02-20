@@ -54,9 +54,9 @@ class WebsitePageConfigOptionPlugin extends Plugin {
             withSequence(HIDE_FOOTER, HideFooterOption),
             BreadcrumbOption,
         ],
-        target_show: this.onTargetVisibilityToggle.bind(this, true),
-        target_hide: this.onTargetVisibilityToggle.bind(this, false),
-        save_handlers: this.onSave.bind(this),
+        on_target_shown_handlers: this.onTargetVisibilityToggle.bind(this, true),
+        on_target_hidden_handlers: this.onTargetVisibilityToggle.bind(this, false),
+        on_will_reset_history_after_saving_handlers: this.onSave.bind(this),
     };
 
     /**

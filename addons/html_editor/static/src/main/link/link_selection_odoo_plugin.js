@@ -6,9 +6,17 @@ export class OdooLinkSelectionPlugin extends Plugin {
     static id = "odooLinkSelection";
     /** @type {import("plugins").EditorResources} */
     resources = {
-        ineligible_link_for_zwnbsp_predicates: [
-            (link) => selectElements(link, "*").some((el) => el.nodeName === "IMG" || isBlock(el)),
+        is_link_eligible_for_zwnbsp_predicates: [
+            (link) => {
+                if (selectElements(link, "*").some((el) => el.nodeName === "IMG" || isBlock(el))) {
+                    return false;
+                }
+            },
         ],
-        ineligible_link_for_selection_indication_predicates: (link) => link.matches(".btn"),
+        is_link_eligible_for_visual_indication_predicates: (link) => {
+            if (link.matches(".btn")) {
+                return false;
+            }
+        },
     };
 }

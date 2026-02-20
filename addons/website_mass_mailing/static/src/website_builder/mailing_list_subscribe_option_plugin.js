@@ -16,7 +16,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
             ToggleThanksMessageAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
     };
 
     setup() {
@@ -84,7 +84,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
         return this.mailingLists;
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         const newsLetterEls = [];
         for (const { selector, exclude, applyTo } of this.newsletterOptions) {
             newsLetterEls.push(...getElementsWithOption(root, selector, exclude, applyTo));

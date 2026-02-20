@@ -43,26 +43,40 @@ export class CaptionPlugin extends Plugin {
                 isActive: () => this.hasImageCaption(this.dependencies.image.getTargetedImage()),
             },
         ],
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        mount_component_handlers: this.setupNewCaption.bind(this),
-        delete_handlers: this.afterDelete.bind(this),
-        before_cut_handlers: this.expandSelectionToCaption.bind(this),
-        before_drag_handlers: this.expandSelectionToCaption.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        on_will_mount_component_handlers: this.setupNewCaption.bind(this),
+        on_deleted_handlers: this.afterDelete.bind(this),
+        on_will_cut_handlers: this.expandSelectionToCaption.bind(this),
+        on_will_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
-        after_save_media_dialog_handlers: this.onImageReplaced.bind(this),
+        on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
-        unsplittable_node_predicates: [
-            (node) => ["FIGURE", "FIGCAPTION"].includes(node.nodeName), // avoid merge
+        is_node_splittable_predicates: [
+            (node) => {
+                // avoid merge
+                if (["FIGURE", "FIGCAPTION"].includes(node.nodeName)) {
+                    return false;
+                }
+            },
         ],
-        image_name_predicates: [this.getImageName.bind(this)],
-        link_compatible_selection_predicates: [this.isLinkAllowedOnSelection.bind(this)],
+        is_link_allowed_on_selection_predicates: () => {
+            if (this.isLinkAllowedOnSelection()) {
+                return true;
+            }
+        },
         // Consider a <figure> element as empty if it only contains a
         // <figcaption> element (e.g. when its image has just been
         // removed).
-        empty_node_predicates: (el) =>
-            el.matches?.("figure") &&
-            el.children.length === 1 &&
-            el.children[0].matches("figcaption"),
+        is_node_empty_predicates: (el) => {
+            if (
+                el.matches?.("figure") &&
+                el.children.length === 1 &&
+                el.children[0].matches("figcaption")
+            ) {
+                return true;
+            }
+        },
+        image_name_providers: this.getImageName.bind(this),
         move_node_whitelist_selectors: "figure",
 
         /** Processors */
@@ -80,7 +94,7 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const figure of root.querySelectorAll("figure")) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");

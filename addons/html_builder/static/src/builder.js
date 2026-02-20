@@ -28,7 +28,7 @@ import { isVisible } from "@html_builder/utils/utils";
 
 /**
  * @typedef {(() => void)[]} on_mobile_preview_clicked
- * @typedef {(() => void)[]} trigger_dom_updated
+ * @typedef {(() => void)[]} on_dom_updated_handlers
  * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
  */
 
@@ -130,13 +130,13 @@ export class Builder extends Component {
                 installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
                 /** @type {import("plugins").BuilderResources} */
                 resources: {
-                    trigger_dom_updated: () => {
+                    on_dom_updated_handlers: () => {
                         this.triggerDomUpdated();
                     },
                     on_mobile_preview_clicked: withSequence(20, () => {
                         this.triggerDomUpdated();
                     }),
-                    before_save_handlers: () => {
+                    on_will_save_handlers: () => {
                         const snippetMenuEl = this.builder_sidebarRef.el;
                         const saveButton = snippetMenuEl.querySelector("[data-action='save']");
                         delete this.removeLoadingEffect;
@@ -151,7 +151,7 @@ export class Builder extends Component {
                             actionButtonEl.disabled = true;
                         }
                     },
-                    after_save_handlers: () => {
+                    on_saved_handlers: () => {
                         for (const actionButtonEl of this.actionButtonEls) {
                             actionButtonEl.removeAttribute("disabled");
                         }
@@ -160,7 +160,7 @@ export class Builder extends Component {
                     on_snippet_dropped_handlers: () => {
                         this.activeTargetEl = null;
                     },
-                    change_current_options_containers_listeners: (currentOptionsContainers) => {
+                    on_current_options_containers_changed_handlers: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (currentOptionsContainers.length) {
                             this.activeTargetEl = null;
@@ -174,17 +174,20 @@ export class Builder extends Component {
                         Component: InvisibleElementsPanel,
                         props: this.invisibleElementsPanelState,
                     }),
-                    unsplittable_node_predicates: (/** @type {Node} */ node) =>
-                        node.querySelector?.("[data-oe-translation-source-sha]"),
+                    is_node_splittable_predicates: (/** @type {Node} */ node) => {
+                        if (node.querySelector?.("[data-oe-translation-source-sha]")) {
+                            return false;
+                        }
+                    },
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
                     ref: this.props.overlayRef,
                 },
-                saveSnippet: (snippetEl, cleanForSaveHandlers, wrapWithSaveSnippetHandlers) =>
+                saveSnippet: (snippetEl, cleanForSaveProcessors, wrapWithSaveSnippetHandlers) =>
                     this.snippetModel.saveSnippet(
                         snippetEl,
-                        cleanForSaveHandlers,
+                        cleanForSaveProcessors,
                         wrapWithSaveSnippetHandlers
                     ),
                 snippetModel: this.snippetModel,

@@ -110,7 +110,7 @@ export class HtmlField extends Component {
             const value = record.data[this.props.dynamicFieldReferenceModel || "model"];
             // update Dynamic Placeholder reference model
             if (this.editor && this.editor.isReady) {
-                this.editor.dispatchTo("dynamic_model_change_handlers", value);
+                this.editor.trigger("on_model_changed_handlers", value);
             }
         });
     }

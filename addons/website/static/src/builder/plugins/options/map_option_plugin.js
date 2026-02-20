@@ -22,7 +22,11 @@ class MapOptionPlugin extends Plugin {
             MapDescriptionTextAction,
         },
         // TODO remove when the snippet will have a "Height" option.
-        keep_overlay_options: (el) => el.matches(".s_map"),
+        should_keep_overlay_options_predicates: (el) => {
+            if (el.matches(".s_map")) {
+                return true;
+            }
+        },
     };
 
     setup() {
