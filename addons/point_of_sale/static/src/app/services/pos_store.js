@@ -1407,11 +1407,15 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getSyncAllOrdersContext(orders, options = {}) {
-        return {
+        const context = {
             config_id: this.config.id,
             device_identifier: this.device.identifier,
             ...(options.context || {}),
         };
+        if (options.currentOrderUuid) {
+            context.current_order_uuid = options.currentOrderUuid;
+        }
+        return context;
     }
 
     async preSyncAllOrders(orders) {

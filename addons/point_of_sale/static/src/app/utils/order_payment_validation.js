@@ -157,7 +157,10 @@ export default class OrderPaymentValidation {
 
         try {
             // 1. Save order to server.
-            const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
+            const syncOrderResult = await this.pos.syncAllOrders({
+                throw: true,
+                currentOrderUuid: this.order.uuid,
+            });
             if (!syncOrderResult) {
                 return false;
             }
