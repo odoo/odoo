@@ -10,10 +10,10 @@
                         t-ref="customFieldCardTextArea"
                         t-model.lazy="this.props.value"
                         t-on-change="(ev) => { this.props.onChange(this.props.value) }"
-                        t-att-placeholder="!props.readonly &amp;&amp; this.placeholder"
-                        t-att-readonly="props.readonly"
+                        t-att-placeholder="!this.props.readonly &amp;&amp; this.placeholder"
+                        t-att-readonly="this.props.readonly"
                         class="customFieldCardTextArea form-control overflow-y-hidden"
-                        t-att-class="{ 'text-muted': !props.value || props.readonly }"
+                        t-att-class="{ 'text-muted': !this.props.value || this.props.readonly }"
                     />
                 </span>
             </div>

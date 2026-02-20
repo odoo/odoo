@@ -2,7 +2,7 @@
 <templates>
 
     <t t-name="sale_loyalty.LoyaltyDataField">
-        <table class="table" t-if="LoyaltyCardData">
+        <table class="table" t-if="this.LoyaltyCardData">
             <tr class="border-bottom">
                 <td>Loyalty Card :</td>
             </tr>
@@ -10,8 +10,8 @@
                 <td>Issued :</td>
                 <td class="text-end">
                     <div class="p-0 m-0">
-                        <span t-out="LoyaltyCardData.issued"/>
-                        <span class="ms-1 d-none d-md-inline" t-out="LoyaltyCardData.point_name"/>
+                        <span t-out="this.LoyaltyCardData.issued"/>
+                        <span class="ms-1 d-none d-md-inline" t-out="this.LoyaltyCardData.point_name"/>
                     </div>
                 </td>
             </tr>
@@ -19,8 +19,8 @@
                 <td>Used :</td>
                 <td class="text-end">
                     <div class="p-0 m-0">
-                        <span t-out="LoyaltyCardData.cost"/>
-                        <span class="ms-1 d-none d-md-inline" t-out="LoyaltyCardData.point_name"/>
+                        <span t-out="this.LoyaltyCardData.cost"/>
+                        <span class="ms-1 d-none d-md-inline" t-out="this.LoyaltyCardData.point_name"/>
                     </div>
                 </td>
             </tr>
