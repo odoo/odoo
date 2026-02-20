@@ -6,8 +6,21 @@ patch(PosOrder.prototype, {
     get eventRegistrations() {
         return this.lines.flatMap((line) => line.event_registration_ids);
     },
-    getLinesToCompute() {
-        // Override to ensure orderline price of event tickets are not recomputed
-        return super.getLinesToCompute().filter((line) => !line.event_ticket_id);
+    setLinePrice(line, pricelist) {
+        if (line.event_ticket_id) {
+            if (
+                pricelist.item_ids.some(
+                    (item) =>
+                        item.product_id == line.product_id ||
+                        item.product_tmpl_id == line.product_id.product_tmpl_id
+                )
+            ) {
+                super.setLinePrice(line, pricelist);
+                return;
+            }
+            line.setUnitPrice(line.event_ticket_id.price);
+        } else {
+            super.setLinePrice(line, pricelist);
+        }
     },
 });
