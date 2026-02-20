@@ -20,7 +20,12 @@ import {
     lastLeaf,
     ancestors,
     createDOMPathGenerator,
+<<<<<<< 3656171994450d11151565efdb4b9dd0468cefa8
     descendants,
+||||||| 6e2195934ba1357b8ef21bedfbc5ee971db9c0fe
+=======
+    findUpTo,
+>>>>>>> c057ea3027e85c18d5fc60fc2e23a911a1a4bacc
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
@@ -161,8 +166,12 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement|undefined, HTMLElement|undefined]}
      */
     splitElementBlock({ targetNode, targetOffset, blockToSplit }) {
-        // If the block is unsplittable, insert a line break instead.
-        if (this.isUnsplittable(blockToSplit)) {
+        // If the block is unsplittable or the targetNode is within an
+        // unsplittable element, insert a line break instead.
+        if (
+            this.isUnsplittable(blockToSplit) ||
+            findUpTo(targetNode, blockToSplit, (el) => this.isUnsplittable(el))
+        ) {
             // @todo: t-if, t-else etc are not blocks, but they are
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
