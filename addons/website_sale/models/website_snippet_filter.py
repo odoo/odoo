@@ -129,6 +129,7 @@ class WebsiteSnippetFilter(models.Model):
                         res_product['product_id'] = product.product_variant_id.id
                     else:
                         res_product.update(product._get_combination_info())
+                    res_product['hide_variants'] = hide_variants
 
                     if records.env.context.get('add2cart_rerender'):
                         res_product['_add2cart_rerender'] = True

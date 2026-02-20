@@ -274,24 +274,7 @@
         <t name="buttons_container" position="inside">
             <t t-call="website_sale.product_tile_element_visibility">
                 <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_wishlist'"/>
-
-                <t t-set="btnTitle">Add to wishlist</t>
-                <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
-
-                <button
-                    t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
-                    t-att-disabled="product in products_in_wishlist"
-                    t-att-data-product-id="product_variant.id"
-                    t-att-data-product-template-id="product.id"
-                    t-att-title="in_wish and btnTitleActive or btnTitle"
-                >
-                    <span
-                        t-attf-class="fa o_not-animable #{in_wish and 'fa-heart' or 'fa-heart-o'}"
-                        role="presentation"
-                    />
-                    <span t-if="not in_wish" class="o_label small ms-2">Add to wishlist</span>
-                    <span t-else="" class="o_label small ms-2">In your wishlist</span>
-                </button>
+                <t t-call="website_sale.wishlist_button" product_template="product"/>
             </t>
         </t>
     </template>
@@ -314,19 +297,7 @@
                 t-call="website_sale.product_tile_element_visibility"
                 visible_element_class.f="o_wsale_products_opt_has_comparison"
             >
-
-                <button
-                    t-if="product._can_be_added_to_comparison()"
-                    class="btn o_add_compare"
-                    title="Compare"
-                    aria-label="Compare"
-                    t-att-data-product-id="product_variant.id"
-                    t-att-data-product-template-id="product.id"
-                >
-                    <span class="fa fa-exchange fa-fw o_not-animable"/>
-                    <span class="o_label small ms-2">Compare</span>
-                </button>
-
+                <t t-call="website_sale.comparison_button" product_template="product"/>
             </t>
             <t t-else="" t-call="website_sale.product_tile_element_visibility">
                 <!--
