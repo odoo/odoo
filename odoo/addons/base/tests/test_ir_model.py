@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 from psycopg2.errors import NotNullViolation
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, TransactionCase, HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
@@ -360,3 +360,350 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, "res.partner")
         self.assertEqual(imi.parent_field_id.name, "partner_id")
+
+
+class TestCommonCustomFields(TransactionCase):
+    MODEL = 'res.partner'
+    COMODEL = 'res.users'
+
+    def setUp(self):
+        # check that the registry is properly reset
+        fnames = set(self.registry[self.MODEL]._fields)
+
+        @self.addCleanup
+        def check_registry():
+            assert set(self.registry[self.MODEL]._fields) == fnames
+
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_all_caches)
+
+        super().setUp()
+
+    def create_field(self, name, *, field_type='char'):
+        """ create a custom field and return it """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': name,
+            'field_description': name,
+            'ttype': field_type,
+        })
+        self.assertIn(name, self.env[self.MODEL]._fields)
+        return field
+
+    def create_view(self, name):
+        """ create a view with the given field name """
+        return self.env['ir.ui.view'].create({
+            'name': 'yet another view',
+            'model': self.MODEL,
+            'arch': '<list string="X"><field name="%s"/></list>' % name,
+        })
+
+
+@tagged('at_install', '-post_install')
+class TestCustomFields(TestCommonCustomFields):
+    def test_create_custom(self):
+        """ custom field names must be start with 'x_' """
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            self.create_field('xyz')
+
+    def test_rename_custom(self):
+        """ custom field names must be start with 'x_' """
+        field = self.create_field('x_xyz')
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            field.name = 'xyz'
+
+    def test_create_valid(self):
+        """ field names must be valid pg identifiers """
+        with self.assertRaises(ValidationError):
+            self.create_field('x_foo bar')
+
+    def test_rename_valid(self):
+        """ field names must be valid pg identifiers """
+        field = self.create_field('x_foo')
+        with self.assertRaises(ValidationError):
+            field.name = 'x_foo bar'
+
+    def test_create_unique(self):
+        """ one cannot create two fields with the same name on a given model """
+        self.create_field('x_foo')
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            self.create_field('x_foo')
+
+    def test_rename_unique(self):
+        """ one cannot create two fields with the same name on a given model """
+        field1 = self.create_field('x_foo')
+        field2 = self.create_field('x_bar')
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            field2.name = field1.name
+
+    def test_remove_without_view(self):
+        """ try removing a custom field that does not occur in views """
+        field = self.create_field('x_foo')
+        field.unlink()
+
+    def test_rename_without_view(self):
+        """ try renaming a custom field that does not occur in views """
+        field = self.create_field('x_foo')
+        field.name = 'x_bar'
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_remove_with_view(self):
+        """ try removing a custom field that occurs in a view """
+        field = self.create_field('x_foo')
+        self.create_view('x_foo')
+
+        # try to delete the field, this should fail but not modify the registry
+        with self.assertRaises(UserError):
+            field.unlink()
+        self.assertIn('x_foo', self.env[self.MODEL]._fields)
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_rename_with_view(self):
+        """ try renaming a custom field that occurs in a view """
+        field = self.create_field('x_foo')
+        self.create_view('x_foo')
+
+        # try to delete the field, this should fail but not modify the registry
+        with self.assertRaises(UserError):
+            field.name = 'x_bar'
+        self.assertIn('x_foo', self.env[self.MODEL]._fields)
+
+    def test_unlink_base(self):
+        """ one cannot delete a non-custom field expect for uninstallation """
+        field = self.env['ir.model.fields']._get(self.MODEL, 'ref')
+        self.assertTrue(field)
+
+        with self.assertRaisesRegex(UserError, 'This column contains module data'):
+            field.unlink()
+
+        # but it works in the context of uninstalling a module
+        field.with_context(force_delete=True).unlink()
+
+    def test_unlink_with_inverse(self):
+        """ create a custom o2m and then delete its m2o inverse """
+        model = self.env['ir.model']._get(self.MODEL)
+        comodel = self.env['ir.model']._get(self.COMODEL)
+
+        m2o_field = self.env['ir.model.fields'].create({
+            'model_id': comodel.id,
+            'name': 'x_my_m2o',
+            'field_description': 'my_m2o',
+            'ttype': 'many2one',
+            'relation': self.MODEL,
+        })
+
+        o2m_field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_my_o2m',
+            'field_description': 'my_o2m',
+            'ttype': 'one2many',
+            'relation': self.COMODEL,
+            'relation_field': m2o_field.name,
+        })
+
+        # normal mode: you cannot break dependencies
+        with self.assertRaises(UserError):
+            m2o_field.unlink()
+
+        # uninstall mode: unlink dependant fields
+        m2o_field.with_context(force_delete=True).unlink()
+        self.assertFalse(o2m_field.exists())
+
+    def test_unlink_with_dependant(self):
+        """ create a computed field, then delete its dependency """
+        # Also applies to compute fields
+        comodel = self.env['ir.model'].search([('model', '=', self.COMODEL)])
+
+        field = self.create_field('x_my_char')
+
+        dependant = self.env['ir.model.fields'].create({
+            'model_id': comodel.id,
+            'name': 'x_oh_boy',
+            'field_description': 'x_oh_boy',
+            'ttype': 'char',
+            'related': 'partner_id.x_my_char',
+        })
+
+        # normal mode: you cannot break dependencies
+        with self.assertRaises(UserError):
+            field.unlink()
+
+        # uninstall mode: unlink dependant fields
+        field.with_context(force_delete=True).unlink()
+        self.assertFalse(dependant.exists())
+
+    def test_unlink_inherited_custom(self):
+        """ Creating a field on a model automatically creates an inherited field
+            in the comodel, and the latter can only be removed by deleting the
+            "parent" field.
+        """
+        field = self.create_field('x_foo')
+        self.assertEqual(field.state, 'manual')
+
+        inherited_field = self.env['ir.model.fields']._get(self.COMODEL, 'x_foo')
+        self.assertTrue(inherited_field)
+        self.assertEqual(inherited_field.state, 'base')
+
+        # one cannot delete the inherited field itself
+        with self.assertRaises(UserError):
+            inherited_field.unlink()
+
+        # but the inherited field is deleted when its parent field is
+        field.unlink()
+        self.assertFalse(field.exists())
+        self.assertFalse(inherited_field.exists())
+        self.assertFalse(self.env['ir.model.fields'].search_count([
+            ('model', 'in', [self.MODEL, self.COMODEL]),
+            ('name', '=', 'x_foo'),
+        ]))
+
+    def test_create_binary(self):
+        """ binary custom fields should be created as attachment=True to avoid
+        bloating the DB when creating e.g. image fields via studio
+        """
+        self.create_field('x_image', field_type='binary')
+        custom_binary = self.env[self.MODEL]._fields['x_image']
+
+        self.assertTrue(custom_binary.attachment)
+
+    def test_related_field(self):
+        """ create a custom related field, and check filled values """
+        #
+        # Add a custom field equivalent to the following definition:
+        #
+        # class ResPartner(models.Model)
+        #     _inherit = 'res.partner'
+        #     x_oh_boy = fields.Char(related="country_id.code", store=True)
+        #
+
+        # pick N=100 records in comodel
+        countries = self.env['res.country'].search([('code', '!=', False)], limit=100)
+        self.assertEqual(len(countries), 100, "Not enough records in comodel 'res.country'")
+
+        # create records in model, with N distinct values for the related field
+        partners = self.env['res.partner'].create([
+            {'name': country.code, 'country_id': country.id} for country in countries
+        ])
+        self.env.flush_all()
+
+        # create a non-computed field, and assert how many queries it takes
+        model_id = self.env['ir.model']._get_id('res.partner')
+        query_count = 51
+        with self.assertQueryCount(query_count):
+            self.env.registry.clear_cache()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_oh_box',
+                'field_description': 'x_oh_box',
+                'ttype': 'char',
+                'store': True,
+            })
+
+        # same with a related field, it only takes 8 extra queries
+        with self.assertQueryCount(query_count + 8):
+            self.env.registry.clear_cache()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_oh_boy',
+                'field_description': 'x_oh_boy',
+                'ttype': 'char',
+                'related': 'country_id.code',
+                'store': True,
+            })
+
+        # check the computed values
+        for partner in partners:
+            self.assertEqual(partner.x_oh_boy, partner.country_id.code)
+
+    def test_relation_of_a_custom_field(self):
+        """ change the relation model of a custom field """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'model_id': model.id,
+            'field_description': 'x_foo',
+            'ttype': 'many2many',
+            'relation': self.COMODEL,
+        })
+
+        # change the relation
+        with self.assertRaises(ValidationError):
+            field.relation = 'foo'
+
+    def test_selection(self):
+        """ custom selection field """
+        Model = self.env[self.MODEL]
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_sel',
+            'field_description': "Custom Selection",
+            'ttype': 'selection',
+            'selection_ids': [
+                Command.create({'value': 'foo', 'name': 'Foo', 'sequence': 0}),
+                Command.create({'value': 'bar', 'name': 'Bar', 'sequence': 1}),
+            ],
+        })
+
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
+
+        # add selection value 'baz'
+        field.selection_ids.create({
+            'field_id': field.id, 'value': 'baz', 'name': 'Baz', 'sequence': 2,
+        })
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+
+        # assign values to records
+        rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
+        rec2 = Model.create({'name': 'Rec2', 'x_sel': 'bar'})
+        rec3 = Model.create({'name': 'Rec3', 'x_sel': 'baz'})
+        self.assertEqual(rec1.x_sel, 'foo')
+        self.assertEqual(rec2.x_sel, 'bar')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+        # remove selection value 'foo'
+        field.selection_ids[0].unlink()
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
+
+        self.assertEqual(rec1.x_sel, False)
+        self.assertEqual(rec2.x_sel, 'bar')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+        # update selection value 'bar'
+        field.selection_ids[0].value = 'quux'
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
+
+        self.assertEqual(rec1.x_sel, False)
+        self.assertEqual(rec2.x_sel, 'quux')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+
+class TestCustomFieldsPostInstall(TestCommonCustomFields):
+    def test_add_field_valid(self):
+        """ custom field names must start with 'x_', even when bypassing the constraints
+
+        If a user bypasses all constraints to add a custom field not starting by `x_`,
+        it must not be loaded in the registry.
+
+        This is to forbid users to override class attributes.
+        """
+        field = self.create_field('x_foo')
+        # Drop the SQL constraint, to bypass it,
+        # as a user could do through a SQL shell or a `cr.execute` in a server action
+        self.env.cr.execute("ALTER TABLE ir_model_fields DROP CONSTRAINT ir_model_fields_name_manual_field")
+        self.env.cr.execute("UPDATE ir_model_fields SET name = 'foo' WHERE id = %s", [field.id])
+        with self.assertLogs('odoo.registry') as log_catcher:
+            # Trick to reload the registry. The above rename done through SQL didn't reload the registry. This will.
+            self.env.registry._setup_models__(self.cr, [self.MODEL])
+            self.assertIn(
+                f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
+            )

@@ -722,3 +722,11 @@ class TestUsersIdentitycheck(HttpCase):
 
         # In addition, the password must have been emptied from the wizard
         self.assertFalse(user_identity_check.password)
+
+
+class TestResUsersForm(TransactionCase):
+    def test_create_res_users(self):
+        user_form = Form(self.env['res.users'])
+        user_form.login = 'a user login'
+        user_form.name = 'a user name'
+        user_form.save()

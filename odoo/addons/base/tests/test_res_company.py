@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import TransactionCase, tagged, Form
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -75,3 +75,10 @@ class TestCompany(TransactionCase):
             [main_company.id, second_company.id],
             "Companies are not in the correct order",
         )
+
+
+class TestResCompanyForm(TransactionCase):
+    def test_create_res_company(self):
+        company_form = Form(self.env['res.company'])
+        company_form.name = 'a company'
+        company_form.save()

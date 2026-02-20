@@ -9,7 +9,7 @@ This module allows authorized users to import a custom data module (.xml files a
 for customization purpose.
 """,
     'category': 'Hidden/Tools',
-    'depends': ['web'],
+    'depends': ['test_tools', 'web'],
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',

@@ -3,7 +3,7 @@
 
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 
-from odoo.tests import tagged
+from odoo.tests import tagged, TransactionCase, Form
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
@@ -56,3 +56,11 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         # updating the sanitized value will also update the account_number
         partner_bank.write({'sanitized_account_number': 'BE001251882303WRONG'})
         self.assertEqual(partner_bank.account_number, partner_bank.sanitized_account_number)
+
+
+class TestResPartnerBankForm(TransactionCase):
+    def test_create_res_partner_bank(self):
+        bank_account_form = Form(
+            self.env['res.partner.bank'].with_context(default_partner_id=self.env.user.partner_id.id))
+        bank_account_form.account_number = '11234'
+        bank_account_form.save()

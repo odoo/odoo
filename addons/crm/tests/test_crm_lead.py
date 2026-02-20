@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
+from odoo.addons.base.tests.test_res_partner_addresses import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
