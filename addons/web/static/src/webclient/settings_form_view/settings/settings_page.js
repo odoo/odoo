@@ -85,9 +85,11 @@ export class SettingsPage extends Component {
 
     scrollToSelectedTab() {
         const key = this.state.selectedTab;
-        this.settingsTabRef.el
-            .querySelector(`[data-key='${key}']`)
-            .scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        if (this.settingsTabRef.el) {
+            this.settingsTabRef.el
+                .querySelector(`[data-key='${key}']`)
+                .scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
     }
 
     onSettingTabClick(key) {
