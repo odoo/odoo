@@ -51,6 +51,19 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    def _compute_kit_quantities_from_moves(self, moves, kit_bom):
+        self.ensure_one()
+        moves_to_consider = moves.filtered(lambda m: m.state == 'done' and not m.scrapped)
+        order_qty = self.product_uom_id._compute_quantity(self.product_uom_qty, kit_bom.product_uom_id)
+        filters = {
+            'incoming_moves': lambda m:
+                m._is_incoming() and
+                (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+            'outgoing_moves': lambda m:
+                m._is_outgoing() and m.to_refund,
+        }
+        return moves_to_consider._compute_kit_quantities(self.product_id, order_qty, kit_bom, filters)
+
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']
         lines_stock = self.filtered(lambda l: l.qty_received_method == 'stock_moves' and l.move_ids and l.state != 'cancel')
@@ -64,16 +77,7 @@ class PurchaseOrderLine(models.Model):
         for line in lines_stock:
             kit_bom = kits_by_company[line.company_id].get(line.product_id)
             if kit_bom:
-                moves = line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
-                order_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, kit_bom.product_uom_id)
-                filters = {
-                    'incoming_moves': lambda m:
-                        m._is_incoming() and
-                        (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-                    'outgoing_moves': lambda m:
-                        m._is_outgoing() and m.to_refund,
-                }
-                line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
+                line.qty_received = line._compute_kit_quantities_from_moves(line.move_ids, kit_bom)
                 kit_lines += line
         super(PurchaseOrderLine, self - kit_lines)._compute_qty_received()
 
