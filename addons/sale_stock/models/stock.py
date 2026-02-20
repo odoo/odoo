@@ -158,7 +158,9 @@ class StockPicking(models.Model):
                 so_line_vals['price_unit'] = 0
             # New lines should be added at the bottom of the SO (higher sequence number)
             if not so_line:
-                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
+                so_line_vals['sequence'] = (
+                    max(sale_order.order_line.mapped('sequence'), default=0) + len(sale_order_lines_vals) + 1
+                )
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
