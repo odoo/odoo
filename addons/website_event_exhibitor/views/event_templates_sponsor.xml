@@ -15,10 +15,11 @@
                                 <i class="fa fa-globe me-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
                             </div>
                         </t>
-                        <a class="o_wevent_sponsor o_wevent_sponsor_card h-100 rounded text-decoration-none" tabindex="0" role="button"
+                        <a class="o_wevent_sponsor o_wevent_sponsor_card h-100 rounded text-decoration-none position-relative" tabindex="0" role="button"
                             t-att-data-publish="'on' if sponsor.website_published else 'off'"
                             t-att-data-bs-content="popover_content"
                             data-bs-html="true" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom">
+                            <t t-if="not sponsor.website_published" t-call="website.unpublished_badge" is_minimal_badge="True"/>
                             <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
                         </a>
                     </t>
@@ -36,8 +37,6 @@
     </div>
     <span t-if="sponsor.sudo().sponsor_type_id.display_ribbon_style and sponsor.sudo().sponsor_type_id.display_ribbon_style != 'no_ribbon'"
             t-field="sponsor.sudo().sponsor_type_id" t-attf-class="o_ribbon d-block w-100 ribbon_#{sponsor.sudo().sponsor_type_id.display_ribbon_style}"/>
-    <span t-if="not sponsor.website_published"
-        class="d-flex justify-content-center badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</span>
 </template>
 
 </odoo>

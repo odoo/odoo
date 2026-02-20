@@ -147,6 +147,7 @@
                     <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-reset"
                         t-att-href="sponsor_other.website_absolute_url"
                         t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
+                        <t t-if="not sponsor_other.website_published" t-call="website.unpublished_badge" is_minimal_badge="True"/>
                         <div class="d-flex flex-column align-items-center">
                             <img t-if="sponsor_other.partner_id.country_id"
                             class="o_wesponsor_aside_logo mb-1"
@@ -163,9 +164,6 @@
                                 <span class="d-inline-block text-truncate" t-out="sponsor_other.name"/>
                             </span>
                             <small class="opacity-75" t-out="sponsor_other.subtitle"/>
-                            <div class="d-inline-block float-end" t-if="not sponsor_other.website_published">
-                                <small class="badge text-bg-danger">Unpublished</small>
-                            </div>
                         </div>
                     </a>
                 </li>

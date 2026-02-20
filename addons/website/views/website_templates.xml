@@ -2786,6 +2786,21 @@
     </div>
 </template>
 
+<template id="website.unpublished_badge" name="Unpublished Badge">
+    <t t-set="badge_offset" t-value="badge_offset or '2'"/>
+    <t t-if="not badge_position == 'static' and not badge_classes">
+        <t t-if="badge_position == 'left'" t-set="badge_classes" t-valuef="position-absolute start-0 top-0 z-1 mt-{{badge_offset}} ms-{{badge_offset}}"/>
+        <t t-else="" t-set="badge_classes" t-valuef="position-absolute end-0 top-0 z-1 mt-{{badge_offset}} me-{{badge_offset}}"/>
+    </t>
+    <t t-set="unpublished_label">Unpublished</t>
+    <small
+        t-attf-class="o_unpublished_badge badge bg-black-75 shadow-sm {{badge_classes}}"
+        t-att-title="is_minimal_badge and unpublished_label or ''"
+    >
+        <i t-attf-class="fa fa-ban {{not is_minimal_badge and 'me-2' or ''}}" aria-hidden="true"/><t t-if="not is_minimal_badge"><t t-out="unpublished_label"/></t>
+    </small>
+</template>
+
 <template id="pager" name="Pager" inherit_id="portal.pager">
 </template>
 

@@ -227,12 +227,11 @@
 </template>
 
 <template id="event_track_aside_other_track">
+    <t t-if="not track_other.website_published and user_event_manager" t-call="website.unpublished_badge"/>
     <span t-out="track_other.name" class="fw-bold"/>
     <div class="d-flex flex-column flex-lg-row flex-wrap justify-content-between align-items-start mt-1">
         <small class="opacity-75" t-out="track_other.partner_name"/>
         <div class="d-inline-block o_wesession_track_aside_info text-truncate">
-            <small t-if="not track_other.website_published and user_event_manager"
-                class="badge text-bg-danger">Unpublished</small>
             <small t-if="track_other.is_track_live and not track_other.is_track_done"
                 class="badge text-bg-danger">Live</small>
             <small t-elif="track_other.is_track_done"

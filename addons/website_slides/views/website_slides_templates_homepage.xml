@@ -33,9 +33,9 @@
             </div>
             <div t-foreach="channels_my[:5]" t-as="channel">
                 <div class="row">
-                    <div class="col-5 d-flex align-items-center my-2">
+                    <div class="col-5 d-flex align-items-center gap-1 my-2">
+                        <t t-if="not channel.website_published" t-call="website.unpublished_badge" badge_position="'static'" is_minimal_badge="True"/>
                         <a t-attf-href="/slides/#{slug(channel)}" t-out="channel.name"/>
-                        <span t-if="not channel.is_published" class="badge text-bg-danger ms-1">Unpublished</span>
                     </div>
                     <div class="col-5 d-flex justify-content-between align-items-center">
                         <div t-if="channel.completed" class="badge rounded-pill text-bg-success pull-right">
@@ -337,7 +337,8 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="card o_wslides_course_card w-100 h-100 text-decoration-none #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
+    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" class="card w-100 h-100 text-decoration-none" t-att-data-publish="channel.website_published and 'on' or 'off'">
+        <t t-if="not channel.website_published" t-call="website.unpublished_badge"/>
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
         <div>
             <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
@@ -345,7 +346,6 @@
         </div>
         <div class="card-body">
             <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
-            <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="o_line_clamp small" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
