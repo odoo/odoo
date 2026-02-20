@@ -322,6 +322,7 @@ patch(PosStore.prototype, {
                     program_id: this.models["loyalty.program"].get(payload.program_id),
                     partner_id: this.models["res.partner"].get(payload.partner_id),
                     points: payload.points,
+                    points_display: payload.points_display,
                     // TODO JCB: make the expiration_date work.
                     // expiration_date: payload.expiration_date,
                 });
@@ -342,11 +343,7 @@ patch(PosStore.prototype, {
             }
         }
         if (!rule && order.lines.length === 0 && coupon) {
-            return _t(
-                "Gift Card: %s\nBalance: %s",
-                code,
-                this.env.utils.formatCurrency(coupon.points)
-            );
+            return _t("%s: %s\nBalance: %s", coupon.program_id.name, code, coupon.points_display);
         }
         return true;
     },
