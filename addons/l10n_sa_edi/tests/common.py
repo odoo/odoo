@@ -40,7 +40,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'name': 'SA Company Test',
             'email': 'info@company.saexample.com',
             'phone': '+966 51 234 5678',
-            'vat': '311111111111113',
+            'vat': '311111111101113',
             # Address fields
             'street': 'Al Amir Mohammed Bin Abdul Aziz Street',
             'street2': 'Testomania',
@@ -76,6 +76,9 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         # Simplified invoice partner (individual)
         cls.partner_sa_simplified = cls._create_saudi_individual_partner()
 
+        # VAT Group member partner (company with 11th digit of VAT = '1')
+        cls.partner_sa_vat_group = cls._create_saudi_vat_group_partner()
+
     @classmethod
     def _create_saudi_company_partner(cls):
         """Create a Saudi company partner with full ZATCA requirements."""
@@ -88,7 +91,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'email': 'saudi.aramco@example.com',
             'phone': '+966556666666',
             # Tax info
-            'vat': '311111111111113',
+            'vat': '311111111101113',
             'l10n_sa_additional_identification_scheme': 'CRN',
             'l10n_sa_additional_identification_number': '353535353535353',
             # Address
@@ -116,6 +119,33 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             # Simplified invoices use different ID schemes
             'l10n_sa_additional_identification_scheme': 'MOM',  # Momra License
             'l10n_sa_additional_identification_number': '3123123213131',
+        })
+
+    @classmethod
+    def _create_saudi_vat_group_partner(cls):
+        """Create a Saudi VAT Group member partner."""
+        return cls.env['res.partner'].create({
+            'name': 'VAT Group Member Company',
+            'ref': 'VAT Group Member',
+            'company_type': 'company',
+            'lang': 'en_US',
+            # Contact info
+            'email': 'vatgroup@example.com',
+            'phone': '+966557777777',
+            # Tax info
+            'vat': '311111111111113',
+            'l10n_sa_additional_identification_scheme': 'TIN',
+            'l10n_sa_additional_identification_number': '1234567890',  # Unique 10-digit TIN
+            # Address
+            'street': '1234 VAT Group St',
+            'street2': 'Business District',
+            'city': 'Riyadh',
+            'zip': '12345',
+            'state_id': cls.riyadh.id,
+            'country_id': cls.saudi_arabia.id,
+            # Saudi-specific address fields
+            'l10n_sa_edi_building_number': '5678',
+            'l10n_sa_edi_plot_identification': '9012',
         })
 
     @classmethod

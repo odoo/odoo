@@ -143,13 +143,21 @@ class AccountJournal(models.Model):
         self.ensure_one()
         company_id = self.company_id
         parent_company_id = self.company_id.parent_id
+        # For VAT Group members (15-digit VAT with 11th digit = '1'), use TIN as OrganizationUnitName
+        # Otherwise, use the first 10 digits of the VAT number
+        if parent_company_id:
+            org_unit_name = company_id.name
+        elif company_id.l10n_sa_is_vat_group_member:
+            org_unit_name = company_id.l10n_sa_additional_identification_number
+        else:
+            org_unit_name = company_id.vat[:10]
         return {
             "country_name": {
                 "value": company_id.country_id.code,
                 "name": _("Country Name"),
             },
             "org_unit_name": {
-                "value": company_id.name if parent_company_id else company_id.vat[:10],
+                "value": org_unit_name,
                 "name": _("Company Name"),
             },
             "org_name": {

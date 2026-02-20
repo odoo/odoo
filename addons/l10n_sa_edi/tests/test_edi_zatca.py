@@ -578,3 +578,30 @@ class TestEdiZatca(TestSaEdiCommon):
 
         for field_name in expected_error_fields:
             self.assertIn(field_name, error_message, f"Error message should contain '{field_name}'")
+
+    def test_vat_group_invoice_party_identification(self):
+        """Test that invoice XML uses actual TIN for VAT Group members, not VAT[:10]."""
+        invoice = self._create_invoice(
+            name='INV/2022/00015',
+            invoice_date='2022-09-05',
+            invoice_date_due='2022-09-22',
+            partner_id=self.partner_sa_vat_group,
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': self.tax_15.ids,
+            }]
+        )
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
+        xml_root = etree.fromstring(xml_content)
+        namespaces = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+
+        customer_id = xml_root.xpath(
+            "//cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID",
+            namespaces=namespaces
+        )[0].text.strip()
+
+        # VAT Group member should use actual TIN (1234567890), not VAT[:10] (3111111111)
+        self.assertEqual(customer_id, '1234567890')

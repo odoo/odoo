@@ -107,8 +107,11 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         if partner.country_code != "SA":
             identification_number = vat
         elif partner.l10n_sa_additional_identification_scheme == 'TIN':
-            # according to ZATCA, the TIN number is always the first 10 digits of the VAT number
-            identification_number = vat[:10]
+            # For VAT Group members (15-digit VAT with 11th digit = '1'), use the actual TIN
+            # from l10n_sa_additional_identification_number. For regular companies, derive TIN
+            # from the first 10 digits of the VAT number as per ZATCA rules.
+            if not partner.l10n_sa_is_vat_group_member:
+                identification_number = vat[:10]
 
         return [{
             'id_attrs': {'schemeID': partner.l10n_sa_additional_identification_scheme},
