@@ -1,12 +1,10 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { _t } from "@web/core/l10n/translation";
 
-export const socialMediaElementsSelector = ".s_social_media i.fa, .s_share i.fa, .social_media_img";
-
 export class ReplaceMediaOption extends BaseOptionComponent {
     static template = "html_builder.ReplaceMediaOption";
     static selector = "img, .media_iframe_video, span.fa, i.fa";
-    static exclude = `[data-oe-xpath], ${socialMediaElementsSelector}`;
+    static exclude = "[data-oe-xpath], .s_share i.fa, .s_share .social_media_img";
     static name = "replaceMediaOption";
     setup() {
         super.setup();
@@ -20,7 +18,8 @@ export class ReplaceMediaOption extends BaseOptionComponent {
         return (
             isImageSupportedForStyle(editingElement) &&
             !searchSupportedParentLinkEl(editingElement).matches("a[data-oe-xpath]") &&
-            !editingElement.classList.contains("media_iframe_video")
+            !editingElement.classList.contains("media_iframe_video") &&
+            !editingElement.closest(".s_social_media")
         );
     }
     hasHref(editingElement) {

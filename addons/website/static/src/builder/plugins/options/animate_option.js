@@ -3,10 +3,8 @@ import {
     useDomState,
     SPECIAL_BLOCKQUOTE_SELECTOR,
 } from "@html_builder/core/utils";
-import {
-    isImageSupportedForStyle,
-    socialMediaElementsSelector,
-} from "@html_builder/plugins/image/replace_media_option";
+import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
+import { socialMediaElementsSelector } from "@html_builder/plugins/image/image_tool_option_plugin";
 
 /**
  * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
