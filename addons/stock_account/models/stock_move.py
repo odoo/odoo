@@ -165,6 +165,8 @@ class StockMove(models.Model):
         moves_out = self.filtered(lambda m: m._is_out())
         moves_out._set_value()
         moves = super()._action_done(cancel_backorder=cancel_backorder)
+        # Filter out deleted moves (e.g. exploded kit moves)
+        moves_out = moves_out.exists()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_in._set_value()
         moves._create_account_move()
