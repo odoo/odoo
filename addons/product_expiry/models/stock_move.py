@@ -14,6 +14,8 @@ class StockMove(models.Model):
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
+    use_create_lots = fields.Boolean(
+        string='Create New Lots/Serial Numbers', related='picking_type_id.use_create_lots')
 
     @api.model
     def action_generate_lot_line_vals(self, context_data, mode, first_lot, count, lot_text):
@@ -23,8 +25,10 @@ class StockMove(models.Model):
         if product.use_expiration_date:
             from_date = picking.scheduled_date or fields.Datetime.today()
             expiration_date = from_date + datetime.timedelta(days=product.expiration_time)
+            removal_date = expiration_date - datetime.timedelta(days=product.removal_time)
             for vals in vals_list:
-                vals['expiration_date'] = vals.get('expiration_date') or expiration_date
+                vals['expiration_date'] = vals.get('expiration_date', expiration_date)
+                vals['removal_date'] = vals.get('removal_date', removal_date)
         return vals_list
 
     def _generate_serial_move_line_commands(self, field_data, location_dest_id=False, origin_move_line=None):
