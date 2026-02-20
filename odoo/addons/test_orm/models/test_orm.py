@@ -9,6 +9,8 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
 import itertools
 
+from odoo.fields import StoredTranslations
+
 _logger = logging.getLogger('precompute_setter')
 
 
@@ -2233,6 +2235,8 @@ class TestOrmRelated_Translation_2(models.Model):
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
     computed_name = fields.Char('Name Computed', compute='_compute_name')
     computed_html = fields.Char('HTML Computed', compute='_compute_html')
+    computed_translated_name = fields.Char(compute='_compute_translated_name', translate=True, store=True)
+    computed_translated_html = fields.Char(compute='_compute_translated_html', translate=True, store=True)
 
     @api.depends_context('lang')
     @api.depends('related_id.name')
@@ -2246,6 +2250,46 @@ class TestOrmRelated_Translation_2(models.Model):
         for record in self:
             record.computed_html = record.related_id.html
 
+    @api.depends('name')
+    def _compute_translated_name(self):
+        field = self.env['test_orm.related_translation_1']._fields['name']
+        for record in self:
+            value = field._get_stored_translations(record.related_id)
+            # NOTE: [CORRECT] but the performance is not optimized
+            record.computed_translated_name = value and StoredTranslations(value)
+
+    @api.depends('html')
+    def _compute_translated_html(self):
+        field = self.env['test_orm.related_translation_1']._fields['html']
+        for record in self:
+            value = field._get_stored_translations(record.related_id)
+            # NOTE: [CORRECT] but the performance is not optimized
+            record.computed_translated_html = value and StoredTranslations(value)
+
+    @api.constrains('computed_translated_name', 'name')
+    def _check_name(self):
+        """
+        `constrains` for translated fields only check the value for the current language.
+        Translation updates from `_update_field_translations` and `write` with dict translated value may bypass the check.
+        As a result, it is not recommended to check model translated fields.
+        """
+        for record in self:
+            # WARNING: [WRONG] it only checks the value of translated content
+            if record.name == 'x' or record.computed_translated_name == 'x':
+                raise ValidationError('bad name value')
+
+    @api.constrains('computed_translated_html', 'html')
+    def _check_html(self):
+        """
+        `constrains` for translated fields only check the value for the current language.
+        Translations updates from `_update_field_translations` and `write` with dict translated value may bypass the check.
+        As a result, the check method should be used to check the html structure but not its model_terms translations
+        """
+        for record in self:
+            # NOTE: [CORRECT] it checks the structure of the html value which is synchronized for all languages
+            if '<a>' in (record.html or '') or '<a>' in (record.computed_translated_html or ''):
+                raise ValidationError('bad html value')
+
 
 class TestOrmRelated_Translation_3(models.Model):
     _name = 'test_orm.related_translation_3'
@@ -2254,6 +2298,16 @@ class TestOrmRelated_Translation_3(models.Model):
     related_id = fields.Many2one('test_orm.related_translation_2', string='Parent Model')
     name = fields.Char('Name Related', related='related_id.name', readonly=False)
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
+
+
+class TestOrmRelated_Translation_4(models.Model):
+    _name = 'test_orm.related_translation_4'
+    _description = 'A model to test translation for inherited translated fields'
+    _inherits = {
+        'test_orm.related_translation_1': 'related_id',
+    }
+
+    related_id = fields.Many2one('test_orm.related_translation_1', string='Parent Model', required=True, ondelete='cascade')
 
 
 class TestOrmIndexed_Translation(models.Model):

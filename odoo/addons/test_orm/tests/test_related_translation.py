@@ -2,6 +2,7 @@ import io
 
 import odoo.tests
 from odoo.tools.translate import TranslationImporter
+from odoo.exceptions import ValidationError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -347,3 +348,182 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         # inconsistent behavior but usually users don't care or may even be happy about it
         self.assertEqual(record_en.html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
         self.assertEqual(record_fr.html, '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+    def _check_translation_value(self, record, expected):
+        for _ in range(2):
+            # first time check cache value
+            # second time check refetched/recomputed value
+            for field_name, expected_dict in expected.items():
+                if not expected_dict:
+                    self.assertEqual(record[field_name], False)
+                else:
+                    for lang, value in expected_dict.items():
+                        self.assertEqual(record.with_context(lang=lang)[field_name], value)
+            record.invalidate_recordset()
+
+    def test_create_translated_dict(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        model = self.env['test_orm.related_translation_1'].with_context(lang='en_US')
+        record = model.create({
+            'name': {
+                'en_US': 'Knife',
+                'fr_FR': 'Couteau'
+            },
+            'html': {
+                'en_US': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>'
+            }
+        })
+
+        self._check_translation_value(record, {
+            'name': {
+                'en_US': 'Knife',
+                'fr_FR': 'Couteau',
+                'nl_NL': 'Knife',
+            },
+            'html': {
+                'en_US': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>',
+                'nl_NL': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
+            }
+        })
+    
+    def test_create_related_translated_dict(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        model = self.env['test_orm.related_translation_4'].with_context(lang='en_US')
+        record = model.create({
+            'related_id': self.test1.id,
+            'name': {
+                'en_US': 'Knife',
+                'fr_FR': 'Couteau'
+            },
+            'html': {
+                'en_US': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>'
+            }
+        })
+
+        self._check_translation_value(record, {
+            'name': {
+                'en_US': 'Knife',
+                'fr_FR': 'Couteau',
+                'nl_NL': 'Knife',
+            },
+            'html': {
+                'en_US': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>',
+                'nl_NL': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
+            }
+        })
+
+    def test_write_translated_dict(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+
+        test1_en = self.test1.with_context(lang='en_US')
+        test1_fr = self.test1.with_context(lang='fr_FR')
+        test1_nl = test1_fr.with_context(lang='nl_NL')
+        test1_en.name = {'fr_FR': 'Couteau 2'}
+        test1_en.html = {'fr_FR': '<p>Couteau 2</p><p>Fourchette</p><p>Cuiller</p>'}
+        self._check_translation_value(test1_en, {
+            'name': {
+                'en_US': 'Knife',
+                'fr_FR': 'Couteau 2',
+                'nl_NL': 'Knife',
+            },
+            'html': {
+                'en_US': '<p>Couteau 2</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau 2</p><p>Fourchette</p><p>Cuiller</p>',
+                'nl_NL': '<p>Couteau 2</p><p>Fork</p><p>Spoon</p>',
+            }
+        })
+
+        test1_en.name = {'fr_FR': 'Couteau 3', 'nl_NL': 'Mes 3'}
+        test1_en.html = {'fr_FR': '<p>Couteau 3</p><p>Fourchette</p><p>Cuiller</p>', 'nl_NL': '<p>Mes 3</p><p>Vork 3</p><p>Lepel 3</p>'}
+        self._check_translation_value(test1_en, {
+            'name': {
+                'en_US': 'Knife',
+                'fr_FR': 'Couteau 3',
+                'nl_NL': 'Mes 3',
+            },
+            'html': {
+                # since en_US (test1_env.env.lang) not in the dict, fr_FR as the first key will be the write language
+                'en_US': '<p>Couteau 3</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau 3</p><p>Fourchette</p><p>Cuiller</p>',
+                'nl_NL': '<p>Mes 3</p><p>Vork 3</p><p>Lepel 3</p>',
+            }
+        })
+
+        test1_en.name = {'en_US': 'Knife4', 'fr_FR': 'Nouveau couteau4'}
+        test1_en.html = {'fr_FR': '<p>Couteau 4</p><p>Fourchette</p><p>Cuiller</p>', 'en_US': '<p>Knife 4</p><p>Fork</p><p>Spoon</p>'}
+        self._check_translation_value(test1_en, {
+            'name': {
+                'en_US': 'Knife4',
+                'fr_FR': 'Nouveau couteau4',
+                'nl_NL': 'Mes 3',
+            },
+            'html': {
+                # since en_US (test1_env.env.lang) is in the dict, it will be the write language
+                'en_US': '<p>Knife 4</p><p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Couteau 4</p><p>Fourchette</p><p>Cuiller</p>',
+                'nl_NL': '<p>Knife 4</p><p>Vork 3</p><p>Lepel 3</p>',
+            }
+        })
+        self.assertEqual(test1_en.name, 'Knife4')
+        self.assertEqual(test1_fr.name, 'Nouveau couteau4')
+        self.assertEqual(test1_nl.name, 'Mes 3')
+
+        with self.assertRaises(ValidationError):
+            # <p> is not consistent with <a>
+            test1_en.html = {'en_US': '<p>Knife 5</p><p>Fork</p><p>Spoon</p>', 'fr_FR': '<a>Couteau 5</a><p>Fourchette</p><p>Cuiller</p>'}
+
+        with self.assertRaises(ValidationError):
+            # inconsistent term numbers (2 vs 3)
+            test1_en.html = {'en_US': '<p>Knife 6</p><p>Fork</p><p>Spoon</p>', 'fr_FR': '<p></p><p>Fourchette</p><p>Cuiller</p>'}
+
+    def test_write_translated_dict_relation(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        test1_en = self.test1.with_context(lang='en_US')
+        test1_en.name = {'en_US': 'New knife', 'fr_FR': 'Nouveau couteau'}
+        test1_en.html = {'en_US': '<p>New knife</p><p>Fork</p><p>Spoon</p>', 'fr_FR': '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>'}
+
+        expected_name_dict = {
+            'en_US': 'New knife',
+            'fr_FR': 'Nouveau couteau',
+            'nl_NL': 'New knife',
+        }
+        expected_html_dict = {
+            'en_US': '<p>New knife</p><p>Fork</p><p>Spoon</p>',
+            'fr_FR': '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>',
+            'nl_NL': '<p>New knife</p><p>Fork</p><p>Spoon</p>',
+        }
+    
+        self._check_translation_value(test1_en, {
+            'name': expected_name_dict,
+            'html': expected_html_dict,
+        })
+
+        test2_en = self.test2.with_context(lang='en_US')
+        # non-store related fields
+        self._check_translation_value(test2_en, {
+            'name': expected_name_dict,
+            'html': expected_html_dict,
+        })
+        # non stored context dependent computed fields
+        self._check_translation_value(test2_en, {
+            'computed_name': expected_name_dict,
+            'computed_html': expected_html_dict,
+        })
+        # stored computed translated fields
+        self._check_translation_value(test2_en, {
+            'computed_translated_name': expected_name_dict,
+            'computed_translated_html': expected_html_dict,
+        })
+
+    def test_constraints(self):
+        # Expected behavior: The check for non current language won't be triggered
+        self.test1.with_context(lang='en_US').name = {'en_US': 'New knife', 'fr_FR': 'x'}
+        with self.assertRaises(ValidationError):
+            self.test1.with_context(lang='en_US').name = {'en_US': 'x', 'fr_FR': 'Nouveau couteau'}
+
+        with self.assertRaises(ValidationError):
+            self.test1.with_context(lang='en_US').html = {'en_US': '<a>Knife</a>', 'fr_FR': '<a>x</a>'}
