@@ -48,7 +48,7 @@ class FleetVehicleLogContract(models.Model):
         [('futur', 'New'),
          ('open', 'Running'),
          ('expired', 'Expired'),
-         ('closed', 'Cancelled')
+         ('closed', 'Closed')
         ], 'Status', default='futur',
         help='Choose whether the contract is still valid or not',
         tracking=True,
