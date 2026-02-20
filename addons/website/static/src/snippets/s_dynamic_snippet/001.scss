@@ -1,0 +1,24 @@
+.s_dynamic[data-vcss="001"] {
+    // TODO Dynamic snippet loading style: Temporarily disabled in preview mode
+    // since it needs interactions to be available.
+    #wrap &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
+        section:not(.s_dynamic_snippet_holder) {
+            display: none !important;
+        }
+        .s_dynamic_snippet_holder {
+            display: block !important;
+        }
+    }
+    [data-url] {
+        cursor: pointer;
+    }
+    img {
+        object-fit: scale-down;
+    }
+
+    &.s_dynamic_snippet_cover_left {
+        .s_dynamic_snippet_content_position {
+            flex-direction: row-reverse;
+        }
+    }
+}

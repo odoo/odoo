@@ -39,5 +39,12 @@
             />
         </BuilderRow>
     </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Section Title&quot;]/BuilderButtonGroup" position="replace">
+        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
+            <BuilderButton label.translate="Top" action="'sectionTitlePosition'" actionParam="'top'" classAction="dynamicOptionParams.getSnippetTitleClasses('top')" />
+            <BuilderButton label.translate="Left" action="'sectionTitlePosition'" actionParam="'left'" classAction="dynamicOptionParams.getSnippetTitleClasses('left')" />
+            <BuilderButton label.translate="None" title.translate="No title" action="'sectionTitlePosition'" actionParam="'none'" classAction="dynamicOptionParams.getSnippetTitleClasses('none')" />
+        </BuilderButtonGroup>
+    </xpath>
 </t>
 </templates>

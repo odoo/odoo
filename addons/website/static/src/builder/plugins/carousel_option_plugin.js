@@ -9,6 +9,8 @@ import { between } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { patch } from "@web/core/utils/patch";
+import { SetContainerWidthAction } from "./content_width_option_plugin";
 
 /**
  * @typedef { Object } CarouselOptionShared
@@ -395,5 +397,20 @@ export class ToggleCardImgAction extends BuilderAction {
         return !!cardImgEl;
     }
 }
+
+patch(SetContainerWidthAction.prototype, {
+    apply({ editingElement }) {
+        super.apply(...arguments);
+        if (!editingElement.closest(".s_quotes_carousel")) {
+            return;
+        }
+        const carouselEl = editingElement.querySelector(".carousel");
+        if (carouselEl) {
+            // Ensure carousel recomputes its min-height on content-width
+            // option change
+            carouselEl.dispatchEvent(new CustomEvent("content_changed"));
+        }
+    },
+});
 
 registry.category("website-plugins").add(CarouselOptionPlugin.id, CarouselOptionPlugin);
