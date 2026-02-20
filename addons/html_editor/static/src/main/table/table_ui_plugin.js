@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { MobileTablePicker } from "./mobile_table_picker";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -13,7 +14,7 @@ import { TableDragDrop } from "./table_drag_drop";
  */
 export class TableUIPlugin extends Plugin {
     static id = "tableUi";
-    static dependencies = ["history", "overlay", "table"];
+    static dependencies = ["history", "overlay", "selection", "table"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -48,6 +49,18 @@ export class TableUIPlugin extends Plugin {
                         picker.style.right = `${window.innerWidth - left - popperRect.width}px`;
                         picker.style.removeProperty("left");
                     }
+                },
+            },
+        });
+
+        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
+        this.mobilePicker = this.dependencies.overlay.createOverlay(MobileTablePicker, {
+            positionOptions: {
+                updatePositionOnResize: false,
+                onPositioned: (picker) => {
+                    picker.style.bottom = 0;
+                    picker.style.width = "100%";
+                    picker.style.removeProperty("top");
                 },
             },
         });
@@ -91,9 +104,22 @@ export class TableUIPlugin extends Plugin {
         });
     }
 
+    openMobilePicker() {
+        this.mobilePicker.open({
+            props: {
+                editable: this.editable,
+                close: () => {
+                    this.mobilePicker.close();
+                    this.dependencies.selection.focusEditable();
+                },
+                insertTable: (params) => this.dependencies.table.insertTable(params),
+            },
+        });
+    }
+
     openPickerOrInsertTable() {
         if (this.services.ui.isSmall) {
-            this.dependencies.table.insertTable({ cols: 3, rows: 3 });
+            this.openMobilePicker();
         } else {
             this.openPicker();
         }

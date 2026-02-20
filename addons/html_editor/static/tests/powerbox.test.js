@@ -532,6 +532,9 @@ test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     await insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");
     await press("Enter");
+    await animationFrame();
+
+    await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
         `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
