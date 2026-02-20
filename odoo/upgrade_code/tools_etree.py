@@ -129,7 +129,6 @@ def update_etree(origin: str, callback: Callable[[etree._ElementTree]]) -> str:
 
     new_template = etree.tostring(root, encoding='unicode')
 
-
     # unescape \n in attribute values
     indented_template = ATTRIBUTES_SPACE_REG.sub(_un_escape_newlines_in_attr, new_template)
 
@@ -328,7 +327,7 @@ def _test():
                 <t t-set="resources" t-value="event.test_resource_ids"/>
                 <t t-set="based_on_users" t-value="test_type.schedule_based_on == 'users'"/>
                 <div id="wrap" class="o_test d-flex bg-o-color-4 p-4">
-                <div 
+                <div
                     class="oe_structure"/>
                     <div
                             class="o_test_edit_in_backend alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden"
@@ -340,7 +339,7 @@ def _test():
                         test
                     </t>
                     <t t-if="len(resources)">
-                    
+
                             <article t-foreach="stuff.test" t-as="tata" class="d-flex flex-nowrap gap-2 align-items-center mb-1">
                                 <div t-if="tata"
                                     class="o_class_test other_test">
@@ -415,7 +414,7 @@ def _test():
                 <t t-set="resources" t-value="event.test_resource_ids"/>
                 <t t-set="based_on_users" t-value="test_type.schedule_based_on == 'users'"/>
                 <div id="wrap" class="o_test d-flex bg-o-color-4 p-4">
-                <div 
+                <div
                     class="oe_structure"/>
                     <div
                             class="o_test_edit_in_backend alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden"
@@ -436,8 +435,6 @@ def _test():
                             />
                     </article>
                     <t t-if="len(resources)">
-                    
-                            
                     </t>
                     <newnode
                         data-attribute-a="1"
