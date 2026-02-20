@@ -38,7 +38,7 @@ export class ImageTransformation extends Component {
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         image: { validate: (p) => p.tagName === "IMG" },
         destroy: { type: Function },
-        onChange: { type: Function },
+        onChange: { type: Function, optional: true },
         onApply: { type: Function, optional: true },
         onComponentMounted: { type: Function, optional: true },
     };
@@ -215,16 +215,31 @@ export class ImageTransformation extends Component {
             this.image.parentElement,
             (node) => node.offsetWidth > currentPixelWidth
         );
-        const widthPercent = (currentPixelWidth / container.offsetWidth) * 100;
+        const containerStyles = window.getComputedStyle(container);
+        const widthPercent =
+            (currentPixelWidth /
+                (container.offsetWidth -
+                    parseFloat(containerStyles.paddingLeft) -
+                    parseFloat(containerStyles.paddingRight) -
+                    parseFloat(containerStyles.borderLeftWidth) -
+                    parseFloat(containerStyles.borderRightWidth))) *
+            100;
         this.image.style.width = Math.min(100, widthPercent).toFixed(2) + "%";
     }
 
     mouseUp() {
+        if (!this.transfo.active) {
+            return;
+        }
         this.isCurrentlyTransforming = false;
+        // Width should be converted to percentage only
+        // when image dimension is changed. See `mouseMove`.
+        if (this.transfo.active.type.length === 2) {
+            this.convertPixelWidthToPercentage();
+        }
         this.transfo.active = null;
-        this.convertPixelWidthToPercentage();
         this.props.onApply?.();
-        this.props.onChange();
+        this.props.onChange?.();
     }
 
     mouseDown(ev) {
