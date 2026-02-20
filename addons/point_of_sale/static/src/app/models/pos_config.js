@@ -93,6 +93,10 @@ export class PosConfig extends Base {
     get receiptLogoUrl() {
         return this.logo ? `data:image/png;base64,${this.logo}` : false;
     }
+
+    get paymentMethods() {
+        return this.payment_method_ids.slice().sort((a, b) => a.sequence - b.sequence);
+    }
 }
 
 registry.category("pos_available_models").add(PosConfig.pythonModel, PosConfig);
