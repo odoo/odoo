@@ -7,22 +7,13 @@ import { markup } from "@odoo/owl";
 
 patch(registry.category("web_tour.tours").get("crm_tour"), {
     steps() {
-        const originalSteps = super.steps();
-        const DragOppToWonStepIndex = originalSteps.findIndex(
-            (step) => step.id === "drag_opportunity_to_won_step"
-        );
-        originalSteps.splice(
-            DragOppToWonStepIndex + 1,
-            0,
+        /**
+        * Add some steps related to the lead generation (crm_iap_mine).
+        * This eases the on boarding for the Lead Generation process.
+        */
+        const newSteps = [
             {
-                /**
-                 * Add some steps between "Drag your opportunity to <b>Won</b> when you get
-                 * the deal. Congrats!" and "Let’s have a look at an Opportunity." to
-                 * include the steps related to the lead generation (crm_iap_mine).
-                 * This eases the on boarding for the Lead Generation process.
-                 *
-                 */
-                trigger: ".o_button_generate_leads",
+                trigger: ".o_control_panel_main_buttons .o-dropdown",
                 content: markup(_t("Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool.")),
                 tooltipPosition: "bottom",
                 run: "click .o_button_generate_leads",
@@ -47,7 +38,7 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
                 tooltipPosition: "bottom",
                 run: "click",
             }
-        );
-        return originalSteps;
+        ];
+        return [...super.steps(), ...newSteps];
     },
 });
