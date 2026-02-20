@@ -5,7 +5,7 @@
         <t t-name="composition_button" position="after">
             <DropdownItem
                 onSelected="() => this.toggleIsOptional(record)"
-                attrs="{ 'class': disableOptionalButton ? 'disabled' : '' }"
+                attrs="{ 'class': this.disableOptionalButton(record) ? 'disabled' : '' }"
             >
                 <i class="me-1 fa fa-fw fa-dot-circle-o"/>
                 <span t-if="record.data.is_optional">Unset Optional</span>
