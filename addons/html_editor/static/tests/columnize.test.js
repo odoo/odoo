@@ -618,3 +618,37 @@ describe("helper hint", () => {
         });
     });
 });
+
+describe("list", () => {
+    test("should split list at first item", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>[]a</li><li>b</li><li>c</li></ul>",
+            stepFunction: async (editor) => columnize(2)(editor),
+            contentAfter:
+                "<ul><li>a</li></ul>" +
+                columnsContainer(column(6, "<p>[]<br></p>") + column(6, "<p><br></p>")) +
+                "<ul><li>b</li><li>c</li></ul>",
+        });
+    });
+
+    test("should split list at middle item", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>a</li><li>b[]</li><li>c</li></ul>",
+            stepFunction: async (editor) => columnize(2)(editor),
+            contentAfter:
+                "<ul><li>a</li><li>b</li></ul>" +
+                columnsContainer(column(6, "<p>[]<br></p>") + column(6, "<p><br></p>")) +
+                "<ul><li>c</li></ul>",
+        });
+    });
+
+    test("should split list at last item and add paragraph after", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>a</li><li>b</li><li>c[]</li></ul>",
+            stepFunction: async (editor) => columnize(2)(editor),
+            contentAfter:
+                "<ul><li>a</li><li>b</li><li>c</li></ul>" +
+                columnsContainer(column(6, "<p>[]<br></p>") + column(6, "<p><br></p>")),
+        });
+    });
+});
