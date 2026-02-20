@@ -208,6 +208,7 @@ test("Odoo pie chart runtime loads the data", async () => {
         datasets: [
             {
                 backgroundColor: ["#4EA7F2", "#EA6175", "#43C5B1"],
+                hoverBackgroundColor: ["#4EA7F2", "#EA6175", "#43C5B1"],
                 borderColor: "#FFFFFF",
                 data: [1, 3],
                 hoverOffset: 10,

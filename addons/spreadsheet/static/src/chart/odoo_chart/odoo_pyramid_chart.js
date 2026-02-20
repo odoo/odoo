@@ -16,7 +16,7 @@ const {
     getChartTitle,
     getPyramidChartShowValues,
     getPyramidChartScales,
-    getBarChartLegend,
+    getPyramidChartLegend,
     getPyramidChartTooltip,
 } = chartHelpers;
 
@@ -85,7 +85,7 @@ function createOdooChartRuntime(chart, getters) {
             scales: getPyramidChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition, getters),
-                legend: getBarChartLegend(definition, chartData),
+                legend: getPyramidChartLegend(definition, chartData),
                 tooltip: getPyramidChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getPyramidChartShowValues(
                     changeTypeToSpreadsheetChart(definition),
