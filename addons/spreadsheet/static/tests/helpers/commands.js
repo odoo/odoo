@@ -373,9 +373,9 @@ export function addChartFigureToCarousel(
     chartFigureId,
     sheetId = model.getters.getActiveSheetId()
 ) {
-    return model.dispatch("ADD_FIGURE_CHART_TO_CAROUSEL", {
+    return model.dispatch("ADD_FIGURES_CHART_TO_CAROUSEL", {
         carouselFigureId: carouselId,
-        chartFigureId,
+        chartFigureIds: [chartFigureId],
         sheetId,
     });
 }
