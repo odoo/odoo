@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="crm.ControlPanel" t-inherit="web.ControlPanel">
+        <xpath expr="//button[@name='embedded_actions']" position="before">
+            <t t-call="crm.CrmTeamSwitcher"/>
+        </xpath>
+    </t>
+
+    <t t-name="crm.CrmTeamSwitcher">
+        <Dropdown>
+            <button class="btn btn-secondary" t-att-title="teamSwitcherTitle">
+                <t t-if="env.isSmall">
+                    <i class="fa fa-sliders"/>
+                </t>
+                <t t-else="">
+                    <t t-out="teamSwitcherTitle"/>
+                    <i class="fa fa-caret-down ms-2"/>
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="accessibleTeams" t-as="team" t-key="team_index">
+                    <t t-set="isMain" t-value="isTeamMain(team.id)"/>
+                    <t t-set="isSelected" t-value="isTeamSelected(team.id)"/>
+                    <t t-set="mainLabel" t-value="getMainTeamLabel(team)"/>
+                    <span
+                        class="d-flex dropdown-item p-0 w-100"
+                        t-att-class="isSelected ? 'alert-secondary' : ''"
+                        tabindex="0"
+                    >
+                        <div
+                            role="menuitemcheckbox"
+                            t-att-aria-checked="isSelected"
+                            t-att-aria-label="team.name"
+                            t-att-title="(isSelected ? 'Hide ' : 'Show ') + team.name + ' content'"
+                            class="border-end"
+                            t-att-class="isSelected ? 'border-primary' : ''"
+                            t-on-click.stop="() => this.onSelectCrmTeam(team.id)"
+                        >
+                            <span class="btn btn-link text-primary border-0 px-2">
+                                <i class="fa fa-fw py-1" t-att-class="isSelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+                            </span>
+                        </div>
+
+                        <div
+                            role="button"
+                            t-att-aria-pressed="isMain ? 'true' : 'false'"
+                            t-att-aria-label="mainLabel"
+                            t-att-title="mainLabel"
+                            class="d-flex flex-grow-1 align-items-center py-0"
+                            t-attf-class="btn btn-link #{isMain ? 'bg-primary-subtle' : 'fw-normal border-0'}"
+                            t-on-click="() => this.onSetMain(team.id)"
+                        >
+                            <span class="text-body text-truncate">
+                                <t t-out="team.name"/>
+                            </span>
+                        </div>
+                    </span>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

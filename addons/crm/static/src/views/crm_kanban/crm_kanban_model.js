@@ -1,10 +1,16 @@
 import { checkRainbowmanMessage } from "@crm/views/check_rainbowman_message";
+import { CrmTeamSwitcherModelMixin } from "@crm/views/crm_control_panel/crm_team_switcher_model_mixin";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 
-export class CrmKanbanModel extends RelationalModel {
+export class CrmKanbanModel extends CrmTeamSwitcherModelMixin(RelationalModel) {
     setup(params, { effect }) {
         super.setup(...arguments);
         this.effect = effect;
+    }
+    async load(params = {}) {
+        const domain = params.domain || this.config.domain;
+        params.domain = this._processSearchDomain(params, domain);
+        return super.load(params);
     }
 }
 

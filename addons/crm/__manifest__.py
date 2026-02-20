@@ -71,10 +71,16 @@
     'assets': {
         'web.assets_backend': [
             'crm/static/src/**',
+            ('remove', 'crm/static/src/views/crm_activity/**'),
+            ('remove', 'crm/static/src/views/crm_graph/**'),
+            ('remove', 'crm/static/src/views/crm_pivot/**'),
             ('remove', 'crm/static/src/views/forecast_graph/**'),
             ('remove', 'crm/static/src/views/forecast_pivot/**'),
         ],
         'web.assets_backend_lazy': [
+            'crm/static/src/views/crm_activity/**',
+            'crm/static/src/views/crm_graph/**',
+            'crm/static/src/views/crm_pivot/**',
             'crm/static/src/views/forecast_graph/**',
             'crm/static/src/views/forecast_pivot/**',
         ],
