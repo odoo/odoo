@@ -881,7 +881,16 @@ class PosOrder(models.Model):
 
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
+<<<<<<< a6e10db0fbb9829fddb1fa434c0d520ad8e6e68c
         move_type = 'out_invoice' if not any(order.is_refund for order in self) else 'out_refund'
+||||||| 4816dc594edbd4158b2b071eb5a2eec3c862c8df
+        rounding_method = pos_config.rounding_method
+        amount_total = sum(order.amount_total for order in self)
+        move_type = 'out_invoice' if amount_total >= 0 else 'out_refund'
+=======
+        amount_total = sum(order.amount_total for order in self)
+        move_type = 'out_invoice' if amount_total >= 0 else 'out_refund'
+>>>>>>> af04b7e5805dba800df6e32d6913d1945133d8ed
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
             if self.partner_id.property_payment_term_id and any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
@@ -914,6 +923,9 @@ class PosOrder(models.Model):
 
         if any(order.floating_order_name for order in self):
             vals.update({'narration': ', '.join(self.filtered('floating_order_name').mapped('floating_order_name'))})
+
+        if pos_config.cash_rounding and (not pos_config.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
+            vals['invoice_cash_rounding_id'] = pos_config.rounding_method.id
 
         return vals
 
