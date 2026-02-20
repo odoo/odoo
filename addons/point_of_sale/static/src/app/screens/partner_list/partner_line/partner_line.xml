@@ -42,23 +42,22 @@
         <t t-else="">
             <tr class="partner-line partner-info" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
                 t-on-click="() => this.props.onClickPartner(props.partner)">
-                <td class="text-break w-25">
+                <td class="text-break w-25 align-middle">
                     <b t-esc="props.partner.name or ''" />
                     <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
                 </td>
-                <td>
+                <td class="text-break align-middle">
                     <div class="partner-line-adress" t-if="props.partner.pos_contact_address" t-esc="props.partner.pos_contact_address" />
                 </td>
-                <td class="partner-line-email ">
+                <td class="partner-line-email align-middle">
                     <div t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2"/><t t-esc="props.partner.phone"/>
                     </div>
-                    <div t-if="props.partner.email" class="email-field">
+                    <div t-if="props.partner.email" class="email-field text-truncate" style="max-width: 220px;" t-att-title="props.partner.email">
                         <i class="fa fa-fw fa-paper-plane-o me-2"/><t t-esc="props.partner.email" />
                     </div>
                 </td>
-                <!-- FIXME: this should be in pos_settle_due, not here -->
-                <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
+                <td class="partner-line-balance align-middle" t-if="props.isBalanceDisplayed"></td>
                 <td class="edit-partner-button-cell align-middle pe-0">
                     <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag d-lg-inline-block d-none btn btn-link btn-lg mt-1 float-end">
                         <i class="fa fa-check"/>
