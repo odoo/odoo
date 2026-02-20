@@ -1,6 +1,6 @@
 import re
-
-from odoo.upgrade_code.tools_js_expressions import aggregate_vars, update_template
+from odoo.upgrade_code.tools_etree import update_etree
+from odoo.upgrade_code.tools_js_expressions import update_template, VariableAggregator
 
 EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -676,9 +676,9 @@ MAIL_WHITELIST = {
 }
 EVENT_WHITELIST = {
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
-    "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+    # "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
 }
-THIS_TARGETS = ["sale"]
+THIS_TARGETS = ["event"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
@@ -689,21 +689,27 @@ def upgrade_this(file_manager, log_info, log_error):
         and not any(f.path._str.endswith(p) for p in EXCLUDED_PATH)
     ]
 
-    all_vars = {
+    white_vars = {
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
     }  # vars defined inside template, eg. using t-set
-    all_vars = all_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
-    t_call_inner = {}  # vars defined under t-call
+    white_vars = white_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
 
     # Iteration 1: Gather all variables
-    for fileno, file in enumerate(all_files, start=1):
-        t_call_outer = aggregate_vars(file.content, all_vars, t_call_inner)
+    aggregator = VariableAggregator()
+    for _, file in enumerate(all_files, start=1):
+        def callback(tree):
+            aggregator.aggregate_inside_vars(tree)
+            aggregator.aggregate_call_vars(tree)
+
+        update_etree(file.content, callback)
+
+    aggregator.all_vars = aggregator.all_vars | white_vars
 
     # Iteration 2: Update templates
     for fileno, file in enumerate(all_files, start=1):
         try:
-            file.content = update_template(file.path._str, file.content, THIS_TARGETS, all_vars, t_call_inner, t_call_outer)
+            file.content = update_template(file.path._str, file.content, THIS_TARGETS, aggregator)
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
 
@@ -718,8 +724,8 @@ def upgrade_this_in_js(file_manager, log_info, log_error):
     ]
 
     pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
-    for fileno, file in enumerate(test_files, start=1):
-        # add warning for clients who have ${} inside fragments
+    for _, file in enumerate(test_files, start=1):
+        # TODO add warning for clients who have ${} inside fragments
         if THIS_TARGETS and not any(
             f"/{module}/" in file.path._str or f"/{module}_" in file.path._str
             for module in THIS_TARGETS

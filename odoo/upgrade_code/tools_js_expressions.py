@@ -181,10 +181,129 @@ def tokenize(expr):
             raise ValueError(f"Tokenizer error near: {s}")
     return tokens
 
+# ------------------------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------------------------
+
+
+def is_inside_inherit(node: etree._Element):
+    """ Returns the nearest ancestor (or self) that defines a t-inherit. """
+    return node.xpath("ancestor-or-self::*[@t-inherit][1]")
+
+
+def get_inheritance_chain(template_name, inherit_map):
+    chain = []
+    current = template_name
+    seen = set()
+
+    while current in inherit_map:
+        if current in seen:
+            break  # Break out of accidental circular dependencies
+
+        seen.add(current)
+        parent = inherit_map[current]
+        chain.append(parent)
+        current = parent
+
+    return chain
+
+
+# ------------------------------------------------------------------------------
+# Variables
+# ------------------------------------------------------------------------------
+
+
+class VariableAggregator:
+    """
+        Traverses XML templates, aggregating variables per fragment. The implementation
+        does not take nested inherits or t-call vars not instide the t-call on purpose.
+    """
+
+    def __init__(self):
+        self.all_vars = defaultdict(set)
+        self.t_call_vars = defaultdict(set)
+        self.t_call_outer_vars = defaultdict(set)
+        self.inherit_map = defaultdict(str)
+
+    def aggregate_call_vars(self, root: etree._ElementTree):
+        """
+            Maps all variable inside t-call by t-call keys eg.
+            <t t-call ="web.xyz"> <t t-set="x" t-value=2/> </t>  --> {"web.xyz" : {"x"}}
+            Does not take variables not nested inside t-call into account, handled with whitelist in upgrade_code
+        """
+        # Find all nodes with t-call="sometemplate"
+        for call_node in root.xpath("descendant-or-self::*[@t-call]"):
+            template_name = call_node.get("t-call")
+            if not template_name:
+                continue
+
+            # Look for t-set inside this t-call subtree
+            # (On purpose only take t-set inside t-call even if those outside still apply)
+            for set_node in call_node.xpath("descendant-or-self::*[@t-set]"):
+                var_name = set_node.get("t-set")
+                if var_name:
+                    self.t_call_vars[template_name].add(var_name)
+
+            scope_nodes = call_node.xpath(
+                "ancestor::* | ancestor-or-self::*/preceding-sibling::*"
+            )
+            self.t_call_outer_vars[template_name].update(self._extract_vars_from_nodes(scope_nodes))
+
+    def aggregate_inside_vars(self, root: etree._ElementTree):
+        """
+            Maps all variable inside a template in a dict keyed by template name.
+            Does not take nested inherits into account (eg. <t t-name="web.ext" t-inherit="web.xyz"...
+            --> web.ext variable set will not include web.xyz, handled with whitelist in upgrade_code)
+        """
+        templates = root.xpath(
+            "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
+        )
+        for tpl in templates:
+            template_name = tpl.get("t-name") or tpl.get("id")
+            if not template_name:
+                continue
+
+            nodes = tpl.xpath("descendant-or-self::*[not(ancestor::*[@t-call])]")
+            self.all_vars[template_name].update(self._extract_vars_from_nodes(nodes))
+
+            for node in nodes:
+                if is_inside_inherit(node):
+                    new_name = is_inside_inherit(node)[0].get("t-name", False)
+                    inherit_name = is_inside_inherit(node)[0].get("t-inherit", False)
+                    if new_name:  # Ignore extension inherits
+                        self.inherit_map[new_name] = inherit_name
+
+    @staticmethod
+    def _extract_vars_from_nodes(nodes):
+        """
+            Helper generator that yields variable names found in a given iterable of XML nodes.
+            Checks for t-set, t-as, t-index, and t-slot-scope.
+        """
+        for node in nodes:
+            var_name = node.get("t-set")
+            if var_name:
+                yield var_name
+
+            if node.get("t-foreach") or node.get("t-for-each"):
+                var_name = node.get("t-as")
+                if var_name:
+                    yield var_name
+
+                var_name = node.get("t-foreach-index") or node.get("t-index")
+                if var_name:
+                    yield var_name
+
+            if node.get("t-set-slot"):
+                var_name = node.get("t-slot-scope")
+                if var_name:
+                    yield var_name
+
 
 # ------------------------------------------------------------------------------
 # Compiler
 # ------------------------------------------------------------------------------
+
+
 def next_non_whitespace(tokens, i):
     j = i + 1
     while j < len(tokens) and tokens[j].type == "WHITESPACE":
@@ -245,27 +364,34 @@ class TemplateCompiler:
             self,
             path: str,
             modules: list[str],
-            all_vars: dict[str, set[str]],
-            t_call_inner: dict[str, set[str]],
-            t_call_outer: dict[str, set[str]]
+            aggregator: VariableAggregator,
     ):
-        self.t_call_inner = t_call_inner
-        self.t_call_outer = t_call_outer
-        self.allVars = all_vars
+        self.t_call_vars = aggregator.t_call_vars
+        self.t_call_outer_vars = aggregator.t_call_outer_vars
+        self.all_vars = aggregator.all_vars
+        self.inherit_map = aggregator.inherit_map
+
         self.modules = modules
         self.template_path = path
+        self.current_template = path  # default to the file path but if inside a t-name takes that value
 
-        self.current_template = path  # default
+        self.nested_inherit_vars = set()
+
+    def _map_nested_inherits_vars(self, template_name):
+        chain = get_inheritance_chain(template_name, self.inherit_map)
+        if chain:
+            for nested_inherit in chain:
+                self.nested_inherit_vars |= set(self.all_vars.get(nested_inherit, {}))
 
     def fix_rendering_context(self, root: etree._ElementTree):
         template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
-
         if template_nodes:
             for template in template_nodes:
-                self.current_template = template.attrib.get("t-name") or "Unknown"
+                self.current_template = template.attrib.get("t-name") or self.template_path
+
                 bound_variables = self._collect_bound_variables(template)
-                bound_variables |= set(self.t_call_inner.get(template.attrib["t-name"], {}))
-                bound_variables |= set(self.allVars.get(template.attrib["t-name"], {}))
+                bound_variables |= set(self.t_call_vars.get(template.attrib["t-name"], {}))
+                bound_variables |= set(self.all_vars.get(template.attrib["t-name"], {}))
 
                 self.fix_template(template, bound_variables)
 
@@ -285,8 +411,8 @@ class TemplateCompiler:
         if not self.modules:
             return False
 
-        if self._is_inside_inherit(node):
-            target_module = self._is_inside_inherit(node)[0].get("t-inherit", "").split(".")[0]
+        if is_inside_inherit(node):
+            target_module = is_inside_inherit(node)[0].get("t-inherit", "").split(".")[0]
             should_refactor_inherit = any(target_module == m or target_module.startswith(f"{m}_") for m in self.modules)
             if not should_refactor_inherit:
                 return True   # Don't refactor inherits targetting modules we are not refactoring
@@ -337,7 +463,7 @@ class TemplateCompiler:
                         continue
                     if attr.startswith("t-") or attr.endswith(".translate"):
                         continue  # skip Owl directives
-                    if self._is_inside_inherit(node) and attr.startswith("position"):
+                    if is_inside_inherit(node) and attr.startswith("position"):
                         continue  # A component can be replaced with <A position="replace"/> inside inherits
                     node.set(attr, self._compile_expr(value, node_vars, warning_vars))
 
@@ -351,10 +477,14 @@ class TemplateCompiler:
 
     def _get_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
         """ If inside a t-inherit subtree, merge target template locals into the vars. """
-        if self._is_inside_inherit(node):
-            target = self._is_inside_inherit(node)[0].get("t-inherit")
-            node_vars = base_vars | (self.allVars.get(target, set())) | self.t_call_inner.get(target, set())
-            return node_vars, self.t_call_outer.get(target, set())
+        if is_inside_inherit(node):
+            print("inherits")
+            target = is_inside_inherit(node)[0].get("t-inherit")
+            node_vars = base_vars | (self.all_vars.get(target, set())) | self.t_call_vars.get(target, set())
+
+            self._map_nested_inherits_vars(target)
+
+            return node_vars, self.t_call_outer_vars.get(target, set())
         return base_vars, {}
 
     def _process_attribute(self, node: etree._Element, node_vars: set[str], warning_vars: set[str]):
@@ -467,6 +597,8 @@ class TemplateCompiler:
             ):
                 if tok.value in warning_variables:
                     print("WARNING in template " + self.current_template + " : t-call-outer variable" + expr)  # noqa: T201
+                if tok.value in self.nested_inherit_vars:
+                    print("WARNING in template " + self.current_template + " : nested inherit variable" + expr)  # noqa: T201
                 if (
                     group_type == "LEFT_BRACE"
                     and prev_tok
@@ -542,11 +674,6 @@ class TemplateCompiler:
         return (node.tag and node.tag[0].isupper()) or node.get("t-component") is not None
 
     @staticmethod
-    def _is_inside_inherit(node: etree._Element):
-        """ Returns the nearest ancestor (or self) that defines a t-inherit. """
-        return node.xpath("ancestor-or-self::*[@t-inherit][1]")
-
-    @staticmethod
     def _should_compile_attribute_node(attr_name: str, xp_expr: str) -> bool:
         def is_component_xpath_expr(expr: str) -> bool:
             # component tag selection: //Navbar, //MyComp, etc.
@@ -567,8 +694,8 @@ class TemplateCompiler:
         return is_component_xpath_expr(xp_expr)
 
 
-def update_template(path: str, content: str, modules: list[str], all_vars, t_call_inner, t_call_outer):
-    compiler = TemplateCompiler(path, modules, all_vars, t_call_inner, t_call_outer)
+def update_template(path: str, content: str, modules: list[str], aggregator: VariableAggregator):
+    compiler = TemplateCompiler(path, modules, aggregator)
 
     def callback(tree):
         compiler.fix_rendering_context(tree)
@@ -580,114 +707,12 @@ def update_template(path: str, content: str, modules: list[str], all_vars, t_cal
     return result
 
 # ------------------------------------------------------------------------------
-# Variables
-# ------------------------------------------------------------------------------
-
-
-class VariableAggregator:
-    """
-        Traverses XML templates, aggregating variables per fragment. The implementation
-        does not take nested inherits or t-call vars not instide the t-call on purpose.
-    """
-
-    def __init__(self):
-        self.tCallVars = defaultdict(set)
-        self.tCallVarsOutside = defaultdict(set)
-        self.insideVars = defaultdict(set)
-
-    def aggregate_call_vars(self, root: etree._ElementTree):
-        """
-            Maps all variable inside t-call by t-call keys eg.
-            <t t-call ="web.xyz"> <t t-set="x" t-value=2/> </t>  --> {"web.xyz" : {"x"}}
-            Does not take variables not nested inside t-call into account, handled with whitelist in upgrade_code
-        """
-        # Find all nodes with t-call="sometemplate"
-        for call_node in root.xpath("descendant-or-self::*[@t-call]"):
-            template_name = call_node.get("t-call")
-            if not template_name:
-                continue
-
-            # Look for t-set inside this t-call subtree
-            # (On purpose only take t-set inside t-call even if those outside still apply)
-            for set_node in call_node.xpath("descendant-or-self::*[@t-set]"):
-                var_name = set_node.get("t-set")
-                if var_name:
-                    self.tCallVars[template_name].add(var_name)
-
-            scope_nodes = call_node.xpath(
-                "ancestor::* | ancestor-or-self::*/preceding-sibling::*"
-            )
-            self.tCallVarsOutside[template_name].update(self._extract_vars_from_nodes(scope_nodes))
-
-    def aggregate_inside_vars(self, root: etree._ElementTree):
-        """
-            Maps all variable inside a template in a dict keyed by template name.
-            Does not take nested inherits into account (eg. <t t-name="web.ext" t-inherit="web.xyz"...
-            --> web.ext variable set will not include web.xyz, handled with whitelist in upgrade_code)
-        """
-        templates = root.xpath(
-            "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
-        )
-        for tpl in templates:
-            template_name = tpl.get("t-name") or tpl.get("id")
-            if not template_name:
-                continue
-
-            nodes = tpl.xpath("descendant-or-self::*[not(ancestor::*[@t-call])]")
-            self.insideVars[template_name].update(self._extract_vars_from_nodes(nodes))
-
-    def _extract_vars_from_nodes(self, nodes):
-        """
-            Helper generator that yields variable names found in a given iterable of XML nodes.
-            Checks for t-set, t-as, t-index, and t-slot-scope.
-        """
-        for node in nodes:
-            var_name = node.get("t-set")
-            if var_name:
-                yield var_name
-
-            if node.get("t-foreach") or node.get("t-for-each"):
-                var_name = node.get("t-as")
-                if var_name:
-                    yield var_name
-
-                var_name = node.get("t-foreach-index") or node.get("t-index")
-                if var_name:
-                    yield var_name
-
-            if node.get("t-set-slot"):
-                var_name = node.get("t-slot-scope")
-                if var_name:
-                    yield var_name
-
-
-def aggregate_vars(content: str, vars={}, inside_vars={}):
-    def callback(tree):
-        aggregator.aggregate_inside_vars(tree)
-        aggregator.aggregate_call_vars(tree)
-
-    aggregator = VariableAggregator()
-    update_etree(content, callback)
-
-    for template, variables in aggregator.tCallVars.items():
-        if template not in vars:
-            vars[template] = set()
-        vars[template].update(variables)
-
-    for template, variables in aggregator.insideVars.items():
-        if template not in inside_vars:
-            inside_vars[template] = set()
-        inside_vars[template].update(variables)
-
-    return aggregator.tCallVarsOutside
-
-# ------------------------------------------------------------------------------
 # TESTS
 # ------------------------------------------------------------------------------
 
 
 def run_tests_main(test):
-    return update_template("", test["content"], [], {}, {}, {})
+    return update_template("", test["content"], [], VariableAggregator())
 
 
 tests = [
@@ -1508,7 +1533,10 @@ def run_test_specific_modules(test):
     variables = test.get("inside_vars", {})
     modules = test.get("modules", False)
     path = test.get("path", False)
-    return update_template(path, test["content"], modules, {}, variables, {})
+
+    aggregator = VariableAggregator()
+    aggregator.all_vars = variables
+    return update_template(path, test["content"], modules, aggregator)
 
 
 test_external_xpath = [
@@ -1640,7 +1668,12 @@ test_external_xpath = [
 
 
 def run_test_vars(test):
-    return update_template("", test["content"], False, test["inside_vars"], test["outside_vars"], {})  # {"web.ListView": "notitem"}
+    aggregator = VariableAggregator()
+    aggregator.all_vars = test["inside_vars"]
+    aggregator.t_call_vars = test["outside_vars"]
+    aggregator.t_call_outer_vars_vars = {"web.ListView": "notitem"}
+
+    return update_template("", test["content"], False, aggregator)
 
 
 test_vars = [
@@ -1754,25 +1787,37 @@ test_vars = [
 
 
 def run_test_vars_collection(test):
-    outside_t_call_vars = aggregate_vars(test["content"], test["outside_vars"], test["inside_vars"])
+    aggregator = VariableAggregator()
+
+    if "inside_vars" in test:
+        aggregator.all_vars.update(test["inside_vars"])
+    if "outside_vars" in test:
+        aggregator.t_call_vars.update(test["outside_vars"])
+
+    # Run variable aggregation
+    def callback(tree):
+        aggregator.aggregate_inside_vars(tree)
+        aggregator.aggregate_call_vars(tree)
+    update_etree(test["content"], callback)
+
     # Convert defaultdicts to standard dicts for clean printing/comparison
-    clean_inside_vars = dict(test["inside_vars"])
-    clean_outside_vars = dict(test["outside_vars"])
-    clean_t_call_outer = dict(outside_t_call_vars)
+    clean_inside_vars = dict(aggregator.all_vars)
+    clean_outside_vars = dict(aggregator.t_call_vars)
+    clean_t_call_outer = dict(aggregator.t_call_outer_vars)
     return f"All vars: {clean_inside_vars} | t-call-inner: {clean_outside_vars} | t-call-outer: {clean_t_call_outer}"
 
 
 test_vars_collection = [
     {
         "name": "simple template",
-        "outside_vars": {},
+        "outside_vars": defaultdict(set),
         "inside_vars": {"abc": {"a"}},
         "content": '<t t-name="web.xyz"> <t t-set="b" t-value="2"/> </t>',
         "expected": """All vars: {'abc': {'a'}, 'web.xyz': {'b'}} | t-call-inner: {} | t-call-outer: {}"""
     },
     {
         "name": "t-slot-scope-vars",
-        "outside_vars": {},
+        "outside_vars": defaultdict(set),
         "inside_vars": defaultdict(set),
         "content": """
 <t t-name="web.Many2XAutocomplete" >
@@ -1792,7 +1837,7 @@ test_vars_collection = [
     },
     {
         "name": "t-call",
-        "outside_vars": {},
+        "outside_vars": defaultdict(set),
         "inside_vars": defaultdict(set),
         "content": """
 <t t-name="web.xyz" >
