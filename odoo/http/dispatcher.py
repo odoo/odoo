@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import logging
+import time
 import traceback
 import typing
 import weakref
 from abc import ABC, abstractmethod
 from http import HTTPStatus
+from wsgiref.handlers import format_date_time
 
 from werkzeug.exceptions import (
     BadRequest,
@@ -69,6 +71,7 @@ def serialize_exception(exception: Exception, *, message: str | None = None, arg
         'name': f'{module}.{name}' if module else name,
         'message': exception_to_unicode(exception) if message is None else message,
         'arguments': exception.args if arguments is None else arguments,
+        'timestamp': int(time.time()),
         'context': getattr(exception, 'context', {}),
         'debug': ''.join(traceback.format_exception(exception)),
     }
@@ -341,7 +344,11 @@ class JsonRPCDispatcher(Dispatcher):
         if result is not None:
             response['result'] = result
 
-        return self.request.make_json_response(response)
+        res = self.request.make_json_response(response)
+        if error is not None:
+            if timestamp := error.get('data', {}).get('timestamp'):
+                res.headers['Date'] = format_date_time(timestamp)
+        return res
 
 
 class Json2Dispatcher(Dispatcher):

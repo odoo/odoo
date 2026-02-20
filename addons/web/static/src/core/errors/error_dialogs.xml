@@ -54,7 +54,7 @@
         <Dialog title.translate="Oops!" size="state.showTraceback ? 'lg' : 'sm'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p>
-                    Something went wrong... If you really are stuck, share the report with your friendly support service
+                    Something went wrong... If you really are stuck, share the report with your friendly support service and tell them it occured on <t t-out="this.date.toFormat('dd/ccc/yyyy HH:mm:ss', { locale: 'en' })"/>
                 </p>
                 <details t-on-toggle="() => { state.showTraceback = !state.showTraceback }">
                     <summary t-esc="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText" class="mb-1 link-info"/>
