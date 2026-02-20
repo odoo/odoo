@@ -184,6 +184,9 @@ const threadPatch = {
                     if (!message.isSelfAuthored) {
                         continue;
                     }
+                    if (message.isNotification) {
+                        continue;
+                    }
                     if (message.id > this.lastMessageSeenByAllId) {
                         continue;
                     }
