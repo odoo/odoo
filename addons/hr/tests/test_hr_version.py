@@ -689,3 +689,28 @@ class TestHrVersion(TransactionCase):
         # attempt to reassign all versions
         with self.assertRaises(ValidationError):
             employee.version_ids.write({"employee_id": another_employee.id})
+
+    def test_date_version_sync_contract_date_start_for_single_version(self):
+        """
+        This test is to ensure that in case when an employee has only one version, writing contract_date_start on the employee
+        will synchronize the version.date_version with that contract_date_start
+        """
+        with freeze_time(date(2025, 12, 20)), self.enter_registry_test_mode():
+            employee = self.env['hr.employee'].create({
+                'name': 'John Doe',
+            })
+            version = employee.version_id
+            self.assertEqual(version.date_version, date(2025, 12, 20))
+
+            employee.write({'contract_date_start': '2025-12-10'})
+            self.assertEqual(version.contract_date_start, date(2025, 12, 10))
+            self.assertEqual(version.date_version, date(2025, 12, 10))
+
+            # date_version should not be reset if contract_date_start is cleared
+            employee.write({'contract_date_start': False})
+            self.assertEqual(version.date_version, date(2025, 12, 10))
+
+            # and setting it again should re-sync
+            employee.write({'contract_date_start': '2025-12-15'})
+            self.assertEqual(version.contract_date_start, date(2025, 12, 15))
+            self.assertEqual(version.date_version, date(2025, 12, 15))
