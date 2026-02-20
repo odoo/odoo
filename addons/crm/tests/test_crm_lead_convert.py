@@ -657,3 +657,21 @@ class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
                 self.assertEqual(opp.stage_id, self.stage_gen_1)  # did not change
             else:
                 self.assertFalse(True)
+
+    @users('user_sales_manager')
+    def test_lead_convert_with_company_and_contact_email(self):
+        """ Test when a lead has both company name and contact names,
+        the resulting company partner has no email, while the contact partner has it. """
+        lead = self.env['crm.lead'].create({
+            'name': 'Test Lead',
+            'partner_name': 'Test Company',
+            'contact_name': 'Test Contact',
+            'email_from': 'test@example.com',
+            'type': 'lead',
+        })
+        lead._handle_partner_assignment()
+        self.assertEqual(lead.partner_id.name, 'Test Contact')
+        self.assertEqual(lead.partner_id.email, 'test@example.com')
+        self.assertTrue(lead.partner_id.parent_id)
+        self.assertEqual(lead.partner_id.parent_id.name, 'Test Company')
+        self.assertFalse(lead.partner_id.parent_id.email, "Company partner should not have the email when a contact person is created")
