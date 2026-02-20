@@ -25,13 +25,13 @@ FLAGS = re.X | re.DOTALL | re.IGNORECASE | re.MULTILINE
 
 NODE_REG = re.compile(r"""
     <(?P<tag_name>[\w:-]+)
-    (?P<attributes>(?:(?P<space>\s+)(?P<attribute>[\w:-]+(?:\.f|\.translate)?=\s*(["']).*?\5))*)
+    (?P<attributes>(?:(?P<space>\s+)(?P<attribute>[\w:.-]+(?:\.[\w]+)*)=\s*(["']).*?\5)*)
     (?P<end_space>\s*)
     (?P<close> (?:\/?>) | (?:>\s*<\/[\w:-]+\s*>)? )
 """, flags=FLAGS)
 ATTRIBUTES_SPACE_REG = re.compile(r"""
     (?P<space>\s+)
-    (?P<attribute>[\w:.-]+(?:\.f|\.translate)?)
+    (?P<attribute>[\w:.-]+(?:\.[\w]+)*)  # capture any dot suffix, e.g., .bind, .f, .translate
     =
     (?P<quote>["'])(?P<value>.*?)(?P=quote)
 """, flags=FLAGS)
@@ -327,7 +327,7 @@ def _test():
                 <t t-set="resources" t-value="event.test_resource_ids"/>
                 <t t-set="based_on_users" t-value="test_type.schedule_based_on == 'users'"/>
                 <div id="wrap" class="o_test d-flex bg-o-color-4 p-4">
-                <div 
+                <div
                     class="oe_structure"/>
                     <div
                             class="o_test_edit_in_backend alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden"
@@ -339,7 +339,7 @@ def _test():
                         test
                     </t>
                     <t t-if="len(resources)">
-                    
+
                             <article t-foreach="stuff.test" t-as="tata" class="d-flex flex-nowrap gap-2 align-items-center mb-1">
                                 <div t-if="tata"
                                     class="o_class_test other_test">
@@ -414,7 +414,7 @@ def _test():
                 <t t-set="resources" t-value="event.test_resource_ids"/>
                 <t t-set="based_on_users" t-value="test_type.schedule_based_on == 'users'"/>
                 <div id="wrap" class="o_test d-flex bg-o-color-4 p-4">
-                <div 
+                <div
                     class="oe_structure"/>
                     <div
                             class="o_test_edit_in_backend alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden"
@@ -435,8 +435,6 @@ def _test():
                             />
                     </article>
                     <t t-if="len(resources)">
-                    
-                            
                     </t>
                     <newnode
                         data-attribute-a="1"
