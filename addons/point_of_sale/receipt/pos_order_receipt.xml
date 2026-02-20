@@ -89,18 +89,12 @@
                         <table class="w-100 mt-2 mb-1">
                             <tbody>
                                 <tr>
-                                    <td class="text-start w-33 text-center text-normal">
-                                        <span class="mb-1">15%</span><br/>
-                                        <span class="font-monospace" t-out="extra_data['tips_configuration']['15']" />
-                                    </td>
-                                    <td class="text-center w-33 text-center text-normal">
-                                        <span class="mb-1">20% </span><br/>
-                                        <span class="font-monospace" t-out="extra_data['tips_configuration']['20']" />
-                                    </td>
-                                    <td class="text-end w-33 text-center text-normal">
-                                        <span class="mb-1">25%</span><br/>
-                                        <span class="font-monospace" t-out="extra_data['tips_configuration']['25']" />
-                                    </td>
+                                    <t t-foreach="extra_data['tips_configuration']" t-as="tip">
+                                        <td class="text-start w-33 text-center text-normal">
+                                            <span class="mb-1" t-out="tip[0]"/><br/>
+                                            <span class="font-monospace" t-out="tip[1]" />
+                                        </td>
+                                    </t>
                                 </tr>
                             </tbody>
                         </table>

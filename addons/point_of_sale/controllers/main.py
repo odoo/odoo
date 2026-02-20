@@ -118,6 +118,7 @@ class PosController(PortalAccount):
             'access_token': pos_session.config_id.access_token,
             'last_data_change': pos_session.config_id.last_data_change.strftime("%Y-%m-%d %H:%M:%S"),
             'urls_to_cache': json.dumps(pos_config._get_url_to_cache(request.session.debug)),
+            'is_restaurant': pos_config.module_pos_restaurant,
         }
         response = request.render('point_of_sale.index', context)
         response.headers['Cache-Control'] = 'no-store'

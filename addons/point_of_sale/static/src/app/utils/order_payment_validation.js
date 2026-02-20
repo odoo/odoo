@@ -78,11 +78,13 @@ export default class OrderPaymentValidation {
 
     async shouldHideValidationBehindFeedbackScreen() {
         const nextPage = this.nextPage;
+        const waitForFn = async () => {
+            await this.finalizeValidation();
+        };
         if (nextPage.page === "FeedbackScreen") {
-            const waitForFn = async () => {
-                await this.finalizeValidation();
-            };
             nextPage.params.waitFor = waitForFn();
+        } else if (nextPage.page === "TipScreen" && !this.pos.config.module_pos_restaurant) {
+            nextPage.params.finalizeValidation = waitForFn;
         } else {
             try {
                 this.pos.env.services.ui.block();

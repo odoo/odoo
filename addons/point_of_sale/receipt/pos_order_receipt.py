@@ -136,6 +136,7 @@ class PosOrderReceipt(models.AbstractModel):
         company = self.company_id
         config_logo = 'data:image/png;base64,' + base64.b64encode(base64.b64decode(self.config_id.logo)).decode('utf-8')
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
+        tip_percentage = [self.config_id.tip_percentage_1, self.config_id.tip_percentage_2, self.config_id.tip_percentage_3] if self.config_id.set_tip_after_payment and self.amount_total > 0 else False
 
         return {
             'order': self.read(order_fields, load=False)[0],
@@ -167,7 +168,11 @@ class PosOrderReceipt(models.AbstractModel):
                 'company_state_name': company.state_id.name if company.state_id else False,
                 'company_country_name': company.country_id.name if company.country_id else False,
                 'formated_date_order': format_datetime(self.env, self.date_order),
-                'formated_shipping_date': format_date(self.env, self.shipping_date) if self.shipping_date else False
+                'formated_shipping_date': format_date(self.env, self.shipping_date) if self.shipping_date else False,
+                'tips_configuration': [
+                    [f"{p}%", self._order_receipt_format_currency(self.amount_total * (p / 100))]
+                    for p in tip_percentage
+                ] if tip_percentage else False
             },
         }
 

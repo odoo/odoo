@@ -213,11 +213,17 @@ export class GeneratePrinterData {
         const url = `${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`;
         const useQrCode = company.point_of_sale_ticket_portal_url_display_mode !== "url";
         const useTips = this.config.set_tip_after_payment && this.order.displayPrice > 0;
-        const tipsConfiguration = {
-            15: this.formatCurrency(this.order.displayPrice * 0.15),
-            20: this.formatCurrency(this.order.displayPrice * 0.2),
-            25: this.formatCurrency(this.order.displayPrice * 0.25),
-        };
+        const tipPercentages = [
+            this.config.tip_percentage_1,
+            this.config.tip_percentage_2,
+            this.config.tip_percentage_3,
+        ];
+        const tipsConfiguration = useTips
+            ? tipPercentages.map((p) => [
+                  `${p}%`,
+                  this.formatCurrency(this.order.displayPrice * (p / 100)),
+              ])
+            : false;
 
         return {
             order: this.order.raw,

@@ -11,6 +11,7 @@ export class TipScreen extends Component {
     static template = "point_of_sale.TipScreen";
     static props = {
         orderUuid: { type: String },
+        finalizeValidation: { type: Function, optional: true },
     };
     setup() {
         this.pos = usePos();
@@ -43,14 +44,24 @@ export class TipScreen extends Component {
     get currentOrder() {
         return this.pos.getOrder();
     }
+    get tipPercentages() {
+        const config = this.pos.config;
+        return [config.tip_percentage_1, config.tip_percentage_2, config.tip_percentage_3];
+    }
     get percentageTips() {
-        return [
-            { percentage: "15%", amount: 0.15 * this.totalAmount },
-            { percentage: "20%", amount: 0.2 * this.totalAmount },
-            { percentage: "25%", amount: 0.25 * this.totalAmount },
-        ];
+        return this.tipPercentages.map((tip) => {
+            const tipAmount = (tip / 100) * this.totalAmount;
+            return {
+                percentage: `${tip}%`,
+                amount: this.env.utils.formatCurrency(tipAmount),
+                inputTipAmount: tipAmount,
+            };
+        });
     }
     async validateTip() {
+        if (!this.pos.config.module_pos_restaurant) {
+            await this.props.finalizeValidation();
+        }
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
         const serverId = order.isSynced && order.id;
@@ -70,13 +81,16 @@ export class TipScreen extends Component {
             this.goNextScreen();
             return;
         }
-
-        if (amount > this.pos.currency.round(0.25 * this.totalAmount)) {
+        const maxTipPercentage = Math.max(...this.tipPercentages);
+        const maxTipAmount = (maxTipPercentage / 100) * this.totalAmount;
+        if (amount > maxTipAmount) {
             const confirmed = await ask(this.dialog, {
-                title: "Are you sure?",
-                body: `${this.env.utils.formatCurrency(
-                    amount
-                )} is more than 25% of the order's total amount. Are you sure of this tip amount?`,
+                title: _t("Are you sure?"),
+                body: _t(
+                    "%s is more than %s% of the order's total amount. Are you sure of this tip amount?",
+                    this.env.utils.formatCurrency(amount),
+                    maxTipPercentage
+                ),
             });
             if (!confirmed) {
                 return;
@@ -130,6 +144,6 @@ registry.category("pos_pages").add("TipScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/tipping/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: true,
+        orderFinalized: odoo.is_restaurant || false,
     },
 });

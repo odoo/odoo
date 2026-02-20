@@ -1224,6 +1224,45 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_weight_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Vanela Gathiya"),
+            inLeftSide([
+                Numpad.click("Price"),
+                Numpad.click("4"),
+                Numpad.click("0"),
+                ...Order.hasLine({
+                    productName: "Vanela Gathiya",
+                    quantity: "4",
+                    price: "40",
+                    withClass: ".selected",
+                }),
+            ]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("Price"),
+                Numpad.click("4"),
+                Numpad.click("0"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "1",
+                    price: "40",
+                    withClass: ".selected",
+                }),
+            ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_preset_customer_selection", {
     steps: () =>
         [

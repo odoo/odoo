@@ -162,7 +162,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'list_price': 1.20,
             'taxes_id': False,
             'weight': 0.01,
-            'to_weight': True,
             'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
         })
         cls.wall_shelf = env['product.template'].create({
@@ -219,6 +218,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 10,
             'taxes_id': False,
+        })
+        cls.vanela_gathiya = env['product.template'].create({
+            'name': 'Vanela Gathiya',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'to_weight': True,
         })
 
         attribute = env['product.attribute'].create({
@@ -3355,6 +3361,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_custom_attribute_alone_displayed')
+
+    def test_weight_product(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_weight_product')
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(len(order.lines), 2, "There should be two order lines")
+        self.assertEqual(order.lines[0].price_subtotal_incl, 40, "The price unit should be 40")
+        self.assertEqual(order.lines[0].qty, 4, "The quantity should be 4")
+        self.assertEqual(order.lines[1].price_subtotal_incl, 40, "The price unit should be 40")
+        self.assertEqual(order.lines[1].qty, 1, "The quantity should be 1")
 
     def test_preset_customer_selection(self):
         self.preset_delivery = self.env['pos.preset'].create({
