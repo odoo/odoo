@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { htmlEscape } from "@odoo/owl";
@@ -108,6 +108,10 @@ export class BannerPlugin extends Plugin {
                 categoryId: "banner",
             },
         ],
+        normalize_handlers: withSequence(
+            5, // before tabs are aligned
+            this.handle_monospace_tab_to_spaces.bind(this)
+        ),
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_editor_banner"),
         move_node_blacklist_selectors: ".o_editor_banner *",
@@ -116,6 +120,7 @@ export class BannerPlugin extends Plugin {
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
+        shift_tab_overrides: this.handleShiftTab.bind(this),
     };
 
     setup() {
@@ -190,5 +195,39 @@ export class BannerPlugin extends Plugin {
         bannerElement.replaceWith(baseContainer);
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
+    }
+
+    handle_monospace_tab_to_spaces(root) {
+        for (const el of selectElements(root, ".font-monospace.o_editor_banner .oe-tabs")) {
+            const spacesElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
+            el.replaceWith(spacesElement);
+        }
+    }
+
+    handleShiftTab() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const monospaceBannerElement = closestElement(
+            selection.anchorNode,
+            ".font-monospace.o_editor_banner"
+        );
+        if (!monospaceBannerElement) {
+            return;
+        }
+        const fourSpacesRe = /^(?:\u200B*\s\u200B*){4}/;
+        for (const block of [...this.dependencies.selection.getTargetedBlocks()]) {
+            const text = block.textContent;
+            if (text.match(fourSpacesRe)) {
+                // Unindent first text node
+                const textNode = descendants(block).find(
+                    (n) =>
+                        n.nodeType === Node.TEXT_NODE &&
+                        n.textContent.length &&
+                        n.textContent !== "\u200b"
+                );
+                if (textNode) {
+                    textNode.textContent = textNode.textContent.replace(fourSpacesRe, "");
+                }
+            }
+        }
     }
 }
