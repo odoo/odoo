@@ -13,6 +13,7 @@ import {
     isTextNode,
     isWhitespace,
     isZwnbsp,
+    PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
@@ -186,9 +187,11 @@ export class ColorPlugin extends Plugin {
                         .getTargetedNodes()
                         .filter(
                             (n) =>
-                                isTextNode(n) ||
-                                (mode === "backgroundColor" &&
-                                    n.classList.contains("o_selected_td"))
+                                (isTextNode(n) ||
+                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                                    (mode === "backgroundColor" &&
+                                        n.classList.contains("o_selected_td"))) &&
+                                this.dependencies.selection.isNodeEditable(n)
                         );
                     return hasAnyNodesColor(nodes, mode);
                 };
@@ -277,7 +280,7 @@ export class ColorPlugin extends Plugin {
         const targetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
                 .filter(Boolean)
         );
 
