@@ -303,7 +303,7 @@ class HrAttendance(models.Model):
                 inter = Intervals(version_periods_by_employee[employee]) & attendance_intervals
                 if not inter:
                     continue
-                version = inter._items[0][2]
+                version = inter._items[0][2].filtered(lambda version: version.date_start <= attendance.check_in.date() and (not version.date_end or version.date_end >= attendance.check_out.date()))
                 ruleset = version.ruleset_id
                 if ruleset:
                     attendances_by_ruleset[ruleset] += attendance
