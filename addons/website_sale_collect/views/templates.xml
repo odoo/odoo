@@ -5,7 +5,7 @@
         id="payment_confirmation_status"
         inherit_id="website_sale.payment_confirmation_status"
     >
-        <div id="order_reference" position="replace">
+        <div id="payment_instructions" position="replace">
             <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
                 <div class="mt-2">
                     <div class="o_header_carrier_message">

@@ -114,7 +114,7 @@
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div
                 t-if="tx_sudo"
-                t-attf-class="alert px-3 pb-0 pt-3 #{
+                t-attf-class="alert px-3 pb-3 pt-3 #{
                     (tx_sudo.state == 'pending' and 'alert-info') or
                     (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
                     (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
@@ -156,8 +156,17 @@
                     </t>
                 </div>
                 <t t-if="tx_sudo.provider_code == 'custom'">
-                    <div id="order_reference" t-if="order.reference" class="mt-2">
-                        <b>Communication: </b><span t-out='order.reference'/>
+                    <div id="payment_instructions">
+                        <div t-if="tx_sudo.amount" class="mt-3">
+                            <b>Amount: </b>
+                            <span class="user-select-all border rounded bg-light p-2">
+                                <t t-out="tx_sudo.currency_id.symbol"/>
+                                <t t-out="tx_sudo.amount"/>
+                            </span>
+                        </div>
+                        <div t-if="order.reference" class="mt-3">
+                            <b>Communication: </b><span class="user-select-all border rounded bg-light p-2" t-out='order.reference'/>
+                        </div>
                     </div>
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
                         <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>

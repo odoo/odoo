@@ -87,7 +87,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/", 'event_buy_tickets', login="admin")
 
@@ -98,7 +97,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         #  Ensure the use of USD (company currency)
         self.env['product.pricelist'].create({'name': "Public Pricelist"})
@@ -111,7 +109,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/", 'event_buy_last_ticket')
 

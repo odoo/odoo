@@ -45,7 +45,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'is_published': True,
             'company_id': self.env.company.id,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         large_cabinet = self.env['product.product'].create({
             'name': 'Small Cabinet',
