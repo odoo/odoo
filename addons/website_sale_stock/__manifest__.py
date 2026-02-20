@@ -32,6 +32,7 @@ Then it can be made specific at the product level.
         'web.assets_frontend': [
             'website_sale_stock/static/src/interactions/**/*',
             'website_sale_stock/static/src/js/combo_configurator_dialog/*',
+            'website_sale_stock/static/src/js/cart_lines/**/*',
             'website_sale_stock/static/src/js/models/*',
             'website_sale_stock/static/src/js/product/*',
             'website_sale_stock/static/src/js/product_card/*',

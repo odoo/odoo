@@ -44,6 +44,7 @@
             'payment/static/src/js/payment_wizard_copy_clipboard_field.js',
         ],
         'web.assets_unit_tests_setup': [
+            'payment/static/src/interactions/express_checkout.js',
             'payment/static/src/interactions/payment_button.js',
             'payment/static/src/interactions/payment_form.js',
         ],

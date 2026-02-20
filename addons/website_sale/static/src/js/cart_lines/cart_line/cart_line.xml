@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_sale.CartLine">
+        <div
+            class="o_cart_product d-flex gap-3 pb-4"
+        >
+            <div
+                class="o_cart_product_image"
+            >
+                <!--
+                    Unsellable lines can have unpublished products, but portal users have no
+                    access to unpublished product images. To ensure product images are
+                    always shown for unsellable lines, we use the raw image data as src
+                    (which doesn't require access, unlike the image URL).
+                -->
+                <t t-call="website_sale.CartLineProductLink">
+                    <img
+                        t-att-src="props.imageUri || `/web/image/product.product/${props.productId}/image_128`"
+                        class="img border rounded"
+                        t-att-alt="props.nameShort"
+                    />
+                </t>
+            </div>
+            <div class="d-flex flex-column flex-grow-1 gap-3 min-w-0">
+                <div class="d-flex gap-3">
+                    <div class="flex-grow-1 text-wrap w-100">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-md-flex flex-md-wrap column-gap-md-1 align-items-md-center">
+                                <t t-call="website_sale.CartLineProductLink">
+                                    <h6
+                                        t-out="props.headerName"
+                                        class="text-wrap mb-1"
+                                    />
+                                </t>
+                                <span t-if="props.combinationName" class="d-none d-md-inline h6 text-muted mb-1">-</span>
+                                <div
+                                    t-if="props.combinationName || props.hasMultipleUoms"
+                                    class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
+                                >
+                                    <span
+                                        t-if="props.combinationName"
+                                        class="h6 text-muted mb-1"
+                                        t-out="props.combinationName"
+                                    />
+                                    <span
+                                        t-if="props.hasMultipleUoms"
+                                        class="badge bg-light mb-1"
+                                        t-out="props.uomName"
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                t-att-class="!props.isCombo ? 'd-block d-md-none' : ''"
+                            >
+                                <t t-call="website_sale.CartLinesPrice"/>
+                            </div>
+                        </div>
+                        <!-- This div displays all the lines following the first one on the description of the sale
+                            order line, with a muted style. For typical products this content will be the product
+                            description_sale. -->
+                        <div name="cart_lines_description" t-if="props.descriptionLines.length > 0" class="text-muted small">
+                            <t t-foreach="props.descriptionLines" t-as="nameLine" t-key="nameLine">
+                                <span
+                                    t-if="nameLine"
+                                    class="d-block"
+                                    t-out="nameLine"
+                                />
+                            </t>
+                        </div>
+                        <ul t-if="props.isCombo" class="list-group">
+                            <t
+                                t-foreach="props.comboItemLines"
+                                t-as="comboItemLine"
+                                t-key="comboItemLine.id"
+                            >
+                                <!-- TODO-NIPL: Should I make it a component? -->
+                                <t t-call="website_sale.CartComboItemLine"/>
+                            </t>
+                        </ul>
+                        <div
+                            name="o_wsale_cart_line_button_container"
+                            t-attf-class="d-none d-md-flex align-items-center gap-2 mt-2 {{ props.isCombo ? 'justify-content-between' : ''}}"
+                        >
+                            <button
+                                class="js_delete_product btn btn-link btn-sm p-0"
+                                aria-label="Remove from cart"
+                                title="Remove from cart"
+                                t-on-click="(event) => this.updateQuantity(0)"
+                            >
+                                <t t-out="props.templateData.removeButtonText"/>
+                            </button>
+                            <t t-if="props.isSellable and props.isWishlistViewActive">
+                                <span class="text-300">|</span>
+                                <!-- TODO NIPL add to wishlist and remove from cart -->
+                                <button
+                                    class="btn btn-link btn-sm p-0"
+                                    aria-label="Save for later"
+                                    title="Save for later"
+                                    t-on-click="() => this.addToWishlist()"
+                                >
+                                    <t t-out="props.templateData.wishlistButtonText"/>
+                                </button>
+                            </t>
+                            <div t-if="props.isCombo" class="d-none d-md-block ms-auto">
+                                <t t-call="website_sale.CartLinesQuantity"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="!props.isCombo" class="d-none d-md-block">
+                        <t t-call="website_sale.CartLinesPrice"/>
+                        <div class="d-none d-md-block mt-2">
+                            <t t-call="website_sale.CartLinesQuantity"/>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    name="o_wsale_cart_line_button_container_mobile"
+                    class="d-flex d-md-none"
+                >
+                    <div class="d-flex d-md-none align-items-center me-auto">
+                        <t t-call="website_sale.CartLinesQuantity" isMobile="True"/>
+                    </div>
+                    <!-- TODO NIPL add to wishlist and remove from cart -->
+                    <button
+                        t-if="props.isSellable and props.isWishlistViewActive"
+                        class="btn btn-link d-inline-block d-md-none px-2"
+                        aria-label="Wishlist"
+                        title="Wishlist"
+                        t-on-click="() => this.addToWishlist()"
+                    >
+                        <i class="fa fa-fw fa-heart-o"/>
+                    </button>
+                    <button
+                        class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
+                        title="Remove"
+                        t-on-click="() => this.updateQuantity(0)"
+                    >
+                        <i class="fa fa-fw fa-trash-o"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_sale.CartLinesPrice">
+        <h6
+            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1"
+            name="website_sale_cart_line_price"
+        >
+            <del
+                t-if="props.shouldShowStrikethroughPrice"
+                class="me-md-2 text-muted text-nowrap opacity-50"
+                t-out="formatPrice(props.displayedUnitPrice * props.productUomQty)"
+            />
+            <span t-out="formatPrice(props.productPrice)" style="white-space: nowrap;"/>
+        </h6>
+        <small
+            t-if="props.isSellable and props.isUomFeatureEnabled and props.baseUnitPrice"
+            class="cart_product_base_unit_price d-block text-muted text-end"
+        >
+            <span
+                class="o_base_unit_price"
+                t-out="formatPrice(props.productBaseUnitPrice)"
+            />
+            / <span class="oe_custom_base_unit" t-out="props.baseUnitName"/>
+        </small>
+    </t>
+
+    <t t-name="website_sale.CartComboItemLine">
+        <a
+            class="list-group-item"
+            t-att-href="comboItemLine.is_sellable and comboItemLine.website_published ? comboItemLine.website_url : '#'"
+            t-att-class="comboItemLine.is_sellable and comboItemLine.website_published ? 'list-group-item-action' : 'cursor-default text-decoration-none'"
+        >
+            <h6 class="d-inline small">
+                <span t-out="comboItemLine.displayed_quantity"/>
+                x
+                <span t-out="comboItemLine.name_short"/>
+            </h6>
+            <div t-if="comboItemLine.description_lines" class="small text-muted">
+                <t t-foreach="comboItemLine.description_lines" t-as="description_line" t-key="description_line">
+                    <span
+                        t-if="description_line"
+                        class="d-block"
+                        t-out="description_line"
+                    />
+                </t>
+            </div>
+        </a>
+    </t>
+
+    <t t-name="website_sale.CartLinesQuantity">
+        <t t-set="showQuantitySelector" t-value="props.isQuantityViewActive"/>
+        <div
+            t-attf-class="css_quantity input-group justify-content-end h-100 {{showQuantitySelector and props.isSellable ? 'border' : ''}}"
+            t-attf-name="{{ isMobile ? 'website_sale_cart_line_quantity_mobile' : 'website_sale_cart_line_quantity' }}"
+        >
+            <t t-if="showQuantitySelector and props.isSellable">
+                <a
+                    href="#"
+                    class="btn btn-link d-inline-block border-end-0"
+                    aria-label="Remove one"
+                    title="Remove one"
+                    t-on-click="() => this.updateQuantity(state.quantity - 1)"
+                >
+                    <i class="oi oi-minus position-relative z-1" t-out="props.templateData.qtyMinusButtonText"/>
+                </a>
+                <input
+                    type="text"
+                    class="js_quantity quantity form-control border-0"
+                    t-att-value="state.quantity"
+                    t-on-input="(event) => this.updateQuantity(event.target.value)"
+                />
+                <t t-if="props.shopWarning">
+                    <a href="#" class="btn btn-link">
+                        <i
+                            class="fa fa-warning text-warning"
+                            t-att-title="props.shopWarning"
+                            role="img"
+                            aria-label="Warning"
+                        />
+                    </a>
+                </t>
+                <a
+                    t-else=""
+                    name="add_quantity"
+                    href="#"
+                    class="btn btn-link d-inline-block border-start-0"
+                    aria-label="Add one"
+                    title="Add one"
+                    t-on-click="() => this.updateQuantity(state.quantity + 1)"
+                >
+                    <i class="oi oi-plus position-relative z-1" t-out="props.templateData.qtyPlusButtonText"/>
+                </a>
+            </t>
+            <t t-else="">
+                <input
+                    type="text"
+                    class="js_quantity form-control quantity text-start text-md-end text-md-end border-0 p-0 shadow-none mw-100"
+                    t-att-value="state.quantity"
+                    readonly="True"
+                />
+            </t>
+        </div>
+    </t>
+
+    <!-- Encapsulate the content in a `a` tag with a link to the product page. Override this
+        template to change or remove the product link. -->
+    <t t-name="website_sale.CartLineProductLink">
+        <a
+            t-if="props.isSellable"
+            class="text-reset"
+            t-att-href="props.websiteUrl"
+            name="o_cart_line_product_link"
+        >
+            <t t-out="0"/>
+        </a>
+        <t t-else="" t-out="0"/>
+    </t>
+</templates>

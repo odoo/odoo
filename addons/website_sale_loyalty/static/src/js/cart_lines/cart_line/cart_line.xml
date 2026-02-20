@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-inherit="website_sale.CartLine" t-inherit-mode="extension">
+        <div name='o_wsale_cart_line_button_container' position="before">
+            <div t-if="props.isRewardLine and props.showCouponCode" class="d-md-block mb-2 small text-muted">
+                <span>
+                    Code: <t t-out="props.couponCode.slice(-4).padStart(14, '⋆')"/>
+                </span>
+                <t t-if="props.couponExpirationDate">
+                    <br/>
+                    <span>
+                        Expired Date:
+                        <t t-out="formatDate(props.couponExpirationDate)"/>
+                    </span>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-inherit="website_sale.CartLinesQuantity" t-inherit-mode="extension">
+        <t t-set="showQuantitySelector" position="attributes">
+            <attribute name="t-value" separator=" || " add="!props.rewardType == 'product'"/>
+        </t>
+    </t>
+</templates>

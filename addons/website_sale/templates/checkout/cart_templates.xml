@@ -1,281 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Encapsulate the content in a `a` tag with a link to the product page. Override this
-         template to change or remove the product link. Called in `website_sale.cart_lines`. -->
-    <template id="website_sale.cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a
-            t-if="line._is_sellable()"
-            class="text-reset"
-            t-att-href="line.product_id.website_url"
-            name="o_cart_line_product_link"
-        >
-            <t t-out="0"/>
-        </a>
-        <t t-else="" t-out="0"/>
-    </template>
-
-    <!-- This template displays all the lines following the first one on the description of the sale
-         order line, with a muted style. For typical products this content will be the product
-         description_sale. Called in `website_sale.cart_lines`. -->
-    <template id="website_sale.cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
-        <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
-        <div t-if="description_lines" class="text-muted small">
-            <t t-foreach="description_lines" t-as="name_line">
-                <span
-                    t-if="name_line"
-                    t-attf-class="d-block #{not name_line_last and 'mb-1'}"
-                    t-out="name_line"
-                />
-            </t>
-        </div>
-    </template>
-
     <!-- Lines that show items in the cart. Called in `website_sale.cart`. -->
     <template id="website_sale.cart_lines" name="Shopping Cart Lines">
+        <!-- target tag for interaction to mount cart lines component -->
+        <div id="cart_products"/>
+        <!-- dummy cart line to display in edit mode only -->
         <div
-            t-if="not website_sale_order or not website_sale_order.website_order_line"
-            class="js_cart_lines w-100"
+            t-if="editable and website_sale_order and website_sale_order.website_order_line"
+            class="css_non_editable_mode_hidden"
+            id="cart_products_edit_mode"
+        >
+            <div class="o_cart_product d-flex gap-3 pb4">
+                <div class="o_cart_product_image" contenteditable="false">
+                    <a class="text-reset" name="o_cart_line_product_link" href="#">
+                        <div><img src="/web/image/product.product/7/image_128" class="img border rounded"/></div>
+                    </a>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 gap-3 min-w-0">
+                    <div class="d-flex gap-3">
+                        <div class="flex-grow-1 text-wrap w-100">
+                            <div class="d-flex justify-content-between" contenteditable="false">
+                                <div class="d-md-flex flex-md-wrap column-gap-md-1 align-items-md-center">
+                                    <a class="text-reset" name="o_cart_line_product_link" href="#">
+                                        <h6 class="text-wrap mb-1">Customizable Desk 3</h6>
+                                    </a>
+                                </div>
+                                <div class="d-block d-md-none">
+                                    <h6 class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1" name="website_sale_cart_line_price">
+                                        <span style="white-space: nowrap;">600.00</span>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="text-muted small" contenteditable="false">
+                                <span class="d-block mb-1">160x80cm, with large legs blanco</span>
+                            </div>
+                            <div name="o_wsale_cart_line_button_container" class="d-none d-md-flex align-items-center gap-2 mt-2">
+                                <button class="cart_remove btn btn-link btn-sm p-0">Remove</button>
+                                <span class="text-300">|</span>
+                                <button class="cart_wishlist btn btn-link btn-sm p-0">Save for Later</button>
+                            </div>
+                        </div>
+                        <div class="d-none d-md-block">
+                            <h6 class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1" contenteditable="false" name="website_sale_cart_line_price">
+                                <span style="white-space: nowrap;">600.00</span>
+                            </h6>
+                            <div class="d-none d-md-block mt-2">
+                                <div class="css_quantity input-group justify-content-end h-100 border" name="website_sale_cart_line_quantity">
+                                    <a href="#" class="btn btn-link d-inline-block border-end-0" aria-label="Remove one" title="Remove one">
+                                        <i class="oi oi-minus position-relative z-1 cart_quantity_minus"></i>
+                                    </a>
+                                    <input type="text" class="js_quantity quantity form-control border-0" value="1"/>
+                                    <a href="#" class="btn btn-link d-inline-block border-start-0" aria-label="Add one" title="Add one">
+                                        <i class="oi oi-plus position-relative z-1 cart_quantity_plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div name="o_wsale_cart_line_button_container_mobile" class="d-flex d-md-none">
+                        <div class="d-flex d-md-none align-items-center me-auto">
+                            <div class="css_quantity input-group justify-content-end h-100 border" name="website_sale_cart_line_quantity_mobile">
+                                <a href="#" class="btn btn-link d-inline-block border-end-0" aria-label="Remove one" title="Remove one">
+                                    <i class="oi oi-minus position-relative z-1 cart_quantity_minus"></i>
+                                </a>
+                                <input type="text" class="js_quantity quantity form-control border-0" value="1"/>
+                                <a href="#" class="btn btn-link d-inline-block border-start-0" aria-label="Add one" title="Add one">
+                                    <i class="oi oi-plus position-relative z-1 cart_quantity_plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <button class="cart_wishlist o_add_wishlist btn btn-link d-inline-block d-md-none px-2" title="Wishlist">
+                            <i class="fa fa-fw fa-heart-o"></i>
+                        </button>
+                        <button class="cart_remove btn btn-link d-inline-block d-md-none px-2" title="Remove">
+                            <i class="fa fa-fw fa-trash-o"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            t-if="editable and (not website_sale_order or not website_sale_order.website_order_line)"
+            class="css_non_editable_mode_hidden empty_cart w-100"
         >
             <div class="mt-5 mb-3"><t t-call="website_sale.empty_cart_svg"/></div>
-            <h5 class="mb-3" style="text-align: center;">
+            <h5 class="mb-3 empty_cart_title" style="text-align: center;">
                 Your cart is empty!
             </h5>
             <p style="text-align: center;">
-                <a href="/shop" class="btn btn-primary">
+                <a href="/shop" class="btn btn-primary shop_button_title">
                     Shop
                 </a>
             </p>
         </div>
-        <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning js_cart_lines" role="alert">
-                <strong>Warning!</strong>
-                <div t-out="website_sale_order._get_shop_warning()" class="text-prewrap"/>
-            </div>
-        </t>
-        <div id="cart_products"
-             t-if="website_sale_order and website_sale_order.website_order_line"
-             class="js_cart_lines d-flex flex-column mb32">
-            <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
-                <div
-                    class="o_cart_product d-flex gap-3 pb-4"
-                    t-attf-data-product-id="#{line.product_id and line.product_id.id}"
-                >
-                    <div
-                        class="o_cart_product_image"
-                    >
-                        <!--
-                            Unsellable lines can have unpublished products, but portal users have no
-                            access to unpublished product images. To ensure product images are
-                            always shown for unsellable lines, we use the raw image data as src
-                            (which doesn't require access, unlike the image URL).
-                        -->
-                        <t t-call="website_sale.cart_line_product_link">
-                            <img
-                                t-if="not line._is_sellable() and line.product_id.image_128"
-                                t-att-src="image_data_uri(line.product_id.image_128)"
-                                class="img border rounded"
-                                t-att-alt="line.name_short"
-                            />
-                            <div
-                                t-else=""
-                                t-field="line.product_id.image_128"
-                                t-options="{
-                                    'widget': 'image',
-                                    'qweb_img_responsive': False,
-                                    'class': 'border rounded',
-                                }"
-                            />
-                        </t>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1 gap-3 min-w-0">
-                        <div class="d-flex gap-3">
-                            <div class="flex-grow-1 text-wrap w-100">
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-md-flex flex-md-wrap column-gap-md-1 align-items-md-center">
-                                        <t t-call="website_sale.cart_line_product_link">
-                                            <h6
-                                                t-out="line._get_line_header()"
-                                                class="text-wrap mb-1"
-                                            />
-                                        </t>
-                                        <t t-set="combination_name" t-value="line._get_combination_name()"/>
-                                        <span t-if="combination_name" class="d-none d-md-inline h6 text-muted mb-1">-</span>
-                                        <div
-                                            t-if="combination_name or line.product_template_id._has_multiple_uoms()"
-                                            class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
-                                        >
-                                            <span
-                                                t-if="combination_name"
-                                                class="h6 text-muted mb-1"
-                                                t-out="combination_name"
-                                            />
-                                            <span
-                                                t-if="line.product_template_id._has_multiple_uoms()"
-                                                class="badge bg-light mb-1"
-                                                t-out="line.product_uom_id.name"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div t-attf-class="{{'d-block d-md-none' if not is_combo else ''}}"><t t-call="website_sale.cart_lines_price"/></div>
-                                </div>
-                                <t t-call="website_sale.cart_line_description_following_lines"/>
-                                <ul t-if="is_combo" class="list-group">
-                                    <t
-                                        t-foreach="line.linked_line_ids.filtered('combo_item_id')"
-                                        t-as="combo_item_line"
-                                    >
-                                        <t t-call="website_sale.cart_combo_item_line"/>
-                                    </t>
-                                </ul>
-                                <div
-                                    name="o_wsale_cart_line_button_container"
-                                    t-attf-class="d-none d-md-flex align-items-center gap-2 mt-2 {{'justify-content-between' if is_combo else ''}}"
-                                >
-                                    <button
-                                        class="js_delete_product btn btn-link btn-sm p-0"
-                                        aria-label="Remove from cart"
-                                        title="Remove from cart"
-                                    >
-                                        Remove
-                                    </button>
-                                    <div t-if="is_combo" class="d-none d-md-block ms-auto"><t t-call="website_sale.cart_lines_quantity"/></div>
-                                </div>
-                            </div>
-                            <div t-if="not is_combo" class="d-none d-md-block">
-                                <t t-call="website_sale.cart_lines_price"/>
-                                <div class="d-none d-md-block mt-2"><t t-call="website_sale.cart_lines_quantity"/></div>
-                            </div>
-                        </div>
-                        <div
-                            name="o_wsale_cart_line_button_container_mobile"
-                            class="d-flex d-md-none"
-                        >
-                            <div class="d-flex d-md-none align-items-center me-auto">
-                                <t t-call="website_sale.cart_lines_quantity" is_mobile="True"/>
-                            </div>
-                            <button
-                                class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
-                                title="Remove"
-                            >
-                                <i class="fa fa-fw fa-trash-o"/>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </div>
-    </template>
-
-    <template id="website_sale.cart_lines_quantity" name="Shopping Cart Line quantity">
-        <t
-            t-set="should_show_quantity_selector"
-            t-value="is_view_active('website_sale.product_quantity')"
-        />
-        <div
-            t-attf-class="css_quantity input-group justify-content-end h-100 {{should_show_quantity_selector and line._is_sellable() and 'border' or ''}}"
-            t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
-        >
-            <t t-if="should_show_quantity_selector and line._is_sellable()">
-                <a
-                    href="#"
-                    class="btn btn-link d-inline-block border-end-0"
-                    aria-label="Remove one"
-                    title="Remove one"
-                >
-                    <i class="oi oi-minus position-relative z-1"/>
-                </a>
-                <input
-                    type="text"
-                    class="js_quantity quantity form-control border-0"
-                    t-att-data-line-id="line.id"
-                    t-att-data-product-id="line.product_id.id"
-                    t-att-value="line._get_displayed_quantity()"
-                />
-                <t t-if="line._get_shop_warning(clear=False)">
-                    <a href="#" class="btn btn-link">
-                        <i
-                            class="fa fa-warning text-warning"
-                            t-att-title="line._get_shop_warning()"
-                            role="img"
-                            aria-label="Warning"
-                        />
-                    </a>
-                </t>
-                <a
-                    t-else=""
-                    href="#"
-                    class="btn btn-link d-inline-block border-start-0"
-                    aria-label="Add one"
-                    title="Add one"
-                >
-                    <i class="oi oi-plus position-relative z-1"/>
-                </a>
-            </t>
-            <t t-else="">
-                <input
-                    type="text"
-                    class="js_quantity quantity form-control text-start text-md-end text-md-end border-0 p-0 shadow-none mw-100"
-                    t-att-data-line-id="line.id"
-                    t-att-data-product-id="line.product_id.id"
-                    t-att-value="line._get_displayed_quantity()"
-                    readonly="True"
-                />
-            </t>
-        </div>
-    </template>
-
-    <template id="website_sale.cart_lines_price" name="Shopping Cart Line Price">
-        <h6
-            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1"
-            name="website_sale_cart_line_price"
-        >
-            <del
-                t-if="line._should_show_strikethrough_price()"
-                class="me-md-2 text-muted text-nowrap opacity-50"
-                t-out="line._get_displayed_unit_price() * line.product_uom_qty"
-                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-            />
-            <t t-set="product_price" t-value="line._get_cart_display_price()"/>
-            <t t-call="website_sale.cart_product_price"/>
-        </h6>
-        <small
-            t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
-            class="cart_product_base_unit_price d-block text-muted text-end"
-            groups="website_sale.group_show_uom_price"
-        >
-            <t t-set="product" t-value="line.product_id"/>
-            <t t-call="website_sale.base_unit_price"
-                product="product"
-                base_unit_price="product._get_base_unit_price(product_price/line.product_uom_qty)"/>
-        </small>
-    </template>
-
-    <template id="website_sale.cart_combo_item_line">
-        <a
-            t-att-href="combo_item_line.product_id.website_url if combo_item_line._is_sellable() and combo_item_line.product_id.website_published else '#'"
-            t-attf-class="list-group-item #{'list-group-item-action' if combo_item_line._is_sellable() and combo_item_line.product_id.website_published else 'cursor-default text-decoration-none'}"
-        >
-            <h6 class="d-inline small">
-                <span t-out="combo_item_line._get_displayed_quantity()"/>
-                x
-                <span t-out="combo_item_line.name_short"/>
-            </h6>
-            <t
-                t-set="description_lines"
-                t-value="combo_item_line.get_description_following_lines()"
-            />
-            <div t-if="description_lines" class="small text-muted">
-                <t t-foreach="description_lines" t-as="description_line">
-                    <span
-                        t-if="description_line"
-                        class="d-block"
-                        t-out="description_line"
-                    />
-                </t>
-            </div>
-        </a>
     </template>
 
     <template id="website_sale.cart_product_price">
@@ -479,7 +297,7 @@
         inherit_id="website_sale.cart_lines"
         name="Accessory Products in my cart"
     >
-        <xpath expr="//div[@id='cart_products']" position="inside">
+        <xpath expr="//div[@id='cart_products']" position="after">
             <h5 t-attf-class="mt-3 mb-0" t-if="suggested_products">Suggested accessories</h5>
             <div t-if="suggested_products"
                  id="suggested_products"
@@ -555,31 +373,6 @@
         id="website_sale.product_cart_lines"
         inherit_id="website_sale.cart_lines"
         active="True"
-    >
-        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/button" position="after">
-            <t t-if="line._is_sellable()">
-                <span class="text-300">|</span>
-                <button
-                    class="o_add_wishlist js_delete_product btn btn-link btn-sm p-0"
-                    t-att-data-product-id="line.product_id.id"
-                    t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
-                >
-                    Save for Later
-                </button>
-            </t>
-        </xpath>
-
-        <xpath expr="//div[@name='o_wsale_cart_line_button_container_mobile']/button" position="before">
-            <button
-                t-if="line._is_sellable()"
-                class="o_add_wishlist js_delete_product btn btn-link d-inline-block d-md-none px-2"
-                t-att-data-product-id="line.product_id.id"
-                t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
-                title="Wishlist"
-            >
-                <i class="fa fa-fw fa-heart-o"/>
-            </button>
-        </xpath>
-    </template>
+    />
 
 </odoo>

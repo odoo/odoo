@@ -141,23 +141,17 @@ export class QuickReorder extends Interaction {
             ...(isCombo && { linked_products: linkedProducts }),
         }));
 
-        data['website_sale.shorter_cart_summary'] = markup(
-            data['website_sale.shorter_cart_summary']
-        );
-        data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
+        this.services.cart.bus.trigger('cart_update');
 
         // Add the product to the cart and update the DOM.
-        const cart = this.el.closest('#shop_cart');
-        const cartSummary = document.querySelector('.o_wsale_shorter_cart_summary');
-        // `updateCartNavBar` regenerates the cart lines and `updateQuickReorderSidebar` regenerates
-        // the quick reorder products, so we need to stop and start interactions to make sure the
-        // regenerated cart lines and reorder products are properly handled.
-        this.services['public.interactions'].stopInteractions(cart);
-        this.services['public.interactions'].stopInteractions(cartSummary);
-        wSaleUtils.updateCartNavBar(data);
+        const websiteSale = document.querySelector('.oe_website_sale');
+        // `updateQuickReorderSidebar` regenerates the quick reorder products, so we need
+        // to stop and start interactions to make sure the regenerated reorder products
+        // are properly handled.
+        // TODO NIPL: Fix this selector to only render the quick reorder sidebar
+        this.services['public.interactions'].stopInteractions(websiteSale);
         wSaleUtils.updateQuickReorderSidebar(data);
-        this.services['public.interactions'].startInteractions(cart);
-        this.services['public.interactions'].startInteractions(cartSummary);
+        this.services['public.interactions'].startInteractions(websiteSale);
 
         // Move the focus to the next quantity input.
         this._focusNextQuantityInput(currentButtonIndex);

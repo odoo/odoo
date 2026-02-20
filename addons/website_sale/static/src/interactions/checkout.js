@@ -171,8 +171,8 @@ export class Checkout extends Interaction {
             save: async locationData => {
                 const jsonLocation = JSON.stringify(locationData);
                 // Assign the selected pickup location to the order.
-                const updatedCartData = await this.waitFor(this._setPickupLocation(jsonLocation));
-                this._updateCartSummaries(updatedCartData);
+                await this.waitFor(this._setPickupLocation(jsonLocation));
+                this._updateCartSummaries();
 
                 //  Show and set the order location details.
                 this._updatePickupLocation(deliveryMethodContainer, locationData, jsonLocation);
@@ -311,7 +311,7 @@ export class Checkout extends Interaction {
         this._showLoadingBadge(radio);
         const result = await this.waitFor(this._setDeliveryMethod(radio.dataset.dmId));
         this._updateAmountBadge(radio, result);
-        this._updateCartSummaries(result);
+        this._updateCartSummaries();
     }
 
     /**
@@ -360,47 +360,10 @@ export class Checkout extends Interaction {
      * Update the order summary table with the delivery rate of the selected delivery method.
      *
      * @private
-     * @param {Object} result - The order summary values.
-     * @param {Object} targetEl - Specific cart summary to update.
      * @return {void}
      */
-    _updateCartSummary(result, targetEl) {
-        const amountDelivery = targetEl.querySelector(
-            'tr[name="o_order_delivery"] .monetary_field'
-        );
-        const amountUntaxed = targetEl.querySelector(
-            'tr[name="o_order_total_untaxed"] .monetary_field'
-        );
-        const amountTax = targetEl.querySelector('#order_tax_lines_container');
-        const amountTotal = targetEl.parentElement.querySelectorAll(
-            'tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field'
-        );
-
-        // When no dm is set and a price span is hidden, hide the message and show the price span.
-        if (amountDelivery.classList.contains('d-none')) {
-            amountDelivery.querySelector('span[name="o_message_no_dm_set"]')?.classList.add('d-none');
-            amountDelivery.classList.remove('d-none');
-        }
-
-        amountDelivery.innerHTML = result.amount_delivery;
-        amountUntaxed.innerHTML = result.amount_untaxed;
-
-        amountTax.outerHTML = result.amount_tax_lines;
-        amountTotal.forEach(total => total.innerHTML = result.amount_total);
-    }
-
-    /**
-     * Update the order summary table with the delivery rate of the selected delivery method.
-     *
-     * @private
-     * @param {Object} result - The order summary values.
-     * @return {void}
-     */
-    _updateCartSummaries(result) {
-        const parentElements = document.querySelectorAll(
-            '#o_cart_summary_offcanvas, div.o_total_card'
-        );
-        parentElements.forEach(el => this._updateCartSummary(result, el));
+    _updateCartSummaries() {
+        this.services.cart.bus.trigger('cart_update');
     }
 
     /**
@@ -551,10 +514,10 @@ export class Checkout extends Interaction {
             'span[name="o_pickup_location_selector"]'
         );
         if (editPickupLocationButton.dataset.pickupLocationData) {
-            const updatedCart = await this.waitFor(
+            await this.waitFor(
                 this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData)
             );
-            this._updateCartSummaries(updatedCart);
+            this._updateCartSummaries();
         }
 
         pickupLocation.classList.remove('d-none'); // Show the whole div.

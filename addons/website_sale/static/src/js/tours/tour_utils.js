@@ -77,25 +77,25 @@ export function assertCartAmounts({ taxes = false, untaxed = false, total = fals
     if (taxes) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr[name="o_order_total_taxes"] .oe_currency_value:text(${taxes})`,
+            trigger: `tr[name="o_order_total_taxes"]:contains(${taxes})`,
         });
     }
     if (untaxed) {
         steps.push({
             content: 'Check if the subtotal is correct',
-            trigger: `tr[name="o_order_total_untaxed"] .oe_currency_value:text(${untaxed})`,
+            trigger: `tr[name="o_order_total_untaxed"]:contains(${untaxed})`,
         });
     }
     if (total) {
         steps.push({
             content: 'Check if the total is correct',
-            trigger: `tr[name="o_order_total"] .oe_currency_value:text(${total})`,
+            trigger: `tr[name="o_order_total"]:contains(${total})`,
         });
     }
     if (delivery) {
         steps.push({
             content: 'Check if the delivery is correct',
-            trigger: `tr[name='o_order_delivery'] .oe_currency_value:text(${delivery})`,
+            trigger: `tr[name='o_order_delivery']:contains(${delivery})`,
         });
     }
     return steps
@@ -153,7 +153,7 @@ export function assertCartContains({
     }
 
     if (price) {
-        const priceTrigger = `${lineTrigger} h6[name='website_sale_cart_line_price'] .oe_currency_value:contains(${price})`;
+        const priceTrigger = `${lineTrigger} h6[name='website_sale_cart_line_price']:contains(${price})`;
         steps.push({
             content: `Checking if the cart line holds the expected price.`,
             trigger: `${backend ? ":iframe" : ""} ${priceTrigger}`,
