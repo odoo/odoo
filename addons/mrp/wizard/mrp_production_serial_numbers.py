@@ -50,6 +50,8 @@ class MrpProductionSerials(models.TransientModel):
 
     def action_apply(self):
         self.ensure_one()
+        if not self.serial_numbers:
+            return
         lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
         existing_lots = self.env['stock.lot'].search([
             '|', ('company_id', '=', False), ('company_id', '=', self.production_id.company_id.id),
