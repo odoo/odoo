@@ -137,4 +137,22 @@
             <field name="sale_line_id" position="replace"/>
         </field>
     </record>
+
+    <record id="project_project_view_kanban_inherit_sale_project" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.sale.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="show_ratings"/>
+                <field name="allow_billable"/>
+            </xpath>
+            <xpath expr="//div[@name='project_customer_rating_menu']" position="attributes">
+                <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value</attribute>
+            </xpath>
+            <xpath expr="//div[@t-if='record.show_ratings.raw_value and record.rating_count.raw_value &gt; 0']" position="attributes">
+                <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value and record.rating_count.raw_value &gt; 0 </attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
