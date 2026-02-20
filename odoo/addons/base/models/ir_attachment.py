@@ -12,6 +12,7 @@ import uuid
 import warnings
 from collections import defaultdict
 from collections.abc import Collection
+from functools import partial
 
 import psycopg2
 import werkzeug.security
@@ -558,16 +559,7 @@ class IrAttachment(models.Model):
             forbidden = self.browse(forbidden_ids)
             forbidden.invalidate_recordset(SECURITY_FIELDS)  # avoid cache pollution
             if error_func is None:
-                def error_func():
-                    return AccessError(self.env._(
-                        "Sorry, you are not allowed to access this document. "
-                        "Please contact your system administrator.\n\n"
-                        "(Operation: %(operation)s)\n\n"
-                        "Records: %(records)s, User: %(user)s",
-                        operation=operation,
-                        records=forbidden[:6],
-                        user=self.env.uid,
-                    ))
+                error_func = partial(forbidden._make_access_error, operation)
             return forbidden, error_func
         return None
 
@@ -599,6 +591,17 @@ class IrAttachment(models.Model):
             res_ids.difference_update(records._ids)
             for res_id in res_ids:
                 yield res_model, res_id
+
+    def _make_access_error(self, operation: str) -> AccessError:
+        return AccessError(self.env._(
+            "Sorry, you are not allowed to access this document. "
+            "Please contact your system administrator.\n\n"
+            "(Operation: %(operation)s)\n\n"
+            "Records: %(records)s, User: %(user)s",
+            operation=operation,
+            records=self.ids[:6],
+            user=self.env.uid,
+        ))
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):

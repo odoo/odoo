@@ -11,6 +11,7 @@ from odoo.addons.mail.tools.discuss import Store
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
+    message_ids = fields.Many2many("mail.message", "message_attachment_rel", "attachment_id", "message_id", copy=False)
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
 
