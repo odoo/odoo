@@ -8,6 +8,7 @@ import { rpc } from "@web/core/network/rpc";
 import { Pager } from "@web/core/pager/pager";
 import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
 import { useService } from "@web/core/utils/hooks";
+import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
 export class KioskManualSelection extends Component {
     static template = "hr_attendance.public_kiosk_manual_selection";
@@ -15,6 +16,7 @@ export class KioskManualSelection extends Component {
         Dropdown,
         DropdownItem,
         Pager,
+        AttendanceVideoStream,
     };
     static props = {
         displayBackButton: { type: Boolean },
@@ -22,6 +24,7 @@ export class KioskManualSelection extends Component {
         departments: { type: Array },
         onSelectEmployee: { type: Function },
         onClickBack: { type: Function },
+        captureCheckInPicture: { type: Boolean },
     };
 
     setup() {
@@ -51,16 +54,24 @@ export class KioskManualSelection extends Component {
         let fontSizeMultiplication = 1;
         let searchBarHeight = 0;
         // for small screen the searchbar is higher
-        if (screen.width <= MEDIAS_BREAKPOINTS[SIZES.SM].maxWidth){
+
+        const width = window.innerWidth;
+        const kioskContainer = document.querySelector(".o_hr_attendance_kiosk_mode");
+        const kioskContainerHeight = kioskContainer
+            ? kioskContainer.clientHeight
+            : window.innerHeight;
+
+        if (width <= MEDIAS_BREAKPOINTS[SIZES.SM].maxWidth) {
             searchBarHeight += 38;
-        } else if(screen.width <= MEDIAS_BREAKPOINTS[SIZES.MD].maxWidth){
+        } else if (width <= MEDIAS_BREAKPOINTS[SIZES.MD].maxWidth) {
             employeeCardPerLine = 2;
-        } else if(screen.width <= MEDIAS_BREAKPOINTS[SIZES.LG].maxWidth){
+        } else if (width <= MEDIAS_BREAKPOINTS[SIZES.LG].maxWidth) {
             fontSizeMultiplication *= 1.25;
             employeeCardPerLine = 2;
-        } else if (screen.width <= MEDIAS_BREAKPOINTS[SIZES.XL].maxWidth){
+        } else if (width <= MEDIAS_BREAKPOINTS[SIZES.XL].maxWidth) {
             fontSizeMultiplication *= 1.25;
-            if (screen.width < 1400){ //grid breakpoint xxl
+            if (width < 1400) {
+                //grid breakpoint xxl
                 employeeCardPerLine = 3;
             } else {
                 employeeCardPerLine = 4;
@@ -73,9 +84,17 @@ export class KioskManualSelection extends Component {
                 fontSizeMultiplication *= 2;
             }
         }
-        let employeeCardHeight = 150 * fontSizeMultiplication;
+
+        const employeeCardHeight = 150 * fontSizeMultiplication;
         searchBarHeight += 62 * fontSizeMultiplication;
-        let availableScreen = screen.height - searchBarHeight;
+        let availableScreen = kioskContainerHeight - searchBarHeight;
+
+        if (this.props.captureCheckInPicture) {
+            const topBarElement = document.querySelector(".o_attendance_top_bar");
+            const topBarElementHeight = topBarElement ? topBarElement.offsetHeight : 0;
+            availableScreen -= topBarElementHeight;
+        }
+
         return Math.trunc(availableScreen / employeeCardHeight) * employeeCardPerLine;
     }
 

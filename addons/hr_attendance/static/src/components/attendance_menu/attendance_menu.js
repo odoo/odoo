@@ -8,9 +8,10 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
 export class ActivityMenu extends Component {
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, AttendanceVideoStream };
     static props = [];
     static template = "hr_attendance.attendance_menu";
 
@@ -23,10 +24,9 @@ export class ActivityMenu extends Component {
             checkedIn: false,
             isDisplayed: false,
         });
-
+        this.cameraApi = null;
         this.date_formatter = registry.category("formatters").get("float_time");
         this.dropdown = useDropdownState();
-
         onWillStart(() => {
             this.lazySession.getValue("attendance_user_data", (employee) => {
                 if (employee) {
@@ -51,6 +51,7 @@ export class ActivityMenu extends Component {
         this.employeeName = this.employee.name;
         this.state.isDisplayed = this.employee.display_systray;
         this.state.checkedIn = this.employee.attendance_state === "checked_in";
+        this.state.displayVideoStream = this.employee.capture_check_in_picture && !this.state.checkedIn;
 
         this.hoursToday = this.date_formatter(this.employee.hours_today);
 
@@ -83,11 +84,12 @@ export class ActivityMenu extends Component {
         return { h, m };
     }
 
-    async checking(latitude = false, longitude = false) {
+    async checking({ latitude = false, longitude = false, checkInImage = null } = {}) {
         try {
             this.employee = await rpc("/hr_attendance/systray_check_in_out", {
                 latitude,
                 longitude,
+                check_in_image: checkInImage,
             });
             this._searchReadEmployeeFill();
         } catch (error) {
@@ -106,7 +108,10 @@ export class ActivityMenu extends Component {
     }
 
     async signInOut() {
+        const checkInImage = this.cameraApi?.capture();
+        this.cameraApi?.stop();
         this.dropdown.close();
+
         if (this._attendanceInProgress) {
             return;
         }
@@ -117,10 +122,10 @@ export class ActivityMenu extends Component {
             // iOS app lacks permissions to call `getCurrentPosition`
             navigator.geolocation.getCurrentPosition(
                 async ({ coords: { latitude, longitude } }) => {
-                    await this.checking(latitude, longitude);
+                    await this.checking({ latitude, longitude, checkInImage });
                 },
                 async () => {
-                    await this.checking();
+                    await this.checking({ checkInImage });
                 },
                 {
                     enableHighAccuracy: true,
@@ -128,7 +133,7 @@ export class ActivityMenu extends Component {
                 }
             );
         } else {
-            await this.checking();
+            await this.checking({ checkInImage });
         }
     }
 }

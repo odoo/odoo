@@ -35,6 +35,7 @@ class HrAttendance(http.Controller):
                 'attendance_state': employee.attendance_state,
                 'display_systray': employee.company_id.attendance_from_systray,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
+                'capture_check_in_picture': employee.company_id.attendance_capture_check_in,
             }
         return response
 
@@ -54,7 +55,6 @@ class HrAttendance(http.Controller):
                     ('employee_id', '=', employee.id), ('date', '=', datetime.date.today())]).mapped('duration')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
-                'device_tracking_enabled': employee.company_id.attendance_device_tracking,
             }
         return response
 
@@ -196,6 +196,7 @@ class HrAttendance(http.Controller):
                         'from_trial_mode': from_trial_mode,
                         'barcode_source': company.attendance_barcode_source,
                         'device_tracking_enabled': company.attendance_device_tracking,
+                        'capture_check_in_picture': company.attendance_capture_check_in,
                         'lang': py_to_js_locale(company.partner_id.lang or company.env.lang),
                         'server_version_info': odoo.release.version_info,
                     },
@@ -212,22 +213,30 @@ class HrAttendance(http.Controller):
         return {}
 
     @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
-    def scan_barcode(self, token, barcode):
+    def scan_barcode(self, token, barcode, check_in_image=None):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
-                employee._attendance_action_change(self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking))
+                employee._attendance_action_change(self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking), check_in_image)
                 return self._get_employee_info_response(employee)
         return {}
 
     @http.route('/hr_attendance/manual_selection', type="jsonrpc", auth="public")
-    def manual_selection(self, token, employee_id, pin_code, latitude=False, longitude=False):
+    def manual_selection(self, token, employee_id, pin_code, latitude=False, longitude=False, check_in_image=None):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().browse(employee_id)
             if employee.company_id == company and ((not company.attendance_kiosk_use_pin) or (employee.pin == pin_code)):
-                employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude, device_tracking_enabled=company.attendance_device_tracking))
+                employee.sudo()._attendance_action_change(
+                    self._get_geoip_response(
+                        mode='kiosk',
+                        latitude=latitude,
+                        longitude=longitude,
+                        device_tracking_enabled=company.attendance_device_tracking
+                    ),
+                    check_in_image,
+                )
                 return self._get_employee_info_response(employee)
         return {}
 
@@ -250,13 +259,13 @@ class HrAttendance(http.Controller):
         return []
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
-    def systray_attendance(self, latitude=False, longitude=False):
+    def systray_attendance(self, latitude=False, longitude=False, check_in_image=None):
         employee = request.env.user.employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude,
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
-        employee._attendance_action_change(geo_ip_response)
+        employee._attendance_action_change(geo_ip_response, check_in_image)
         return self._get_employee_info_response(employee)
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)
