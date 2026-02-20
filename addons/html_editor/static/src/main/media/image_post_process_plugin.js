@@ -273,10 +273,18 @@ export class ImagePostProcessPlugin extends Plugin {
         return [url, newDataset];
     }
     updateImageAttributes(el, url, newDataset) {
-        el.classList.add("o_modified_image_to_save");
         if (el.tagName === "IMG") {
+            if (url.startsWith("data:")) {
+                el.classList.add(
+                    el.dataset.originalId ? "o_modified_image_to_save" : "o_b64_image_to_save"
+                );
+                el.classList.remove(
+                    el.dataset.originalId ? "o_b64_image_to_save" : "o_modified_image_to_save"
+                );
+            }
             el.setAttribute("src", url);
         } else {
+            el.classList.add("o_modified_image_to_save");
             this.dependencies.style.setBackgroundImageUrl(el, url);
         }
         for (const key in newDataset) {
