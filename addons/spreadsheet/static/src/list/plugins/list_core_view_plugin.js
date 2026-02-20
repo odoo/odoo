@@ -261,7 +261,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         const cell = this.getters.getCorrespondingFormulaCell(position);
         const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
-            const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
+            const listFunction = getFirstListFunction(cell.compiledFormula, this.getters);
             if (listFunction) {
                 const content = astToFormula(listFunction.args[0]);
                 return this.getters.evaluateFormula(sheetId, content)?.toString();
@@ -279,7 +279,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         if (!cell?.isFormula) {
             return undefined;
         }
-        const { functionName, args } = getFirstListFunction(cell.compiledFormula.tokens);
+        const { functionName, args } = getFirstListFunction(cell.compiledFormula, this.getters);
         const fieldArg = functionName === "ODOO.LIST.HEADER" ? args[1] : args[2];
         const dataSource = this.getters.getListDataSource(listId);
         if (!fieldArg || !dataSource.isValid()) {
@@ -313,7 +313,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         if (!cell?.isFormula) {
             return false;
         }
-        const { functionName } = getFirstListFunction(cell.compiledFormula.tokens);
+        const { functionName } = getFirstListFunction(cell.compiledFormula, this.getters);
         const dataSource = this.getters.getListDataSource(listId);
         return (
             functionName === "ODOO.LIST.HEADER" &&

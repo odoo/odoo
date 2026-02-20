@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { AccountingPlugin } from "./plugins/accounting_plugin";
-import { getFirstAccountFunction, getNumberOfAccountFormulas } from "./utils";
+import { getFirstAccountFunction, hasAccountingFormula } from "./utils";
 import { parseAccountingDate } from "./accounting_functions";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 
@@ -18,7 +18,7 @@ cellMenuRegistry.add("move_lines_see_records", {
         const position = env.model.getters.getActivePosition();
         const sheetId = position.sheetId;
         const cell = env.model.getters.getCell(position);
-        const func = getFirstAccountFunction(cell.compiledFormula.tokens);
+        const func = getFirstAccountFunction(cell.compiledFormula, env.model.getters);
         let codes, partner_ids, account_tag_ids = "";
         let date_range, offset, companyId, includeUnposted = false;
         const parsed_args = func.args.map(astToFormula).map(
@@ -85,7 +85,7 @@ cellMenuRegistry.add("move_lines_see_records", {
             evaluatedCell.value !== "" &&
             cell &&
             cell.isFormula &&
-            getNumberOfAccountFormulas(cell.compiledFormula.tokens) === 1
+            hasAccountingFormula(cell.compiledFormula)
         );
     },
     icon: "o-spreadsheet-Icon.SEE_RECORDS",
