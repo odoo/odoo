@@ -10,7 +10,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import Store, get_member_ref_values
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.addons.web.models.models import lazymapping
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -427,6 +427,9 @@ class DiscussChannel(models.Model):
             for cmd in membership_ids_cmd:
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
+                # find partners and guests to add from member_refs
+                member_ref = cmd[2].pop("member_ref", False)
+                cmd[2].update(get_member_ref_values(member_ref))
                 for field_name in cmd[2]:
                     if field_name not in self._get_allowed_channel_member_create_params():
                         raise ValidationError(

@@ -27,6 +27,18 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_in_call = bool(partner.rtc_session_ids)
 
+    @api.depends("name", "email")
+    @api.depends_context("display_email", "formatted_display_name")
+    def _compute_display_name(self):
+        if not self.env.context.get("display_email"):
+            super()._compute_display_name()
+            return
+        for partner in self:
+            if self.env.context.get("formatted_display_name"):
+                partner.display_name = f"{partner.name}" + (f" --({partner.email})--" if partner.email else "")
+            else:
+                partner.display_name = f"{partner.name}" + (f" ({partner.email})" if partner.email else "")
+
     @api.readonly
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):

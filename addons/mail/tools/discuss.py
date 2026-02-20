@@ -38,6 +38,18 @@ def add_guest_to_context(func):
     return wrapper
 
 
+def get_member_ref_values(member_ref: str | None) -> dict:
+    if not member_ref:
+        return {}
+    model, id_str = member_ref.split(",")
+    record_id = int(id_str)
+    if model == "res.partner":
+        return {"partner_id": record_id, "guest_id": False}
+    if model == "mail.guest":
+        return {"guest_id": record_id, "partner_id": False}
+    return {}
+
+
 def get_twilio_credentials(env) -> tuple[str | None, str | None]:
     """
     To be overridable if we need to obtain credentials from another source.
