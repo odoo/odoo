@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:05+0000\n"
-"PO-Revision-Date: 2025-12-16 19:05+0000\n"
+"POT-Creation-Date: 2026-02-20 12:31+0000\n"
+"PO-Revision-Date: 2026-02-20 12:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -75,16 +75,6 @@ msgid "Access token is unauthorized."
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model,name:l10n_ro_edi.model_account_move_send
-msgid "Account Move Send"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model:ir.model,name:l10n_ro_edi.model_account_move_send_wizard
-msgid "Account Move Send Wizard"
-msgstr ""
-
-#. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Activate test environment for sending E-Factura to SPV"
 msgstr ""
@@ -103,6 +93,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "CIUS-RO XML attachment not found."
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.product_template_form_inherit
+msgid "CPV"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_l10n_ro_cpv_code
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_product_product__cpv_code_id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_product_template__cpv_code_id
+msgid "CPV Code"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -127,6 +129,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_secret
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_client_secret
 msgid "Client Secret"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__code
+msgid "Code"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.constraint,message:l10n_ro_edi.constraint_l10n_ro_cpv_code_code_uniq
+msgid "Code must be unique!"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,help:l10n_ro_edi.field_product_product__cpv_code_id
+#: model:ir.model.fields,help:l10n_ro_edi.field_product_template__cpv_code_id
+msgid "Common Procurement Vocabulary, used by e-Factura"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -155,11 +173,15 @@ msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__create_uid
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__create_uid
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__create_date
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__create_date
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__create_date
 msgid "Created on"
 msgstr ""
@@ -171,8 +193,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,help:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__start_date
+msgid "Date from which you want to synchronize (back up to 60 days)"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__datetime
 msgid "Datetime"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_fetch_invoices_wizard_form
+msgid "Discard"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -180,7 +212,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_product_template__display_name
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__display_name
@@ -339,7 +374,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send_wizard__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_product_template__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__id
@@ -359,6 +397,14 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__invoice_id
 msgid "Invoice"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"It was not possible to retrieve the PDF from the SPV for the following "
+"reason: %s"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -389,11 +435,15 @@ msgid "L10N Ro Edi Document"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__write_uid
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__write_uid
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__write_date
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__write_date
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__write_date
 msgid "Last Updated on"
 msgstr ""
@@ -401,6 +451,22 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__message
 msgid "Message"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__nb_days
+msgid "Nb Days"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "No PDF found: PDF imported from SPV."
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -412,6 +478,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "Only posted entries can be sent to SPV."
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Period selection"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_product_template
+msgid "Product"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -500,10 +577,21 @@ msgid "Select journal for SPV imported bills"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_fetch_invoices_wizard_form
+msgid ""
+"Select the date from which you want to synchronize with ANAF (up to 60 days)"
+msgstr ""
+
+#. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 #: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
 msgid "Send E-Factura to SPV"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_move_send_wizard
+msgid "Send Invoice Wizard"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -527,6 +615,11 @@ msgid "Sent E-Factura"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__show_fetch_status_button
 msgid "Show Fetch Status Button"
 msgstr ""
@@ -534,6 +627,16 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Submit the form by clicking on \"Generare Client ID\""
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_fetch_invoices_wizard_form
+msgid "Synchronize"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__start_date
+msgid "Synchronize from"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -696,9 +799,20 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_l10n_ro_edi_account_move_fetch_invoices_wizard
+msgid "Wizard to select date to fetch the invoices from"
+msgstr ""
+
+#. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
 msgid "You can't send now. Invoice is waiting for an answer."
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/wizard/account_move_fetch_invoices_wizard.py:0
+msgid "You cannot synchronize invoices that are older than 60 days"
 msgstr ""
 
 #. module: l10n_ro_edi
