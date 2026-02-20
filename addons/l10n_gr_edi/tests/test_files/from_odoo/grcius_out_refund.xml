@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CreditNote
+	xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+	<cbc:ID>047747270|01/01/2025|0|1.2|RINV|00001</cbc:ID>
+	<cbc:IssueDate>2025-01-01</cbc:IssueDate>
+	<cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cbc:BuyerReference>Ministry of justice</cbc:BuyerReference>
+	<cac:OrderReference>
+		<cbc:ID>RINV/2025/00001</cbc:ID>
+	</cac:OrderReference>
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>047747270|01/01/2025|0|1.1|INV|00001</cbc:ID>
+		</cac:InvoiceDocumentReference>
+	</cac:BillingReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="9933">EL047747270</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>Test GR Company</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Odos Str 10</cbc:StreetName>
+				<cbc:CityName>Athens</cbc:CityName>
+				<cbc:PostalZone>10100</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>GR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>EL047747270</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Test GR Company</cbc:RegistrationName>
+				<cbc:CompanyID>EL047747270</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Test GR Company</cbc:Name>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="9933">EL047747210</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID>2048.8010430600.00061</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Greek Govt customer</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Kallirois Str 5</cbc:StreetName>
+				<cbc:CityName>Athens</cbc:CityName>
+				<cbc:PostalZone>10100</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>GR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>EL047747210</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Greek Govt customer</cbc:RegistrationName>
+				<cbc:CompanyID>EL047747210</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Greek Govt customer</cbc:Name>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:Delivery>
+		<cac:DeliveryLocation>
+			<cac:Address>
+				<cbc:StreetName>Kallirois Str 5</cbc:StreetName>
+				<cbc:CityName>Athens</cbc:CityName>
+				<cbc:PostalZone>10100</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>GR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+		<cac:DeliveryParty>
+			<cac:PartyName>
+				<cbc:Name>Greek Govt customer</cbc:Name>
+			</cac:PartyName>
+		</cac:DeliveryParty>
+	</cac:Delivery>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode name="standing agreement">57</cbc:PaymentMeansCode>
+		<cbc:PaymentID>RINV/2025/00001</cbc:PaymentID>
+	</cac:PaymentMeans>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">5.02</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">20.90</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">5.02</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>24.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">20.90</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">20.90</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">25.92</cbc:TaxInclusiveAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="EUR">25.92</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:CreditNoteLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:CreditedQuantity unitCode="C62">1.0</cbc:CreditedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">15.80</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Description>[E-COM08] product_a</cbc:Description>
+			<cbc:Name>product_a</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM08</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:CommodityClassification>
+				<cbc:ItemClassificationCode listID="CPV">123123</cbc:ItemClassificationCode>
+			</cac:CommodityClassification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>24.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">15.8</cbc:PriceAmount>
+		</cac:Price>
+	</cac:CreditNoteLine>
+	<cac:CreditNoteLine>
+		<cbc:ID>2</cbc:ID>
+		<cbc:CreditedQuantity unitCode="DZN">1.0</cbc:CreditedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">5.10</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Description>[FURN_0001] product_b</cbc:Description>
+			<cbc:Name>product_b</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>FURN_0001</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:CommodityClassification>
+				<cbc:ItemClassificationCode listID="CPV">243234</cbc:ItemClassificationCode>
+			</cac:CommodityClassification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>24.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">5.1</cbc:PriceAmount>
+		</cac:Price>
+	</cac:CreditNoteLine>
+</CreditNote>

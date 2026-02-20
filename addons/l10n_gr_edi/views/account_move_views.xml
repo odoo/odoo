@@ -56,6 +56,7 @@
                 <field name="l10n_gr_edi_available_cls_category" column_invisible="1"/>
                 <field name="l10n_gr_edi_available_cls_type" column_invisible="1"/>
                 <field name="l10n_gr_edi_available_cls_vat" column_invisible="1"/>
+                <field name="l10n_gr_edi_cpv_code" optional="hide" readonly="0" column_invisible="parent.country_code != 'GR'"/>
                 <field name="l10n_gr_edi_detail_type" optional="hide" column_invisible="parent.country_code != 'GR'"/>
                 <field name="l10n_gr_edi_cls_category"
                        widget="dynamic_selection"
@@ -80,6 +81,16 @@
                        optional="hide"
                        column_invisible="parent.country_code != 'GR'"
                        readonly="not l10n_gr_edi_need_exemption_category"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='other_info']//field[@name='delivery_date']" position="after">
+                <field name="l10n_gr_edi_budget_type"
+                       string="Budget Type"/>
+                <field name="l10n_gr_edi_project_reference"
+                       string="Project Reference"
+                       required="l10n_gr_edi_budget_type"
+                       readonly="0" />
+                <field name="l10n_gr_edi_contract_reference"
+                       string="Contract Reference"/>
             </xpath>
 
             <!-- myDATA Documents Tab -->

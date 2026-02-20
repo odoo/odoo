@@ -9,3 +9,8 @@ class ProductTemplate(models.Model):
         string='Preferred myDATA Classification',
         inverse_name='product_template_id',
     )
+
+    l10n_gr_edi_cpv_code = fields.Char(
+        string='CPV Code',
+        help='Common Procurement Vocabulary (CPV) code for public procurement in Greece.',
+    )

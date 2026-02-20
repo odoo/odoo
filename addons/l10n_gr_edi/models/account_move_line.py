@@ -54,6 +54,13 @@ class AccountMoveLine(models.Model):
         store=True,
         readonly=False,
     )
+    l10n_gr_edi_cpv_code = fields.Char(
+        string='CPV Code',
+        help='Common Procurement Vocabulary (CPV) code for public sector procurement in Greece.',
+        store=True,
+        related='product_id.l10n_gr_edi_cpv_code',
+        readonly=False,
+    )
 
     def _auto_init(self):
         """

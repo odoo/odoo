@@ -86,6 +86,25 @@ class AccountMove(models.Model):
         compute='_compute_from_l10n_gr_edi_document_ids',
         store=True,
     )
+    l10n_gr_edi_budget_type = fields.Selection([
+        ('1', '1 - Ordinary Budget'),
+        ('2', '2 - PDE (Public Investment Budget)'),
+        ('3', '3 - Other Budget')
+        ], string="Budget Type"
+    )
+    l10n_gr_edi_project_reference = fields.Char(
+        string='Project reference number',
+        help='ADA or Enaritmos number',
+    )
+    l10n_gr_edi_contract_reference = fields.Char(
+        string='Contract ADAM',
+        help='Internet contract posting number(ADAM) of the Central Electronic Register of Public Procurement (KIMDIS)',
+        default='0',
+    )
+    # l10n_gr_edi_is_prepayment_order = fields.Boolean(
+    #     string="Prepayment Order",
+    #     help="Indicates that this partner is a Prepayment Order Accountant Type"
+    # )
 
     def _auto_init(self):
         """
