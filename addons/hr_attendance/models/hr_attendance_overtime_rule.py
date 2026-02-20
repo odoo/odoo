@@ -696,7 +696,7 @@ class HrAttendanceOvertimeRule(models.Model):
 
         overtimes, undertimes = self._get_overtime_undertime_intervals_by_employee_by_attendance(min_check_in, max_check_out, attendances, schedules_intervals_by_employee)
         for employee, intervals_by_attendance in overtimes.items():
-            tz = timezone(employee._get_tz())
+            tz = timezone(employee.sudo()._get_tz())
             for attendance, intervals in intervals_by_attendance.items():
                 duration_by_day_by_rules = defaultdict(lambda: defaultdict(float))
                 record_overlap_intervals = _record_overlap_intervals(intervals)
@@ -706,7 +706,7 @@ class HrAttendanceOvertimeRule(models.Model):
                 _add_overtime_val(attendance, duration_by_day_by_rules)
 
         for employee, intervals_by_attendance in undertimes.items():
-            tz = timezone(employee._get_tz())
+            tz = timezone(employee.sudo()._get_tz())
             for attendance, intervals in intervals_by_attendance.items():
                 date = attendance.check_in.astimezone(tz).date()
                 duration_by_day_by_rules = defaultdict(lambda: defaultdict(float))
