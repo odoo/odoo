@@ -4,22 +4,22 @@
         <template id="pos_loyalty.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
             <div name="before-footer" position="before">
                 <table t-if="extra_data.get('loyalties')" class="w-100 mt-2">
-                    <tbody>
-                        <t t-foreach="extra_data['loyalties']" t-as="loyalty">
-                            <tr>
-                                <td class="text-start pb-1" style="width: 40%;">
-                                    <span t-out="loyalty['name']"/>
-                                </td>
-                                <td class="pb-1 text-end" style="width: 60%;">
-                                    <t t-if="loyalty.get('barcode_base64')">
-                                        <img t-att-src="loyalty['barcode_base64']" class="img-fluid" style="transform: translateX(13%);"/>
-                                    </t>
-                                    <div>
-                                        <t t-out="loyalty['type']"/> <t t-out="loyalty['points']"/>
-                                    </div>
-                                </td>
-                            </tr>
-                        </t>
+                    <tbody t-foreach="extra_data['loyalties']" t-as="loyalty">
+                        <tr>
+                            <td class="text-start pb-1" t-out="loyalty['name'] + ' ' + loyalty['type']"/>
+                            <td class="pb-1 text-end w-50"  t-out="loyalty['points']"/>
+                        </tr>
+                    </tbody>
+                </table>
+                <table t-if="extra_data.get('new_coupons')" class="w-100 mt-2">
+                    <tbody t-foreach="extra_data['new_coupons']" t-as="coupon">
+                        <tr>
+                            <td class="text-start pb-1" t-out="coupon['name']"/>
+                            <td class="pb-1 text-end">
+                                <div><img t-att-src="coupon['barcode_base64']" style="width:250px;"/></div>
+                                <div class="text-end" t-out="coupon['code']"/>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

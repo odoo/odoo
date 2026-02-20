@@ -6,21 +6,21 @@
                 <tbody name="company_info">
                     <tr>
                         <td class="text-start" t-out="company['name']" />
-                        <td class="text-end">
+                        <td t-if="config.get('phone')" class="text-end">
                             Tel. <t t-out="config['phone']" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-start" t-out="config['receipt_address']" />
+                        <td t-if="config.get('address')" class="text-start" t-out="config['receipt_address']" />
                     </tr>
                     <tr>
-                        <td class="text-start" t-out="config['email']">
+                        <td t-if="config.get('email')" class="text-start" t-out="config['email']">
                         </td>
-                        <td class="text-end" t-out="config['website']" />
+                        <td t-if="config.get('website')" class="text-end" t-out="config['website']" />
                     </tr>
                     <tr>
                         <td class="text-start" t-out="company['name']" />
-                        <td class="text-end">
+                        <td t-if="company.get('phone')" class="text-end">
                             Tel. <t t-out="company['phone']" />
                         </td>
                     </tr>

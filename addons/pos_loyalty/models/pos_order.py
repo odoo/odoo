@@ -176,7 +176,7 @@ class PosOrder(models.Model):
                 'program_name': coupon.program_id.name,
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
-                'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', coupon.code)).decode('utf-8'),
+                'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', coupon.code, quiet=False)).decode('utf-8'),
             } for coupon in new_coupons if (
                 coupon.program_id.applies_on == 'future'
                 # Don't send the coupon code for the gift card and ewallet programs.

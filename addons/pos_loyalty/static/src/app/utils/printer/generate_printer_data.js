@@ -11,29 +11,25 @@ patch(GeneratePrinterData.prototype, {
         const points = this.order.getLoyaltyPoints();
         data.extra_data.loyalties = [];
 
-        for (const coupon of points) {
-            data.extra_data.loyalties.push({
-                name: coupon.program.name,
-                type: coupon.points.won >= 0 ? _t("Won:") : _t("Spent:"),
-                points: coupon.points.won || coupon.points.spent,
-            });
-            data.extra_data.loyalties.push({
-                name: coupon.program.name,
-                type: _t("Balance:"),
-                points: coupon.points.balance,
-            });
-        }
+        const capitalizeFirst = (s) => s && s[0].toUpperCase() + s.slice(1);
 
-        if (this.order.new_coupon_info) {
-            for (const coupon of this.order.new_coupon_info) {
-                data.extra_data.loyalties.push({
-                    name: coupon.program_name,
-                    type: "",
-                    points: coupon.code,
-                    barcode_base64: coupon.barcode_base64,
-                });
+        for (const coupon of points) {
+            for (const key of ["won", "spent", "balance"]) {
+                if (coupon.points[key]) {
+                    data.extra_data.loyalties.push({
+                        name: coupon.program.portal_point_name,
+                        type: _t(capitalizeFirst(key) + ":"),
+                        points: coupon.points[key],
+                    });
+                }
             }
         }
+
+        data.extra_data.new_coupons = (this.order.new_coupon_info || []).map((coupon) => ({
+            name: coupon.program_name,
+            code: coupon.code,
+            barcode_base64: coupon.barcode_base64,
+        }));
 
         return data;
     },
