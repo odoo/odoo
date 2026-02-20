@@ -58,7 +58,12 @@ registry.category("web_tour.tours").add("EventAvailabilityInPos", {
 
             // --------------------------------------------------------------------
 
-            // Check event seats unlimited, basic ticket unlimited, vip ticket max 1
+            // Check event seats unlimited, basic ticket unlimited (max 3 per selection), vip ticket max 1
+            // - Taking 4 basic tickets should show error (limit max per order = 3)
+            ProductScreen.clickDisplayedProduct("Event Unlimited"),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 4),
+            Dialog.confirm(),
+            Dialog.confirm(),
             // - Taking 2 vip tickets should show error
             ProductScreen.clickDisplayedProduct("Event Unlimited"),
             EventTourUtils.increaseQuantityOfTicketBy("Ticket VIP", 2),

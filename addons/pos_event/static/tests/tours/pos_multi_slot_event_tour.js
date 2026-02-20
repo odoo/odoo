@@ -86,6 +86,13 @@ registry.category("web_tour.tours").add("MultiSlotEventAvailabilityInPos", {
 
             // Check slots seats unlimited, basic ticket unlimited, vip ticket max 1
             // Slot from 8-9AM
+            // - Taking 4 basic tickets should show error (limit max per order = 3)
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 4),
+            Dialog.confirm(),
+            Dialog.confirm(),
             // - Taking 2 vip tickets should show error
             ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
             SlotSelectionScreen.clickDisplayedSlot("08:00"),

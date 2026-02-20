@@ -116,19 +116,35 @@ patch(ProductScreen.prototype, {
                 const slotId = ticketsData[0];
                 const ticketId = ticketsData[1];
                 const currentCount = currentOrderRegCounts.perSlotTicket[ticketId]?.[slotId] ?? 0;
+                // Maximum number of ticket the user can select in the selection box.
+                // NB: This number doesn't refer to a global limit for the order.
+                const selectionLimitMax =
+                    tickets.find((t) => t.id === ticketId)?.limit_max_per_order ?? 0;
+
                 if (!acc[ticketId]) {
                     acc[ticketId] = {};
                 }
                 if (!acc[ticketId][slotId]) {
                     acc[ticketId][slotId] = {};
                 }
+                let slotTicketAvailability;
                 if (availability === null) {
-                    acc[ticketId][slotId] = "unlimited";
+                    slotTicketAvailability = "unlimited";
                 } else if (typeof availability === "number") {
-                    acc[ticketId][slotId] = availability - currentCount;
+                    slotTicketAvailability = availability - currentCount;
                 } else {
-                    acc[ticketId][slotId] = 0;
+                    slotTicketAvailability = 0;
                 }
+                if (selectionLimitMax > 0) {
+                    slotTicketAvailability =
+                        slotTicketAvailability === "unlimited"
+                            ? selectionLimitMax
+                            : Math.min(selectionLimitMax, slotTicketAvailability);
+                }
+                if (slotTicketAvailability !== "unlimited") {
+                    slotTicketAvailability = Math.max(0, slotTicketAvailability);
+                }
+                acc[ticketId][slotId] = slotTicketAvailability;
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some((av) =>
@@ -202,14 +218,29 @@ patch(ProductScreen.prototype, {
             slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
-                const currentOrderTicketRegCount = currentOrderRegCounts.perTicket[ticket.id] ?? 0;
+                const currentTicketCount = currentOrderRegCounts.perTicket[ticket.id] ?? 0;
+                // Maximum number of ticket the user can select in the selection box.
+                // NB: This number doesn't refer to a global limit for the order.
+                const selectionLimitMax = ticket.limit_max_per_order ?? 0;
+
+                let availability;
                 if (ticket.seats_max === 0) {
                     // Ticket = unlimited seats
-                    acc[ticket.id] = "unlimited";
+                    availability = "unlimited";
                 } else {
                     // Ticket = limited seats
-                    acc[ticket.id] = ticket.seats_available - currentOrderTicketRegCount;
+                    availability = ticket.seats_available - currentTicketCount;
                 }
+                if (selectionLimitMax > 0) {
+                    availability =
+                        availability === "unlimited"
+                            ? selectionLimitMax
+                            : Math.min(selectionLimitMax, availability);
+                }
+                if (availability !== "unlimited") {
+                    availability = Math.max(0, availability);
+                }
+                acc[ticket.id] = availability;
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some(
