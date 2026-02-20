@@ -532,7 +532,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_early_pay_discount_with_0_tax')
 
-    def test_global_discount_exported_as_allowance_charge_sale_order(self):
+    def test_invoice_with_global_discount_line_sale_order(self):
         self.ensure_installed('sale')
 
         tax_21 = self.percent_tax(21.0)
