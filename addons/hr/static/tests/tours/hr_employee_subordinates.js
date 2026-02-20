@@ -14,3 +14,23 @@ registry.category("web_tour.tours").add("indirect_subordinates_tour", {
         },
     ],
 });
+registry.category("web_tour.tours").add("employee_view_access_multicompany", {
+    steps: () => [
+        {
+            content: "Employee list view",
+            trigger: ".o_switch_view.o_list",
+            run: "click",
+        },
+        {
+            content: "Click on the employee C",
+            trigger: 'table.o_list_table tbody td:contains("Employee C")',
+            run: "click",
+        },
+        {
+            content: "Click the number next to employee C",
+            trigger: "div[name='child_ids'] .o_org_chart_entry button > .badge:contains('1')",
+            run: "click",
+        },
+    ],
+});
+
