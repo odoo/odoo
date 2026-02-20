@@ -165,8 +165,7 @@ class ProjectProject(models.Model):
                         l.parent_state != 'cancel'
                         and l.analytic_distribution
                         and any(
-                            key == str(self.account_id.id)
-                            or key.startswith(str(self.account_id.id) + ",")
+                            str(self.account_id.id) in key.split(',')
                             for key in l.analytic_distribution
                         )
                     )
