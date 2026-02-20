@@ -54,6 +54,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     json.loads(content),
                     {
                         "data": {
+<<<<<<< a2b3a10255dba290ea462b9193ae11c54d8dd5e0
                             "attachment_id": attachment.id,
                             "store_data": {
                                 "ir.attachment": [
@@ -78,6 +79,48 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                     }
                                 ],
                             }
+||||||| 7ed14164e2099bc46258ed30e66fc765604337f3
+                            "ir.attachment": [
+                                {
+                                    "access_token": False,
+                                    "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                                    "create_date": odoo.fields.Datetime.to_string(
+                                        attachment.create_date
+                                    ),
+                                    "file_size": 0,
+                                    "id": attachment.id,
+                                    "mimetype": "text/x-python",
+                                    "name": "__init__.py",
+                                    "raw_access_token": attachment._get_raw_access_token(),
+                                    "res_name": False,
+                                    "thread": False,
+                                    "voice": False,
+                                    "type": "cloud_storage",
+                                    "url": "[url]",
+                                }
+                            ],
+=======
+                            "ir.attachment": [
+                                {
+                                    "access_token": False,
+                                    "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                                    "create_date": odoo.fields.Datetime.to_string(
+                                        attachment.create_date
+                                    ),
+                                    "file_size": 0,
+                                    "id": attachment.id,
+                                    "mimetype": "text/x-python",
+                                    "name": "__init__.py",
+                                    "raw_access_token": attachment._get_raw_access_token(),
+                                    "res_name": False,
+                                    "res_model": attachment.res_model,
+                                    "thread": False,
+                                    "voice": False,
+                                    "type": "cloud_storage",
+                                    "url": "[url]",
+                                }
+                            ],
+>>>>>>> f6546d381dae111d30d311ffb19c078f39886d10
                         },
                         "upload_info": {
                             "headers": {"x-ms-blob-type": "BlockBlob"},
