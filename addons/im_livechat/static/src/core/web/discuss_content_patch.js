@@ -10,11 +10,11 @@ patch(DiscussContent.prototype, {
             super.actionPanelAutoOpenFn();
         }
     },
-    get threadDescriptionAttClass() {
+    get threadTopicAttClass() {
         return {
-            ...super.threadDescriptionAttClass,
+            ...super.threadTopicAttClass,
             "text-muted":
-                this.thread.channel?.livechat_status === "need_help" && this.thread.description,
+                this.thread.channel?.livechat_status === "need_help" && this.thread.topic,
         };
     },
 });

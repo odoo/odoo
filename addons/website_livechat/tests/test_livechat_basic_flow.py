@@ -172,7 +172,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "country_id": False,
                         "create_uid": self.user_public.id,
                         "default_display_mode": False,
-                        "description": False,
                         "discuss_category_id": False,
                         "fetchChannelInfoState": "fetched",
                         "id": channel.id,
@@ -193,6 +192,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "message_needaction_counter_bus_id": 0,
                         "name": f"Visitor #{self.visitor.id} El Deboulonnator",
                         "requested_by_operator": False,
+                        "topic": False,
                         "uuid": channel.uuid,
                     }
                 ),

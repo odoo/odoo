@@ -167,24 +167,24 @@ test("can change the thread description of #general", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
-        description: "General announcements...",
+        topic: "General announcements...",
         create_uid: serverState.userId,
     });
 
-    onRpc("discuss.channel", "channel_change_description", ({ route }) => expect.step(route));
+    onRpc("discuss.channel", "change_topic", ({ route }) => expect.step(route));
 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-DiscussContent-threadDescription:value(General announcements...)");
+    await contains("input.o-mail-DiscussContent-threadTopic:value(General announcements...)");
     await insertText(
-        "input.o-mail-DiscussContent-threadDescription:enabled",
+        "input.o-mail-DiscussContent-threadTopic:enabled",
         "I want a burger today!",
         { replace: true }
     );
     triggerHotkey("Enter");
-    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
-    await contains("input.o-mail-DiscussContent-threadDescription:value(I want a burger today!)");
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/change_topic"]);
+    await contains("input.o-mail-DiscussContent-threadTopic:value(I want a burger today!)");
 });
 
 test("Message following a notification should not be squashed", async () => {
@@ -1898,11 +1898,11 @@ test("Do not trigger channel description server update when channel has no descr
         name: "General",
     });
 
-    onRpc("discuss.channel", "channel_change_description", ({ method }) => expect.step(method));
+    onRpc("discuss.channel", "change_topic", ({ method }) => expect.step(method));
 
     await start();
     await openDiscuss(channelId);
-    await insertText("input.o-mail-DiscussContent-threadDescription", "");
+    await insertText("input.o-mail-DiscussContent-threadTopic", "");
     triggerHotkey("Enter");
     await expect.waitForSteps([]);
 });

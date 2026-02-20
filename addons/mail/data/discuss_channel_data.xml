@@ -4,12 +4,12 @@
 
         <record model="discuss.channel" id="mail.channel_all_employees">
             <field name="name">general</field>
-            <field name="description">General announcements for all employees.</field>
+            <field name="topic">General announcements for all employees.</field>
         </record>
 
         <record model="discuss.channel" id="mail.channel_admin">
             <field name="name">Administrators</field>
-            <field name="description">General channel for administrators.</field>
+            <field name="topic">General channel for administrators.</field>
             <field name="group_public_id" ref="base.group_system"/>
         </record>
 

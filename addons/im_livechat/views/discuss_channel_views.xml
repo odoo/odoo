@@ -2,6 +2,18 @@
 <odoo>
     <data>
 
+        <record id="discuss_channel_view_form_im_livechat_inherited" model="ir.ui.view">
+            <field name="name">discuss.channel.form.im_livechat_inherited</field>
+            <field name="model">discuss.channel</field>
+            <field name="inherit_id" ref="mail.discuss_channel_view_form"/>
+            <field name="mode">extension</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='topic']" position='attributes'>
+                    <attribute name="invisible" add="channel_type != 'livechat'" separator=" and "/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="discuss_channel_view_search" model="ir.ui.view">
             <field name="name">discuss.channel.search</field>
             <field name="model">discuss.channel</field>
@@ -11,7 +23,7 @@
                     <field name="livechat_agent_requesting_help_history"/>
                     <field name="livechat_agent_providing_help_history"/>
                     <field name="country_id" string="Country"/>
-                    <field name="description"/>
+                    <field name="topic"/>
                     <field name="livechat_customer_partner_ids" string="Customer"/>
                     <filter name="filter_my_sessions" domain="[('livechat_agent_partner_ids.user_ids', 'in', uid)]" string="My Sessions"/>
                     <separator/>
@@ -58,7 +70,7 @@
                     <field name="livechat_agent_requesting_help_history" widget="many2one_avatar" optional="hide"/>
                     <field name="livechat_agent_providing_help_history" widget="many2one_avatar" optional="hide"/>
                     <field name="livechat_bot_history_ids" string="Chatbot" widget="many2many_tags_avatar" optional="hide"/>
-                    <field name="description" optional="hide"/>
+                    <field name="topic" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="livechat_lang_id" optional="show"/>
                     <field name="livechat_expertise_ids" string="Expertise" widget="many2many_tags" optional="show"/>

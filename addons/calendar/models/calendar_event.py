@@ -1085,7 +1085,7 @@ class CalendarEvent(models.Model):
                 self.videocall_channel_id = event_with_channel.videocall_channel_id
                 return
         self.videocall_channel_id = self._create_videocall_channel_id(self.name, self.partner_ids.ids)
-        self.videocall_channel_id.channel_change_description(self.recurrence_id.name if self.recurrency else self.display_time)
+        self.videocall_channel_id.change_topic(self.recurrence_id.name if self.recurrency else self.display_time)
 
     def _create_videocall_channel_id(self, name, partner_ids):
         videocall_channel = self.env['discuss.channel']._create_group(partner_ids, default_display_mode='video_full_screen', name=name)

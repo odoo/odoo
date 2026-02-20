@@ -52,7 +52,7 @@ test("Thread rename", async () => {
 });
 
 test.tags("focus required");
-test("Thread description update", async () => {
+test("Thread topic update", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         create_uid: serverState.userId,
@@ -63,7 +63,7 @@ test("Thread description update", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await insertText(
-        `${env1.selector} .o-mail-DiscussContent-threadDescription`,
+        `${env1.selector} .o-mail-DiscussContent-threadTopic`,
         "The very best channel",
         {
             replace: true,
@@ -71,7 +71,7 @@ test("Thread description update", async () => {
     );
     triggerHotkey("Enter");
     await contains(
-        `${env2.selector} .o-mail-DiscussContent-threadDescription[title='The very best channel']`
+        `${env2.selector} .o-mail-DiscussContent-threadTopic[title='The very best channel']`
     );
 });
 
