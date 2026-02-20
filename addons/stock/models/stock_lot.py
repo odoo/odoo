@@ -243,7 +243,7 @@ class StockLot(models.Model):
         domain = [
             ('lot_id', '!=', False),
             '|', ('location_id.usage', '=', 'internal'),
-            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', '!=', False)
+            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', 'in', self.env.companies.ids)
         ]
         lots_w_qty = self.env['stock.quant']._read_group(domain=domain, groupby=['lot_id'], aggregates=['quantity:sum'], having=[('quantity:sum', '!=', 0)])
         ids = []
