@@ -165,13 +165,13 @@ export class Operation {
      * @returns {Function}
      */
     addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
-        const loadingScreenEl = document.createElement("div");
-        loadingScreenEl.classList.add(
+        this.loadingScreenEl = document.createElement("div");
+        this.loadingScreenEl.classList.add(
             ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
         );
         const spinnerEl = document.createElement("img");
         spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
-        loadingScreenEl.appendChild(spinnerEl);
+        this.loadingScreenEl.appendChild(spinnerEl);
 
         let removeClickListener = () => {};
         if (shouldInterceptClick) {
@@ -192,24 +192,56 @@ export class Operation {
             this.editableDocument.addEventListener("click", onClick);
             removeClickListener = () => this.editableDocument.removeEventListener("click", onClick);
         }
+        if (this.isUIBlocked) {
+            this.loadingScreenEl.classList.add("d-none");
+        }
 
-        this.editableDocument.body.appendChild(loadingScreenEl);
+        this.editableDocument.body.appendChild(this.loadingScreenEl);
 
         // If specified, add a loading effect on that element after a delay.
         let loadingTimeout;
         if (withLoadingEffect) {
             loadingTimeout = setTimeout(
-                () => loadingScreenEl.classList.add("o_we_ui_loading"),
+                () => this.loadingScreenEl?.classList.add("o_we_ui_loading"),
                 loadingEffectDelay
             );
         }
-
         return () => {
             if (loadingTimeout) {
                 clearTimeout(loadingTimeout);
             }
             removeClickListener();
-            loadingScreenEl.remove();
+            this.loadingScreenEl.remove();
+            this.loadingScreenEl = null;
         };
+    }
+
+    /**
+     * Handles the "BLOCK" UI event dispatched by the ui service.
+     *
+     * @param {CustomEvent} ev
+     * @param {Object} ev.detail
+     * @param {Number} [ev.detail.delay] delay in ms before the UI is considered
+     *   blocked
+     */
+    onBlockUI(ev) {
+        this.blockUITimeout = setTimeout(() => {
+            this.isUIBlocked = true;
+            if (this.loadingScreenEl) {
+                this.loadingScreenEl.classList.add("d-none");
+            }
+        }, ev.detail?.delay);
+    }
+
+    /**
+     * Handles the "UNBLOCK" UI event dispatched by the ui service. Cancels any
+     * pending block timeout and marks the UI as no longer blocked
+     */
+    onUnblockUI() {
+        clearTimeout(this.blockUITimeout);
+        this.isUIBlocked = false;
+        if (this.loadingScreenEl) {
+            this.loadingScreenEl.classList.remove("d-none");
+        }
     }
 }

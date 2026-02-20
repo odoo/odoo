@@ -6,10 +6,10 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Operation } from "@html_builder/core/operation";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { animationFrame, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -139,7 +139,6 @@ describe("Block editable", () => {
         await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`, {
             loadIframeBundles: true,
         });
-
         await contains(":iframe .test-options-target").click();
         await contains("[data-action-id='customAction']").click();
         expect(":iframe .o_loading_screen:not(.o_we_ui_loading)").toHaveCount(1);
@@ -151,6 +150,49 @@ describe("Block editable", () => {
         await tick();
         expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
         expect(":iframe .test-options-target").toHaveClass("custom-action");
+    });
+
+    test("Loading screen hides when ui is blocked", async () => {
+        const customActionDef = Promise.withResolvers();
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                load() {
+                    return customActionDef.promise;
+                }
+                apply({ editingElement }) {
+                    editingElement.classList.add("custom-action");
+                }
+            },
+        });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderButton action="'customAction'"/>`,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`, {
+            loadIframeBundles: true,
+        });
+        await contains(":iframe .test-options-target").click();
+        await contains("[data-action-id='customAction']").click();
+        expect(":iframe .o_loading_screen:not(.o_we_ui_loading)").toHaveCount(1);
+        await advanceTime(50); // cancelTime=50 trigger by the preview
+        await advanceTime(500); // setTimeout in addLoadingElement
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+        const ui = getService("ui");
+        ui.block();
+
+        await animationFrame();
+        expect(".o_blockUI").toHaveCount(1);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveClass("d-none");
+
+        ui.unblock();
+        await animationFrame();
+        expect(".o_blockUI").toHaveCount(0);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").not.toHaveClass("d-none");
+
+        customActionDef.resolve();
+        await tick();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
     });
 });
 

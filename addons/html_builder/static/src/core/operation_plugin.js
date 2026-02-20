@@ -25,6 +25,20 @@ export class OperationPlugin extends Plugin {
         // this may lose the user input while the apply was running
         this.addDomListener(this.editable, "keydown", () => this.next());
         this.addDomListener(this.editable, "beforeinput", () => this.next());
+
+        // We want to hide the loading screen if the ui gets blocked, to avoid
+        // multiple loading screens
+        const ui = this.services.ui;
+        const onBlockUI = this.operation.onBlockUI.bind(this.operation);
+        const onUnblockUI = this.operation.onUnblockUI.bind(this.operation);
+
+        ui.bus.addEventListener("BLOCK", onBlockUI);
+        ui.bus.addEventListener("UNBLOCK", onUnblockUI);
+
+        this._cleanups.push(() => {
+            ui.bus.removeEventListener("BLOCK", onBlockUI);
+            ui.bus.removeEventListener("UNBLOCK", onUnblockUI);
+        });
     }
 
     /**
