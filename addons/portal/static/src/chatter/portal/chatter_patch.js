@@ -32,4 +32,11 @@ patch(Chatter.prototype, {
             () => [this.topRef.el]
         );
     },
+
+    get extraMessageFetchRouteParams() {
+        return {
+            ...super.extraMessageFetchRouteParams,
+            ...(this.env.inFrontendPortalChatter ? { only_portal: true } : {}),
+        };
+    },
 });

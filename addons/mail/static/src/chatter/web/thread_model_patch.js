@@ -9,7 +9,7 @@ const threadPatch = {
     async fetchThreadData(requestList) {
         this.isLoadingAttachments =
             this.isLoadingAttachments || requestList.includes("attachments");
-        await super.fetchThreadData(requestList);
+        await super.fetchThreadData(...arguments);
         if (!this.message_main_attachment_id && this.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(0);
         }

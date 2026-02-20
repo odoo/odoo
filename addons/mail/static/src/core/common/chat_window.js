@@ -42,7 +42,7 @@ export class ChatWindow extends Component {
         super.setup();
         useSubEnv({ inChatWindow: true });
         this.store = useService("mail.store");
-        this.messageHighlight = useMessageScrolling();
+        this.messageHighlight = useMessageScrolling(() => this.channel?.thread);
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,

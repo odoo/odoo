@@ -24,7 +24,7 @@ export class Discuss extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.messageHighlight = useMessageScrolling();
+        this.messageHighlight = useMessageScrolling(() => this.thread);
         this.root = useRef("root");
         this.orm = useService("orm");
         this.effect = useService("effect");
