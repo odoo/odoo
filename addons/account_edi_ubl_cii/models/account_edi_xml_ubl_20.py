@@ -47,11 +47,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # 3. Run constraints
         vals['document_node'] = document_node
+        nsmap = document_node['_nsmap'] = self._get_document_nsmap(vals)
         constraints = self._flatten_multilevel_constraints(self._export_invoice_constraints(invoice, vals))
         errors = [constraint for constraint in constraints.values() if constraint]
-
         template = self._get_document_template(vals)
-        nsmap = self._get_document_nsmap(vals)
 
         # 4. Render the XML
         xml_content = dict_to_xml(document_node, nsmap=nsmap, template=template)
