@@ -81,3 +81,38 @@ class TestResourceCalendarLeaves(TestHrHolidaysCommon):
         (calendar_a | calendar_b)._compute_associated_leaves_count()
         self.assertEqual(calendar_a.associated_leaves_count, 2, "Calendar A should still have 2 specific + 1 global leave.")
         self.assertEqual(calendar_b.associated_leaves_count, 1, "Calendar B should have 0 specific + 1 global leave.")
+
+    def test_duration_visibility(self):
+        # Create a working schedule with no work on friday afternoon
+        self.calendar_34h = self.env['resource.calendar'].create({
+            'name': 'Standard 34 hours/week',
+            'company_id': False,
+            'hours_per_day': 6.833,
+            'attendance_ids': [(5, 0, 0),
+                    (0, 0, {'dayofweek': '0', 'duration_hours': 7.6, 'hour_from': 0, 'hour_to': 0}),
+                    (0, 0, {'dayofweek': '1', 'duration_hours': 7.6, 'hour_from': 0, 'hour_to': 0}),
+                    (0, 0, {'dayofweek': '2', 'duration_hours': 7.6, 'hour_from': 0, 'hour_to': 0}),
+                    (0, 0, {'dayofweek': '3', 'duration_hours': 7.6, 'hour_from': 0, 'hour_to': 0}),
+                    (0, 0, {'dayofweek': '4', 'duration_hours': 3.8, 'hour_from': 0, 'hour_to': 0}),
+
+                    ],
+        })
+        test_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test type',
+            'request_unit': 'half_day',
+            'unit_of_measure': 'day',
+            'leave_validation_type': 'no_validation',
+            'time_type': 'leave',
+            'requires_allocation': False,
+        })
+
+        self.employee_emp.resource_calendar_id = self.calendar_34h.id
+        test_leave = self.env['hr.leave'].create({
+            'name': 'Test Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': test_leave_type.id,
+            'request_date_from': '2026-02-09',  # Monday
+            'request_date_to': '2026-02-13',
+        })
+        self.assertEqual(test_leave.number_of_days, 4.5)
+        self.assertEqual(test_leave.duration_display, '4.5 days')
