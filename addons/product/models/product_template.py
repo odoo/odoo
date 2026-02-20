@@ -218,6 +218,30 @@ class ProductTemplate(models.Model):
     # UI
     show_sales_price_page = fields.Boolean(compute='_compute_show_sales_price_page')
 
+    base_unit_count = fields.Float(
+        string="Base Unit Count",
+        help="Display base unit price. Set to 0 to hide it for this product.",
+        compute='_compute_base_unit_count',
+        inverse='_set_base_unit_count',
+        store=True,
+        required=True,
+        default=1,
+    )
+    base_unit_id = fields.Many2one(
+        string="Custom Unit of Measure",
+        help="Define a custom unit to display in the price per unit of measure field.",
+        comodel_name='product.base.unit',
+        compute='_compute_base_unit_id',
+        inverse='_set_base_unit_id',
+        store=True,
+    )
+    base_unit_price = fields.Monetary(string="Price Per Unit", compute="_compute_base_unit_price")
+    base_unit_name = fields.Char(
+        compute='_compute_base_unit_name',
+        help="Displays the custom unit for the products if defined or the selected unit of measure"
+            " otherwise.",
+    )
+
     @api.depends('type')
     def _compute_service_tracking(self):
         self.filtered(lambda product: product.type != 'service').service_tracking = 'no'
@@ -593,6 +617,42 @@ class ProductTemplate(models.Model):
 
     def _inverse_import_attribute_values(self):
         raise ValueError('This field can only be used to import products.')
+
+    @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
+    def _compute_base_unit_count(self):
+        self.base_unit_count = 0
+        for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
+            template.base_unit_count = template.product_variant_ids.base_unit_count
+
+    def _set_base_unit_count(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.base_unit_count = template.base_unit_count
+
+    @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
+    def _compute_base_unit_id(self):
+        self.base_unit_id = self.env['product.base.unit']
+        for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
+            template.base_unit_id = template.product_variant_ids.base_unit_id
+
+    def _set_base_unit_id(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.base_unit_id = template.base_unit_id
+
+    def _get_base_unit_price(self, price):
+        self.ensure_one()
+        return self.base_unit_count and price / self.base_unit_count
+
+    @api.depends('list_price', 'base_unit_count')
+    def _compute_base_unit_price(self):
+        for template in self:
+            template.base_unit_price = template._get_base_unit_price(template.list_price)
+
+    @api.depends('uom_name', 'base_unit_id.name')
+    def _compute_base_unit_name(self):
+        for template in self:
+            template.base_unit_name = template.base_unit_id.name or template.uom_name
 
     @api.model
     def load(self, fields, data):
@@ -1005,7 +1065,8 @@ class ProductTemplate(models.Model):
         return {
             'product_tmpl_id': self.id,
             'product_template_attribute_value_ids': [(6, 0, combination.ids)],
-            'active': self.active
+            'active': self.active,
+            'base_unit_count': self.base_unit_count,
         }
 
     def has_dynamic_attributes(self):

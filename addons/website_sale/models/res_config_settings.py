@@ -7,12 +7,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     # Groups
-    group_show_uom_price = fields.Boolean(
-        string="Base Unit Price",
-        default=False,
-        implied_group="website_sale.group_show_uom_price",
-        group='base.group_user',
-    )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",
