@@ -80,7 +80,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
         },
         {
             content: "The italicized text is in the full composer",
-            trigger: ".o_mail_composer_message em:contains(Hello)",
+            trigger:
+                ".o_mail_composer_message div.o-paragraph[style='font-style: italic;']:contains(Hello)",
         },
         {
             content: "Close full composer",
@@ -94,7 +95,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
         },
         {
             content: "The italicized text is in the composer",
-            trigger: ".o-mail-Composer-html.odoo-editor-editable em:contains(Hello)",
+            trigger:
+                ".o-mail-Composer-html.odoo-editor-editable div.o-paragraph[style='font-style: italic;']:contains(Hello)",
         },
     ],
 });

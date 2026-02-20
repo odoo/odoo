@@ -264,7 +264,7 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
                     "</tr></tbody></table>" +
-                    "<p><strong>abc</strong></p>" +
+                    '<p style="font-weight: bolder;">abc</p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
@@ -298,7 +298,7 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
                     "</tr></tbody></table>" +
-                    "<p><strong>abc</strong></p>" +
+                    '<p style="font-weight: bolder;">abc</p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
@@ -454,9 +454,7 @@ describe("select a full table on cross over", () => {
                             </td>
                         </tr></tbody>
                     </table>
-                    <p>
-                        <font style="color: aquamarine;">abc</font>
-                    </p>
+                    <p style="color: aquamarine;">abc</p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -508,7 +506,7 @@ describe("select a full table on cross over", () => {
                             </td>
                         </tr></tbody>
                     </table>
-                    <p><font style="color: aquamarine;">abc</font></p>
+                    <p style="color: aquamarine;">abc</p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">

@@ -113,12 +113,24 @@ export const formatsSpecs = {
             )?.style["font-size"];
             return props?.size ? fontSize === props.size : fontSize;
         },
-        hasStyle: (node) => node.style && node.style["font-size"],
+        hasStyle: (node) =>
+            node.style?.["font-size"] || node.classList?.contains("o_default_font_size"),
         addStyle: (node, props) => {
             node.style["font-size"] = props.size;
             removeClass(node, ...FONT_SIZE_CLASSES);
         },
-        removeStyle: (node) => removeStyle(node, "font-size"),
+        removeStyle: (node) => {
+            removeStyle(node, "font-size");
+            removeClass(node, "o_default_font_size");
+        },
+        addNeutralStyle: function (node) {
+            const block = closestBlock(node);
+            if (["H1", "H2", "H3", "H4", "H5", "H6"].includes(block.nodeName)) {
+                node.classList.add(block.nodeName.toLowerCase());
+            } else {
+                node.classList.add("o_default_font_size");
+            }
+        },
     },
     setFontSizeClassName: {
         isFormatted: (node, props) =>
@@ -149,7 +161,7 @@ export const formatsSpecs = {
         },
         removeStyle: (node) => {
             removeStyle(node, "font-size");
-            removeClass(node, ...FONT_SIZE_CLASSES);
+            removeClass(node, ...FONT_SIZE_CLASSES, "o_default_font_size");
             // Typography classes should be preserved on block elements since
             // they act as semantic equivalents of <h1>, <h2>, etc., not just
             // removable styles.

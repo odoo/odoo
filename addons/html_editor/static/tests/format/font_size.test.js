@@ -33,7 +33,7 @@ test("should change the font size of a whole heading after a triple click", asyn
             await tripleClick(editor.editable.querySelector("h1"));
             setFontSize("36px")(editor);
         },
-        contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
+        contentAfter: '<h1 style="font-size: 36px;">[ab]</h1><p>cd</p>',
     });
 });
 
@@ -128,7 +128,7 @@ test("should add font size in selected table cells", async () => {
             '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p><br></p>]</td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
         stepFunction: setFontSize("48px"),
         contentAfter:
-            '<table><tbody><tr><td><p><span style="font-size: 48px;">[<br></span></p></td><td><p><span style="font-size: 48px;">]<br></span></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
+            '<table><tbody><tr><td><p style="font-size: 48px;">[<br></p></td><td><p style="font-size: 48px;">]<br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
     });
 });
 
@@ -138,7 +138,7 @@ test("should add font size in all table cells", async () => {
             '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p><br></p></td></tr><tr><td class="o_selected_td"><p><br></p></td><td class="o_selected_td"><p><br>]</p></td></tr></tbody></table>',
         stepFunction: setFontSize("36px"),
         contentAfter:
-            '<table><tbody><tr><td><p><span style="font-size: 36px;">[<br></span></p></td><td><p><span style="font-size: 36px;"><br></span></p></td></tr><tr><td><p><span style="font-size: 36px;"><br></span></p></td><td><p><span style="font-size: 36px;">]<br></span></p></td></tr></tbody></table>',
+            '<table><tbody><tr><td><p style="font-size: 36px;">[<br></p></td><td><p style="font-size: 36px;"><br></p></td></tr><tr><td><p style="font-size: 36px;"><br></p></td><td><p style="font-size: 36px;">]<br></p></td></tr></tbody></table>',
     });
 });
 
@@ -148,7 +148,7 @@ test("should add font size in selected table cells with h1 as first child", asyn
             '<table><tbody><tr><td class="o_selected_td"><h1>[<br></h1></td><td class="o_selected_td"><h1><br>]</h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
         stepFunction: setFontSize("18px"),
         contentAfter:
-            '<table><tbody><tr><td><h1><span style="font-size: 18px;">[<br></span></h1></td><td><h1><span style="font-size: 18px;">]<br></span></h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
+            '<table><tbody><tr><td><h1 style="font-size: 18px;">[<br></h1></td><td><h1 style="font-size: 18px;">]<br></h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
     });
 });
 
@@ -210,8 +210,7 @@ test("should update the font size currectly if already has one", async () => {
     await testEditor({
         contentBefore: '<h2 style="font-size: 14px;">[abcdefg]</h2>',
         stepFunction: setFontSize("18px"),
-        contentAfter:
-            '<h2 style="font-size: 14px;"><span style="font-size: 18px;">[abcdefg]</span></h2>',
+        contentAfter: '<h2 style="font-size: 18px;">[abcdefg]</h2>',
     });
 });
 
@@ -224,11 +223,11 @@ test("should add style to br except line-break br (2)", async () => {
     );
 });
 
-test("should update the font class if the parent already has one", async () => {
+test("should update the font class if the block already has one", async () => {
     await testEditor({
         contentBefore: '<h2 class="h4-fs">[abcdefg]</h2>',
         stepFunction: setFontSizeClassName("h3-fs"),
-        contentAfter: '<h2 class="h4-fs"><span class="h3-fs">[abcdefg]</span></h2>',
+        contentAfter: '<h2 class="h3-fs">[abcdefg]</h2>',
     });
 });
 

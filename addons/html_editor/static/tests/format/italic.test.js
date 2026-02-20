@@ -33,7 +33,7 @@ test("should make two paragraphs italic", async () => {
     await testEditor({
         contentBefore: "<p>[abc</p><p>def]</p>",
         stepFunction: italic,
-        contentAfter: `<p><em>[abc</em></p><p><em>def]</em></p>`,
+        contentAfter: `<p style="font-style: italic;">[abc</p><p style="font-style: italic;">def]</p>`,
     });
 });
 
@@ -61,7 +61,7 @@ test("should make a whole heading italic after a triple click", async () => {
             await tripleClick(editor.editable.querySelector("h1"));
             italic(editor);
         },
-        contentAfter: `<h1><em>[ab]</em></h1><p>cd</p>`,
+        contentAfter: `<h1 style="font-style: italic;">[ab]</h1><p>cd</p>`,
     });
 });
 
@@ -81,7 +81,7 @@ test("should make a selection starting with italic text fully italic", async () 
     await testEditor({
         contentBefore: `<p><em>[ab</em></p><p>c]d</p>`,
         stepFunction: italic,
-        contentAfter: `<p><em>[ab</em></p><p><em>c]</em>d</p>`,
+        contentAfter: `<p style="font-style: italic;">[ab</p><p><em>c]</em>d</p>`,
     });
 });
 
@@ -89,7 +89,7 @@ test("should make a selection with italic text in the middle fully italic", asyn
     await testEditor({
         contentBefore: `<p>[a<em>b</em></p><p><em>c</em>d]e</p>`,
         stepFunction: italic,
-        contentAfter: `<p><em>[ab</em></p><p><em>cd]</em>e</p>`,
+        contentAfter: `<p style="font-style: italic;">[ab</p><p><em>cd]</em>e</p>`,
     });
 });
 
@@ -97,7 +97,7 @@ test("should make a selection ending with italic text fully italic", async () =>
     await testEditor({
         contentBefore: `<p>[ab</p><p><em>c]d</em></p>`,
         stepFunction: italic,
-        contentAfter: `<p><em>[ab</em></p><p><em>c]d</em></p>`,
+        contentAfter: `<p style="font-style: italic;">[ab</p><p><em>c]d</em></p>`,
     });
 });
 
@@ -109,8 +109,8 @@ test("should make two paragraphs (separated with whitespace) italic", async () =
         `,
         stepFunction: italic,
         contentAfter: `
-            <p><em>[abc</em></p>
-            <p><em>def]</em></p>
+            <p style="font-style: italic;">[abc</p>
+            <p style="font-style: italic;">def]</p>
         `,
     });
 });
@@ -138,8 +138,8 @@ test("should make two paragraphs (separated with whitespace) italic, then not it
         stepFunction: async (editor, { assertContentEquals }) => {
             italic(editor);
             assertContentEquals(`
-            <p><em>[abc</em></p>
-            <p><em>def]</em></p>
+            <p style="font-style: italic;">[abc</p>
+            <p style="font-style: italic;">def]</p>
         `);
             italic(editor);
         },
@@ -172,7 +172,7 @@ test("should not format non-editable text (italic)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: italic,
-        contentAfter: `<p><em>[a</em></p><p contenteditable="false">b</p><p><em>c]</em></p>`,
+        contentAfter: `<p style="font-style: italic;">[a</p><p contenteditable="false">b</p><p style="font-style: italic;">c]</p>`,
     });
 });
 
@@ -216,17 +216,17 @@ test("should make a few characters italic inside table (italic)", async () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="o_selected_td"><p><em>[abc</em></p></td>
+                        <td class="o_selected_td"><p style="font-style: italic;">[abc</p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
                     <tr>
-                        <td class="o_selected_td"><p><em>def</em></p></td>
+                        <td class="o_selected_td"><p style="font-style: italic;">def</p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
                     <tr>
-                        <td class="o_selected_td"><p><em>]<br></em></p></td>
+                        <td class="o_selected_td"><p style="font-style: italic;">]<br></p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>

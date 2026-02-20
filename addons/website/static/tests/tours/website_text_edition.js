@@ -55,16 +55,11 @@ registerWebsitePreviewTour(
             content: "Check that paragraph now uses the main color *class*",
             trigger: ":iframe .s_text_block p",
             run: function (actions) {
-                const fontEl = this.anchor.querySelector("font");
-                if (!fontEl) {
-                    console.error("A background color should have been applied");
-                    return;
-                }
-                if (fontEl.style.backgroundColor) {
+                if (this.anchor.style.backgroundColor) {
                     console.error("The paragraph should not have an inline style background color");
                     return;
                 }
-                const rgbColor = fontEl.style.getPropertyValue("color");
+                const rgbColor = this.anchor.style.getPropertyValue("color");
                 const hexColor = rgbToHex(rgbColor);
                 if (hexColor.toUpperCase() !== WEBSITE_MAIN_COLOR) {
                     console.error("The paragraph should have the right background color class");

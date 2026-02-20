@@ -34,7 +34,7 @@ test("should make two paragraphs underline", async () => {
     await testEditor({
         contentBefore: "<p>[abc</p><p>def]</p>",
         stepFunction: underline,
-        contentAfter: `<p><u>[abc</u></p><p><u>def]</u></p>`,
+        contentAfter: `<p style="text-decoration-line: underline;">[abc</p><p style="text-decoration-line: underline;">def]</p>`,
     });
 });
 
@@ -62,7 +62,7 @@ test("should make a whole heading underline after a triple click", async () => {
             await tripleClick(editor.editable.querySelector("h1"));
             underline(editor);
         },
-        contentAfter: `<h1><u>[ab]</u></h1><p>cd</p>`,
+        contentAfter: `<h1 style="text-decoration-line: underline;">[ab]</h1><p>cd</p>`,
     });
 });
 
@@ -78,7 +78,7 @@ test("should make a selection starting with underline text fully underline", asy
     await testEditor({
         contentBefore: `<p><u>[ab</u></p><p>c]d</p>`,
         stepFunction: underline,
-        contentAfter: `<p><u>[ab</u></p><p><u>c]</u>d</p>`,
+        contentAfter: `<p style="text-decoration-line: underline;">[ab</p><p><u>c]</u>d</p>`,
     });
 });
 
@@ -86,7 +86,7 @@ test("should make a selection with underline text in the middle fully underline"
     await testEditor({
         contentBefore: `<p>[a<u>b</u></p><p><u>c</u>d]e</p>`,
         stepFunction: underline,
-        contentAfter: `<p><u>[ab</u></p><p><u>cd]</u>e</p>`,
+        contentAfter: `<p style="text-decoration-line: underline;">[ab</p><p><u>cd]</u>e</p>`,
     });
 });
 
@@ -95,7 +95,7 @@ test("should make a selection ending with underline text fully underline", async
         // @phoenix content adapted to make it valid html
         contentBefore: `<p>[ab</p><p><u>c]d</u></p>`,
         stepFunction: underline,
-        contentAfter: `<p><u>[ab</u></p><p><u>c]d</u></p>`,
+        contentAfter: `<p style="text-decoration-line: underline;">[ab</p><p><u>c]d</u></p>`,
     });
 });
 
@@ -107,8 +107,8 @@ test("should make two paragraphs (separated with whitespace) underline", async (
         `,
         stepFunction: underline,
         contentAfter: `
-            <p><u>[abc</u></p>
-            <p><u>def]</u></p>
+            <p style="text-decoration-line: underline;">[abc</p>
+            <p style="text-decoration-line: underline;">def]</p>
         `,
     });
 });
@@ -136,8 +136,8 @@ test("should make two paragraphs (separated with whitespace) underline, then not
         stepFunction: async (editor, { assertContentEquals }) => {
             underline(editor);
             assertContentEquals(`
-            <p><u>[abc</u></p>
-            <p><u>def]</u></p>
+            <p style="text-decoration-line: underline;">[abc</p>
+            <p style="text-decoration-line: underline;">def]</p>
         `);
             underline(editor);
         },
@@ -170,7 +170,7 @@ test("should not format non-editable text (underline)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: underline,
-        contentAfter: `<p><u>[a</u></p><p contenteditable="false">b</p><p><u>c]</u></p>`,
+        contentAfter: `<p style="text-decoration-line: underline;">[a</p><p contenteditable="false">b</p><p style="text-decoration-line: underline;">c]</p>`,
     });
 });
 
@@ -202,17 +202,17 @@ test("should make a few characters underline inside table (underline)", async ()
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="o_selected_td"><p><u>[abc</u></p></td>
+                        <td class="o_selected_td"><p style="text-decoration-line: underline;">[abc</p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
                     <tr>
-                        <td class="o_selected_td"><p><u>def</u></p></td>
+                        <td class="o_selected_td"><p style="text-decoration-line: underline;">def</p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
                     <tr>
-                        <td class="o_selected_td"><p><u>]<br></u></p></td>
+                        <td class="o_selected_td"><p style="text-decoration-line: underline;">]<br></p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
