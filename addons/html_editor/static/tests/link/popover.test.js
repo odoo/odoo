@@ -20,6 +20,7 @@ import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
+import { browser } from "@web/core/browser/browser";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -222,6 +223,26 @@ describe("popover should switch UI depending on editing state", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/">linkABCD[]</a></p>'
         );
+    });
+    test("should show relative href in URL input", async () => {
+        await setupEditor('<p>this is a <a href="http://test.com/">link[]</a></p>');
+        await waitFor(".o-we-linkpopover", { timeout: 1500 });
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        expect(queryFirst("p a").href).toBe("http://test.com/");
+
+        await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
+        await fill("/contactus");
+        await waitFor(".o_we_apply_link:not([disabled])");
+        await click(".o_we_apply_link");
+
+        await waitFor(".o_we_edit_link");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        expect(".o_we_href_input_link").toHaveValue("/contactus");
+        const url = browser.location.href + "contactus";
+        expect(queryFirst("p a").href).toBe(url);
     });
 });
 
