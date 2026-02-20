@@ -929,6 +929,19 @@ class TestPoSBasicConfig(TestPoSCommon):
         # calling load_data should not raise an error
         self.pos_session.load_data([])
 
+    def test_load_data_picks_the_company_website_domain(self):
+        if self.env['ir.module.module']._get('website').state != 'installed':
+            self.skipTest("website module is required for this test")
+
+        company_website = self.config.company_id.website_id
+
+        if company_website:
+            company_website.write({'domain': 'https://custom.test.domain.com'})
+            self.open_new_session()
+            response = self.pos_session.load_data([])
+
+            self.assertEqual(response['pos.config'][0]['_base_url'], company_website.domain)
+
     def test_invoice_past_refund(self):
         """ Test invoicing a past refund
 
