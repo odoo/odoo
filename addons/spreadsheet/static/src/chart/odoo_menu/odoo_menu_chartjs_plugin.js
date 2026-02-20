@@ -7,13 +7,14 @@ export const chartOdooMenuPlugin = {
     id: "chartOdooMenuPlugin",
     afterEvent(chart, { event }, { env, menu }) {
         const isDashboard = env?.model.getters.isDashboard();
-        event.native.target.style.cursor = menu && isDashboard ? "pointer" : "";
+        if (!menu || !isDashboard) {
+            return;
+        }
+        event.native.target.style.cursor = "pointer";
 
         const middleClick = isChartJSMiddleClick(event);
         if (
             (event.type !== "click" && !middleClick) ||
-            !menu ||
-            !isDashboard ||
             event.native.defaultPrevented
         ) {
             return;
