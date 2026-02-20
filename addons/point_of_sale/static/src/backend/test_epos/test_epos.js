@@ -111,7 +111,7 @@ export class TestEPos extends Component {
         if (printer.printer_type === "epson_epos") {
             try {
                 const protocol = printer.use_lna ? "http:" : window.location.protocol;
-                const url = protocol + "//" + printer.epson_printer_ip;
+                const url = protocol + "//" + printer.printer_ip;
                 const address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
                 const params = {
                     method: "POST",
