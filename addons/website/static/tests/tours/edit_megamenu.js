@@ -365,11 +365,17 @@ const testHeaderNavVisibility = function (elementsVisibility) {
     return test;
 };
 
-const openMenu = () => ({
-    content: "Open Menu",
-    trigger: ":iframe span.navbar-toggler-icon",
-    run: "click",
-});
+const openMenu = () => [
+    {
+        content: "Open Menu",
+        trigger: ":iframe span.navbar-toggler-icon",
+        run: "click",
+    },
+    {
+        trigger:
+            ":iframe #top_menu_collapse_mobile:not(.showing):is(.show), :iframe #top_menu_collapse:not(.showing):is(.show)",
+    },
+];
 
 registerWebsitePreviewTour(
     "edit_megamenu_visibility",
@@ -412,7 +418,7 @@ registerWebsitePreviewTour(
             timeout: 30000,
         },
 
-        openMenu(),
+        ...openMenu(),
         // Mega Menu 1: Desktop Only
         {
             content: "Open the first mega menu",
@@ -460,7 +466,7 @@ registerWebsitePreviewTour(
         ...changeOptionInPopover("Block", "Users", "Visible for Logged Out"),
         ...clickOnSave(),
         // Check desktop visibility while NOT editing
-        openMenu(),
+        ...openMenu(),
         ...testHeaderNavVisibility({
             "MM des": true,
             "Drop 1": true,
@@ -473,7 +479,7 @@ registerWebsitePreviewTour(
             trigger: ".o_mobile_preview > a",
             run: "click",
         },
-        openMenu(),
+        ...openMenu(),
         // Check mobile visibility while NOT editing
         ...testHeaderNavVisibility({
             "MM des": false,
@@ -497,7 +503,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         // Check desktop visibility while editing
-        openMenu(),
+        ...openMenu(),
         ...testHeaderNavVisibility({
             "MM des": true,
             "Drop 1": true,
