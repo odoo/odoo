@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_hu_edi_view_in_invoice_bill_tree" model="ir.ui.view">
+        <field name="name">l10n_hu_edi.view_in_invoice_bill_tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">l10n_hu_edi_account_move_tree</attribute>
+            </list>
+        </field>
+    </record>
+
+</odoo>

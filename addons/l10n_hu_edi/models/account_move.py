@@ -61,7 +61,7 @@ class AccountMove(models.Model):
         index='btree_not_null',
     )
     l10n_hu_edi_batch_upload_index = fields.Integer(
-        string='Index of invoice within a batch upload',
+        string='Index of invoice within a transaction',
         copy=False,
     )
     l10n_hu_edi_attachment = fields.Binary(
@@ -120,7 +120,7 @@ class AccountMove(models.Model):
     def _check_posted_if_active(self):
         """ Enforce the constraint that you cannot reset to draft / cancel a posted invoice if it was already sent to NAV. """
         for move in self:
-            if move.state in ['draft', 'cancel'] and move.l10n_hu_edi_state not in [False, 'rejected', 'cancelled']:
+            if move.state in ['draft', 'cancel'] and move.l10n_hu_edi_state not in [False, 'rejected', 'cancelled', 'digested', 'received', 'parsed']:
                 raise ValidationError(_('Cannot reset to draft or cancel invoice %s because an electronic document was already sent to NAV!', move.name))
 
     # === Computes === #
