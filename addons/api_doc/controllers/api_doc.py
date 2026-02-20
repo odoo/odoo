@@ -18,8 +18,14 @@ import odoo
 from odoo import http, models
 from odoo.api import Self
 from odoo.exceptions import AccessError
+<<<<<<< 16bd8f4f7740ccebe67a27dbaf806cf6fe4bcb47
 from odoo.http import request
 from odoo.models import get_public_method
+||||||| a2b3a10255dba290ea462b9193ae11c54d8dd5e0
+from odoo.http import request
+=======
+from odoo.http import content_disposition, request
+>>>>>>> ad39da828b0d320489fe421ad816897807a8c775
 from odoo.modules.module_graph import ModuleGraph
 from odoo.tools import hmac, json_default, lazy_classproperty, py_to_js_locale
 
@@ -78,6 +84,18 @@ class DocController(http.Controller):
                 "This page is only accessible to %s users.",
                 self.env.ref('api_doc.group_allow_doc').sudo().name))
 
+        # Client requested no cache, generate the document and send it.
+        if parse_cache_control_header(request.httprequest.headers.get('Cache-Control')).no_cache:
+            modules, models = self._doc_index()
+            return request.make_json_response(
+                {'modules': modules, 'models': models},
+                headers={
+                    'Cache-Control': 'no-store',
+                    'Content-Disposition': content_disposition('odoo-doc-index.json'),
+                    'Content-Language': py_to_js_locale(self.env.lang),
+                },
+            )
+
         # Cache key
         db_registry_sequence, _ = self.env.registry.get_sequences(self.env.cr)
         unique = hmac(
@@ -91,21 +109,14 @@ class DocController(http.Controller):
         )
 
         # Client cache
-        use_cache = not parse_cache_control_header(
-            request.httprequest.headers.get('Cache-Control')).no_cache
-        if use_cache and not is_resource_modified(request.httprequest.environ, etag=unique):
+        if not is_resource_modified(request.httprequest.environ, etag=unique):
             return request.make_response('', status=HTTPStatus.NOT_MODIFIED)
 
-        # Server cache, use an attachment and not ormcache because the
-        # index gets very large (>1MiB) when there are many modules
-        # installed.
-        # TODO: gzip
+        # Server cache, use an attachment because the index gets very
+        # large (>1MiB) when there are many modules installed.
         filename = f'odoo-doc-index-{db_registry_sequence}-{unique}.json'
         index_attach = self.env['ir.attachment'].sudo().search([('name', '=', filename)], limit=1)
-        if not use_cache:
-            modules, models = self._doc_index()
         if not index_attach:
-            # No cache, generate the index and save it.
             modules, models = self._doc_index()
             index_attach = index_attach.create({
                 'name': filename,
@@ -120,7 +131,7 @@ class DocController(http.Controller):
                     {'modules': modules, 'models': models},
                     ensure_ascii=False,
                     default=json_default,
-                ),
+                ).encode(),
                 'public': False,
             })
             logger.info("new index attachment: %s", filename)
