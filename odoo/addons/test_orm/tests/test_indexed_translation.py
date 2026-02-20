@@ -1,7 +1,9 @@
 import odoo.tests
 
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
-from odoo.addons.base.tests.test_translate import SPECIAL_CHARACTERS
+from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
+
+# a string with various unicode characters
+SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
 
 
 @odoo.tests.tagged('post_install', '-at_install')
