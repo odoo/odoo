@@ -3479,6 +3479,7 @@ export class Wysiwyg extends Component {
     async resetValue(value) {
         this.setValue(value);
         this.odooEditor.historyReset();
+        this.odooEditor.lastSavePoint = this.odooEditor._historyIds.at(-1);
         this._historyShareId = Math.floor(Math.random() * Math.pow(2,52)).toString();
         this._serverLastStepId = value && this._getLastHistoryStepId(value);
         if (this._serverLastStepId) {

@@ -339,6 +339,8 @@ export class OdooEditor extends EventTarget {
         }
         this.initElementForEdition(editable);
 
+        this.lastSavePoint = null;
+
         // Convention: root node is ID root.
         editable.oid = 'root';
         this._idToNodeMap.set(1, editable);
@@ -898,7 +900,7 @@ export class OdooEditor extends EventTarget {
         value = value || '<p><br></p>';
         this.editable.innerHTML = fixInvalidHTML(value);
         this.sanitize(this.editable);
-        this.historyStep(true);
+        this.historyStep(true, { isReset: true });
         // The unbreakable protection mechanism detects an anomaly and attempts
         // to trigger a rollback when the content is reset using `innerHTML`.
         // Prevent this rollback as it would otherwise revert the new content.
@@ -1331,7 +1333,7 @@ export class OdooEditor extends EventTarget {
     }
 
     // One step completed: apply to vDOM, setup next history step
-    historyStep(skipRollback = false, { stepId } = {}) {
+    historyStep(skipRollback = false, { stepId, restoredStepId, isReset } = {}) {
         if (!this._historyStepsActive) {
             return;
         }
@@ -1352,6 +1354,8 @@ export class OdooEditor extends EventTarget {
         const previousStep = peek(this._historySteps);
         currentStep.clientId = this._collabClientId;
         currentStep.previousStepId = previousStep.id;
+        currentStep.isReset = isReset;
+        currentStep.restoredStepId = restoredStepId;
 
         this._historySteps.push(currentStep);
         if (this.options.onHistoryStep) {
@@ -1470,7 +1474,7 @@ export class OdooEditor extends EventTarget {
             // Consider the last position of the history as an undo.
             const stepId = this._generateId();
             this._historyStepsStates.set(stepId, 'undo');
-            this.historyStep(true, { stepId });
+            this.historyStep(true, { stepId, restoredStepId: this._historySteps[pos].previousStepId });
             this.dispatchEvent(new Event('historyUndo'));
         }
     }
@@ -1494,7 +1498,7 @@ export class OdooEditor extends EventTarget {
             this.historySetSelection(this._historySteps[pos]);
             const stepId = this._generateId();
             this._historyStepsStates.set(stepId, 'redo');
-            this.historyStep(true, { stepId });
+            this.historyStep(true, { stepId, restoredStepId: this._historySteps[pos].previousStepId });
             this.dispatchEvent(new Event('historyRedo'));
         }
     }
