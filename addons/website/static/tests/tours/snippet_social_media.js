@@ -45,7 +45,8 @@ const replaceIconByImage = function (url) {
         },
         {
             content: "Go to the Images tab in the media dialog",
-            trigger: ".o_select_media_dialog .o_notebook_headers .nav-item button:contains('Images')",
+            trigger:
+                ".o_select_media_dialog .o_notebook_headers .nav-item button:contains('Images')",
             run: "click",
         },
         {
@@ -95,7 +96,6 @@ registerWebsitePreviewTour(
     "snippet_social_media",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [

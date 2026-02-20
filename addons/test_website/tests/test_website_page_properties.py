@@ -7,10 +7,10 @@ from odoo.tests import HttpCase, tagged
 class TestWebsitePageProperties(HttpCase):
 
     def test_website_page_properties_common(self):
-        self.start_tour('/test_view', 'website_page_properties_common', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/test_view'), 'website_page_properties_common', login='admin')
 
     def test_website_page_properties_can_publish(self):
-        self.start_tour('/test_website/model_item/1', 'website_page_properties_can_publish', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/test_website/model_item/1'), 'website_page_properties_can_publish', login='admin')
 
     def test_website_page_properties_website_page(self):
         # Create a website page with a different URL to be tested for dependency
@@ -24,4 +24,4 @@ class TestWebsitePageProperties(HttpCase):
             'website_id': self.env['website'].search([], limit=1).id,
         })
 
-        self.start_tour('/', 'website_page_properties_website_page', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/'), 'website_page_properties_website_page', login='admin')

@@ -12,7 +12,6 @@ registerWebsitePreviewTour(
     "anchor_behaviour_on_accordion_same_tab",
     {
         edition: true,
-        url: "/",
     },
     () => [
         ...insertSnippet({
@@ -77,7 +76,6 @@ registerWebsitePreviewTour(
 );
 
 registry.category("web_tour.tours").add("anchor_behaviour_on_accordion_new_tab", {
-    url: "/#What-services-does-your-company-offer-%3F",
     steps: () => [
         {
             content: "Check that the accordion item's content is visible",

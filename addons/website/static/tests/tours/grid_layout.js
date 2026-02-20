@@ -75,7 +75,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "scroll_to_new_grid_item",
     {
-        url: "/",
         edition: true,
     },
     () => [

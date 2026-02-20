@@ -13,7 +13,7 @@ from odoo import http
 class TestImageUploadProgress(odoo.tests.HttpCase):
 
     def test_01_image_upload_progress(self):
-        self.start_tour(self.env['website'].get_client_action_url('/test_image_progress'), 'test_image_upload_progress', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/test_image_progress', True), 'test_image_upload_progress', login="admin")
 
     def test_02_image_upload_progress_unsplash(self):
         BASE_URL = self.base_url()
@@ -55,4 +55,4 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
         # disable undraw, no third party should be called in tests
         self.patch(Web_Unsplash, 'fetch_unsplash_images', fetch_unsplash_images)
 
-        self.start_tour(self.env['website'].get_client_action_url('/test_image_progress'), 'test_image_upload_progress_unsplash', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/test_image_progress', True), 'test_image_upload_progress_unsplash', login="admin")

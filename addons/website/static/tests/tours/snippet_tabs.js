@@ -9,7 +9,6 @@ registerWebsitePreviewTour(
     "snippet_tabs",
     {
         edition: true,
-        url: "/",
     },
     () => [
         ...insertSnippet({

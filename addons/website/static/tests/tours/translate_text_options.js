@@ -9,7 +9,6 @@ import {
 registerWebsitePreviewTour(
     "translate_text_options",
     {
-        url: "/",
         edition: true,
     },
     () => [

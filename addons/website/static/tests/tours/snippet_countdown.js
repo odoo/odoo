@@ -9,7 +9,6 @@ import {
 registerWebsitePreviewTour(
     "snippet_countdown",
     {
-        url: "/",
         edition: true,
     },
     () => [

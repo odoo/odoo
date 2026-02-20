@@ -57,7 +57,6 @@ registerWebsitePreviewTour(
     "conditional_visibility_1",
     {
         edition: true,
-        url: "/",
     },
     () => [
         ...insertSnippet(snippets[0]),
@@ -117,7 +116,6 @@ registerWebsitePreviewTour(
     "conditional_visibility_3",
     {
         edition: true,
-        url: "/",
     },
     () => [
         checkEyeIcon("Text - Image", true),
@@ -177,7 +175,6 @@ registerWebsitePreviewTour(
     "conditional_visibility_4",
     {
         edition: true,
-        url: "/",
     },
     () => [
         // Click on the "Text-Image" snippet.
@@ -221,7 +218,6 @@ registerWebsitePreviewTour(
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
-        url: "/",
     },
     () => [
         {

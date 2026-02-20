@@ -9,7 +9,6 @@ registerWebsitePreviewTour(
     "snippet_cache_across_websites",
     {
         edition: true,
-        url: "/@/",
     },
     () => [
         {

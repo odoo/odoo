@@ -27,7 +27,6 @@ async function assertSvgColors(img, color1, color2, errorMessage) {
 registerWebsitePreviewTour(
     "website_dynamic_svg_theme_colors",
     {
-        url: "/",
         edition: true,
     },
     () => [

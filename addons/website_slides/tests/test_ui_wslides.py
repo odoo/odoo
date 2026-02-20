@@ -271,7 +271,7 @@ class TestUi(TestUICommon):
             'html_content': "<section class=\"s_text_block\" data-snippet=\"s_text_block\"><p>Hello World!</p></section>"
         })
 
-        self.start_tour("/slides", 'fullscreen_slide_text_highlights', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/slides"), 'fullscreen_slide_text_highlights', login='admin')
 
 
 @tests.common.tagged('post_install', '-at_install')
@@ -351,7 +351,7 @@ class TestUiPublisherYoutube(HttpCaseGamification):
         self.env.ref('website_slides.slide_channel_demo_3_furn0')._remove_membership(self.env.ref('base.partner_demo').ids)
         self.env.ref('website_slides.slide_slide_demo_3_1').url += '&start=260'
 
-        self.start_tour('/slides', 'course_member_youtube', login=user_demo.login)
+        self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_member_youtube', login=user_demo.login)
 
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo

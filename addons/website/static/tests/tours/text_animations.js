@@ -28,7 +28,6 @@ function setTextAnimation(trigger, value) {
 registerWebsitePreviewTour(
     "text_animations",
     {
-        url: "/",
         edition: true,
     },
     () => [

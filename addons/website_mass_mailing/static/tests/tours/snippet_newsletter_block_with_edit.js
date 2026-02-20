@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
-    url: '/',
     edition: true,
 }, () => [
     // Put a Newsletter block.

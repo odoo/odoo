@@ -7,4 +7,4 @@ import odoo.tests
 class TestSnippetBackgroundVideo(odoo.tests.HttpCase):
 
     def test_snippet_background_video(self):
-        self.start_tour("/", "snippet_background_video", login="admin")
+        self.start_tour(self.env["website"].get_client_action_url("/", True), "snippet_background_video", login="admin")

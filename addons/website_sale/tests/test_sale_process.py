@@ -130,7 +130,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
 
         self.start_tour('/shop?search=Storage Box Test', 'website_sale.complete_flow_1')
         self.start_tour(
-            self.env['website'].get_client_action_url('/shop/cart'),
+            self.env['website'].get_client_action_url('/shop/cart', True),
             'website_sale.enable_extra_info',
             login='admin'
         )

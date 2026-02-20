@@ -8,7 +8,6 @@ import {
 registerWebsitePreviewTour(
     "default_shape_gets_palette_colors",
     {
-        url: "/",
         edition: true,
     },
     () => [

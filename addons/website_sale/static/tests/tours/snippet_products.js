@@ -12,7 +12,6 @@ const productsSnippet = { id: "s_dynamic_snippet_products", name: "Products", gr
 registerWebsitePreviewTour(
     'website_sale.snippet_products',
     {
-        url: '/',
         edition: true,
     },
     () => {
@@ -32,7 +31,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     'website_sale.products_snippet_recently_viewed',
     {
-        url: '/',
         edition: true,
     },
     () => [

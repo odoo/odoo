@@ -69,7 +69,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
-        self.start_tour("/blog", "blog_context_and_social_media", login="admin")
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_context_and_social_media", login="admin")
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
@@ -114,7 +114,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
         self.env.ref("website_blog.opt_blog_post_sidebar").active = True
-        self.start_tour("/blog", "blog_sidebar_with_date_and_tag", login="admin")
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_sidebar_with_date_and_tag", login="admin")
 
         blog_tag = self.env.ref('website_blog.blog_tag_5', raise_if_not_found=False)
         if not blog_tag:
@@ -122,7 +122,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_1.write({'tag_ids': [(4, blog_tag.id)]})
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
-        self.start_tour("/blog", "blog_tags_with_date", login="admin")
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_tags_with_date", login="admin")
 
     def test_blog_access_rights(self):
         group_website_blog_manager_id = self.ref("website_blog.group_website_blog_manager")
@@ -144,10 +144,10 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_no_manager", login="eve")
 
     def test_blog_posts_dynamic_snippet_options(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_options', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True, True), 'blog_posts_dynamic_snippet_options', login='admin')
 
     def test_blog_posts_dynamic_snippet_visibility(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_edit', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'blog_posts_dynamic_snippet_edit', login='admin')
         homepage_view = self.env['ir.ui.view'].search([
             ('website_id', '=', self.env.ref('website.default_website').id),
             ('key', '=', 'website.homepage'),

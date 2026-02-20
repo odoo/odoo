@@ -45,7 +45,6 @@ const chatRequest = [
 ];
 
 registry.category("web_tour.tours").add("website_livechat_chat_request", {
-    url: "/",
     steps: () =>
         [].concat(chatRequest, closeChat, confirmnClose, okRating, feedback, downloadTranscript),
 });
