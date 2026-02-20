@@ -4,10 +4,11 @@ import { formatDuration } from "../formatters";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
-import { parseDuration, parseFloatDuration } from "../parsers";
+import { parseDuration, parseFloatTime } from "../parsers";
 
 import { Component, useState } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 export class FloatTimeField extends Component {
     static template = "web.FloatTimeField";
@@ -18,7 +19,6 @@ export class FloatTimeField extends Component {
         unit: { type: ["hours", "minutes", "seconds"], optional: true },
     };
     static defaultProps = {
-        showSeconds: true,
         numeric: false,
         unit: "hours",
     };
@@ -27,7 +27,7 @@ export class FloatTimeField extends Component {
         this.inputFloatTimeRef = useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: (v) => parseFloatDuration(v, this.props.unit),
+            parse: (v) => parseFloatTime(v, this.props.unit),
         });
 
         this.state = useState({
@@ -46,6 +46,13 @@ export class FloatTimeField extends Component {
             numeric: this.props.numeric,
             unit: this.props.unit,
         });
+        if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
+            this.resultPopover.close();
+        } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
+            this.resultPopover.open(this.inputFloatTimeRef.el, {
+                state: this.state,
+            });
+        }
     }
 
     openPopover() {
@@ -65,13 +72,17 @@ export class FloatTimeField extends Component {
     }
 
     get formattedValue() {
-        const value = {};
-        value[this.props.unit] = this.props.record.data[this.props.name];
-        return formatDuration(value, {
-            showSeconds: this.props.showSeconds,
-            numeric: this.props.numeric,
-            unit: this.props.unit,
-        });
+        const value = this.props.record.data[this.props.name];
+        return formatDuration(
+            {
+                [this.props.unit]: value,
+            },
+            {
+                showSeconds: this.props.showSeconds,
+                numeric: this.props.numeric,
+                unit: this.props.unit,
+            },
+        );
     }
 }
 
@@ -91,7 +102,6 @@ export const floatTimeField = {
             label: _t("Show seconds"),
             name: "show_seconds",
             type: "boolean",
-            default: true,
         },
         {
             label: _t("Type"),
@@ -119,8 +129,8 @@ export const floatTimeField = {
     supportedTypes: ["float"],
     isEmpty: () => false,
     extractProps: ({ options }) => ({
-        showSeconds: options.show_seconds,
-        numeric: options.numeric,
+        showSeconds: exprToBoolean(options.show_seconds),
+        numeric: exprToBoolean(options.numeric),
         unit: options.unit,
     }),
 };

@@ -108,35 +108,10 @@ export function parseFloat(value, { allowOperation = false } = {}) {
  * The float time can have two formats: float or integer:integer.
  *
  * @param {string} value
+ * @param {UnitOfTime} unit by default "hours"
  * @returns {number} a float
  */
-export function parseFloatTime(value) {
-    let sign = 1;
-    if (value[0] === "-") {
-        value = value.slice(1);
-        sign = -1;
-    }
-    const values = value.split(":");
-    if (values.length > 2) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
-    }
-    if (values.length === 1) {
-        return sign * parseFloat(value);
-    }
-    const hours = parseInteger(values[0]);
-    const minutes = parseInteger(values[1]);
-    return sign * (hours + minutes / 60);
-}
-
-/**
- *
- * Parse a string of a duration to float value based on unit
- * e.g.: 1h 30m in hours would be 1.5 
- * 
- * @param {string} value
- * @param {UnitOfTime} unit
- */
-export function parseFloatDuration(value, unit) {
+export function parseFloatTime(value, unit = "hours") {
     const duration = parseDuration(value, unit);
 
     if (unit === "hours") {
@@ -263,7 +238,7 @@ export function parseInteger(value, { allowOperation = false } = {}) {
     }
     if (parsed < -2147483648 || parsed > 2147483647) {
         throw new InvalidNumberError(
-            `"${value}" is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)`
+            `"${value}" is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)`,
         );
     }
     return parsed;
@@ -304,7 +279,7 @@ export function parseMonetary(value, { allowOperation = false } = {}) {
     }
     value = value.trim();
     const startMatch = value.match(
-        new RegExp(`[\\d\\-+=]|${escapeRegExp(localization.decimalPoint)}`)
+        new RegExp(`[\\d\\-+=]|${escapeRegExp(localization.decimalPoint)}`),
     );
     if (startMatch) {
         value = value.substring(startMatch.index);

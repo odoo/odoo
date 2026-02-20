@@ -291,11 +291,11 @@ test("pivot rendering with widget", async () => {
         resModel: "partner",
         arch: `
 			<pivot string="Partners">
-				<field name="foo" type="measure" widget="float_time"/>
+				<field name="foo" type="measure" widget="float_time""/>
 			</pivot>
 		`,
     });
-    expect("td.o_pivot_cell_value:contains(32:00)").toHaveCount(1);
+    expect("td.o_pivot_cell_value:contains(32h)").toHaveCount(1);
 });
 
 test("pivot rendering with widget and options", async () => {
@@ -304,7 +304,7 @@ test("pivot rendering with widget and options", async () => {
         resModel: "partner",
         arch: `
 			<pivot string="Partners">
-                <field name="foo" type="measure" widget="float_time"/>
+                <field name="foo" type="measure" widget="float_time" options="{'numeric': 1}"/>
 			</pivot>
 		`,
     });

@@ -186,9 +186,9 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
 });
 
 /**
- * Returns a string representing a time value, from a float.  The idea is that
- * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
- * instead of 0.25.
+ * Returns a string representing a time value, from a float or a Duration object.
+ * The idea is that we sometimes want to display something like 1h 45m instead of 1.75,
+ * or 0:15 instead of 0.25.
  *
  * @param {import("./parsers").Duration} value
  * @param {Object} [options]
@@ -203,7 +203,6 @@ export function formatDuration(value, options = {}) {
     }
 
     options.unit = options.unit || "hours";
-
     let seconds = (value.hours || 0) * 3600 + (value.minutes || 0) * 60 + (value.seconds || 0);
     let isNegative;
 
@@ -225,7 +224,7 @@ export function formatDuration(value, options = {}) {
         secondsDisplay: options.unit === "seconds" || options.numeric ? "always" : "auto",
     })
         .formatToParts(duration)
-        .filter((d) => d.unit !== "second" || options.showSeconds !== false)
+        .filter((d) => d.unit !== "second" || options.showSeconds === true)
         .filter((d) => d.type !== "literal");
 
     let formattedValue = "";
@@ -255,54 +254,58 @@ export function formatDuration(value, options = {}) {
     return `${isNegative ? "-" : ""}${formattedValue}`;
 }
 formatDuration.extractOptions = ({ options }) => ({
-    showSeconds: options.show_seconds,
-    numeric: options.numeric,
+    showSeconds: exprToBoolean(options.show_seconds),
+    numeric: exprToBoolean(options.numeric),
 });
 
 /**
- * Returns a string representing a time value, from a float.  The idea is that
- * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
- * instead of 0.25.
- *
- * @param {number | false} value
  * @param {Object} [options]
- * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30 otherwise, format like 01:30
  * @param {boolean} [options.showSeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
+ * @param {boolean} [options.numeric] if true, show the duration in the format set on the language
+ * @param {import("./parsers").UnitOfTime} [options.unit="hours"] The unit of mesure for the duration
  * @returns {string}
  */
 export function formatFloatTime(value, options = {}) {
     if (value === false) {
         return "";
     }
-    const isNegative = value < 0;
-    value = Math.abs(value);
 
-    let hour = Math.floor(value);
-    const milliSecLeft = Math.round(value * 3600000) - hour * 3600000;
+    let milliRound;
+
+    switch (options.unit) {
+        case "seconds":
+            milliRound = 1000;
+            break;
+        case "minutes":
+            milliRound = 60000;
+            break;
+        default:
+            milliRound = 3600000;
+            break;
+    }
+
+    let unitTime = Math.floor(value);
+    const milliSecLeft = Math.round(value * milliRound) - unitTime * milliRound;
     // Although looking quite overkill, the following lines ensures that we do
     // not have float issues while still considering that 59s is 00:00.
-    let min = milliSecLeft / 60000;
+    let hours = Math.floor(milliSecLeft / 3600000);
+    let minutes = milliSecLeft / 60000;
+    hours += minutes/60;
     if (options.showSeconds) {
-        min = Math.floor(min);
+        minutes = Math.floor(minutes) % 60;
     } else {
-        min = Math.round(min);
+        minutes = Math.round(minutes) % 60;
     }
-    if (min === 60) {
-        min = 0;
-        hour = hour + 1;
-    }
-    min = String(min).padStart(2, "0");
-    if (!options.noLeadingZeroHour) {
-        hour = String(hour).padStart(2, "0");
-    }
-    let sec = "";
-    if (options.showSeconds) {
-        sec = ":" + String(Math.floor((milliSecLeft % 60000) / 1000)).padStart(2, "0");
-    }
-    return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
+
+    return formatDuration({
+        hours,
+        minutes,
+        seconds: Math.floor((milliSecLeft % 60000) / 1000)
+    }, options);
 }
 formatFloatTime.extractOptions = ({ options }) => ({
-    showSeconds: options.show_seconds,
+    showSeconds: exprToBoolean(options.show_seconds),
+    numeric: exprToBoolean(options.numeric),
 });
 
 /**
@@ -476,7 +479,7 @@ function formatProperties(value, field) {
 export function formatReference(value, options) {
     return formatMany2one(
         value ? { id: value.resId, display_name: value.displayName } : false,
-        options
+        options,
     );
 }
 
