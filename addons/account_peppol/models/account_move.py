@@ -8,7 +8,7 @@ from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    peppol_message_uuid = fields.Char(string='PEPPOL message ID')
+    peppol_message_uuid = fields.Char(string='PEPPOL message ID', copy=False)
     peppol_move_state = fields.Selection(
         selection=[
             ('ready', 'Ready to send'),

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_peppol_response_view_move_form" model="ir.ui.view">
+        <field name="name">account.peppol.response.view.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="inside">
+                <group string="Peppol info"
+                        name="accounting_info_group"
+                        invisible="not peppol_message_uuid"
+                        groups="base.group_no_one">
+                    <label for="peppol_move_state"/>
+                    <div>
+                        <a class="oe_link fw-bold" type="object" name="action_open_peppol_reponses">
+                            <field name="peppol_move_state"/>
+                        </a>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

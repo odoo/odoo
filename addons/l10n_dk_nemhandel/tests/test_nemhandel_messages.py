@@ -102,6 +102,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
                 'state': 'done' if not error else 'error',
                 'direction': 'outgoing',
                 'document_type': 'Invoice',
+                'origin_message_uuid': FAKE_UUID[0],
             },
             FAKE_UUID[1]: {
                 'accounting_supplier_party': '0184:16356706',
@@ -111,6 +112,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
                 'state': 'done' if not error else 'error',
                 'direction': 'incoming',
                 'document_type': 'Invoice',
+                'origin_message_uuid': FAKE_UUID[1],
             },
         }
 
@@ -132,7 +134,8 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
                         'error': False if not error else 'Test error',
                     }
                 ],
-            }}
+            }},
+            '/api/nemhandel/1/send_response': {'result': {'messages': [{'message_uuid': 'rrrrrrrr-rrrr-rrrr-rrrr-rrrrrrrrrrrr'}] * nr_invoices}},
         }
         return proxy_documents, responses
 
@@ -207,6 +210,9 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             if not body['params']['documents']:
                 raise UserError('No documents were provided')
             proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'), nr_invoices=len(body['params']['documents']))
+        elif url == '/api/nemhandel/1/send_response':
+            num_responses = len(body['params']['reference_uuids'])
+            proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'), nr_invoices=num_responses)
         else:
             proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
 

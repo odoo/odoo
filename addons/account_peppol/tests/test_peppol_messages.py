@@ -145,18 +145,16 @@ class TestPeppolMessageCommon(TestAccountMoveSendCommon):
                     },
                 }
                 return response
-
-            if peppol_identifier == '0198:dk16356706':
-                response.status_code = 200
-                response.json = lambda: {"result": {
-                        'identifier': peppol_identifier,
-                        'smp_base_url': "http://iap-services.odoo.com",
-                        'ttl': 60,
-                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
-                        'services': [],
-                    },
-                }
-                return response
+            response.status_code = 200
+            response.json = lambda: {"result": {
+                    'identifier': peppol_identifier,
+                    'smp_base_url': "http://iap-services.odoo.com",
+                    'ttl': 60,
+                    'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                    'services': [],
+                },
+            }
+            return response
 
         body = json.loads(r.body)
         if url == '/api/peppol/1/send_document':
@@ -203,9 +201,20 @@ class TestPeppolMessageCommon(TestAccountMoveSendCommon):
                     'state': 'done' if not cls.env.context.get('error') else 'error',
                     'direction': 'incoming',
                     'document_type': 'Invoice',
+                    'origin_message_uuid': FAKE_UUID[1],
                 }
 
             response.json = lambda: {'result': {uuid: response_content}}
+            return response
+
+        if url == '/api/peppol/1/send_response':
+            # This will be called if account_peppol_response is installed, to be overridden in that module
+            num_responses = len(body['params']['reference_uuids'])
+            response.json = lambda: {
+                'result': {
+                    'messages': [{'message_uuid': 'rrrrrrrr-rrrr-rrrr-rrrr-rrrrrrrrrrrr'}] * num_responses
+                }
+            }
             return response
 
         return super()._request_handler(s, r, **kw)
