@@ -37,9 +37,9 @@ class ProjectMilestone(models.Model):
     def _compute_product_uom_qty(self):
         for milestone in self:
             if milestone.quantity_percentage:
-                milestone.product_uom_qty = milestone.quantity_percentage * milestone.sale_line_id.product_uom_qty
+                milestone.product_uom_qty = milestone.quantity_percentage * milestone.sale_line_id.sudo().product_uom_qty
             else:
-                milestone.product_uom_qty = milestone.sale_line_id.product_uom_qty
+                milestone.product_uom_qty = milestone.sale_line_id.sudo().product_uom_qty
 
     @api.model
     def _get_fields_to_export(self):
