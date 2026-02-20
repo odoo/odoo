@@ -10,7 +10,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { Component, onWillDestroy, markup, xml } from "@odoo/owl";
-import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { clearRegistry, contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { Colibri } from "@web/public/colibri";
@@ -2457,6 +2457,56 @@ describe("locked", () => {
         expect.verifySteps(["updateContent"]);
         await click(queryOne(".test"));
         expect.verifySteps(["protect", "done", "unprotect", "updateContent"]);
+    });
+
+    test("locked event handler loading effect mutations", async () => {
+        let handlerDuration = 0;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                button: {
+                    "t-on-click": this.locked(this.onClickLong, true),
+                },
+            };
+            async onClickLong() {
+                await new Promise((resolve) => setTimeout(resolve, handlerDuration));
+                expect.step("handler done");
+            }
+        }
+
+        await startInteraction(Test, TemplateTestDoubleButton, {
+            waitForStart: false,
+        });
+
+        const observer = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if ([...m.addedNodes].some((node) => node.tagName === "SPAN")) {
+                    expect.step("loading added");
+                }
+            }
+        });
+        observer.observe(queryFirst("button"), { childList: true });
+
+        handlerDuration = 5000;
+        await contains("button").click();
+        // Advance time more than the debounce delay of makeButtonHandler
+        // (400ms) but less than the handler duration.
+        await advanceTime(1000);
+        expect.verifySteps(["loading added"]);
+        await advanceTime(handlerDuration);
+        expect.verifySteps(["handler done"]);
+
+        handlerDuration = 100;
+        await contains("button").click();
+        // Advance time more than the handler duration but less than the
+        // debounce delay of makeButtonHandler (400ms).
+        await advanceTime(200);
+        expect.verifySteps(["handler done"]);
+        await advanceTime(1000);
+        expect.verifySteps([], {
+            message:
+                "Loading effect should never be added in the DOM for handlers shorter than 400ms",
+        });
     });
 });
 
