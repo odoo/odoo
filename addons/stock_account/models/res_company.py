@@ -51,7 +51,10 @@ class ResCompany(models.Model):
         if at_date and isinstance(at_date, str):
             at_date = fields.Date.from_string(at_date)
         last_closing_date = self._get_last_closing_date()
-        if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
+        if at_date \
+            and last_closing_date \
+            and at_date < fields.Date.to_date(last_closing_date) \
+            and at_date < fields.Date.to_date(self._get_last_closing_date_accounting()):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
         aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
@@ -172,7 +175,9 @@ class ResCompany(models.Model):
         ])
         amls_vals_list = []
         valued_location = self.env['stock.location'].search(location_domain)
-        last_closing_date = self._get_last_closing_date()
+        last_closing_date = self._get_last_closing_date_accounting()
+        if fields.Date.to_date(last_closing_date) == fields.Date.today():
+            last_closing_date = self._get_last_closing_date()
         moves_base_domain = Domain([
             ('product_id.is_storable', '=', True),
             ('product_id.valuation', '=', 'periodic')
@@ -326,7 +331,7 @@ class ResCompany(models.Model):
             'product_id': product_id,
         }]
 
-    def _get_last_closing_date(self):
+    def _get_last_closing_date_with_priority(self, priority_to_create_date=True):
         self.ensure_one()
         key = f'{self.id}.stock_valuation_closing_ids'
         closing_ids = self.env['ir.config_parameter'].sudo().get_param(key)
@@ -340,7 +345,15 @@ class ResCompany(models.Model):
             return False
         am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
         state_tracking = closing.message_ids.sudo().tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
-        return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
+        if priority_to_create_date:
+            return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
+        return fields.Datetime.to_datetime(closing.date) or state_tracking[-1:].create_date
+
+    def _get_last_closing_date(self):
+        return self._get_last_closing_date_with_priority()
+
+    def _get_last_closing_date_accounting(self):
+        return self._get_last_closing_date_with_priority(priority_to_create_date=False)
 
     def _save_closing_id(self, move_id):
         self.ensure_one()
