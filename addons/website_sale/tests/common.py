@@ -32,18 +32,15 @@ def MockRequest(
     with websiteMockRequest(*args, **kwargs) as request:
         if sale_order_id is not None:
             request.session[CART_SESSION_CACHE_KEY] = sale_order_id
-        request.cart = lazy(request.website._get_and_cache_current_cart)
 
         if website_sale_current_pl is not None:
             request.session[PRICELIST_SESSION_CACHE_KEY] = website_sale_current_pl
-        request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
 
         if website_sale_selected_pl_id is not None:
             request.session[PRICELIST_SELECTED_SESSION_CACHE_KEY] = website_sale_selected_pl_id
 
         if fiscal_position_id is not None:
             request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fiscal_position_id
-        request.fiscal_position = lazy(request.website._get_and_cache_current_fiscal_position)
 
         yield request
 
