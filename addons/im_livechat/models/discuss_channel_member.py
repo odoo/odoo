@@ -126,25 +126,28 @@ class DiscussChannelMember(models.Model):
                 history.write(values_by_member[member])
 
     def _inverse_livechat_member_type(self):
-        # sudo - im_livechat.channel.member: creating/updating history following
-        # "livechat_member_type" modification is acceptable.
-        self.sudo()._create_or_update_history(
-            {member: {"livechat_member_type": member.livechat_member_type} for member in self},
-        )
+        if not self.channel_id.livechat_end_dt:
+            # sudo - im_livechat.channel.member: creating/updating history following
+            # "livechat_member_type" modification is acceptable.
+            self.sudo()._create_or_update_history(
+                {member: {"livechat_member_type": member.livechat_member_type} for member in self},
+            )
 
     def _inverse_chatbot_script_id(self):
-        # sudo - im_livechat.channel.member: creating/updating history following
-        # "chatbot_script_id" modification is acceptable.
-        self.sudo()._create_or_update_history(
-            {member: {"chatbot_script_id": member.chatbot_script_id.id} for member in self}
-        )
+        if not self.channel_id.livechat_end_dt:
+            # sudo - im_livechat.channel.member: creating/updating history following
+            # "chatbot_script_id" modification is acceptable.
+            self.sudo()._create_or_update_history(
+                {member: {"chatbot_script_id": member.chatbot_script_id.id} for member in self}
+            )
 
     def _inverse_agent_expertise_ids(self):
-        # sudo - im_livechat.channel.member.history: creating/udpating history following
-        # "agent_expetise_ids" modification is acceptable.
-        self.sudo()._create_or_update_history(
-            {member: {"agent_expertise_ids": member.agent_expertise_ids.ids} for member in self}
-        )
+        if not self.channel_id.livechat_end_dt:
+            # sudo - im_livechat.channel.member.history: creating/udpating history following
+            # "agent_expetise_ids" modification is acceptable.
+            self.sudo()._create_or_update_history(
+                {member: {"agent_expertise_ids": member.agent_expertise_ids.ids} for member in self}
+            )
 
     @api.autovacuum
     def _gc_unpin_livechat_sessions(self):

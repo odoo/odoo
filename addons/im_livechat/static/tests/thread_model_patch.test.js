@@ -18,6 +18,7 @@ defineLivechatModels();
 
 test("Thread name unchanged when inviting new users", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({
         name: "James",

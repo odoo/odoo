@@ -20,6 +20,7 @@ test("Can invite a partner to a livechat channel", async () => {
         { name: "events" },
     ]);
     pyEnv["res.partner"].write([serverState.partnerId], { user_livechat_username: "Mitch (FR)" });
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     const userId = pyEnv["res.users"].create({
         name: "James",
         livechat_lang_ids: langIds,
@@ -68,6 +69,7 @@ test("Can invite a partner to a livechat channel", async () => {
 
 test("Available operators come first", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     pyEnv["res.partner"].create({
         name: "Harry",
         im_status: "offline",
@@ -102,6 +104,7 @@ test("Available operators come first", async () => {
 test("Partners invited most frequently by the current user come first", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     pyEnv["res.partner"].create({
         name: "John",
         im_status: "offline",
@@ -162,6 +165,7 @@ test("Partners invited most frequently by the current user come first", async ()
 
 test("shows operators are in call", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     const [bobPartnerId] = pyEnv["res.partner"].create([
         { name: "bob", user_ids: [Command.create({ name: "bob" })] },
@@ -204,6 +208,7 @@ test("shows operators are in call", async () => {
 
 test("Operator invite shows livechat_username", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     pyEnv["res.partner"].create({
         name: "John",
         im_status: "offline",
