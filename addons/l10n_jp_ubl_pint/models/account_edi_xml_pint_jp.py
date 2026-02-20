@@ -186,3 +186,10 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
         if commercial_partner.country_code == 'JP':
             for node in nodes:
                 node['cbc:CompanyID'] = None
+
+    def _export_document_node_constraints(self, vals):
+        # EXTENDS account.edi.ubl_bis3
+        constraints = super()._export_document_node_constraints(vals)
+        constraints.pop('cen_en16931_supplier_vat_country_code', None)
+        constraints.pop('cen_en16931_customer_vat_country_code', None)
+        return constraints
