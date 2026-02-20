@@ -12,6 +12,45 @@
                 <div class="alert alert-info" role="alert" invisible="state != 'draft' or l10n_tr_nilvera_send_status != 'error' or not l10n_tr_nilvera_uuid">
                     To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue.
                 </div>
+                <div invisible="not l10n_tr_ticarifatura_status">
+                    <div class="alert alert-info w-100 d-flex align-items-center gap-1" role="alert" invisible="l10n_tr_ticarifatura_status != 'pending'">
+                        <span>Pending: Awaiting response from </span>
+                        <field invisible="move_type != 'out_invoice'" name="partner_id" readonly="True"/>
+                        <field invisible="move_type != 'in_invoice'" name="company_id" readonly="True"/>
+                        <span>.</span>
+                        <div class="ms-auto d-flex gap-2" invisible="move_type != 'in_invoice'">
+                            <button name="l10n_tr_action_approve_ticarifatura" type="object" class="btn btn-link">
+                                <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                <span class="text-success">Accept</span>
+                            </button>
+                            <button name="l10n_tr_action_reject_ticarifatura" type="object" class="btn btn-link">
+                                <i class="fa fa-times text-warning" aria-hidden="true"></i>
+                                <span class="text-warning">Reject</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alert alert-success w-100 d-flex align-items-center gap-1" role="alert"
+                         invisible="l10n_tr_ticarifatura_status != 'approved'">
+                        <field invisible="move_type != 'out_invoice'" name="partner_id" readonly="True"/>
+                        <field invisible="move_type != 'in_invoice'" name="company_id" readonly="True"/>
+                        <span>Accepted the commercial invoice</span>
+                    </div>
+                    <div class="alert alert-success w-100 d-flex align-items-center gap-1" role="alert"
+                         invisible="l10n_tr_ticarifatura_status != 'documentAnsweredAutomatically'">
+                        <span>The commercial invoice has been automatically accepted</span>
+                    </div>
+                    <div class="alert alert-danger w-full d-flex flex-column align-items-sm-start gap-1" role="alert"
+                         invisible="l10n_tr_ticarifatura_status != 'rejected'">
+                        <span>
+                            <field invisible="move_type != 'out_invoice'" name="partner_id" readonly="True"/>
+                            <field invisible="move_type != 'in_invoice'" name="company_id" readonly="True"/>
+                            <span> Rejected the commercial invoice with reason </span>
+                        </span>
+                        <span>
+                            <field name="l10n_tr_ticarifatura_response_note" readonly="True"/>
+                        </span>
+                    </div>
+                </div>
             </xpath>
             <xpath expr="//button[@name='action_post'][2]" position="attributes">
                 <attribute name="invisible" separator=" or " add="l10n_tr_nilvera_send_status == 'error' and l10n_tr_nilvera_uuid"/>
@@ -29,7 +68,7 @@
                 <div class="o_td_label"
                      invisible="l10n_tr_is_export_invoice
                                 or country_code != 'TR'
-                                or move_type not in ['out_invoice', 'out_refund']
+                                or move_type not in ['out_invoice', 'in_invoice', 'out_refund']
                                 or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']">
                     <label for="l10n_tr_gib_invoice_scenario" invisible="l10n_tr_nilvera_customer_status != 'einvoice'" />
                     <label string="Invoice Type"
@@ -39,7 +78,7 @@
                 <div class="d-flex"
                      invisible="l10n_tr_is_export_invoice
                                 or country_code != 'TR'
-                                or move_type not in ['out_invoice', 'out_refund']
+                                or move_type not in ['out_invoice', 'in_invoice', 'out_refund']
                                 or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']">
                     <field name="l10n_tr_gib_invoice_scenario"
                            invisible="l10n_tr_nilvera_customer_status != 'einvoice'"
@@ -60,6 +99,20 @@
                                   or l10n_tr_nilvera_customer_status != 'earchive'
                                   or not l10n_tr_is_export_invoice"
                        readonly="state in ['cancel', 'posted']"/>
+                <div class="o_td_label"
+                     invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status != 'succeed'">
+                    <label for="l10n_tr_ticarifatura_status"/>
+                </div>
+                <div class="d-flex"
+                     invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status != 'succeed'">
+                    <field name="l10n_tr_ticarifatura_status" invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status != 'succeed'"/>
+                    <button name="l10n_tr_action_fetch_ticafatura_response" type="object"
+                            class="btn btn-link text-info ms-auto d-flex align-items-center gap-1"
+                            invisible="move_type not in ['out_invoice', 'in_invoice'] or l10n_tr_ticarifatura_status != 'pending'">
+                        <i class="fa fa-refresh text-info"/>
+                        <span class="text-info">Retry</span>
+                    </button>
+                </div>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']//list//field[@name='tax_ids']" position="after">
                 <field name="l10n_tr_ctsp_number" optional="hide"/>

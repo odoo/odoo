@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_tr_nilvera_einvoice.ticafatura_response_wizard_form" model="ir.ui.view">
+            <field name="name">l10n_tr_nilvera_einvoice.ticafatura.response.wizard.form</field>
+            <field name="model">l10n_tr.ticafatura.response.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="oe_form_box">
+                        <p class="oe_form_warning fst-italic">
+                            <span>
+                                <span>You are about to </span>
+                                <span invisible="response_code != 'approved'">approve</span>
+                                <span invisible="response_code != 'rejected'">reject</span>
+                                a <strong>Commercial Bill</strong>.
+                            </span>
+                            <span> This action will send a response to Nilvera and cannot be undone.</span>
+                        </p>
+                    </div>
+                    <field name="response_note" nolabel="1" placeholder="Enter reason for rejection..." invisible="response_code != 'rejected'" required="response_code == 'rejected'"/>
+                    <footer>
+                        <button string="Proceed" name="action_proceed" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
