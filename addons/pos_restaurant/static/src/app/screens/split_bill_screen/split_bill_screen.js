@@ -133,6 +133,7 @@ export class SplitBillScreen extends Component {
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
+        const isOrdered = Object.keys(originalOrder.last_order_preparation_change.lines).length > 0;
 
         // Create lines for the new order
         const comboMap = new Map();
@@ -190,6 +191,20 @@ export class SplitBillScreen extends Component {
                     line.update({ qty: newQty });
                 }
 
+                // Required before triggering `handlePreparationHistory` to avoid losing the preparation key
+                // because `handlePreparationHistory` deletes prep key after split, when a line is split and sent again to the preparation display.
+                if (isOrdered) {
+                    const origSplit = (originalOrder.last_order_preparation_change.split_lines ??=
+                        {});
+
+                    if (originalOrder.last_order_preparation_change.lines[line.uuid]) {
+                        origSplit[line.uuid] = {
+                            uuid: line.uuid,
+                            splitted_qty: this.qtyTracker[line.uuid],
+                        };
+                    }
+                }
+
                 this.pos.handlePreparationHistory(
                     originalOrder.last_order_preparation_change.lines,
                     newOrder.last_order_preparation_change.lines,
@@ -197,6 +212,18 @@ export class SplitBillScreen extends Component {
                     newLine,
                     this.qtyTracker[line.uuid]
                 );
+
+                if (isOrdered) {
+                    const newSplit = (newOrder.last_order_preparation_change.split_lines ??= {});
+                    const newLineData = newOrder.last_order_preparation_change.lines[newLine.uuid];
+                    if (newLineData) {
+                        newSplit[newLine.uuid] = {
+                            uuid: newLine.uuid,
+                            splitted_qty: newLineData.quantity,
+                            original_order: originalOrder.uuid,
+                        };
+                    }
+                }
             }
         }
 
