@@ -396,11 +396,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         if filetype == 'fatturapa':
             if fatturapa_attachment := self.l10n_it_edi_attachment_file:
-                return {
+                return [{
                     'filename': self.l10n_it_edi_attachment_name,
                     'filetype': 'xml',
                     'content': b64decode(fatturapa_attachment),
-                }
+                }]
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
     def get_extra_print_items(self):
