@@ -1,7 +1,7 @@
 import io
 from odoo import models, _
 from odoo.tools import pdf
-from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter, PdfReadError
+from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter, PdfReadError, DependencyError
 
 
 class IrActionsReport(models.Model):
@@ -36,7 +36,7 @@ class IrActionsReport(models.Model):
                     attachment_reader = OdooPdfFileReader(attachment_stream, strict=False)
                     try:
                         output_pdf.appendPagesFromReader(attachment_reader)
-                    except PdfReadError as e:
+                    except (PdfReadError, DependencyError) as e:
                         expense._message_log(body=_(
                             "The attachment (%(attachment_name)s) has not been added to the report due to the following error: '%(error)s'",
                             attachment_name=attachment.name,
