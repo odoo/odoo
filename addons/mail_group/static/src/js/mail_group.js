@@ -29,10 +29,22 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
     /**
      * @private
      */
+    _showSubscriptionMode: function() {
+        this.$el.find('.o_mg_unsubscribe_btn').addClass('d-none');
+        this.$el.find('.o_mg_email_input_group').removeClass('d-none');
+    },
+
+    _showUnSubscriptionMode: function () {
+        this.$el.find('.o_mg_email_input_group').addClass('d-none');
+        this.$el.find('.o_mg_unsubscribe_btn').removeClass('d-none');
+    },
+
     _onSubscribeBtnClick: async function (ev) {
         ev.preventDefault();
         const $email = this.$el.find(".o_mg_subscribe_email");
         const email = $email.val();
+
+        console.log(email);
 
         if (!email.match(/.+@.+/)) {
             this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
@@ -53,10 +65,10 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
 
         if (response === 'added') {
             this.isMember = true;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            this._showUnSubscriptionMode();
         } else if (response === 'removed') {
             this.isMember = false;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Subscribe')).removeClass('btn-outline-primary').addClass('btn-primary');
+            this._showSubscriptionMode();
         } else if (response === 'email_sent') {
             // The confirmation email has been sent
             this.$el.html(
@@ -65,7 +77,7 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
             );
         } else if (response === 'is_already_member') {
             this.isMember = true;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            this._showUnSubscriptionMode();
             this.$el.find('.o_mg_subscribe_form').before(
                 $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
                 .text(_t('This email is already subscribed.'))
@@ -73,7 +85,7 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         } else if (response === 'is_not_member') {
             if (!this.forceUnsubscribe) {
                 this.isMember = false;
-                this.$el.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+                this._showSubscriptionMode();
             }
             this.$el.find('.o_mg_subscribe_form').before(
                 $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
