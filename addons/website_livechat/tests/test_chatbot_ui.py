@@ -160,13 +160,13 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
 
     def test_complete_chatbot_flow_ui(self):
         tests.new_test_user(self.env, login="portal_user", groups="base.group_portal")
-        self.start_tour('/', 'website_livechat_chatbot_flow_tour')
+        self.start_tour('/', 'website_livechat_chatbot_flow_tour', watch=True)
         self._check_complete_chatbot_flow_result()
         self.env['discuss.channel'].search([
             ('livechat_channel_id', '=', self.livechat_channel.id),
             ('chatbot_current_step_id.chatbot_script_id', '=', self.chatbot_script.id),
         ]).unlink()
-        self.start_tour('/', 'website_livechat_chatbot_flow_tour', login="portal_user")
+        self.start_tour('/', 'website_livechat_chatbot_flow_tour', login="portal_user", watch=True)
         self._check_complete_chatbot_flow_result()
 
     def test_chatbot_available_after_reload(self):
