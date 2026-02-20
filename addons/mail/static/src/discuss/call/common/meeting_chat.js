@@ -35,4 +35,8 @@ export class MeetingChat extends Component {
     get channel() {
         return this.store.rtc.channel;
     }
+
+    openPinnedMessages() {
+        this.env.pinMenu?.open();
+    }
 }

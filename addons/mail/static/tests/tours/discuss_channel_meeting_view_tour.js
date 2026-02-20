@@ -7,20 +7,20 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
     const steps = [
         { trigger: ".o-mail-Meeting" },
         {
-            trigger: ".o-mail-Meeting [title='Invite People']",
+            trigger: ".o-mail-Meeting [title='Members']",
             run: "click",
         },
-        { trigger: ".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')" },
+        { trigger: ".o-mail-Meeting .o-mail-ActionPanel:contains('Members')" },
         {
-            trigger: ".o-mail-Meeting [title='Invite People']", // close it
+            trigger: ".o-mail-Meeting [title='Members']", // close it
             run: "click",
         },
         { trigger: ".o-mail-Meeting:not(:has(.o-mail-ActionPanel))" },
         {
-            trigger: ".o-mail-Meeting [title='Invite People']",
+            trigger: ".o-mail-Meeting [title='Members']",
             run: "click",
         },
-        { trigger: ".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')" },
+        { trigger: ".o-mail-Meeting .o-mail-ActionPanel:contains('Members')" },
         {
             trigger: ".o-mail-Meeting [title='Chat']",
             run: "click",

@@ -2,6 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="mail.MeetingChat">
         <ActionPanel t-if="channel" title.translate="In call messages" resizable="true" minWidth="300" initialWidth="400" icon="'fa fa-comments'" contentRef="panelContentRef">
+            <t t-set-slot="pin-icon">
+                <button t-if="channel?.pinnedMessages?.length > 0 and channel?.isMeetingChannel" title="Pinned Messages" class="btn opacity-75 opacity-100-hover position-relative" t-on-click="openPinnedMessages">
+                    <i class="fa fa-thumb-tack"/>
+                    <span class="o-mail-PinCounter badge rounded-circle position-absolute" t-esc="channel.pinnedMessages.length"/>
+                </button>
+            </t>
             <Thread thread="channel.thread" jumpPresent="state.jumpPresent"/>
             <t t-call="mail.ChatWindow.memberTyping"/>
             <Composer
