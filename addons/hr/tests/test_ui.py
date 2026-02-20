@@ -45,3 +45,10 @@ class TestEmployeeUi(HttpCase):
 
         self.start_tour("/odoo", 'version_timeline_auto_save_tour', login="alice")
         self.assertFalse(bob_employee.version_ids[-1].contract_date_start)
+
+    def test_create_employee_with_hr_rights(self):
+        new_test_user(self.env, login='hr_user', groups='hr.group_hr_user')
+        self.start_tour('/odoo', 'hr_officer_create_employee_tour', login='hr_user')
+
+        emp = self.env['hr.employee'].search([('name', 'ilike', 'My Employee')])
+        self.assertTrue(emp)
