@@ -67,6 +67,7 @@ test("should be able to cancel a file upload", async () => {
     expect(".o_we_progressbar").toHaveCount(1);
     await waitForRequest;
     const progressEv = new Event("progress");
+    progressEv.lengthComputable = true;
     progressEv.loaded = 40;
     progressEv.total = 100;
     xhr.upload.dispatchEvent(progressEv);

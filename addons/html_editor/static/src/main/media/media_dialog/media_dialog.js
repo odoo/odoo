@@ -82,6 +82,7 @@ export class MediaDialog extends Component {
             },
             () => [this.selectedMedia[this.state.activeTab].length, this.state.isSaving]
         );
+        this.abortUploads = null;
     }
 
     get initialActiveTab() {
@@ -118,6 +119,7 @@ export class MediaDialog extends Component {
                 selectMedia: (...args) =>
                     this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
+                setAbortUploadsCallback: (abortFunc) => (this.abortUploads = abortFunc),
                 onAttachmentChange: this.props.onAttachmentChange,
                 errorMessages: (errorMessage) => (this.errorMessages[tab.id] = errorMessage),
                 modalRef: this.modalRef,
@@ -332,5 +334,13 @@ export class MediaDialog extends Component {
 
     onTabChange(tab) {
         this.state.activeTab = tab;
+    }
+    async close() {
+        if (this.abortUploads) {
+            this.abortUploads();
+            delete this.abortUploads;
+        }
+        this.state.isSaving = false;
+        await this.props.close();
     }
 }
