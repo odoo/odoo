@@ -22,4 +22,11 @@
         </field>
     </record>
 
+    <record id="action_missing_hsn_product" model="ir.actions.act_window">
+        <field name="name">Missing HSN Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="l10n_in_pos.product_tree_hsn_code"/>
+    </record>
+
 </odoo>

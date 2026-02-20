@@ -26,8 +26,11 @@ export class hsnCodeDialog extends Component {
     async redirect() {
         // Close dialog first
         this.props.close();
-        const url = "/odoo/customer-products";
+        const action_xml_id = await this.pos.data.call("product.template", "l10n_in_get_hsn_code_action", [
+            this.props.productIds,
+        ]);
+        const url = "/odoo/action-" + action_xml_id;
         // We could define another action here which shows by default the products available in pos without hsn if it is available (and otherwise they have to update)
-        window.open(url, '_blank');
+        window.open(url, "_blank");
     }
 }
