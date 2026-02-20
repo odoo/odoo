@@ -198,6 +198,30 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_below_400_codice_simplified.xml')
 
+    def test_export_invoice_document_type(self):
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_b.id,
+            'l10n_it_document_type': self.env.ref('l10n_it_edi.l10n_it_document_type_07').id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'cheap_line',
+                    'price_unit': 100.00,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+                Command.create({
+                    'name': 'cheap_line_2',
+                    'quantity': 2,
+                    'price_unit': 10.0,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'invoice_simplified_document_type.xml')
+
     def test_invoice_total_400_VAT_simplified(self):
         self.company.l10n_it_codice_fiscale = '07149930583'
         invoice = self.env['account.move'].with_company(self.company).create({
