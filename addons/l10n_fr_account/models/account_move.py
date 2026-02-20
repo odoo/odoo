@@ -5,6 +5,9 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_fr_is_company_french = fields.Boolean(compute='_compute_l10n_fr_is_company_french')
+    l10n_fr_account_show_tax_exigibility = fields.Boolean(
+        compute='_compute_l10n_fr_account_show_tax_exigibility'
+    )
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -27,3 +30,20 @@ class AccountMove(models.Model):
         super()._compute_show_delivery_date()
         for move in self.filtered(lambda m: m.country_code == 'FR'):
             move.show_delivery_date = move.is_sale_document()
+
+    @api.depends(
+        'invoice_line_ids.product_id.type',
+        'invoice_line_ids.tax_ids.tax_exigibility',
+        'invoice_line_ids.tax_ids.tax_scope',
+    )
+    def _compute_l10n_fr_account_show_tax_exigibility(self):
+        for move in self:
+            service_lines = move.invoice_line_ids.filtered(
+                lambda aml: aml.product_id.type == 'service'
+            )
+            # Check if any service line has a tax with exigibility set to 'on invoice'
+            move.l10n_fr_account_show_tax_exigibility = any(
+                tax.tax_exigibility == 'on_invoice'
+                and tax.tax_scope == 'consu'
+                for tax in service_lines.mapped('tax_ids')
+            )
