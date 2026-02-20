@@ -4,7 +4,7 @@ from . import (
     test_acl,
     test_all_models,
     test_api,
-    test_autovacuum,
+    test_decorators,
     test_cache,
     test_check_access,
     test_company_checks,
