@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_ruleset_confirmation_wizard" model="ir.ui.view">
+        <field name="name">ruleset.overwrite.confirmation.wizard.form</field>
+        <field name="model">ruleset.overwrite.confirmation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <p>One or more selected records already have a ruleset assigned (highlighted in yellow). Do you want to overwrite them?</p>
+                <footer>
+                    <button name="action_confirm" string="Yes, Overwrite" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

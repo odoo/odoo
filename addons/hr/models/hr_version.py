@@ -596,6 +596,20 @@ class HrVersion(models.Model):
             ('divorced', self.env._('Divorced')),
         ]
 
+    @api.model
+    def _get_current_versions_domain(self):
+        """
+        Returns employee versions that are currently active
+        """
+        today = fields.Date.today()
+        return [
+            ("contract_date_start", "<=", today),
+            "|",
+                ("contract_date_end", "=", False),
+                ("contract_date_end", ">=", today),
+            ('employee_id', '!=', False),
+        ]
+
     def _inverse_resource_calendar_id(self):
         for employee, versions in self.grouped('employee_id').items():
             current_version = employee.current_version_id

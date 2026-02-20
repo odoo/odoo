@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <field name="date_version" position="replace"/>
             <field name="resource_calendar_id" position="replace"/>
+            <field name="department_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
             <field name="job_id" position="after">
                 <field name="resource_calendar_id" optional="show"/>
             </field>
@@ -25,6 +28,12 @@
                     <button display="always" name="action_assign_ruleset" type="object" string="Add" class="btn-primary"/>
                 </header>
             </xpath>
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-warning">has_ruleset_id</attribute>
+            </xpath>
+            <field name="resource_calendar_id" position="after">
+                <field name="ruleset_id" groups="hr.group_hr_manager"/>
+            </field>
         </field>
     </record>
 
@@ -77,11 +86,12 @@
         <field name="target">new</field>
         <field name="view_id" ref="hr_attendance.hr_version_list_view_enhanced_hr_attendance_add"/>
         <field name="search_view_id" ref="hr_attendance.hr_version_search_view_enhanced_hr_attendance"/>
+        <field name="group_ids" eval="[(4, ref('hr.group_hr_manager'))]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Records.
             </p><p>
-                There are no employees without an overtime ruleset.
+                There are no employees without this overtime ruleset.
             </p>
         </field>
     </record>

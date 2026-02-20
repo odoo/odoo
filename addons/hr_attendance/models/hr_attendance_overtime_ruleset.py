@@ -34,16 +34,8 @@ class HrAttendanceOvertimeRuleset(models.Model):
     version_ids = fields.One2many('hr.version', 'ruleset_id')
     versions_count = fields.Integer(compute="_compute_versions_count")
 
-    def _get_current_versions_domain(self):
-        today = fields.Date.today()
-        return [
-            ("ruleset_id", "in", self.ids),
-            ("contract_date_start", "<=", today),
-            "|",
-                ("contract_date_end", "=", False),
-                ("contract_date_end", ">=", today),
-            ('employee_id', '!=', False),
-        ]
+    def _get_versions_with_current_ruleset_domain(self):
+        return [("ruleset_id", "in", self.ids)] + self.env["hr.version"]._get_current_versions_domain()
 
     def _compute_rules_count(self):
         for ruleset in self:
@@ -51,7 +43,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     def _compute_versions_count(self):
         count_by_ruleset = dict(self.env['hr.version']._read_group(
-                domain=self._get_current_versions_domain(),
+                domain=self._get_versions_with_current_ruleset_domain(),
                 groupby=['ruleset_id'],
                 aggregates=['__count'],
             ))
@@ -73,9 +65,15 @@ class HrAttendanceOvertimeRuleset(models.Model):
         self._attendances_to_regenerate_for()._update_overtime()
 
     def action_show_versions(self):
+        if not self.versions_count:
+            action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
+            action['domain'] = self.env["hr.version"]._get_current_versions_domain()
+            action['context'] = {'default_ruleset_id': self.id}
+            return action
+
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view')
-        action['domain'] = self._get_current_versions_domain()
+        action['domain'] = self._get_versions_with_current_ruleset_domain()
         action['context'] = {'default_ruleset_id': self.id}
         return action
 

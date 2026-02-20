@@ -30,6 +30,7 @@ actions(Check in/Check out) performed by them.
         'views/hr_attendance_kiosk_templates.xml',
         'views/hr_attendance_overtime_rule_views.xml',
         'views/hr_version_views.xml',
+        'views/ruleset_overwrite_confirmation_wizard.xml',
     ],
     'demo': [
         'data/hr_attendance_demo.xml'
