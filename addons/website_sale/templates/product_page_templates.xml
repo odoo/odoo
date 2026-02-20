@@ -287,7 +287,39 @@
                         </span>
                     </div>
 
-                    <t t-if="attribute.display_type == 'select'">
+                    <t t-if="attribute.is_thumbnail_visible">
+                        <ul
+                            t-att-data-attribute-id="attribute.id"
+                            t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
+                        >
+                            <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">
+                                <t
+                                    t-set="img_url"
+                                    t-value="attribute_value_images.get(ptav.id)"
+                                />
+                                <label
+                                    name="o_wsale_attribute_thumbnail_selector"
+                                    t-attf-style="background-image: url(#{img_url}); background-size: cover;"
+                                    t-attf-class="css_attribute_thumbnail oe_img_bg o_bg_img_center position-relative d-block bg-body cursor-pointer #{'active' if ptav in combination else ''}"
+                                >
+                                    <input
+                                        type="radio"
+                                        t-attf-class="js_variant_change opacity-0 cursor-pointer #{attribute.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value-id="ptav.id"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"
+                                    />
+                                </label>
+                            </li>
+                        </ul>
+                    </t>
+                    <t t-elif="attribute.display_type == 'select'">
                         <select
                             t-att-data-attribute-id="attribute.id"
                             t-attf-class="form-select css_attribute_select o_wsale_product_attribute js_variant_change #{attribute.create_variant} #{'d-none' if single_and_custom else ''}"
@@ -380,8 +412,10 @@
                                 <t t-set="color_style"
                                    t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
                                 />
-                                <label t-attf-style="#{img_style or color_style}"
-                                       t-attf-class="css_attribute_color cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                <label
+                                    name="o_wsale_attribute_color_selector"
+                                    t-attf-style="#{img_style or color_style}"
+                                    t-attf-class="css_attribute_color cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                                 >
                                       <input type="radio"
                                         t-attf-class="js_variant_change cursor-pointer #{attribute.create_variant}"

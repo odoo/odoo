@@ -56,7 +56,7 @@
 
 .css_attribute_image {
     --o-wsale-css-attribute-image__height: 4rem;
-    --o-wsale-css-attribute-image__outline-width: #{$border-width * 2};
+    --o-wsale-css-attribute-image__outline-width: #{$border-width};
 
     height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
     aspect-ratio: 1;
@@ -68,6 +68,9 @@
         outline-color: map-get($theme-colors, 'primary');
     }
 
+    &:where(:has(input:focus-visible)) {
+        box-shadow: $focus-ring-box-shadow;
+    }
 
     &.custom_value {
         background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
@@ -81,6 +84,27 @@
         --o-wsale-css-attribute-image__height: 3rem;
         --o-wsale-css-attribute-image__outline-width: #{$border-width};
     }
+}
+
+.css_attribute_thumbnail {
+    box-sizing: content-box;
+    border: 1px solid $body-bg;
+    border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
+    outline: $border-width solid $border-color;
+    aspect-ratio: var(--o-wsale-product-image-ratio);
+    width: 64px;
+
+    &:hover, &.active {
+        outline-color: $primary;
+    }
+
+    &:where(:has(input:focus-visible)) {
+        box-shadow: $focus-ring-box-shadow;
+    }
+}
+
+.o_wsale_product_page_opt_image_ratio_auto label.css_attribute_thumbnail {
+    min-height: 64px;
 }
 
 .css_not_available_msg {
