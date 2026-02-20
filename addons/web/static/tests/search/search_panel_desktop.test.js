@@ -763,6 +763,57 @@ test("use category (on selection) to refine search", async () => {
     expect(component.domain).toEqual([]);
 });
 
+test("use category (on many2many) to refine search", async () => {
+    Partner._records.push({
+        id: 5,
+        bar: true,
+        foo: "woof",
+        int_field: 8,
+        company_ids: [5, 3],
+        company_id: 5,
+        state: "def",
+        category_id: 7,
+    });
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_ids" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    const component = await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+        domain: [["bar", "=", true]],
+        context: {
+            searchpanel_default_company_id: false,
+            searchpanel_default_state: "ghi",
+        },
+    });
+    expect(component.domain).toEqual([["bar", "=", true]]);
+
+    // select "asustek"
+    await contains(queryAll`.o_search_panel_category_value header`[1]).click();
+    expect(`.o_search_panel_category_value .active`).toHaveCount(1);
+    expect(`.o_search_panel_category_value:eq(1) .active`).toHaveCount(1);
+    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_ids", "=", 3]]);
+
+    // select "agrolait"
+    await contains(queryAll`.o_search_panel_category_value header`[2]).click();
+    expect(`.o_search_panel_category_value .active`).toHaveCount(1);
+    expect(`.o_search_panel_category_value:eq(2) .active`).toHaveCount(1);
+    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_ids", "=", 5]]);
+
+    // select "All"
+    await contains(queryAll`.o_search_panel_category_value header`[0]).click();
+    expect(`.o_search_panel_category_value .active`).toHaveCount(1);
+    expect(`.o_search_panel_category_value:first .active`).toHaveCount(1);
+    expect(component.domain).toEqual([["bar", "=", true]]);
+});
+
 test("category has been archived", async () => {
     Company._fields.active = fields.Boolean({ string: "Archived" });
     Company._records = [
