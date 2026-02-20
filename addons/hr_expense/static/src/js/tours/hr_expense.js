@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 },
 {
     trigger: '.o_field_widget[name="product_id"] .o_input_dropdown',
-    content: _t("Enter a name then choose a category and configure the amount of your expense."),
+    content: _t("Enter a name then choose a product and configure the amount of your expense."),
     tooltipPosition: 'bottom',
     run: "click",
 },

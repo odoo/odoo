@@ -8,7 +8,7 @@ class HrExpense(models.Model):
 
     sale_order_id = fields.Many2one(
         'sale.order',
-        string='Customer to Reinvoice',
+        string='Reinvoice to',
         compute='_compute_sale_order_id',
         store=True,
         readonly=False,

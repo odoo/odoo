@@ -104,16 +104,15 @@
                             invisible="nb_attachment == 0 or state != 'draft'" data-hotkey="v"/>
                     <button name="action_approve" string="Approve" type="object" data-hotkey="q" context="{'validate_analytic': True}"
                             invisible="nb_attachment == 0 or not can_approve or state != 'submitted'" class="oe_highlight o_expense_approve_highlight"/>
-                    <button name="action_post" string="Post Journal Entries" type="object" data-hotkey="y" class="oe_highlight o_expense_post_highlight"
+                    <button name="action_post" string="Post" type="object" data-hotkey="y" class="oe_highlight o_expense_post_highlight"
                             invisible="nb_attachment == 0 or state != 'approved'" groups="account.group_account_invoice"/>
 
-                    <!-- With attachments the attach document comes last-->
                     <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
                     <button name="action_submit" string="Submit" type="object" class="o_expense_submit"
                             invisible="nb_attachment &gt;= 1 or state != 'draft'" data-hotkey="v"/>
                     <button name="action_approve" string="Approve" type="object" data-hotkey="q" context="{'validate_analytic': True}"
                             invisible="nb_attachment &gt;= 1 or not can_approve or state != 'submitted'" class="o_expense_approve"/>
-                    <button name="action_post" string="Post Journal Entries" type="object" data-hotkey="y" class="o_expense_post"
+                    <button name="action_post" string="Post" type="object" data-hotkey="y" class="o_expense_post"
                             invisible="nb_attachment  &gt;= 1 or state != 'approved'" groups="account.group_account_invoice"/>
 
                     <button name="action_refuse" string="Refuse" invisible="state not in ('submitted', 'approved')" type="object"
@@ -123,14 +122,11 @@
                     <!-- v In the case where the user has no accounting rights, we don't show the button in the post & done states  -->
                     <button name="action_reset" string="Reset" type="object" data-hotkey="r"
                             invisible="not can_reset or state in ('draft', 'posted', 'in_payment','paid')" groups="!account.group_account_invoice"/>
-                    <button name="action_split_wizard" string="Split Expense" type="object" invisible="state != 'draft' or product_has_cost"
+                    <button name="action_split_wizard" string="Split" type="object" invisible="state != 'draft' or product_has_cost"
                             groups="!hr_expense.group_hr_expense_team_approver,!account.group_account_invoice" class="o_expense_split_user"/>
-                    <button name="action_split_wizard" string="Split Expense" type="object" class="o_expense_split_manager"
+                    <button name="action_split_wizard" string="Split" type="object" class="o_expense_split_manager"
                             invisible="state in ('in_payment', 'paid', 'refused', 'posted') or product_has_cost"
                             groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
-
-                    <!-- With attachments the attach_document comes last -->
-                    <widget name="attach_document" string="Attach Receipt" action="attach_document" invisible="nb_attachment == 0"/>
 
                     <!-- Statusbar -->
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved,posted,paid"
@@ -152,8 +148,9 @@
                             class="oe_stat_button"
                             icon="fa-file-text-o"
                             invisible="not split_expense_origin_id"
-                            string="Split"
-                        />
+                        >
+                        <field string="Related" name="split_expense_count" widget="statinfo"/>
+                        </button>
                         <button name="action_open_account_move"
                             class="oe_stat_button"
                             icon="fa-bars"
@@ -258,7 +255,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date" readonly="not is_editable" class="w-50"/>
+                            <field name="date" string="Date" readonly="not is_editable" class="w-50"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
                             <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
@@ -273,7 +270,9 @@
                                    invisible="payment_mode != 'company_account'"
                                    readonly="not is_editable"
                                    required="payment_mode == 'company_account'"/>
-                            <field name="analytic_distribution" widget="analytic_distribution"
+                            <field name="analytic_distribution"
+                                string="Analytic"
+                                widget="analytic_distribution"
                                 groups="analytic.group_analytic_accounting"
                                 options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"
                                 readonly="not is_editable"/>
@@ -452,8 +451,9 @@
                     <!-- Group bys -->
                     <group>
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Category" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Reimbursement" name="reimbursement" domain="[]" context="{'group_by': 'payment_mode'}"/>
                         <filter string="Expense Date" name="expensesmonth" domain="[]" context="{'group_by': 'date'}"
                                 help="Expense Date"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"
@@ -645,7 +645,7 @@
 
         <menuitem id="menu_hr_expense_configuration" name="Configuration" parent="menu_hr_expense_root"
             sequence="100"/>
-        <menuitem id="menu_hr_product" name="Expense Categories" parent="menu_hr_expense_configuration"
+        <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration"
             action="hr_expense_product" groups="hr_expense.group_hr_expense_manager" sequence="10"/>
 
         <menuitem id="menu_hr_expense_account_employee_expenses" name="Employee Expenses" sequence="22"

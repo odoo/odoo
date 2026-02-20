@@ -227,4 +227,4 @@ class TestExpensesMailImport(TestExpenseCommon):
         }
 
         expense = self.env['hr.expense'].message_new(message)
-        self.assertRaisesRegex(ValidationError, "Select a category to proceed.", expense.action_submit)
+        self.assertRaisesRegex(ValidationError, "Select a product to proceed.", expense.action_submit)
