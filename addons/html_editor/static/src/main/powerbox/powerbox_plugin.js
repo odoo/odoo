@@ -101,24 +101,11 @@ export class PowerboxPlugin extends Plugin {
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        user_commands: {
-            id: "openPowerbox",
-            run: () =>
-                this.openPowerbox({
-                    commands: this.getAvailablePowerboxCommands(),
-                    categories: this.getResource("powerbox_categories"),
-                }),
-        },
         powerbox_categories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),
             withSequence(60, { id: "widget", name: _t("Widget") }),
             withSequence(100, { id: "modules", name: _t("Modules") }),
         ],
-        power_buttons: withSequence(100, {
-            commandId: "openPowerbox",
-            description: _t("More options"),
-            icon: "oi-ellipsis-v",
-        }),
         hints: withSequence(30, {
             selector: baseContainerGlobalSelector,
             text: _t('Type "/" for commands'),
