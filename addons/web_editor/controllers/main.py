@@ -620,6 +620,9 @@ class Web_Editor(http.Controller):
                     }])
 
         if attachment.url:
+            # Use SUPERUSER_ID since non admin editors will not have permission
+            # to modify the url field of an attachment.
+            attachment = attachment.with_user(SUPERUSER_ID)
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.
             if re.match(r'^/\w+/static/', attachment.url):
