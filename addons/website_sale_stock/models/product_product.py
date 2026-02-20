@@ -94,13 +94,16 @@ class ProductProduct(models.Model):
                 product.stock_notification_partner_ids -= partner
                 self.env['ir.cron']._commit_progress(1)
 
-    def _to_markup_data(self, website):
-        """ Override of `website_sale` to include the product availability in the offer. """
-        markup_data = super()._to_markup_data(website)
+    def _to_structured_data(self, website):
+        structured_data = super()._to_structured_data(website)
         if self.is_product_variant and self.is_storable:
-            if not self._is_sold_out():
-                availability = 'https://schema.org/InStock'
-            else:
-                availability = 'https://schema.org/OutOfStock'
-            markup_data['offers']['availability'] = availability
-        return markup_data
+            availability = (
+                "https://schema.org/InStock"
+                if not self._is_sold_out()
+                else "https://schema.org/OutOfStock"
+            )
+            offers = structured_data.values.get("offers")
+            if offers:
+                offers.set(availability=availability)
+
+        return structured_data

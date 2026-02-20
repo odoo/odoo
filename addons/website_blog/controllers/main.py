@@ -6,8 +6,9 @@ from zoneinfo import ZoneInfo
 import babel.dates
 import werkzeug
 
-from odoo import http, tools, models
+from odoo import http, tools, models, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.structure_data_defination import JsonLd, create_breadcrumbs
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.session import touch
@@ -173,6 +174,59 @@ class WebsiteBlog(http.Controller):
             'original_search': fuzzy_search_term and search,
         }
 
+    def _prepare_blog_listing_structured_data(self, website, blog, posts):
+        if not posts:
+            return []
+
+        base_url = website.get_base_url()
+        org_id = f"{base_url}/#organization"
+
+        posts_sd = posts._to_structured_data(website=website)
+        if not posts_sd:
+            return []
+
+        for post_sd in posts_sd:
+            post_sd.add_nested(publisher=JsonLd.create_id_reference("Organization", org_id))
+            if blog:
+                blog_id = f"{base_url}/blog/{blog.id}#primary_blog"
+                post_sd.add_nested(is_part_of=JsonLd.create_id_reference("Blog", blog_id))
+
+        result = []
+
+        company = website.company_id
+
+        if company:
+            result.append(website.organization_structured_data(with_id=True))
+
+        if blog:
+            blog_sd = blog._to_structured_data(website=website)
+            blog_sd.values["@id"] = f"{base_url}/blog/{blog.id}#primary_blog"
+            organization = JsonLd.create_id_reference("Organization", org_id)
+            blog_sd.add_nested(publisher=organization, has_part=posts_sd)
+            result.extend([blog_sd, self._get_blog_breadcrumb_structured_data(website, blog=blog)])
+        else:
+            collection = JsonLd(
+                "CollectionPage",
+                name=_("Blog"),
+                url=f"{base_url}{request.httprequest.path}",
+            )
+            collection.add_nested(has_part=posts_sd)
+            result.extend([collection, self._get_blog_breadcrumb_structured_data(website)])
+
+        return result
+
+    def _get_blog_breadcrumb_structured_data(self, website, blog=None):
+        base_url = website.get_base_url()
+        items = [
+            (website.name, base_url),
+            (_("Blog"), f"{base_url}/blog"),
+        ]
+        if blog:
+            slug = self.env["ir.http"]._slug(blog)
+            items.append((blog.name, f"{base_url}/blog/{slug}"))
+
+        return create_breadcrumbs(items)
+
     def sitemap_blog(env, rule, qs):
         Blog = env['blog.blog']
         website = env['website'].get_current_website()
@@ -228,6 +282,10 @@ class WebsiteBlog(http.Controller):
         if blog:
             values['main_object'] = blog
         values['blog_url'] = QueryURL('/blog', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
+
+        structured_data = self._prepare_blog_listing_structured_data(request.website, blog, values.get('posts'))
+        if structured_data:
+            values['blog_ld_json'] = JsonLd.render_structured_data_list(structured_data)
 
         return request.render("website_blog.blog_post_short", values)
 
@@ -331,6 +389,13 @@ class WebsiteBlog(http.Controller):
             'date': date_begin,
             'blog_url': blog_url,
         }
+
+        post_data = blog_post._to_structured_data(website=request.website)
+        breadcrumb_data = blog_post._to_breadcrumb_structured_data(website=request.website)
+        if post_data and breadcrumb_data:
+            post_data.append(breadcrumb_data)
+        if post_data:
+            values['blog_post_ld_json'] = JsonLd.render_structured_data_list(post_data)
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):

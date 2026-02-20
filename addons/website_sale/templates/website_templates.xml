@@ -67,10 +67,7 @@
         </body>
         <head position="inside">
             <!-- Insert JSON-LD markup data for SEO. -->
-            <script
-                type="application/ld+json"
-                t-out="markup_data_json or website and website._get_ecommerce_store_markup_json()"
-            />
+            <script t-if="markup_data_json" type="application/ld+json" t-out="markup_data_json"/>
         </head>
     </template>
 

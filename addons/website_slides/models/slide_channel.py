@@ -8,6 +8,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
@@ -1098,3 +1099,16 @@ class SlideChannel(models.Model):
     @api.model
     def _allow_publish_rating_stats(self):
         return True
+
+    def _to_structured_data(self, website, just_id=False):
+        self.ensure_one()
+        provider = None
+        if just_id and website:
+            provider = JsonLd.create_id_reference("Organization", f"{website.get_base_url()}/#organization")
+        if website and not just_id:
+            provider = website.organization_structured_data()
+        return JsonLd("Course",
+                               url=self.website_absolute_url,
+                               name=self.name,
+                               description=self.description_short,
+                               provider=provider)

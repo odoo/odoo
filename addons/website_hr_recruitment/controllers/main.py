@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import itemgetter
 
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.fields import Domain
@@ -189,7 +190,10 @@ class WebsiteHrRecruitment(WebsiteForm):
 
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def job(self, job, **kwargs):
+        job_structured_data = job._to_structured_data()
+        organization_structured_data = request.website.organization_structured_data(with_id=True)
         return request.render("website_hr_recruitment.detail", {
+            'job_structured_data': JsonLd.render_structured_data_list([organization_structured_data, job_structured_data]),
             'job': job,
             'main_object': job,
         })

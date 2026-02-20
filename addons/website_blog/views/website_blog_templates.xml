@@ -4,7 +4,7 @@
 <!-- ======   Overall pages layout   ===========================================
 ============================================================================ -->
 <template id="index" name="Blog Navigation">
-    <t t-call="website.layout">
+    <t t-call="website.layout" head="head">
         <div id="wrap" class="js_blog website_blog">
             <t t-out="0"/>
 
@@ -25,6 +25,7 @@ list of filtered posts (by date or tag).
     <t t-set="head">
         <link t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
         <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
+        <script t-if="blog_ld_json" type="application/ld+json" t-out="blog_ld_json"/>
     </t>
     <t t-call="website_blog.index"
         head="head"
@@ -165,7 +166,10 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
-    <t t-call="website_blog.index">
+    <t t-set="head">
+        <script t-if="blog_post_ld_json" type="application/ld+json" t-out="blog_post_ld_json"/>
+    </t>
+    <t t-call="website_blog.index" head="head">
 
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>

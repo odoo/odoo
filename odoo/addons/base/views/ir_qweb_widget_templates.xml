@@ -22,11 +22,17 @@
         <t t-if="object.country_id.name_position != 'after'">
             <t t-call="base.contact_name"/>
         </t>
-        <div class="gap-2" t-att-itemprop="options.get('with_microdata') and 'address'" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+        <t t-set="with_microdata" t-value="options.get('with_microdata')"/>
+        <div class="gap-2"
+            t-att-itemprop="with_microdata and 'address'"
+            t-att-itemscope="with_microdata and 'itemscope'"
+            t-att-itemtype="with_microdata and 'http://schema.org/PostalAddress'">
 
             <div t-if="address and 'address' in fields" t-attf-class="d-flex align-items-baseline gap-1">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
-                <span class="w-100 lh-sm text-break d-block" itemprop="streetAddress" t-out="address"/>
+                <span class="w-100 lh-sm text-break d-block"
+                    t-att-itemprop="with_microdata and 'streetAddress'"
+                    t-out="address"/>
             </div>
             <t t-set="has_city" t-value="city and 'city' in fields"/>
             <t t-set="has_state" t-value="object.state_id and object.country_id.state_required"/>
@@ -35,30 +41,39 @@
                 <span>
                     <div>
                         <t t-if="has_city">
-                            <span itemprop="addressLocality" t-out="city"/><t t-if="country_id">,</t>
+                            <span t-att-itemprop="with_microdata and 'addressLocality'" t-out="city"/><t t-if="country_id">,</t>
                         </t>
                         <t t-if="has_state">
-                            <span itemprop="addressRegion" t-out="object.state_id.code"/>,
+                            <span t-att-itemprop="with_microdata and 'addressRegion'" t-out="object.state_id.code"/>,
                         </t>
-                        <span itemprop="addressCountry" t-out="country_id"/>
+                        <span t-att-itemprop="with_microdata and 'addressCountry'" t-out="country_id"/>
                     </div>
                 </span>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="phone and 'phone' in fields">
-                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-out="phone"/>
+                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/>
+                <span class="o_force_ltr" t-att-itemprop="with_microdata and 'telephone'" t-out="phone"/>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="mobile and 'mobile' in fields">
-                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-out="mobile"/>
+                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/>
+                <span class="o_force_ltr" t-att-itemprop="with_microdata and 'telephone'" t-out="mobile"/>
             </div>
             <!-- Prevent issue with iOS Safari parsing of schema data without telephone itemprops -->
-            <div t-if="not (phone and 'phone' in fields) and not (mobile and 'mobile' in fields)" itemprop="telephone"/>
+            <div t-if="with_microdata and not (phone and 'phone' in fields) and not (mobile and 'mobile' in fields)" itemprop="telephone"/>
             <div class="d-flex align-items-baseline gap-1" t-if="website and 'website' in fields">
                 <i t-if="not options.get('no_marker')" class='fa fa-globe fa-fw' role="img" aria-label="Website" title="Website"/>
-                <a class="text-break w-100" t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-out="website"/></a>
+                <a class="text-break w-100" t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)">
+                    <span t-att-itemprop="with_microdata and 'website'" t-out="website"/>
+                </a>
             </div>
-            <div class="d-flex align-items-baseline gap-1" t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span class="text-break w-100" itemprop="email" t-out="email"/></div>
+            <div class="d-flex align-items-baseline gap-1" t-if="email and 'email' in fields">
+                <i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/>
+                <span class="text-break w-100" t-att-itemprop="with_microdata and 'email'" t-out="email"/>
+            </div>
         </div>
-        <div t-if="vat and 'vat' in fields"><span t-out="vat_label"/>: <span itemprop="vatID" t-out="vat"/></div>
+        <div t-if="vat and 'vat' in fields">
+            <span t-out="vat_label"/>: <span t-att-itemprop="with_microdata and 'vatID'" t-out="vat"/>
+        </div>
         <t t-if="object.country_id and object.country_id.name_position == 'after'">
             <t t-call="base.contact_name"/>
         </t>

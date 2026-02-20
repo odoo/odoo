@@ -13,6 +13,7 @@ from odoo import fields, http, tools, _
 from odoo.addons.base.models.ir_qweb import keep_query
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.fields import Domain
@@ -471,6 +472,7 @@ class WebsiteSlides(WebsiteProfile):
         render_values.update(self._prepare_user_values(**post))
         render_values.update(self._slides_channel_user_values(
             compute_channels_my=not self._has_slide_channel_search(**search_args)))
+        course_list_json_ld = self._prepare_summary_structured_data(channels)
         render_values.update({
             'channels': channels,
             'tag_groups': tag_groups,
@@ -490,9 +492,29 @@ class WebsiteSlides(WebsiteProfile):
                 page=page,
                 step=page_size,
                 scope=3) if page else False,
+            'course_list_json_ld': JsonLd.render_structured_data_list(course_list_json_ld),
         })
 
         return render_values
+
+    def _prepare_summary_structured_data(self, channels):
+        """Prepare structured data for the course summary page."""
+        website = request.website
+        return [
+            website.organization_structured_data(with_id=True),
+            JsonLd(
+                "ItemList",
+                url=request.httprequest.url,
+                itemListElement=[
+                    JsonLd(
+                        "ListItem",
+                        position=index,
+                        item=channel._to_structured_data(website, just_id=True),
+                    )
+                    for index, channel in enumerate(channels, start=1)
+                ],
+            ),
+        ]
 
     def _prepare_additional_channel_values(self, values, **kwargs):
         return values
@@ -650,6 +672,7 @@ class WebsiteSlides(WebsiteProfile):
                     'access_error_content_name': request.params.get('access_error_slide_name'),
                 })
 
+        course_json_ld = channel._to_structured_data(request.website)
         render_values = self._slide_render_context_base()
         render_values.update({
             'channel': channel,
@@ -674,6 +697,7 @@ class WebsiteSlides(WebsiteProfile):
             'invite_partner_id': invite_partner_id,
             'invite_preview': valid_invite_values.get('invite_preview'),
             'is_partner_without_user': valid_invite_values.get('is_partner_without_user'),
+            'course_json_ld': course_json_ld,
             ** errors,
             ** self._slide_channel_prepare_review_values(channel),
         })

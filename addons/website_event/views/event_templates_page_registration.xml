@@ -3,7 +3,14 @@
 
 
 <template id="event_details" name="Event Header">
-    <t t-call="website_event.layout">
+    <t t-set="head">
+        <script t-if="event_json_ld" type="application/ld+json" t-out="event_json_ld"/>
+    </t>
+    <t t-call="website_event.layout" head="head">
+        <!-- Remove this in cleanup to something like this because it's already there inside event_json_ld -->
+        <!-- <div class="h-100" name="event">
+            <t t-out="0"/>
+        </div> -->
         <div class="h-100" name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
             <meta itemprop="startDate" t-attf-content="{{event.date_begin}}Z"/>
             <meta itemprop="endDate" t-attf-content="{{event.date_end}}Z"/>
@@ -14,6 +21,7 @@
 
 <!-- Event - Description -->
 <template id="event_description_full" name="Event Description" track="1">
+    <!-- Check this template for dead code after JSON LD integration TODO -->
     <t t-set="hide_submenu" t-value="True"/>
     <t t-set="hide_register_cta" t-value="True"/>
     <t t-set="opt_event_description_cover_hidden" t-value="is_view_active('website_event.opt_event_description_cover_hidden')"/>
@@ -113,6 +121,7 @@
                                 <h6 class="o_wevent_sidebar_title">Location</h6>
                             </div>
                             <div itemprop="name" class="mb-1" t-field="event.address_id"/>
+                            <!-- TODO remove microdata from here -->
                             <small class="d-block mb-2" t-field="event.address_id" t-options='{
                                 "widget": "contact",
                                 "fields": ["address"],

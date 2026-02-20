@@ -161,3 +161,17 @@ def create_image_attachment(env, image_path, image_name):
         'url': Attachments.get_base_url() + image_path,
     })
     return img
+
+
+def truncate_text(text, max_length=100, suffix='...'):
+    """
+    Truncates a text to a maximum length, adding a suffix if truncation occurs.
+
+    :param text: the text to truncate
+    :param max_length: the maximum length of the text including the suffix
+    :param suffix: the suffix to add if truncation occurs
+    :return: the truncated text
+    """
+    if len(text) <= max_length:
+        return text
+    return text[:max_length - len(suffix)] + suffix

@@ -18,6 +18,7 @@ from lxml import etree, html
 from urllib.parse import urlparse
 from werkzeug import urls
 
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
@@ -2409,4 +2410,90 @@ class Website(models.CachedModel):
             menu.is_visible
             and menu.url not in ('/', '', '#')
             and not menu.url.startswith(('/?', '/#', ' '))
+        )
+
+    def organization_structured_data(self, with_id=False, schema_type="Organization"):
+        """
+        Generate Organization structured data using only website context.
+        """
+        base_url = self.get_base_url()
+        schema = JsonLd(
+            schema_type,
+            name=self.name,
+            url=base_url,
+        )
+
+        if with_id:
+            schema.set(id=f"{base_url}/#{schema_type.lower()}")
+
+        social_links = [
+            self.social_facebook,
+            self.social_linkedin,
+            self.social_twitter,
+            self.social_instagram,
+            self.social_tiktok,
+            self.social_youtube,
+            self.social_github,
+            self.social_discord,
+        ]
+        if same_as := list(filter(None, social_links)):
+            schema.set(same_as=same_as)
+
+        logo_url = f"{base_url}/logo.png?company={self.company_id.id}"
+        schema.add_nested(logo=JsonLd("ImageObject", url=logo_url))
+
+        return schema
+
+    # TODO: remove if used nowhere in last.
+    # @api.model
+    # def contact_structured_data(self, company):
+    #     """
+    #     Generate structured data for the contact point of a company.
+
+    #     Args:
+    #         company (res.company): The company for which to generate contact point structured data
+
+    #     Returns:
+    #         JsonLd or None: The structured data schema builder for the contact point
+    #     """
+    #     if not company:
+    #         return None
+    #     telephone = (company.phone or '').strip() or None
+    #     email = (company.email or '').strip() or None
+    #     if telephone or email:
+    #         return JsonLd("ContactPoint", telephone=telephone, email=email)
+    #     return None
+
+    @api.model
+    def postal_address_structured_data(self, **kwargs):
+        """
+        Generate PostalAddress structured data.
+
+        Accepted kwargs:
+            street
+            street2
+            city
+            zip
+            state_code
+            country_code
+        """
+
+        street = (kwargs.get("street") or "").strip() or None
+        street2 = (kwargs.get("street2") or "").strip() or None
+        street_address = " ".join(filter(None, [street, street2])).strip() or None
+        zip_code = (kwargs.get("zip") or "").strip() or None
+        city = kwargs.get("city")
+        state = kwargs.get("state_code")
+        country = kwargs.get("country_code")
+
+        if not any([street, street2, city, zip_code, state, country]):
+            return None
+
+        return JsonLd(
+            "PostalAddress",
+            street_address=street_address,
+            address_locality=city,
+            postal_code=zip_code,
+            address_region=state,
+            address_country=country,
         )

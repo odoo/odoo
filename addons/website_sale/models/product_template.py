@@ -13,6 +13,7 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
+from odoo.addons.website.structure_data_defination import JsonLd
 from odoo.addons.website.tools import text_from_html
 from odoo.addons.website_sale.const import SHOP_PATH
 
@@ -1025,7 +1026,7 @@ class ProductTemplate(models.Model):
                 ), pricelist_rule_id
         return price, pricelist_rule_id
 
-    def _to_markup_data(self, website):
+    def _to_structured_data(self, website):
         """ Generate JSON-LD markup data for the current product template.
 
         If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
@@ -1039,7 +1040,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         if self.product_variant_count == 1:
-            markup_data = self.product_variant_id._to_markup_data(website)
+            markup_data = self.product_variant_id._to_structured_data(website)
         else:
             # perf: temporal solution to avoid slowness when product have many variants and
             # pricelist rules
@@ -1052,24 +1053,40 @@ class ProductTemplate(models.Model):
                 product_variant_ids = self.product_variant_ids
 
             base_url = website.get_base_url()
-            markup_data = {
-                '@context': 'https://schema.org',
-                '@type': 'ProductGroup',
-                'name': self.name,
-                'image': f'{base_url}{website.image_url(self, "image_1920")}',
-                'url': f'{base_url}{self.website_url}',
-                'hasVariant': [product._to_markup_data(website) for product in product_variant_ids]
-            }
+            product_group_id = (
+                self.default_code
+                or (self.product_variant_ids[:1].default_code)
+                or f"TEMPLATE-{self.id}"
+            )
+            product_group = JsonLd(
+                "ProductGroup",
+                name=self.name,
+                url=f"{base_url}{self.website_url}",
+                image=f"{base_url}{website.image_url(self, 'image_1920')}",
+                description=self.description_sale,
+                product_group_id=product_group_id,
+            )
+            brand_obj = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
+            if brand_obj:
+                product_group.add_nested(brand=brand_obj)
+
+            product_group.add_nested(has_variant=[
+                variant._to_structured_data(website)
+                for variant in product_variant_ids
+            ])
+
             if self.description_ecommerce:
-                markup_data['description'] = text_from_html(self.description_ecommerce)
+                product_group.set(description=text_from_html(self.description_ecommerce))
+            markup_data = product_group
 
         if website.is_view_active('website_sale.product_comment') and self.rating_count:
-            markup_data['aggregateRating'] = {
-                '@type': 'AggregateRating',
-                # sudo: product.product - visitor can access product average rating
-                'ratingValue': self.sudo().rating_avg,
-                'reviewCount': self.rating_count,
-            }
+            rating = JsonLd(
+                "AggregateRating",
+                rating_value=self.sudo().rating_avg,
+                review_count=self.rating_count,
+            )
+            markup_data.add_nested(aggregate_rating=rating)
+
         return markup_data
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):

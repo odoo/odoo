@@ -5,6 +5,7 @@
 <template id="index" name="Events" track="1">
     <t t-set="head">
         <meta t-if="search_tags" name="robots" content="none"/>
+        <script t-if="event_list_json_ld" type="application/ld+json" t-out="event_list_json_ld"/>
     </t>
     <t t-call="website.layout" head="head">
         <div id="wrap" class="o_wevent_index">

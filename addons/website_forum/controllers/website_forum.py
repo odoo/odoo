@@ -312,11 +312,12 @@ class WebsiteForum(WebsiteProfile):
 
     def _prepare_question_template_vals(self, forum, post, question):
         values = self._prepare_user_values(forum=forum, searches=post)
+        structured_data = question._to_structured_data()
         values.update({
             'main_object': question,
             'edit_in_backend': True,
             'question': question,
-            'seo_microdata': question._get_microdata(),
+            'structured_data': structured_data and structured_data.render_json(),
             'header': {'question_data': True},
             'filters': 'question',
             'reversed': reversed,

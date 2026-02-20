@@ -6,6 +6,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.website.structure_data_defination import JsonLd
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -166,7 +168,7 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
+    def _to_structured_data(self, website):
         """ Generate JSON-LD markup data for the current product.
 
         :param website website: The current website.
@@ -186,21 +188,28 @@ class ProductProduct(models.Model):
         )
 
         base_url = website.get_base_url()
-        markup_data = {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            'name': self.with_context(display_default_code=False).display_name,
-            'url': f'{base_url}{self.website_url}',
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'offers': {
-                '@type': 'Offer',
-                'price': price,
-                'priceCurrency': website.currency_id.name,
-            },
-        }
+        offer = JsonLd(
+            "Offer",
+            price=price,
+            price_currency=website.currency_id.name,
+        )
+        seller = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
+
+        if seller:
+            offer.add_nested(seller=seller)
+
+        product = JsonLd(
+            "Product",
+            name=self.with_context(display_default_code=False).display_name,
+            url=f"{base_url}{self.website_url}",
+            image=f"{base_url}{website.image_url(self, 'image_1920')}",
+        )
+        product.add_nested(offers=offer)
+
         if self.website_meta_description or self.description_sale:
-            markup_data['description'] = self.website_meta_description or self.description_sale
-        return markup_data
+            product.set(description=self.website_meta_description or self.description_sale)
+
+        return product
 
     def _get_image_1920_url(self):
         """ Returns the local url of the product main image.

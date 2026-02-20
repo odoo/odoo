@@ -175,6 +175,10 @@
         preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
         <link rel="apple-touch-icon" t-att-href="x_icon"/>
+        <t t-if="xmlid in ('website.homepage', 'website.contactus', 'website.aboutus')">
+            <t t-set="structured_data" t-value="website.organization_structured_data(with_id=True)"/>
+            <script t-if="structured_data" type="application/ld+json" t-out="structured_data.render_json()"/>
+        </t>
     </xpath>
 
     <xpath expr="//head/script" position="before">

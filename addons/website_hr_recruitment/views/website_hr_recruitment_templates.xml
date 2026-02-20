@@ -100,7 +100,10 @@
 
 <!-- Job Detail -->
 <template id="detail" name="Job Detail" track="1">
-    <t t-call="website.layout">
+    <t t-set="head">
+        <script t-if="job_structured_data" type="application/ld+json" t-out="job_structured_data"/>
+    </t>
+    <t t-call="website.layout" head="head">
         <!-- Topbar -->
         <nav class="navbar navbar-light border-top shadow-sm d-print-none">
             <div class="container">
@@ -116,24 +119,7 @@
         </nav>
         <!-- Content -->
         <div id="wrap" class="js_hr_recruitment">
-            <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
-                <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
-                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date and job.published_date.isoformat()"/>
-                <meta itemprop="title" t-att-content="job.name"/>
-                <meta itemprop="directApply" content="true"/>
-                <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
-                    <meta itemprop="name" t-att-content="job.company_id.name"/>
-                    <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
-                </span>
-                <span t-if="job.address_id.sudo().contact_address" itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
-                    <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
-                </span>
-                <t t-else="">
-                    <meta itemprop="jobLocationType" content="TELECOMMUTE"/>
-                    <span itemprop="applicantLocationRequirements" itemscope="itemscope" itemtype="https://schema.org/Country">
-                        <meta itemprop="name" t-att-content="job.company_id.country_id.name"/>
-                    </span>
-                </t>
+            <div>
                 <!-- Job name -->
                 <section class="pb32">
                     <div class="container">
@@ -162,7 +148,7 @@
                 <section class="pt32">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-8 pb32" itemprop="description">
+                            <div class="col-lg-8 pb32">
                                 <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
                                 <div class="lead"
                                     t-field="job.description"
