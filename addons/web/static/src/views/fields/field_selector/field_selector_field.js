@@ -38,6 +38,9 @@ export class FieldSelectorField extends Component {
     }
 
     get resModel() {
+        if (this.props.resModel && ! this.props.record.data[this.props.resModel]) {
+            return this.props.resModel;
+        }
         return this.props.record.data[this.props.resModel] || this.props.record.resModel;
     }
 
