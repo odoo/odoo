@@ -1470,10 +1470,10 @@ class HrLeave(models.Model):
             view_name = 'hr_holidays.hr_leave_allocation_view_tree_my'
             domain = [('employee_id', '=', employee.id)]
         return {
-            'name': _('Allocation Requests'),
+            'name': self.env._('Allocation Requests'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.allocation',
-            'views': [[self.env.ref(view_name).id, 'list']],
+            'views': [(self.env.ref(view_name).id, 'list'), (False, 'form')],
             'domain': domain,
             'context': context,
         }
