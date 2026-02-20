@@ -476,60 +476,68 @@ class BaseString(Field[str | typing.Literal[False]]):
         delay_translations = records.env.context.get('delay_translations')
         for record in records:
             # shortcut when no term needs to be translated
-            if not new_terms or not (stored_translations := self._get_stored_translations(record)):
+            if not new_terms or not (stored_translations_dict := self._get_stored_translations(record)):
                 new_translations_list.append({'en_US': cache_value, **cache_value_dict})
                 continue
 
-            old_translations = {
-                k: stored_translations.get(f'_{k}', v)
-                for k, v in stored_translations.items()
+            stored_translations = StoredTranslations(stored_translations_dict)
+            # old translations for not touched languages
+            other_old_translations = {
+                k: stored_translations['_' + k]
+                for k in stored_translations
                 if not k.startswith('_')
                 and k not in cache_value_dict
             }
-            from_lang_value = StoredTranslations(stored_translations)['_' + lang]
-            translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
-            text2terms = defaultdict(list)
-            for term in new_terms:
-                if term_text := self.get_text_content(term):
-                    text2terms[term_text].append(term)
-
-            is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
-            term_adapter = self.translate.term_adapter if hasattr(self.translate, 'term_adapter') else None
-            for old_term in list(translation_dictionary.keys()):
-                if old_term not in new_terms:
-                    old_term_text = self.get_text_content(old_term)
-                    matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
-                    if matches:
-                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
-                        if closest_term in translation_dictionary:
-                            continue
-                        old_is_text = is_text(old_term)
-                        closest_is_text = is_text(closest_term)
-                        if old_is_text or not closest_is_text:
-                            if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
-                                adapter = term_adapter(closest_term)
-                                if adapter(old_term) is None:  # old term and closest_term have different structures
-                                     continue
-                                translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
-                            else:
-                                translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
-            # pylint: disable=not-callable
-            new_translations = {
-                l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
-                for l in old_translations.keys()
-            }
-            if delay_translations:
-                new_store_translations = stored_translations
-                new_store_translations.update({f'_{k}': v for k, v in new_translations.items()})
-                new_store_translations.pop(f'_{lang}', None)
+            from_lang_value = stored_translations['_' + lang]
+            if from_lang_value == cache_value:
+                # not touched language values are not needed to be updated
+                other_new_translations = other_old_translations
             else:
-                new_store_translations = new_translations
-            new_store_translations.update(cache_value_dict)
+                translation_dictionary = self.get_translation_dictionary(from_lang_value, other_old_translations)
+                text2terms = defaultdict(list)
+                for term in new_terms:
+                    if term_text := self.get_text_content(term):
+                        text2terms[term_text].append(term)
+
+                is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
+                term_adapter = self.translate.term_adapter if hasattr(self.translate, 'term_adapter') else None
+                for old_term in list(translation_dictionary.keys()):
+                    if old_term not in new_terms:
+                        old_term_text = self.get_text_content(old_term)
+                        matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
+                        if matches:
+                            closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                            if closest_term in translation_dictionary:
+                                continue
+                            old_is_text = is_text(old_term)
+                            closest_is_text = is_text(closest_term)
+                            if old_is_text or not closest_is_text:
+                                if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
+                                    adapter = term_adapter(closest_term)
+                                    if adapter(old_term) is None:  # old term and closest_term have different structures
+                                        continue
+                                    translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
+                                else:
+                                    translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+                # pylint: disable=not-callable
+                other_new_translations = {
+                    l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
+                    for l in other_old_translations.keys()
+                }
+            if delay_translations:
+                for k, v in other_new_translations.items():
+                    if v == stored_translations_dict[k]:
+                        cache_value_dict[k] = v
+                    else:
+                        cache_value_dict[f'_{k}'] = v
+                        cache_value_dict[k] = stored_translations_dict[k]
+            else:
+                cache_value_dict.update(other_new_translations)
 
             if not records.env['res.lang']._lang_get('en_US'):
-                new_store_translations['en_US'] = cache_value
-                new_store_translations.pop('_en_US', None)
-            new_translations_list.append(new_store_translations)
+                cache_value_dict['en_US'] = cache_value
+                cache_value_dict.pop('_en_US', None)
+            new_translations_list.append(cache_value_dict)
         for record, new_translation in zip(records.with_context(prefetch_langs=True), new_translations_list, strict=True):
             self._update_cache(record, StoredTranslations(new_translation), dirty=True)
 
