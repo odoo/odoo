@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="product_pricelist_view_kanban_pos" model="ir.ui.view">
+        <field name="name">product.pricelist.kanban.pos</field>
+        <field name="model">product.pricelist</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='card']" position="replace">
+                <t t-name="card">
+                    <div class="o_kanban_card p-2">
+                        <div class="d-flex align-items-center mb-3">
+                            <field name="name" class="fw-bold fs-4" />
+                            <div class="ms-auto text-muted fw-semibold d-flex align-items-center gap-1">
+                                <i class="fa fa-money" role="img" aria-label="Currency" title="Currency"/>
+                                <field name="currency_id"/>
+                            </div>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-5 fw-semibold text-dark" groups="base.group_multi_company">
+                                Company:
+                            </div>
+                            <div class="col-7 text-muted" groups="base.group_multi_company">
+                                <field name="company_id"/>
+                            </div>
+                            <div class="col-5 fw-semibold text-dark">
+                                Country Groups:
+                            </div>
+                            <div class="col-7">
+                                <t t-if="record.country_group_ids.raw_value.length">
+                                    <field name="country_group_ids" widget="many2many_tags" options="{'no_create': True}" class="text-muted"/>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted">No Country Groups</span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_product_pricelist_action" model="ir.actions.act_window">
+        <field name="name">Pricelists</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('product.product_pricelist_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('product_pricelist_view_kanban_pos')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product.product_pricelist_view')})]"/>
+    </record>
+</odoo>
