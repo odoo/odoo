@@ -42,7 +42,7 @@
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 <t t-esc="this.getNumberOfProducts()" /> product(s) selected
                             </div>
-                            <t t-set="discountPc" t-value="getGlobalDiscountPc()" />
+                            <t t-set="discountPc" t-value="currentOrder.globalDiscountPc" />
                             <div t-if="discountPc.value" class="discount text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 With <t t-esc="discountPc.type === 'percent' ? `${discountPc.value}%` : env.utils.formatCurrency(discountPc.value)" /> discount
