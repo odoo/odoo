@@ -66,15 +66,17 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.env['res.config.settings'].create({
             'group_automate_suggested_products': True
         }).set_values()
-        self.product_with_alternatives = self.env['product.template'].create([{
-            'name': 'Product with alternatives',
-            'alternative_product_ids': [Command.link(self.template_chair.id)],
-        }])
+        self.product_with_alternatives = self.env['product.template'].create([
+            {
+                'name': 'Product with alternatives',
+                'alternative_product_ids': [Command.link(self.template_chair.id)],
+            }
+        ])
         self.assertFalse(self.product_with_alternatives.suggest_alternative_products)
 
-        self.product_without_alternatives = self.env['product.template'].create([{
-            'name': 'Product without alternatives',
-        }])
+        self.product_without_alternatives = self.env['product.template'].create([
+            {'name': 'Product without alternatives'}
+        ])
         self.assertTrue(self.product_without_alternatives.suggest_alternative_products)
 
     def test_activate_automate_suggested_products_settings_triggers_cron(self):
@@ -85,7 +87,9 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
             'website_sale.update_suggested_products_cron'
         ) as captured_triggers:
             # Enable the suggested products feature
-            self.env['res.config.settings'].create({'group_automate_suggested_products': True}).set_values()
+            self.env['res.config.settings'].create({
+                'group_automate_suggested_products': True
+            }).set_values()
         self.assertTrue(suggested_products_cron.active)
         # Assert that a trigger was created
         self.assertTrue(captured_triggers.records)
@@ -96,7 +100,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         tested_products = self.template_desk | self.template_chair | self.template_combo_desk_chair
         tested_products.alternative_product_ids = False
         # Update suggested products on tested_products
-        tested_products._prepare_suggested_products_update()
+        tested_products._update_suggested_products()
         self.assertEqual(self.template_desk.alternative_product_ids, self.template_combo_desk_chair)
         self.assertEqual(
             self.template_chair.alternative_product_ids, self.template_combo_desk_chair
@@ -109,7 +113,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         # Clear any existing optional products
         self.template_desk.optional_product_ids = False
         # Update suggested products for template_desk
-        self.template_desk._prepare_suggested_products_update()
+        self.template_desk._update_suggested_products()
         self.assertEqual(self.template_desk.optional_product_ids, self.template_chair)
 
     def test_cron_write_preserves_automation(self):
@@ -118,6 +122,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.template_desk.suggest_optional_products = True
 
         # Write from cron context
+        # TODO PDA call _update_suggested_products directly instead of write
         self.template_desk.with_context(cron_id=1).write({
             'alternative_product_ids': [Command.link(self.template_chair.id)],
             'optional_product_ids': [Command.link(self.template_chair.id)],
@@ -142,8 +147,8 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         """Test that calling _update_suggested_products from the action re-enables automation."""
         self.template_desk.suggest_alternative_products = False
         self.template_desk.suggest_optional_products = False
-        # Call from action (without cron_id context)
-        self.template_desk._prepare_suggested_products_update()
+        # Call from action
+        self.template_desk._update_suggested_products(force_update=True)
         self.assertTrue(self.template_desk.suggest_alternative_products)
         self.assertTrue(self.template_desk.suggest_optional_products)
 
@@ -158,7 +163,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         with patch.object(fields.Datetime, 'now', return_value=now):
             with self.enter_registry_test_mode(), self.env.registry.cursor() as cr:
                 env = self.env(context={'cron_id': 1}, cr=cr)
-                products.with_env(env)._prepare_suggested_products_update()
+                products.with_env(env)._update_suggested_products()
         # template_desk should not be updated (recently updated)
         self.assertEqual(self.template_desk.suggested_products_last_update, recent_date)
         # template_chair should be updated

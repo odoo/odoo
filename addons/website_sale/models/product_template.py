@@ -98,20 +98,21 @@ class ProductTemplate(models.Model):
         column2='dest_id',
         check_company=True,
     )
-    # Whether optional products should be automatically filled by a cron.
+    # Whether a cron should automatically fill optional products.
     suggest_optional_products = fields.Boolean(
-        string="Suggest Optional Products",
-        default=lambda self: self._is_automate_suggested_product_feature_enabled(),
+        string="Suggest Optional Products", compute='_compute_suggest_optional_products', store=True
     )
-    # Whether accessory products should be automatically filled by a cron.
+    # Whether a cron should automatically fill accessory products.
     suggest_accessory_products = fields.Boolean(
         string="Suggest Accessory Products",
-        default=lambda self: self._is_automate_suggested_product_feature_enabled(),
+        compute='_compute_suggest_accessory_products',
+        store=True,
     )
-    # Whether alternative products should be automatically filled by a cron.
+    # Whether a cron should automatically fill alternative products.
     suggest_alternative_products = fields.Boolean(
         string="Suggest Alternative Products",
-        default=lambda self: self._is_automate_suggested_product_feature_enabled(),
+        compute='_compute_suggest_alternative_products',
+        store=True,
     )
     # Last update date of the optional, accessory and alternative products.
     suggested_products_last_update = fields.Datetime(string="Last update of suggested products")
@@ -222,6 +223,36 @@ class ProductTemplate(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    @api.depends('optional_product_ids')
+    def _compute_suggest_optional_products(self):
+        if self._is_automate_suggested_product_feature_enabled():
+            # Disable auto-suggestion if the user manually sets optional_product_ids
+            self.suggest_optional_products = False
+        else:
+            for template in self:
+                # Maintain consistency for feature enablement: suggest only when empty
+                template.suggest_optional_products = not template.optional_product_ids
+
+    @api.depends('accessory_product_ids')
+    def _compute_suggest_accessory_products(self):
+        if self._is_automate_suggested_product_feature_enabled():
+            # Disable auto-suggestion if the user manually sets accessory_product_ids
+            self.suggest_accessory_products = False
+        else:
+            for template in self:
+                # Maintain consistency for feature enablement: suggest only when empty
+                template.suggest_accessory_products = not template.accessory_product_ids
+
+    @api.depends('alternative_product_ids')
+    def _compute_suggest_alternative_products(self):
+        if self._is_automate_suggested_product_feature_enabled():
+            # Disable auto-suggestion if the user manually sets alternative_product_ids
+            self.suggest_alternative_products = False
+        else:
+            for template in self:
+                # Maintain consistency for feature enablement: suggest only when empty
+                template.suggest_alternative_products = not template.alternative_product_ids
+
     @api.depends('is_published')
     def _compute_publish_date(self):
         """Set `publish_date` to the moment of (re-)publishing."""
@@ -278,14 +309,6 @@ class ProductTemplate(models.Model):
 
     #=== CRUD METHODS ===#
 
-    def create(self, vals_list):
-        for vals in vals_list:
-            # Avoid erasing alternative, optional or accessory products set at creation if the
-            # feature group_automate_suggested_products is enabled.
-            # The other fields of the product.template are not set yet when setting the default.
-            self._exclude_products_from_automated_suggestions(vals)
-        return super().create(vals_list)
-
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
@@ -295,26 +318,9 @@ class ProductTemplate(models.Model):
             and not ('media_iframe_video' in description_ecommerce or 'data-embedded' in description_ecommerce)  # don't remove "empty" video div
         ):
             vals['description_ecommerce'] = ''
-
-        # Deactivate the automation of suggested products whem manually adding suggested products.
-        from_cron = self.env.context.get('cron_id')
-        from_settings = self.env.context.get('module')
-        from_server_action = self.env.context.get('active_model')
-        if not (from_cron or from_settings or from_server_action):
-            self._exclude_products_from_automated_suggestions(vals)
-
         return super().write(vals)
 
     #=== BUSINESS METHODS ===#
-
-    @staticmethod
-    def _exclude_products_from_automated_suggestions(vals):
-        if 'optional_product_ids' in vals:
-            vals.update({'suggest_optional_products': False})
-        if 'accessory_product_ids' in vals:
-            vals.update({'suggest_accessory_products': False})
-        if 'alternative_product_ids' in vals:
-            vals.update({'suggest_alternative_products': False})
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -331,7 +337,7 @@ class ProductTemplate(models.Model):
         domain = self.env['website'].sale_product_domain()
         return self.alternative_product_ids.filtered_domain(domain)
 
-    def _prepare_suggested_products_update(self, batch_size=None, force_update=True):
+    def _update_suggested_products(self, batch_size=None, force_update=True):
         """Update the current product templates' optional, accessory, and alternative products.
 
         Only salable and publish product templates are considered. The heuristics to find suggested
@@ -369,18 +375,16 @@ class ProductTemplate(models.Model):
             )
             in_cron = True
 
-        products_to_update._populate_suggested_products(force_update, in_cron, now, products_domain)
-
-    def _populate_suggested_products(self, force_update, in_cron, now, products_domain):
         if in_cron:
             self.env['ir.cron']._commit_progress(remaining=len(self))
         if force_update:
+            # Reset the suggest_ fields with the server action
             self.write({
                 'suggest_optional_products': True,
                 'suggest_accessory_products': True,
                 'suggest_alternative_products': True,
             })
-        for company, products in self.grouped('company_id').items():
+        for company, products in products_to_update.grouped('company_id').items():
             other_products_by_categories = dict(
                 self._read_group(
                     products_domain & Domain('company_id', '=', company.id),
@@ -394,13 +398,25 @@ class ProductTemplate(models.Model):
                         max_optionals=2, max_accessories=1
                     )
                     if product.suggest_optional_products:
-                        product.optional_product_ids = optionals
+                        # Don't trigger compute from the _update_suggested_products method
+                        with product.env.protecting(
+                            [product._fields['suggest_optional_products']], product
+                        ):
+                            product.optional_product_ids = optionals
                     if product.suggest_accessory_products:
-                        product.accessory_product_ids = accessories
+                        # Don't trigger compute from the _update_suggested_products method
+                        with product.env.protecting(
+                            [product._fields['suggest_accessory_products']], product
+                        ):
+                            product.accessory_product_ids = accessories
                 if product.suggest_alternative_products:
-                    product.alternative_product_ids = product._get_suggested_alternatives(
-                        other_products_by_categories, max_products=4
-                    )
+                    # Don't trigger compute from the _update_suggested_products method
+                    with product.env.protecting(
+                        [product._fields['suggest_alternative_products']], product
+                    ):
+                        product.alternative_product_ids = product._get_suggested_alternatives(
+                            other_products_by_categories, max_products=4
+                        )
         self.suggested_products_last_update = now
         if in_cron:
             self.env['ir.cron']._commit_progress(len(self))
@@ -412,13 +428,15 @@ class ProductTemplate(models.Model):
         )
 
     def _get_suggested_optionals_and_accessories(self, max_optionals, max_accessories):
-        """Get products that are bought together with main product (self).
+        """Get products that are bought together with the main product (self).
         Products bought together in at least 2 sale orders dated within 5 years."""
         max_products = max_optionals + max_accessories
         # Return the list of matching template pt2, any product.template sharing the conditions:
         # - same order, dated from less than 5 years
         # - active product, cheaper than the main product, not a combo item, not himself
-        query = """
+        result = self.env.execute_query(
+            SQL(
+                """
             SELECT pt2.id
               FROM sale_order_line sol
               JOIN sale_order so ON so.id = sol.order_id
@@ -437,9 +455,12 @@ class ProductTemplate(models.Model):
              GROUP BY pt2.id
              ORDER BY COUNT(DISTINCT so.id) DESC, RANDOM()
              LIMIT %(max_products)s
-        """
-        self.env.cr.execute(query, {'pt_id': self.id, 'max_products': max_products})
-        sold_together_ids = [id[0] for id in self.env.cr.fetchall()]
+            """,
+                pt_id=self.id,
+                max_products=max_products,
+            )
+        )
+        sold_together_ids = [id[0] for id in result]
         optional_products_ids = sold_together_ids[:max_optionals]
         accessory_products_ids = sold_together_ids[max_optionals:]  # last ones
         optional_products = self.env['product.template'].browse(optional_products_ids)
@@ -1227,7 +1248,7 @@ class ProductTemplate(models.Model):
         return price, pricelist_rule_id
 
     def _to_markup_data(self, website):
-        """ Generate JSON-LD markup data for the current product template.
+        """Generate JSON-LD markup data for the current product template.
 
         If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
         Otherwise, the markup data generation is delegated to the variant to use the

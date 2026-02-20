@@ -110,6 +110,9 @@ class ResConfigSettings(models.TransientModel):
     # === CRUD METHODS === #
 
     def set_values(self):
+        had_group_asp = self.default_get(['group_automate_suggested_products'])[
+            'group_automate_suggested_products'
+        ]
         super().set_values()
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
@@ -127,28 +130,11 @@ class ResConfigSettings(models.TransientModel):
         suggested_products_cron_sudo = (
             self.env['ir.cron'].sudo().env.ref('website_sale.update_suggested_products_cron')
         )
-        if self.group_automate_suggested_products:  # The feature is enabled
-            self._flag_products_for_automated_suggestions()
+        if self.group_automate_suggested_products and not had_group_asp:  # Enable the feature
             suggested_products_cron_sudo.active = True
             suggested_products_cron_sudo._trigger()
-        else:  # The feature is disabled
+        elif not self.group_automate_suggested_products:  # Disable the feature
             suggested_products_cron_sudo.active = False
-
-    def _flag_products_for_automated_suggestions(self):
-        """Find products without suggested (optional, accessory, or alternative) products and mark
-        them for automatic suggestion updates.
-
-        :rtype: None
-        """
-        products = self.env['product.template'].search([
-            ('is_published', '=', True),
-            ('sale_ok', '=', True),
-        ])
-        products.filtered(lambda p: not p.optional_product_ids).suggest_optional_products = True
-        products.filtered(lambda p: not p.accessory_product_ids).suggest_accessory_products = True
-        products.filtered(
-            lambda p: not p.alternative_product_ids
-        ).suggest_alternative_products = True
 
     # === ACTION METHODS === #
 
