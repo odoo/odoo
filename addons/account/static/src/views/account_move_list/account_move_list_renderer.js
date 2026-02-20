@@ -12,7 +12,11 @@ export class AccountMoveListRenderer extends FileUploadListRenderer {
     getCellClass(column, record) {
         const classNames = super.getCellClass(column, record);
         if (column.name === 'ref' && record.data.duplicated_ref_ids && record.data.duplicated_ref_ids.count !== 0) {
-            return `${classNames} table-warning`;
+            if (record.data.is_exact_ref_duplicate) {
+                return `${classNames} table-danger`;
+            } else if (record.data.state === 'draft') {
+                return `${classNames} table-warning`;
+            }
         }
         return classNames;
     }
