@@ -19,6 +19,7 @@
         # Record data
         'data/data.xml',
         'data/digest_data.xml',
+        'data/ir_actions_server_data.xml',
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         'data/product_ribbon_data.xml',
@@ -230,3 +231,5 @@
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
+
+# TODO-PDA script upgrade set suggest alt, acc and opt

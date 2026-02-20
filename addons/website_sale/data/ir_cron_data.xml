@@ -10,4 +10,14 @@
         <field name="state">code</field>
     </record>
 
+    <record id="update_suggested_products_cron" model="ir.cron">
+        <field name="name">eCommerce: Update suggested products</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">weeks</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="code">model._update_suggested_products(batch_size=100, force_update=False)</field>
+        <field name="active">False</field>
+        <field name="state">code</field>
+    </record>
+
 </odoo>
