@@ -25,7 +25,6 @@ from . import (
     test_performance,
     test_properties,
     test_query,
-    test_qweb_float,
     test_read_group_override,
     test_read_group_private,
     test_read_grouping_sets,
