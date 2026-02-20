@@ -6,7 +6,7 @@ from . import (
     test_api,
     test_decorators,
     test_cache,
-    test_check_access,
+    test_models_access,
     test_company_checks,
     test_convert,
     test_create,
