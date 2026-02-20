@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -18,7 +16,6 @@ class ResConfigSettings(models.TransientModel):
         string='Allow the users to synchronize their calendar with Outlook Calendar')
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
     module_auth_ldap = fields.Boolean("LDAP Authentication")
-    module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_voip = fields.Boolean("Phone")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
     module_sms = fields.Boolean("SMS")

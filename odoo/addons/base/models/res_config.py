@@ -148,6 +148,14 @@ class ResConfigSettings(models.TransientModel):
     _name = 'res.config.settings'
     _description = 'Config Settings'
 
+    def _register_hook(self):
+        super()._register_hook()
+        try:
+            # validate the classified fields
+            self._get_classified_fields()
+        except Exception as e:  # noqa: BLE001
+            _logger.critical("%s", str(e))
+
     def _valid_field_parameter(self, field, name):
         return (
             name in ('default_model', 'config_parameter')
@@ -216,7 +224,10 @@ class ResConfigSettings(models.TransientModel):
             elif name.startswith('module_'):
                 if field.type not in ('boolean', 'selection'):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
-                modules += IrModule._get(name[7:])
+                module = IrModule._get(name.removeprefix("module_")).exists()
+                if not module:
+                    raise Exception("Field %s refer to a non-existing module" % field)
+                modules += module
             elif hasattr(field, 'config_parameter') and field.config_parameter:
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
                     raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
