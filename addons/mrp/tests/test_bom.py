@@ -2520,3 +2520,89 @@ class TestBoM(TestMrpCommon):
         mo_form.bom_id = test_bom
         mo = mo_form.save()
         self.assertEqual(mo.workorder_ids.operation_id, kit_bom.operation_ids.filtered(lambda op: op.bom_product_template_attribute_value_ids == blue))
+
+    def test_bom_explode_kit_with_apply_on_same_components(self):
+        """
+        Given a kit bom for a product_template with lines with the same component
+        applying to different variants with different quantities, check that the on_hand
+        quantity of the variants are consistent with the bom configuration.
+        """
+        kit_product_template = self.product_7_template
+        bigger_uom = self.env['uom.uom'].search([('category_id', '=', self.product_6.uom_id.category_id.id), ('factor', '<', 1.0)], limit=1)
+        self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': kit_product_template.id,
+                'product_uom_id': kit_product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({
+                        'product_id': self.product_6.id,
+                        'product_qty': 1,
+                        'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v1.id)]
+                    }),
+                    Command.create({
+                        'product_id': self.product_6.id,
+                        'product_qty': 2,
+                        'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)]
+                    }),
+                    Command.create({
+                        'product_id': self.product_6.id,
+                        'product_qty': 1,
+                        'product_uom_id': bigger_uom.id,
+                        'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v3.id)]
+                    })
+                ],
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(self.product_6, self.env.ref('stock.stock_location_stock'), quantity=20)
+        variant1 = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == self.product_7_attr1_v1)
+        variant2 = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == self.product_7_attr1_v2)
+        variant3 = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == self.product_7_attr1_v3)
+        # compute the qty_available in batch
+        (variant1 | variant2 | variant3).mapped('qty_available')
+        self.assertEqual(variant1.qty_available, 20)
+        self.assertEqual(variant2.qty_available, 10)
+        self.assertLessEqual(variant3.qty_available, self.product_6.uom_id._compute_quantity(20, bigger_uom))
+
+    def test_bom_explode_kit_with_apply_on_different_components(self):
+        """
+        Given a kit bom for a product_template with lines with the different component
+        applying to different variants with different quantities, check that the on_hand
+        quantity of the variants are consistent with the bom configuration.
+        """
+        kit_product_template = self.product_7_template
+        self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': kit_product_template.id,
+                'product_uom_id': kit_product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({
+                        'product_id': self.product_6.id,
+                        'product_qty': 1,
+                        'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v1.id)]
+                    }),
+                    Command.create({
+                        'product_id': self.product_5.id,
+                        'product_qty': 1,
+                        'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)]
+                    }),
+                    Command.create({
+                        'product_id': self.product_8.id,
+                        'product_qty': 1,
+                        'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v3.id)]
+                    })
+                ],
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(self.product_6, self.env.ref('stock.stock_location_stock'), quantity=2)
+        self.env['stock.quant']._update_available_quantity(self.product_8, self.env.ref('stock.stock_location_stock'), quantity=3)
+        variant1 = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == self.product_7_attr1_v1)
+        variant2 = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == self.product_7_attr1_v2)
+        variant3 = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == self.product_7_attr1_v3)
+        (variant1 | variant2 | variant3).mapped('qty_available')
+        self.assertEqual(variant1.qty_available, 2)
+        self.assertEqual(variant2.qty_available, 0)
+        self.assertEqual(variant3.qty_available, 3)
