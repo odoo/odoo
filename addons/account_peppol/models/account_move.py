@@ -9,7 +9,7 @@ from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    peppol_message_uuid = fields.Char(string='PEPPOL message ID')
+    peppol_message_uuid = fields.Char(string='PEPPOL message ID', copy=False)
     peppol_move_state = fields.Selection(
         selection=[
             ('ready', 'Ready to send'),
@@ -71,6 +71,44 @@ class AccountMove(models.Model):
                 move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    @api.depends('peppol_message_uuid')
+    def _compute_duplicated_ref_ids(self):
+        return super()._compute_duplicated_ref_ids()
+
+    def _fetch_duplicate_supplier_reference(self, only_posted=False):
+        # We check whether there are moves with the same peppol message uuid
+        peppol_vendor_bills = self.filtered(lambda m: m.is_purchase_document() and m.peppol_message_uuid and m._origin.id)
+        if not peppol_vendor_bills:
+            return super()._fetch_duplicate_supplier_reference(only_posted=only_posted)
+
+        self.env['account.move'].flush_model(('company_id', 'move_type', 'peppol_message_uuid'))
+
+        self.env.cr.execute(
+            """
+              SELECT move.id AS move_id,
+                     ARRAY_AGG(duplicate_move.id) AS duplicate_ids
+                FROM account_move AS move
+                JOIN account_move AS duplicate_move
+                  ON move.company_id = duplicate_move.company_id
+                 AND move.move_type = duplicate_move.move_type
+                 AND move.id != duplicate_move.id
+                 AND move.peppol_message_uuid = duplicate_move.peppol_message_uuid
+               WHERE move.id IN %(moves)s
+            GROUP BY move.id
+            """,
+            {
+                'moves': tuple(peppol_vendor_bills.ids),
+            },
+        )
+        peppol_message_duplicates = {
+            self.env['account.move'].browse(res['move_id']): self.env['account.move'].browse(res['duplicate_ids'])
+            for res in self.env.cr.dictfetchall()
+        }
+        move_duplicates = super()._fetch_duplicate_supplier_reference(only_posted=only_posted)
+        for move, duplicates in peppol_message_duplicates.items():
+            move_duplicates[move] = move_duplicates.get(move, self.env['account.move']) | duplicates
+        return move_duplicates
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
