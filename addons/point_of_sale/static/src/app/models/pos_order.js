@@ -540,7 +540,7 @@ export class PosOrder extends PosOrderAccounting {
                     sum += data.tax_details.discount_amount;
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
-                        !(orderLine.price_type === "manual") &&
+                        !["manual", "override"].includes(orderLine.price_type) &&
                         orderLine.discount == 0
                     ) {
                         sum +=

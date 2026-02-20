@@ -384,7 +384,7 @@ export class TicketScreen extends Component {
                 pack_lot_ids: options
                     .slice(0, refundDetail.qty)
                     .map((lotName) => ["create", { lot_name: lotName }]),
-                price_type: "automatic",
+                price_type: refundLine.price_type === "override" ? "override" : "automatic",
                 attribute_value_ids: refundLine.attribute_value_ids.map((attr) => ["link", attr]),
             });
             lines.push(line);

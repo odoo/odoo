@@ -277,13 +277,22 @@ export class OrderSummary extends Component {
                 }
                 this.pos.setDiscountFromUI(selectedLine, val);
             } else if (numpadMode === "price" && val !== "remove") {
+                const excludedProductIds = this.pos.getExcludedProductIds();
+                if (
+                    selectedLine.product_id.taxes_id &&
+                    !excludedProductIds.includes(selectedLine.product_id.id)
+                ) {
+                    selectedLine.price_type = "override";
+                }
                 this.setLinePrice(selectedLine, val);
             }
         }
     }
 
     async setLinePrice(line, price) {
-        line.price_type = "manual";
+        if (line.price_type !== "override") {
+            line.price_type = "manual";
+        }
         if (line.product_id.to_weight) {
             const val = line.price_unit ? parseFloat(price) / line.price_unit : 0;
             line.setQuantity(val, false);

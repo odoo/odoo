@@ -42,30 +42,32 @@ export class PosOrderlineAccounting extends Base {
      */
     get displayPrice() {
         return !this.combo_line_ids.length
-            ? this.config.iface_tax_included === "total"
+            ? this.config.iface_tax_included === "total" || this.price_type === "override"
                 ? this.priceIncl
                 : this.priceExcl
             : this.combo_line_ids.reduce((total, cl) => {
                   const price =
-                      this.config.iface_tax_included === "total" ? cl.priceIncl : cl.priceExcl;
+                      this.config.iface_tax_included === "total" || this.price_type === "override"
+                          ? cl.priceIncl
+                          : cl.priceExcl;
                   return total + price;
               }, 0);
     }
     get displayPriceNoDiscount() {
         return !this.combo_line_ids.length
-            ? this.config.iface_tax_included === "total"
+            ? this.config.iface_tax_included === "total" || this.price_type === "override"
                 ? this.priceInclNoDiscount
                 : this.priceExclNoDiscount
             : this.combo_line_ids.reduce((total, cl) => {
                   const price =
-                      this.config.iface_tax_included === "total"
+                      this.config.iface_tax_included === "total" || this.price_type === "override"
                           ? cl.priceInclNoDiscount
                           : cl.priceExclNoDiscount;
                   return total + price;
               }, 0);
     }
     get displayPriceUnit() {
-        return this.config.iface_tax_included === "total"
+        return this.config.iface_tax_included === "total" || this.price_type === "override"
             ? this.unitPrices.total_included
             : this.unitPrices.total_excluded;
     }
@@ -73,7 +75,7 @@ export class PosOrderlineAccounting extends Base {
         return this.unitPrices.total_excluded;
     }
     get displayPriceUnitNoDiscount() {
-        return this.config.iface_tax_included === "total"
+        return this.config.iface_tax_included === "total" || this.price_type === "override"
             ? this.unitPrices.no_discount_total_included
             : this.unitPrices.no_discount_total_excluded;
     }
@@ -189,6 +191,9 @@ export class PosOrderlineAccounting extends Base {
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
             // Recompute taxes based on product and fiscal position.
             values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(values.tax_ids);
+        }
+        if (this.price_type === "override") {
+            values.special_mode = "total_included";
         }
         return values;
     }

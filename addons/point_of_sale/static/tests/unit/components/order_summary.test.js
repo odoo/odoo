@@ -35,3 +35,25 @@ test("Display tax include/exclude subtotal label", async () => {
     expect(total2.innerHTML).toBe("$&nbsp;17.85");
     expect(subtotal2.innerHTML).toBe("$&nbsp;15.00");
 });
+
+test("price_type check on manual price edit", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product1 = store.models["product.template"].get(5);
+
+    await store.addLineToCurrentOrder({ product_tmpl_id: product1 });
+    expect(order.lines[0].price_type).toBe("original");
+
+    store.numpadMode = "price";
+    const orderSummary = await mountWithCleanup(OrderSummary, {});
+    orderSummary._setValue(5);
+    expect(order.lines[0].qty).toBe(1);
+    expect(order.lines[0].price_unit).toBe(5);
+    expect(order.lines[0].price_type).toBe("override");
+
+    await store.addLineToCurrentOrder({ product_tmpl_id: product1 });
+    expect(order.lines).toHaveLength(2);
+    expect(order.lines[1].qty).toBe(1);
+    expect(order.lines[1].price_unit).toBe(3);
+    expect(order.lines[1].price_type).toBe("original");
+});

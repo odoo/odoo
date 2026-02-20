@@ -258,7 +258,7 @@ class PosOrder(models.Model):
                 'product_uom_id': line_values['uom_id'].id,
             }
 
-        return {
+        invoice_line_values = {
             'product_id': line_values['product_id'].id,
             'quantity': qty_sign * line_values['quantity'],
             'discount': line_values['discount'],
@@ -268,6 +268,11 @@ class PosOrder(models.Model):
             'product_uom_id': line_values['uom_id'].id,
             'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(line_values),
         }
+
+        # If the price was manually changed for pos_order_line, treat the price as tax-included
+        if pos_line.price_type == 'override' and line_values['special_mode']:
+            invoice_line_values['extra_tax_data']['special_mode'] = line_values['special_mode']
+        return invoice_line_values
 
     def _prepare_invoice_lines(self, move_type):
         """ Prepare a list of orm commands containing the dictionaries to fill the
