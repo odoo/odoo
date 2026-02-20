@@ -731,10 +731,16 @@ class MrpProduction(models.Model):
                 if production.date_deadline:
                     updated_values['date_deadline'] = production.date_deadline
                 if 'date' in updated_values or 'date_deadline' in updated_values:
-                    production.move_finished_ids = [
+                    vals_to_update = [
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
                         if m.state != 'done'
+                        and (
+                            ('date' in updated_values and m.date != updated_values['date'])
+                            or ('date_deadline' in updated_values and m.date_deadline != updated_values['date_deadline'])
+                        )
                     ]
+                    if vals_to_update:
+                        production.move_finished_ids = vals_to_update
                 continue
             # delete to remove existing moves from database and clear to remove new records
             production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
