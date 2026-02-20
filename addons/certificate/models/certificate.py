@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 
 from odoo import _, api, fields, models
 from .key import STR_TO_HASH, _get_formatted_value
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import parse_version
 
@@ -95,6 +95,12 @@ class Certificate(models.Model):
         ondelete='cascade',
     )
     country_code = fields.Char(related='company_id.country_code', depends=['company_id'])
+
+    @api.constrains('content')
+    def _check_certificate_format_allowed(self):
+        for cert in self:
+            if cert.content and cert.content_format not in ('der', 'pkcs12', 'pem'):
+                raise ValidationError(_("Certificate format must be one of: DER, PKCS12, or PEM."))
 
     @api.depends('pem_certificate')
     def _compute_private_key(self):
