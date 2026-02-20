@@ -368,3 +368,47 @@ class TestPosMrp(CommonPosMrpTest):
             {'product_id': product_2.id, 'total_cost': 20},
             {'product_id': product_1.id, 'total_cost': 10},
         ])
+
+
+# TODO : Merge this test with the other class when it is not skipped anymore
+@odoo.tests.tagged('post_install', '-at_install')
+class TestPosMrpTemp(CommonPosMrpTest):
+    def test_bom_kit_different_uom_invoice_valuation_no_invoice(self):
+        """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
+           the price unit is correctly computed on the invoice lines.
+        """
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        self.env.company.inventory_valuation = 'real_time'
+        # Edit kit product and component product
+        self.product_product_kit_one.categ_id = self.category_fifo_realtime
+        self.product_product_comp_one.standard_price = 12000
+        self.product_product_comp_one.uom_id = self.env.ref('uom.product_uom_dozen').id
+        self.product_product_comp_one.categ_id = self.category_fifo_realtime
+        self.product_product_comp_one.is_storable = True
+
+        # Edit kit product UoM
+        self.bom_one_line.bom_line_ids[0].product_uom_id = self.env.ref('uom.product_uom_unit').id
+
+        self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_moda.id,
+            },
+            'line_data': [
+                {'product_id': self.product_product_kit_one.id, 'qty': 1},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id}
+            ]
+        })
+
+        current_session = self.pos_config_usd.current_session_id
+        current_session.action_pos_session_closing_control()
+
+        accounts = self.product_product_kit_one.product_tmpl_id.get_product_accounts()
+        expense_line = current_session.move_id.line_ids.filtered(
+            lambda l: l.account_id.id == accounts['expense'].id)
+        interim_line = current_session.move_id.line_ids.filtered(
+            lambda l: l.account_id.id == accounts['stock_valuation'].id)
+
+        self.assertEqual(expense_line.debit, 1000.0)
+        self.assertEqual(interim_line.credit, 1000.0)

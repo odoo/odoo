@@ -155,12 +155,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
         return related_original_applicants
 
     def _prepare_send_refusal_mails(self):
-        mail_values = []
         for applicant in self.applicant_ids:
-            mail_value = self._prepare_mail_values(applicant)
-            applicant.message_post(body=mail_value.get('body_html'))
-            mail_values.append(mail_value)
-        self.env['mail.mail'].sudo().create(mail_values)
+            mail_values = self._prepare_mail_values(applicant)
+            applicant.message_post(**mail_values)
 
     def _prepare_mail_values(self, applicant):
         """ Create mail specific for recipient """
@@ -168,17 +165,13 @@ class ApplicantGetRefuseReason(models.TransientModel):
         subject = self._render_field('subject', applicant.ids, set_lang=lang)[applicant.id]
         body = self._render_field('body', applicant.ids, set_lang=lang)[applicant.id]
         email_from = self.template_id.email_from if self.template_id and self.template_id.email_from else self.env.user.email_formatted
-        mail_values = {
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'author_id': self.env.user.partner_id.id,
-            'auto_delete': True,
-            'body_html': body,
-            'email_to': applicant.email_from or applicant.partner_id.email,
+        return {
+            'body': body,
             'email_from': email_from,
-            'model': None,
-            'res_id': None,
             'subject': subject,
+            'author_id': self.env.user.partner_id.id,
+            'incoming_email_to': applicant.email_from or applicant.partner_id.email,
             'scheduled_date': self.scheduled_date,
+            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
+            'body_is_html': True,
         }
-
-        return mail_values

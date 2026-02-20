@@ -86,34 +86,42 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         line_vals = [
             {
                 'product_id': self.place_prdct.id,
+                'name': 'Placement',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
+                'name': 'Displacement',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
+                'name': 'Displacement',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
+                'name': 'Displacement',
                 'product_uom_id': self.uom_dozens.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': products[0].id,
+                'name': 'Awesome Product',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             }, {
                 'product_id': products[1].id,
+                'name': 'XYZ',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             }, {
                 'product_id': products[2].id,
+                'name': 'XXX',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             }, {
                 'product_id': products[3].id,
+                'name': 'YYY',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             },
@@ -127,7 +135,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         company.partner_id.bank_ids = [Command.create({
             'acc_number': '999999',
             'partner_id': company.partner_id.id,
-            'acc_holder_name': 'The Chosen One'
+            'acc_holder_name': 'The Chosen One',
+            'allow_out_payment': True,
         })]
 
         for ubl_cii_format in ['facturx', 'ubl_bis3']:
@@ -589,6 +598,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 'partner_id': self.partner_a.id,
                 'bank_id': bank_ing.id,
                 'company_id': self.env.company.id,
+                'allow_out_payment': True,
             })
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
@@ -612,8 +622,11 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
             company_bank_journal = self.company_data['default_journal_bank']
             company_bank_journal.bank_acc_number = 'CH9300762011623852957'
-            company_bank_journal.bank_account_id.bank_id = bank_ing
             self.partner_a.country_id = self.env.ref('base.nl').id
+            company_bank_journal.bank_account_id.write({
+                'bank_id': bank_ing.id,
+                'allow_out_payment': True,
+            })
 
             mandate = self.env['sdd.mandate'].create({
                 'name': 'mandate ' + (self.partner_a.name or ''),
@@ -664,11 +677,57 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 self.assertEqual(node.findtext('.//{*}ID') or False, tax.ubl_cii_tax_category_code)
                 self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
 
+    def test_import_discount_3(self):
+        """
+        This test ensures that the subtotal and the sum of prices and charges are compared
+        correctly and there's no regression on floating point issues when the price is 0.0
+        """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 0,
+                }),
+            ],
+        })
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """
+            <xpath expr="(//*[local-name()='InvoiceLine']/*[local-name()='LineExtensionAmount'])" position="replace">
+                <LineExtensionAmount currencyID="EUR">0.30</LineExtensionAmount>
+            </xpath>
+            <xpath expr="(//*[local-name()='InvoiceLine']/*[local-name()='LineExtensionAmount'])" position="after">
+                <AllowanceCharge>
+                    <ChargeIndicator>true</ChargeIndicator>
+                    <AllowanceChargeReason>FREIGHT</AllowanceChargeReason>
+                    <Amount currencyID="EUR">0.20</Amount>
+                </AllowanceCharge>
+                <AllowanceCharge>
+                    <ChargeIndicator>true</ChargeIndicator>
+                    <AllowanceChargeReason>FUEL SURCHARGE</AllowanceChargeReason>
+                    <Amount currencyID="EUR">0.10</Amount>
+                </AllowanceCharge>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertRecordValues(imported_invoice.invoice_line_ids, [
+            {'name': self.product_a.name, 'price_subtotal': 0.00},
+            {'name': ' FREIGHT', 'price_subtotal': 0.20},
+            {'name': ' FUEL SURCHARGE', 'price_subtotal': 0.10},
+        ])
+
     def test_oin_code(self):
         partner = self.partner_a
         partner.peppol_endpoint = '00000000001020304050'
         partner.country_id = self.env.ref('base.nl').id
-        partner.bank_ids = [Command.create({'acc_number': "0123456789"})]
+        partner.bank_ids = [Command.create({'acc_number': "0123456789", 'allow_out_payment': True})]
         invoice = self.env['account.move'].create({
             'partner_id': partner.id,
             'move_type': 'out_invoice',

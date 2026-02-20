@@ -12,7 +12,7 @@
                         <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                             t-att-scrolling="this.state.isMobile ? '' : 'no'"
                             t-att-class="{ 'd-none': props.showThemeSelector or props.showCodeView }"
-                            t-ref="iframeRef" t-on-blur="onBlur"/>
+                            t-ref="iframeRef"/>
                     </div>
                 </div>
                 <div t-if="!props.readonly and props.withBuilder and !props.showThemeSelector and !props.showCodeView">

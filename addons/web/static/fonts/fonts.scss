@@ -34,7 +34,16 @@ $lato-font-path: './lato';
         font-style: $style;
         unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF;
     }
-
+    // Telugu: U+0C00-0C7F
+    @font-face {
+        font-family: 'Odoo Unicode Support Noto';
+        src: url('https://fonts.odoocdn.com/fonts/noto/NotoSansTelugu-#{$type}.woff2') format('woff2'),
+             url('https://fonts.odoocdn.com/fonts/noto/NotoSansTelugu-#{$type}.woff') format('woff'),
+             url('https://fonts.odoocdn.com/fonts/noto/NotoSansTelugu-#{$type}.ttf') format('truetype');
+        font-weight: $weight;
+        font-style: $style;
+        unicode-range: U+0C00-0C7F;
+    }
     @font-face {
         font-family: 'Lato';
         src: url('#{$lato-font-path}/Lato-#{$type}-webfont.eot');

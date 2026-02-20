@@ -338,4 +338,22 @@ describe("pos.order - loyalty", () => {
         expect(loyaltyStats2[0].points.total).toBe(1);
         expect(loyaltyStats2[0].points.balance).toBe(3);
     });
+
+    test("reward amount tax included cheapest product", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        const line = await addProductLineToOrder(store, order, {
+            productId: 24,
+            templateId: 24,
+            qty: 1,
+        });
+        expect(line.prices.total_included).toBe(10);
+        expect(line.prices.total_excluded).toBe(8.7);
+        await store.updateRewards();
+        await tick();
+        expect(order.getOrderlines().length).toBe(2);
+        const rewardLine = order._get_reward_lines()[0];
+        expect(rewardLine.prices.total_included).toBe(-10);
+    });
 });

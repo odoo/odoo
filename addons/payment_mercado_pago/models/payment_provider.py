@@ -81,9 +81,24 @@ class PaymentProvider(models.Model):
 
     def _compute_mercado_pago_is_oauth_supported(self):
         """Return current state of OAuth support by Odoo. To be removed in future versions."""
-        self.mercado_pago_is_oauth_supported = False
+        self.mercado_pago_is_oauth_supported = True
 
     # === CONSTRAINT METHODS === #
+
+    @api.constrains('available_currency_ids')
+    def _check_currency_is_supported(self):
+        for provider in self.filtered(lambda p: p.code == 'mercado_pago'):
+            account_country = provider.mercado_pago_account_country_id
+            account_currency = const.CURRENCY_MAPPING.get(account_country.code)
+            if not account_country:
+                continue
+            if (
+                len(provider.available_currency_ids) != 1
+                or provider.available_currency_ids.name != account_currency
+            ):
+                raise ValidationError(
+                    _("Only the currency %s is available for this account.", account_currency)
+                )
 
     @api.constrains('state', 'mercado_pago_access_token')
     def _check_mercado_pago_credentials_are_set_before_enabling(self):

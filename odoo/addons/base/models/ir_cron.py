@@ -167,7 +167,7 @@ class IrCron(models.Model):
 
         with ListLogHandler(_logger, logging.ERROR) as capture:
             self._process_job(cron_cr, job)
-        if log_record := next((lr for lr in capture if hasattr(lr, 'exc_info')), None):
+        if log_record := next((lr for lr in capture if getattr(lr, 'exc_info', None)), None):
             _exc_type, exception, _traceback = log_record.exc_info
             e = RuntimeError()
             e.__cause__ = exception
@@ -489,11 +489,6 @@ class IrCron(models.Model):
             status = None
             loop_count = 0
             _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
-
-            if not env.user.active and env.user != env.ref('base.user_root'):
-                _logger.warning("Forbidden server action %r executed while the user %s is archived.", job['cron_name'], env.user.login)
-                done, remaining = 0, 0
-                status = CompletionStatus.FAILED
 
             # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
             # upon full completion or failure

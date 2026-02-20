@@ -761,7 +761,7 @@ class PosSession(models.Model):
             session_destination_id = picking_type.default_location_dest_id.id
 
         for order in self._get_closed_orders():
-            if order.company_id.anglo_saxon_accounting and order.is_invoiced or order.shipping_date:
+            if order._force_create_picking_real_time() or order.shipping_date:
                 continue
             destination_id = order.partner_id.property_stock_customer.id or session_destination_id
             if destination_id in lines_grouped_by_dest_location:
@@ -967,10 +967,10 @@ class PosSession(models.Model):
                 ])
                 for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
                     for move in stock_moves_batch:
-                        product_accounts = move.product_id._get_product_accounts()
+                        product_accounts = move.with_company(move.company_id).product_id._get_product_accounts()
                         exp_key = product_accounts['expense']
                         stock_key = product_accounts['stock_valuation']
-                        signed_product_qty = move.quantity
+                        signed_product_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False)
                         if move._is_in():
                             signed_product_qty *= -1
                         amount = signed_product_qty * move._get_price_unit()

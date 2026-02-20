@@ -342,3 +342,14 @@ class TestPaymentTransaction(PaymentCommon):
 
         tx._set_done()
         self.assertFalse(tx.is_post_processed)
+
+    def test_validate_amount_uses_payment_minor_unit(self):
+        self.currency_euro.rounding = 0.001
+        tx = self._create_transaction('direct', amount=123.452, currency_id=self.currency_euro.id)
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._extract_amount_data',
+            return_value={'amount': 123.45, 'currency_code': self.currency_euro.name},
+        ):
+            tx._validate_amount({})
+        self.assertNotEqual(tx.state, 'error')
