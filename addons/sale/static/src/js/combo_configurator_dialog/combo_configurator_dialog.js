@@ -3,7 +3,13 @@ import { Dialog } from '@web/core/dialog/dialog';
 import { formatCurrency } from '@web/core/currency';
 import { rpc } from '@web/core/network/rpc';
 import { useService } from '@web/core/utils/hooks';
-import { Component, useState, useSubEnv } from '@odoo/owl';
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useState,
+    useSubEnv,
+} from '@odoo/owl';
 import { ProductCard } from '../product_card/product_card';
 import { ProductCombo } from '../models/product_combo';
 import { ProductTemplateAttributeLine } from '../models/product_template_attribute_line';
@@ -59,6 +65,9 @@ export class ComboConfiguratorDialog extends Component {
         this._initSelectedComboItems();
         this.getPriceUrl = '/sale/combo_configurator/get_price';
         useSubEnv({ currency: { id: this.props.currency_id } });
+
+        onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
+        onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
     /**

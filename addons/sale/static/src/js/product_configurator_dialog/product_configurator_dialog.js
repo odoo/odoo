@@ -1,4 +1,11 @@
-import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useState,
+    useSubEnv,
+} from '@odoo/owl';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -90,6 +97,9 @@ export class ProductConfiguratorDialog extends Component {
             // Use the currency id retrieved from the server if none was provided in the props.
             this.currency.id ??= currency_id;
         });
+
+        onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
+        onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
     //--------------------------------------------------------------------------
