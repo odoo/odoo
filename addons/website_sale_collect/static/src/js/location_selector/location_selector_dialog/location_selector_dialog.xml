@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-inherit="delivery.locationSelector.dialog" t-inherit-mode="extension">
+    <t t-inherit="delivery.locationSelector.component" t-inherit-mode="extension">
         <section id="location_selector_list_view" position="attributes">
             <attribute name="t-if">!hideListView</attribute>
         </section>
@@ -15,7 +15,7 @@
         </MapContainer>
     </t>
 
-    <t t-inherit="delivery.locationSelector.searchbar" t-inherit-mode="extension">
+    <t t-inherit="website.locationSelector.searchbar" t-inherit-mode="extension">
         <input id="o_location_selector_search" position="before">
             <!-- Country selector -->
             <SelectMenu

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="s_store_locator" name="Store Locator">
+    <section class="s_store_locator"
+        data-map-zoom="12"
+        data-map-searchbar="true"
+        data-map-sidebar="true"
+        data-map-sidebar-location="left"
+        data-map-details="area"
+        locations_data="">
+        <div class="border-0 h-100 container-fluid overflow-hidden o_store_locator_component o_not_editable"/>
+    </section>
+</template>
+
+<record id="website.s_store_locator_000_scss" model="ir.asset">
+    <field name="name">Store locator 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_store_locator/000.scss</field>
+</record>
+
+</odoo>

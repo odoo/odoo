@@ -19,6 +19,7 @@
         'google_recaptcha',
         'utm',
         'html_builder',
+        'base_geolocalize',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
@@ -167,6 +168,7 @@
         'views/snippets/s_google_map.xml',
         'views/snippets/s_cta_mockups.xml',
         'views/snippets/s_map.xml',
+        'views/snippets/s_store_locator.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
@@ -274,6 +276,7 @@
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
             'website/static/src/components/user_switch.*',
+            'website/static/src/components/location_selector/**/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -340,6 +343,7 @@
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
             'website/static/src/mail/core/common/**/*',
+            'website/static/src/components/location_selector/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
             # TODO Remove the module's form js - this is for testing.

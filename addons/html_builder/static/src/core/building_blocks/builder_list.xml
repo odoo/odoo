@@ -64,9 +64,10 @@
                                 choices="excludedRecords.map((record) => ({ value: record, label: record.display_name  }))"
                                 onSelect="(record) => this.addItem(record)"
                                 class="'o-hb-selectMany2X-wrapper min-w-0'"
-                                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+                                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown' + (props.fullWidthDropdown ? ' o-hb-full-width-dropdown' : '' )"
                                 togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
                                 disabled="!excludedRecords.length"
+                                alternativeChoiceItemTemplate="props.alternativeChoiceItemTemplate"
                             >
                                 <t t-out="props.addItemTitle"/>
                             </SelectMenu>

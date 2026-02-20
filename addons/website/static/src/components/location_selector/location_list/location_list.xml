@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="delivery.locationSelector.locationList">
+    <t t-name="website.locationSelector.locationList">
         <div class="d-flex flex-grow-1 h-100 h-md-auto overflow-x-auto">
             <div id="o_location_selector_list_view" class="list-group list-group-flush flex-grow-1">
                 <t
@@ -9,8 +9,9 @@
                     t-key="location.id"
                 >
                     <Location
+                        t-if="!this.props.hideOffscreenLocations or this.props.visibleLocations.has((location_index + 1).toString())"
                         id="location.id.toString()"
-                        number="location_index + 1"
+                        number="this.props.showIndexes ? (location_index + 1).toString() : ''"
                         name="location.name"
                         street="location.street"
                         city="location.city"
@@ -19,6 +20,7 @@
                         additionalData="location.additional_data"
                         isSelected="this.props.selectedLocationId === location.id.toString()"
                         setSelectedLocation="this.props.setSelectedLocation"
+                        showPinIndicator="this.props.showPinIndicator"
                     />
                 </t>
             </div>

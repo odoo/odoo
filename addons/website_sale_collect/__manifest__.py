@@ -26,6 +26,7 @@ Allows customers to check in-store stock, pay on site, and pick up their orders 
     'assets': {
         'web.assets_frontend': [
             'website_sale_collect/static/src/**/*',
+            'website/static/src/components/location_selector/**/*',
         ],
     },
     'post_init_hook': 'post_init_hook',

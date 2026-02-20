@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="website.locationSelector.map">
+        <div class="o_location_selector_map w-100 flex-grow-1" t-ref="map"/>
+    </t>
+
+    <t t-name="website.locationSelector.map.marker">
+        <t t-call="delivery.locationSelector.map.pinIndicator">
+            <t t-set="number" t-value="number"/>
+        </t>
+    </t>
+
+    <t t-name="website.locationSelector.map.tooltip">
+        <b t-out="location.name"/><br/>
+        <t t-out="location.street"/><br/>
+        <t t-out="location.zip_code"/> <t t-out="location.city"/>
+        <t t-if="showPhone and location.phone">
+            <br/><i class="fa fa-phone fa-fw me-1"/> <t t-out="location.phone"/>
+        </t>
+        <t t-if="showEmail and location.email">
+            <br/><i class="fa fa-envelope fa-fw me-1"/> <t t-out="location.email"/>
+        </t>
+        <t t-if="showWebsite and location.website">
+            <br/><i class="fa fa-globe fa-fw me-1"/> <a t-attf-href="{{location.website}}" target="_blank"><t t-out="location.website"/></a>
+        </t>
+    </t>
+
+</templates>
