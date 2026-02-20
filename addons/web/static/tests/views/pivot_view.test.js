@@ -291,7 +291,7 @@ test("pivot rendering with widget", async () => {
         resModel: "partner",
         arch: `
 			<pivot string="Partners">
-				<field name="foo" type="measure" widget="float_time"/>
+				<field name="foo" type="measure" widget="float_time" options="{'numeric': 1}"/>
 			</pivot>
 		`,
     });
@@ -304,7 +304,7 @@ test("pivot rendering with widget and options", async () => {
         resModel: "partner",
         arch: `
 			<pivot string="Partners">
-                <field name="foo" type="measure" widget="float_time"/>
+                <field name="foo" type="measure" widget="float_time" options="{'numeric': 1}"/>
 			</pivot>
 		`,
     });
