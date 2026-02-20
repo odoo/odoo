@@ -50,6 +50,9 @@
                     <group name="resource_details">
                         <group name="schedule_type">
                             <field name="schedule_type" widget="schedule_type_confirm_radio" options="{'horizontal': true}" class="o_field_radio"/>
+                            <field name="days_per_week" string="Days/Week" readonly="schedule_type == 'fixed'"/>
+                            <field name="hours_per_week" string="Hours/Week" readonly="schedule_type == 'fixed'"/>
+                            <field name="hours_per_day" string="Hours/Day" readonly="schedule_type == 'fixed'"/>
                         </group>
                         <group name="resource_company">
                             <field name="company_id" placeholder="Visible to all"/>

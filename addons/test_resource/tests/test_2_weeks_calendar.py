@@ -287,5 +287,9 @@ class Test2WeeksCalendar(TransactionCase):
             Check that we can create a new company
             if the default company calendar is two weeks
         """
-        self.env.company.resource_calendar_id = self.two_weeks_resource
+        self.env.company.resource_calendar_id = self.env['resource.calendar'].create({
+            "name": "2-weeks calendar",
+            "schedule_type": "variable",
+            "attendance_ids": [],
+        })
         self.env['res.company'].create({'name': 'New Company'})

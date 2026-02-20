@@ -65,12 +65,12 @@ class ResourceCalendar(models.Model):
         compute='_compute_global_leave_ids', store=True, readonly=False,
         domain=[('resource_id', '=', False)],
     )
-    days_per_week = fields.Float("Days per Week", compute="_compute_days_per_week", store=True)
+    days_per_week = fields.Float("Days per Week", compute="_compute_days_per_week", store=True, digits=(2, 2), readonly=False)
     hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(2, 2), readonly=False,
         help="Average hours per day a resource is supposed to work with this calendar.")
     hours_per_week = fields.Float(
         string="Hours per Week",
-        compute="_compute_hours_per_week", store=True, readonly=False, copy=False)
+        compute="_compute_hours_per_week", store=True, digits=(2, 2), readonly=False, copy=False)
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
@@ -113,10 +113,9 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             if calendar.schedule_type == "variable":
                 calendar.attendance_ids = calendar._origin.attendance_ids
-            # TODO ZIRAH: Ruff.
             elif not (calendar.attendance_ids.filtered(lambda a: not a.date)
-                      or calendar._origin.company_id == calendar.company_id
-                      and calendar._origin.schedule_type == calendar.schedule_type):
+                      or (calendar._origin.company_id == calendar.company_id
+                      and calendar._origin.schedule_type == calendar.schedule_type)):
                 calendar.attendance_ids = calendar._get_default_attendance_ids(calendar.company_id)
 
     @api.depends('company_id')
@@ -127,35 +126,34 @@ class ResourceCalendar(models.Model):
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids],
             })
 
-    @api.depends('attendance_ids.date', 'attendance_ids.dayofweek', 'schedule_type')
+    # TODO ZIRAH Or else we can do:
+    # * If no recurrencies to forever:
+    #     len([1 for atts in self._get_attendances_by_day(min(date), max(until)).values() if atts])
+    #      - Could have perf issues if someone decides to stop all recurrencies starting from date(1, 1, 1) which would mean computing ~750.000 days of attendances.
+    # * If any recurrencies to forever:
+    #     We search the cicle of recurrency and compute the days per week inside that cycle.
+    #      - Can be confusing for a user when they create a single recurrency for every week and see days per week = 1
+    @api.depends('attendance_ids.dayofweek', 'schedule_type')
     def _compute_days_per_week(self):
-        # TODO ZIRAH: Add recurrency support
-        for calendar in self:
-            attendances = calendar._get_working_attendances()
-            days = len(set(attendances.mapped('date' if calendar.schedule_type == 'variable' else 'dayofweek')))
-            weeks = len({(att.date.toordinal() - 1) // 7 for att in attendances}) if calendar.schedule_type == 'variable' else 1
-            calendar.days_per_week = float_round(days / weeks if weeks else 0.0, precision_digits=2)
+        for calendar in self.filtered(lambda c: c.schedule_type == 'fixed'):
+            calendar.days_per_week = len(set(calendar._get_working_attendances().mapped('dayofweek')))
 
-    @api.depends('attendance_ids.date', 'attendance_ids.dayofweek', 'attendance_ids.duration_hours', 'schedule_type')
+    @api.depends('attendance_ids.dayofweek', 'attendance_ids.duration_hours', 'schedule_type')
     def _compute_hours_per_day(self):
-        # TODO ZIRAH: Add recurrency support
         """ Compute the average hours per day.
             Cannot directly depend on hours_per_week because of rounding issues. """
-        for calendar in self:
+        for calendar in self.filtered(lambda c: c.schedule_type == 'fixed'):
             attendances = calendar._get_working_attendances()
             hours = sum(attendances.mapped('duration_hours'))
-            days = len(set(attendances.mapped('date' if calendar.schedule_type == 'variable' else 'dayofweek')))
+            days = len(set(attendances.mapped('dayofweek')))
             calendar.hours_per_day = float_round((hours / days) if days else 0.0, precision_digits=2)
 
-    @api.depends('attendance_ids.date', 'attendance_ids.duration_hours', 'schedule_type')
+    @api.depends('attendance_ids.duration_hours', 'schedule_type')
     def _compute_hours_per_week(self):
-        # TODO ZIRAH: Add recurrency support
         """ Compute the average hours per week """
-        for calendar in self:
+        for calendar in self.filtered(lambda c: c.schedule_type == 'fixed'):
             attendances = calendar._get_working_attendances()
-            hours = sum(attendances.mapped('duration_hours'))
-            weeks = len({(att.date.toordinal() - 1) // 7 for att in attendances}) if calendar.schedule_type == 'variable' else 1
-            calendar.hours_per_week = float_round(hours / weeks if weeks else 0.0, precision_digits=2)
+            calendar.hours_per_week = float_round(sum(attendances.mapped('duration_hours')), precision_digits=2)
 
     def _compute_work_resources_count(self):
         resources_per_calendar = dict(self.env['resource.resource']._read_group(
