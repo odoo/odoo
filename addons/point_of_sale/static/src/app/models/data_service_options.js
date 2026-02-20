@@ -97,4 +97,11 @@ export class DataServiceOptions {
             "res.partner": ["property_product_pricelist"],
         };
     }
+
+    get prohibitedAutoLoadedModelsExemptions() {
+        return {
+            "pos.order": ["lines"],
+            "pos.order.line": ["refund_orderline_ids", "refunded_orderline_id", "order_id"],
+        };
+    }
 }

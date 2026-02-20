@@ -746,7 +746,10 @@ export class PosData extends Reactive {
             );
 
             for (const [, rel] of relations) {
-                if (this.opts.pohibitedAutoLoadedModels.includes(rel.relation)) {
+                if (
+                    this.opts.pohibitedAutoLoadedModels.includes(rel.relation) &&
+                    !this.opts.prohibitedAutoLoadedModelsExemptions[model]?.includes(rel.name)
+                ) {
                     continue;
                 }
 
