@@ -44,6 +44,7 @@ class TestPeppolParticipant(TransactionCase):
             '/api/peppol/1/participant_status': {
                 'result': {
                     'peppol_state': peppol_state,
+                    'main_alias': '0208:0000000388'
                 }
             },
             '/api/peppol/1/activate_participant': {'result': {}},
@@ -564,3 +565,16 @@ class TestPeppolParticipant(TransactionCase):
 
         # Should successfully deregister despite client_gone error
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
+
+    def test_participant_status_update_alias(self):
+        """ a main alias in the participant_status should change the identifier """
+        company = self.env.company
+        settings = self.env['res.config.settings'].create(self._get_participant_vals())
+        settings.button_create_peppol_proxy_user()
+        self.assertEqual(company.peppol_endpoint, '0000000000')
+        self.assertEqual(company.peppol_eas, '9925')
+        self.assertEqual(company.account_edi_proxy_client_ids.edi_identification, '9925:0000000000')
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
+        self.assertEqual(company.peppol_endpoint, '0000000388')
+        self.assertEqual(company.peppol_eas, '0208')
+        self.assertEqual(company.account_edi_proxy_client_ids.edi_identification, '0208:0000000388')

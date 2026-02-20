@@ -314,3 +314,12 @@ class AccountEdiProxyClientUser(models.Model):
                 edi_user.company_id.account_peppol_proxy_state = local_state
             else:
                 _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), edi_user.id)
+
+            new_alias = proxy_user.get('main_alias')
+            if new_alias:
+                scheme, endpoint = new_alias.split(':')
+                edi_user.company_id.write({
+                    'peppol_eas': scheme,
+                    'peppol_endpoint': endpoint
+                })
+                edi_user.edi_identification = new_alias
