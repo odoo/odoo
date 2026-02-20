@@ -114,6 +114,14 @@ export class SearchPowerboxPlugin extends Plugin {
     }
     openSearchPowerbox() {
         const selection = this.dependencies.selection.getEditableSelection();
+        if (
+            !(
+                this.checkPredicates("is_powerbox_available_predicates", selection.anchorNode) ??
+                true
+            )
+        ) {
+            return;
+        }
         this.offset = selection.startOffset - 1;
         this.enabledCommands = this.dependencies.powerbox.getAvailablePowerboxCommands();
         this.dependencies.powerbox.openPowerbox({

@@ -1,11 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, findFurthest, selectElements } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input", "feff"];
+    static dependencies = ["clipboard", "feff", "history", "input", "selection", "split"];
     resources = {
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
@@ -16,6 +17,38 @@ export class InlineCodePlugin extends Plugin {
                 result.push(feff);
             }
             return result;
+        },
+
+        /** Overrides */
+        paste_overrides: (selection, clipboardData) => {
+            const caretNode =
+                selection.direction === DIRECTIONS.RIGHT
+                    ? selection.anchorNode
+                    : selection.focusNode;
+            if (closestElement(caretNode, "code.o_inline_code")) {
+                this.dependencies.clipboard.pasteText(
+                    selection,
+                    clipboardData.getData("text/plain")
+                );
+                return true;
+            }
+        },
+
+        /** Predicates */
+        is_formattable_node_predicates: (node) => {
+            if (closestElement(node, "code.o_inline_code")) {
+                return false;
+            }
+        },
+        is_powerbox_available_predicates: (node) => {
+            if (closestElement(node, "code.o_inline_code")) {
+                return false;
+            }
+        },
+        toolbar_visibility_predicates: (node) => {
+            if (closestElement(node, "code.o_inline_code")) {
+                return false;
+            }
         },
     };
 
@@ -75,16 +108,17 @@ export class InlineCodePlugin extends Plugin {
             if (startOffset) {
                 splitTextNode(textNode, startOffset);
             }
-            // Remove ticks.
-            textNode.textContent = textNode.textContent.substring(
-                1,
-                textNode.textContent.length - 1
-            );
-            // Insert code element.
+            const splitLimit = findFurthest(textNode, closestBlock(textNode), (n) => !isBlock(n));
+            const splitNode = this.dependencies.split.splitAroundUntil(textNode, splitLimit);
+            // Insert code element with plain text.
             const codeElement = this.document.createElement("code");
             codeElement.classList.add("o_inline_code");
-            textNode.before(codeElement);
-            codeElement.append(textNode);
+            // Remove ticks from the text content.
+            codeElement.textContent = splitNode.textContent.substring(
+                1,
+                splitNode.textContent.length - 1
+            );
+            splitNode.replaceWith(codeElement);
             if (
                 !codeElement.previousSibling ||
                 codeElement.previousSibling.nodeType !== Node.TEXT_NODE

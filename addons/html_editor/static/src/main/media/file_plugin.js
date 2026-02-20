@@ -40,7 +40,11 @@ export class FilePlugin extends Plugin {
         /** Predicates */
         functional_empty_node_predicates: (node) =>
             node?.nodeName === "SPAN" && node.classList.contains("o_file_box"),
-        toolbar_visibility_predicates: (node) => !closestElement(node, ".o_file_box"),
+        toolbar_visibility_predicates: (node) => {
+            if (closestElement(node, ".o_file_box")) {
+                return false;
+            }
+        },
     };
 
     setup() {
