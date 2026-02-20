@@ -8,7 +8,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred, delay } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -150,4 +150,42 @@ describe("waitSidebarUpdated", () => {
         expect(".test-value-parent").toHaveText("c");
         expect(".test-value-sub").toHaveText("c");
     });
+});
+
+test("UI is blocked when doing the reloadable operation", async () => {
+    onRpc("ir.ui.view", "save", () => true);
+    addBuilderAction({
+        TestReloadAction: class extends BuilderAction {
+            static id = "testReload";
+            setup() {
+                this.reload = {};
+            }
+            isApplied({ editingElement }) {
+                return editingElement.dataset.applied === "true";
+            }
+            async apply({ editingElement }) {
+                await delay(100);
+                editingElement.dataset.applied = "true";
+            }
+            clean({ editingElement }) {
+                editingElement.dataset.applied = "false";
+            }
+        },
+    });
+
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'testReload'">Click</BuilderButton>`;
+        }
+    );
+
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `<div class="test-options-target">Target</div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container [data-action-id='testReload']").click();
+    expect(".o_blockUI").toHaveCount(1);
+    await waitSidebarUpdated();
+    expect(".o_blockUI").toHaveCount(0);
 });
