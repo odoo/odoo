@@ -7,8 +7,6 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     def _get_cogs_value(self):
-        price_unit = super()._get_cogs_value()
-
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         if so_line:
             # We give preference to the bom in the stock moves for the sale order lines
@@ -38,5 +36,5 @@ class AccountMoveLine(models.Model):
                     prod_moves = moves.filtered(lambda m: m.product_id == product)
                     product = product.with_company(self.company_id)
                     average_price_unit += factor * prod_moves._get_price_unit()
-                price_unit = average_price_unit / bom.product_qty or price_unit
-        return price_unit
+                return average_price_unit / bom.product_qty
+        return super()._get_cogs_value()
