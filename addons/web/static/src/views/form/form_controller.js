@@ -426,6 +426,10 @@ export class FormController extends Component {
     async onWillSaveRecord() {}
 
     async onSaveError(error, { discard }) {
+        if (!error.data) {
+            throw error;
+        }
+
         const proceed = await new Promise((resolve) => {
             this.model.dialog.add(FormErrorDialog, {
                 message: error.data.message,
