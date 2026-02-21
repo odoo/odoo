@@ -5,7 +5,13 @@ import markupsafe
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+<<<<<<< 59e9b77bda1a1b90ea7fee9c7cc64ea7c8f33449
 from odoo.tools import OrderedSet, frozendict
+||||||| bc5cadbeffdc22df9ab7282e8183eb41d5aafdc3
+from odoo.tools import frozendict, SQL
+=======
+from odoo.tools import frozendict, OrderedSet
+>>>>>>> 0856a18dce76151def792e7c39ccb8b201cd99b3
 from odoo.tools.misc import clean_context
 
 
@@ -397,8 +403,8 @@ class AccountPaymentRegister(models.TransientModel):
                 balance = sum(lines.mapped('balance'))
                 vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
                 if merge:
-                    partner_banks = banks_per_partner[batch_key['partner_id']]
-                    vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                    partner_banks = banks_per_partner[key['partner_id']]
+                    vals['payment_values']['partner_bank_id'] = next(iter(partner_banks[vals['payment_values']['payment_type']]))
                     vals['lines'] = lines
                 batch_vals.append(vals)
 
