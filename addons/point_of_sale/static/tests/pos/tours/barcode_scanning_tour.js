@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as ProductConfigurator from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -52,6 +53,12 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
             ProductScreen.selectedOrderlineHas("Packaging Product", 12),
             scan_barcode("12345610"),
             ProductScreen.selectedOrderlineHas("Packaging Product", 22),
+
+            // Add Product which has no barcode, but it's packaging has one
+            scan_barcode("12345618"),
+            ProductConfigurator.pickMulti("Cushion"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Packaging Product2", 10),
             Chrome.endTour(),
         ].flat(),
 });

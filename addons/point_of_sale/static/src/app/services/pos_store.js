@@ -694,11 +694,11 @@ export class PosStore extends WithLazyGetterTrap {
                 values[0].attribute_id.create_variant === "no_variant"
                     ? values
                     : values.filter((value) =>
-                          product.product_template_attribute_value_ids.includes(value)
+                          product?.product_template_attribute_value_ids.includes(value)
                       )
             );
         }
-        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+        if (attributeLinesValues.some((values) => values.length > 1 || values[0]?.is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 productTemplate: pTemplate,
                 hideAlwaysVariants: opts.hideAlwaysVariants,
