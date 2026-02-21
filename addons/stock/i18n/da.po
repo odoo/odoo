@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 13:30+0000\n"
+"PO-Revision-Date: 2026-02-21 14:11+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/stock/"
 "da/>\n"
@@ -9049,8 +9049,8 @@ msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
 msgstr ""
-"Opbevar produkter i specifikke lokationer i dit varehus (f.eks. kasser, "
-"hylder) og spor inventar derudfra."
+"Opbevar produkter i specifikke lokationer i dit varehus "
+"(f.eks. kasser, hylder) og spor inventar derudfra."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -9188,6 +9188,13 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
+"Serienummeret (%(serial_number)s) bruges allerede på følgende sted(er): %"
+"(location_list)s.\n"
+"\n"
+"Er dette forventet? Dette kan f.eks. ske, hvis en leveringsproces valideres, "
+"før den tilhørende modtagelsesproces er godkendt. I sådanne tilfælde løses "
+"problemet automatisk, når alle trin er gennemført. Ellers bør serienummeret "
+"korrigeres for at undgå inkonsistente data."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -9502,8 +9509,8 @@ msgstr ""
 "Dette tilføjer ruten \"Genopfyldning efter ordre (ordreproduktion)\", som "
 "bruges på produkter til automatisk at oprette genopfyldninger, f.eks. i "
 "forbindelse med salgsordrer, så snart de bekræftes. Genopfyldningen sker via "
-"et direkte link og afhænger af den valgte metode for produktet (enten "
-"\"Indkøb\" eller \"Produktion\")."
+"et direkte link og afhænger af den valgte metode for produktet "
+"(enten \"Indkøb\" eller \"Produktion\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

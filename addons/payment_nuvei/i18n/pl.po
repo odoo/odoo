@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2026-01-17 13:14+0000\n"
+"PO-Revision-Date: 2026-02-21 14:05+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "payment_nuvei/pl/>\n"
@@ -22,8 +22,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_nuvei
@@ -40,6 +40,8 @@ msgid ""
 "An error occurred during the processing of your payment (%(reason)s). Please "
 "try again."
 msgstr ""
+"Wystąpił błąd podczas przetwarzania płatności (%(reason)s). Proszę spróbować "
+"ponownie."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
@@ -61,7 +63,7 @@ msgstr "ID"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
-msgstr ""
+msgstr "Identyfikator sprzedawcy"
 
 #. module: payment_nuvei
 #. odoo-python
@@ -77,7 +79,7 @@ msgstr "Nuvei"
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "Nuvei Merchant Identifier"
-msgstr ""
+msgstr "Identyfikator sprzedawcy Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
@@ -87,7 +89,7 @@ msgstr "Tajny klucz Nuvei"
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "Nuvei Site Identifier"
-msgstr ""
+msgstr "Identyfikator witryny Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
@@ -103,19 +105,21 @@ msgstr "Transakcja płatnicza"
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Otrzymano dane z brakującym statusem płatności."
 
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Otrzymano dane bez referencji."
 
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr ""
+"Otrzymano nieprawidłowy status transakcji %(status)s oraz powód "
+"\"%(reason)s\"."
 
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
@@ -125,23 +129,23 @@ msgstr "Tajny klucz"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
-msgstr ""
+msgstr "Identyfikator witryny"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "The code of the merchant account to use with this provider."
-msgstr ""
+msgstr "Kod konta sprzedawcy, który należy używać w przypadku tego dostawcy."
 
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Klient opuścił stronę płatności."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "The site identifier code associated with the merchant account."
-msgstr ""
+msgstr "Kod identyfikacyjny witryny powiązany z kontem handlowym."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code

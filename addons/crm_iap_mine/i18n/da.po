@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 13:06+0000\n"
+"PO-Revision-Date: 2026-02-21 13:52+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "crm_iap_mine/da/>\n"
@@ -51,9 +51,9 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Kære</p>\n"
-"    <p>Der er ikke flere point på din IAP-konto til generering af kundeemner."
-"<br/>\n"
-"    Du kan oplade din IAP-konto til oprettelse af kundeemner i CRM-appens "
+"    <p>Der er ikke flere point på din IAP-konto til generering af leads.<br/>"
+"\n"
+"    Du kan oplade din IAP-konto til oprettelse af leads i CRM-appens "
 "indstillinger.<br/></p>\n"
 "    <p>Med venlig hilsen</p>\n"
 "    <p>Odoo S.A.</p>\n"
@@ -103,7 +103,7 @@ msgstr "<span class=\"col-md-6\">Ekstra kontakter pr. virksomhed</span>"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Leads</span>"
-msgstr "<span class=\"o_stat_text\">Kundeemner</span>"
+msgstr "<span class=\"o_stat_text\">Leads</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -147,12 +147,12 @@ msgstr "CEO"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
 msgid "CRM IAP Lead Industry"
-msgstr "CRM IAP-kundeemnebranche"
+msgstr "CRM IAP-leadsbranche"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr "CRM-anmodning om generering af kundeemner"
+msgstr "CRM-anmodning om generering af leads"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -234,7 +234,7 @@ msgstr "Lande"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Create a Lead Mining Request"
-msgstr "Opret en anmodnig om generering af et kundeemne"
+msgstr "Opret en anmodnig om generering af et lead"
 
 #. module: crm_iap_mine
 #: model:ir.model,website_form_label:crm_iap_mine.model_crm_lead
@@ -282,8 +282,7 @@ msgstr "Vis navn"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
 msgid "Diversified Financials & Financial Services"
-msgstr ""
-"Finansielle virksomheder og tjenesteydelser med bredt forretningsområde"
+msgstr "Finansielle virksomheder og tjenesteydelser med bredt forretningsområde"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
@@ -367,7 +366,7 @@ msgstr "Fra"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.view_crm_lead_kanban
 msgid "Generate Leads"
-msgstr "Generér kundeemner"
+msgstr "Generér leads"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -379,7 +378,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr "Kundeemne / salgsmulighed genereret"
+msgstr "Lead / salgsmulighed genereret"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
@@ -404,7 +403,7 @@ msgstr "Hjælpemetoder til crm_iap_mine-moduler"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "How many leads would you like?"
-msgstr "Hvor mange kundeemner kunne du tænke dig?"
+msgstr "Hvor mange leads kunne du tænke dig?"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
@@ -415,7 +414,7 @@ msgstr "Personaleadministration (HR)"
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr "Meddelelse om IAP-kundeemnegenerering"
+msgstr "Meddelelse om IAP-leadsgenerering"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
@@ -478,45 +477,45 @@ msgstr "Sidst opdateret den"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_lead
 msgid "Lead"
-msgstr "Kundeemne"
+msgstr "Lead"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
-msgstr "Point til kundeemnekontakter"
+msgstr "Point til leadskontakter"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
 msgid "Lead Credits"
-msgstr "Kundeemnepoint"
+msgstr "Leadpoint"
 
 #. module: crm_iap_mine
 #: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr "Generering af kundeemner"
+msgstr "Generering af leads"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Lead Mining Request"
-msgstr "Anmodning om generering af kundeemne"
+msgstr "Anmodning om generering af leads"
 
 #. module: crm_iap_mine
 #: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
 #: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
 msgid "Lead Mining Requests"
-msgstr "Anmodninger om generering af kundeemne"
+msgstr "Anmodninger om generering af leads"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
 msgid "Lead Total Credits"
-msgstr "Samlede pointtal for kundeemner"
+msgstr "Samlede pointtal for leads"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
-msgstr "Kundeemner"
+msgstr "Leads"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
@@ -529,7 +528,7 @@ msgstr "Juridisk"
 msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 "Leder du efter flere salgsmuligheder?<br>Prøv værktøjet til <b>generering af "
-"kundeemner</b>."
+"leads</b>."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
@@ -588,13 +587,13 @@ msgstr "Antal kontakter"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
 msgid "Number of Generated Leads"
-msgstr "Antal oprettede kundeemner"
+msgstr "Antal oprettede leads"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
 msgid "Number of Leads"
-msgstr "Antal kundeemner"
+msgstr "Antal leads"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
@@ -611,7 +610,7 @@ msgstr "Salgsmuligheder"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr "Mulighed oprettet af Odoos værktøj til generering af kundeemner"
+msgstr "Mulighed oprettet af Odoos værktøj til generering af leads"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:49+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -78,13 +78,6 @@ msgstr "10 idei de mobilier pentru începători"
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 Sfaturi și trucuri de prelucrare a lemnului pentru începători"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -158,15 +151,6 @@ msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Convorbiri preferate"
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -1450,10 +1434,7 @@ msgstr "Activități viitoare"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
+msgid "Get prepared and"
 msgstr ""
 
 #. module: website_event_track
@@ -1511,6 +1492,11 @@ msgstr "Ridicat"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "Cel mai ridicat (cea mai ridicata)"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Pagina principală"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -2922,6 +2908,11 @@ msgstr ""
 "complicate sau complicate."
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Values set here are website-specific."
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
 msgstr "Vizualizați pista"
@@ -3221,6 +3212,12 @@ msgid "minutes after Track start"
 msgstr "minute după începerea pistei"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "înregistrați-vă acum la discuțiile preferate"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "începe în"
@@ -3229,6 +3226,13 @@ msgstr "începe în"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "începe pe"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+#~ "specific.\" groups=\"website.group_multi_website\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+#~ "specific.\" groups=\"website.group_multi_website\"/>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3246,9 +3250,6 @@ msgstr "începe pe"
 #~ msgstr ""
 #~ "Permiteți înregistrarea video și audio a \n"
 #~ "prezentării acestora, pentru publicare pe site-ul nostru web."
-
-#~ msgid "Home page"
-#~ msgstr "Pagina principală"
 
 #~ msgid "Number of messages which requires an action"
 #~ msgstr "Număr de mesaje ce necesită intervenție"
@@ -3276,9 +3277,6 @@ msgstr "începe pe"
 
 #~ msgid "This event does not accept proposals."
 #~ msgstr "Acest eveniment nu acceptă propuneri."
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "înregistrați-vă acum la discuțiile preferate"
 
 #~ msgid "search."
 #~ msgstr "căutare."
