@@ -18,6 +18,7 @@ import threading
 import time
 from collections import deque
 import contextlib
+from email.utils import parsedate_to_datetime
 from io import BytesIO
 
 import psutil
@@ -148,6 +149,7 @@ class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
             # path isn't set if the requestline was bad
             msg = self.requestline
 
+<<<<<<< 9fd4161d6c297a2b89a5a01e1f1250221a219290
         code = str(code)
 
         if code[0] == "1":  # 1xx - Informational
@@ -169,6 +171,16 @@ class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
 
 
 class RequestHandler(CommonRequestHandler):
+||||||| 90d98e64ed400944bc85485a38b58b86dd2d39f2
+class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+=======
+class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self._sent_date_header = None
+        self._sent_server_header = None
+        super().__init__(*args, **kwargs)
+
+>>>>>>> 1c31a32abdaf8fe8d73d2522d46fcb341a523c49
     def setup(self):
         # timeout to avoid chrome headless preconnect during tests
         if config['test_enable']:
@@ -197,6 +209,33 @@ class RequestHandler(CommonRequestHandler):
             # Do not keep processing requests.
             self.close_connection = True
             return
+
+        if keyword.casefold() == 'date':
+            if self._sent_date_header is None:
+                self._sent_date_header = value
+            elif self._sent_date_header == value:
+                return  # don't send the same header twice
+            else:
+                sent_datetime = parsedate_to_datetime(self._sent_date_header)
+                new_datetime = parsedate_to_datetime(value)
+                if sent_datetime == new_datetime:
+                    return  # don't send the same date twice (differ in format)
+                if abs((sent_datetime - new_datetime).total_seconds()) <= 1:
+                    return  # don't send the same date twice (jitter of 1 second)
+                _logger.warning(
+                    "sending two different Date response headers: %r vs %r",
+                    self._sent_date_header, value)
+
+        if keyword.casefold() == 'server':
+            if self._sent_server_header is None:
+                self._sent_server_header = value
+            elif self._sent_server_header == value:
+                return  # don't send the same header twice
+            else:
+                _logger.warning(
+                    "sending two different Server response headers: %r vs %r",
+                    self._sent_server_header, value)
+
         super().send_header(keyword, value)
 
     def end_headers(self, *a, **kw):
