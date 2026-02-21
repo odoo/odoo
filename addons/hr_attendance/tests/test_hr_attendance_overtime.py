@@ -637,6 +637,39 @@ class TestHrAttendanceOvertime(HttpCase):
             self.assertEqual(morning.worked_hours + afternoon.worked_hours, 9)  # 8 hours from calendar's attendances + 1 hour of tolerance
             self.assertEqual(afternoon.check_out, datetime(2024, 1, 1, 18, 0))
 
+    def test_auto_check_out_two_weeks_calendar(self):
+        """Test case: two weeks calendar with different attendances depending on the week. No morning attendance on
+        wednesday of the first week."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 0
+        })
+        # TODO ZIRAH: Make a recurrency
+        self.employee.resource_calendar_id.write({
+            'schedule_type': 'variable',
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {'date': datetime(2025, 3, 5), 'hour_from': 12, 'hour_to': 16}),
+                               (0, 0, {'date': datetime(2025, 3, 12), 'hour_from': 8, 'hour_to': 16})],
+        })
+
+        with freeze_time("2025-03-05 22:00:00"):
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 3, 5, 8, 0)
+            })
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(att.worked_hours, 4)
+            self.assertEqual(att.check_out, datetime(2025, 3, 5, 12, 0))
+
+        with freeze_time("2025-03-12 22:00:00"):
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 3, 12, 8, 0),
+            })
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(att.worked_hours, 8)
+            self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
+
     # @freeze_time("2024-02-01 14:00:00")
     # def test_absence_management(self):
     # TODO no more absence management

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="resource.ResourceCalendarAttendancePopover">
+        <div t-ref="root">
+            <Record t-props="currentRecordProps" t-slot-scope="currentRecord">
+                <div class="o_cw_popover card">
+                    <div class="card-header popover-header d-flex align-items-baseline py-1 px-2">
+                        <h4 class="m-0 me-auto" t-esc="currentRecord.record.data.display_name"/>
+                        <span class="cursor-pointer" t-on-click.stop="props.close">
+                            <i class="fa fa-close" />
+                        </span>
+                    </div>
+                    <div class="popover-body o_form_view o_form_nosheet py-0">
+                        <FormRenderer record="currentRecord.record" archInfo="props.archInfo" class="'p-0 pt-3'"/>
+                    </div>
+                    <div class="popover-footer d-flex justify-content-between">
+                        <div class="p-3 pt-0 d-flex gap-1 w-100 o_form_nosheet">
+                            <button class="btn btn-sm btn-primary me-auto"
+                                    t-on-click="onSave.bind(this, currentRecord.record)">Save</button>
+                            <ViewButton className="'btn btn-sm ms-0 btn-danger'"
+                                        clickParams="{type: 'object', name: 'unlink'}"
+                                        icon="'fa-trash'"
+                                        record="currentRecord.record"
+                                        string.translate="Delete"/>
+                        </div>
+                    </div>
+                </div>
+            </Record>
+        </div>
+    </t>
+</templates>

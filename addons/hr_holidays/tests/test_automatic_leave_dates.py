@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from odoo.fields import Command
 from odoo.tests import tagged, Form
@@ -328,3 +328,75 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 0)
         self.assertEqual(leave.date_from, datetime(2019, 9, 3, 6, 0, 0))
         self.assertEqual(leave.date_to, datetime(2019, 9, 3, 10, 0, 0))
+
+    def test_variable_calendar(self):
+        # The difference in hours between the calendar and the result in this test is due to the timezones.
+        # Times in the calendars do not have a timezone. The same hour in the user's timezone is 2 hours before the one in calendar.
+        self.env.user.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'auto next day',
+            'schedule_type': 'variable',
+            # TODO ZIRAH: Make a recurrency
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {'date': datetime(2019, 9, 2), 'hour_from': 10, 'hour_to': 12}),
+                               (0, 0, {'date': datetime(2019, 9, 9), 'hour_from': 8, 'hour_to': 12}),
+                               *[(0, 0, {'date': datetime(2019, 9, 2) + timedelta(days=day), 'hour_from': 8, 'hour_to': 16}) for day in set(range(14)) - {0, 7}]],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            # even week, works 2 hours
+            leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0.5)
+        self.assertEqual(leave.number_of_hours, 2)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 2, 8, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            # odd week, works 4 hours
+            leave_form.request_date_from = date(2019, 9, 9)
+            leave_form.request_date_to = date(2019, 9, 9)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0.5)
+        self.assertEqual(leave.number_of_hours, 4)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 9, 6, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 9, 10, 0, 0))
+
+    def test_variable_calendar_next_week(self):
+        # The difference in hours between the calendar and the result in this test is due to the timezones.
+        # Times in the calendars do not have a timezone. The same hour in the user's timezone is 2 hours before the one in calendar.
+        self.env.user.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'auto next day',
+            'schedule_type': 'variable',
+            # TODO ZIRAH: Make a recurrency
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {'date': datetime(2019, 9, 9), 'hour_from': 8, 'hour_to': 12})],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            # even week, does not work
+            leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0)
+        self.assertEqual(leave.number_of_hours, 0)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 2, 6, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))

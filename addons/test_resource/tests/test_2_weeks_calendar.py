@@ -2,7 +2,8 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.exceptions import ValidationError
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -16,21 +17,23 @@ class Test2WeeksCalendar(TransactionCase):
         cls.two_weeks_cal_fixed = cls.env['resource.calendar'].create([
             {
                 "name": "2-weeks calendar",
-                "two_weeks_calendar": True,
+                "schedule_type": "variable",
                 "attendance_ids": [(
                     0, 0, {
                         "hour_from": att[0],
                         "hour_to": att[1],
-                        "dayofweek": str(att[2]),
-                        "week_type": att[3],
+                        "date": datetime(1, 1, att[2] + (7 * att[3]) + 1),
+                        "recurrency": True,
+                        "recurrency_type": 'weeks',
+                        "interval": 2,
                     },
                 ) for att in [
-                    (8, 16, 0, "0"),
-                    (9, 17, 1, "0"),
-                    (8, 16, 0, "1"),
-                    (7, 15, 2, "1"),
-                    (8, 16, 3, "1"),
-                    (10, 16, 4, "1"),
+                    (8, 16, 0, 0),
+                    (9, 17, 1, 0),
+                    (8, 16, 0, 1),
+                    (7, 15, 2, 1),
+                    (8, 16, 3, 1),
+                    (10, 16, 4, 1),
                 ]],
             },
         ])
@@ -39,20 +42,22 @@ class Test2WeeksCalendar(TransactionCase):
         cls.two_weeks_cal_duration = cls.env['resource.calendar'].create([
             {
                 "name": "2-weeks calendar",
-                "two_weeks_calendar": True,
+                "schedule_type": "variable",
                 "attendance_ids": [(
                     0, 0, {
                         "duration_hours": att[0],
-                        "dayofweek": str(att[1]),
-                        "week_type": att[2],
+                        "date": datetime(1, 1, att[1] + (7 * int(att[2]) + 1)),
+                        "recurrency": True,
+                        "recurrency_type": 'weeks',
+                        "interval": 2,
                     },
                 ) for att in [
-                    (8, 0, "0"),
-                    (8, 1, "0"),
-                    (8, 0, "1"),
-                    (8, 2, "1"),
-                    (8, 3, "1"),
-                    (6, 4, "1"),
+                    (8, 0, 0),
+                    (8, 1, 0),
+                    (8, 0, 1),
+                    (8, 2, 1),
+                    (8, 3, 1),
+                    (6, 4, 1),
                 ]],
             },
         ])
@@ -187,7 +192,7 @@ class Test2WeeksCalendar(TransactionCase):
     def test_compute_work_time_rate_with_two_weeks_calendar(self):
         """Test Case: check if the computation of the work time rate in the resource.calendar is correct."""
         def create_attendance_ids(attendance_list):
-            return [(0, 0, {'week_type': str(i), **attendance}) for i in range(0, 2) for attendance in attendance_list]
+            return [(0, 0, {'date': datetime(1, 1, 1 + int(attendance['dayofweek'])), **attendance, 'recurrency': True, 'recurrency_type': 'weeks', 'interval': 1}) for attendance in attendance_list]
 
         attendance_list = [
             {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'},
@@ -200,7 +205,7 @@ class Test2WeeksCalendar(TransactionCase):
         # Define a mid time
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Calendar Mid-Time',
-            'two_weeks_calendar': True,
+            'schedule_type': 'variable',
             'full_time_required_hours': 40,
             'attendance_ids': create_attendance_ids(attendance_list),
         })
@@ -232,25 +237,22 @@ class Test2WeeksCalendar(TransactionCase):
         calendar = self.env['resource.calendar'].create([
             {
                 "name": "2-weeks calendar",
-                "two_weeks_calendar": True,
+                "schedule_type": "variable",
                 "attendance_ids": [],
             },
         ])
 
-        self.env['resource.calendar.attendance'].create({
-            'calendar_id': calendar.id,
-            'hour_from': 0,
-            'hour_to': 0,
-        })
-        resource_hour = calendar._get_hours_per_day()
-        self.assertEqual(resource_hour, 0.0)
+        with self.assertRaises(ValidationError):
+            self.env['resource.calendar.attendance'].create({
+                'calendar_id': calendar.id,
+                'date': datetime(2026, 1, 28),
+                'hour_from': 0,
+                'hour_to': 0,
+            })
 
-        self.env['resource.calendar.attendance'].create({
-            'calendar_id': calendar.id,
-            'duration_hours': 0,
-        })
-        resource_hour = calendar._get_hours_per_day()
-        self.assertEqual(resource_hour, 0.0)
+        self.assertEqual(calendar.hours_per_day, 0.0)
+        self.assertEqual(calendar.days_per_week, 0.0)
+        self.assertEqual(calendar.hours_per_week, 0.0)
 
     def test_work_data_2_weeks(self):
         jules_tz = ZoneInfo(self.jules.tz)
@@ -279,3 +281,15 @@ class Test2WeeksCalendar(TransactionCase):
             datetime(2019, 12, 27, 23, 59, 59, tzinfo=jules_tz),
         )[self.jules.id]
         self.assertEqual(data, {'days': 784, 'hours': 6010})
+
+    def test_create_company_using_two_weeks_resource(self):
+        """
+            Check that we can create a new company
+            if the default company calendar is two weeks
+        """
+        self.env.company.resource_calendar_id = self.env['resource.calendar'].create({
+            "name": "2-weeks calendar",
+            "schedule_type": "variable",
+            "attendance_ids": [],
+        })
+        self.env['res.company'].create({'name': 'New Company'})
