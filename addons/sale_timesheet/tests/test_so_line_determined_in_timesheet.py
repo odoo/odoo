@@ -236,3 +236,91 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
 
         # 6) Check if the task and timesheet has no SOL.
         self.assertFalse(timesheet.so_line, 'No SOL should be linked to the timesheet because the project is non billable')
+
+    def test_sol_determined_with_multi_company_and_billing_rate(self):
+        """ Test the sol give to the timesheet when the pricing type in the project is employee rate
+
+            Test Case:
+            =========
+            1) Create an employee related to the user for each company,
+            2) Define a SO, with 3 SOL creating tasks in a new billable project,
+            3) Check that the default SOL linked to a newly created timesheet is the first one in the list aswell as the default for the project,
+            4) Create SOL mapping between the other SOL and each employee,
+            5) Check that depending on which company is activated, new timesheets linked to the project assign the correct SOL to the user.
+        """
+        # 1) Create an employee related to the user for each company
+
+        comp1 = self.company_data.get('company')
+        comp2 = self.company_data_2.get('company')
+
+        self.env.user.with_company(comp1).action_create_employee()
+        e1 = self.env.user.with_company(comp1).employee_id
+        self.env.user.with_company(comp2).action_create_employee()
+        e2 = self.env.user.with_company(comp2).employee_id
+
+        # 2) Define a SO, with 3 SOL creating tasks in a new billable project
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_b.id,
+            'partner_invoice_id': self.partner_b.id,
+            'partner_shipping_id': self.partner_b.id,
+        })
+
+        so_lines = self.env['sale.order.line'].create([{
+            'order_id': so.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+        }, {
+            'order_id': so.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+        }, {
+            'order_id': so.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+        }])
+
+        so.action_confirm()
+
+        # 3) Check that the default SOL linked to a newly created timesheet is the first one in the list aswell as the default for the project
+
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'unit_amount': 1,
+            'auto_account_id': self.analytic_account_sale.id,
+            'project_id': so_lines[0].project_id.id,
+        })
+        self.assertTrue(timesheet.so_line == timesheet.project_id.sale_line_id == so_lines[0])
+
+        # 4) Create SOL mapping between the other SOL and each employee
+
+        mapping = self.env['project.sale.line.employee.map'].create([{
+            'project_id': so_lines[0].project_id.id,
+            'employee_id': e1.id,
+            'sale_line_id': so_lines[2].id
+
+        }, {
+            'project_id': so_lines[0].project_id.id,
+            'employee_id': e2.id,
+            'sale_line_id': so_lines[1].id
+        }])
+        so_lines[0].project_id.sale_line_employee_ids = mapping
+
+        # 5) Check that depending on which company is activated, new timesheets linked to the project assign the correct SOL to the user.
+
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'unit_amount': 1,
+            'auto_account_id': self.analytic_account_sale.id,
+            'project_id': so_lines[0].project_id.id,
+        })
+        self.assertEqual(timesheet.so_line.id, so_lines[2].id)
+
+        self.env.user.company_id = comp2
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'unit_amount': 1,
+            'auto_account_id': self.analytic_account_sale.id,
+            'project_id': so_lines[0].project_id.id,
+        })
+        self.assertEqual(timesheet.so_line.id, so_lines[1].id)
