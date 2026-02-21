@@ -153,6 +153,11 @@ class ResUsers(models.Model):
                 else 'default'
             )
 
+    @api.onchange('out_of_office_from')
+    def _onchange_out_of_office_from(self):
+        if not self.out_of_office_from:
+            self.out_of_office_to = False
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
