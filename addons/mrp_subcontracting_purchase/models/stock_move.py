@@ -15,7 +15,7 @@ class StockMove(models.Model):
         valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
         last_subcontract_done_receipt = self.move_dest_ids.filtered(
             lambda m: m.state == 'done' and m.is_subcontract and m.purchase_line_id
-        )
+        ).sorted('create_date', reverse=True)[:1]
         if not self.production_id or not last_subcontract_done_receipt:
             return valuation_data
 
