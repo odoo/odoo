@@ -59,13 +59,16 @@ class StockMoveLine(models.Model):
         for move_line in self:
             sale_line_id = move_line.move_id.sale_line_id
             if sale_line_id and sale_line_id.product_id == move_line.product_id:
-                unit_price = sale_line_id.price_reduce_taxinc
-                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom)
+                base_line = sale_line_id._convert_to_tax_base_line_dict()
+                base_line.update({'quantity': move_line.quantity})
+                tax_results = self.env['account.tax'].with_company(sale_line_id.company_id)._compute_taxes([base_line])
+                totals = next(iter(tax_results['totals'].values()))
+                move_line.sale_price = totals['amount_untaxed'] + totals['amount_tax']
             else:
                 # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
-            move_line.sale_price = unit_price * qty
+                move_line.sale_price = unit_price * qty
         super(StockMoveLine, self)._compute_sale_price()
 
     def _get_aggregated_product_quantities(self, **kwargs):

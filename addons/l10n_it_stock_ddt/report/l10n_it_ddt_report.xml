@@ -127,12 +127,14 @@
                                         <span t-field="move.sale_line_id.discount"/>
                                     </td>
                                     <td>
+                                        <!-- t-if-else kept for stable policy, to be removed in master -->
                                         <t t-if="move.sale_line_id">
                                             <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxexcl * move.quantity + move.sale_line_id.price_tax"/>
                                         </t>
                                         <t t-else="">
                                             <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)"/>
                                         </t>
+                                        <t t-set="lst_price" t-value="move.move_line_ids[0].sale_price"/>
                                         <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                         <t t-set="total_value" t-value="total_value + lst_price"/>
                                     </td>
