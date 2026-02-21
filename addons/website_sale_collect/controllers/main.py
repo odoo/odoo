@@ -11,8 +11,9 @@ class WebsiteSaleCollect(WebsiteSale):
     def _prepare_product_values(self, product, category, **kwargs):
         """ Override of `website_sale` to configure the Click & Collect Availability widget. """
         res = super()._prepare_product_values(product, category, **kwargs)
-        if in_store_dm_sudo := request.website.sudo().in_store_dm_id:
-            order_sudo = request.cart
+        website = self.env['website'].get_current_website()
+        if in_store_dm_sudo := website.sudo().in_store_dm_id:
+            order_sudo = website.current_session_sale_order_id.sudo()
             selected_location_data = {}
             single_location = len(in_store_dm_sudo.warehouse_ids) == 1
             if (

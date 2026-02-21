@@ -15,8 +15,9 @@ class WebsiteSaleMrpVariantController(WebsiteSaleVariantController):
             product_template_id, product_id, combination, add_qty, uom_id=uom_id, **kwargs
         )
 
+        website = self.env['website'].get_current_website()
         if (
-            (so := request.cart)
+            (so := website.current_session_sale_order_id.sudo())
             and combination_info['product_id']
             and combination_info.get('is_storable')
             and not combination_info.get('allow_out_of_stock_order')

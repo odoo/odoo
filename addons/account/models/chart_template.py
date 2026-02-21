@@ -328,7 +328,7 @@ class AccountChartTemplate(models.AbstractModel):
             *self.env['account.tax']._check_company_domain(company),
         ])
 
-        current_fiscal_positions =  self.env['account.fiscal.position'].with_context(active_test=False).search([
+        current_session_fiscal_position_ids =  self.env['account.fiscal.position'].with_context(active_test=False).search([
             *self.env['account.fiscal.position']._check_company_domain(company),
         ])
 
@@ -344,7 +344,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
         xmlid2fiscal_position= {
             xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.fiscal.position'].browse(record)
-            for record, xml_id in current_fiscal_positions.get_external_id().items() if xml_id.startswith('account.')
+            for record, xml_id in current_session_fiscal_position_ids.get_external_id().items() if xml_id.startswith('account.')
         }
         xmlid2tax_group = {
             xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax.group'].browse(res_id)
