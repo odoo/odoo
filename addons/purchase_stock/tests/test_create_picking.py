@@ -892,3 +892,22 @@ class TestCreatePicking(ProductVariantsCommon):
         po.order_line.name += '\nRandom purchase notes'
         po.button_confirm()
         self.assertEqual(po.picking_ids.move_ids.description_picking, ('No variant: extra\n' if product_matrix_installed else '') + '[123] ABC\nReceive with care')
+
+    def test_move_description_picking_supplier_product(self):
+        """Test receipt move description uses the product supplier name and code."""
+        self.product_id_1.seller_ids = [Command.create({
+            'partner_id': self.partner_id.id,
+            'product_name': 'Vendor_A',
+            'product_code': '001',
+            'min_qty': 1,
+            'price': 1,
+        })]
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({
+                'product_id': self.product_id_1.id,
+                'product_qty': 1,
+            })],
+        })
+        po.button_confirm()
+        self.assertEqual(po.picking_ids.move_ids.description_picking, '[001] Vendor_A')

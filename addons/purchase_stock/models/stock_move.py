@@ -51,7 +51,11 @@ class StockMove(models.Model):
                 vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
                 vendor_reference += f' {seller.product_name}' if seller.product_name else ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
-                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + move.description_picking).strip()
+                exiting_description = move.description_picking.splitlines()
+                if vendor_reference and (vendor_reference).strip() not in exiting_description:
+                    move.description_picking = vendor_reference + '\n' + move.description_picking
+                if no_variant_attributes and no_variant_attributes not in exiting_description:
+                    move.description_picking = no_variant_attributes + '\n' + move.description_picking
 
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
