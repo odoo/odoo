@@ -1319,7 +1319,15 @@ class AccountMove(models.Model):
                 extra_domain = list(extra_domain)
                 tax_scope = 'service' if move_line.product_id.type == 'service' else 'consu'
                 extra_domain += [('tax_scope', 'in', [tax_scope, False])]
-            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
+            tax = None
+            if move_line.account_id and move_line.account_id.tax_ids:
+                extra_domain += [('amount', '=', percentage), ('amount_type', '=', 'percent')]
+                account_taxes = move_line.account_id.tax_ids.filtered_domain(extra_domain)
+                if account_taxes:
+                    tax = account_taxes[0]
+            if not tax:
+                tax = self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason)
+            if tax:
                 move_line.tax_ids |= tax
             else:
                 message = Markup("<br/>").join((
