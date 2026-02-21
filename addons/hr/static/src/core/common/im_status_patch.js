@@ -41,7 +41,7 @@ imStatusDataRegistry.add(
             away: _t("User is at other location and idle"),
             busy: _t("User is at other location and busy"),
             offline: _t("User is at other location and offline"),
-            default: _t("User is at the office"),
+            default: _t("User is at other location"),
         },
     },
     { sequence: 60 }
