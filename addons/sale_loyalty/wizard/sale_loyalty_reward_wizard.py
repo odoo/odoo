@@ -52,4 +52,18 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
             raise ValidationError(_('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
         self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
         self.order_id._update_programs_and_rewards()
+        self._unlink_unused_coupon_ids()
         return True
+
+    def action_cancel(self):
+        self.ensure_one()
+        self._unlink_unused_coupon_ids()
+
+    def _unlink_unused_coupon_ids(self):
+        reward_coupons = self.order_id.order_line.coupon_id
+        self.order_id.coupon_point_ids.filtered(
+            lambda points: (
+                points.coupon_id.program_id.applies_on == 'current' and
+                points.coupon_id not in reward_coupons
+            )
+        ).coupon_id.sudo().unlink()

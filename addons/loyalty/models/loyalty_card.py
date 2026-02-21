@@ -45,7 +45,7 @@ class LoyaltyCard(models.Model):
     code = fields.Char(required=True, default=lambda self: self._generate_code())
     expiration_date = fields.Date()
 
-    use_count = fields.Integer(compute='_compute_use_count')
+    use_count = fields.Integer(compute='_compute_use_count', store=True)
     active = fields.Boolean(default=True)
     history_ids = fields.One2many(
         comodel_name='loyalty.history',

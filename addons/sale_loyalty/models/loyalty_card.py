@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class LoyaltyCard(models.Model):
@@ -35,6 +35,7 @@ class LoyaltyCard(models.Model):
     def _get_signature(self):
         return self.order_id.user_id.signature or super()._get_signature()
 
+    @api.depends('order_id.order_line.coupon_id')
     def _compute_use_count(self):
         super()._compute_use_count()
         read_group_res = self.env['sale.order.line']._read_group(
