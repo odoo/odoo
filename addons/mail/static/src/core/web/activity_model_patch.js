@@ -46,10 +46,7 @@ patch(Activity.prototype, {
             attachment_ids: attachmentIds,
             feedback: this.feedback,
         });
-        this.store.activityBroadcastChannel?.postMessage({
-            type: "RELOAD_CHATTER",
-            payload: { id: this.res_id, model: this.res_model },
-        });
+        this.store.broadcastActivity("RELOAD_CHATTER", { id: this.res_id, model: this.res_model });
     },
     /** @returns {Promise<import("@web/webclient/actions/action_service").ActionDescription>} */
     async markAsDoneAndScheduleNext() {
@@ -59,19 +56,13 @@ patch(Activity.prototype, {
             [[this.id]],
             { feedback: this.feedback }
         );
-        this.activityBroadcastChannel?.postMessage({
-            type: "RELOAD_CHATTER",
-            payload: { id: this.res_id, model: this.res_model },
-        });
+        this.store.broadcastActivity("RELOAD_CHATTER", { id: this.res_id, model: this.res_model });
         return action;
     },
     remove({ broadcast = true } = {}) {
         this.delete();
         if (broadcast) {
-            this.activityBroadcastChannel?.postMessage({
-                type: "DELETE",
-                payload: { id: this.id },
-            });
+            this.store.broadcastActivity("DELETE", { id: this.id });
         }
     },
 });

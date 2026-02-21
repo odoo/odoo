@@ -15,10 +15,7 @@ export class Activity extends Record {
         const activity = this.preinsert(data);
         assignDefined(activity, data);
         if (broadcast) {
-            this.store.activityBroadcastChannel?.postMessage({
-                type: "INSERT",
-                payload: activity.serialize(),
-            });
+            this.store.broadcastActivity("INSERT", activity.serialize());
         }
         return activity;
     }
