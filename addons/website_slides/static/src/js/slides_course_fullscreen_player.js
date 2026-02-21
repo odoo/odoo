@@ -701,7 +701,10 @@
             const slide = this._slideValue;
             this.call("dialog", "add", SlideShareDialog, {
                 category: slide.category,
-                documentMaxPage: slide.category == 'document' && this.getDocumentMaxPage(),
+                documentMaxPage:
+                    slide.category == "document" &&
+                    new URL(slide.embedUrl, window.location.href).origin === window.location.origin &&
+                    this.getDocumentMaxPage(),
                 emailSharing: slide.emailSharing === 'True',
                 embedCode: slide.embedCode || '',
                 id: slide.id,
