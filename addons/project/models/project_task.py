@@ -1337,6 +1337,7 @@ class ProjectTask(models.Model):
             self.env.remove_to_compute(self._fields['state'], self)
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
+        self._task_message_unsubscribe_notify({task: old_user_ids[task] - task.user_ids - self.env.user for task in self})
 
         if partner_ids:
             for task in self:
@@ -1549,6 +1550,37 @@ class ProjectTask(models.Model):
                     model_description=task_model_description,
                     mail_auto_delete=False,
                 )
+
+    def _task_message_unsubscribe_notify(self, unassigned_users_per_task):
+        if self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('project.project_message_user_unassigned', raise_if_not_found=False)
+        if not template_id:
+            return
+        task_model_description = self.env['ir.model']._get(self._name).display_name
+        subtype_id_unassigned = self.env['ir.model.data']._xmlid_to_res_id('project.mt_task_unassigned', raise_if_not_found=False)
+        for task, unassigned_users in unassigned_users_per_task.items():
+            followers_with_subtype = task.message_follower_ids.filtered(lambda follower: subtype_id_unassigned in follower.subtype_ids.ids)
+            if not unassigned_users or not followers_with_subtype:
+                continue
+            unassigned_user_names = ', '.join(unassigned_users.mapped('name'))
+            values = {
+                'object': task,
+                'model_description': task_model_description,
+                'access_link': task._notify_get_action_link('view'),
+                'unassigned_user_names': unassigned_user_names,
+            }
+            unassignation_msg = self.env['ir.qweb']._render('project.project_message_user_unassigned', values, minimal_qcontext=True)
+            unassignation_msg = self.env['mail.render.mixin']._replace_local_links(unassignation_msg)
+            task.message_notify(
+                subject=_("%(unassignee_name)s have been unassigned from %(task_name)s", unassignee_name=unassigned_user_names, task_name=task.display_name),
+                body=unassignation_msg,
+                partner_ids=followers_with_subtype.partner_id.ids,
+                record_name=task.display_name,
+                email_layout_xmlid='mail.mail_notification_layout',
+                model_description=task_model_description,
+                mail_auto_delete=False,
+            )
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         if 'user_ids' not in updated_values:

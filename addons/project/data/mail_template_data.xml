@@ -126,6 +126,15 @@
 </div>
         </template>
 
+        <template id="project_message_user_unassigned">
+            <div>Hello,
+                <br/><br/>
+                <span style="margin-top: 8px;">
+                    The following users have been unassigned from the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>:
+                    <t t-esc="unassigned_user_names"/>
+                </span>
+            </div>
+        </template>
         <!-- You have been invited to follow the task -->
         <template id="task_invitation_follower">
 <div>
