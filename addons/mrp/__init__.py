@@ -14,12 +14,14 @@ def _pre_init_mrp(env):
           stock_move.unit_factor is terribly slow with the ORM and leads to "Out of
           Memory" crashes
     """
-    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
+    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool DEFAULT TRUE;""")
     env.cr.execute("""UPDATE stock_move
-                     SET is_done=COALESCE(state in ('done', 'cancel'), FALSE);""")
-    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision;""")
-    env.cr.execute("""UPDATE stock_move
-                     SET unit_factor=1;""")
+                    SET is_done = FALSE
+                  WHERE state NOT IN ('done', 'cancel');""")
+    env.cr.execute("""ALTER TABLE stock_move ALTER COLUMN is_done DROP DEFAULT;""")
+    env.cr.execute("""ALTER TABLE "stock_move"
+                    ADD COLUMN "unit_factor" double precision DEFAULT 1;""")
+    env.cr.execute("""ALTER TABLE stock_move ALTER COLUMN unit_factor DROP DEFAULT;""")
 
 def _create_warehouse_data(env):
     """ This hook is used to add a default manufacture_pull_id, manufacture
