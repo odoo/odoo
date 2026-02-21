@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from odoo.fields import Datetime
 from odoo.tests.common import TransactionCase
@@ -82,3 +83,9 @@ class TestExpression(TransactionCase):
             self.assertTrue(res.id, 'The resource was successfully created')
             self.assertEqual(res.date_from, Datetime.to_string(date_from))
             self.assertEqual(res.date_to, Datetime.to_string(date_to))
+
+    def test_compute_date_to_time_off(self):
+        """Test that checks if the date_to is correctly computed from the date_from on a Resource Time Off"""
+        with Form(self.env['resource.calendar.leaves']) as res:
+            res.date_from = datetime.strptime('2025-11-23 00:00:00', '%Y-%m-%d %H:%M:%S')
+        self.assertEqual(res.record.date_to, datetime(2025, 11, 23, 22, 59, 59))

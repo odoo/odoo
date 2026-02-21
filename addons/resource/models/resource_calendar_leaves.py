@@ -68,6 +68,8 @@ class ResourceCalendarLeaves(models.Model):
                 continue
             date_to_tz = user_tz.localize(leave.date_from) + relativedelta(hour=23, minute=59, second=59)
             leave.date_to = date_to_tz.astimezone(utc).replace(tzinfo=None)
+            if user_tz.localize(leave.date_from).day == user_tz.localize(leave.date_to).day and user_tz.localize(leave.date_from) > user_tz.localize(leave.date_to):
+                leave.date_to += relativedelta(days=+1)
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
