@@ -595,7 +595,7 @@ class SessionStore:
                 self.save(session)
 
 
-@functools.lru_cache(1)
+@functools.cache
 def session_store():
     _logger.debug('HTTP sessions stored in: %s', config.session_dir)
     return SessionStore(path=config.session_dir)
