@@ -4,6 +4,7 @@ import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.fields import Command
+from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -184,3 +185,104 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_product_dont_display_all_variants")
+
+    def test_self_order_combo_compute_backend(self):
+        """
+        Verify that the total is computed correctly when we have a combo
+        and the _verify_line_price is called. This function is called to
+        make sure the backend and frontend prices are in sync.
+        """
+        setup_product_combo_items(self)
+        self.pos_config.with_user(self.pos_user).open_ui()
+        order = self.env['pos.order'].create({
+            'config_id': self.pos_config.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'amount_paid': 0.0,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+        product_1, product_2 = self.env["product.product"].create([
+            {
+                "name": "Combo Product",
+                "is_storable": True,
+                "available_in_pos": True,
+                "list_price": 20,
+            }, {
+                "name": "Combo Product 2",
+                "is_storable": True,
+                "available_in_pos": True,
+                "list_price": 30,
+            },
+        ])
+        combo = self.env["product.combo"].create(
+            {
+                "name": "Desks Combo",
+                "qty_free": 2,
+                "qty_max": 3,
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": product_1.id,
+                        "extra_price": 0,
+                    }),
+                    Command.create({
+                        "product_id": product_2.id,
+                        "extra_price": 2,
+                    }),
+                ],
+            }
+        )
+        combo_product = self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 30,
+                "name": "Combo",
+                "type": "combo",
+                "uom_id": self.env.ref("uom.product_uom_unit").id,
+                "combo_ids": [
+                    Command.set([combo.id])
+                ],
+            }
+        )
+        desk_combo_line = self.env['pos.order.line'].create({
+            'order_id': order.id,
+            'product_id': combo_product.id,
+            'qty': 1,
+            'price_unit': 30.0,
+            'price_subtotal': 0,
+            'price_subtotal_incl': 0,
+            'combo_line_ids': [
+                Command.create({
+                    'order_id': order.id,
+                    'product_id': product_1.id,
+                    'qty': 2,
+                    'price_unit': 20.0,
+                    'price_subtotal': 0,
+                    'price_subtotal_incl': 0,
+                    'combo_id': combo.id,
+                    'combo_item_id': combo.combo_item_ids[0].id,
+                }),
+                Command.create({
+                    'order_id': order.id,
+                    'product_id': product_2.id,
+                    'qty': 1,
+                    'price_unit': 30.0,
+                    'price_subtotal': 0,
+                    'price_subtotal_incl': 0,
+                    'combo_id': combo.id,
+                    'combo_item_id': combo.combo_item_ids[1].id,
+                }),
+            ]
+        })
+        preset_eat_in = self.env['pos.preset'].create({
+            'name': 'Eat in',
+        })
+
+        controller = PosSelfOrderController()
+        controller._verify_line_price(
+            desk_combo_line, self.pos_config, preset_eat_in
+        )
+        total = desk_combo_line.combo_line_ids[0].price_unit * desk_combo_line.combo_line_ids[0].qty + desk_combo_line.combo_line_ids[1].price_unit
+        self.assertEqual(total, 52)
+        self.assertEqual(desk_combo_line.combo_line_ids[0].price_unit, 15)
+        self.assertEqual(desk_combo_line.combo_line_ids[1].price_unit, 22)
