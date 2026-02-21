@@ -270,6 +270,32 @@ class ProductTemplate(models.Model):
 
     #=== BUSINESS METHODS ===#
 
+    def get_attribute_values_for_image_assignment(self, product_variant_id=False):
+        current_value_ids = (
+            self.env['product.product']
+            .browse(product_variant_id)
+            .product_template_attribute_value_ids.ids
+            if product_variant_id else []
+        )
+
+        attributes = [
+            {
+                'id': line.attribute_id.id,
+                'values': [
+                    {
+                        'id': ptav.id,
+                        'name': ptav.name,
+                    }
+                    for ptav in line.product_template_value_ids
+                    if ptav.ptav_active
+                ],
+            }
+            for line in self.attribute_line_ids
+            if line.attribute_id.create_variant != 'no_variant'
+        ]
+
+        return {'attributes': attributes, 'current_value_ids': current_value_ids}
+
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
         variant_dict['base_unit_count'] = self.base_unit_count
@@ -849,7 +875,7 @@ class ProductTemplate(models.Model):
         Template Extra Images.
         """
         self.ensure_one()
-        return [self] + list(self.product_template_image_ids)
+        return [self] + list(self.product_template_image_ids.filtered('is_template_image'))
 
     def _get_attribute_value_domain(self, attribute_value_dict):
         return [

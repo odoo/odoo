@@ -17,6 +17,7 @@ def _post_init_hook(env):
     existing_websites = env['website'].search([])
     for website in existing_websites:
         website._create_checkout_steps()
+    _create_extra_variant_images(env)
 
 def uninstall_hook(env):
     ''' Need to reenable the `product` pricelist multi-company rule that were
@@ -27,3 +28,17 @@ def uninstall_hook(env):
     multi_company_rules = pl_rule or env['ir.rule']
     multi_company_rules += pl_item_rule or env['ir.rule']
     multi_company_rules.write({'active': True})
+
+
+def _create_extra_variant_images(env):
+    products = env['product.product'].search([('product_tmpl_id.image_1920', '!=', False)])
+    image_vals = []
+    for product in products:
+        image_vals.append({
+            'name': product.display_name,
+            'product_variant_ids': [(4, product.id)],
+            'attribute_value_ids': [(6, 0, product.product_template_attribute_value_ids.ids)],
+            'image_1920': product.image_variant_1920 or product.product_tmpl_id.image_1920,
+            'sequence': 0,
+        })
+    env['product.image'].create(image_vals)

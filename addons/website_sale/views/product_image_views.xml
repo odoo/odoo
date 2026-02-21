@@ -41,15 +41,21 @@
         <field name="arch" type="xml">
             <kanban string="Product Images" default_order="sequence">
                 <field name="sequence" widget="handle"/>
+                <field name="product_tmpl_id"/>
+                <field name="product_variant_ids"/>
+                <field name="name"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
-                        <div class="card">
-                            <div class="o_squared_image">
-                                <field class="card-img-top" name="image_1920" widget="x2_many_image"/>
+                        <div class="card flex-row border rounded-0">
+                            <div class="o_website_sale_image_list_card_image ratio ratio-1x1">
+                                <field name="image_1920" widget="x2_many_image"/>
                             </div>
-                            <div class="p-2 m-0 bg-200" t-attf-title="#{record.name.value}">
-                                <field name="name" class="small fs-5 text-truncate d-block"/>
-                            </div>
+                            <field
+                                name="attribute_value_ids"
+                                class="overflow-y-auto p-2"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color'}"
+                            />
                             <!-- below 100 Kb: good -->
                             <t t-if="record.image_1920.raw_value.length &lt; 100*1000">
                                 <t t-set="size_status" t-value="'text-bg-success'"/>
@@ -67,6 +73,7 @@
                             </t>
                             <span t-attf-class="badge #{size_status} o_product_image_size" t-att-title="message"></span>
                         </div>
+                        <field name="attribute_value_ids" widget="variant_image_assignment"/>
                     </t>
                 </templates>
             </kanban>

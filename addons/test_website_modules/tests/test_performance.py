@@ -113,11 +113,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         })
         cls.product_images = cls.env['product.image'].with_context(default_product_tmpl_id=cls.productC.product_tmpl_id.id).create([{
             'name': 'Template image',
-            'image_1920': blue_image,
-        }, {
-            'name': 'Variant image',
             'image_1920': red_image,
-            'product_variant_id': cls.productC.id,
         }])
 
         for i in range(20):
@@ -148,7 +144,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 images.append({
                     'name': 'Variant image',
                     'image_1920': red_image,
-                    'product_variant_id': variant.id,
+                    'product_variant_ids': [Command.link(variant.id)],
                 })
             cls.env['product.image'].create(images)
 
@@ -291,11 +287,11 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
     def _get_queries_shop(self):
         html = self.url_open('/shop').text
-        self.assertIn(f'<img src="/web/image/product.product/{self.productC.id}/', html)
+        self.assertIn(f'<img src="/web/image/product.template/{self.productC.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
-        self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
+        self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[0]}/', html)
 
-        query_count = 49  # To increase this number you must ask the permission to al
+        query_count = 45  # To increase this number you must ask the permission to al
         queries = {
             'orm_signaling_registry': 1,
             'website': 1,
@@ -316,9 +312,8 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'product_ribbon': 1,
             'product_attribute_value': 3,
             'product_attribute': 1,
-            'ir_attachment': 4,
-            'product_image': 3,
-            'product_template_attribute_value': 1,
+            'ir_attachment': 2,
+            'product_image': 2,
             'ir_ui_view': 2,
             'website_menu': 1,
             'website_page': 1,
@@ -344,9 +339,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['ir_attachment'] += 1
             queries['product_ribbon'] += 1
             queries['res_company'] += 1
-        else:
-            query_count += 3
-            queries['product_template_attribute_value'] += 3
 
         # To increase the query count you must ask the permission to al
         return query_count, queries

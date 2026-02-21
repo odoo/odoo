@@ -112,11 +112,6 @@
     </t>
 
     <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
-	    <BuilderRow label.translate="Main Image">
-	        <BuilderButton id="'o_wsale_replace_main_image'" type="'success'" className="'flex-grow-1'" preview="false"
-	            applyTo="'#product_detail_main'" action="'productReplaceMainImage'"
-	        >Replace</BuilderButton>
-	    </BuilderRow>
 	    <BuilderRow label.translate="Extra Media">
 	        <BuilderButton id="'o_wsale_add_extra_images'" type="'success'" action="'productAddExtraImage'">Add More</BuilderButton>
 	        <BuilderButton id="'o_wsale_clear_extra_images'" type="'danger'" action="'productRemoveAllExtraImages'">Remove All</BuilderButton>

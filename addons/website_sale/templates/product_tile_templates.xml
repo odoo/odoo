@@ -46,23 +46,14 @@
     >
         <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
             <!-- Fetch Images Data -->
-            <t
-                t-if="product_variant and product_variant.with_context(bin_size=True).image_128"
-                t-set="all_images_list"
-                t-value="product_variant._get_images()"
-            />
-            <t
-                t-else=""
-                t-set="all_images_list"
-                t-value="product._get_images()"
-            />
+            <t t-set="all_images_list" t-value="product._get_images()"/>
             <!--
                 Image holders are records of different types (`product.template`, `product.product`
                 or `product.image`) and are returned as a list.
              -->
             <t
                 t-set="primary_image_holder"
-                t-value="(all_images_list[:1]+[product])[0]"
+                t-value="all_images_list[0] if all_images_list else False"
             />
             <t
                 t-set="secondary_image_holder"

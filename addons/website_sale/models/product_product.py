@@ -14,10 +14,12 @@ class ProductProduct(models.Model):
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
 
-    product_variant_image_ids = fields.One2many(
+    product_variant_image_ids = fields.Many2many(
+        'product.image',
         string="Extra Variant Images",
-        comodel_name='product.image',
-        inverse_name='product_variant_id',
+        relation='product_image_product_variant_rel',
+        column1='product_variant_id',
+        column2='product_image_id',
     )
 
     base_unit_count = fields.Float(
@@ -112,16 +114,19 @@ class ProductProduct(models.Model):
         """Return a list of records implementing `image.mixin` to
         display on the carousel on the website for this variant.
 
-        This returns a list and not a recordset because the records might be
-        from different models (template, variant and image).
+        Variant and template extra images are combined into a single list
+        and ordered by their sequence, so the end user experiences a single
+        unified carousel regardless of image source.
 
-        It contains in this order: the main image of the variant (which will fall back on the main
-        image of the template, if unset), the Variant Extra Images, and the Template Extra Images.
+        If no extra images exist, the main image of the variant is returned
+        (which will fall back on the main image of the template, if unset).
         """
         self.ensure_one()
-        variant_images = list(self.product_variant_image_ids)
-        template_images = list(self.product_tmpl_id.product_template_image_ids)
-        return [self] + variant_images + template_images
+        variant_images = self.product_variant_image_ids
+        template_images = self.product_tmpl_id.product_template_image_ids.filtered('is_template_image')
+        images = (variant_images | template_images).sorted('sequence')
+
+        return list(images) or [self]
 
     def _get_combination_info_variant(self, **kwargs):
         """Return the variant info based on its combination.
@@ -223,7 +228,8 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return [
             self.env['website'].image_url(extra_image, 'image_1920')
-            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            for extra_image in self.product_variant_image_ids
+            + self.product_template_image_ids.filtered('is_template_image')
             if extra_image.image_128  # only images, no video urls
         ]
 
@@ -235,6 +241,15 @@ class ProductProduct(models.Model):
                 ('product_id', 'in', self.ids),
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
+
+        if 'product_variant_image_ids' in vals:
+            removed_image_ids = [
+                cmd[1] for cmd in vals['product_variant_image_ids']
+                if cmd[0] == 3
+            ]
+            if removed_image_ids:
+                self.env['product.image'].browse(removed_image_ids).unlink()
+
         return super().write(vals)
 
     def _is_in_wishlist(self):
@@ -280,3 +295,11 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.env['website'].image_url(self, 'image_1024')
+
+    def _set_main_image_from_extra_images(self):
+        for product in self:
+            first_extra_image = product.product_variant_image_ids.sorted("sequence")[:1]
+
+            product.image_variant_1920 = (
+                first_extra_image.image_1920 if first_extra_image else False
+            )

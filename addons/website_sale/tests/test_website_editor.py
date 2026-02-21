@@ -129,100 +129,94 @@ class TestProductPictureController(HttpCase):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'first',
+                images[2]._name, images[2].id, 'first', self.product.id,
             )
             # Trigger the reordering of product.image records based on their sequence.
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
-            self.assertEqual(self.product.image_1920, i3)
+            self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5])
 
     def test_resequence_image_left(self):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'left',
+                images[2]._name, images[2].id, 'left', self.product.id,
             )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
+            self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5])
 
     def test_resequence_image_right(self):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'right',
+                images[2]._name, images[2].id, 'right', self.product.id,
             )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i3, i5, i6])
+            self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i3, i5])
 
     def test_resequence_image_last(self):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'last',
+                images[2]._name, images[2].id, 'last', self.product.id,
             )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i5, i6, i3])
+            self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i5, i3])
 
     def test_resequence_image_first_to_last(self):
         """Moving an image from first to last position is an edge case in the code."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[0]._name, images[0].id, 'last',
+                images[0]._name, images[0].id, 'last', self.product.id,
             )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
-            self.assertEqual(self.product.image_1920, i2)
+            self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i1])
 
     def test_resequence_video_left(self):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'left',
+                images[2]._name, images[2].id, 'left', self.product.id,
             )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
+            self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5])
 
     def test_resequence_video_first(self):
-        """A video can't be resequenced to first position."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
-            with self.assertRaises(ValidationError):
-                self.WebsiteSaleController.resequence_product_image(
-                    images[2]._name, images[2].id, 'first',
-                )
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
+            self.WebsiteSaleController.resequence_product_image(
+                images[2]._name, images[2].id, 'first', self.product.id,
+            )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+            self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5])
 
     def test_resequence_video_replace_first(self):
-        """A video can't replace an image that was resequenced away from first position."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[1].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
-            with self.assertRaises(ValidationError):
-                self.WebsiteSaleController.resequence_product_image(
-                    images[0]._name, images[0].id, 'right',
-                )
+            i1, i2, i3, i4, i5 = self._get_product_image_data()
+            self.WebsiteSaleController.resequence_product_image(
+                images[0]._name, images[0].id, 'right', self.product.id,
+            )
             self.env['product.image'].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+            self.assertListEqual(self._get_product_image_data(), [i2, i1, i3, i4, i5])
 
 
 @tagged('post_install', '-at_install')

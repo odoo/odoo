@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="variant_image_assignment">
+        <Dropdown
+            t-if="showDropdown"
+            state="dropdownState"
+            beforeOpen.bind="beforeOpen"
+        >
+            <div>
+                <button class="btn btn-outline-secondary border-top-0 rounded-0 w-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span>Assign to variant</span>
+                            <span
+                                t-if="selectedCount"
+                                class="badge rounded-pill bg-secondary"
+                            >
+                                <t t-out="selectedCount"/>
+                            </span>
+                        </div>
+                        <i t-if="!dropdownState.isOpen" class="fa fa-caret-down ms-1"/>
+                        <i t-else="" class="fa fa-caret-up ms-1"/>
+                    </div>
+                </button>
+                <t t-set-slot="content">
+                    <t
+                        t-if="state.attributes.length"
+                        t-foreach="state.attributes"
+                        t-as="attr"
+                        t-key="attr.id"
+                    >
+                        <t t-foreach="attr.values" t-as="val" t-key="val.id">
+                            <DropdownItem
+                                class="'d-flex align-items-center justify-content-between gap-3 px-3'"
+                                onSelected="() => this.toggleValue(val.id)"
+                                closingMode="'none'"
+                            >
+                                <div class="o-checkbox form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        t-att-checked="state.checkedIds.has(val.id)"
+                                    />
+                                    <span class="small">
+                                        <t t-out="val.name"/>
+                                    </span>
+                                </div>
+                            </DropdownItem>
+                        </t>
+                        <div t-if="!attr_last" class="d-flex align-items-center my-1 px-2">
+                            <span class="mx-2 small text-muted">And</span>
+                            <div class="flex-grow-1 border-top"/>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </Dropdown>
+    </t>
+
+</templates>

@@ -655,14 +655,47 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
+        product_product = (
+            request.env['product.product'].browse(int(product_product_id))
+            if product_product_id else False
+        )
+        product_template = (
+            request.env['product.template'].browse(int(product_template_id))
+            if product_template_id else False
+        )
+
+        if product_product and not product_template:
+            product_template = product_product.product_tmpl_id
+
+        if not product_product and product_template and product_template.has_dynamic_attributes():
+            combination = request.env['product.template.attribute.value'].browse(combination_ids)
+            product_product = product_template._get_variant_for_combination(combination)
+            if not product_product:
+                product_product = product_template._create_product_variant(combination)
+
+        is_variant_media = (
+            product_template.has_configurable_attributes
+            and product_product
+            and not all(
+                pa.create_variant == 'no_variant'
+                for pa in product_template.attribute_line_ids.attribute_id
+            )
+        )
         if type == 'image':  # Image case
             image_ids = request.env["ir.attachment"].browse(i['id'] for i in media)
-            media_create_data = [Command.create({
-                'name': image.name,   # Images uploaded from url do not have any datas. This recovers them manually
-                'image_1920': image.datas
-                    if image.datas
-                    else request.env['ir.qweb.field.image'].load_remote_url(image.url),
-            }) for image in image_ids]
+            media_create_data = []
+            for image in image_ids:
+                media_create_values = {
+                    'name': image.name,   # Images uploaded from url do not have any datas. This recovers them manually
+                    'image_1920': image.datas
+                        if image.datas
+                        else request.env['ir.qweb.field.image'].load_remote_url(image.url),
+                }
+                if is_variant_media:
+                    media_create_values['attribute_value_ids'] = [
+                        Command.set(product_product.product_template_attribute_value_ids.ids)
+                    ]
+                media_create_data.append(Command.create(media_create_values))
         elif type == 'video':  # Video case
             video_data = media[0]
             thumbnail = None
@@ -679,18 +712,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'image_1920': thumbnail,
             })]
 
-        product_product = request.env['product.product'].browse(int(product_product_id)) if product_product_id else False
-        product_template = request.env['product.template'].browse(int(product_template_id)) if product_template_id else False
-
-        if product_product and not product_template:
-            product_template = product_product.product_tmpl_id
-
-        if not product_product and product_template and product_template.has_dynamic_attributes():
-            combination = request.env['product.template.attribute.value'].browse(combination_ids)
-            product_product = product_template._get_variant_for_combination(combination)
-            if not product_product:
-                product_product = product_template._create_product_variant(combination)
-        if product_template.has_configurable_attributes and product_product and not all(pa.create_variant == 'no_variant' for pa in product_template.attribute_line_ids.attribute_id):
+        if is_variant_media:
             product_product.write({
                 'product_variant_image_ids': media_create_data
             })
@@ -719,14 +741,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_template.product_template_image_ids.unlink()
 
     @route(['/shop/product/resequence-image'], type='jsonrpc', auth='user', website=True)
-    def resequence_product_image(self, image_res_model, image_res_id, move):
+    def resequence_product_image(self, image_res_model, image_res_id, move, product_variant_id):
         """
         Move the product image in the given direction and update all images' sequence.
 
         :param str image_res_model: The model of the image. It can be 'product.template',
-                                    'product.product', or 'product.image'.
+                                    or 'product.image'.
         :param str image_res_id: The record ID of the image to move.
         :param str move: The direction of the move. It can be 'first', 'left', 'right', or 'last'.
+        :param str product_variant_id: The ID of the product variant in whose context the image
+                                       resequencing is performed
         :raises NotFound: If the user does not have the required permissions, if the model of the
                           image is not allowed, or if the move direction is not allowed.
         :raise ValidationError: If the product is not found.
@@ -740,18 +764,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
             or move not in ['first', 'left', 'right', 'last']
         ):
             raise NotFound()
-
         image_res_id = int(image_res_id)
         image_to_resequence = request.env[image_res_model].browse(image_res_id)
-        if image_res_model == 'product.product':
-            product = image_to_resequence
-            product_template = product.product_tmpl_id
-        elif image_res_model == 'product.template':
+        if image_res_model == 'product.template':
             product_template = image_to_resequence
             product = product_template.product_variant_id
         else:
-            product = image_to_resequence.product_variant_id
+            product = image_to_resequence.product_variant_ids.filtered(
+                lambda p: p.id == int(product_variant_id)
+            )
             product_template = product.product_tmpl_id or image_to_resequence.product_tmpl_id
+            if not product:
+                product = product_template.product_variant_ids.filtered(
+                    lambda p: p.id == int(product_variant_id)
+                )
 
         if not product and not product_template:
             raise ValidationError(_("Product not found"))
@@ -778,12 +804,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # If the main image has been reordered (i.e. it's no longer in first position), use the
         # image that's now in first position as main image instead.
-        # Additional images are product.image records. The main image is a product.product or
-        # product.template record.
+        # Additional images are product.image records. The main image is a product.template record.
         main_image_idx = next(
-            idx for idx, image in enumerate(product_images) if image._name != 'product.image'
+            (idx for idx, image in enumerate(product_images) if image._name != 'product.image'),
+            None
         )
-        if main_image_idx != 0:
+        if main_image_idx is not None and main_image_idx != 0:
             main_image = product_images[main_image_idx]
             additional_image = product_images[0]
             if additional_image.video_url:

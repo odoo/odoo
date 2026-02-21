@@ -24,7 +24,6 @@ class ProductPageOptionPlugin extends Plugin {
             ProductPageImageRoundnessAction,
             ProductPageImageGridSpacingAction,
             ProductPageImageGridColumnsAction,
-            ProductReplaceMainImageAction,
             ProductAddExtraImageAction,
             ProductRemoveAllExtraImagesAction,
         },
@@ -186,9 +185,9 @@ export class BaseProductPageAction extends BuilderAction {
         this.reload = {};
         const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
-            const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
+            const productProduct = mainEl.querySelector('[data-product-variant-id]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
-            this.productProductID = productProduct ? productProduct.dataset.oeId : null;
+            this.productProductID = productProduct ? productProduct.dataset.productVariantId : null;
             this.productTemplateID = productTemplate ? productTemplate.dataset.oeId : null;
             this.model = "product.template";
             if (this.productProductID) {
@@ -312,48 +311,6 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
         this.productPageGrid.dataset.grid_columns = value;
         await rpc("/shop/config/website", {
             product_page_grid_columns: value,
-        });
-    }
-}
-export class ProductReplaceMainImageAction extends BaseProductPageAction {
-    static id = "productReplaceMainImage";
-    static dependencies = [...super.dependencies, "media"];
-    setup() {
-        super.setup();
-        this.reload = false;
-        this.canTimeout = false;
-    }
-    apply({ editingElement: productDetailMainEl }) {
-        // Emulate click on the main image of the carousel.
-        const image = productDetailMainEl.querySelector(
-            `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
-        );
-        this.dependencies.media.openMediaDialog({
-            multiImages: false,
-            visibleTabs: ["IMAGES"],
-            node: productDetailMainEl,
-            save: (imgEl, selectedMedia) => {
-                const attachment = selectedMedia[0];
-                if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
-                    image.src = attachment.image_src;
-                    return;
-                }
-                const originalSize = Math.max(imgEl.width, imgEl.height);
-                const ratio = Math.min(originalSize, 1920) / originalSize;
-                const canvas = document.createElement("canvas");
-                canvas.width = parseInt(imgEl.width * ratio);
-                canvas.height = parseInt(imgEl.height * ratio);
-                const ctx = canvas.getContext("2d")
-                ctx.fillStyle = "transparent";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(imgEl, 0, 0);
-                image.src = canvas.toDataURL("image/webp");
-                const { model, productProductID: productID, productTemplateID: templateID } = this;
-                const resID = parseInt(model === "product.product" ? productID : templateID);
-                this.services.orm.write(model, [resID], {
-                    image_1920: image.src.split(",")[1],
-                });
-            },
         });
     }
 }
