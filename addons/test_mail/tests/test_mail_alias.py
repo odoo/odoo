@@ -10,6 +10,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import formataddr, mute_logger
+from email.message import EmailMessage
 
 
 class TestMailAliasCommon(MailCommon):
@@ -555,6 +556,34 @@ class TestAliasCompany(TestMailAliasCommon):
             formataddr((self.company_3.name, f'{self.alias_catchall_c3}@{self.alias_domain_c3_name}'))
         )
         self.assertEqual(self.company_3.default_from_email, f'{self.alias_default_from_c3}@{self.alias_domain_c3_name}')
+
+    def test_message_route_bounce_multi_company_alias_domain(self):
+        msg = EmailMessage()
+        msg['From'] = 'test@test.com'
+        msg['To'] = f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}'
+        msg['Subject'] = 'Test multi-company routing alias'
+        msg.set_content('Hello World')
+
+        message_dict = {
+            'email_from': msg['From'],
+            'to': msg['To'],
+            'recipients': msg['To'],
+            'message_id': '',
+            'references': '',
+            'in_reply_to': '',
+            'is_bounce': False,
+        }
+        with self.mock_mail_gateway():
+            self.env['mail.thread'].message_route(
+                msg,
+                message_dict,
+            )
+            self.assertEqual(len(self._new_mails), 1)
+            self.assertSentEmail(
+                f'"MAILER-DAEMON" <{self.alias_bounce_c2}@{self.alias_domain_c2_name}>',
+                ['test@test.com'],
+                subject='Re: Test multi-company routing alias'
+            )
 
     @users('erp_manager')
     def test_res_company_creation_alias_domain(self):
