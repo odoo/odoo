@@ -384,11 +384,15 @@ class ResourceCalendar(models.Model):
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
+                    calendar = resource_calendars[resource] if resource else self
+                    calendar_tz = timezone(calendar.tz)
+
+                    start_datetime = start_dt.astimezone(calendar_tz)
+                    end_datetime = end_dt.astimezone(calendar_tz)
+
                     start_date = start_datetime.date()
                     end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
                     end_date = end_datetime_adjusted.date()
-
-                    calendar = resource_calendars[resource] if resource else self
 
                     full_time_required_hours = calendar.full_time_required_hours
                     max_hours_per_day = calendar.hours_per_day
@@ -414,15 +418,14 @@ class ResourceCalendar(models.Model):
                         current_day = week_start
                         while current_day <= week_end:
                             if remaining_hours > 0:
-                                day_start = tz.localize(datetime.combine(current_day, time.min))
-                                day_end = tz.localize(datetime.combine(current_day, time.max))
+                                day_start = calendar_tz.localize(datetime.combine(current_day, time.min))
+                                day_end = calendar_tz.localize(datetime.combine(current_day, time.max))
                                 day_period_start = max(start_datetime, day_start)
                                 day_period_end = min(end_datetime, day_end)
                                 allocate_hours = min(max_hours_per_day, remaining_hours, (day_period_end - day_period_start).total_seconds() / 3600)
                                 remaining_hours -= allocate_hours
 
-                                # Create interval centered at 12:00 PM (or as close as possible)
-                                midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
+                                midpoint = calendar_tz.localize(datetime.combine(current_day, time(12, 0)))
                                 start_time = midpoint - timedelta(hours=allocate_hours / 2)
                                 end_time = midpoint + timedelta(hours=allocate_hours / 2)
 
