@@ -156,8 +156,8 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global.tasks.sale_line_id, so_line_order_task_in_global, "Global project's task should be linked to so line")
         self.assertEqual(
             so_line_order_task_in_global.task_id.name,
-            f"{sale_order.name} - Description for global task.",
-            "Task name in global project should include SO name and the single-line SOL description.",
+            f"{sale_order.name} - [TEST1] - {self.partner.name}",
+            "Task name in global project should include SO name & partial line description",
         )
         self.assertFalse(
             so_line_order_task_in_global.task_id.description,
@@ -1943,3 +1943,46 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertFalse(optional_product_line.project_id)
         optional_product_line.write({'product_uom_qty': 1})
         self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)
+
+    def test_project_name_with_partner(self):
+        """Test project name for a sale order with a regular partner."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_order_service4.id,
+            })],
+        })
+        sale_order.action_confirm()
+
+        expected_project_name = (
+            f"{sale_order.name} - "
+            f"[{self.product_order_service4.code}] "
+            f"{self.product_order_service4.name} - "
+            f"{self.partner.name}"
+        )
+
+        self.assertEqual(sale_order.order_line[0].project_id.name, expected_project_name)
+
+    def test_project_name_with_child_partner(self):
+        """Test project name for a sale order with a child contact partner."""
+        child_partner = self.env['res.partner'].create({
+            'name': 'child',
+            'company_type': 'person',
+            'parent_id': self.env.company.partner_id.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': child_partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_order_service4.id,
+            })],
+        })
+        sale_order.action_confirm()
+
+        expected_project_name = (
+            f"{sale_order.name} - "
+            f"[{self.product_order_service4.code}] "
+            f"{self.product_order_service4.name} - "
+            f"{child_partner.commercial_company_name}"
+        )
+        self.assertEqual(sale_order.order_line[0].project_id.name, expected_project_name)
