@@ -72,7 +72,7 @@ class TestWebsiteControllerPage(HttpCase):
         self.env["ir.model.access"].search([("model_id", "=", self.model.id)]).perm_read = False
 
         with self.assertRaises(AccessError) as cm:
-            self.env["website.controller.page"].with_user(2).create({
+            self.env["website.controller.page"].with_user(self.ref('base.user_admin')).create({
                 "name": "Exposed Model Read",
                 "website_id": False,
                 "view_id": self.single_view.id,

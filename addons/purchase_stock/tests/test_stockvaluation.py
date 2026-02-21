@@ -93,7 +93,7 @@ class TestStockValuation(TransactionCase):
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'uom_id': ap.id,
             'quantity': replenishment_uom_qty,
-            'warehouse_id': self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1).id,
+            'warehouse_id': self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).id,
         })
         genrated_picking = replenish_wizard.launch_replenishment()
         links = genrated_picking.get("params", {}).get("links")

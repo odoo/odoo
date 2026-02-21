@@ -1,14 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 
 
-@tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
     def test_01_homepage_url(self):
         # Setup
-        website = self.env['website'].browse([1])
+        website = self.env.ref('website.default_website')
         website.write({
             'name': 'Test Website',
             'domain': self.base_url(),

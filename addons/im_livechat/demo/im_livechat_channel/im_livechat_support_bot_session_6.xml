@@ -107,7 +107,7 @@
         </record>
         <record id="support_bot_session_6_member_history_admin" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="support_bot_session_6_demo"/>
-            <field name="partner_id" ref="base.user_admin"/>
+            <field name="partner_id" ref="base.partner_admin"/>
             <field name="livechat_member_type">agent</field>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=10)"/>
             <field name="response_time_hour" eval="5/3600"/>

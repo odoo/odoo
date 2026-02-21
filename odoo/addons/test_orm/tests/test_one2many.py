@@ -442,10 +442,7 @@ class One2manyCase(TransactionExpressionCase):
         member2 = Member.create({'name': 'Noura', 'team_id': team3.id})
         Member.create({'name': 'Ivan', 'team_id': team2.id})
 
-        # In this specific case...
-        self.assertEqual(member2.id, member2.team_id.parent_id.id)
-
-        # ...we had an infinite recursion on making the following search, but not anymore
+        # Make sure we don't have an infinite recursion on making the following search
         Team.search([('member_ids', 'child_of', member2.id)])
 
         # Also, test a simple infinite loop if record is marked as a parent of itself

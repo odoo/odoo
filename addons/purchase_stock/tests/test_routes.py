@@ -1,4 +1,3 @@
-from odoo import Command
 from odoo.tests import tagged, Form, TransactionCase
 
 
@@ -15,12 +14,12 @@ class TestRoutes(TransactionCase):
 
         location_1 = self.env['stock.location'].create({
             'name': 'loc1',
-            'location_id': warehouse.id
+            'location_id': warehouse.lot_stock_id.id
         })
 
         location_2 = self.env['stock.location'].create({
             'name': 'loc2',
-            'location_id': warehouse.id
+            'location_id': warehouse.lot_stock_id.id
         })
 
         receipt_1 = self.env['stock.picking.type'].create({

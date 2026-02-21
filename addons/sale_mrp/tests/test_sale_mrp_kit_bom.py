@@ -336,7 +336,7 @@ class TestSaleMrpKitBom(BaseCommon):
             a bom_line_id
         """
 
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         wh.write({'delivery_steps': 'pick_ship'})
 
         kitA = self._create_product('Kit Product', True, 0.00)
@@ -390,7 +390,7 @@ class TestSaleMrpKitBom(BaseCommon):
            is correct for each products.
         """
 
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         wh.write({'delivery_steps': 'pick_ship'})
 
         kitAB = self._create_product('Kit AB', True, 0.00)

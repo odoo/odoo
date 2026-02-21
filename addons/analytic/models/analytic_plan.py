@@ -106,6 +106,9 @@ class AccountAnalyticPlan(models.Model):
         if not project_plan:
             raise UserError(_("A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"))
         other_plans = self.sudo().search([('parent_id', '=', False)]) - project_plan
+        if project_plan.id == 1 and not self.env.registry.ready and not project_plan.exists():
+            # temporary fix during load
+            project_plan, other_plans = other_plans[0], other_plans[1:]
         return project_plan.id, other_plans.ids
 
     def _get_all_plans(self):

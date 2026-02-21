@@ -23,7 +23,7 @@ def test_01_cow_views_inherit_on_module_update(env):
 
     # 1. Setup hierarchy as comment above
     View = env['ir.ui.view']
-    View.with_context(force_delete=True, active_test=False).search([('website_id', '=', 1)]).unlink()
+    View.with_context(force_delete=True, active_test=False).search([('website_id', '=', env.ref('website.default_website').id)]).unlink()
     child_view = env.ref('portal.footer_language_selector')
     parent_view = env.ref('portal.portal_back_in_edit_mode')
     # Remove any possibly existing COW view (another theme etc)
@@ -32,7 +32,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     # Change `inherit_id` so the module update will set it back to the XML value
     child_view.write({'inherit_id': parent_view.id, 'arch': child_view.arch_db.replace('o_footer_copyright_name', 'text-center')})
     # Trigger COW on view
-    child_view.with_context(website_id=1).write({'name': 'COW Website 1'})
+    child_view.with_context(website_id=env.ref('website.default_website').id).write({'name': 'COW Website 1'})
     child_cow_view = child_view._get_specific_views()
 
     # 2. Ensure setup is as expected
@@ -58,15 +58,15 @@ def test_02_cow_views_inherit_on_module_update(env):
 
     # 1. Setup hierarchy as comment above
     View = env['ir.ui.view']
-    View.with_context(force_delete=True, active_test=False).search([('website_id', '=', 1)]).unlink()
+    View.with_context(force_delete=True, active_test=False).search([('website_id', '=', env.ref('website.default_website').id)]).unlink()
     view_D = env.ref('portal.my_account_link')
     view_A = env.ref('portal.message_thread')
     # Change `inherit_id` so the module update will set it back to the XML value
     view_D.write({'inherit_id': view_A.id, 'arch_db': view_D.arch_db.replace('o_logout_divider', 'discussion')})
     # Trigger COW on view
     view_B = env.ref('portal.user_dropdown')  # XML data
-    view_D.with_context(website_id=1).write({'name': 'D Website 1'})
-    view_B.with_context(website_id=1).write({'name': 'B Website 1'})
+    view_D.with_context(website_id=env.ref('website.default_website').id).write({'name': 'D Website 1'})
+    view_B.with_context(website_id=env.ref('website.default_website').id).write({'name': 'B Website 1'})
     view_Dcow = view_D._get_specific_views()
 
     # 2. Ensure setup is as expected

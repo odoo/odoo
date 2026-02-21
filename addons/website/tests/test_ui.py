@@ -29,7 +29,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         Page = self.env['website.page']
         Attachment = self.env['ir.attachment']
 
-        website_default = Website.browse(1)
+        website_default = self.env.ref('website.default_website')
         website_test = Website.create({'name': 'Website Test'})
 
         # simulate attachment state when editing 2 theme through customize
@@ -141,7 +141,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.assertEqual(View.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
         self.assertTrue(generic_page.arch == oe_structure_layout, "Generic homepage view should be untouched")
         self.assertEqual(len(generic_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 0, "oe_structure view should have been deleted when aboutus was COW")
-        specific_page = Website.with_context(website_id=1).viewref('test.generic_view')
+        specific_page = Website.with_context(website_id=self.ref('website.default_website')).viewref('test.generic_view')
         self.assertTrue(specific_page.arch != oe_structure_layout, "Specific homepage view should have been changed")
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
@@ -444,7 +444,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_12_edit_translated_page_redirect(self):
         lang = self.env['res.lang']._activate_lang('nl_NL')
-        self.env['website'].browse(1).write({'language_ids': [(4, lang.id, 0)]})
+        self.env.ref('website.default_website').write({'language_ids': [(4, lang.id, 0)]})
         self.start_tour("/nl/contactus", 'edit_translated_page_redirect', login='admin')
 
     def test_14_carousel_snippet_content_removal(self):
@@ -658,7 +658,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour('/', 'website_powerbox_keyword', login='admin')
 
     def test_website_no_dirty_lazy_image(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         # Enable multiple langs to reduce the chance of the test being silently
         # broken by ensuring that it receives a lot of extra o_dirty elements.
         # This is done to account for potential later changes in the number of
@@ -691,7 +691,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
 
     def test_website_edit_menus_delete_parent(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         self.env['website.menu'].create({
             'name': 'Test Child Menu',
             'url': '/test-child',
@@ -786,7 +786,7 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_background_color_gradient_precedence(self):
         # Configure CC1 with a gradient and apply it to the header, then set a
         # different gradient directly on the header background.
-        self.env['website.assets'].with_context(website_id=1).make_scss_customization(
+        self.env['website.assets'].with_context(website_id=self.ref('website.default_website')).make_scss_customization(
             '/website/static/src/scss/options/user_values.scss',
             {
                 'o-cc1-bg-gradient': 'linear-gradient(rgb(0, 0, 0), rgb(1, 1, 1))',

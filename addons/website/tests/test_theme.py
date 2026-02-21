@@ -15,7 +15,7 @@ class TestTheme(common.TransactionCase):
 
     def test_02_disable_view(self):
         """This test ensure only one template header can be active at a time."""
-        website_id = self.env['website'].browse(1)
+        website_id = self.env.ref('website.default_website')
         ThemeUtils = self.env['theme.utils'].with_context(website_id=website_id.id)
 
         ThemeUtils._reset_default_config()

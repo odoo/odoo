@@ -4305,7 +4305,7 @@ class TestMany2oneReference(TransactionExpressionCase):
         reference.res_model = record._name
 
         # the model field 'res_model' is not in database yet
-        self.assertIn(record.id, self.env._field_dirty[reference._fields['res_model']])
+        self.assertIn(reference.id, self.env._field_dirty[reference._fields['res_model']])
 
         # searching on the one2many should flush the field 'res_model'
         records = record.search([('model_ids.create_date', '!=', False)])
@@ -5225,6 +5225,7 @@ class TestPrecompute(TransactionCase):
 
         fnames = [fname for fname, field in currency._fields.items() if field.prefetch]
         QUERIES = [
+            'SELECT "res_currency"."id" FROM "res_currency" WHERE "res_currency"."id" IN %s',  # env.ref for currency
             select(currency, *fnames),
             insert(model, 'amount', 'currency_id'),
             select(model, 'currency_id'),

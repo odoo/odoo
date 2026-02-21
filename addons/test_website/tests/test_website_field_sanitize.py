@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 import odoo.tests
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestWebsiteFieldSanitize(odoo.tests.HttpCase):
     def test_sanitize_video_iframe(self):
+        item_id = self.env['test.model'].search([], limit=1).ensure_one().id
         self.env['res.users'].create({
             'name': 'Restricted Editor',
             'login': 'restricted',
@@ -20,13 +20,13 @@ class TestWebsiteFieldSanitize(odoo.tests.HttpCase):
 
         # Add a video to an HTML field (admin).
         self.start_tour(
-            self.env['website'].get_client_action_url('/test_website/model_item/1'),
+            self.env['website'].get_client_action_url(f'/test_website/model_item/{item_id}'),
             'website_designer_iframe_video',
             login='admin'
         )
         # Make sure a user can still edit the content (restricted editor).
         self.start_tour(
-            self.env['website'].get_client_action_url('/test_website/model_item/1'),
+            self.env['website'].get_client_action_url(f'/test_website/model_item/{item_id}'),
             'website_restricted_editor_iframe_video',
             login='restricted'
         )

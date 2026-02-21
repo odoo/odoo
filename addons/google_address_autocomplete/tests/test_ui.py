@@ -152,16 +152,17 @@ class TestUI(HttpCase):
             headers={"Content-Type": "application/json"},
         )
 
+        australia = self.env.ref('base.au')
         res = json.loads(res.content)
         self.assertEqual(
             res["result"],
             {
-                "country": [13, "Australia"],
+                "country": [australia.id, "Australia"],
                 "number": "48",
                 "city": "Pyrmont",
                 "street": "Pirrama Road",
                 "zip": "2009",
-                "state": [2, "New South Wales"],
+                "state": [australia.state_ids[1].id, "New South Wales"],
                 "formatted_street_number": "48 Pirrama Road",
             },
         )

@@ -63,7 +63,7 @@ class TestForumCRUD(TestForumCommon):
 
         # One should not be able to give his vote to someone else
         self.employee_vote_on_admin_post.with_user(self.user_employee).write({
-            'user_id': 1,
+            'user_id': self.ref('base.user_root'),
         })
         self.assertEqual(self.employee_vote_on_admin_post.user_id, self.user_employee, 'User employee should not be able to give its vote ownership to someone else')
         # One should not be able to change his vote's post to a post of his own (would be self voting)
@@ -74,7 +74,7 @@ class TestForumCRUD(TestForumCommon):
 
         # One should not be able to give his vote to someone else
         self.portal_vote_on_admin_post.with_user(self.user_portal).write({
-            'user_id': 1,
+            'user_id': self.ref('base.user_root'),
         })
         self.assertEqual(self.portal_vote_on_admin_post.user_id, self.user_portal, 'User portal should not be able to give its vote ownership to someone else')
         # One should not be able to change his vote's post to a post of his own (would be self voting)
@@ -113,14 +113,14 @@ class TestForumCRUD(TestForumCommon):
         # One should not be able to create a vote for someone else
         new_employee_vote = Vote.with_user(self.user_employee).create({
             'post_id': self.portal_post.id,
-            'user_id': 1,
+            'user_id': self.ref('base.user_root'),
             'vote': '1',
         })
         self.assertEqual(new_employee_vote.user_id, self.user_employee, 'Creating a vote for someone else should not be allowed. It should create it for yourself instead')
         # One should not be able to create a vote for someone else
         new_portal_vote = Vote.with_user(self.user_portal).create({
             'post_id': self.employee_post.id,
-            'user_id': 1,
+            'user_id': self.ref('base.user_root'),
             'vote': '1',
         })
         self.assertEqual(new_portal_vote.user_id, self.user_portal, 'Creating a vote for someone else should not be allowed. It should create it for yourself instead')

@@ -202,14 +202,17 @@ class TestImage(HttpCase):
             res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
             res.raise_for_status()
             self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+
         # within a 14-days period, the same token is generated
         start_of_period = datetime(2021, 2, 18, 0, 0, 0)  # 14-days period 2021-02-18 to 2021-03-04
         base_result = datetime(2021, 3, 24, 15, 25, 40)
+        attachment2, attachment3 = attachment.browse([2, 3])  # hardcoded ids for access token jitter
         for i in range(14):
             with freeze_time(start_of_period + timedelta(days=i, hours=i % 24, minutes=i % 60)):
                 self.assertEqual(
-                    get_datetime_from_token(self.env["ir.attachment"].browse(2)._get_raw_access_token()),
+                    get_datetime_from_token(attachment2._get_raw_access_token()),
                     base_result,
+                    f"Token regenerated for day {i}",
                 )
         # on each following 14-days period another token is generated, valid for exactly 14 extra
         # days from the previous token
@@ -219,7 +222,7 @@ class TestImage(HttpCase):
             ):
                 self.assertEqual(
                     get_datetime_from_token(
-                        self.env["ir.attachment"].browse(2)._get_raw_access_token()
+                        attachment2._get_raw_access_token()
                     ),
                     base_result + timedelta(days=14 * i),
                 )
@@ -227,21 +230,21 @@ class TestImage(HttpCase):
             # at the same time...
             self.assertEqual(
                 get_datetime_from_token(
-                    self.env["ir.attachment"].browse(2)._get_raw_access_token()
+                    attachment2._get_raw_access_token()
                 ),
                 base_result,
             )
             # a different record generates a different token
-            record_res = self.env["ir.attachment"].browse(3)._get_raw_access_token()
+            record_res = attachment3._get_raw_access_token()
             self.assertNotIn(record_res, [base_result])
             # a different field generates a different token
             field_res = get_datetime_from_token(
-                limited_field_access_token(self.env["ir.attachment"].browse(3), "mimetype", scope="binary")
+                limited_field_access_token(attachment3, "mimetype", scope="binary")
             )
             self.assertNotIn(field_res, [base_result, record_res])
             # a different model generates a different token
             model_res = get_datetime_from_token(
-                limited_field_access_token(self.env["res.partner"].browse(3), "raw", scope="binary")
+                limited_field_access_token(attachment3, "raw", scope="binary")
             )
             self.assertNotIn(model_res, [base_result, record_res, field_res])
 

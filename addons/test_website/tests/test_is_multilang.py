@@ -27,7 +27,7 @@ class TestIsMultiLang(odoo.tests.HttpCase):
             self.assertEqual('/get_post_nomultilang', body.find('./a[@id="get_post_nomultilang"]').get('href'))
 
     def test_02_url_lang_code_underscore(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         it = self.env.ref('base.lang_it').sudo()
         en = self.env.ref('base.lang_en').sudo()
         be = self.env.ref('base.lang_fr_BE').sudo()

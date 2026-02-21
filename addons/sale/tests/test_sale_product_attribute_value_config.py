@@ -35,7 +35,7 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueCommon):
             # Create a dummy SO to prevent the variant from being deleted by
             # _create_variant_ids() because the variant is a related field that
             # is required on the SO line
-            so = self.env['sale.order'].create({'partner_id': 1})
+            so = self.env['sale.order'].create({'partner_id': self.ref('base.partner_root')})
             self.env['sale.order.line'].create({
                 'order_id': so.id,
                 'name': "test",

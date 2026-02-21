@@ -41,7 +41,7 @@
         <field name="color">Black</field>
         <field name="location">Millersburg Ohio (US) 44654</field>
         <field name="doors">2</field>
-        <field name="driver_id" ref="base.user_admin" />
+        <field name="driver_id" ref="base.partner_admin" />
         <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
         <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
         <field name="odometer">18000</field>

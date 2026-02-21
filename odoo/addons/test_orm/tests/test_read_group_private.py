@@ -248,18 +248,19 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_array_read_groups(self):
         Model = self.env['test_read_group.aggregate']
-        Model.create({'partner_id': 1})
-        Model.create({'partner_id': 1})
-        Model.create({'partner_id': 2})
+        p1, p2 = self.ref('base.partner_root'), self.ref('base.partner_admin')
+        Model.create({'partner_id': p1})
+        Model.create({'partner_id': p1})
+        Model.create({'partner_id': p2})
 
         self.assertEqual(
             Model._read_group([], aggregates=['partner_id:array_agg']),
-            [([1, 1, 2],)],
+            [([p1, p1, p2],)],
         )
 
         self.assertEqual(
             Model._read_group([], aggregates=['partner_id:recordset']),
-            [(self.env['res.partner'].browse([1, 2]),)],
+            [(self.env['res.partner'].browse([p1, p2]),)],
         )
 
     def test_flush_read_group(self):

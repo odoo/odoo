@@ -12,7 +12,7 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        website = cls.env['website'].search([], limit=1)
+        website = cls.env.ref('website.default_website')
         fr = cls.env.ref('base.lang_fr').sudo()
         en = cls.env.ref('base.lang_en').sudo()
 
@@ -21,9 +21,10 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
         website.default_lang_id = en
         website.language_ids = en + fr
 
+        item_id = cls.env['test.model'].search([], limit=1).ensure_one().id
         cls.env['website.menu'].create({
             'name': 'Model item',
-            'url': '/test_website/model_item/1',
+            'url': f'/test_website/model_item/{item_id}',
             'parent_id': website.menu_id.id,
             'sequence': 100,
         })

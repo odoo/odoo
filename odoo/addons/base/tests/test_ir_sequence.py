@@ -256,14 +256,14 @@ class TestIrSequenceGenerate(BaseCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrSequenceInit(common.TransactionCase):
 
-    def test_00(self):
+    def test_00_read_next_sequence(self):
         """ test whether the read method returns the right number_next value
             (from postgreSQL sequence and not ir_sequence value)
         """
         # first creation of sequence (normal)
         seq = self.env['ir.sequence'].create({
             'number_next': 1,
-            'company_id': 1,
+            'company_id': self.ref('base.main_company'),
             'padding': 4,
             'number_increment': 1,
             'implementation': 'standard',

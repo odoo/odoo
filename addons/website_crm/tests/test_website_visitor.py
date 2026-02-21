@@ -77,7 +77,7 @@ class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTestsCommon):
         active_visitors = self.env['website.visitor'].create([{
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.be').id,
-            'website_id': 1,
+            'website_id': self.ref('website.default_website'),
             'last_connection_datetime': datetime.now() - timedelta(days=8),
             'access_token': 'f9d28aad05ebee0bca215837b129aa00',
             'lead_ids': [(0, 0, {

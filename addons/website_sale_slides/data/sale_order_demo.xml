@@ -12,7 +12,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=30)"/>
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-        <field name="website_id" eval="1"/>
+        <field name="website_id" ref="website.default_website"/>
         <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2')), (4, ref('sales_team.categ_oppor5'))]"/>
     </record>
     <record id="sale_order_course_1_line_1" model="sale.order.line">
@@ -29,7 +29,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=100)"/>
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-        <field name="website_id" eval="1"/>
+        <field name="website_id" ref="website.default_website"/>
     </record>
     <record id="sale_order_course_2_line_1" model="sale.order.line">
         <field name="order_id" ref="sale_order_course_2"/>
@@ -53,7 +53,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=30)"/>
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-        <field name="website_id" eval="1"/>
+        <field name="website_id" ref="website.default_website"/>
     </record>
     <record id="sale_order_course_3_line_1" model="sale.order.line">
         <field name="order_id" ref="sale_order_course_3"/>

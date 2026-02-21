@@ -35,6 +35,8 @@ class TestActivityMixin(TestActivityCommon):
         )
         cls.user_australia.tz = 'Australia/Sydney'
 
+        cls.activity_type = cls.env['mail.activity.type'].search([], limit=1).ensure_one()
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
@@ -259,7 +261,7 @@ class TestActivityMixin(TestActivityCommon):
         test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
 
         activity = self.env['mail.activity'].create({
-            'activity_type_id': 1,
+            'activity_type_id': self.activity_type.id,
             'res_id': test_record.id,
             'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
             'summary': 'Test',
@@ -310,7 +312,7 @@ class TestActivityMixin(TestActivityCommon):
             today_utc = datetime.today()
             activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
-                'activity_type_id': 1,
+                'activity_type_id': self.activity_type.id,
                 'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
                 'res_id': record.id,
                 'date_deadline': today_utc,
@@ -485,7 +487,7 @@ class TestActivityMixin(TestActivityCommon):
             today_utc = datetime.today()
             origin_1_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
-                'activity_type_id': 1,
+                'activity_type_id': self.activity_type.id,
                 'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
                 'res_id': origin_1.id,
                 'date_deadline': today_utc + relativedelta(hours=2),

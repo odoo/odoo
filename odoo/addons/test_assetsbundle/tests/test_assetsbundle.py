@@ -2054,7 +2054,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(asset_keys_length, 1)
         self.assertEqual(qweb_keys_length, 1)
 
-        self.env['ir.qweb'].with_context(website_id=1)._get_asset_nodes('test_assetsbundle.manifest1')
+        self.env['ir.qweb'].with_context(website_id=self.ref('website.default_website'))._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
         # The content may be different for different websites, even if it is not
         # always the case.

@@ -106,7 +106,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             new_form_fields[2]: "11/04/2020",  # date
             new_form_fields[3]: "",  # datetime missing
             new_form_fields[4]: "1.0",  # float
-            new_form_fields[5]: "1",  # integer
+            new_form_fields[5]: str(self.env.company.color),  # integer
             new_form_fields[6]: dict(self.sale_order._fields['state'].selection)['draft'],  # selection
             new_form_fields[7]: "$\xa0725.00",  # monetary
             new_form_fields[8]: f"{sol_1.display_name}, {sol_2.display_name}",  # one2many

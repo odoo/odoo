@@ -43,11 +43,11 @@ class TestWebsiteControllerArgs(odoo.tests.HttpCase):
 class TestWebsiteControllers(odoo.tests.TransactionCase):
 
     def test_01_sitemap(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         locs = website.with_user(website.user_id)._enumerate_pages(query_string='test_website_sitemap')
         self.assertEqual(len(list(locs)), 1, "The same URL should only be shown once")
 
     def test_02_search_controller(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         res = website._enumerate_pages(query_string="/test_website/country/elgium")
         self.assertIn('/test_website/country/belgium', next(res).get('loc'))

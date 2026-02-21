@@ -174,7 +174,7 @@ class SaleOrderTemplate(models.Model):
                 'product_uom_qty': 0,
             }),
             Command.create({
-                'product_id': self.env.ref('product.product_template_dining_table').id,
+                'product_id': self.env.ref('product.product_template_dining_table').product_variant_id.id,
             }),
             Command.create({
                 'product_id': self.env.ref('product.monitor_stand').id,

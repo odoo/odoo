@@ -15,5 +15,6 @@
             <field name="name">Project</field>
             <field name="default_applicability">optional</field>
         </record>
+        <function model="ir.config_parameter" name="set_int" eval="('analytic.project_plan', ref('analytic_plan_projects'))"/>
     </data>
 </odoo>
