@@ -11,7 +11,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.fields import Command, Date, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.html_editor.tools import handle_history_divergence
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_list, SQL, LazyTranslate, html_sanitize
 from odoo.addons.resource.models.utils import filter_map_domain
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
@@ -1567,6 +1567,23 @@ class ProjectTask(models.Model):
             except Exception:
                 pass
         return new_followers
+
+    def _get_access_action(self, access_uid=None, force_website=False):
+        action = super()._get_access_action(access_uid=access_uid, force_website=force_website)
+        user = self.env['res.users'].sudo().browse(access_uid) if access_uid else self.env.user
+        if not user.share and not force_website:
+            try:
+                self.with_user(user).check_access('read')
+            except AccessError:
+                return action
+            if self.project_id:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': f'/odoo/project/{self.project_id.id}/tasks/{self.id}',
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return action
 
     def _track_template(self, changes):
         res = super()._track_template(changes)
