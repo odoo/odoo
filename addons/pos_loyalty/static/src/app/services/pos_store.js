@@ -186,8 +186,32 @@ patch(PosStore.prototype, {
                 }, {});
 
                 oldChanges.forEach((pointObj) => {
+<<<<<<< 2cb4796e904d4e66acc163d873ddd5eba3912c4d:addons/pos_loyalty/static/src/app/services/pos_store.js
                     const { points, barcode = "" } = pointObj;
                     const key = barcode ? `${points}-${barcode}` : `${points}`;
+||||||| bc5cadbeffdc22df9ab7282e8183eb41d5aafdc3:addons/pos_loyalty/static/src/overrides/models/pos_store.js
+                    const { points, barcode = "", gift_code = "" } = pointObj;
+                    const key =
+                        barcode && gift_code
+                            ? `${points}-${barcode}-${gift_code}`
+                            : barcode
+                            ? `${points}-${barcode}`
+                            : gift_code
+                            ? `${points}--${gift_code}`
+                            : `${points}`;
+
+=======
+                    const { points, barcode = "", code = "" } = pointObj;
+                    const key =
+                        barcode && code
+                            ? `${points}-${barcode}-${code}`
+                            : barcode
+                            ? `${points}-${barcode}`
+                            : code
+                            ? `${points}--${code}`
+                            : `${points}`;
+
+>>>>>>> fc5c430a9fc36772ff45e979459e3a30ea048d52:addons/pos_loyalty/static/src/overrides/models/pos_store.js
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
                     }
