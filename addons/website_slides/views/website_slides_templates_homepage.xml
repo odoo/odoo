@@ -343,7 +343,7 @@
             </div>
             <div t-attf-class="row g-4 g-lg-3 g-xxl-4 #{'row-cols-1 row-cols-sm-2 row-cols-xl-4' if (is_public_user and not has_side_column) else 'row-cols-1 row-cols-sm-2 row-cols-xl-3'}">
                 <t t-foreach="channels" t-as="channel">
-                    <div class="d-flex">
+                    <div class="o_wslides_course_card_container d-flex">
                         <t t-call="website_slides.course_card"/>
                     </div>
                 </t>
@@ -372,7 +372,7 @@
             <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
-                <div class="o_line_clamp small" t-field="channel.description_short"/>
+                <div class="o_line_clamp o_wslides_description_short small" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
