@@ -13,7 +13,7 @@ class MailboxController(http.Controller):
         messages = res.pop("messages")
         return {
             **res,
-            "data": Store().add(messages, add_followers=True).get_result(),
+            "data": Store().add(messages, extra_fields=request.env["mail.message"]._get_store_inbox_fields(), add_followers=True).get_result(),
             "messages": messages.ids,
         }
 
