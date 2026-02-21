@@ -1177,3 +1177,41 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertRecordValues(purchase_order.order_line, [
             {'price_unit': 100, 'discount': 10, 'price_unit_discounted': 90},
         ])
+
+    def test_orderline_description_change_on_partner_change(self):
+        """Test that The Vendor Code and/or Vendor Name does change correctly in the product description when changing the partner"""
+        supplierinfo_vals = {
+            'min_qty': 1,
+            'product_id': self.product_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+        }
+
+        self.env["product.supplierinfo"].create([
+            {
+                **supplierinfo_vals,
+                'price': 10,
+                'product_name': 'Name 1',
+                'product_code': 'Code 1',
+                'partner_id': self.partner_a.id,
+            },
+            {
+                **supplierinfo_vals,
+                'price': 20,
+                'product_name': 'Name 2',
+                'product_code': 'Code 2',
+                'partner_id': self.partner_b.id,
+            }
+        ])
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+                'name': "[Code 1] Name 1\nSome Variant: Some Value: Some Text"
+            })],
+        })
+
+        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
+        po.partner_id = self.partner_b.id
+        self.assertEqual(po.order_line[0].name, "[Code 2] Name 2\nSome Variant: Some Value: Some Text")

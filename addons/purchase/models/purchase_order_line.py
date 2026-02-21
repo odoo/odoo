@@ -369,6 +369,17 @@ class PurchaseOrderLine(models.Model):
                 product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
+            # Checks that the product vendor and vendor name are correct
+            for vendor in vendors:
+                product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                line_with_vendor_context = line.product_id.with_context(product_ctx)
+                if line.name.startswith(line_with_vendor_context.display_name):
+                    if vendor.id != seller.id:
+                        product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                        line_with_seller_context = line.product_id.with_context(product_ctx)
+                        line.name = line_with_seller_context.display_name + line.name[len(line_with_vendor_context.display_name):]
+                    break
+
     @api.depends('product_id', 'product_qty', 'product_uom')
     def _compute_product_packaging_id(self):
         for line in self:
