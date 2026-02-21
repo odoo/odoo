@@ -1183,13 +1183,13 @@
         },
         "B4": { "content": "=B2+B3" },
         "B5": {
-          "content": "=PIVOT.VALUE(11,\"order_reference\",\"state\",\"sale\")"
+          "content": "=PIVOT.VALUE(11,\"order_reference\")-B4"
         },
         "B6": {
-          "content": "=PIVOT.VALUE(11,\"order_reference\",\"state\",\"sale\")"
+          "content": "=PIVOT.VALUE(11,\"order_reference\")-B4"
         },
         "B7": {
-          "content": "=PIVOT.VALUE(11,\"price_subtotal\",\"state\",\"sale\")"
+          "content": "=PIVOT.VALUE(11,\"price_subtotal\") - PIVOT.VALUE(11,\"price_subtotal\",\"state\",\"sent\") - PIVOT.VALUE(11,\"price_subtotal\",\"state\",\"draft\")"
         },
         "B8": { "content": "=IFERROR(B7/B6)" },
         "C1": { "content": "=_t(\"Previous\")" },
@@ -1201,13 +1201,13 @@
         },
         "C4": { "content": "=C2+C3" },
         "C5": {
-          "content": "=PIVOT.VALUE(12,\"order_reference\",\"state\",\"sale\")"
+          "content": "=PIVOT.VALUE(12,\"order_reference\")-C4"
         },
         "C6": {
-          "content": "=PIVOT.VALUE(12,\"order_reference\",\"state\",\"sale\")"
+          "content": "=PIVOT.VALUE(12,\"order_reference\")-C4"
         },
         "C7": {
-          "content": "=PIVOT.VALUE(12,\"price_subtotal\",\"state\",\"sale\")"
+          "content": "=PIVOT.VALUE(12,\"price_subtotal\") - PIVOT.VALUE(12,\"price_subtotal\",\"state\",\"sent\") - PIVOT.VALUE(12,\"price_subtotal\",\"state\",\"draft\")"
         },
         "C8": { "content": "=IFERROR(C7/C6)" },
         "D1": { "content": "=_t(\"Current\")" },
@@ -1962,7 +1962,7 @@
         }
       },
       "context": {},
-      "domain": [["state", "in", ["draft", "sent", "sale"]]],
+      "domain": [["state", "!=", "cancel"]],
       "id": "11",
       "measures": [
         { "id": "order_reference", "fieldName": "order_reference" },
@@ -2017,7 +2017,7 @@
         }
       },
       "context": {},
-      "domain": [["state", "in", ["draft", "sent", "sale"]]],
+      "domain": [["state", "!=", "cancel"]],
       "id": "12",
       "measures": [
         { "id": "order_reference", "fieldName": "order_reference" },
