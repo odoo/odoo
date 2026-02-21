@@ -38,26 +38,57 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         super().init_poolmanager(*args, **kwargs)
 
     def cert_verify(self, conn, url, verify, cert):
-        """ The original method wants to check for an existing file
-            at the cert location. As we use in-memory objects,
-            we skip the check and assign it manually.
-        """
+        """Keep native cert handling for file paths and support certificate records."""
         # OVERRIDE
-        super().cert_verify(conn, url, verify, None)
-        conn.cert_file = cert
-        conn.key_file = None
+        self._patch_ssl_context(conn)
+        if self._is_certificate_record(cert):
+            # The original method checks for file existence. Our certificate object is in-memory.
+            super().cert_verify(conn, url, verify, None)
+            conn.cert_file = cert
+            conn.key_file = None
+        else:
+            super().cert_verify(conn, url, verify, cert)
 
     def get_connection(self, url, proxies=None):
         """ Reads the certificate from a certificate.certificate rather than from the filesystem """
         # OVERRIDE
         conn = super().get_connection(url, proxies=proxies)
-        context = conn.conn_kw['ssl_context']
+        self._patch_ssl_context(conn)
+        return conn
+
+    def get_connection_with_tls_context(self, *args, **kwargs):
+        # OVERRIDE
+        conn = super().get_connection_with_tls_context(*args, **kwargs)
+        self._patch_ssl_context(conn)
+        return conn
+
+    @staticmethod
+    def _is_certificate_record(cert):
+        return getattr(cert, '_name', None) == 'certificate.certificate'
+
+    def _patch_ssl_context(self, conn):
+        conn_kw = getattr(conn, 'conn_kw', None) or {}
+        context = conn_kw.get('ssl_context')
+        if not context or getattr(context, '_odoo_patched_load_cert_chain', False):
+            return
+
+        original_load_cert_chain = context.load_cert_chain
 
         def patched_load_cert_chain(certificate, keyfile=None, password=None):
+            if not self._is_certificate_record(certificate):
+                return original_load_cert_chain(certificate, keyfile, password)
+
             certificate = certificate.sudo()
-            pem, key = map(b64decode, (certificate.pem_certificate, certificate.private_key_id.pem_key))
-            context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
-            context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
+            pem_certificate = certificate.with_context(bin_size=False).pem_certificate
+            pem_private_key = certificate.private_key_id.with_context(bin_size=False).pem_key
+            if not pem_certificate or not pem_private_key:
+                raise SSLError(f"Certificate {certificate.name} is invalid.")
+            try:
+                pem, key = map(b64decode, (pem_certificate, pem_private_key))
+                context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
+                context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
+            except (TypeError, CryptoError) as e:
+                raise SSLError(f"Certificate {certificate.name} is invalid: {e}") from e
 
         context.load_cert_chain = patched_load_cert_chain
-        return conn
+        context._odoo_patched_load_cert_chain = True
