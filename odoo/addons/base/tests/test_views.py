@@ -228,7 +228,7 @@ class TestViewInheritance(ViewCase):
     def setUp(self):
         super(TestViewInheritance, self).setUp()
 
-        self.patch(self.registry, '_init', False)
+        self.patch(self.registry, 'ready', True)
 
         self.model = 'ir.ui.view.custom'
         self.view_ids = {}
@@ -1092,7 +1092,7 @@ class TestNoModel(ViewCase):
 class TestTemplating(ViewCase):
     def setUp(self):
         super(TestTemplating, self).setUp()
-        self.patch(self.registry, '_init', False)
+        self.patch(self.registry, 'ready', True)
 
     def test_branding_t0(self):
         view1 = self.View.create({

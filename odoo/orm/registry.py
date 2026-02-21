@@ -122,7 +122,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             except KeyError:
                 return cls.new(db_name)
 
-    _init: bool  # whether init needs to be done
     ready: bool  # whether everything is set up
     loaded: bool  # whether all modules are loaded
     models: dict[str, type[BaseModel]]
@@ -138,7 +137,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
-        models_to_check: set[str] | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -162,17 +160,18 @@ class Registry(Mapping[str, type["BaseModel"]]):
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
           determined by the ``config['with_demo']``. Defaults to ``None``
         """
+        if (registry := cls.registries.get(db_name)) and not registry.ready:
+            raise Exception('Registry for database %s can not be loaded recursively' % db_name)
+
         t0 = time.time()
         registry: Registry = object.__new__(cls)
         registry.init(db_name)
-        registry.new = registry.init = registry.registries = None  # type: ignore
         first_registry = not cls.registries
 
         # Initializing a registry will call general code which will in
         # turn call Registry() to obtain the registry being initialized.
         # Make it available in the registries dictionary then remove it
         # if an exception is raised.
-        cls.delete(db_name)
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
         try:
             registry.setup_signaling()
@@ -199,15 +198,26 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     new_db_demo = config['with_demo']
                 if first_registry and not update_module:
                     exit_stack.enter_context(gc.disabling_gc())
-                load_modules(
-                    registry,
-                    update_module=update_module,
-                    upgrade_modules=upgrade_modules,
-                    install_modules=install_modules,
-                    reinit_modules=reinit_modules,
-                    new_db_demo=new_db_demo,
-                    models_to_check=models_to_check,
-                )
+                retries = 5 if update_module else 1
+                for _ in range(retries):
+                    # load_modules multiple times in case there are modules to be uninstalled
+                    load_modules(
+                        registry,
+                        update_module=update_module,
+                        upgrade_modules=upgrade_modules,
+                        install_modules=install_modules,
+                        reinit_modules=reinit_modules,
+                        new_db_demo=new_db_demo,
+                    )
+                    if registry.loaded:
+                        break
+                    models_to_check = registry._models_to_check
+                    registry = object.__new__(cls)
+                    registry.init(db_name, models_to_check=models_to_check)
+                    cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+                    upgrade_modules = install_modules = reinit_modules = ()
+                else:
+                    raise Exception(f'Failed to load registry after {retries} attempts')  # noqa: TRY301
             except Exception:
                 reset_modules_state(db_name)
                 raise
@@ -218,14 +228,16 @@ class Registry(Mapping[str, type["BaseModel"]]):
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
             raise
 
+        del registry.loaded_xmlids
+        del registry._force_upgrade_scripts
         del registry._reinit_modules
+        del registry._models_to_check
 
         # load_modules() above can replace the registry by calling
         # indirectly new() again (when modules have to be uninstalled).
         # Yeah, crazy.
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
-        registry._init = False
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
         registry.signal_changes()
@@ -233,8 +245,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
 
-    def init(self, db_name: str) -> None:
-        self._init = True
+    def init(self, db_name: str, models_to_check: OrderedSet[str] | None = None) -> None:
         self.loaded = False
         self.ready = False
 
@@ -252,14 +263,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # update context during loading modules
+        self.loaded_xmlids: set[str] = set()           # loaded xmlids for IrModelData._process_end()
         self._force_upgrade_scripts: set[str] = set()  # force the execution of the upgrade script for these modules
         self._reinit_modules: set[str] = set()  # modules to reinitialize
+        self._models_to_check: OrderedSet[str] = models_to_check or OrderedSet()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules: set[str] = set()         # modules have been initialized
         self.updated_modules: list[str] = []         # installed/updated modules
         self.uninstalling_modules: set[str] = set()  # modules being uninstalled
-        self.loaded_xmlids: set[str] = set()
 
         self.db_name = db_name
         self._db: Connection = sql_db.db_connect(db_name, readonly=False)
@@ -308,6 +320,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
+
+        self.new = self.init = self.registries = None  # type: ignore
 
     @classmethod
     @locked

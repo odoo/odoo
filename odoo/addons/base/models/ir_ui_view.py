@@ -462,7 +462,7 @@ actual arch.
 
                     # During an upgrade, we can only use the views that have been
                     # fully upgraded already.
-                    if self.pool._init and sibling_primary_views and self.pool._init_modules:
+                    if not self.pool.ready and sibling_primary_views and self.pool._init_modules:
                         query = sibling_primary_views._get_filter_xmlid_query()
                         sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
                         loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
@@ -1074,7 +1074,7 @@ actual arch.
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
-        if self.pool._init and not self.env.context.get('load_all_views'):
+        if not self.pool.ready and not self.env.context.get('load_all_views'):
             all_tree_views = all_tree_views._filter_loaded_views(set(views.env.context['check_view_ids']))
 
         # get the global children views then get hierarchy for each views
@@ -2562,7 +2562,7 @@ actual arch.
         """ Validate the architecture of all the views of a given module that
             are impacted by view updates, but have not been checked yet.
         """
-        assert self.pool._init
+        assert not self.pool.ready
 
         # only validate the views that still exist...
         prefix = module + '.'
