@@ -99,8 +99,9 @@ class PaymentTransaction(models.Model):
         checksum = self.provider_id._nuvei_calculate_signature(url_params, incoming=False)
         rendering_values = {
             'api_url': self.provider_id._nuvei_get_api_url(),
-            'checksum': checksum,
             'url_params': url_params,
+            'checksum': checksum,
+            'api_method': 'post'
         }
         return rendering_values
 

@@ -71,7 +71,7 @@ class PaymentTransaction(models.Model):
             'publicKey': self.provider_id.paymob_public_key,
             'clientSecret': paymob_client_secret,
         }
-        return {'api_url': api_url, 'url_params': url_params}
+        return {'api_url': api_url, 'url_params': url_params, 'api_method': 'get'}
 
     def _paymob_prepare_payment_request_payload(self):
         """ Create the payload for the payment request based on the transaction values.

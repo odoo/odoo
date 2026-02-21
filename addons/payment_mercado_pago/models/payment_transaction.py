@@ -2,8 +2,6 @@
 
 from urllib.parse import quote as url_quote
 
-from werkzeug.urls import url_decode, url_parse
-
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
@@ -46,12 +44,10 @@ class PaymentTransaction(models.Model):
         ]
 
         # Extract the payment link URL and params and embed them in the redirect form.
-        parsed_url = url_parse(api_url)
-        url_params = url_decode(parsed_url.query)
-        rendering_values = {
-            'api_url': api_url,
-            'url_params': url_params,  # Encore the params as inputs to preserve them.
-        }
+        rendering_values = payment_utils.extract_values_for_default_redirect_form(
+            api_url,
+            'get'
+        )
         return rendering_values
 
     def _mercado_pago_prepare_preference_request_payload(self):

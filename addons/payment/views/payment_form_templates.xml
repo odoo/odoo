@@ -533,4 +533,15 @@
         </ul>
     </template>
 
+    <template id="payment_default_redirect_form">
+        <!-- Generic redirect form used by payment providers that return
+         a dynamic URL per transaction and may require sending
+         additional parameters during the redirection. -->
+        <form t-att-action="api_url" t-att-method="api_method">
+            <t t-foreach="url_params" t-as="param">
+                <input type="hidden" t-att-name="param" t-att-value="url_params[param]" />
+            </t>
+        </form>
+    </template>
+
 </odoo>

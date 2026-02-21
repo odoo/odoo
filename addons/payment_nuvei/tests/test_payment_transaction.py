@@ -65,7 +65,10 @@ class TestPaymentTransaction(NuveiCommon):
         checksum = self.provider._nuvei_calculate_signature(
             expected_values['url_params'], incoming=False
         )
-        expected_values['checksum'] = checksum
+        expected_values.update({
+            'checksum': checksum,
+            'api_method': 'post',
+        })
 
         with patch(
             'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
