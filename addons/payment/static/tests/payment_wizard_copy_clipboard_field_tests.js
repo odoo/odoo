@@ -16,6 +16,11 @@ QUnit.module("Payment", {
                     fields: {
                         amount: { string: "Amount", type: "float" },
                         link: { string: "Payment Link", type: "char" },
+                        link_copy_text: {
+                            string: "Custom Link Copy",
+                            type: "char",
+                            default: "Generate and Copy Payment Link",
+                        },
                     },
                     onchanges: {
                         amount(record) {
@@ -31,7 +36,7 @@ QUnit.module("Payment", {
     },
 });
 
-QUnit.test("copy link immediatly after entering the amount", async (assert) => {
+QUnit.test("copy link immediately after entering the amount", async (assert) => {
     assert.expect(3);
 
     await makeView({
@@ -42,11 +47,10 @@ QUnit.test("copy link immediatly after entering the amount", async (assert) => {
             <group>
                 <group>
                     <field name="amount"/>
-                     <field
-                        string="Generate and Copy Payment Link"
-                        name="link"
-                        widget="PaymentWizardCopyClipboardButtonField"
-                    />
+                    <field name="link_copy_text" invisible="1"/>
+                    <field name="link"
+                           widget="PaymentWizardCopyClipboardButtonField"
+                           options="{'copy_text_field': 'link_copy_text'}"/>
                 </group>
             </group>
         </form>`,

@@ -34,6 +34,7 @@ class ProjectShareWizard(models.TransientModel):
 
     access_mode = fields.Selection([('read', 'Readonly'), ('edit', 'Edit')])
     display_access_mode = fields.Boolean()
+    share_link_copy_text = fields.Char(default=lambda self: _("Copy Link"), readonly=True, store=False)
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):
