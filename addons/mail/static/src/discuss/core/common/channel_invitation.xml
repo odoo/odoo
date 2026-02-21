@@ -20,7 +20,7 @@
                 </div>
                 <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': selectablePartners.length === 0 and state.selectableEmails.length === 0 }">
                     <div t-if="selectablePartners.length === 0 and state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
-                        <t t-if="props.channel">No people found to invite.</t>
+                        <t t-if="props.channel">No one found to invite.</t>
                         <t t-else="">No user found.</t>
                     </div>
                     <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
@@ -78,7 +78,7 @@
     </t>
     <t t-name="discuss.ChannelInvitation-selectableItem">
         <t t-set="isSelected" t-value="selectablePartner ? selectablePartner.in(selectedPartners) : state.selectedEmails.includes(selectableEmailAddress)"/>
-        <li class="o-discuss-ChannelInvitation-selectable object-fit-cover d-flex align-items-start px-1 py-0 btn list-group-item border-0 rounded-0 w-100"
+        <li class="o-discuss-ChannelInvitation-selectable object-fit-cover d-flex align-items-center px-1 py-0 btn list-group-item border-0 rounded-0 w-100"
             t-att-class="{ 'o-odd': selectableItemIndex % 2 === 1, 'o-selected': isSelected, 'align-items-center': selectableEmailAddress }"
             t-on-click="() => selectablePartner ? this.onClickSelectablePartner(selectablePartner) : this.onClickSelectableEmail(selectableEmailAddress) "
         >
@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-column mx-2 flex-grow-1 overflow-hidden o-mt-0_5">
+            <div class="d-flex flex-column mx-2 o-mb-0_5 flex-grow-1 overflow-hidden">
                 <t t-if="selectablePartner">
                     <div class="d-flex overflow-hidden align-items-baseline" name="selectablePartnerName">
                         <span class="text-truncate" t-esc="selectablePartner.name"/>
@@ -104,7 +104,7 @@
                     <span t-if="state.sentEmails.has(selectableEmailAddress)" class="text-truncate text-start smaller text-600 fw-normal lh-1 w-100">Invitation already sent to this address</span>
                 </div>
             </div>
-            <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
+            <input class="form-check-input flex-shrink-0 mt-0 mx-1" type="checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
         </li>
     </t>
 </templates>

@@ -536,9 +536,9 @@ export class DiscussChannel extends Record {
         const notification = this.store.env.services.notification;
         try {
             await clipboard.writeText(this.invitationLink);
-            notification.add(_t("Invitation link copied!"), { type: "success" });
+            notification.add(_t("Invitation link copied"), { type: "success" });
         } catch {
-            notification.add(_t("Permission denied: invitation link copy failed!"), {
+            notification.add(_t("Permission denied: invitation link copy failed"), {
                 type: "danger",
             });
         }

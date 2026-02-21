@@ -86,7 +86,6 @@ class ResPartner(models.Model):
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
                 [("user_ids.active", "=", True)],
-                [("user_ids.share", "=", False)],
             ]
         )
         channel = self.env["discuss.channel"]
