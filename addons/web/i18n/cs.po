@@ -19,20 +19,21 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Stanislav Kurinec <stenly.kurinec@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-01-29 09:06+0000\n"
+"PO-Revision-Date: 2026-02-19 12:30+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/web/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: web
@@ -310,7 +311,7 @@ msgstr "3.30"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "31/01/%s"
-msgstr ""
+msgstr "31/01/%s"
 
 #. module: web
 #. odoo-javascript
@@ -454,7 +455,7 @@ msgstr "9:30"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_processor.js:0
 msgid ": not"
-msgstr ""
+msgstr ": ne"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_oauth
@@ -491,6 +492,16 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
+"\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Oddělené "
+"(jedno na kartu)</option>\n"
+"                                        <option value=\"temporal\">Časové "
+"(experimentální)</option>\n"
+"                                    </select> <span id=\"temporal_warning\" "
+"class=\"alert alert-warning\" style=\"display:none\"><b> Varování:</b> "
+"Časový režim sloučí všechny vzorky.<br/>V případě souběžných profilů to může "
+"vést k částečně neplatným výsledkům.<br/>Používejte s opatrností. </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -551,7 +562,7 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span itemprop=\"name\">Acme Corporation</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Acme Corporation</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -906,13 +917,13 @@ msgstr "Přidat fotku"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
-msgstr ""
+msgstr "Přidat vlastnost"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 msgid "Add a"
-msgstr ""
+msgstr "Přidat"
 
 #. module: web
 #. odoo-javascript
@@ -949,7 +960,7 @@ msgstr "Přidat podmínku"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "Add nested rule"
-msgstr ""
+msgstr "Přidat vnořené pravidlo"
 
 #. module: web
 #. odoo-javascript
@@ -961,7 +972,7 @@ msgstr "Přidat kontekst pro qweb"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "Add rule"
-msgstr ""
+msgstr "Přidat pravidlo"
 
 #. module: web
 #. odoo-javascript
@@ -1056,7 +1067,7 @@ msgstr "Povolit výrazy"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 msgid "Allowed file mimetype"
-msgstr ""
+msgstr "Povolený typ souboru"
 
 #. module: web
 #. odoo-javascript
@@ -1089,6 +1100,8 @@ msgid ""
 "Among the %(total)s selected records, %(valid_count)s are valid for this "
 "update."
 msgstr ""
+"Mezi %(total)s vybranými záznamy, jsou pro tuto aktualizaci %(valid_count)s "
+"platné záznamy."
 
 #. module: web
 #. odoo-javascript
@@ -1171,13 +1184,13 @@ msgstr "Opravdu chcete smazat tuto vestavěnou akci?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the %(nbSelected)s selected records?"
-msgstr ""
+msgstr "Opravdu chcete smazat %(nbSelected)s vybrané záznamy?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the selected record?"
-msgstr ""
+msgstr "Opravdu chcete smazat vybraný záznam?"
 
 #. module: web
 #. odoo-javascript
@@ -1195,13 +1208,13 @@ msgstr "Opravdu chcete smazat tento sloupec?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Are you sure you want to delete this property field?"
-msgstr ""
+msgstr "Opravdu chcete smazat toto pole vlastnosti?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid "Are you sure you want to update %(count)s records?"
-msgstr ""
+msgstr "Opravdu chcete aktualizovat %(count)s záznamy?"
 
 #. module: web
 #. odoo-javascript
@@ -1620,7 +1633,7 @@ msgstr "Kozoroh"
 #. odoo-javascript
 #: code:addons/web/static/src/public/caps_lock_warning.xml:0
 msgid "Caps Lock is on!"
-msgstr ""
+msgstr "Caps Lock je zapnutý!"
 
 #. module: web
 #. odoo-javascript
@@ -2217,26 +2230,26 @@ msgstr "Vlastní vestavěna akce"
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Custom Filter"
-msgstr ""
+msgstr "Vlastní filtr"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Custom Filter..."
-msgstr ""
+msgstr "Vlastní filtr..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/custom_group_by_item/custom_group_by_item.xml:0
 msgid "Custom Group"
-msgstr ""
+msgstr "Vlastní skupina"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Custom range"
-msgstr ""
+msgstr "Vlastní rozsah"
 
 #. module: web
 #. odoo-python
@@ -2467,7 +2480,7 @@ msgstr "Smazat řádek"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "Delete rule"
-msgstr ""
+msgstr "Odstranit pravidlo"
 
 #. module: web
 #. odoo-javascript
@@ -2612,6 +2625,8 @@ msgid ""
 "Displays or hides the seconds in the datetime value. Affect only the "
 "readable datetime format."
 msgstr ""
+"Zobrazí nebo skryje sekundy v hodnotě datetime. Ovlivňuje pouze čitelný "
+"formát datetime."
 
 #. module: web
 #. odoo-javascript
@@ -2624,6 +2639,8 @@ msgstr "Zobrazí nebo skryje čas v hodnotě data a času."
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
 msgstr ""
+"Zobrazuje datum buď ve formátu 31/01/%(year)s, nebo ve formátu 31. ledna. %"
+"(year)s"
 
 #. module: web
 #. odoo-javascript
@@ -2847,7 +2864,7 @@ msgstr "Email"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_res_users_settings__embedded_actions_config_ids
 msgid "Embedded Actions Config"
-msgstr ""
+msgstr "Konfigurace vložených akcí"
 
 #. module: web
 #. odoo-javascript
@@ -3213,6 +3230,7 @@ msgid ""
 "For example, if the value is \"1\" and you enter \"+=2\", it will be updated "
 "to \"3\"."
 msgstr ""
+"Například pokud je hodnota „1“ a zadáte „+=2“, bude aktualizována na „3“."
 
 #. module: web
 #. odoo-javascript
@@ -3390,6 +3408,9 @@ msgid ""
 "click the %(upload_icon)s button now to ensure your work is saved before you "
 "exit this tab."
 msgstr ""
+"Pozor! Vaše poslední změny jsou příliš velké na to, aby se uložily "
+"automaticky. Klikněte nyní na tlačítko %(upload_icon)s, aby se vaše práce "
+"uložila před opuštěním této karty."
 
 #. module: web
 #. odoo-javascript
@@ -3432,7 +3453,7 @@ msgstr "Skryt technické detaily"
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/monetary/monetary_field.js:0
 msgid "Hide trailing zeros"
-msgstr ""
+msgstr "Skrýt koncové nuly"
 
 #. module: web
 #. odoo-javascript
@@ -3441,6 +3462,8 @@ msgstr ""
 msgid ""
 "Hide zeros to the right of the last non-zero digit, e.g. 1.20 becomes 1.2"
 msgstr ""
+"Skrýt nuly napravo od poslední číslice jiné než nula, např. 1,20 se změní na "
+"1,2"
 
 #. module: web
 #. odoo-javascript
@@ -3567,6 +3590,8 @@ msgid ""
 "If checked, the checkboxes will be displayed in a column. Otherwise, they "
 "will be inlined."
 msgstr ""
+"Pokud je zaškrtnuto, budou zaškrtávací políčka zobrazena ve sloupci. V "
+"opačném případě budou zarovnána do řádku."
 
 #. module: web
 #. odoo-javascript
@@ -3884,18 +3909,20 @@ msgid ""
 "It will be removed for everyone using the \"%(parentName)s\" %"
 "(parentFieldLabel)s."
 msgstr ""
+"Bude odstraněno pro všechny, kteří používají „%(parentName)s “ %"
+"(parentFieldLabel)s."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "It will be removed for everyone!"
-msgstr ""
+msgstr "Bude odstraněno pro všechny!"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Jan 31, %s"
-msgstr ""
+msgstr "31. ledna %s"
 
 #. module: web
 #. odoo-javascript
@@ -4124,7 +4151,7 @@ msgstr "Štítek:"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "Lack of inspiration?"
-msgstr ""
+msgstr "Nedostatek inspirace?"
 
 #. module: web
 #. odoo-python
@@ -4144,7 +4171,7 @@ msgstr "Velký"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "Posledních 12 měsíců"
 
 #. module: web
 #. odoo-javascript
@@ -4192,7 +4219,7 @@ msgstr "Naposledy změnil:"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Latest accepted date"
-msgstr ""
+msgstr "Poslední přijaté datum"
 
 #. module: web
 #. odoo-javascript
@@ -4220,7 +4247,7 @@ msgstr "Pozadí rozložení"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Leave Debug Mode"
-msgstr ""
+msgstr "Opustit režim ladění"
 
 #. module: web
 #. odoo-javascript
@@ -4262,7 +4289,7 @@ msgstr "nahrát demo data"
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_renderer.xml:0
 msgid "Load everything anyway."
-msgstr ""
+msgstr "Načíst vše stejně."
 
 #. module: web
 #. odoo-javascript
@@ -4359,7 +4386,7 @@ msgstr "Červený drak v Mahjongu"
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "MailDeliveryException"
-msgstr ""
+msgstr "MailDeliveryException"
 
 #. module: web
 #. odoo-javascript
@@ -4372,7 +4399,7 @@ msgstr "Hlavní akce"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 msgid "Make this embedded action available to other users"
-msgstr ""
+msgstr "Umožněte ostatním uživatelům využívat tuto vloženou akci"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -4383,19 +4410,19 @@ msgstr "Správa databází"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one_barcode/many2one_barcode_field.js:0
 msgid "Many2OneBarcode"
-msgstr ""
+msgstr "Many2OneBarcode"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one_reference/many2one_reference_field.js:0
 msgid "Many2OneReference"
-msgstr ""
+msgstr "Many2OneReference"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one_reference_integer/many2one_reference_integer_field.js:0
 msgid "Many2OneReferenceInteger"
-msgstr ""
+msgstr "Many2OneReferenceInteger"
 
 #. module: web
 #. odoo-javascript
@@ -4421,26 +4448,26 @@ msgstr "Párování"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Max value"
-msgstr ""
+msgstr "Maximální hodnota"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Max value field"
-msgstr ""
+msgstr "Pole maximální hodnoty"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Max: %(max)s"
-msgstr ""
+msgstr "Max: %(max)s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Maximal precision"
-msgstr ""
+msgstr "Maximální přesnost"
 
 #. module: web
 #. odoo-javascript
@@ -4471,12 +4498,12 @@ msgstr "Téma schůzky"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory limit (in bytes)"
-msgstr ""
+msgstr "Limit paměti (v bajtech)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory profile"
-msgstr ""
+msgstr "Profil paměti"
 
 #. module: web
 #. odoo-javascript
@@ -4520,25 +4547,25 @@ msgstr "Mléčná dráha"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Minimal precision"
-msgstr ""
+msgstr "Minimální přesnost"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 msgid "Minimum Digits"
-msgstr ""
+msgstr "Minimální počet číslic"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/timezone_mismatch/timezone_mismatch_field.js:0
 msgid "Mismatch title"
-msgstr ""
+msgstr "Nesoulad názvu"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Missing Action"
-msgstr ""
+msgstr "Chybějící akce"
 
 #. module: web
 #. odoo-javascript
@@ -4550,13 +4577,13 @@ msgstr "Chybějící záznam"
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "Missing record id"
-msgstr ""
+msgstr "Chybějící id záznamu"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/model/relational_model/record.js:0
 msgid "Missing required fields"
-msgstr ""
+msgstr "Chybějící povinná pole"
 
 #. module: web
 #. odoo-javascript
@@ -4588,13 +4615,13 @@ msgstr "Přístupová pravidla modelu"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/reference/reference_field.js:0
 msgid "Model field"
-msgstr ""
+msgstr "Modelové pole"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Model field:"
-msgstr ""
+msgstr "Modelové pole:"
 
 #. module: web
 #. odoo-javascript
@@ -4606,7 +4633,7 @@ msgstr "Model:"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 msgid "Model: %s"
-msgstr ""
+msgstr "Model: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_model
@@ -4617,7 +4644,7 @@ msgstr "Modely"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Modify filter"
-msgstr ""
+msgstr "Upravit filtr"
 
 #. module: web
 #. odoo-javascript
@@ -4643,7 +4670,7 @@ msgstr "Měsíc"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Month to date"
-msgstr ""
+msgstr "Za měsíc"
 
 #. module: web
 #. odoo-javascript
@@ -4664,7 +4691,7 @@ msgstr "Více"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "More Menu"
-msgstr ""
+msgstr "Další nabídka"
 
 #. module: web
 #. odoo-javascript
@@ -4689,25 +4716,25 @@ msgstr "Hora Fudži"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Move this Property down"
-msgstr ""
+msgstr "Přesunout tuto vkastnost dolů"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Move this Property up"
-msgstr ""
+msgstr "Přesunout tuto vlastnost nahoru"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Move to %s..."
-msgstr ""
+msgstr "Přesunout na %s..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Move to next %s"
-msgstr ""
+msgstr "Přejít na další %s"
 
 #. module: web
 #. odoo-javascript
@@ -4743,7 +4770,7 @@ msgstr "Víceřádkový text"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Multiple profile"
-msgstr ""
+msgstr "Více profilů"
 
 #. module: web
 #. odoo-javascript
@@ -4761,13 +4788,13 @@ msgstr "Muslim"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 msgid "My Odoo.com Account"
-msgstr ""
+msgstr "Můj účet Odoo.com"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 msgid "My Preferences"
-msgstr ""
+msgstr "Moje preference"
 
 #. module: web
 #. odoo-javascript
@@ -4822,13 +4849,13 @@ msgstr "Nová událost"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "New Property"
-msgstr ""
+msgstr "Nová vlastnost"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "New Rule"
-msgstr ""
+msgstr "Nové pravidlo"
 
 #. module: web
 #. odoo-javascript
@@ -4847,7 +4874,7 @@ msgstr "Nová šablona"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 msgid "New:"
-msgstr ""
+msgstr "Nový:"
 
 #. module: web
 #. odoo-javascript
@@ -4867,25 +4894,25 @@ msgstr "Další (šipka vpravo)"
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Next century"
-msgstr ""
+msgstr "Příští století"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Next decade"
-msgstr ""
+msgstr "Příští desetiletí"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Next month"
-msgstr ""
+msgstr "Příští měsíc"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Next year"
-msgstr ""
+msgstr "Příští rok"
 
 #. module: web
 #. odoo-javascript
@@ -4901,13 +4928,13 @@ msgstr "Ne"
 #: code:addons/web/static/src/views/fields/properties/property_value.js:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 msgid "No Access"
-msgstr ""
+msgstr "Žádný přístup"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/properties_group_by_item/properties_group_by_item.xml:0
 msgid "No Properties"
-msgstr ""
+msgstr "Žádné vlastnosti"
 
 #. module: web
 #. odoo-javascript
@@ -4925,7 +4952,7 @@ msgstr "Žádná barva"
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "No command found"
-msgstr ""
+msgstr "Nenalezen žádný příkaz"
 
 #. module: web
 #. odoo-javascript
@@ -4944,7 +4971,7 @@ msgstr "Žádná data k zobrazení"
 #. odoo-python
 #: code:addons/web/controllers/pivot.py:0
 msgid "No data to export"
-msgstr ""
+msgstr "Žádná data k exportu"
 
 #. module: web
 #. odoo-javascript
@@ -4956,13 +4983,13 @@ msgstr "Nebyl nalezen žádný debug příkaz"
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
 msgid "No device can be found."
-msgstr ""
+msgstr "Nelze najít žádné zařízení."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 msgid "No emoji matches your search"
-msgstr ""
+msgstr "Žádné emoji neodpovídá vašemu vyhledávání"
 
 #. module: web
 #. odoo-javascript
@@ -4974,13 +5001,13 @@ msgstr "Žádná shoda nenalezena."
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "No menu found"
-msgstr ""
+msgstr "Nenalezeno žádné menu"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "No record found"
-msgstr ""
+msgstr "Nenalezen žádný záznam"
 
 #. module: web
 #. odoo-javascript
@@ -4995,7 +5022,7 @@ msgstr "Žádné záznamy"
 #. odoo-javascript
 #: code:addons/web/static/src/search/action_menus/action_menus.js:0
 msgid "No report available."
-msgstr ""
+msgstr "Žádná zpráva není k dispozici."
 
 #. module: web
 #. odoo-javascript
@@ -5019,19 +5046,19 @@ msgstr "Žádné výsledky"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 msgid "No settings found"
-msgstr ""
+msgstr "Nenalezena žádná nastavení"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "No stages yet, let's create some!"
-msgstr ""
+msgstr "Zatím žádné fáze, pojďme nějaké vytvořit!"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/action_service.js:0
 msgid "No view of type '%s' could be found in the current action."
-msgstr ""
+msgstr "V aktuální akci nebyl nalezen žádný pohled typu \"%s\"."
 
 #. module: web
 #. odoo-javascript
@@ -5060,7 +5087,7 @@ msgstr "Není nastaveno"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_value_editors.js:0
 msgid "Not a valid %s"
-msgstr ""
+msgstr "Není platné %s"
 
 #. module: web
 #. odoo-javascript
@@ -5069,6 +5096,7 @@ msgid ""
 "Not possible to create monetary field because there is no currency on "
 "current model."
 msgstr ""
+"Nelze vytvořit pole pro měnu, protože v aktuálním modelu není žádná měna."
 
 #. module: web
 #. odoo-javascript
@@ -5222,6 +5250,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
+"Z vybraných záznamů %(selectedRecord)s byly archivovány/odarchivovány pouze "
+"první %(firstRecords)s."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -5263,7 +5293,7 @@ msgstr ""
 msgid ""
 "Only the first %(count)s records have been deleted (out of %(total)s "
 "selected)"
-msgstr ""
+msgstr "Byly smazány pouze první %(count)s záznamy (z vybraných %(total)s )"
 
 #. module: web
 #. odoo-python
@@ -5442,7 +5472,7 @@ msgstr "PDF soubor"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Page <span class=\"page\"/> / <span class=\"topage\"/>"
-msgstr ""
+msgstr "Stránka <span class=\"page\"/> / <span class=\"topage\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -5564,6 +5594,14 @@ msgid ""
 "                    For your reference, invalid xpath nodes are highlighted "
 "in red."
 msgstr ""
+"Vezměte prosím na vědomí, že váš pohled obsahuje neplatné lokalizátory.<br/>"
+"\n"
+"                    Tyto uzly nebylo možné ukotvit k nadřazenému pohledu a "
+"nemají žádný účinek.<br/>\n"
+"                    Tento problém mohl vzniknout v důsledku ručních úprav "
+"nebo během procesu aktualizace.<br/>\n"
+"                    Pro vaši informaci jsou neplatné uzly xpath zvýrazněny "
+"červeně."
 
 #. module: web
 #. odoo-javascript
@@ -5847,6 +5885,10 @@ msgid ""
 "\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
+"Jste připraveni nechat svůj záznam zmizet beze stopy? Jste si jisti?\n"
+"Bude navždy pryč!\n"
+"\n"
+"Než kliknete na tlačítko „Odstranit“, dobře si to rozmyslete!"
 
 #. module: web
 #. odoo-javascript
@@ -6526,6 +6568,8 @@ msgstr "Nastavit prioritu..."
 msgid ""
 "Set to true the full range input has to be display by default, even if empty."
 msgstr ""
+"Nastavte na hodnotu true, aby se standardně zobrazoval celý rozsah vstupu, i "
+"když je prázdný."
 
 #. module: web
 #. odoo-javascript
@@ -6647,6 +6691,8 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
+"Něco se pokazilo... Pokud se potýkáte s problémy, nahlaste to našemu "
+"přátelskému týmu podpory"
 
 #. module: web
 #. odoo-javascript
@@ -7031,6 +7077,8 @@ msgid ""
 "The selected file (%(size)sB) is larger than the maximum allowed file size (%"
 "(maxSize)sB)."
 msgstr ""
+"Vybraný soubor (%(size)sB) je větší než maximální povolená velikost souboru "
+"(%(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -7040,6 +7088,9 @@ msgid ""
 "that must be fixed for the entire database before continuing working. See "
 "browser console or server logs for details."
 msgstr ""
+"Kompilace stylu selhala. Jedná se o chybu správce nebo vývojáře, kterou je "
+"nutné opravit pro celou databázi, než budete pokračovat v práci. Podrobnosti "
+"najdete v konzoli prohlížeče nebo v protokolech serveru."
 
 #. module: web
 #: model:ir.model.constraint,message:web.constraint_res_users_settings_embedded_action_res_user_settings_e_91890fa3
@@ -7047,6 +7098,8 @@ msgid ""
 "The user should have one unique embedded action setting per user setting, "
 "action and record id."
 msgstr ""
+"Uživatel by měl mít jedno jedinečné nastavení vložených akcí pro každé "
+"uživatelské nastavení, akci a identifikátor záznamu."
 
 #. module: web
 #. odoo-javascript
@@ -7055,6 +7108,8 @@ msgid ""
 "There are too many data. The graph only shows a sample. Use the filters to "
 "refine the scope."
 msgstr ""
+"Je zde příliš mnoho dat. Graf zobrazuje pouze vzorek. Použijte filtry k "
+"upřesnění rozsahu."
 
 #. module: web
 #. odoo-python
@@ -7142,6 +7197,7 @@ msgid ""
 "This record belongs to a different parent so you can not change this "
 "property."
 msgstr ""
+"Tento záznam patří jinému nadřazenému , takže tuto vlastnost nelze změnit."
 
 #. module: web
 #. odoo-javascript
@@ -7328,6 +7384,8 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                        active filter in the search bar."
 msgstr ""
+"Zkuste přidat nějaké záznamy, nebo se ujistěte, že není žádný aktivní filtr "
+"ve vyhledávací liště."
 
 #. module: web
 #. odoo-javascript
@@ -7439,6 +7497,8 @@ msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html.%"
 "(link)s"
 msgstr ""
+"Nelze najít Wkhtmltopdf v tomto systému. Zpráva bude zobrazena ve formátu "
+"html.%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -7612,6 +7672,7 @@ msgid ""
 "Use the operators \"+=\", \"-=\", \"*=\" and \"/=\" to update the current "
 "value."
 msgstr ""
+"K aktualizaci aktuální hodnoty použijte operátory „+=“, „-=“, „*=“ a „/=“."
 
 #. module: web
 #. odoo-javascript
@@ -7626,6 +7687,9 @@ msgid ""
 "Use to override the display value (e.g. if your progress bar is a computed "
 "percentage but you want to display the actual field value instead)."
 msgstr ""
+"Použijte k přepsání zobrazené hodnoty (např. pokud je váš ukazatel průběhu "
+"vypočítán jako procento, ale vy chcete místo toho zobrazit skutečnou hodnotu "
+"pole)."
 
 #. module: web
 #. odoo-javascript
@@ -7635,6 +7699,9 @@ msgid ""
 "keys to adapt the saturation. Press the Control or Command key at the same "
 "time to have finer control."
 msgstr ""
+"Pomocí šipek nahoru a dolů upravte jas. Pomocí šipek doleva a doprava "
+"upravte nasycení. Pro jemnější nastavení stiskněte současně klávesu Control "
+"nebo Command."
 
 #. module: web
 #. odoo-javascript
@@ -7897,6 +7964,7 @@ msgid ""
 "Whether or not this Property Field is displayed in the Calendar, Cards & "
 "Kanban views"
 msgstr ""
+"Zda se toto pole vlastnosti zobrazuje v zobrazení Kalendáře, Karty a Kanban"
 
 #. module: web
 #. odoo-javascript
@@ -8031,6 +8099,7 @@ msgstr ""
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
 msgstr ""
+"Před otevřením dynamického výběru zástupných symbolů je třeba vybrat model."
 
 #. module: web
 #. odoo-javascript
@@ -8050,6 +8119,9 @@ msgid ""
 "to get a correct display of headers and footers as well as support for table-"
 "breaking between pages.%(link)s"
 msgstr ""
+"Abyste dosáhli správného zobrazení záhlaví a zápatí a podpořili rozdělení "
+"tabulek mezi stránkami, měli byste aktualizovat verzi programu Wkhtmltopdf "
+"alespoň na 0.12.0.%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -8065,6 +8137,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html.%(link)s"
 msgstr ""
+"Vaše instalace programu Wkhtmltopdf se zdá být nesprávná. Zpráva se zobrazí "
+"ve formátu html.%(link)s"
 
 #. module: web
 #. odoo-javascript

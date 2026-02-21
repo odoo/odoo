@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -76,15 +76,6 @@ msgstr "絶対的な初心者のための10のDIY家具のアイデア"
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "初心者のための木工のヒントとコツ6"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">ホームページ</a>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -1843,14 +1834,8 @@ msgstr "今後の活動"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
-"準備を整えて\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">お気に入りの講演に今すぐ登録しましょう。</a>"
+msgid "Get prepared and"
+msgstr "準備して"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1901,6 +1886,11 @@ msgstr "高"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "最高"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "ホームページ"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3606,6 +3596,12 @@ msgid "minutes after Track start"
 msgstr "分後(セッション開始から)"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "今すぐお気に入りのトークに登録してください。"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "で始まる"
@@ -3614,6 +3610,22 @@ msgstr "で始まる"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "に始まります"
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">ホームページ</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "準備を整えて\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">お気に入りの講演に今すぐ登録しましょう。</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3660,14 +3672,8 @@ msgstr "に始まります"
 #~ msgid "Filter Tracks..."
 #~ msgstr "フィルタートラック..."
 
-#~ msgid "Get prepared and"
-#~ msgstr "準備して"
-
 #~ msgid "Group By"
 #~ msgstr "グループ化"
-
-#~ msgid "Home page"
-#~ msgstr "ホームページ"
 
 #~ msgid "Number of messages which requires an action"
 #~ msgstr "アクションを必要とするメッセージの数"
@@ -3705,9 +3711,6 @@ msgstr "に始まります"
 
 #~ msgid "We did not find any track matching your"
 #~ msgstr "あなたに一致するトラックは見つかりませんでした"
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "今すぐお気に入りのトークに登録してください。"
 
 #~ msgid "search."
 #~ msgstr "探す。"

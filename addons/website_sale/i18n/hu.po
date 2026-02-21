@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-02-05 19:32+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-16 05:03+0000\n"
 "Last-Translator: Tommy Gombar <tommy.gombar@kilafornia.net>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/hu/>\n"
@@ -161,15 +161,6 @@ msgstr "50 %"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -349,6 +340,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">Rendelkezik már fiókkal ?</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -531,28 +527,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
 msgstr ""
 
 #. module: website_sale
@@ -1503,6 +1477,11 @@ msgstr ""
 "létrehozásához."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Kattintson ide"
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to open the reporting menu"
@@ -2333,7 +2312,7 @@ msgstr "Szerkesztés"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Edit address"
-msgstr "Cím változtatás"
+msgstr "Cím módosítás"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5059,6 +5038,11 @@ msgid "Sidebar"
 msgstr "Oldalsáv"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Regisztrálás"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Bejelentkezés"
@@ -6258,6 +6242,20 @@ msgid "hours."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "ha össze szeretné vonni a korábbi kosarát a jelenlegi kosarával."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"ha vissza szeretné állítani az előző kosarát. A jelenlegi kosarát felváltja "
+"az előző kosara."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr ""
@@ -6520,9 +6518,6 @@ msgstr ""
 #~ msgid "City"
 #~ msgstr "Város"
 
-#~ msgid "Click here"
-#~ msgstr "Kattintson ide"
-
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Easypost kiszállítás és szállítási költség számítás"
 
@@ -6736,9 +6731,6 @@ msgstr ""
 #~ msgid "Shopping cart"
 #~ msgstr "Bevásárló kosár"
 
-#~ msgid "Sign Up"
-#~ msgstr "Regisztrálás"
-
 #~ msgid "Sold"
 #~ msgstr "Eladva"
 
@@ -6861,16 +6853,6 @@ msgstr ""
 
 #~ msgid "e.g. Cheese Burger"
 #~ msgstr "pl.: Sajtburger"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "ha össze szeretné vonni a korábbi kosarát a jelenlegi kosarával."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "ha vissza szeretné állítani az előző kosarát. A jelenlegi kosarát "
-#~ "felváltja az előző kosara."
 
 #~ msgid "new address"
 #~ msgstr "új cím"

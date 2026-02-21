@@ -17,13 +17,14 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 21:53+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-02-16 10:59+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "mrp_subcontracting/pl/>\n"
 "Language: pl\n"
@@ -31,26 +32,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 msgid "%(name)s Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "%(name)s Podwykonawca ds. uzupełniania zapasów"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 msgid "%(name)s Sequence subcontracting"
-msgstr ""
+msgstr "%(name)s Podwykonawstwo sekwencyjne"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
 msgid "/my/productions"
-msgstr ""
+msgstr "/my/productions"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -61,7 +62,7 @@ msgstr "Wszystko"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
 msgid "Assign serial numbers to production order"
-msgstr ""
+msgstr "Przypisz numery seryjne do zlecenia produkcyjnego"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -127,7 +128,7 @@ msgstr "Kontakt"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
 msgid "Create New Production"
-msgstr ""
+msgstr "Utwórz nową produkcję"
 
 #. module: mrp_subcontracting
 #: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
@@ -191,7 +192,7 @@ msgstr "Wykonano"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
 msgid "Follow manufacturing orders you have to fulfill"
-msgstr ""
+msgstr "Wykonuj zlecenia produkcyjne, które musisz zrealizować."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
@@ -227,6 +228,8 @@ msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
+"Aby zapewnić dokładne zarządzanie zapasami, lokalizacje podwykonawców muszą "
+"być typu wewnętrznego i powiązane z odpowiednią firmą."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -312,6 +315,8 @@ msgstr "Zamówienie"
 msgid ""
 "Please set a lot/serial for the currently opened subcontracting MO first."
 msgstr ""
+"Najpierw należy ustawić numer partii/serii dla aktualnie otwartego zlecenia "
+"podwykonawczego MO."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -461,7 +466,7 @@ msgstr "Lokalizacje podwykonawstwa"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 msgid "Subcontracting MOs"
-msgstr ""
+msgstr "Podwykonawstwo MO"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -486,7 +491,7 @@ msgstr "Portal podwykonawczy"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracting Productions"
-msgstr ""
+msgstr "Produkcje podwykonawcze"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -549,7 +554,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 msgid "The subcontracted goods have already been received."
-msgstr ""
+msgstr "Towary zlecone podwykonawcom zostały już dostarczone."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -592,7 +597,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_unbuild.py:0
 msgid "You can't unbuild a subcontracted Manufacturing Order."
-msgstr ""
+msgstr "Nie można cofnąć zlecenia produkcyjnego zleconego podwykonawcy."
 
 #. module: mrp_subcontracting
 #. odoo-python

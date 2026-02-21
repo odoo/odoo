@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-01-30 09:26+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-20 09:20+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/fi/>\n"
@@ -212,19 +212,6 @@ msgstr "50%"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Luo tili</a>\n"
-"                 <span class=\"align-middle\">seurataksesi tilaustasi.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -434,6 +421,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">Onko sinulla jo tili?</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -667,40 +659,6 @@ msgstr "<span>päivää julkaisemisen jälkeen.</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr "<span>:</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Klikkaa tästä</a>,\n"
-"                            </strong> jos haluat yhdistää aiemman "
-"ostoskorisi nykyisen kanssa."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Klikkaa tästä</a>,\n"
-"                            </strong>jos haluat palauttaa aiemman "
-"ostoskorisi. Nykyinen ostoskorisi korvataan aiemmalla."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1737,6 +1695,11 @@ msgstr ""
 "Klikkaa<i>'Uusi'</i> oikeassa yläkulmassa luodaksesi ensimmäisen tuotteesi."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Klikkaa tästä"
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to open the reporting menu"
@@ -2477,8 +2440,7 @@ msgstr ""
 #: code:addons/website_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Sinulla ei ole oikeutta tähän toimintoon. Ohita tämä tieto käyttäjien "
-"yhteenvetosähköpostissa"
+"Ei pääsyoikeutta, jätä nämä tiedot pois käyttäjän yhteenvetosähköpostista"
 
 #. module: website_sale
 #. odoo-python
@@ -4505,17 +4467,17 @@ msgstr "Tuotetunnisteet"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Product Template"
-msgstr "Tuotemalli"
+msgstr "Tuotepohja"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Tuotemallin määriterivi"
+msgstr "Tuotepohjan määriterivi"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Tuotemallin määritteen arvo"
+msgstr "Tuotepohjan määritteen arvo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
@@ -4526,7 +4488,7 @@ msgstr "Tuotemallipohja"
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
 msgid "Product Variant"
-msgstr "Tuotevariantti"
+msgstr "Tuotevariaatio"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5075,7 +5037,7 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
-"Valitse <b>Uusi tuote</b>  luodaksesi sen ja hallinnoidaksesi tuotteen "
+"Valitse <b>Uusi tuote</b> luodaksesi sen ja hallinnoidaksesi tuotteen "
 "ominaisuuksia myynnin lisäämiseksi."
 
 #. module: website_sale
@@ -5346,6 +5308,11 @@ msgid "Sidebar"
 msgstr "Sivupalkki"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Liity"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Kirjaudu sisään"
@@ -5582,7 +5549,7 @@ msgstr "Toimitusehdot"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Terms and Conditions"
-msgstr "Ehdot & edellytykset"
+msgstr "Käyttöehdot"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5649,7 +5616,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "The delivery method is not compatible with your delivery address."
-msgstr ""
+msgstr "Toimitustapa ei ole yhteensopiva toimitusosoitteesi kanssa."
 
 #. module: website_sale
 #. odoo-python
@@ -6583,6 +6550,20 @@ msgid "hours."
 msgstr "tuntia."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "jos haluat yhdistää edellisen ostoskorisi nykyiseen ostoskoriin."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"jos halaut palauttaa edellisen ostoskorisi. Nykyinen ostoskorisi korvataan "
+"edellisellä ostoskorillasi."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "kategoriassa \""
@@ -6688,6 +6669,49 @@ msgstr "tilaus- &amp; toimitusehdot"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} kuva"
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Luo tili</a>\n"
+#~ "                 <span class=\"align-middle\">seurataksesi tilaustasi.</"
+#~ "span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Klikkaa tästä</a>,\n"
+#~ "                            </strong> jos haluat yhdistää aiemman "
+#~ "ostoskorisi nykyisen kanssa."
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Klikkaa tästä</a>,\n"
+#~ "                            </strong>jos haluat palauttaa aiemman "
+#~ "ostoskorisi. Nykyinen ostoskorisi korvataan aiemmalla."
 
 #~ msgid ""
 #~ "\"Optional\" allows guests to register from the order confirmation email "
@@ -7004,9 +7028,6 @@ msgstr "{{0}} kuva"
 
 #~ msgid "City"
 #~ msgstr "Kaupunki"
-
-#~ msgid "Click here"
-#~ msgstr "Klikkaa tästä"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Laske toimituskulut ja lähetä Easypostilla"
@@ -7430,9 +7451,6 @@ msgstr "{{0}} kuva"
 #~ msgid "Show b2b Fields"
 #~ msgstr "Näytä b2b-kentät"
 
-#~ msgid "Sign Up"
-#~ msgstr "Liity"
-
 #~ msgid "Slanted"
 #~ msgstr "Kallistunut"
 
@@ -7616,16 +7634,6 @@ msgstr "{{0}} kuva"
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "verkkokauppa"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "jos haluat yhdistää edellisen ostoskorisi nykyiseen ostoskoriin."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "jos halaut palauttaa edellisen ostoskorisi. Nykyinen ostoskorisi "
-#~ "korvataan edellisellä ostoskorillasi."
 
 #~ msgid "item(s))"
 #~ msgstr "tuotetta)"

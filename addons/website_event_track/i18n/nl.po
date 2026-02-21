@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-02-04 09:25+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -75,15 +75,6 @@ msgstr "10 doe-het-zelf meubelideeën voor absolute beginners."
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 tips en trucs voor houtbewerking voor beginners."
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Startpagina</a>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -1857,14 +1848,8 @@ msgstr "Toekomstige activiteiten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
-"Bereid je voor en\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">registreer nu voor je favoriete talks.</a>"
+msgid "Get prepared and"
+msgstr "Bereid je voor en"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1915,6 +1900,11 @@ msgstr "Hoog"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "Hoogste"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Startpagina"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3635,6 +3625,12 @@ msgid "minutes after Track start"
 msgstr "minuten nadat de track begint"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "registreer je nu voor je favoriete presentaties."
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "Begint in"
@@ -3643,6 +3639,22 @@ msgstr "Begint in"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "begint om"
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Startpagina</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "Bereid je voor en\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">registreer nu voor je favoriete talks.</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3739,14 +3751,8 @@ msgstr "begint om"
 #~ msgid "Filter Tracks..."
 #~ msgstr "Filteren op tracks..."
 
-#~ msgid "Get prepared and"
-#~ msgstr "Bereid je voor en"
-
 #~ msgid "Group By"
 #~ msgstr "Groeperen op"
-
-#~ msgid "Home page"
-#~ msgstr "Startpagina"
 
 #~ msgid "No results found"
 #~ msgstr "Geen resultaten gevonden"
@@ -3812,9 +3818,6 @@ msgstr "begint om"
 #~ "                            interessant en mogelijk nuttig is voor het\n"
 #~ "                            publiek, kan het in het programma\n"
 #~ "                            worden opgenomen."
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "registreer je nu voor je favoriete presentaties."
 
 #~ msgid "search."
 #~ msgstr "zoekopdracht."

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2026-02-05 03:02+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -192,20 +192,6 @@ msgstr "50 %"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">회원 가입</a>하면\n"
-"                    <span class=\"align-middle\">주문 내역을 조회할 수 있습니"
-"다.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -405,6 +391,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">이미 계정이 있으신가요?</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -613,40 +604,6 @@ msgstr "<span>일이 게시 후 경과되었습니다.</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr "<span>대상</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">여기를 클릭하세요</a>\n"
-"                            </strong> 이전 장바구니가 현재 장바구니에 합쳐집"
-"니다."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">여기를 클릭하세요</a>\n"
-"                            </strong> 이전 장바구니 내역이 복원되어 현재 사"
-"용 중인 장바구니 내역이 이전으로 바뀝니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1662,6 +1619,11 @@ msgstr "클랙 앤 콜렉트"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr "첫 번째 제품을 만들려면 오른쪽 상단의 \"새로 만들기\"를 클릭하십시오."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "여기를 클릭하세요"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5233,6 +5195,11 @@ msgid "Sidebar"
 msgstr "사이드바"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "가입"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "로그인"
@@ -6452,6 +6419,18 @@ msgid "hours."
 msgstr "시간."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "이전 장바구니를 현재 장바구니에 병합하려는 경우."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr "이전 장바구니를 복원하려는 경우 현재 카트가 이전 카트로 바뀝니다."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "다음 범주에서 \""
@@ -6550,6 +6529,49 @@ msgstr "이용 &amp; 약관"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} 이미지"
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">회원 가입</a>하면\n"
+#~ "                    <span class=\"align-middle\">주문 내역을 조회할 수 있"
+#~ "습니다.</span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">여기를 클릭하세요</a>\n"
+#~ "                            </strong> 이전 장바구니가 현재 장바구니에 합쳐"
+#~ "집니다."
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">여기를 클릭하세요</a>\n"
+#~ "                            </strong> 이전 장바구니 내역이 복원되어 현재 "
+#~ "사용 중인 장바구니 내역이 이전으로 바뀝니다."
 
 #~ msgid "placeholder"
 #~ msgstr "자리 표시자"
@@ -6839,9 +6861,6 @@ msgstr "{{0}} 이미지"
 
 #~ msgid "City"
 #~ msgstr "시/군/구"
-
-#~ msgid "Click here"
-#~ msgstr "여기를 클릭하세요"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Easypost로 배송비를 계산 및 배송합니다."
@@ -7188,9 +7207,6 @@ msgstr "{{0}} 이미지"
 #~ msgid "Shopping cart"
 #~ msgstr "쇼핑한 장바구니"
 
-#~ msgid "Sign Up"
-#~ msgstr "가입"
-
 #~ msgid "Sold"
 #~ msgstr "판매됨"
 
@@ -7329,14 +7345,6 @@ msgstr "{{0}} 이미지"
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "이커머스 온라인 상점"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "이전 장바구니를 현재 장바구니에 병합하려는 경우."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr "이전 장바구니를 복원하려는 경우 현재 카트가 이전 카트로 바뀝니다."
 
 #~ msgid "new address"
 #~ msgstr "새 주소 입력"

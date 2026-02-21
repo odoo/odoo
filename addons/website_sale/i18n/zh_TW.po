@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2026-02-03 07:25+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -196,19 +196,6 @@ msgid "66 %"
 msgstr "66%"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">註冊</a>帳戶\n"
-"                    <span class=\"align-middle\">以追蹤訂單進度。</span>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list_collapsible
@@ -277,8 +264,8 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
 "                    <span class=\"o_label small ms-1\">加入購物車</span>"
 
 #. module: website_sale
@@ -326,8 +313,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
 "class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span class="
-"\"o_label small ms-1\">加入購物車</span>"
+"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+"class=\"o_label small ms-1\">加入購物車</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -412,6 +399,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">已有帳戶？</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -643,39 +635,6 @@ msgid "<span>for</span>"
 msgstr "<span>為</span>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">按此處</a>\n"
-"                            </strong>將先前的購物車合併至目前購物車。"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">按此處</a>\n"
-"                            </strong>恢復先前的購物車，它將取代你目前的購物"
-"車。"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<strong>Documents</strong>"
 msgstr "<strong>文件</strong>"
@@ -873,7 +832,8 @@ msgstr "產品可以是實體產品，也可以是您向客戶銷售的服務。
 msgid ""
 "A single feed cannot contain more than %(limit)s products. Please separate "
 "products with Categories."
-msgstr "單一產品清單不可包含超過 %(limit)s 項產品。請使用「類別」將產品分類列出。"
+msgstr ""
+"單一產品清單不可包含超過 %(limit)s 項產品。請使用「類別」將產品分類列出。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -992,7 +952,8 @@ msgstr "「加入購物車」操作"
 msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to "
 "the                           sale price"
-msgstr "除售價外，加入產品每計量單位的參考價格                           （例如：每公"
+msgstr ""
+"除售價外，加入產品每計量單位的參考價格                           （例如：每公"
 "斤價錢）"
 
 #. module: website_sale
@@ -1363,10 +1324,10 @@ msgid ""
 "minimum purchase amount, period). Rewards can be discounts (% or "
 "amount)                            or free products."
 msgstr ""
-"利用多種計劃刺激銷售額：優惠券、推廣促銷、                            禮品卡"
-"、會員/忠誠度計劃。你可設定特定條件（適用產品、客戶、"
-"                            最低消費額、有效期）。獎勵可以是折扣（百分比或指"
-"定金額）                            或免費禮品。"
+"利用多種計劃刺激銷售額：優惠券、推廣促銷、                            禮品"
+"卡、會員/忠誠度計劃。你可設定特定條件（適用產品、客"
+"戶、                            最低消費額、有效期）。獎勵可以是折扣（百分比"
+"或指定金額）                            或免費禮品。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1688,6 +1649,11 @@ msgstr "網購店取"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr "點選右上角<i>的『新建』</i>來建立您的第一件產品。"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -4807,7 +4773,8 @@ msgstr "退貨"
 msgid ""
 "Reverses the horizontal order of items on desktop and larger screens (mobile "
 "layout remains unchanged)"
-msgstr "在桌上型電腦及較大的螢幕上，倒轉商品的水平排序（流動裝置版面佈局維持不變）"
+msgstr ""
+"在桌上型電腦及較大的螢幕上，倒轉商品的水平排序（流動裝置版面佈局維持不變）"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5255,6 +5222,11 @@ msgid "Sidebar"
 msgstr "側邊欄"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "登入"
@@ -5563,7 +5535,8 @@ msgid ""
 "The feed %(feed_name)s contains more than %(limit)s products, which may not "
 "be fully updated. Consider refining the feed by adjusting the product "
 "categories."
-msgstr "資訊流「%(feed_name)s」包含的產品數量超過 %(limit)s 件，可能未能完全更新。建"
+msgstr ""
+"資訊流「%(feed_name)s」包含的產品數量超過 %(limit)s 件，可能未能完全更新。建"
 "議調整產品類別，收窄資訊流的範圍。"
 
 #. module: website_sale
@@ -5611,7 +5584,8 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new "
 "product                            created but not of products already "
 "existing."
-msgstr "此處選擇的模式適用於任何新增的產品的發票政策，                            但"
+msgstr ""
+"此處選擇的模式適用於任何新增的產品的發票政策，                            但"
 "不適用於已有產品的發票政策。"
 
 #. module: website_sale
@@ -5785,8 +5759,8 @@ msgid ""
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
 "若要在 B2B 模式中傳送邀請，請開啟一個聯絡人，                            或在"
-"列表檢視畫面中選擇多個聯絡人，然後在 *動作* 下拉式選單中，按一下             "
-"               「門戶網站存取管理」選項。"
+"列表檢視畫面中選擇多個聯絡人，然後在 *動作* 下拉式選單中，按一"
+"下                            「門戶網站存取管理」選項。"
 
 #. module: website_sale
 #. odoo-python
@@ -6464,6 +6438,18 @@ msgid "hours."
 msgstr "小時。"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "於類別 \""
@@ -6569,6 +6555,47 @@ msgstr "條款和條件"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} 圖片"
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">註冊</a>帳戶\n"
+#~ "                    <span class=\"align-middle\">以追蹤訂單進度。</span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">按此處</a>\n"
+#~ "                            </strong>將先前的購物車合併至目前購物車。"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">按此處</a>\n"
+#~ "                            </strong>恢復先前的購物車，它將取代你目前的購"
+#~ "物車。"
 
 #~ msgid ""
 #~ "\"Optional\" allows guests to register from the order confirmation email "

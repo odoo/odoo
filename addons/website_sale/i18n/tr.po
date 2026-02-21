@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2025-11-21 14:46+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -213,20 +213,6 @@ msgstr "% 50"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "% 66"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Siparişinizi takip etmek için</"
-"a>\n"
-"                    <span class=\"align-middle\">adresine kaydolun.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -432,6 +418,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">Zaten bir hesabınız var mı?</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -665,42 +656,6 @@ msgstr "<span>yayınlandıktan sonraki günler.</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr "<span>için</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">{{access_token}}&amp;revive_method=merge\">Önceki "
-"sepetinizi mevcut sepetinizle birleştirmek istiyorsanız buraya</a>\n"
-"                            </strong> tıklayın."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">{{access_token}}"
-"&amp;revive_method=squash\">Önceki sepetinizi geri yüklemek istiyorsanız "
-"buraya</a>\n"
-"                            </strong> tıklayın. Mevcut sepetiniz önceki "
-"sepetinizle değiştirilecektir."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1738,6 +1693,11 @@ msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
 "İlk ürününüzü oluşturmak için sağ üst köşedeki <i>Yeni'yi </i> 'tıklayın."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Buraya tıklayın"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5350,6 +5310,11 @@ msgid "Sidebar"
 msgstr "Kenar Çubuğu"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Üye Ol"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Giriş"
@@ -6585,6 +6550,20 @@ msgid "hours."
 msgstr "Saatlerce."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "eğer bu sepetiniz ile öncekini birleştirmek istiyorsanız."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"Eğer önceki sepetinizi güncellemek isterseniz, şimdiki sepetini önceki "
+"sepetinizin yerini alacaktır."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "kategorisinde \""
@@ -6690,6 +6669,52 @@ msgstr "şartlar &amp; koşullar"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} görüntü"
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Siparişinizi takip etmek "
+#~ "için</a>\n"
+#~ "                    <span class=\"align-middle\">adresine kaydolun.</span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">{{access_token}}"
+#~ "&amp;revive_method=merge\">Önceki sepetinizi mevcut sepetinizle "
+#~ "birleştirmek istiyorsanız buraya</a>\n"
+#~ "                            </strong> tıklayın."
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">{{access_token}}"
+#~ "&amp;revive_method=squash\">Önceki sepetinizi geri yüklemek istiyorsanız "
+#~ "buraya</a>\n"
+#~ "                            </strong> tıklayın. Mevcut sepetiniz önceki "
+#~ "sepetinizle değiştirilecektir."
 
 #~ msgid "placeholder"
 #~ msgstr "yer tutucu"
@@ -7020,9 +7045,6 @@ msgstr "{{0}} görüntü"
 
 #~ msgid "City"
 #~ msgstr "Semt/İlçe"
-
-#~ msgid "Click here"
-#~ msgstr "Buraya tıklayın"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Teslimat maliyetini hesaplayın ve Easypost ile gönderin"
@@ -7447,9 +7469,6 @@ msgstr "{{0}} görüntü"
 #~ msgid "Show b2b Fields"
 #~ msgstr "b2b Alanlarını Göster"
 
-#~ msgid "Sign Up"
-#~ msgstr "Üye Ol"
-
 #~ msgid "Slanted"
 #~ msgstr "Eğimli"
 
@@ -7633,16 +7652,6 @@ msgstr "{{0}} görüntü"
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "e-Ticaret Mağazası"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "eğer bu sepetiniz ile öncekini birleştirmek istiyorsanız."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "Eğer önceki sepetinizi güncellemek isterseniz, şimdiki sepetini önceki "
-#~ "sepetinizin yerini alacaktır."
 
 #~ msgid "item(s))"
 #~ msgstr "kalem(ler))"

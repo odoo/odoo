@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_sms
+# * project_sms
 #
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-10-08 18:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2026-02-16 05:04+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"project_sms/sk/>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project_sms
 #: model:ir.model,website_form_label:project_sms.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Vytvoriť úlohu"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project__display_name
@@ -27,7 +30,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_sms.field_project_task__display_name
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný názov"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project__id
@@ -35,7 +38,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_sms.field_project_task__id
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_project_stage__sms_template_id
@@ -43,6 +46,8 @@ msgid ""
 "If set, an SMS Text Message will be automatically sent to the customer when "
 "the project reaches this stage."
 msgstr ""
+"Ak je táto možnosť nastavená, zákazníkovi bude automaticky odoslaná SMS "
+"správa, keď projekt vstúpi do tejto fázy."
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_task_type__sms_template_id
@@ -50,38 +55,40 @@ msgid ""
 "If set, an SMS Text Message will be automatically sent to the customer when "
 "the task reaches this stage."
 msgstr ""
+"Ak je táto možnosť nastavená, zákazníkovi bude automaticky odoslaná SMS "
+"správa, keď úloha vstúpi do tejto fázy."
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "Fáza projektu"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project_stage__sms_template_id
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS šablóna"
 
 #. module: project_sms
 #: model:ir.actions.act_window,name:project_sms.project_project_act_window_sms_composer
 #: model:ir.actions.act_window,name:project_sms.project_task_act_window_sms_composer
 msgid "Send SMS"
-msgstr ""
+msgstr "Poslať SMS"
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Úloha"
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Fáza úlohy"
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_task__display_name
@@ -98,3 +105,14 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Na nastavenie nových úloh použite tieto kľúčové slová v názve:\n"
+"\n"
+"        30h Prideliť úlohe 30 hodín\n"
+"        #tags Nastaviť značky úlohy\n"
+"        @user Prideliť úlohu používateľovi\n"
+"        ! Nastaviť úlohu ako strednú prioritu\n"
+"        !! Nastaviť úlohu ako vysokú prioritu\n"
+"        !!! Nastavte úlohe naliehavú prioritu\n"
+"\n"
+"        Uistite sa, že používate správny formát a poradie, napr. Vylepšiť "
+"konfiguračnú obrazovku 5h #bug #v16 @Jano !"
