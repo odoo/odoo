@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:39+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-01-16 14:24+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -57,13 +57,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
 msgstr ". Eine andere Suche versuchen."
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
-msgid ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</a>"
-msgstr ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">Zurück zur Website</a>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -173,18 +166,18 @@ msgid ""
 "            </t>"
 msgstr ""
 "<t>\n"
-"                            Hallo <t t-out=\"object.name or ''\">Marc "
-"Demo</t>,<br/><br/>\n"
+"                            Hallo <t t-out=\"object.name or ''\">Marc Demo</"
+"t>,<br/><br/>\n"
 "                            Sie wurden gebeten, Ihre E-Mail-Adresse zu "
-"bestätigen, um Zugang zur Website <t t-out=\"object.company_id.name or ''\""
-">IhrUnternehmen</t> zu erhalten.\n"
+"bestätigen, um Zugang zur Website <t t-out=\"object.company_id.name or "
+"''\">IhrUnternehmen</t> zu erhalten.\n"
 "                            Um Ihre E-Mail-Adresse zu bestätigen, klicken "
 "Sie bitte auf die Schaltfläche unten:\n"
 "                           <div style=\"margin: 32px 0px 32px 0px;\">\n"
-"                                <a t-att-href=\"ctx.get('token_url')\" t"
-"-attf-style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\"> \n"
 "                                    Mein Konto bestätigen\n"
 "                               </a>\n"
@@ -480,6 +473,11 @@ msgid "Ranks and Badges"
 msgstr "Ränge und Abzeichen"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
+msgid "Return to the website."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr "Suchen"
@@ -711,3 +709,9 @@ msgstr "Profilvalidierung von {{ object.company_id.name }}"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "└ Users"
 msgstr "└ Benutzer"
+
+#~ msgid ""
+#~ "<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</"
+#~ "a>"
+#~ msgstr ""
+#~ "<a class=\"o_translate_inline\" t-attf-href=\"/\">Zurück zur Website</a>"

@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:22+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-21 13:44+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/de/>\n"
@@ -85,6 +85,14 @@ msgstr ""
 "   z. B. 180 / (1 - 10 %) = 200 (nicht im Preis enthalten)\n"
 "   z. B. 200 * (1 - 10 %) = 180 (im Preis enthalten)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1785,14 +1793,8 @@ msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<span>1.00</span>\n"
-"                                                            <span "
-"groups=\"uom.group_uom\">Units</span>"
+msgid "<span>1.00</span>"
 msgstr ""
-"<span>1,00</span>\n"
-"                                                            <span "
-"groups=\"uom.group_uom\">Einheiten</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5981,6 +5983,8 @@ msgid "Chart of accounts set!"
 msgstr "Kontenplan eingestellt!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Prüfung"
@@ -11892,6 +11896,7 @@ msgstr "Journal:"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Journale"
 
@@ -18501,6 +18506,14 @@ msgstr ""
 "Der Geschäftspartner wurde für alle zugehörigen Buchungen aktualisiert."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Das Unternehmen, zu dem diese Verteilungszeile gehört."
@@ -19063,6 +19076,14 @@ msgstr "Der Restbetrag einer Buchungszeile, in Unternehmenswährung angegeben."
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
 "Der laufende Saldo (%s) stimmt nicht mit dem angegebenen Endsaldo überein."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20307,6 +20328,11 @@ msgid "Unit Price:"
 msgstr "Einzelpreis:"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Units"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr "Einheiten & Verpackungen"
@@ -21429,6 +21455,8 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Sie können den Betrag einer Zahlung mit mehreren Liquiditätszeilen nicht "
+"ändern."
 
 #. module: account
 #. odoo-python
@@ -21831,6 +21859,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Sie können den Typ eines Dokuments mit einer vorhandenen Sequenznummer nicht "
+"ändern."
 
 #. module: account
 #. odoo-python
@@ -22652,6 +22682,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'k. A.' }})"
+
+#~ msgid ""
+#~ "<span>1.00</span>\n"
+#~ "                                                            <span "
+#~ "groups=\"uom.group_uom\">Units</span>"
+#~ msgstr ""
+#~ "<span>1,00</span>\n"
+#~ "                                                            <span "
+#~ "groups=\"uom.group_uom\">Einheiten</span>"
 
 #~ msgid ""
 #~ "<br/>\n"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 12:21+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -203,18 +203,6 @@ msgstr "50%"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66%"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
-"o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
-"o_translate_inline\">ご登録</a>\n"
-"                    <span class=\"align-middle\">いただくとご注文を追跡できま"
-"す。</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -417,6 +405,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">すでにアカウントをお持ちですか?</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -651,41 +644,6 @@ msgstr "<span>日後(公開日より)。</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr "<span>対象：</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                現在のカートに以前のカートを統合したい場合"
-"は、<a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}"
-"&amp;access_token={{access_token}}&amp;revive_method=merge\">こちらをクリック"
-"</a>\n"
-"                            </strong> してください。"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                               以前のカートを復元したい場合は、<a "
-"class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}"
-"&amp;access_token={{access_token}}&amp;revive_method=squash\">こちらをクリッ"
-"ク</a>\n"
-"                            </strong> してください。現在のカートは以前のカー"
-"トに置き換えられます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2232,6 +2190,11 @@ msgstr "クリック＆コレクト"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr "右上の<i>新規</i>をクリックして、最初の製品を作成しましょう。"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -4239,7 +4202,8 @@ msgstr "カゴ落ちが見つかりませんでした"
 msgid ""
 "No delivery method is available for your current order and shipping address. "
 "Please contact us for more information."
-msgstr "現在のご注文内容と配送先では、ご利用可能な配送方法がありません。詳細について"
+msgstr ""
+"現在のご注文内容と配送先では、ご利用可能な配送方法がありません。詳細について"
 "はお問い合わせください。"
 
 #. module: website_sale
@@ -5837,6 +5801,11 @@ msgid "Sidebar"
 msgstr "サイドバー"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "サインイン"
@@ -6320,7 +6289,8 @@ msgstr "こちらは現在のカートです。"
 msgid ""
 "This note is added to sales orders, invoices, eCommerce listing and SEO "
 "descriptions."
-msgstr "このメモは、販売オーダ、請求書、eコマース商品リスト、およびSEO説明文に追加さ"
+msgstr ""
+"このメモは、販売オーダ、請求書、eコマース商品リスト、およびSEO説明文に追加さ"
 "れます。"
 
 #. module: website_sale
@@ -7068,6 +7038,18 @@ msgid "hours."
 msgstr "時間。"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "、カテゴリ:「"
@@ -7202,6 +7184,48 @@ msgstr "利用規約"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} 画像"
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
+#~ "o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
+#~ "o_translate_inline\">ご登録</a>\n"
+#~ "                    <span class=\"align-middle\">いただくとご注文を追跡で"
+#~ "きます。</span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                現在のカートに以前のカートを統合したい場合"
+#~ "は、<a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}"
+#~ "&amp;access_token={{access_token}}&amp;revive_method=merge\">こちらをク"
+#~ "リック</a>\n"
+#~ "                            </strong> してください。"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                               以前のカートを復元したい場合は、<a "
+#~ "class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}"
+#~ "&amp;access_token={{access_token}}&amp;revive_method=squash\">こちらをク"
+#~ "リック</a>\n"
+#~ "                            </strong> してください。現在のカートは以前の"
+#~ "カートに置き換えられます。"
 
 #~ msgid "Ecommerce Shop"
 #~ msgstr "eコマースショップ"

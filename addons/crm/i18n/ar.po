@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2026-02-14 12:05+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/crm/ar/"
@@ -233,19 +233,6 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> "
-"+ </span>\n"
-"                                        <span class=\"opacity-50 p-2\" "
-"groups=\"!crm.group_use_recurring_revenues\"> at </span>"
-msgstr ""
-"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> "
-"+ </span>\n"
-"                                        <span class=\"opacity-50 p-2\" "
-"groups=\"!crm.group_use_recurring_revenues\"> في </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"opacity-50 p-2\"> %</span>"
 msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 
@@ -334,19 +321,19 @@ msgstr ""
 "<t>\n"
 "مرحباً <t t-out=\"object.partner_id and object.partner_id.name or ''\">Acme "
 "Corporation</t>،<br/><br/>\n"
-"مرحباً بكم إلى <t t-out=\"object.company_id.name or ''\">شركتي (سان فرانسيسكو)"
-"</t>.\n"
-"نحن مسرورون بلقائك! الآن بعد انضمامك إلينا، ستكتشف ما بوسع <t t-out="
-"\"object.company_id.name or ''\">شركتي (سان فرانسيسكو)</t> القيام به. اسمي "
-"هو <t t-out=\"object.user_id.name or ''\">مارك ديمو</t> وسأساعدك على تحقيق "
-"الاستفادة القصوى من برنامج أودو. هل يمكننا تحديد موعد لتجربة سريعة قريبًا؟<br/"
-">\n"
+"مرحباً بكم إلى <t t-out=\"object.company_id.name or ''\">شركتي (سان "
+"فرانسيسكو)</t>.\n"
+"نحن مسرورون بلقائك! الآن بعد انضمامك إلينا، ستكتشف ما بوسع <t t-"
+"out=\"object.company_id.name or ''\">شركتي (سان فرانسيسكو)</t> القيام به. "
+"اسمي هو <t t-out=\"object.user_id.name or ''\">مارك ديمو</t> وسأساعدك على "
+"تحقيق الاستفادة القصوى من برنامج أودو. هل يمكننا تحديد موعد لتجربة سريعة "
+"قريبًا؟<br/>\n"
 "لا تتردد في التواصل معنا في أي وقت!<br/><br/>\n"
 "مع وافر الشكر والتقدير،<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">مارك ديمو</t></b>\n"
-"    <br/>البريد الإلكتروني: <t t-out=\"object.user_id.email or ''\""
-">mark.brown23@example.com</t>\n"
+"    <br/>البريد الإلكتروني: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>رقم الهاتف: <t t-out=\"object.user_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
 "</t>\n"
@@ -4052,14 +4039,15 @@ msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
 "tabindex=\"-1\">join a team.</a>"
 msgstr ""
-"للعمل باستخدام نظام إدارة علاقات العملاء، عليك <a name=\"%d\" type=\"action\""
-" tabindex=\"-1\">الانضمام إلى فريق.</a> "
+"للعمل باستخدام نظام إدارة علاقات العملاء، عليك <a name=\"%d\" "
+"type=\"action\" tabindex=\"-1\">الانضمام إلى فريق.</a> "
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "To work with the CRM, you should join a team."
-msgstr "للعمل باستخدام نظام إدارة علاقات العملاء (CRM)، عليك الانضمام إلى فريق."
+msgstr ""
+"للعمل باستخدام نظام إدارة علاقات العملاء (CRM)، عليك الانضمام إلى فريق."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4481,6 +4469,11 @@ msgstr "اللقب"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
 msgstr "مثال: \"شهري\""
@@ -4630,6 +4623,17 @@ msgstr "عنوان بريد إلكتروني صالح"
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr "رقم هاتف صالح"
+
+#~ msgid ""
+#~ "<span class=\"opacity-50 p-2\" "
+#~ "groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+#~ "                                        <span class=\"opacity-50 p-2\" "
+#~ "groups=\"!crm.group_use_recurring_revenues\"> at </span>"
+#~ msgstr ""
+#~ "<span class=\"opacity-50 p-2\" "
+#~ "groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+#~ "                                        <span class=\"opacity-50 p-2\" "
+#~ "groups=\"!crm.group_use_recurring_revenues\"> في </span>"
 
 #~ msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
 #~ msgstr "<i class=\"fa fa-building\" title=\"الشركة \"/>"

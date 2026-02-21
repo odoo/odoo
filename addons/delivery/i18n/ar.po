@@ -10,22 +10,23 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/delivery/"
-"ar/>\n"
+"PO-Revision-Date: 2026-02-21 13:27+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
+"delivery/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: delivery
 #. odoo-python
@@ -99,7 +100,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Delivery Description</strong>"
-msgstr ""
+msgstr "<strong>وصف عملية التسليم</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -131,7 +132,7 @@ msgstr "إضافة"
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
-msgstr ""
+msgstr "أضف طريقة توصيل"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -338,7 +339,7 @@ msgstr "طريقة التوصيل"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "معالج اختيار طريقة التوصيل "
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -386,6 +387,8 @@ msgid ""
 "Delivery method %(name)s cannot have the same tag in both Must Have Tags and "
 "Excluded Tags."
 msgstr ""
+"لا يمكن أن يكون لطريقة التوصيل %(name)s نفس العلامة في كل من "
+"\"العلامات الضرورية\" و\"العلامات المستثناة\"."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -393,6 +396,9 @@ msgid ""
 "Delivery method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"تفاصيل طريقة التوصيل التي يجب تضمينها في أسفل أوامر البيع ورسائل البريد "
+"الإلكتروني الخاصة بتأكيدها. على سبيل المثال، التعليمات التي يجب على العملاء "
+"اتباعها."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -400,6 +406,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery methods to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"يتم تعيين بادئات الرموز البريدية للتسليم لطرق التوصيل لتقييد\n"
+"            الرموز البريدية المتاحة لها."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -499,6 +507,7 @@ msgid ""
 "Filling this form allows you to make the delivery method available according "
 "to the content of the order or its destination."
 msgstr ""
+"ستؤدي تعبئة هذه الاستمارة إلى تحديد طريقة التوصيل وفقًا لمحتوى الطلب أو وجهته."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -796,6 +805,10 @@ msgid ""
 "lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. "
 "'100$' will only match '100' and not '1000')"
 msgstr ""
+"بادئات الرموز البريدية التي تنطبق عليها طريقة التوصيل هذه. لاحظ أنه يمكن "
+"استخدام التعبيرات العادية لدعم البلدان التي تختلف فيها أطوال الرموز البريدية،"
+" أي يمكن إضافة \"$\" إلى نهاية البادئة لمطابقة الرمز البريدي الدقيق "
+"(على سبيل المثال، \"100$\" سيطابق \"100\" فقط وليس \"1000\") "
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -1105,6 +1118,8 @@ msgid ""
 "You cannot delete this product category as it is used on the products linked "
 "to delivery methods."
 msgstr ""
+"لا يمكنك حذف فئة المنتجات هذه لأنها مستخدمة في المنتجات المرتبطة بطرق "
+"التوصيل."
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod

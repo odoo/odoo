@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 12:11+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -305,19 +305,19 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Kính gửi <b><t t-out="
-"\"object.env.context.get('manager')\"/></b> ,\n"
+"                    Kính gửi <b><t t-out=\"object.env.context.get('manager')"
+"\"/></b> ,\n"
 "                   <br/><br/> \n"
 "                   <p> Tôi xin đề nghị nghỉ phép. Rất mong quý vị có thể phê "
 "duyệt sớm nhất có thể!</p>\n"
 "                    <ul>\n"
-"                       <li> Loại nghỉ phép: <t t-out="
-"\"object.holiday_status_id.name\"/></li>\n"
-"                       <li><t t-out=\"object.request_date_from\"/> → <t "
-"t-out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)"
-"</li>\n"
-"                        <li t-if=\"object.name\">Lý do: <t t-out="
-"\"object.name\"/></li>\n"
+"                       <li> Loại nghỉ phép: <t t-"
+"out=\"object.holiday_status_id.name\"/></li>\n"
+"                       <li><t t-out=\"object.request_date_from\"/> → <t t-"
+"out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
+"li>\n"
+"                        <li t-if=\"object.name\">Lý do: <t t-"
+"out=\"object.name\"/></li>\n"
 "                   </ul>\n"
 "                </div> \n"
 "            "
@@ -2894,9 +2894,10 @@ msgid "Meeting"
 msgstr "Cuộc họp"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__member_of_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__member_of_department
-msgid "Member of department"
-msgstr "Thành viên của phòng ban"
+msgid "Member of Department"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
@@ -4996,15 +4997,6 @@ msgid "When the time is accrued?"
 msgstr "Khi nào thời gian được tích lũy?"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_report_calendar__member_of_department
-msgid ""
-"Whether the employee is a member of the active user's department or one of "
-"it's child department."
-msgstr ""
-"Cho dù nhân viên là thành viên của phòng ban của người dùng đang hoạt động "
-"hay một trong những phòng ban cấp dưới của nó."
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
 msgstr "Tại sao bạn muốn hủy ngày nghỉ đã được phê duyệt này?"
@@ -5651,3 +5643,13 @@ msgstr "hợp lệ cho đến"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "xác thực"
+
+#~ msgid "Member of department"
+#~ msgstr "Thành viên của phòng ban"
+
+#~ msgid ""
+#~ "Whether the employee is a member of the active user's department or one "
+#~ "of it's child department."
+#~ msgstr ""
+#~ "Cho dù nhân viên là thành viên của phòng ban của người dùng đang hoạt "
+#~ "động hay một trong những phòng ban cấp dưới của nó."

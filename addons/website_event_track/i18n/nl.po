@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-02-07 12:38+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -77,15 +77,6 @@ msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 tips en trucs voor houtbewerking voor beginners."
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class="
-"\"btn btn-primary o_translate_inline\">Startpagina</a>"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
 msgstr "<b>E-mail</b>:"
@@ -142,21 +133,21 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Beste <t t-out=\"object.partner_id.name or object.partner_name or ''\""
-">Brandon Freeman</t><br/>\n"
-"    We informeren je graag dat je voorstel <t t-out=\"object.name or ''\""
-">Warover Gaat Dit Evenement</t> werd aanvaard en bevestigd voor het "
+"    Beste <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    We informeren je graag dat je voorstel <t t-out=\"object.name or "
+"''\">Warover Gaat Dit Evenement</t> werd aanvaard en bevestigd voor het "
 "evenement <t t-out=\"object.event_id.name or ''\">Online Onthulling OpenWood "
 "Collectie</t>.\n"
 "    <br/>\n"
 "    Je vindt hier meer details:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href="
-"\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style="
-"\"padding: 8px 16px 8px 16px; font-size: 14px; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none "
-"!important; background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: "
+"14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
 "            Presentatie bekijken\n"
 "        </a>\n"
 "    </div>\n"
@@ -164,8 +155,8 @@ msgstr ""
 "    Bedankt,\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>"
 
@@ -1870,14 +1861,8 @@ msgstr "Toekomstige activiteiten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
+msgid "Get prepared and"
 msgstr ""
-"Bereid je voor en\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">registreer nu voor je favoriete talks.</a>"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1928,6 +1913,11 @@ msgstr "Hoog"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "Hoogste"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3653,6 +3643,12 @@ msgid "minutes after Track start"
 msgstr "minuten nadat de track begint"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "Begint in"
@@ -3661,3 +3657,19 @@ msgstr "Begint in"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "begint om"
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary "
+#~ "o_translate_inline\">Startpagina</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "Bereid je voor en\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">registreer nu voor je favoriete talks.</a>"
