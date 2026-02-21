@@ -39,7 +39,7 @@
     <template id="product_attributes_body" inherit_id="website_sale.product" name="Product attributes table">
         <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
-            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display_in_specs_table()"/>
             <t t-if="attrib_categories">
                 <section class="pt32 pb32" id="product_full_spec">
                     <div class="container">
@@ -89,7 +89,7 @@
         active="False"
     >
         <xpath expr="//div[@id='more_information_accordion_item']" position="before">
-            <t t-if="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()">
+            <t t-if="product.valid_product_template_attribute_line_ids._prepare_categories_for_display_in_specs_table()">
                 <t t-foreach="attrib_categories" t-as="category">
                     <div class="accordion-item">
                         <div class="accordion-header my-0 h6">
@@ -152,7 +152,7 @@
             </tr>
             <t
                 t-set="single_value_attributes"
-                t-value="attrib_categories[category]._prepare_single_value_for_display()"
+                t-value="attrib_categories[category]._prepare_single_value_including_multi_type_for_display()"
             />
             <tr t-foreach="single_value_attributes" t-as="attribute">
                 <t
