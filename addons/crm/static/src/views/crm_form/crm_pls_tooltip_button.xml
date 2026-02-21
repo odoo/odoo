@@ -5,41 +5,41 @@
             role="button"
             title="See AI-computed chances details"
             aria-label="See AI-computed chances details"
-            t-on-click.prevent.stop="onClickPlsTooltipButton">
+            t-on-click.prevent.stop="this.onClickPlsTooltipButton">
             <img class="m-1" role="img" src="/crm/static/src/img/pls-tooltip-ai-icon.png" alt="AI"/>
         </a>
     </t>
 
     <t t-name="crm.PlsTooltip">
         <div class="o_crm_pls_tooltip py-1">
-            <t t-set="isSampleData" t-value="props.probability === 0.0"/>
-            <t t-set="positiveDefault" t-value="props.probability >= 50.0  &amp;&amp; !props.top3Data?.length"/>
-            <t t-set="negativeDefault" t-value="props.probability &lt; 50.0 &amp;&amp; !props.low3Data?.length"/>
+            <t t-set="isSampleData" t-value="this.props.probability === 0.0"/>
+            <t t-set="positiveDefault" t-value="this.props.probability >= 50.0  &amp;&amp; !this.props.top3Data?.length"/>
+            <t t-set="negativeDefault" t-value="this.props.probability &lt; 50.0 &amp;&amp; !this.props.low3Data?.length"/>
             <div class="d-flex px-2 mb-1">
                 <div class="d-inline-block me-3 o_crm_pls_tooltip_wheel position-relative">
                     <svg class="position-absolute" width="60" height="60" viewBox="0 0 60 60">
                         <circle class="o_crm_tooltip_wheel_bg_circle"
                             cx="30" cy="30" r="25" fill="none" stroke-width="4"/>
                         <circle cx="30" cy="30" r="25" fill="none" stroke-width="4"
-                                t-att-stroke-dasharray="props.dashArrayVals"/>
+                                t-att-stroke-dasharray="this.props.dashArrayVals"/>
                     </svg>
                     <div class="position-absolute d-flex">
                         <span class="m-auto fw-bolder">
-                            <t t-out="props.probability"/>%
+                            <t t-out="this.props.probability"/>%
                         </span>
                     </div>
                 </div>
                 <div class="d-inline-block d-flex flex-column justify-content-center">
                     <div t-if="isSampleData" class="text-primary fw-bold text-uppercase">sample data</div>
-                    <div t-if="props.teamName &amp;&amp; !isSampleData">AI-computed chances of winning for</div>
+                    <div t-if="this.props.teamName &amp;&amp; !isSampleData">AI-computed chances of winning for</div>
                     <div t-else="">AI-computed chances of winning</div>
                     <div t-if="!isSampleData" class="fw-bolder fs-3">
-                        <t t-if="props.teamName" t-out="props.teamName"/>
+                        <t t-if="this.props.teamName" t-out="this.props.teamName"/>
                         <t t-else="">this lead</t>
                     </div>
                 </div>
             </div>
-            <div t-if="positiveDefault || props.top3Data?.length"
+            <div t-if="positiveDefault || this.props.top3Data?.length"
                 t-attf-class="mb-3 {{isSampleData ? 'o_crm_pls_tooltip_section_sample' : ''}}">
                 <h5 class="bg-primary-subtle py-2 px-2">
                     <span>Top Positives</span>
@@ -47,12 +47,12 @@
                 </h5>
                 <t t-call="crm.PlsTooltipSectionContent">
                     <t t-set="iconClasses" t-value="'oi oi-arrow-up-right text-success'"/>
-                    <t t-set="sectionEntries" t-value="props.top3Data"/>
-                    <t t-set="teamName" t-value="props.teamName"/>
+                    <t t-set="sectionEntries" t-value="this.props.top3Data"/>
+                    <t t-set="teamName" t-value="this.props.teamName"/>
                     <t t-set="useDefault" t-value="positiveDefault"/>
                 </t>
             </div>
-            <div t-if="negativeDefault || props.low3Data?.length"
+            <div t-if="negativeDefault || this.props.low3Data?.length"
                 t-attf-class="mb-3 {{isSampleData ? 'o_crm_pls_tooltip_section_sample' : ''}}">
                 <h5 class="bg-primary-subtle py-2 px-2">
                     <span>Top Negatives</span>
@@ -60,8 +60,8 @@
                 </h5>
                 <t t-call="crm.PlsTooltipSectionContent">
                     <t t-set="iconClasses" t-value="'oi oi-arrow-down-right text-danger'"/>
-                    <t t-set="sectionEntries" t-value="props.low3Data"/>
-                    <t t-set="teamName" t-value="props.teamName"/>
+                    <t t-set="sectionEntries" t-value="this.props.low3Data"/>
+                    <t t-set="teamName" t-value="this.props.teamName"/>
                     <t t-set="useDefault" t-value="negativeDefault"/>
                 </t>
             </div>

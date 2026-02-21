@@ -3,16 +3,16 @@
 
     <t t-name="sale_timesheet.SoLineCreateButton">
         <div class="d-flex align-items-center gap-1">
-            <Many2One t-props="m2oProps" cssClass="'w-100'"/>
+            <Many2One t-props="this.m2oProps" cssClass="'w-100'"/>
             <a
-                t-if="!props.readonly and !props.record.data.sale_line_id"
+                t-if="!this.props.readonly and !this.props.record.data.sale_line_id"
                 type="button"
                 class="ms-3 d-inline-flex align-items-center"
                 tabindex="-1"
                 draggable="false"
                 aria-label="Create Sales Order"
                 data-tooltip="Create Sales Order"
-                t-on-click="openSalesOrderDialog"
+                t-on-click="this.openSalesOrderDialog"
             >
                 <i class="fa fa-plus"/>
             </a>
