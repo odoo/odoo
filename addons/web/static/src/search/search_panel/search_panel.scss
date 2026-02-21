@@ -20,8 +20,6 @@
 // ------- SearchPanel -------
 
 .o_search_panel {
-    --treeEntry-padding-h: #{map-get($spacers, 3)};
-
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
 
@@ -35,6 +33,11 @@
 
     .o_search_panel_counter {
         font-variant-numeric: tabular-nums;
+    }
+
+    .list-group-item {
+        --list-group-item-padding-y: #{map-get($spacers, 2)};
+        --list-group-item-padding-x: 0;
     }
 }
 
@@ -56,13 +59,16 @@
     @include media-breakpoint-up(md) {
         border-right: $border-width solid $border-color;
     }
+
+    &:hover .o_search_panel_sidebar_button {
+        background-color: var(--btn-hover-bg);
+        color: var(--btn-hover-color);
+    }
 }
 
 .o_mobile_search_content {
     --SearchPanel-width: 100%;
     --SearchPanel-fontSize: 1.1em;
-
-    --treeEntry-padding-v: #{$list-group-item-padding-y * 2};
 }
 
 @include media-breakpoint-down(md) {
@@ -75,5 +81,19 @@
 .o_search_panel_section {
     .o_bottom_sheet & .list-group {
         --#{$prefix}list-group-bg: transparent;
+    }
+}
+
+.o_search_panel_category_value {
+    padding-left: map-get($spacers, 3);
+
+    .o_toggle_fold {
+        color: $text-muted;
+    }
+
+    header.active:hover {
+        .o_toggle_fold {
+            color: $black;
+        }
     }
 }

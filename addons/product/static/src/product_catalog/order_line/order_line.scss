@@ -16,3 +16,7 @@ div.o_product_catalog_quantity {
     border-color: $o-component-active-border;
     z-index: 3;  // Makes sure bottom border in groupby view is above
 }
+
+.o_kanban_group .o_kanban_renderer .o_kanban_record.o_product_added .o_kanban_record:not(.o_product_added) {
+        border-top-color: $o-component-active-border;
+    }
