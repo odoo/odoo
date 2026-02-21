@@ -392,3 +392,44 @@ class TestReportSession(TestPoSCommon):
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report["discount_amount"], 12.0, "Discount amount should be equal to 12.0")
         self.assertEqual(report["taxes_info"]["base_amount"], 90.0, "Base amount should be equal to 90.0")
+
+    def test_report_difference_cash(self):
+        """
+        Test that cash difference are correctly calculated in reports
+        """
+        self.product1 = self.create_product('Product A', self.categ_basic, 70)
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.cash_register_balance_start = 100
+        order1 = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 70,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 70,
+                'price_subtotal_incl': 70,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 70.0,
+            'amount_total': 70.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        })
+        self.make_payment(order1, self.cash_pm1, 70)
+        session.cash_register_balance_end_real = 170
+        session.action_pos_session_closing_control()
+
+        self.config.open_ui()
+        session2 = self.config.current_session_id
+        session2.cash_register_balance_start = 100
+        session2.cash_register_balance_end_real = 100
+        session2.action_pos_session_closing_control()
+        report2 = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session2.id])
+        self.assertEqual(report2['payments'][0]['money_difference'], 0)
