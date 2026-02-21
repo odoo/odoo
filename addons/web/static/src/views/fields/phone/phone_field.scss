@@ -10,4 +10,9 @@ body:not(.o_touch_device) .o_field_phone {
 .o_phone_content small {
     overflow-wrap: normal;
     word-break: normal;
+
+    /* On small screens, hide the text labels inside the phone buttons */
+    @include media-breakpoint-down(md) {
+        display: none;
+    }
 }
