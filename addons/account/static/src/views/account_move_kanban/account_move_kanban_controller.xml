@@ -2,7 +2,7 @@
 
     <t t-name="account.AccountMoveKanbanView.Buttons" t-inherit="account.FileuploadKanbanView.Buttons" t-inherit-mode="primary">
         <xpath expr="//t[@t-call='account.DocumentViewUploadButton']" position="replace">
-            <t t-if="showUploadButton" t-call="account.AccountViewUploadButton"/>
+            <t t-if="this.showUploadButton" t-call="account.AccountViewUploadButton"/>
         </xpath>
     </t>
 
