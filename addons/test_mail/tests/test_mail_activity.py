@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta, UTC
+from markupsafe import Markup
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 from zoneinfo import ZoneInfo
@@ -316,38 +317,62 @@ class TestActivityFlow(TestActivityCommon):
             activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
-    def test_activity_summary_sync(self):
-        """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
-        ActivityType = self.env['mail.activity.type']
-        call_activity_type = ActivityType.create({'name': 'call', 'sequence': 1})
-        email_activity_type = ActivityType.create({
-            'name': 'email',
-            'summary': 'Email Summary',
-            'sequence': '30'
+    @freeze_time('2026-01-22')
+    def test_activity_edition(self):
+        """ Test summary, user_id, date_deadline, note computed based on activity_type """
+        todo_activity_type = self.env.ref('mail.mail_activity_data_todo')
+        todo_activity_type.write({'default_note': 'Test note', 'default_user_id': self.user_employee.id})
+        call_activity_type = self.env['mail.activity.type'].create({
+            'name': 'call',
+            'summary': False,
         })
-        call_activity_type = ActivityType.create({'name': 'call', 'summary': False})
-        with Form(
-            self.env['mail.activity'].with_context(
-                default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'),
-                default_res_id=self.test_record.id,
-            )
-        ) as ActivityForm:
-            # coming from default activity type, which is to do
-            self.assertEqual(ActivityForm.activity_type_id, self.env.ref("mail.mail_activity_data_todo"))
-            self.assertEqual(ActivityForm.summary, "TodoSummary")
-            # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
-            # they must be set using defaults, see `action_feedback_schedule_next`
-            ActivityForm.activity_type_id = call_activity_type
-            # activity summary should be empty
-            self.assertEqual(ActivityForm.summary, "TodoSummary", "Did not erase if void on type")
 
-            ActivityForm.activity_type_id = email_activity_type
-            # activity summary should be replaced with email's default summary
-            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+        test_activity = self.env['mail.activity'].create({
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'res_id': self.test_record.id,
+            'activity_type_id': call_activity_type.id,
+        })
+        self.assertEqual(
+            test_activity.summary,
+            'call',
+            'summary should fallback to name when first loaded activity_type does not contain the default summary.'
+        )
+        self.assertEqual(
+            test_activity.user_id.id,
+            self.env.user.id,
+            'user_id should fallback to current user when first loaded activity_type does not contain the default user_id.'
+        )
+        self.assertEqual(
+            test_activity.date_deadline,
+            date(2026, 1, 22),
+            'date_deadline should fallback to today when first loaded activity_type does not have the delay_count.'
+        )
+        self.assertFalse(test_activity.note, 'note should be computed based on activity_type.')
 
-            ActivityForm.activity_type_id = call_activity_type
-            # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
-            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+        test_activity.activity_type_id = todo_activity_type
+        self.assertEqual(
+            test_activity.summary,
+            'TodoSummary',
+            'summary should be computed based on the default_summary provided on activity_type'
+        )
+        self.assertEqual(
+            test_activity.user_id.id,
+            self.user_employee.id,
+            'user_id should be computed based on the default_user_id provided on activity_type.'
+        )
+        self.assertEqual(
+            test_activity.date_deadline,
+            date(2026, 1, 22) + relativedelta(days=4),
+            'date_deadline should be computed based on delay_count provided on activity_type.'
+        )
+        self.assertEqual(test_activity.note, Markup('<p>Test note</p>'), 'note should be computed based on activity_type.')
+
+        test_activity.activity_type_id = call_activity_type
+        # Values should not change as call_activity_type doesn't contains the default values.
+        self.assertEqual(test_activity.summary, 'TodoSummary')
+        self.assertEqual(test_activity.user_id.id, self.user_employee.id)
+        self.assertEqual(test_activity.date_deadline, date(2026, 1, 22) + relativedelta(days=4))
+        self.assertEqual(test_activity.note, Markup('<p>Test note</p>'))
 
     def test_activity_type_unlink(self):
         """ Removing type should allocate activities to Todo """
