@@ -1,194 +1,215 @@
-import requests
-
+import json
+from base64 import b64encode
 from contextlib import contextmanager
-from unittest.mock import Mock, patch
-from urllib.parse import parse_qs, quote_plus
+from urllib.parse import quote_plus, urlencode
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from requests import PreparedRequest
 
-ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+from odoo.tests.common import MockHTTPClient
+from odoo.tools import file_open
+
+__all__ = [
+    'mock_ack',
+    'mock_can_connect',
+    'mock_cancel_peppol_registration',
+    'mock_connect',
+    'mock_documents_retrieval',
+    'mock_get_participant_status',
+    'mock_lookup_not_found',
+    'mock_lookup_success',
+    'mock_register_sender',
+    'mock_register_sender_as_receiver',
+    'mock_send_document',
+    'mock_update_user',
+]
 
 
-class PeppolConnectorCommon(AccountTestInvoicingCommon):
+@contextmanager
+def _mock_simple_api_response(url, success=True):
+    with MockHTTPClient(
+        url=url,
+        return_json={'result': {}} if success else {'error': {'code': "spoutch", 'message': "failure"}}
+    ) as mock_response:
+        yield mock_response
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
 
-    @staticmethod
-    def forge_id_client(company_id):
-        id_str = str(company_id).rjust(len(ID_CLIENT.split('x')) - 1, '0')
-        new_id_client_blocks = []
-        index = 0
-        for block in ID_CLIENT.split('-'):
-            new_id_client_blocks.append(id_str[index:index + len(block)])
-            index += len(block)
-        return '-'.join(new_id_client_blocks)
+@contextmanager
+def mock_lookup_success(peppol_identifier, services=None):
+    expected_url = f'/api/peppol/1/lookup?{urlencode({"peppol_identifier": peppol_identifier})}'
+    if services is None:
+        services = [
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1',
+        ]
+    json_response = {
+        "result": {
+            'identifier': peppol_identifier,
+            'smp_base_url': "http://iap-services.odoo.com",
+            'ttl': 60,
+            'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{quote_plus(peppol_identifier)}',
+            'services': [
+                {
+                    "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{quote_plus(peppol_identifier)}/services/busdox-docid-qns%3A%3A{quote_plus(service)}",
+                    "document_id": service,
+                }
+                for service in services
+            ],
+        },
+    }
+    with MockHTTPClient(url=expected_url, return_json=json_response) as mock_response:
+        yield mock_response
 
-    def _default_error_code(self):
-        return {'error': {'code': "spoutch", 'message': "failure"}}
 
-    def _empty_result_or_error(self, success=True):
-        if success:
-            return {'result': {}}
-        else:
-            return self._default_error_code()
+@contextmanager
+def mock_lookup_not_found(peppol_identifier):
+    expected_url = f'/api/peppol/1/lookup?{urlencode({"peppol_identifier": peppol_identifier})}'
+    json_response = {"error": {"code": "NOT_FOUND", "message": "no naptr record", "retryable": False}}
+    with MockHTTPClient(url=expected_url, return_status=404, return_json=json_response) as mock_response:
+        yield mock_response
 
-    def _mock_can_connect(self, with_auth=False):
-        def replacement_method(url, **kwargs):
-            auth_vals = {
-                'available_auths': {
-                    'itsme': {'authorization_url': 'test_authorization_url'},
+
+@contextmanager
+def mock_can_connect(with_auth=False):
+    expected_url = '/api/peppol/2/can_connect'
+    auth_vals = {
+        'available_auths': {
+            'itsme': {'authorization_url': 'test_authorization_url'},
+        },
+    } if with_auth else {}
+    with MockHTTPClient(url=expected_url, return_json={
+        'auth_required': with_auth,
+        **auth_vals,
+    }) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_connect(success=True, peppol_state='smp_registration', id_client='test_id_client'):
+    expected_url = '/api/peppol/2/connect'
+    if peppol_state == 'rejected':
+        json_response = {
+            'code': 201,
+            'message': 'Unable to register, please contact our support team at peppol.support@odoo.com.',
+        }
+        status_code = 403
+    elif success:
+        json_response = {'id_client': id_client, 'refresh_token': 'test_refresh_token', 'peppol_state': peppol_state}
+        status_code = 200
+    else:
+        json_response = {
+            'code': 208,
+            'message': 'The Authentication failed',
+        }
+        status_code = 401
+    with MockHTTPClient(url=expected_url, return_json=json_response, return_status=status_code) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_ack():
+    with _mock_simple_api_response('/api/peppol/1/ack') as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_register_sender(success=True):
+    with _mock_simple_api_response('/api/peppol/1/register_sender', success) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_register_sender_as_receiver(success=True):
+    with _mock_simple_api_response('/api/peppol/1/register_sender_as_receiver', success) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_get_participant_status(peppol_state: str | None):
+    expected_url = '/api/peppol/2/participant_status'
+    if peppol_state:
+        json_response = {'result': {'peppol_state': peppol_state}}
+    else:
+        json_response = {
+            'result': {
+                'error': {
+                    'code': "client_gone",
+                    'message': "Your registration for this service is no longer valid. "
+                               "If you see this message, please update the related Odoo app. "
+                               "You will then be able to re-register if needed.",
                 },
-            } if with_auth else {}
-            return {
-                'auth_required': with_auth,
-                **auth_vals,
-            }
+            },
+        }
+    with MockHTTPClient(url=expected_url, return_json=json_response) as mock_response:
+        yield mock_response
 
-        return (
-            'https://peppol.test.odoo.com/api/peppol/2/can_connect',
-            replacement_method,
-        )
 
-    def _mock_connect(self, success=True, peppol_state='smp_registration', id_client='test_id_client'):
-        def replacement_method(url, **kwargs):
-            if peppol_state == 'rejected':
-                return {
-                    'status_code': 403,
-                    'code': 201,
-                    'message': 'Unable to register, please contact our support team at peppol.support@odoo.com.'
-                }
-            if success:
-                return {'id_client': id_client, 'refresh_token': 'test_refresh_token', 'peppol_state': peppol_state}
-            else:
-                return {
-                    'status_code': 401,
-                    'code': 208,
-                    'message': 'The Authentication failed',
-                }
+@contextmanager
+def mock_cancel_peppol_registration(success=True):
+    with _mock_simple_api_response('/api/peppol/1/cancel_peppol_registration', success) as mock_response:
+        yield mock_response
 
-        return (
-            'https://peppol.test.odoo.com/api/peppol/2/connect',
-            replacement_method,
-        )
 
-    def _mock_register_sender(self, success=True):
-        return (
-            'https://peppol.test.odoo.com/api/peppol/1/register_sender',
-            lambda url, **kwargs: self._empty_result_or_error(success=success),
-        )
+@contextmanager
+def mock_update_user(success=True):
+    with _mock_simple_api_response('/api/peppol/1/update_user', success) as mock_response:
+        yield mock_response
 
-    def _mock_register_sender_as_receiver(self, success=True):
-        return (
-            'https://peppol.test.odoo.com/api/peppol/1/register_sender_as_receiver',
-            lambda url, **kwargs: self._empty_result_or_error(success=success),
-        )
 
-    def _mock_lookup_participant(self, already_exists=False):
+@contextmanager
+def mock_send_document(messages: list[dict] | None = None):
+    def return_json(request: PreparedRequest):
+        body = json.loads(request.body)
+        num_invoices = len(body['params']['documents'])
+        returned_messages = messages if messages is not None else [{'message_uuid': '11111111-1111-4111-8111-111111111111'}] * num_invoices
+        assert len(returned_messages) == num_invoices, f"Expected {num_invoices} messages but got {len(returned_messages)}"
+        return {'result': {'messages': returned_messages}}
+    with MockHTTPClient(method='POST', url='/api/peppol/1/send_document', return_json=return_json) as mock_response:
+        yield mock_response
 
-        def replacement_method(url, **kwargs):
-            if not already_exists:
-                return {
-                    'status_code': 404,
-                    'error': {
-                        'code': "NOT_FOUND",
-                        'message': "no naptr record",
-                        'retryable': False,
-                    },
-                }
-            else:
-                peppol_identifier = parse_qs(url.rsplit('?')[1])['peppol_identifier'][0]
-                return {
-                    'ok': True,
-                    'result': {
-                        "identifier": peppol_identifier,
-                        "smp_base_url": "http://example.com/smp",
-                        "ttl": 60,
-                        "service_group_url": "http://example.com/smp/iso6523-actorid-upis%3A%3A" + quote_plus(peppol_identifier),
-                        "services": [],
-                    },
-                }
 
-        return (
-            'https://peppol.test.odoo.com/api/peppol/1/lookup',
-            replacement_method,
-        )
+@contextmanager
+def mock_documents_retrieval(messages=None):
+    if messages is None:
+        messages = [
+            {'uuid': '11111111-1111-4111-8111-111111111111', 'direction': 'incoming', 'filename': 'incoming_invoice', 'state': 'done', 'sender': '0208:2718281828'},
+        ]
 
-    def _mock_participant_status(self, peppol_state, exists=True):
+    all_documents_json = {
+        'result': {
+            'messages': [
+                {
+                    'accounting_supplier_party': message.get('sender', False),
+                    'filename': f"{message.get('filename', 'incoming_invoice')}.xml",
+                    'uuid': message['uuid'],
+                    'state': message.get('state', 'done'),
+                    'direction': message.get('direction', 'incoming'),
+                    'document_type': 'Invoice',
+                    'sender': message.get('sender', '0208:2718281828'),
+                    'receiver': '0208:0477472701',
+                    'timestamp': '2022-12-30',
+                    'error': 'Test error' if message.get('state') == 'error' else False,
+                } for message in messages
+            ],
+        }
+    }
 
-        def replacement_method(url, **kwargs):
-            assert peppol_state
-            if exists:
-                return {
-                    'result': {
-                        'peppol_state': peppol_state,
-                    },
-                }
-            else:
-                return {
-                    'result': {
-                        'error': {
-                            'code': "client_gone",
-                            'message': "Your registration for this service is no longer valid. "
-                                       "If you see this message, please update the related Odoo app. "
-                                       "You will then be able to re-register if needed.",
-                        }
-                    },
-                }
+    def get_document_response_json(request: PreparedRequest):
+        uuid = json.loads(request.body)['params']['message_uuids'][0]
+        message_params = next((m for m in messages if m['uuid'] == uuid), {})
+        direction = message_params.get('direction') or 'incoming'
 
-        return (
-            'https://peppol.test.odoo.com/api/peppol/2/participant_status',
-            replacement_method,
-        )
+        return {'result': {uuid: {
+            'accounting_supplier_party': message_params.get('sender', False),
+            'filename': f"{message_params.get('filename', 'incoming_invoice')}.xml",
+            'enc_key': file_open('account_peppol/tests/assets/enc_key', mode='r').read() if direction == 'incoming' else '',
+            'document': b64encode(file_open(f'account_peppol/tests/assets/{message_params.get("filename", "incoming_invoice")}', mode='rb').read()).decode('utf-8') if direction == 'incoming' else '',
+            'state': message_params.get('state', 'done'),
+            'direction': direction,
+            'document_type': 'Invoice',
+        }}}
 
-    def _mock_cancel_peppol_registration(self, success=True):
-        return (
-            'https://peppol.test.odoo.com/api/peppol/1/cancel_peppol_registration',
-            lambda url, **kwargs: self._empty_result_or_error(success=success),
-        )
-
-    def _mock_get_all_documents(self, success=True):
-        return (
-            'https://peppol.test.odoo.com/api/peppol/1/get_all_documents',
-            lambda url, **kwargs: self._empty_result_or_error(success=success),
-        )
-
-    def _mock_update_user(self, success=True):
-        return (
-            'https://peppol.test.odoo.com/api/peppol/1/update_user',
-            lambda url, **kwargs: self._empty_result_or_error(success=success),
-        )
-
-    @contextmanager
-    def _mock_requests(self, mocks_methods):
-        mocks = dict(mocks_methods)
-        called_urls = set()
-        mock_results = {'called': {}}
-
-        def mock_request(url, **kwargs):
-            for mocked_url, replacement_method in mocks.items():
-                if url.startswith(mocked_url):
-                    called_urls.add(mocked_url)
-                    mock_results['called'][mocked_url] = {
-                        'url': url,
-                        'kwargs': kwargs,
-                    }
-                    results = replacement_method(url, **kwargs)
-                    mocked_request = Mock()
-                    mocked_request.status_code = results.get('status_code', 200)
-                    results.pop('status_code', None)
-                    if not (200 <= mocked_request.status_code < 300):
-                        mocked_request.raise_for_status.side_effect = requests.exceptions.HTTPError()
-                    mocked_request.json.return_value = results
-                    return mocked_request
-            self.assertFalse(url, "Missing mock!")
-
-        def mock_request_2(method, url, **kwargs):
-            return mock_request(url, **kwargs)
-
-        with patch('requests.get', mock_request), patch('requests.post', mock_request), patch('requests.request', mock_request_2):
-            yield mock_results
-
-        self.assertFalse([url for url in mocks if url not in called_urls], "URLs mocked but not called")
+    with (
+        MockHTTPClient(method='POST', url='/api/peppol/1/get_all_documents', return_json=all_documents_json),
+        MockHTTPClient(method='POST', url='/api/peppol/1/get_document', return_json=get_document_response_json),
+    ):
+        yield

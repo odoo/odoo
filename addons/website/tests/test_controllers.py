@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from urllib.parse import parse_qs
 
+from urllib3.util import parse_url
 from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
 
-from unittest.mock import patch, Mock
 from odoo import tests
+from odoo.tests.common import MockHTTPClient
 from odoo.tools.misc import mute_logger, submap
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -116,8 +118,7 @@ class TestControllers(tests.HttpCase):
                 "Public user shouldn't access record fields with a `groups` even if published"
             )
 
-    @patch('requests.get')
-    def test_05_seo_suggest_language_regex(self, mock_get):
+    def test_05_seo_suggest_language_regex(self):
         """
         Test the seo_suggest method to verify it properly handles different
         language inputs, sends correct parameters ('hl' for host language and
@@ -129,18 +130,15 @@ class TestControllers(tests.HttpCase):
           'zh_CN@pinyin')
         - Empty string input to handle default case
         """
-
-        # Mocking the response from Google API to simulate what would be
-        # returned by the seo_suggest method.
-        mock_response = Mock()
-        mock_response.content = '''<?xml version="1.0"?>
-        <toplevel>
-            <CompleteSuggestion>
-                <suggestion data="test suggestion"/>
-            </CompleteSuggestion>
-        </toplevel>'''
-        mock_get.return_value = mock_response
-
+        mock_get = MockHTTPClient(
+            method='GET',
+            return_body='''<?xml version="1.0"?>
+                <toplevel>
+                    <CompleteSuggestion>
+                        <suggestion data="test suggestion"/>
+                    </CompleteSuggestion>
+                </toplevel>'''
+        )
         # Test cases with different language inputs and expected hl and gl
         # values.
         test_cases = [
@@ -156,20 +154,19 @@ class TestControllers(tests.HttpCase):
         for lang_input, expected_output in test_cases:
             # subTest creates an isolated context for each test case, allowing
             # failures to be reported separately.
-            with self.subTest(lang=lang_input):
+            with self.subTest(lang=lang_input), mock_get:
                 result = Website.seo_suggest(self, keywords="test", lang=lang_input)
 
                 # Extract the parameters that were passed in the mock
-                # requests.get call.
-                called_params = mock_get.call_args[1]['params']
+                qs = parse_qs(parse_url(mock_get.calls[0].url).query)
 
                 # Verify that the 'hl' parameter (host language) matches the
                 # expected output
-                self.assertEqual(called_params['hl'], expected_output[0])
+                self.assertEqual(qs['hl'], [expected_output[0]])
 
                 # Verify that the 'gl' parameter (geolocation) matches the
                 # expected output
-                self.assertEqual(called_params['gl'], expected_output[1])
+                self.assertEqual(qs.get('gl', ['']), [expected_output[1]])
 
                 # Verify that the returned result contains the expected
                 # suggestion "test suggestion"

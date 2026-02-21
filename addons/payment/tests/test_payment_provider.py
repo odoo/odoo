@@ -6,7 +6,7 @@ import requests
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests.common import MockHTTPClient, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
@@ -458,11 +458,9 @@ class TestPaymentProvider(PaymentCommon):
     @mute_logger('odoo.addons.payment.models.payment_provider')
     def test_parsing_non_json_response_falls_back_to_text_response(self):
         """Test that a non-JSON response is smoothly parsed as a text response."""
-        response = requests.Response()
-        response.status_code = 502
-        response._content = b"<html><body>Cloudflare Error</body></html>"
         with (
-            patch('requests.request', return_value=response),
+            MockHTTPClient(return_status=502, return_body=b"<html><body>Cloudflare Error</body></html>"),
+            patch.object(self.env.registry['payment.provider'], '_build_request_url', return_value='https://example.com/dummy'),
             patch(
                 'odoo.addons.payment.models.payment_provider.PaymentProvider._parse_response_error',
                 new=lambda _self, response_: response_.json(),
