@@ -294,6 +294,7 @@ export class Composer extends Component {
             placeholder: this.placeholder,
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {
+                isInChatter: this.env.inChatter,
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
                 onFocusout: this.onFocusout.bind(this),
