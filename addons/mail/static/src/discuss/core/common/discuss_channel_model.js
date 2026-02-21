@@ -691,7 +691,7 @@ export class DiscussChannel extends Record {
 
     /** @returns {boolean} true if the channel was opened, false otherwise */
     openChannel() {
-        if (this.self_member_id && !this.self_member_id.is_pinned) {
+        if (this.self_member_id && !this.self_member_id.is_pinned && !this.parent_channel_id) {
             this.self_member_id.is_pinned = true;
             this.pinRpc({ pinned: true });
         }
