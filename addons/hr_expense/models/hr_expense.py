@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, parse_version
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty, parse_version
 
 
 _logger = logging.getLogger(__name__)
@@ -1581,8 +1581,11 @@ class HrExpense(models.Model):
 
         return_vals = []
         for employee_sudo, expenses_sudo in self.sudo().grouped('employee_id').items():
-            multiple_expenses_name = _("Expenses of %(employee)s", employee=employee_sudo.name)
-            move_ref = expenses_sudo.name if len(expenses_sudo) == 1 else multiple_expenses_name
+            if len(expenses_sudo) == 1:
+                move_ref = expenses_sudo.name
+            else:
+                latest_expense_date = max(expenses_sudo.mapped('date'))
+                move_ref = _("Expenses of %(employee)s %(date)s", employee=employee_sudo.name, date=format_date(self.env, latest_expense_date, date_format='LLL d, y'))
             return_vals.append({
             **expenses_sudo._prepare_move_vals(),
                 'ref': move_ref,
