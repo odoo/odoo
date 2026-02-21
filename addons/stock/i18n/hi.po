@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 11:31+0000\n"
+"PO-Revision-Date: 2026-02-21 12:20+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "hi/>\n"
@@ -1086,6 +1086,10 @@ msgid ""
 "incoming products into specific child locations straight away (e.g. specific "
 "bins, racks)."
 msgstr ""
+"अपने वेयरहाउस में प्रॉडक्ट मूव्स के लिए रूट ऑपरेशन जोड़ें और कस्टमाइज़ करें: जैसे आने वाले सामान के लिए अनलोड "
+"> क्वालिटी कंट्रोल > स्टॉक, और जाने वाले सामान के लिए पिक > पैक > शिप. \n"
+" इनकमिंग प्रॉडक्ट को सीधे खास चाइल्ड लोकेशन (जैसे खास बिन्स, रैक्स) पर भेजने के लिए आप वेयरहाउस लोकेशन्स "
+"पर पुटअवे रणनीतियां भी सेट कर सकते हैं।"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2556,7 +2560,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Date"
-msgstr "तिथि"
+msgstr "तारीख"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__search_date_category
@@ -5967,7 +5971,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Operations"
-msgstr "संचालन"
+msgstr "ऑपरेशन"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -9016,6 +9020,11 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
+"सीरियल नंबर (%(serial_number)s) पहले से इन जगह पर इस्तेमाल में है: %(location_list)s.\n"
+"\n"
+"क्या यह सही है? उदाहरण के लिए, यह तब हो सकता है जब रसीद से पहले डिलीवरी ऑपरेशन को वैलिडेट कर दिया जा"
+"ए. ऐसे में, सभी स्टेप पूरे होने पर यह समस्या अपने आप ठीक हो जाएगी. अन्यथा, डेटा की गड़बड़ी रोकने के लिए सीरि"
+"यल नंबर को ठीक करें।"
 
 #. module: stock
 #. odoo-python

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Agapi Psyllou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
@@ -114,15 +114,6 @@ msgid ""
 "Conditions</u></a><br/>\n"
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -297,10 +288,8 @@ msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -435,28 +424,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
 msgstr ""
 
 #. module: website_sale
@@ -1240,6 +1207,11 @@ msgid ""
 msgstr ""
 "Κάντε κλικ στο <i>'Νέο'</i> στην επάνω δεξιά γωνία για να δημιουργήσετε το "
 "πρώτο σας είδος."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Κλικ εδώ"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4166,6 +4138,11 @@ msgid "Sidebar Grid"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Εγγραφή"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Σύνδεση"
@@ -4690,6 +4667,11 @@ msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Values set here are website-specific."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Παραλλαγή"
@@ -5197,6 +5179,21 @@ msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr ""
+"εάν θέλετε να συγχωνεύσετε το προηγούμενο καλάθι σας με το τρέχον καλάθι."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"εάν θέλετε να επαναφέρετε το προηγούμενο καλάθι σας. Το τρέχον καλάθι σας θα "
+"αντικατασταθεί από το προηγούμενο καλάθι σας."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr ""
@@ -5269,9 +5266,6 @@ msgstr "όροι &amp; προϋποθέσεις"
 #~ msgid "City"
 #~ msgstr "Πόλη"
 
-#~ msgid "Click here"
-#~ msgstr "Κλικ εδώ"
-
 #~ msgid "Compute shipping costs and ship with DHL"
 #~ msgstr "Υπολογίστε τα έξοδα αποστολής και αποστολή με DHL"
 
@@ -5320,9 +5314,6 @@ msgstr "όροι &amp; προϋποθέσεις"
 #~ msgid "Sign In"
 #~ msgstr "Σύνδεση"
 
-#~ msgid "Sign Up"
-#~ msgstr "Εγγραφή"
-
 #~ msgid "Some required fields are empty."
 #~ msgstr "Ορισμένα υποχρεωτικά πεδία είναι κενά."
 
@@ -5337,14 +5328,3 @@ msgstr "όροι &amp; προϋποθέσεις"
 
 #~ msgid "Zip Code"
 #~ msgstr "Ταχυδρομικός Κώδικας"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr ""
-#~ "εάν θέλετε να συγχωνεύσετε το προηγούμενο καλάθι σας με το τρέχον καλάθι."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "εάν θέλετε να επαναφέρετε το προηγούμενο καλάθι σας. Το τρέχον καλάθι σας "
-#~ "θα αντικατασταθεί από το προηγούμενο καλάθι σας."

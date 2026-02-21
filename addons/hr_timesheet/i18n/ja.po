@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-02-07 11:51+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -142,36 +142,10 @@ msgstr "<span class=\"text-nowrap\">サブタスクの消費時間:</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        You cannot delete employees who have timesheets.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first "
-"delete all of their timesheets.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Please first delete all of their timesheets.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
+"<span invisible=\"has_timesheet\">\n"
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        タイムシートのある従業員を削除することはできませ"
-"ん。 \n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            これらの従業員をアーカイブするか、最初に全てのタ"
-"イムシートを削除することができます。\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            先に全てタイムシートを削除して下さい。\n"
-"</span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
-"                       これらの従業員を本当に削除しますか？\n"
-"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -752,6 +726,11 @@ msgid "Partner"
 msgstr "取引先"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Please first delete all of their timesheets."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "プロダクト単位"
@@ -1289,7 +1268,8 @@ msgstr "タイムシートは選択された会社の有効な従業員で作成
 msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
-msgstr "タイムシートは、計画 '%(plan_name)s' で少なくとも1つの有効な分析アカウントを"
+msgstr ""
+"タイムシートは、計画 '%(plan_name)s' で少なくとも1つの有効な分析アカウントを"
 "定義して作成する必要があります。"
 
 #. module: hr_timesheet
@@ -1393,8 +1373,8 @@ msgstr ""
 "        !! 高優先度\n"
 "        !!! 至急対応\n"
 "\n"
-"        タイトルは以下の順番で記述してください 例：設定画面を改善する 5h #"
-"feature #v16@Mitchell !"
+"        タイトルは以下の順番で記述してください 例：設定画面を改善する 5h "
+"#feature #v16@Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1441,6 +1421,16 @@ msgstr "自分のものではないタイムシートにアクセスすること
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "You cannot delete employees who have timesheets."
 msgstr "タイムシートを持つ従業員を削除できません。"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid ""
+"You cannot delete employees who have timesheets.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
+"                        </span>"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -1508,6 +1498,38 @@ msgstr ""
 "　\n"
 "                            <span class=\"fw-bold text-dark\"> サブタスク</"
 "span>)上"
+
+#~ msgid ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        You cannot delete employees who have timesheets.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            You can either archive these employees or "
+#~ "first delete all of their timesheets.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            Please first delete all of their timesheets.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                        Are you sure you want to delete these employees?\n"
+#~ "                    </span>"
+#~ msgstr ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        タイムシートのある従業員を削除することはできませ"
+#~ "ん。 \n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            これらの従業員をアーカイブするか、最初に全ての"
+#~ "タイムシートを削除することができます。\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            先に全てタイムシートを削除して下さい。\n"
+#~ "</span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                       これらの従業員を本当に削除しますか？\n"
+#~ "                    </span>"
 
 #~ msgid ""
 #~ "Use these keywords in the title to set new tasks:\n"

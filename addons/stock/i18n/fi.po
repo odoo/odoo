@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock
+# * stock
 #
 # Translators:
 # Wil Odoo, 2025
 # Dylan Kiss, 2025
 # Jessica Jakara, 2025
 #
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2026-02-21 12:19+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/stock/"
+"fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -377,9 +380,10 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
-"* Uusi: Varaston siirto on luotu, mutta ei vahvistettu.\n"
-"* Odottaa toista siirtoa: Linkitetty varastosiirto tulee tehdä ennen tätä.\n"
-"* Odottaa:  Varastosiirto on vahvistettu, mutta tuotetta ei voida varata.\n"
+"* Uusi: Varastosiirto on luotu, mutta ei vahvistettu.\n"
+"* Odottaa toista siirtoa: Linkitetty varastosiirto pitäisi tehdä ennen tätä."
+"\n"
+"* Odottaa: Varastosiirto on vahvistettu, mutta tuotetta ei voi varata.\n"
 "* Saatavilla: Varastosiirron tuote on varattu.\n"
 "* Valmis: Tuote on siirretty ja siirto on vahvistettu."
 
@@ -3579,11 +3583,11 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
-"Odoon kaikki varastotoiminnot siirtävät tuotteet yhdestä\n"
-"             sijainnista toiseen. Jos esimerkiksi saat tuotteita\n"
-"             myyjältä, Odoo siirtää tuotteita myyjältä\n"
-"             sijainti Stock-sijaintiin. Jokainen raportti voidaan suorittaa\n"
-"             fyysinen, kumppani tai virtuaalinen sijainti. \""
+"Jokainen Odoon varastotoimenpide siirtää tuotteet yhdestä\n"
+"            sijainnista toiseen. Jos esimerkiksi saat tuotteita\n"
+"            myyjältä, Odoo siirtää ne myyjän sijainnista\n"
+"            varaston sijaintiin. Jokaisen raportin voi suorittaa\n"
+"            fyysiselle, kumppanin tai virtuaaliselle sijainnille."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -7433,7 +7437,7 @@ msgstr "Laadun laskentataulukko"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
-msgstr "Quant"
+msgstr "Määrä"
 
 #. module: stock
 #. odoo-python

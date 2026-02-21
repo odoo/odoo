@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
@@ -108,15 +108,6 @@ msgid ""
 "Conditions</u></a><br/>\n"
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -316,13 +307,9 @@ msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Burda təyin olunan dəyərlər hər "
-"bir vebsayta xasdır.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -479,28 +466,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video Önizləmə</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -1298,6 +1263,11 @@ msgid ""
 msgstr ""
 "İlk məhsulunuzu yaratmaq üçün yuxarı sağ küncdəki <i>'Yeni'</i> düyməsini "
 "klikləyin."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Buraya kliklə"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4262,6 +4232,11 @@ msgid "Sidebar Grid"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Qeydiyyatdan Keç"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Daxil ol"
@@ -4809,6 +4784,11 @@ msgstr ""
 "Places APİ istifadə et"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Values set here are website-specific."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Çeşid"
@@ -5323,6 +5303,20 @@ msgstr ""
 "göndərin"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "əgər köhnə səbətinizlə indiki səbətinizi birləşdirmək istəyirsinizsə."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"əgər bir əvvəlki səbətinizi bərpa etmək istəyirsinizsə. Sizin indiki "
+"səbətiniz bir əvvəlki ilə əvəz olunacaq."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "katoqoriyarda \""
@@ -5372,6 +5366,13 @@ msgstr "sil"
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "terms &amp; conditions"
 msgstr "qaydalar &amp; şərtlər"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+#~ "specific.\" groups=\"website.group_multi_website\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-lg fa-globe\" title=\"Burda təyin olunan dəyərlər hər "
+#~ "bir vebsayta xasdır.\" groups=\"website.group_multi_website\"/>"
 
 #~ msgid "#{record.name.value}"
 #~ msgstr "#{record.name.value}"
@@ -5638,9 +5639,6 @@ msgstr "qaydalar &amp; şərtlər"
 #~ msgid "City"
 #~ msgstr "Şəhər"
 
-#~ msgid "Click here"
-#~ msgstr "Buraya kliklə"
-
 #~ msgid "Collapsible sidebar"
 #~ msgstr "Yığıla bilən yan panel"
 
@@ -5839,9 +5837,6 @@ msgstr "qaydalar &amp; şərtlər"
 #~ msgid "Sign In"
 #~ msgstr "Daxil ol"
 
-#~ msgid "Sign Up"
-#~ msgstr "Qeydiyyatdan Keç"
-
 #~ msgid "Some required fields are empty."
 #~ msgstr "Bəzi tələb olunan sahələr boşdur."
 
@@ -5896,17 +5891,6 @@ msgstr "qaydalar &amp; şərtlər"
 
 #~ msgid "Zip Code"
 #~ msgstr "Poçt İndeksi"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr ""
-#~ "əgər köhnə səbətinizlə indiki səbətinizi birləşdirmək istəyirsinizsə."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "əgər bir əvvəlki səbətinizi bərpa etmək istəyirsinizsə. Sizin indiki "
-#~ "səbətiniz bir əvvəlki ilə əvəz olunacaq."
 
 #~ msgid "new address"
 #~ msgstr "yeni ünvan"
