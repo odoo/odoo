@@ -1026,6 +1026,9 @@ class OrderedSet[T](MutableSet[T]):
     def intersection(self, *others):
         return reduce(OrderedSet.__and__, others, self)
 
+    def copy(self):
+        return OrderedSet(self._map)
+
 
 class LastOrderedSet[T](OrderedSet[T]):
     """ A set collection that remembers the elements last insertion order. """

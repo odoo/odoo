@@ -84,6 +84,8 @@ _BLACKLIST = set(to_opcodes([
     'STORE_ATTR', 'DELETE_ATTR',
     # no reason to allow this
     'STORE_GLOBAL', 'DELETE_GLOBAL',
+    # Deals with dunder methods
+    'LOAD_SPECIAL',
 ]))
 # opcodes necessary to build literal values
 _CONST_OPCODES = set(to_opcodes([
@@ -104,6 +106,8 @@ _CONST_OPCODES = set(to_opcodes([
     'RETURN_CONST',
     # 3.13
     'TO_BOOL',
+    # 3.14 https://docs.python.org/3/whatsnew/3.14.html#cpython-bytecode-changes
+    'NOT_TAKEN', 'LOAD_SMALL_INT',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -183,6 +187,14 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
     'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
     'SET_FUNCTION_ATTRIBUTE',
+    # Added in 3.14, used to load a variable that is the compiler can prove
+    # that the reference in the frame outlives the reference loaded onto the
+    # stack. E.g. args & kwargs.
+    'LOAD_FAST_BORROW', 'LOAD_FAST_BORROW_LOAD_FAST_BORROW',
+    'POP_ITER',  # comprehensions
+    # Hardcoded list of constants, does not bypasses __builtins__
+    # c.f. https://github.com/python/cpython/blob/9181d776daf87f0e4e2ce02c08f162150fdf7d79/Python/pylifecycle.c#L830-L836
+    'LOAD_COMMON_CONSTANT',
 ])) - _BLACKLIST
 
 
