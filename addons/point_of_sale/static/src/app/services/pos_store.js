@@ -41,6 +41,7 @@ import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -464,6 +465,15 @@ export class PosStore extends WithLazyGetterTrap {
                 .get(pm.use_payment_terminal, null);
             if (PaymentInterface) {
                 pm.payment_terminal = new PaymentInterface(this, pm);
+            }
+        }
+
+        // Add Scale
+        for (const ScaleInterface of registry.category("electronic_scales").getAll()) {
+            const scaleInstance = new ScaleInterface(this);
+            if (await scaleInstance.connectToScale()) {
+                this.scale = scaleInstance;
+                break;
             }
         }
 
@@ -946,6 +956,11 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
+        keepGoing = await this.handleWeighableProduct(values, order, configure);
+        if (keepGoing === false) {
+            return;
+        }
+
         const pack_lot_ids = await this.configureNewOrderLine(
             productTemplate,
             vals,
@@ -1014,6 +1029,46 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
 
         return order.getSelectedOrderline();
+    }
+
+    weighProduct() {
+        return makeAwaitable(this.env.services.dialog, ScaleScreen);
+    }
+
+    async handleWeighableProduct(values, order, configure) {
+        // In case of clicking a product with tracking weight enabled a popup will be shown to the user
+        // It will return the weight of the product as quantity
+        // ---
+        // This actions cannot be handled inside pos_order.js or pos_order_line.js
+        if (values.product_tmpl_id.to_weight && this.scale && configure) {
+            if (values.product_tmpl_id.isScaleAvailable) {
+                const decimalAccuracy = this.models["decimal.precision"].find(
+                    (dp) => dp.name === "Product Unit"
+                ).digits;
+                const overridedValues = {};
+                if (order.pricelist_id) {
+                    overridedValues.pricelist = order.pricelist_id;
+                }
+                if (order.fiscal_position_id) {
+                    overridedValues.fiscalPosition = order.fiscal_position_id;
+                }
+                this.scale.setProduct(
+                    values.product_id,
+                    decimalAccuracy,
+                    values.product_id.getTaxDetails({ overridedValues }).total_included
+                );
+                const weight = await this.weighProduct();
+                if (weight) {
+                    values.qty = weight;
+                } else if (weight !== null) {
+                    return false;
+                }
+            } else {
+                await values.product_tmpl_id._onScaleNotAvailable();
+            }
+        }
+
+        return true;
     }
 
     async configureNewOrderLine(productTemplate, vals, values, order, opts = {}, configure = true) {
