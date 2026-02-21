@@ -183,6 +183,31 @@ class TestSaleStockReports(TestReportsCommon):
         with self.assertRaises(AccessError):
             draft.with_user(other).check_access('read')
 
+    def test_deliveryslip_aggregated_qty_sale_backorders(self):
+        """
+        Verify that the delivery slip shows the correct total ordered quantity
+        when there is a backorder waiting for stock.
+        """
+        product = self.env['product.product'].create({'name': 'MTO Product', 'type': 'consu', 'is_storable': True})
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_uom_qty': 10})],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 5, 'picked': True})
+        res = picking.button_validate()
+        self.env['stock.backorder.confirmation'].with_context(res['context']).create({}).process()
+
+        (so.picking_ids - picking).move_ids.state = 'draft'
+
+        aggregated = picking.move_line_ids._get_aggregated_product_quantities()
+        val = next(iter(aggregated.values()))
+
+        self.assertEqual(val['qty_ordered'], 10, "Ordered qty should include unreserved backorder")
+        self.assertEqual(val['quantity'], 5, "Delivered qty should be 5")
+
 
 @tagged('post_install', '-at_install')
 class TestSaleStockInvoices(TestSaleCommon):
