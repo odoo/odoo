@@ -858,15 +858,32 @@ class PosOrder(models.Model):
             'fiscal_position_id': fiscal_position.id,
             'invoice_line_ids': self._prepare_invoice_lines(move_type),
             'invoice_payment_term_id': False,
+<<<<<<< 2cb4796e904d4e66acc163d873ddd5eba3912c4d
             'invoice_cash_rounding_id': rounding_method.id,
+||||||| 436921c24a531eba6bf57ffe3f7c3b4978139d83
+            'invoice_cash_rounding_id': self.config_id.rounding_method.id,
+=======
+>>>>>>> c29c19474f53b4d61715373875f6d4f2751b8ef7
         }
         if is_single_order and self.refunded_order_id.account_move:
             vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
             vals['reversed_entry_id'] = self.refunded_order_id.account_move.id
+<<<<<<< 2cb4796e904d4e66acc163d873ddd5eba3912c4d
 
         if any(order.floating_order_name for order in self):
             vals.update({'narration': ', '.join(self.filtered('floating_order_name').mapped('floating_order_name'))})
 
+||||||| 436921c24a531eba6bf57ffe3f7c3b4978139d83
+        if self.floating_order_name:
+            vals.update({'narration': self.floating_order_name})
+=======
+
+        if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
+            vals['invoice_cash_rounding_id'] = self.config_id.rounding_method.id
+
+        if self.floating_order_name:
+            vals.update({'narration': self.floating_order_name})
+>>>>>>> c29c19474f53b4d61715373875f6d4f2751b8ef7
         return vals
 
     def _prepare_product_aml_dict(self, base_line_vals, update_base_line_vals, rate, sign):
