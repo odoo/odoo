@@ -936,7 +936,9 @@ export class PosStore extends Reactive {
                 line,
                 related_lines
             );
-            related_lines.forEach((line) => line.set_unit_price(price));
+            related_lines
+                .filter((line) => line.product_id.lst_price === line.price_unit)
+                .forEach((line) => line.set_unit_price(price));
         }
         line.setOptions(options);
         this.selectOrderLine(order, line);

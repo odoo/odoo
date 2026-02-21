@@ -605,3 +605,18 @@ registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount"
             Order.hasTotal("12.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("180.00"),
+            Order.doesNotHaveLine({
+                productName: "Settle Lots",
+                quantity: "1.0",
+                price: "100",
+            }),
+        ].flat(),
+});
