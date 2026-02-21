@@ -52,4 +52,11 @@ patch(OrderSummary.prototype, {
             !currentOrder.hasCourses()
         );
     },
+    async updateSelectedOrderline({ buffer, key }) {
+        await super.updateSelectedOrderline(...arguments);
+
+        if (this.pos.getOrder() && this.pos.config.module_pos_restaurant) {
+            this.pos.addPendingOrder([this.pos.getOrder().id]);
+        }
+    },
 });

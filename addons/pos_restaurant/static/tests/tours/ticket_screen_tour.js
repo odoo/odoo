@@ -71,3 +71,25 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             TicketScreen.nthRowContains(2, "T 103"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_sync_lines_qty_update_ticket_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            Chrome.clickRegister(),
+            ProductScreen.addOrderline("Coca-Cola", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A powerful Pos man!"),
+
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+
+            ProductScreen.clickOrderline("Coca-Cola", "1"),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.selectedOrderlineHas("Coca-Cola", "3"),
+            Chrome.clickOrders(),
+        ].flat(),
+});
