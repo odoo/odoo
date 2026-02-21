@@ -39,7 +39,7 @@ test("Pin message", async () => {
     );
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Pin')");
-    await click(".modal-footer button:text('Yeah, pin it!')");
+    await click(".modal-footer button:text('Pin Message')");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message:has(:text('Hello world!'))");
 });
 
@@ -59,7 +59,7 @@ test("Unpin message", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Unpin')");
-    await click(".modal-footer button:text('Yes, remove it please')");
+    await click(".modal-footer button:text('Unpin Message')");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
@@ -75,7 +75,7 @@ test("Open pinned panel from notification", async () => {
     await openDiscuss(channelId);
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item:text('Pin')");
-    await click(".modal-footer button:text('Yeah, pin it!')");
+    await click(".modal-footer button:text('Pin Message')");
     await contains(".o-discuss-PinnedMessagesPanel", { count: 0 });
     await click(".o_mail_notification a:text('See all pinned messages')");
     await contains(".o-discuss-PinnedMessagesPanel");
@@ -128,7 +128,7 @@ test("Jump to message from notification", async () => {
     await contains(".o-mail-Message", { count: 21 });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item:text('Pin')");
-    await click(".modal-footer button:text('Yeah, pin it!')");
+    await click(".modal-footer button:text('Pin Message')");
     await contains(".o_mail_notification");
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
