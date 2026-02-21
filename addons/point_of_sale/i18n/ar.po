@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 18:00+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/ar/>\n"
@@ -201,7 +201,7 @@ msgstr "10000.00"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "11.11"
-msgstr ""
+msgstr "11.11"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -221,7 +221,7 @@ msgstr "2-03-2000 9:00 AM"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "38.83"
-msgstr ""
+msgstr "38.83"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_39
@@ -508,7 +508,7 @@ msgstr "توجد بالفعل ملاحظة بها هذا الاسم "
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "توجد عملية دفع تحمل هذا الرقم التعريفي الفريد بالفعل"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -676,6 +676,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
 msgid "Action Needed"
 msgstr "إجراء مطلوب"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Action cancelled (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1009,12 +1015,12 @@ msgstr "معرف داخلي للطابعة"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "يوجد بند طلب يحمل هذا الرقم التعريفي الفريد بالفعل"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "يوجد طلب يحمل هذا الرقم التعريفي الفريد بالفعل"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1259,7 +1265,7 @@ msgstr "البنك"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Bank App (QR Code)"
-msgstr ""
+msgstr "تطبيق البنك (رمز الاستجابة السريعة)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
@@ -1641,6 +1647,12 @@ msgid "Cash difference observed during the counting (Profit) - closing"
 msgstr "الفروقات النقدية التي تمت ملاحظتها عند العد (الأرباح) - الإقفال "
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Cash in / out"
@@ -1843,7 +1855,7 @@ msgstr "اختر كيفية طباعة رابط URL الخاص بالبوابة 
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "اختر الضريبة التي تريد تطبيقها"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1974,8 +1986,26 @@ msgstr "إغلاق الجلسة "
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "فرق الإغلاق في %(payment_method)s (%(session)s) "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3236,7 +3266,7 @@ msgstr "فرض الانتهاء "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force cancel"
-msgstr ""
+msgstr "فرض الإلغاء"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4565,7 +4595,7 @@ msgstr "تسمية"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "None required"
-msgstr ""
+msgstr "لا شيء مطلوب"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4812,6 +4842,24 @@ msgstr "الرصيد الافتتاحي مجمعاً لكافة المعاملا
 #: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
 msgstr "النقد الافتتاحي "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7630,7 +7678,7 @@ msgstr "هاتف:"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Terminal"
-msgstr ""
+msgstr "جهاز الدفع"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9131,6 +9179,8 @@ msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
 msgstr ""
+"لا يمكنك حذف عميل لديه أوامر بيع في نقطة البيع. يمكنك أرشفة الحساب عوضاً عن "
+"ذلك."
 
 #. module: point_of_sale
 #. odoo-python

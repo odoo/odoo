@@ -40,7 +40,7 @@
 # Bole <bole@dajmi5.com>, 2025
 # Luka Carević <luka@uvid.hr>, 2025
 # Ivica Dimjašević, 2025
-# Alen Komljen <alen@uvid.hr>, 2025.
+# Alen Komljen <alen@uvid.hr>, 2025, 2026.
 # Karlo Mikešić <karlo@uvid.hr>, 2025.
 # Ana Matulin <ana@uvid.hr>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
@@ -48,9 +48,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:38+0000\n"
-"PO-Revision-Date: 2026-01-24 18:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 10:16+0000\n"
+"Last-Translator: Alen Komljen <alen@uvid.hr>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/account/"
 "hr/>\n"
 "Language: hr\n"
@@ -93,6 +93,14 @@ msgid ""
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
 msgstr ""
 
 #. module: account
@@ -4294,6 +4302,8 @@ msgid "Chart of accounts set!"
 msgstr "Kontni plan je postavljen!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Čekovi"
@@ -9448,6 +9458,7 @@ msgstr "Dnevnik:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Dnevnici"
 
@@ -15024,6 +15035,10 @@ msgid ""
 "(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"Učestalost fakturiranja za %(partner_name)s izgleda neuobičajeno. Na temelju "
+"vaših povijesnih podataka, očekivani sljedeći datum izdavanja računa nije "
+"prije %(expected_date)s (svakih %(mean)s (± %(wiggle)s) dana).\n"
+"Molimo provjerite je li ovaj datum točan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -15066,6 +15081,14 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
 msgstr ""
 
 #. module: account
@@ -15622,6 +15645,14 @@ msgstr "Ostatak iznosa na temeljnici iskazan u valuti tvrtke."
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "Stanje (%s) ne odgovara završnom saldu."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python

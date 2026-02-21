@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:38+0000\n"
-"PO-Revision-Date: 2026-02-14 18:01+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/account/"
 "it/>\n"
@@ -73,6 +73,14 @@ msgstr ""
 "        es. 180 / (1 - 10%) = 200 (prezzo non incluso)\n"
 "        es. 200 * (1 - 10%) = 180 (prezzo incluso)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4601,6 +4609,8 @@ msgid "Chart of accounts set!"
 msgstr "Piano dei conti configurato!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Controlla"
@@ -9922,6 +9932,7 @@ msgstr "Registro:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Registri"
 
@@ -15770,6 +15781,17 @@ msgstr ""
 "contabili correlate."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+"Il conto aziendale collegato a questa fattura non è sicuro, effettua una "
+"verifica e contrassegnalo come sicuro prima di confermare altrimenti "
+"rimuovilo"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "L'azienda a cui appartiene la riga di ripartizione."
@@ -16432,6 +16454,14 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "Il saldo aperto (%s) non corrisponde al saldo di chiusura specificato."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18774,6 +18804,8 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Non è possibile modificare l'importo di un pagamento con più righe di "
+"liquidità."
 
 #. module: account
 #. odoo-python
@@ -19173,6 +19205,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Non è possibile modificare la tipologia di un documento con una sequenza "
+"numerica esistente."
 
 #. module: account
 #. odoo-python

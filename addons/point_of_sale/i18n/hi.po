@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 18:00+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/hi/>\n"
@@ -631,6 +631,12 @@ msgid "Action Needed"
 msgstr "कार्रवाई की ज़रूरत है"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Action cancelled (%(ACTION)s)"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
@@ -998,7 +1004,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
 msgid "As soon as possible"
-msgstr ""
+msgstr "जितना जल्दी हो सके"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1570,6 +1576,12 @@ msgid "Cash difference observed during the counting (Profit) - closing"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Cash in / out"
@@ -1892,7 +1904,25 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
 msgstr ""
 
 #. module: point_of_sale
@@ -2550,7 +2580,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "स्टॉक से जुड़े सभी कामों के लिए इस्तेमाल होने वाली बेसिक यूनिट।"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -3513,7 +3543,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Install App"
-msgstr ""
+msgstr "ऐप्लिकेशन इंस्टॉल करें"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -4673,6 +4703,24 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
 msgstr ""
 
@@ -4689,7 +4737,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation Type"
-msgstr ""
+msgstr "ऑपरेशन टाइप"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5200,7 +5248,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "पिकिंग टाइप"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5682,7 +5730,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation"
-msgstr ""
+msgstr "तैयारी करना"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5917,7 +5965,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_procurement_group
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "प्रोक्युर्मन्ट ग्रुप"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -6031,7 +6079,7 @@ msgstr "प्रॉडक्ट माप की इकाई"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Product UoM"
-msgstr ""
+msgstr "प्रॉडक्ट UoM"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_category
