@@ -30,7 +30,8 @@
                                 <span>Ticket was first scanned on <t t-esc="registration.date_closed_formatted"/></span>
                             </t>
                             <t t-else="">
-                                <span>Ticket already scanned!</span>
+                                <span style="font-size:16px">This Card/Ticket is currently unavailable.<br/>
+                                    The offer may have expired or you may have reached the maximum number of entries allowed.</span>
                             </t>
                         </t>
                         <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
@@ -53,6 +54,7 @@
                         <tr><td>Event</td><td><t t-out="registration.event_display_name"/></td></tr>
                         <tr t-if="registration.slot_name"><td>Slot</td><td><t t-out="registration.slot_name"/></td></tr>
                         <tr t-if="registration.ticket_name"><td>Ticket Type</td><td><t t-out="registration.ticket_name"/></td></tr>
+                        <tr t-if="registration.ticket_entry_limit"><td>Remaining Entries</td><td><t t-out="registration.remaining_entries"/></td></tr>
                         <tr t-if="registration.registration_answers &amp;&amp; registration.registration_answers.length > 0">
                             <td class="d-flex">Answers</td>
                             <td>
@@ -67,9 +69,9 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button t-att-disabled="!button.enabled" t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
+                <button t-att-disabled="!button.enabled" t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationClose()">Close</button>
                 <button id="print_button" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
-                <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
+                <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit Ticket</button>
             </t>
         </Dialog>
     </t>

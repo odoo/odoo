@@ -28,7 +28,7 @@
                 <field name="message_needaction" column_invisible="True"/>
                 <button name="action_confirm" string="Registered" type="object" icon="fa-check"
                         invisible="not active or state != 'draft'"/>
-                <button name="action_set_done" string="Mark as Attending" type="object" icon="fa-level-down"
+                <button name="action_attend_event" string="Mark as Attending" type="object" icon="fa-level-down"
                         invisible="not active or state != 'open'"/>
                 <button name="action_cancel" string="Cancel" type="object"
                         class="o_btn_cancel_registration" icon="fa-times"
@@ -49,7 +49,7 @@
                             invisible="not active or state != 'open' and state != 'done'"/>
                     <button name="action_confirm" string="Registered" type="object" class="oe_highlight"
                             invisible="not active or state != 'draft'"/>
-                    <button name="action_set_done" string="Attended" type="object" class="oe_highlight"
+                    <button name="action_attend_event" string="Attended" type="object" class="oe_highlight"
                             invisible="not active or state != 'open'"/>
                     <button name="action_cancel" string="Cancel Registration" type="object"
                             invisible="not active or state == 'cancel'"/>
@@ -80,6 +80,9 @@
                             <field name="partner_id"/>
                             <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                             <field name="date_closed" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Transaction" name="transaction">
+                            <field name="remaining_entries" invisible="not ticket_entry_limit"/>
                         </group>
                         <group string="Marketing" name="utm_link" groups="base.group_no_one">
                             <field name="utm_campaign_id"/>
@@ -114,6 +117,14 @@
                                         </t>
                                     </templates>
                                 </kanban>
+                            </field>
+                        </page>
+                        <page string="Attendances" name="attendances">
+                            <field name="attendances_ids" widget="one2many">
+                                <list editable="bottom">
+                                    <field name="attendance_date"/>
+                                    <field name="create_uid"/>
+                                </list>
                             </field>
                         </page>
                     </notebook>

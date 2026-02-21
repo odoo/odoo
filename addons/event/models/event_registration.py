@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import os
-from datetime import UTC
+from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.fields import Domain
 from odoo.tools import email_normalize, format_date, formataddr
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
@@ -31,6 +31,10 @@ class EventRegistration(models.Model):
          """
         return str(int.from_bytes(os.urandom(8), 'little'))
 
+    @api.model
+    def _default_event_ticket_id(self):
+        return self.env['event.event'].browse(self.env.context.get('default_event_id', False)).event_ticket_ids[:1].id
+
     # event
     event_id = fields.Many2one(
         'event.event', string='Event', required=True, tracking=True, index=True)
@@ -39,7 +43,8 @@ class EventRegistration(models.Model):
         "event.slot", string="Slot", ondelete='restrict', tracking=True, index="btree_not_null",
         domain="[('event_id', '=', event_id)]")
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
+        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null',
+        default=lambda self: self._default_event_ticket_id())
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
@@ -78,6 +83,9 @@ class EventRegistration(models.Model):
              'Registered: registrations considered taken by a client\n'
              'Attended: registrations for which the attendee attended the event\n'
              'Cancelled: registrations cancelled manually')
+    remaining_entries = fields.Integer(string="Remaining Entries", compute="_compute_remaining_entries", tracking=True)
+    ticket_entry_limit = fields.Integer(string="Initial Entry Limit", related="event_ticket_id.entry_limit", tracking=True)
+    attendances_ids = fields.One2many('event.registration.attendance', 'registration_id', string='Attendances', tracking=True)
     # questions
     registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
     registration_answer_choice_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Selection Answers',
@@ -191,6 +199,11 @@ class EventRegistration(models.Model):
         for registration in self:
             registration.event_end_date = registration.event_slot_id.end_datetime or registration.event_id.date_end
 
+    @api.depends("ticket_entry_limit", "attendances_ids")
+    def _compute_remaining_entries(self):
+        for registration in self:
+            registration.remaining_entries = (registration.ticket_entry_limit - len(registration.attendances_ids)) if registration.ticket_entry_limit else 0
+
     @api.model
     def _search_event_end_date(self, operator, value):
         return Domain.OR([
@@ -209,6 +222,16 @@ class EventRegistration(models.Model):
     def _check_event_ticket(self):
         if any(registration.event_id != registration.event_ticket_id.event_id for registration in self if registration.event_ticket_id):
             raise ValidationError(_('Invalid event / ticket choice'))
+
+    @api.constrains('attendances_ids')
+    def _constrains_attendances_ids(self):
+        for registration in self:
+            if registration.remaining_entries < 0:
+                raise UserError(self.env._(
+                    'You cannot have more attendances than the ticket entry limit. '
+                    'Please check registration %(registration_name)s',
+                    registration_name=registration.name
+                ))
 
     def _synchronize_partner_values(self, partner, fnames=None):
         if fnames is None:
@@ -233,6 +256,14 @@ class EventRegistration(models.Model):
             country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
             self.phone = self._phone_format(fname='phone', country=country) or self.phone
 
+    @api.onchange("remaining_entries")
+    def _onchange_remaining_entries(self):
+        for registration in self:
+            if registration.ticket_entry_limit and registration.state == 'open' and registration.remaining_entries < 1:
+                registration.action_set_done()
+            elif registration.state == 'done' and registration.remaining_entries > 0:
+                registration.action_confirm()
+
     @api.model
     def register_attendee(self, barcode, event_id):
         attendee = self.search([('barcode', '=', barcode)], limit=1)
@@ -249,8 +280,8 @@ class EventRegistration(models.Model):
             if event_id and attendee.event_id.id != event_id:
                 status = 'need_manual_confirmation'
             else:
-                attendee.action_set_done()
                 status = 'confirmed_registration'
+                attendee.action_attend_event()
         else:
             status = 'already_registered'
         res.update({'status': status})
@@ -311,6 +342,20 @@ class EventRegistration(models.Model):
 
     def action_confirm(self):
         self.write({'state': 'open'})
+
+    def cancel_last_attendance(self):
+        for record in self:
+            record.attendances_ids = [(2, record.attendances_ids[-1].id)]
+
+    def action_attend_event(self):
+        for record in self:
+            self.env['event.registration.attendance'].create({
+                'registration_id': record.id,
+                'attendance_date': datetime.today(),
+            })
+            if record.remaining_entries > 0:
+                continue
+            record.action_set_done()
 
     def action_set_done(self):
         """ Close Registration """
@@ -465,4 +510,6 @@ class EventRegistration(models.Model):
             'badge_format': self.event_id.badge_format,
             'date_closed_formatted': format_date(env=self.env, value=self.date_closed, date_format='short') if self.date_closed else False,
             'is_date_closed_today': is_date_closed_today,
+            'remaining_entries': max(0, self.remaining_entries - 1),
+            'ticket_entry_limit': self.ticket_entry_limit,
         }
