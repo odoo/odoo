@@ -72,8 +72,9 @@ class CrmTeamMember(models.Model):
 
         if duplicates:
             raise exceptions.ValidationError(
-                _("You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s).",
-                  duplicates=", ".join("%s (%s)" % (m.user_id.name, m.crm_team_id.name) for m in duplicates)
+                _("You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s) when creating %(member)s.",
+                  duplicates=", ".join("%s [%s] (%s)" % (m.user_id.name, m.id, m.crm_team_id.name) for m in duplicates),
+                  member="%s [%s] (%s)" % (self.user_id.name, self.id, self.crm_team_id.name)
                  ))
 
     @api.depends('crm_team_id', 'is_membership_multi', 'user_id')
