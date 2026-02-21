@@ -276,8 +276,10 @@ class TestHttpWebJson_2(TestHttpBase):
         method = 'search'
 
         with (
-            patch.object(self.registry[url_model], method, autospec=True) as url_search,
-            patch.object(self.registry[body_model], method, autospec=True) as body_search,
+            patch.object(self.registry[url_model], method, autospec=True,
+                         side_effect=self.registry[url_model].search) as url_search,
+            patch.object(self.registry[body_model], method, autospec=True,
+                         side_effect=self.registry[body_model].search) as body_search,
         ):
             self.db_url_open(
                 f'/json/2/{url_model}/{method}',
