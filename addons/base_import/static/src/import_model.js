@@ -685,6 +685,7 @@ export class BaseImportModel {
                 type: "select",
                 value: "",
                 options: [
+                    "iso-8859-1",
                     "utf-8",
                     "utf-16",
                     "windows-1252",
