@@ -79,6 +79,15 @@ class StockScrap(models.Model):
     def _should_check_available_qty(self):
         return super()._should_check_available_qty() or self.product_is_kit
 
+    def do_scrap(self):
+        self._check_company()
+        domain = [
+            ('move_id.raw_material_production_id', 'in', self.mapped('production_id').ids),
+            ('lot_id', 'in', self.mapped('lot_id').ids),
+        ]
+        self.env['stock.move.line'].search(domain).picked = False
+        return super().do_scrap()
+
     def do_replenish(self, values=False):
         self.ensure_one()
         values = values or {}
