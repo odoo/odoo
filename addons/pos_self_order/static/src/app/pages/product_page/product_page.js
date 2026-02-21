@@ -26,6 +26,7 @@ export class ProductPage extends Component {
 
         const editedLine = this.selfOrder.editedLine;
         useSubEnv({ selectedValues: {} });
+        this.historyState = history.state;
 
         this.selfOrder.lastEditedProductId = this.props.productTemplate.id;
         this.state = useState({
@@ -154,10 +155,25 @@ export class ProductPage extends Component {
             this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
         );
 
+        if (
+            this.productTemplate.pos_optional_product_ids.length &&
+            !this.historyState.redirectPage
+        ) {
+            return this.router.navigate("optional_product", { id: this.productTemplate.id });
+        }
+
+        const qtys = this.historyState.state?.optionalProductQtys;
+        if (qtys) {
+            qtys[this.productTemplate.id] = (qtys[this.productTemplate.id] || 0) + this.state.qty;
+        }
         this.goBack();
     }
 
     goBack() {
+        if (this.historyState.redirectPage) {
+            const { redirectPage, params, state } = this.historyState;
+            return this.router.navigate(redirectPage, params, state);
+        }
         this.router.navigate("product_list");
     }
 

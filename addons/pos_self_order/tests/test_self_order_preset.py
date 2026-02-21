@@ -110,3 +110,9 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_slot_limit_orders")
+
+    def test_self_order_preset_btn(self):
+        self.pos_config.self_ordering_mode = 'kiosk'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_preset_btn')

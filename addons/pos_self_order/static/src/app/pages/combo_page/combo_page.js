@@ -25,6 +25,7 @@ export class ComboPage extends Component {
             return;
         }
         useSubEnv({ selectedValues: {} });
+        this.historyState = history.state;
         this.selfOrder = useSelfOrder();
         this.state = useState({
             selectedChoiceIndex: 0,
@@ -229,12 +230,17 @@ export class ComboPage extends Component {
     }
 
     isBackVisible() {
-        return !(
-            this.state.selectedChoiceIndex === 0 && !this.currentChoiceState.displayAttributesOfItem
+        return Boolean(
+            this.historyState.redirectPage ||
+                this.state.selectedChoiceIndex !== 0 ||
+                this.currentChoiceState.displayAttributesOfItem
         );
     }
 
     back() {
+        if (this.state.selectedChoiceIndex === 0) {
+            return this.goBack();
+        }
         if (this.state.showResume) {
             this.state.selectedChoiceIndex = this.comboChoices.length - 1;
             this.state.showResume = false;
@@ -419,8 +425,9 @@ export class ComboPage extends Component {
     }
 
     addToCart() {
+        const productTemplate = this.props.productTemplate;
         this.selfOrder.addToCart(
-            this.props.productTemplate,
+            productTemplate,
             this.state.qty,
             "",
             {},
@@ -428,6 +435,16 @@ export class ComboPage extends Component {
             this.getComboSelection()
         );
 
+        if (productTemplate.pos_optional_product_ids.length && !this.historyState.redirectPage) {
+            this.router.navigate("optional_product", { id: productTemplate.id });
+            return;
+        }
+
+        const optionalProductQtys = this.historyState.state?.optionalProductQtys;
+        if (optionalProductQtys) {
+            optionalProductQtys[productTemplate.id] =
+                (optionalProductQtys[productTemplate.id] || 0) + this.state.qty;
+        }
         this.goBack();
     }
 
@@ -441,6 +458,10 @@ export class ComboPage extends Component {
     }
 
     goBack() {
+        if (this.historyState.redirectPage) {
+            const { redirectPage, params, state } = this.historyState;
+            return this.router.navigate(redirectPage, params, state);
+        }
         this.router.navigate("product_list");
     }
 

@@ -1,10 +1,10 @@
-import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
+import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
-patch(ProductListPage.prototype, {
-    ticketAvailabilityText(product) {
-        const event = product.event_id;
+patch(ProductCard.prototype, {
+    get ticketAvailabilityText() {
+        const event = this.props.product.event_id;
         const noOfSlots = event?.event_slot_ids?.length || 0;
 
         if (noOfSlots) {
@@ -25,11 +25,5 @@ patch(ProductListPage.prototype, {
             return `${seats} ${_t("seats available")}`;
         }
         return _t("Sold out");
-    },
-    selectProduct(product, target) {
-        if (!product._event_id) {
-            return super.selectProduct(product, target);
-        }
-        this.router.navigate("event_page", { id: product._event_id });
     },
 });

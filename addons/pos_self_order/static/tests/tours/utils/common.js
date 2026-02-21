@@ -164,3 +164,18 @@ export function checkConfirmationString(timingPreset = false) {
             : `.confirmation-block h1:contains("We're preparing your order!")`,
     };
 }
+
+export function checkPreset(presetName) {
+    return {
+        content: `Check that the order has the preset "${presetName}".`,
+        trigger: `button.preset-btn:contains("${presetName}")`,
+    };
+}
+
+export function clickPresetBtn() {
+    return {
+        content: "Click on Preset button",
+        trigger: "button.preset-btn",
+        run: "click",
+    };
+}

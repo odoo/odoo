@@ -71,3 +71,23 @@ test("shouldGoBack", async () => {
     store.router.activeSlot = "cart";
     expect(comp.shouldGoBack()).toBe(true);
 });
+
+test("presetBtnName", async () => {
+    const store = await setupSelfPosEnv();
+    const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
+    const order = await getFilledSelfOrder(store);
+
+    store.config.use_presets = true;
+    order.preset_id = false;
+    expect(comp.presetBtnName).toBe(null);
+
+    const inPreset = store.models["pos.preset"].get(1);
+    order.preset_id = inPreset;
+    expect(comp.presetBtnName).toBe(null);
+    comp.router.activeSlot = "cart";
+    expect(comp.presetBtnName).toBe("In");
+
+    const takeoutPreset = store.models["pos.preset"].get(10);
+    order.preset_id = takeoutPreset;
+    expect(comp.presetBtnName).toBe("Self-Takeout");
+});

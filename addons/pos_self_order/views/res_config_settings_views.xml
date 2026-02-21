@@ -33,7 +33,7 @@
                             <field name="pos_self_ordering_pay_after" readonly="pos_self_ordering_mode == 'kiosk' or (pos_self_ordering_service_mode == 'counter' and pos_self_ordering_mode == 'mobile')" widget="upgrade_selection"/>
                         </div>
                     </setting>
-                    <setting string="Splash screens" help="Personalize your splash screen by adding one or multiple images to create a slideshow" invisible="pos_self_ordering_mode == 'nothing'">
+                    <setting string="Splash screens" help="Personalize your splash screen by adding one or multiple media items to create a slideshow" invisible="pos_self_ordering_mode == 'nothing'">
                         <field name="pos_self_ordering_image_home_ids" class="w-100" widget="many2many_binary" />
                     </setting>
                     <setting string="Language" help="Available interface languages" invisible="pos_self_ordering_mode == 'nothing'">

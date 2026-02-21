@@ -85,6 +85,8 @@ export class OrderWidget extends Component {
             if (currentPage === "product_list") {
                 const targetPage = this.selfOrder.hasPresets() ? "location" : "default";
                 this.router.navigate(targetPage);
+            } else if (currentPage === "cart" && this.selfOrder.currentOrder.unsentLines.length) {
+                this.router.navigate("product_list");
             } else {
                 this.router.back();
             }
@@ -98,5 +100,24 @@ export class OrderWidget extends Component {
                 this.router.navigate("default");
             },
         });
+    }
+
+    get presetBtnName() {
+        const order = this.selfOrder.currentOrder;
+        const payAfter = this.selfOrder.config?.self_ordering_pay_after;
+        const orderChanges = Object.keys(order.uiState.lineChanges).length;
+        if (
+            this.selfOrder.hasPresets() &&
+            this.router.activeSlot === "cart" &&
+            order.unsentLines.length &&
+            !(payAfter === "meal" && orderChanges) // No preset change after first order (pay-after-meal)
+        ) {
+            return order.preset_id?.name;
+        }
+        return null;
+    }
+
+    onClickPresetBtn() {
+        this.router.navigate("location", {}, { redirectPage: this.router.activeSlot });
     }
 }

@@ -11,7 +11,6 @@ test("selectProduct", async () => {
     const models = store.models;
     const product = models["product.template"].get(5);
     const comp = await mountWithCleanup(ProductListPage, {});
-    comp.flyToCart = () => {};
 
     comp.selectProduct(product);
     expect(store.currentOrder.lines).toHaveLength(1);

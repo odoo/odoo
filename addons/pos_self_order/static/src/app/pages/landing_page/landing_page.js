@@ -1,10 +1,8 @@
-/* global Carousel */
-
-import { Component, onMounted, onWillStart, onWillUnmount, useRef } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
-import { session } from "@web/session";
+import { useCarousel } from "@pos_self_order/app/utils/carousel_hook";
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
@@ -14,9 +12,7 @@ export class LandingPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.dialog = useService("dialog");
-        this.carouselRef = useRef("carousel");
         this.activeSelected = false;
-        this.carouselInterval = null;
 
         onWillStart(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
@@ -29,24 +25,9 @@ export class LandingPage extends Component {
             this.selfOrder.rpcLoading = false;
         });
 
-        onMounted(() => {
-            if (this.selfOrder.config._self_ordering_image_home_ids.length > 1) {
-                // used to init carousel after components mount / unmount
-                const carousel = new Carousel(this.carouselRef.el);
-
-                // prevent traceback when no image is set
-                this.carouselInterval = setInterval(
-                    () => {
-                        carousel.next();
-                    },
-                    session.test_mode ? 100 : 5000
-                );
-            }
-        });
-
-        onWillUnmount(() => {
-            clearInterval(this.carouselInterval);
-        });
+        if (this.selfOrder.config._self_ordering_image_home_ids.length > 1) {
+            useCarousel("carousel", 5);
+        }
     }
 
     get currentLanguage() {

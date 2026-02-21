@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OptionalProductPage">
+        <div class="o_self_optional_product_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
+            <t t-set="product" t-value="productTemplate"/>
+
+            <!-- Header -->
+            <div class="o_self_optional_product_page_header text-bg-primary" t-att-class="{'o_self_shadow_top': scrollShadow.top}">
+                <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
+                    <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="goBack">
+                        <i class="oi oi-close fa-fw" aria-hidden="true"/>
+                        <span  t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
+                    </button>
+                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-esc="product.name"/>
+                </div>
+            </div>
+
+            <!-- Scroll -->
+            <div class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="scrollContainer">
+                <div class="flex-grow-1">
+                    <div class="py-3 text-bg-primary">
+                        <div class="container o_self_container ">
+                             <!-- Name & Image -->
+                            <div class="d-flex flex-column align-items-center">
+                                <h1 class="mt-kiosk-p-3 mb-3 " t-esc="product.name" t-ref="productName"/>
+                                <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
+                                    <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional Products -->
+                    <div class="o_self_optional_product_list o_self_product_list_page overflow-y-auto o_self_fade position-relative">
+                        <h1 class="text-center fw-semibold my-4 text-primary">Optional Products</h1>
+                        <div class="product_container container o_self_container product_list grid" t-att-class="{'pt-sm-3 pt-lg-4': selfOrder.kioskMode, 'pb-2': !selfOrder.kioskMode}">
+                            <div t-foreach="optionalProducts" t-as="optionalProduct" t-key="optionalProduct.id"
+                                class="o_self_product_box g-col-12 g-col-md-6 g-col-lg-3 rounded-4 p-3 p-lg-0 shadow-sm shadow-lg-none"
+                                t-att-class="{'g-col-kiosk-p-4': optionalProducts.length &lt;= 9 , 'g-col-kiosk-p-3': optionalProducts.length &gt; 9 }">
+                                <ProductCard product="optionalProduct" onClick.bind="selectOptionalProduct" qty="state.optionalProductQtyById[optionalProduct.id]" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Footer -->
+            <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container ">
+                   <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
+                        <button class="ms-auto btn btn-lg btn-primary text-truncate ps-auto back-btn" t-on-click="goBack">
+                            <t t-if="isOptionalProductSelected">Continue</t>
+                            <t t-else="">No Thanks</t>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -139,3 +139,19 @@ registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
         Utils.clickBtn("Ok"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_preset_btn", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        Utils.checkPreset("Takeaway"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickPresetBtn(),
+        LandingPage.selectLocation("Delivery"),
+        CartPage.isShown(),
+        Utils.checkPreset("Delivery"),
+    ],
+});

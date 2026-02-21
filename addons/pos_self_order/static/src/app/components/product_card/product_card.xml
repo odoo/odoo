@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductCard">
+        <t t-set="product" t-value="this.props.product" />
+        <article class="o_self_product_card position-relative d-flex flex-row-reverse flex-lg-column align-items-start cursor-pointer" t-on-click="(evt) => this.onClickProduct(evt.target)">
+            <div class="product_img ratio ratio-1x1 w-lg-100 flex-shrink-0 ms-2 ms-lg-0">
+                <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.template/#{product.id}/image_512?unique=#{product.write_date}" loading="lazy"/>
+            </div>
+            <div class="d-flex flex-column w-100 mt-lg-2 mt-kiosk-p-3 gap-lg-1 text-lg-center align-items-lg-center">
+                <ProductNameWidget product="product"/>
+                <span t-out="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(product))" class="o-so-tabular-nums fs-4 fw-bold text-primary"/>
+                <div class="product_descr d-lg-none mt-1 text-ellipsis text-muted small" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
+            </div>
+            <span t-if="this.props.qty" t-out="this.props.qty" class="badge position-absolute top-0 end-0 m-0 m-lg-2 rounded-4 fs-5 text-bg-primary fw-bold"/>
+        </article>
+    </t>
+</templates>
