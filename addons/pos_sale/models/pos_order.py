@@ -185,8 +185,20 @@ class PosOrder(models.Model):
             }
         return order_line
 
+<<<<<<< 55bdec5fd404d36ce3fd58bcd03d9cbd8a14bd8c
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
+||||||| 636465d5eb0aaa78eeb9a47fd0b09be3b97b5072
+    def _get_invoice_lines_values(self, line_values, pos_line):
+        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line)
+=======
+    def _get_stock_moves(self):
+        res = super()._get_stock_moves()
+        return res | self.lines.sale_order_line_id.move_ids
+
+    def _get_invoice_lines_values(self, line_values, pos_line):
+        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line)
+>>>>>>> d55f39e8dcf4a5ae68315fd8c29592d1ae29822f
 
         if pos_line.sale_order_origin_id:
             origin_line = pos_line.sale_order_line_id
