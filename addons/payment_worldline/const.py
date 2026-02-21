@@ -9,6 +9,8 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     'discover',
     'mastercard',
     'visa',
+    'ideal_brand',
+    'wero',
 }
 
 # Mapping of payment method codes to Worldline codes.

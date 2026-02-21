@@ -23,6 +23,8 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     'mastercard',
     'amex',
     'discover',
+    'ideal_brand',
+    'wero',
 }
 
 # Mapping of payment method codes to Stripe codes.
