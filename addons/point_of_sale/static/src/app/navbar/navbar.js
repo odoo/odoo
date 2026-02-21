@@ -5,6 +5,9 @@ import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detec
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
 import { SyncPopup } from "@point_of_sale/app/navbar/sync_popup/sync_popup";
+import { offlineErrorHandler } from "@point_of_sale/app/errors/error_handlers";
+import { ConnectionLostError } from "@web/core/network/rpc";
+
 import {
     SaleDetailsButton,
     handleSaleDetails,
@@ -121,14 +124,19 @@ export class Navbar extends Component {
     }
 
     onSyncNotificationClick() {
-        if (this.pos.data.network.offline) {
-            this.pos.data.network.warningTriggered = false;
-        }
+        try {
+            if (this.pos.data.network.offline) {
+                throw new ConnectionLostError();
+            }
 
-        if (this.pos.data.network.unsyncData.length > 0) {
-            this.dialog.add(SyncPopup, {
-                confirm: () => this.pos.data.syncData(),
-            });
+            if (this.pos.unsyncedOrderCount > 0) {
+                this.dialog.add(SyncPopup, {
+                    confirm: () => this.pos.syncAllOrders(),
+                });
+            }
+        } catch (error) {
+            this.pos.data.network.warningTriggered = false;
+            offlineErrorHandler(this.env, error, error);
         }
     }
 }

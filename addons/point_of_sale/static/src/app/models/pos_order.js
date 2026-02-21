@@ -109,7 +109,7 @@ export class PosOrder extends Base {
     }
 
     get isUnsyncedPaid() {
-        return this.finalized && typeof this.id === "string";
+        return this.finalized && typeof this.id === "string" && this.lines.length > 0;
     }
 
     get originalSplittedOrder() {
