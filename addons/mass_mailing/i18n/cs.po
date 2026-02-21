@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2026-01-24 08:08+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/"
@@ -30,8 +30,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
-"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mass_mailing
@@ -323,17 +323,6 @@ msgstr ""
 "<font style=\"font-size: 62px; font-weight: bold;\">Chytlavý nadpis</font>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
-msgid ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
-"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
-"is_blacklisted\" groups=\"base.group_user\"/>"
-msgstr ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Tato e-mailová "
-"adresa je na černé listině pro hromadné e-maily\" aria-label=\"Černá "
-"listina\" invisible=\"not is_blacklisted\" groups=\"base.group_user\"/>"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
 msgstr "<i class=\"fa fa-bar-chart\"/> Porovnat verze"
@@ -580,8 +569,8 @@ msgid ""
 "<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;"
 "\">Explain the benefits you offer</span>"
 msgstr ""
-"<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;\""
-">Vysvětlete nabízené výhody</span>"
+"<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;"
+"\">Vysvětlete nabízené výhody</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -1242,6 +1231,7 @@ msgstr "Možnost černé listiny při odhlášení"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
 msgid "Blacklisted"
 msgstr "Na černé listině"
 
@@ -1310,8 +1300,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"Žádost o zařazení na blokovací seznam z odkazu pro odhlášení z odběru %"
-"(mailing_link)s (dokument %(record_link)s)"
+"Žádost o zařazení na blokovací seznam z odkazu pro odhlášení z odběru "
+"%(mailing_link)s (dokument %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -4896,6 +4886,11 @@ msgstr ""
 "příliš velkému počtu nedoručených zpráv."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+msgid "This email is blacklisted for mass mailings"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
@@ -5603,3 +5598,12 @@ msgstr "⌙ Aktivní"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
 msgid "⌙ Inactive"
 msgstr "Neaktivní"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+#~ "blacklisted for mass mailings\" aria-label=\"Blacklisted\" "
+#~ "invisible=\"not is_blacklisted\" groups=\"base.group_user\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Tato e-mailová "
+#~ "adresa je na černé listině pro hromadné e-maily\" aria-label=\"Černá "
+#~ "listina\" invisible=\"not is_blacklisted\" groups=\"base.group_user\"/>"

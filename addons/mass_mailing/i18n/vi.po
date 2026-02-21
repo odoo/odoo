@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -308,17 +308,6 @@ msgid ""
 msgstr ""
 "<font style=\"font-size: 62px; font-weight: bold;\">Dòng tiêu đề hấp dẫn</"
 "font>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
-msgid ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
-"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
-"is_blacklisted\" groups=\"base.group_user\"/>"
-msgstr ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Email này bị hạn chế "
-"đối với thư hàng loạt\" aria-label=\"Bị hạn chế\" invisible=\"not "
-"is_blacklisted\" groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1226,6 +1215,7 @@ msgstr "Tùy chọn hạn chế khi hủy đăng ký"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
 msgid "Blacklisted"
 msgstr "Đã hạn chế"
 
@@ -4887,6 +4877,11 @@ msgstr ""
 "Email này đã được tự động thêm vào danh sách chặn vì bị trả lại quá nhiều."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+msgid "This email is blacklisted for mass mailings"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
@@ -5600,3 +5595,12 @@ msgstr "⌙ Hoạt động"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
 msgid "⌙ Inactive"
 msgstr "⌙ Không hoạt động"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+#~ "blacklisted for mass mailings\" aria-label=\"Blacklisted\" "
+#~ "invisible=\"not is_blacklisted\" groups=\"base.group_user\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Email này bị hạn "
+#~ "chế đối với thư hàng loạt\" aria-label=\"Bị hạn chế\" invisible=\"not "
+#~ "is_blacklisted\" groups=\"base.group_user\"/>"

@@ -6,14 +6,15 @@
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
 #
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:36+0000\n"
-"PO-Revision-Date: 2025-12-27 08:02+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"PO-Revision-Date: 2026-02-21 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/de/>\n"
 "Language: de\n"
@@ -33,6 +34,11 @@ msgid ""
 msgstr ""
 "%s sollte eine KVK- oder OIN-Nummer im Feld „Unternehmens-ID“ oder als "
 "Peppol-E-Adresse (EAS-Code 0106 oder 0190) haben."
+
+#. module: account_edi_ubl_cii
+#: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
+msgid "(Un)Group lines by tax"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -573,6 +579,13 @@ msgid "BIS3 DE (XRechnung)"
 msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "Cannot find the origin file, try by importing it again"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
 msgid "Checkbox Ubl Cii Label"
 msgstr "Kontrollkästchen Ubl Cii Xml Bezeichnung"
@@ -774,6 +787,13 @@ msgstr "Für den Import der Rechnung verwendetes Format: %s"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__invoice_is_ubl_cii
 msgid "Generate Peppol format by default"
 msgstr "Peppol-Format standardmäßig generieren"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "Grouped lines by tax"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -998,6 +1018,7 @@ msgstr ""
 #, python-format
 msgid "The following bank account numbers got retrieved during the import : %s"
 msgstr ""
+"Die folgenden Bankkontonummern wurden während des Imports abgerufen: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1059,6 +1080,13 @@ msgid "UBL/CII File"
 msgstr "UBL/CII-Datei"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "Ungrouped lines from %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid ""
@@ -1070,10 +1098,24 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "Unknown partner"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Unsupported file type via %s"
 msgstr "Nicht unterstützter Dateityp über %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "Untaxed"
+msgstr "Unversteuert"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1090,6 +1132,28 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__xrechnung
 msgid "XRechnung CIUS"
 msgstr "XRechnung CIUS"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "You can only (un)group lines of a draft invoice"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid "You can only (un)group lines of a incoming invoice (vendor bill)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only (un)group lines of an invoice not linked to a purchase order"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python

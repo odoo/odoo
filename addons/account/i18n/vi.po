@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2026-01-10 08:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-17/"
@@ -1004,17 +1004,6 @@ msgstr "<span class=\"o_stat_text\">Hạng mục đã đối chiếu</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Transaction</span>"
 msgstr "<span class=\"o_stat_text\">Giao dịch</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span class=\"oe_inline o_form_label mx-3\" "
-"groups=\"base.group_multi_currency\" invisible=\"move_type == 'entry'\"> in "
-"</span>"
-msgstr ""
-"<span class=\"oe_inline o_form_label mx-3\" "
-"groups=\"base.group_multi_currency\" invisible=\"move_type == 'entry'\"> "
-"bằng </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -8962,6 +8951,7 @@ msgstr "Sổ nhật ký:"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_miscellaneous
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Sổ nhật ký"
 
@@ -18027,6 +18017,11 @@ msgid "here"
 msgstr "ở đây"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "in"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
 msgid "in amount"
 msgstr "theo số tiền"
@@ -18315,6 +18310,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Biên lai thanh toán (Mã {{ object.name or "
 "'Không có' }})"
+
+#~ msgid ""
+#~ "<span class=\"oe_inline o_form_label mx-3\" "
+#~ "groups=\"base.group_multi_currency\" invisible=\"move_type == 'entry'\"> "
+#~ "in </span>"
+#~ msgstr ""
+#~ "<span class=\"oe_inline o_form_label mx-3\" "
+#~ "groups=\"base.group_multi_currency\" invisible=\"move_type == 'entry'\"> "
+#~ "bằng </span>"
 
 #, python-format
 #~ msgid "You cannot switch the type of a document which has been posted once."

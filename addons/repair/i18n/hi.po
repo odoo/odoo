@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-24 08:09+0000\n"
+"PO-Revision-Date: 2026-02-21 08:05+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/repair/hi/>"
 "\n"
@@ -45,6 +45,12 @@ msgid ""
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* 'नया' स्टेटस का उपयोग तब किया जाता है जब उपयोगकर्ता एक नया और बिना पुष्टि वाला रिपेयर ऑर्डर दर्ज करता"
+" है.\n"
+"* 'पुष्टि की गई' स्टेटस का उपयोग तब किया जाता है जब उपयोगकर्ता रिपेयर ऑर्डर की पुष्टि करता है.\n"
+"* 'रिपेयर चल रहा है' स्टेटस का उपयोग तब किया जाता है जब रिपेयर जारी हो.\n"
+"* रिपेयर पूरा होने पर 'रिपेयर हो गया' स्टेटस सेट किया जाता है.\n"
+"* 'रद्द किया गया' स्टेटस का इस्तेमाल तब किया जाता है जब उपयोगकर्ता रिपेयर ऑर्डर रद्द करता है।"
 
 #. module: repair
 #. odoo-python
@@ -81,7 +87,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "<span>Orders</span>"
-msgstr ""
+msgstr "<span>ऑर्डर</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -116,7 +122,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? इससे आपके इन्वेंट्री डेटा में गड़बड़ी हो सकती है।"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -176,12 +182,12 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "प्रॉडक्शन रिज़र्व करने के लिए अनुमति दी गई"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "प्रॉडक्शन अनरिज़र्व करने के लिए अनुमति दी गई"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
@@ -220,7 +226,7 @@ msgstr "वर्ग"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Check availability"
-msgstr ""
+msgstr "उपलब्धता देखें"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -243,7 +249,7 @@ msgstr "संस्था"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability
 msgid "Component Status"
-msgstr ""
+msgstr "कॉम्पोनेंट स्टेटस"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
@@ -380,14 +386,14 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
+msgstr "अपने वेयरहाउस में स्टोरेबल प्रॉडक्ट की ट्रेसेबिलिटी पक्का करें।"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "अनुमानित %s"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__expected
@@ -420,12 +426,12 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Forecast Report"
-msgstr ""
+msgstr "अनुमान से जुड़ी रिपोर्ट"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Forecasted"
-msgstr ""
+msgstr "पूर्वानुमान लगाया गया"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -511,7 +517,7 @@ msgstr ""
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
-msgstr ""
+msgstr "इन्वेंट्री मूव्स"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
@@ -592,7 +598,7 @@ msgstr "लोकेशन"
 #: model:ir.model,name:repair.model_stock_lot
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr ""
+msgstr "लॉट/सीरियल"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
@@ -656,7 +662,7 @@ msgstr "सामान्य"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "उपलब्ध नहीं"
 
 #. module: repair
 #. odoo-python
@@ -709,7 +715,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "ऑपरेशन टाइप"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -746,7 +752,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "पिकिंग टाइप"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -756,7 +762,7 @@ msgstr "प्रॉयरिटी"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "प्रोक्युर्मन्ट ग्रुप"
 
 #. module: repair
 #: model:ir.model,name:repair.model_product_template
@@ -784,7 +790,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "प्रॉडक्ट मूव्स (स्टॉक मूव लाइन)"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
@@ -819,7 +825,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
 msgid "Quant"
-msgstr ""
+msgstr "मात्रा"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quantity
@@ -1220,7 +1226,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "To Process"
-msgstr ""
+msgstr "प्रोसेस करने के लिए"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter

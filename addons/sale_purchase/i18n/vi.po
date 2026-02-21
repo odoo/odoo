@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -46,25 +46,6 @@ msgstr "<span class=\"o_stat_text\">Mua hàng</span>"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">Bán hàng</span>"
-
-#. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
-msgid ""
-"<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" invisible=\"not "
-"display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
-"                    There are active purchase orders linked to this sale "
-"order that are not cancelled automatically! <br/>\n"
-"                </span>\n"
-"            </span>"
-msgstr ""
-"<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" invisible=\"not "
-"display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
-"                    Có các đơn mua hàng đang hoạt động được liên kết với đơn "
-"bán hàng này và không bị hủy tự động! <br/>\n"
-"                </span>\n"
-"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -224,6 +205,13 @@ msgid "Subcontract Service"
 msgstr "Dịch vụ gia công"
 
 #. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
+msgid ""
+"There are active purchase orders linked to this sale order that are not "
+"cancelled automatically! <br/>"
+msgstr ""
+
+#. module: sale_purchase
 #. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
@@ -262,3 +250,22 @@ msgstr "của"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
 msgstr "đã đặt thay vì"
+
+#~ msgid ""
+#~ "<span id=\"display_invoice_alert\" position=\"after\">\n"
+#~ "                <span id=\"display_purchase_orders_alert\" "
+#~ "invisible=\"not display_purchase_orders_alert\" "
+#~ "groups=\"purchase.group_purchase_user\">\n"
+#~ "                    There are active purchase orders linked to this sale "
+#~ "order that are not cancelled automatically! <br/>\n"
+#~ "                </span>\n"
+#~ "            </span>"
+#~ msgstr ""
+#~ "<span id=\"display_invoice_alert\" position=\"after\">\n"
+#~ "                <span id=\"display_purchase_orders_alert\" "
+#~ "invisible=\"not display_purchase_orders_alert\" "
+#~ "groups=\"purchase.group_purchase_user\">\n"
+#~ "                    Có các đơn mua hàng đang hoạt động được liên kết với "
+#~ "đơn bán hàng này và không bị hủy tự động! <br/>\n"
+#~ "                </span>\n"
+#~ "            </span>"

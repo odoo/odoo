@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
+# * sale_project
 #
 # Translators:
 # Kseina Tyshchenko, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-17/"
+"sale_project/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && "
+"(n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && "
+"(n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 ))"
+" ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_project
 #. odoo-python
@@ -60,15 +63,6 @@ msgstr "Рядки Замовлення на продаж %(name)s"
 #, python-format
 msgid "%(name)s's Sales Orders"
 msgstr "Замовлення на продаж %(name)s"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
-msgid ""
-"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -946,6 +940,11 @@ msgid "Unit of Measure"
 msgstr "Одиниця вимірювання"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+msgid "Values set here are company-specific."
+msgstr "Значення встановлені тут індивідуальні під компанію."
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count
 msgid "Vendor Bill Count"
 msgstr "Підрахунок рахунків постачальника"
@@ -973,3 +972,10 @@ msgstr ""
 "Ви не можете пов'язати елемент замовлення на продаж %(order_id)s - "
 "%(product_id)s до цього завдання, тому що це витрата, яка повторно "
 "виставлена у рахунку."
+
+#~ msgid ""
+#~ "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+#~ "company-specific.\" groups=\"base.group_multi_company\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+#~ "company-specific.\" groups=\"base.group_multi_company\"/>"

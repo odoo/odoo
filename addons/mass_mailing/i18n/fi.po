@@ -32,13 +32,14 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Jessica Jakara, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2025-08-27 01:41+0000\n"
-"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"PO-Revision-Date: 2026-02-21 08:04+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/"
 "mass_mailing/fi/>\n"
 "Language: fi\n"
@@ -46,7 +47,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mass_mailing
 #. odoo-python
@@ -335,18 +336,6 @@ msgid ""
 msgstr ""
 "<font style=\"font-size: 62px; font-weight: bold;\">Mieleenjäävä otsikko</"
 "font>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
-msgid ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
-"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
-"is_blacklisted\" groups=\"base.group_user\"/>"
-msgstr ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Tämä "
-"sähköpostiosoite on massasähköpostin mustalla listalla\" aria-"
-"label=\"Blacklisted\" invisible=\"not is_blacklisted\" "
-"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1261,6 +1250,7 @@ msgstr "Musta lista -vaihtoehto tilauksen lopettamisen yhteydessä"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
 msgid "Blacklisted"
 msgstr "Markkinointikiellossa"
 
@@ -4056,7 +4046,7 @@ msgstr "Valmiina nousuun!"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Ready to unleash emails?"
-msgstr ""
+msgstr "Valmiina lähettämään sähköposteja?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_blacklist__opt_out_reason_id
@@ -4933,6 +4923,11 @@ msgstr ""
 "palautunut liikaa."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+msgid "This email is blacklisted for mass mailings"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
@@ -5643,3 +5638,13 @@ msgstr "⌙ Aktiivinen"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
 msgid "⌙ Inactive"
 msgstr "⌙ Epäaktiivinen"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+#~ "blacklisted for mass mailings\" aria-label=\"Blacklisted\" "
+#~ "invisible=\"not is_blacklisted\" groups=\"base.group_user\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Tämä "
+#~ "sähköpostiosoite on massasähköpostin mustalla listalla\" aria-"
+#~ "label=\"Blacklisted\" invisible=\"not is_blacklisted\" "
+#~ "groups=\"base.group_user\"/>"
