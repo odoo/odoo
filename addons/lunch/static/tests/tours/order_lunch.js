@@ -28,6 +28,10 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     run: () => {},  // wait for article to be correctly loaded
 },
 {
+    trigger: `div[role=article] .oe_kanban_global_click:first .o_kanban_record_title:contains("Aaron's Pizza")`,
+    run: () => {},  // wait for the filter to be applied
+},
+{
     trigger: "div[role=article] .oe_kanban_global_click",
     content: _t("Click on a product you want to order and is available."),
     run:'click',
