@@ -269,7 +269,7 @@ class Message(models.Model):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS mail_message_model_res_id_id_idx ON mail_message (model, res_id, id)""")
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None, fetch_size=20000):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
         check_access_rule for more details about those rules.
@@ -306,7 +306,6 @@ class Message(models.Model):
         pid = self.env.user.partner_id.id
         ids = []
         allowed_ids = set()
-        model_ids = defaultdict(lambda: defaultdict(set))
 
         rel_alias = query.make_alias(self._table, 'partner_ids')
         query.add_join("LEFT JOIN", rel_alias, 'mail_message_res_partner_rel', SQL(
@@ -336,16 +335,18 @@ class Message(models.Model):
                 SQL.identifier(notif_alias, 'res_partner_id'),
             ),
         ))
-        for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
-            ids.append(id_)
-            if author_id == pid:
-                allowed_ids.add(id_)
-            elif partner_id == pid:
-                allowed_ids.add(id_)
-            elif model and res_id and message_type != 'user_notification':
-                model_ids[model][res_id].add(id_)
+        while rows := self.env.cr.fetchmany(fetch_size):
+            model_ids = defaultdict(lambda: defaultdict(set))
+            for id_, model, res_id, author_id, message_type, partner_id in rows:
+                ids.append(id_)
+                if author_id == pid:
+                    allowed_ids.add(id_)
+                elif partner_id == pid:
+                    allowed_ids.add(id_)
+                elif model and res_id and message_type != 'user_notification':
+                    model_ids[model][res_id].add(id_)
 
-        allowed_ids.update(self._find_allowed_doc_ids(model_ids))
+            allowed_ids.update(self._find_allowed_doc_ids(model_ids))
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
         return allowed._as_query(order)
 
