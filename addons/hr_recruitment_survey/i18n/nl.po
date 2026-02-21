@@ -7,22 +7,22 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-18 10:48+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-24 12:20+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_recruitment_survey/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -47,8 +47,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-"
-"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"            Please answer the interview for <t t-out=\"format_date(object."
+"deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            We wish you good luck! Thank you in advance for your "
@@ -103,6 +103,11 @@ msgstr ""
 "                        <span class=\"o_stat_text\">Interview</span>"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.survey_survey_view_form
+msgid "<span class=\"o_stat_text\">Jobs</span>"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
 msgstr "Over jou"
@@ -110,12 +115,12 @@ msgstr "Over jou"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_current_user
 msgid "Accessible By Current User"
-msgstr ""
+msgstr "Toegankelijk voor huidige gebruiker"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_interviewer_user
 msgid "Accessible By Interviewer User"
-msgstr ""
+msgstr "Toegankelijk voor interviewgebruiker"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -130,17 +135,17 @@ msgstr "Voeg een nieuwe enquête toe"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__emails
 msgid "Additional emails"
-msgstr ""
+msgstr "Extra e-mails"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__all_surveys_are_recruitment
 msgid "All Surveys Are Recruitment"
-msgstr ""
+msgstr "Alle enquêtes zijn Werving & Selectie"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__deadline
 msgid "Answer deadline"
-msgstr ""
+msgstr "Antwoorddeadline"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
@@ -162,22 +167,22 @@ msgstr "Solliciteren voor een functie"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "Bijlagen"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__author_id
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "De inhoud is hetzelfde als het sjabloon"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Kan inhoud bewerken"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -193,17 +198,17 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body
 msgid "Contents"
-msgstr ""
+msgstr "Inhoud"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Aangemaakt door"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Aangemaakt op"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -227,12 +232,12 @@ msgstr "Opleiding"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_partner_ids
 msgid "Existing Partner"
-msgstr ""
+msgstr "Bestaande partner"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_emails
 msgid "Existing emails"
-msgstr ""
+msgstr "Bestaande e-mails"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
@@ -250,14 +255,9 @@ msgid "Getting perks such as free parking, gym passes"
 msgstr "Voordelen krijgen zoals gratis parkeren, gym abonnementen"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_mode
-msgid "Handle existing"
-msgstr ""
-
-#. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__has_many_applicants
 msgid "Has Many Applicants"
-msgstr ""
+msgstr "Heeft veel sollicitanten"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
@@ -277,7 +277,7 @@ msgstr "Gratis extra's zoals thee, koffie en kantoorartikelen"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__hide_url
 msgid "Hide Url"
-msgstr ""
+msgstr "URL verbergen"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -293,6 +293,8 @@ msgstr "ID"
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
+"AIs dit is aangevinkt moeten gebruikers inloggen voor ze antwoorden, zelfs "
+"met een geldig token."
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
@@ -315,13 +317,13 @@ msgstr "Interviewformulier: %s"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation"
-msgstr ""
+msgstr "Uitnodiging voor een gesprek"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation: %(survey_name)s"
-msgstr ""
+msgstr "Uitnodiging voor een gesprek: %(survey_name)s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -338,6 +340,17 @@ msgstr "Interviews"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__is_mail_template_editor
 msgid "Is Editor"
+msgstr "Is Bewerker"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "Job"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__job_count
+msgid "Job Count"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -354,22 +367,22 @@ msgstr "Kennis"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__lang
 msgid "Language"
-msgstr ""
+msgstr "Taal"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Laatst bijgewerkt door"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Laatst bijgewerkt op"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "E-mailsjabloon"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
@@ -394,11 +407,15 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het versturen van een "
+"e-mail. Als deze niet is ingesteld, wordt de taal van de hoofdpartner "
+"gebruikt. Dit moet meestal een 'placeholder expression' zijn die de juiste "
+"taal voorziet, bv. {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__mail_server_id
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "Uitgaande e-mailserver"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -453,7 +470,7 @@ msgstr "Vertel ons wat meer over jezelf: wat zijn je hoofdactiviteiten,..."
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__partner_ids
 msgid "Recipients"
-msgstr ""
+msgstr "Ontvangers"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
@@ -466,19 +483,25 @@ msgid "Recruitment Form"
 msgstr "Wervingsformulier"
 
 #. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "Related Jobs"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Weergavemodel"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
 msgid "Require Login"
-msgstr ""
+msgstr "Inloggen vereist"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_text
 msgid "Resend Comment"
-msgstr ""
+msgstr "Reactie opnieuw verzenden"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
@@ -493,7 +516,7 @@ msgstr "Zie interviewverslag"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__send_email
 msgid "Send Email"
-msgstr ""
+msgstr "E-mail verzenden"
 
 #. module: hr_recruitment_survey
 #: model:ir.actions.server,name:hr_recruitment_survey.action_applicant_send_interview
@@ -504,23 +527,23 @@ msgstr "Interview verzenden"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_tree_view_job_inherit
 msgid "Send Interviews"
-msgstr ""
+msgstr "Gesprekken versturen"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send interviews"
-msgstr ""
+msgstr "Gesprekken versturen"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__single_survey_id
 msgid "Single Survey"
-msgstr ""
+msgstr "Enkele enquête"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__subject
 msgid "Subject"
-msgstr ""
+msgstr "Onderwerp"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -534,7 +557,7 @@ msgstr "Enquête"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_access_mode
 msgid "Survey Access Mode"
-msgstr ""
+msgstr "Toegangsmodus enquête"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
@@ -544,7 +567,7 @@ msgstr "Enquêtetype"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_start_url
 msgid "Survey URL"
-msgstr ""
+msgstr "Enquête-URL"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -554,7 +577,7 @@ msgstr "Enquête gebruikersinvoer"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_ids
 msgid "Surveys"
-msgstr ""
+msgstr "Enquêtes"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
@@ -576,6 +599,8 @@ msgid ""
 "The following emails you just entered are invalid:\n"
 "%s"
 msgstr ""
+"De volgende e-mailadressen die je zojuist hebt ingevoerd, zijn ongeldig:\n"
+"%s"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -584,6 +609,8 @@ msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
 msgstr ""
+"De volgende ontvangers hebben geen gebruikersaccount: %s. Je moet voor hen "
+"gebruikersaccounts aanmaken of extern aanmelden toestaan in de configuratie."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -598,11 +625,14 @@ msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
+"Deze enquête staat geen externe mensen toe om deel te nemen. Je moet een "
+"gebruikersaccount aanmaken of de toegangsmogelijkheden van de enquête "
+"veranderen."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_can_signup
 msgid "Users can signup"
-msgstr ""
+msgstr "Gebruikers kunnen aanmelden"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -637,6 +667,8 @@ msgid ""
 "Wizard for sending interview invitations to job applicants during "
 "recruitment process"
 msgstr ""
+"Wizard voor het versturen van uitnodigingen voor sollicitatiegesprekken aan "
+"sollicitanten tijdens het wervingsproces"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
@@ -652,3 +684,9 @@ msgstr ""
 "Je kunt enquêtes maken die worden gebruikt voor aanwervingen. Ontwerp "
 "eenvoudig je sollicitatiegesprek,\n"
 "                verstuur uitnodigingen en analyseer antwoorden."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "id"
+msgstr ""

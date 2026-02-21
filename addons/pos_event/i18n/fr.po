@@ -3,23 +3,23 @@
 # * pos_event
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-10-23 09:18+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/pos_event/"
-"fr/>\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-15 15:52+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
+"pos_event/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_event
 #. odoo-javascript
@@ -57,7 +57,7 @@ msgstr "<span class=\"o_stat_text\">Commande PdV</span>"
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.event_event_view_form_inherit_pos_event
 msgid "<span class=\"o_stat_text\">PoS Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ventes PdV</span>"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -74,16 +74,16 @@ msgstr "Participants"
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
-msgid "Cancel"
-msgstr "Annuler"
+msgid "Confirm"
+msgstr "Confirmer"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
-msgid "Confirm"
-msgstr "Confirmer"
+msgid "Discard"
+msgstr ""
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__display_name
@@ -189,7 +189,7 @@ msgstr "Aucun créneau"
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Zut !"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__image_1024
@@ -209,7 +209,7 @@ msgstr "Ligne de commande PdV"
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__pos_price_total
 msgid "PoS Total (Tax Included)"
-msgstr ""
+msgstr "Total PdV (taxes incluses)"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_config
@@ -219,12 +219,12 @@ msgstr "Configuration du point de vente"
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Commande point de vente"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Ligne de commande point de vente"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_pos_session
@@ -248,8 +248,8 @@ msgstr "Sélectionnez des tickets pour %(event)s"
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Select tickets for %(event)s (%(seats)s seats available%(suffix)s)"
 msgstr ""
-"Sélectionnez des tickets pour %(event)s (%(seats)s places disponibles%"
-"(suffix)s)"
+"Sélectionnez des tickets pour %(event)s (%(seats)s places "
+"disponibles%(suffix)s)"
 
 #. module: pos_event
 #. odoo-javascript
@@ -288,12 +288,11 @@ msgstr "Tickets"
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.event_event_view_form_inherit_pos_event
 msgid "Total sales for this event from PoS"
-msgstr ""
+msgstr "Total des ventes pour cet événement du PdV"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "Unlimited"
 msgstr "Capacité illimitée"
 
@@ -314,9 +313,14 @@ msgstr "pour"
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "left"
 msgstr "place(s) restante(s)"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "seats"
+msgstr ""
 
 #. module: pos_event
 #. odoo-javascript

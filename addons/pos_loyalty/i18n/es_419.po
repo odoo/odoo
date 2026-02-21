@@ -3,22 +3,23 @@
 # * pos_loyalty
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-10-10 15:42+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-02-14 12:13+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/pos_loyalty/es_419/>\n"
+"odoo-s19-1/pos_loyalty/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
@@ -146,13 +147,11 @@ msgstr "Recompensas disponibles"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
-msgid "Balance"
-msgstr "Saldo"
+#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
+msgid "Balance:"
+msgstr ""
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__promo_barcode
 msgid "Barcode"
 msgstr "Código de barras"
@@ -217,6 +216,7 @@ msgstr "Descuentos y programas de lealtad"
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_receipt__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_session__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_product__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_template__display_name
@@ -303,6 +303,7 @@ msgstr "Cuántos puntos cuesta esta recompensa en el cupón."
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_receipt__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_session__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_product__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_template__id
@@ -384,7 +385,7 @@ msgstr "Regla de lealtad"
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid "Loyalty coupon sold"
-msgstr ""
+msgstr "Cupón de lealtad vendido"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -408,7 +409,7 @@ msgstr "No se encontró ningún monedero electrónico válido"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "¡Ups!"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -462,11 +463,16 @@ msgstr "Configuración del punto de venta"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Orden del punto de venta"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
 msgid "Point of Sale Order Line"
+msgstr "Línea de la orden del Punto de venta"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
 msgstr ""
 
 #. module: pos_loyalty
@@ -542,8 +548,12 @@ msgstr "Restablecer programas"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
-msgid "Restrict publishing to those shops."
-msgstr "Restringir las publicaciones a esas tiendas."
+msgid ""
+"Restrict publishing to those shops. Note: A program will only be used in the "
+"shops using the same currency as the program."
+msgstr ""
+"Restringe la publicación a esas tiendas. Nota: El programa solo se usará en "
+"las tiendas que utilicen la misma moneda que el programa."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -592,7 +602,9 @@ msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
 msgstr "Gastado:"
 
@@ -639,6 +651,8 @@ msgid ""
 "The code is invalid. Ensure that the spelling is right or if the gift card "
 "exists."
 msgstr ""
+"El código no es válido. Acuérdate de que esté bien escrito o que sí exista "
+"la tarjeta de regalo."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
@@ -811,12 +825,6 @@ msgstr "Se rechazó la tarjeta de regalo sin pagar."
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
-msgid "Until:"
-msgstr "Hasta:"
-
-#. module: pos_loyalty
-#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Use eWallet to pay"
 msgstr "Usar el monedero electrónico para pagar"
@@ -839,7 +847,9 @@ msgstr "Si esta línea es parte de una recompensa o no."
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
 msgstr "Ganado:"
 
@@ -854,6 +864,7 @@ msgstr "Sí"
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You cannot change the quantity or the price of a physical gift card."
 msgstr ""
+"No puedes cambiar la cantidad ni el precio de una tarjeta de regalo física."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -893,9 +904,3 @@ msgstr "Reembolso de monedero electrónico"
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "eWallet requires a customer to be selected"
 msgstr "Debe seleccionar un cliente para el monedero electrónico"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
-msgid "no expiration"
-msgstr "sin fecha de vencimiento"

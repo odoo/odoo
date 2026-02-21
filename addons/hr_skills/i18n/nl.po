@@ -7,29 +7,29 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022, 2025.
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-02-07 12:21+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/hr_skills/"
-"nl/>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"hr_skills/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/models/hr_skill_type.py:0
-msgid "%s (copy)"
-msgstr "%s (kopie)"
+msgid "%(skill_type_name)s (copy)"
+msgstr "%(skill_type_name)s (kopie)"
 
 #. module: hr_skills
 #: model:ir.actions.report,print_report_name:hr_skills.action_report_employee_cv
@@ -272,7 +272,6 @@ msgstr "Certificering"
 #: model:hr.skill.type,name:hr_skills.hr_skill_type_certifications
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_certification
 #: model:ir.ui.menu,name:hr_skills.hr_certification_menu
-#: model:mail.activity.type,name:hr_skills.mail_activity_data_upload_certification
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
 msgid "Certifications"
@@ -376,7 +375,6 @@ msgstr "Cursus?"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_learnings_training_attendances_courses
-#, fuzzy
 msgid "Courses"
 msgstr "Cursussen"
 
@@ -447,7 +445,7 @@ msgstr "Huidige werknemer"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_job__current_job_skill_ids
 msgid "Current Job Skill"
-msgstr "Huidige vaardigheid"
+msgstr "Huidige functievaardigheid"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_graph
@@ -574,15 +572,10 @@ msgid "Digital advertising"
 msgstr "Digitaal adverteren"
 
 #. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
-msgid "Discard"
-msgstr "Negeren"
-
-#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_certification_page
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_certification_page
 msgid "Display Certification Page"
-msgstr ""
+msgstr "Certificeringspagina weergeven"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
@@ -847,7 +840,7 @@ msgstr "Glasblazer/-ontwerper"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_go
 msgid "Go"
-msgstr "Ga"
+msgstr "Go"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jth_goodman_inc
@@ -1566,7 +1559,7 @@ msgstr "Cv afdrukken"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_problem_solving
 msgid "Problem-Solving"
-msgstr "Probleemoplossend"
+msgstr "Probleemoplossend denken"
 
 #. module: hr_skills
 #: model:hr.skill.type,name:hr_skills.hr_skill_type_dev
@@ -1663,7 +1656,7 @@ msgstr "Reageren"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_resource_resource
 msgid "Resource"
-msgstr ""
+msgstr "Resource"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_resourcefulness
@@ -1673,9 +1666,7 @@ msgstr "Vindingrijkheid"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Resume"
 msgstr "Cv"
@@ -1904,7 +1895,7 @@ msgstr "Vaardigheidsniveaus"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Skill Type"
-msgstr "Soort vaardigheid"
+msgstr "Vaardigheidstype"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
@@ -1912,12 +1903,12 @@ msgstr "Soort vaardigheid"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr "Vaardigheidssoorten"
+msgstr "Vaardigheidstypes"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_job_skill
 msgid "Skill for job position"
-msgstr ""
+msgstr "Vaardigheden voor functie"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_individual_skill_mixin
@@ -2126,8 +2117,8 @@ msgstr ""
 #: code:addons/hr_skills/models/hr_individual_skill_mixin.py:0
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
-"Het vaardigheidsniveau %(level)s is niet geldig voor het soort vaardigheid: %"
-"(type)s"
+"Het vaardigheidsniveau %(level)s is niet geldig voor het vaardigheidstype: "
+"%(type)s"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
@@ -2188,7 +2179,7 @@ msgstr "Titel"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_view_list
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
 msgid "To"
-msgstr "Aan"
+msgstr "Tot"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jgo_tottenham_central_school
@@ -2209,7 +2200,7 @@ msgstr "Training"
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_lines_training_action
 #: model:ir.ui.menu,name:hr_skills.menu_learnings_training_attendances
 msgid "Training Attendances"
-msgstr "Aanwezigheid bij trainingen"
+msgstr "Gevolgde trainingen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_list_view
@@ -2265,9 +2256,10 @@ msgid "Update Skills"
 msgstr "Vaardigheden"
 
 #. module: hr_skills
-#: model:mail.activity.type,summary:hr_skills.mail_activity_data_upload_certification
+#. odoo-python
+#: code:addons/hr_skills/models/hr_employee.py:0
 msgid "Upload a document for a missing certification"
-msgstr ""
+msgstr "Upload een document voor een ontbrekende certificering"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_urdu

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
 "PO-Revision-Date: 2025-11-12 13:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/utm/bg/"
@@ -86,6 +86,11 @@ msgstr ""
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__is_auto_campaign
 msgid "Automatically Generated Campaign"
+msgstr ""
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_black_friday
+msgid "Black Friday Sales"
 msgstr ""
 
 #. module: utm
@@ -234,7 +239,6 @@ msgstr "Проектирайте"
 #: model:ir.model.fields,field_description:utm.field_utm_medium__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_source__display_name
-#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
 msgid "Display Name"
@@ -250,16 +254,6 @@ msgstr "Извършен"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Edit"
 msgstr "Редактирай"
-
-#. module: utm
-#: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr "Имейл Кампания - Продукти"
-
-#. module: utm
-#: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
-msgid "Email Campaign - Services"
-msgstr "Имейл кампания - услуги"
 
 #. module: utm
 #. odoo-javascript
@@ -292,7 +286,6 @@ msgstr "HTTP Маршрутизиране"
 #: model:ir.model.fields,field_description:utm.field_utm_medium__id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__id
 #: model:ir.model.fields,field_description:utm.field_utm_source__id
-#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__id
 #: model:ir.model.fields,field_description:utm.field_utm_stage__id
 #: model:ir.model.fields,field_description:utm.field_utm_tag__id
 msgid "ID"
@@ -368,7 +361,6 @@ msgid "My Campaigns"
 msgstr ""
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
 #: model:ir.model.fields,field_description:utm.field_utm_stage__name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
@@ -390,6 +382,14 @@ msgstr ""
 #: code:addons/utm/models/utm_medium.py:0
 msgid ""
 "Oops, you can't delete the Medium '%s'.\n"
+"Doing so would be like tearing down a load-bearing wall — not the best idea."
+msgstr ""
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid ""
+"Oops, you can't delete the Source '%s'.\n"
 "Doing so would be like tearing down a load-bearing wall — not the best idea."
 msgstr ""
 
@@ -443,11 +443,6 @@ msgid "Running"
 msgstr "Работещ"
 
 #. module: utm
-#: model:utm.campaign,title:utm.utm_campaign_fall_drive
-msgid "Sale"
-msgstr "Продажба"
-
-#. module: utm
 #: model:utm.stage,name:utm.campaign_stage_1
 msgid "Schedule"
 msgstr "Разписание"
@@ -489,7 +484,6 @@ msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
-#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__source_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
@@ -632,14 +626,14 @@ msgid "UTM Mixin"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__utm_reference
+msgid "UTM Reference"
+msgstr ""
+
+#. module: utm
 #: model:ir.model,name:utm.model_utm_source
 msgid "UTM Source"
 msgstr "UTM източник"
-
-#. module: utm
-#: model:ir.model,name:utm.model_utm_source_mixin
-msgid "UTM Source Mixin"
-msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
@@ -667,20 +661,6 @@ msgstr "UTM"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Use This For My Campaigns"
-msgstr ""
-
-#. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_source.py:0
-msgid "You cannot delete the 'Referral' UTM source record."
-msgstr ""
-
-#. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_source.py:0
-msgid ""
-"You cannot update multiple records with the same name. The name should be "
-"unique!"
 msgstr ""
 
 #. module: utm

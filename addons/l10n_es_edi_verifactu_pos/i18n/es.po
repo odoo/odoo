@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-26 08:12+0000\n"
+"POT-Creation-Date: 2026-02-04 19:20+0000\n"
 "PO-Revision-Date: 2025-11-28 14:25+0000\n"
 "Last-Translator: Grace Conlon <grco@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19-l10n/"
@@ -82,6 +82,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_l10n_es_edi_verifactu_document__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_config__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order_receipt__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_res_company__display_name
 msgid "Display Name"
 msgstr "Nombre para mostrar"
@@ -91,13 +92,13 @@ msgstr "Nombre para mostrar"
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_l10n_es_edi_verifactu_document__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_config__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order_receipt__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_res_company__id
 msgid "ID"
 msgstr "ID"
 
 #. module: l10n_es_edi_verifactu_pos
-#. odoo-javascript
-#: code:addons/l10n_es_edi_verifactu_pos/static/src/app/screens/order_receipt/order_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
 msgid "Invoice:"
 msgstr ""
 
@@ -128,8 +129,17 @@ msgid "Point of Sale Order"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu_pos
-#. odoo-javascript
-#: code:addons/l10n_es_edi_verifactu_pos/static/src/app/screens/order_receipt/order_receipt.xml:0
+#: model:ir.model,name:l10n_es_edi_verifactu_pos.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
+msgid "QR Code"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
 msgid "QR tributario:"
 msgstr "QR tributario:"
 
@@ -174,8 +184,7 @@ msgid "Send Veri*Factu"
 msgstr "Enviar documentos Veri*Factu"
 
 #. module: l10n_es_edi_verifactu_pos
-#. odoo-javascript
-#: code:addons/l10n_es_edi_verifactu_pos/static/src/app/screens/order_receipt/order_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
 msgid "Simplified"
 msgstr ""
 
@@ -201,8 +210,7 @@ msgid "The order needs to be invoiced since its total amount is above %s€."
 msgstr "El pedido debe ser facturado, ya que su importe total supera los %s €."
 
 #. module: l10n_es_edi_verifactu_pos
-#. odoo-javascript
-#: code:addons/l10n_es_edi_verifactu_pos/static/src/app/screens/order_receipt/order_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
 msgid "VERI*FACTU"
 msgstr "VERI*FACTU"
 
@@ -273,6 +281,13 @@ msgid ""
 msgstr ""
 "Los documentos Veri*Factu solo se pueden generar para pedidos de TPV pagados "
 "o publicados."
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+msgid ""
+"With Veri*Factu enabled, POS orders cannot be consolidated into one invoice."
+msgstr ""
 
 #. module: l10n_es_edi_verifactu_pos
 #. odoo-python

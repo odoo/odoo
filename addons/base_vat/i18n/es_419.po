@@ -3,24 +3,24 @@
 # * base_vat
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 22:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:24+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/base_vat/es_419/>\n"
+"odoo-s19-1/base_vat/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_vat
 #. odoo-python
@@ -37,8 +37,16 @@ msgstr "10XXXXXXXXY o 20XXXXXXXXY o 15XXXXXXXXY o 16XXXXXXXXY o 17XXXXXXXXY"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr "17291716060 (NIN) o 1729171602 (VKN)"
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr ""
+"12345678 o UA12345678 (EDRPOU), 1234567890 (RNOPP) o 123456789012 (IPN)"
 
 #. module: base_vat
 #. odoo-python
@@ -69,22 +77,12 @@ msgstr "CHE-123.456.788 TVA o CHE-123.456.788 MWST o CHE-123.456.788 IVA"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"La conexión con el servidor VIES falló. No se pudo validar el número de IVA "
-"%s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -116,6 +114,13 @@ msgstr "DE123456788 o 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nombre para mostrar"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr ""
+"Ocurrió un error al verificar el número de IVA \"%s\" con el servicio VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -210,11 +215,11 @@ msgstr "Número de identificación fiscal"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
-"Parece que el número %(vat_label)s [%(wrong_vat)s] no es válido. %"
-"(expected_note)s"
+"Parece que el número %(vat_label)s [%(wrong_vat)s] no es válido. "
+"%(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -241,26 +246,10 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "El número de IVA %s no pudo ser interpretado por el servidor VIES."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
-"La solicitud de validación del número fiscal no ha sido procesada. El "
-"servicio VIES respondió con el siguiente error: %s"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr ""
-"Usa \"/\" para indicar de forma explícita que el número de identificación "
-"fiscal no es válido. "
+"Para indicar de forma explícita que no hay un IVA válido, usa \"/\", \"na\" "
+"o \"NA\". "
 
 #. module: base_vat
 #. odoo-python

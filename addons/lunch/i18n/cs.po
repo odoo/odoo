@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
 "PO-Revision-Date: 2025-12-05 07:58+0000\n"
 "Last-Translator: Jaroslav Janos <jaroslav.janos.jr@technodat.eu>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/lunch/cs/"
@@ -128,13 +128,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-"
-"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
+"get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', '')"
-"\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', "
+"'')\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -222,12 +222,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "A product is defined by its name, category, price and vendor."
 msgstr "Produkt je definován svým názvem, kategorií, cenou a dodavatelem."
-
-#. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__am
-msgid "AM"
-msgstr "Dopoledne"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction
@@ -342,7 +336,7 @@ msgstr "Počet příloh"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
-msgid "Automatic Email Sending Time should be between 0 and 12"
+msgid "Automatic Email Sending Time should be between 0 and 24"
 msgstr ""
 
 #. module: lunch
@@ -516,14 +510,15 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid ""
-"Click on the <span class=\"fa fa-phone text-success\" title=\"Order "
-"button\"></span> to announce that the order is ordered.<br>\n"
+"Click on the <span class=\"fa fa-phone text-success\" role=\"img\" aria-"
+"label=\"Order button\" title=\"Order button\"></span> to announce that the "
+"order is ordered.<br>\n"
 "            Click on the <span class=\"fa fa-check text-success\" "
-"title=\"Receive button\"></span> to announce that the order is received."
-"<br>\n"
+"role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"></span> "
+"to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" "
-"title=\"Cancel button\"></span> red X to announce that the order isn't "
-"available."
+"role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"></span> "
+"red X to announce that the order isn't available."
 msgstr ""
 
 #. module: lunch
@@ -690,11 +685,6 @@ msgstr "Zásilky"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__description
 msgid "Description"
 msgstr "Popis"
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Discard"
-msgstr "Zrušit"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mode
@@ -1178,32 +1168,32 @@ msgid "Lunch: Supplier Order"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_234
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to The Corner"
 msgstr ""
 
@@ -1241,11 +1231,6 @@ msgstr "Chyba při doručování zprávy"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
 msgid "Messages"
 msgstr "Zprávy"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
-msgid "Moment"
-msgstr "Moment"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
@@ -1412,18 +1397,13 @@ msgid "Nothing to order, add some meals to begin."
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
-msgid "Notification Moment"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
 msgid "Notification Time"
 msgstr ""
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
-msgid "Notification time must be between 0 and 12"
+msgid "Notification time must be between 0 and 24"
 msgstr ""
 
 #. module: lunch
@@ -1530,12 +1510,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
 msgstr "Přečerpání"
-
-#. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
-msgid "PM"
-msgstr "Odpoledne"
 
 #. module: lunch
 #. odoo-javascript

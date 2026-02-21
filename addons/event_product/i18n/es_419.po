@@ -3,23 +3,23 @@
 # * event_product
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 18:36+0000\n"
-"PO-Revision-Date: 2025-11-19 18:13+0000\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-16 15:53+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/event_product/es_419/>\n"
+"odoo-s19-1/event_product/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: event_product
 #: model:ir.model.fields,help:event_product.field_event_event_ticket__description
@@ -27,6 +27,12 @@ msgstr ""
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
 msgstr "Agregue una descripción del boleto para sus clientes."
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__additional_product_ids
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__additional_product_ids
+msgid "Additional Products"
+msgstr "Productos adicionales"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_product_product__service_tracking
@@ -94,6 +100,11 @@ msgid "Event Tickets"
 msgstr "Boletos del evento"
 
 #. module: event_product
+#: model:product.category,name:event_product.product_category_events
+msgid "Events"
+msgstr ""
+
+#. module: event_product
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
 msgid "Free"
 msgstr "Gratis"
@@ -115,26 +126,20 @@ msgid "Not Sold"
 msgstr "Sin vender"
 
 #. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
-#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price
-msgid "Price"
-msgstr "Precio"
-
-#. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_reduce
 #: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price_reduce
 msgid "Price Reduce"
 msgstr "Reducción de precio"
 
 #. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr "Precio reducido con impuestos incluidos"
-
-#. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_incl
-msgid "Price include"
-msgstr "Precio incluido"
+#: model:ir.model.fields,help:event_product.field_event_event_ticket__total_price
+#: model:ir.model.fields,help:event_product.field_event_type_ticket__total_price
+msgid ""
+"Price at which this ticket will be sold, which takes into account the Ticket "
+"Price and the price of every Additional Product"
+msgstr ""
+"Precio al que se venderá este boleto, que tiene en cuenta el precio del "
+"boleto y el precio de cada producto adicional."
 
 #. module: event_product
 #: model:ir.model,name:event_product.model_product_template
@@ -152,11 +157,11 @@ msgstr "Variante del producto"
 #. odoo-python
 #: code:addons/event_product/models/product_product.py:0
 msgid ""
-"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
-"(event)s\"."
+"Products linked to an event ticket must have \"%(tracking)s\" set to "
+"\"%(event)s\"."
 msgstr ""
-"Los productos vinculados a un boleto para un evento deben tener \"%"
-"(tracking)s\" configurado con \"%(event)s\"."
+"Los productos vinculados a un boleto para un evento deben tener "
+"\"%(tracking)s\" configurado con \"%(event)s\"."
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
@@ -174,10 +179,48 @@ msgid "Sales Start"
 msgstr "Inicio de la venta"
 
 #. module: event_product
+#: model:ir.model.fields,help:event_product.field_event_event_ticket__additional_product_ids
+#: model:ir.model.fields,help:event_product.field_event_type_ticket__additional_product_ids
+msgid ""
+"Select products to include with each registration. They will also show up "
+"separately on Sale Orders."
+msgstr ""
+"Selecciona los productos a incluir con cada registro. También aparecerán por "
+"separado en las órdenes de venta."
+
+#. module: event_product
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
 msgid "Sold"
 msgstr "Vendido"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price
+msgid "Ticket Price"
+msgstr "Precio del boleto"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__total_price
+msgid "Total Price"
+msgstr "Precio total"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_reduce
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__total_price_reduce
+msgid "Total Price Reduce"
+msgstr "Reducción del precio total"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_reduce_taxinc
+msgid "Total Price Reduce Tax inc"
+msgstr "Precio total con reducción con impuestos inc."
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_incl
+msgid "Total Price include"
+msgstr "Precio total incluido"
 
 #. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form

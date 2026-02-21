@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
 "PO-Revision-Date: 2025-12-05 18:08+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -123,9 +123,9 @@ msgid ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
-"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
 "        Activate my two-factor authentication\n"
 "    </a>\n"
 "</p>\n"
@@ -167,9 +167,9 @@ msgstr ""
 "учетной записи.</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"   <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
-"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px;\"> \n"
+"   <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\"> \n"
 "        Активировать двухфакторную аутентификацию\n"
 "   </a>\n"
 "</p> \n"
@@ -215,8 +215,8 @@ msgstr "Для входа в ваш аккаунт было использова
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
-"Только что с вашей учетной записи было удалено доверенное устройство: %"
-"(device_names)s"
+"Только что с вашей учетной записи было удалено доверенное устройство: "
+"%(device_names)s"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
@@ -227,6 +227,12 @@ msgstr "Все пользователи"
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Устройство аутентификации"
+
+#. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Authentication code via email"
+msgstr ""
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -247,6 +253,7 @@ msgstr "Параметры конфигурации"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_ir_http__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
 msgid "Display Name"
@@ -279,7 +286,19 @@ msgid "Enforce two-factor authentication"
 msgstr "Обеспечьте двухфакторную аутентификацию"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Enter below the six-digit authentication code just sent to your email"
+msgstr ""
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_ir_http__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
 msgid "ID"
@@ -390,6 +409,12 @@ msgid "Two-factor authentication has been deactivated on your account"
 msgstr "Двухфакторная аутентификация была отключена на вашей учетной записи"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Use an authentication code sent by email"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "User"
 msgstr "Пользователь"
@@ -401,6 +426,12 @@ msgid "Verification failed, please double-check the 6-digit code"
 msgstr "Верификация не прошла, пожалуйста, перепроверьте 6-значный код"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Verify"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 "We strongly recommend enabling the two-factor authentication using an "
@@ -410,6 +441,12 @@ msgstr ""
 "Мы настоятельно рекомендуем включить двухфакторную аутентификацию с помощью "
 "приложения-аутентификатора, чтобы обезопасить свою учетную запись.\n"
 "               <br/>"
+
+#. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "XXXXXX"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code

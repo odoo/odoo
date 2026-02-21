@@ -7,17 +7,17 @@
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-11 13:01+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
+"PO-Revision-Date: 2026-02-07 12:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "sale_stock/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -97,11 +97,6 @@ msgid "<strong>Incoterm</strong>"
 msgstr "<strong>インコタームズ</strong>"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
-msgid "A storable product is a product for which you manage stock."
-msgstr "在庫可能プロダクトは、在庫を管理するプロダクトです。"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be "
@@ -140,7 +135,7 @@ msgstr "特定のルートを適用する"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "可能な限り早く(バックオーダーあり)"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -161,17 +156,6 @@ msgid "Available in stock"
 msgstr "利用可能な在庫"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Blue: Not Delivered/Started\n"
-"            Orange: Partially Delivered\n"
-"            Green: Fully Delivered"
-msgstr ""
-"青: 配送/開始待ち\n"
-"            オレンジ: 一部配送済\n"
-"            緑: 全配送済"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "販売オーダ明細に特定のルートを適用する選択をする"
@@ -179,12 +163,12 @@ msgstr "販売オーダ明細に特定のルートを適用する選択をする
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "最初の配送オーダの完了日"
+msgstr "最初の出荷オーダの完了日"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -219,12 +203,7 @@ msgstr "配送"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "配送オーダ"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
-msgid "Delivery Status"
-msgstr "配送ステータス"
+msgstr "出荷オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -267,7 +246,7 @@ msgstr "表示名"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr "配送数量ウィジェット"
+msgstr "数量ウィジェットを表示"
 
 #. module: sale_stock
 #. odoo-python
@@ -325,11 +304,6 @@ msgid "Free Qty Today"
 msgstr "本日の無料数量"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
-msgid "Fully Delivered"
-msgstr "配送完了"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
@@ -379,7 +353,7 @@ msgstr "イコターム詳細"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "在庫ルート"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -389,7 +363,7 @@ msgstr "MTO（受注生産）か"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr ""
+msgstr "製品の分納を許可するか、一括配送するか指定します。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -409,7 +383,7 @@ msgstr "仕訳明細"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr "最終配送オーダ"
+msgstr "最終出荷オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
@@ -481,10 +455,9 @@ msgid "Not Available"
 msgstr "利用不可"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
-msgstr "配送されていません"
+msgstr "未出荷"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -506,10 +479,9 @@ msgid "On"
 msgstr "On"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Partially Delivered"
-msgstr "一部配送済み"
+msgstr "一部出荷済"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -520,11 +492,6 @@ msgstr "プロダクト"
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "プロダクトの移動(在庫移動ライン)"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
-msgid "Qty Available Today"
-msgstr "本日利用可能な数量"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -655,11 +622,6 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "遅配を避けるために早めに出荷を予定"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
-msgid "Scheduled Date"
-msgstr "予定日"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr "安全リードタイム"
@@ -685,7 +647,6 @@ msgid "Shipping Status"
 msgstr "出荷状況"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Started"
 msgstr "開始済"
@@ -709,12 +670,12 @@ msgstr "在庫補充レポート"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "在庫規則"
+msgstr "在庫ルール"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "在庫規則レポート"
+msgstr "在庫ルールレポート"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
@@ -724,7 +685,7 @@ msgstr "在庫評価"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "在庫規則レポート"
+msgstr "在庫ルールレポート"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -775,11 +736,6 @@ msgid "This product is replenished on demand."
 msgstr "このプロダクトはオンデマンドで補充されます。"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
-msgid "Track Inventory"
-msgstr "在庫追跡"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "転送"
@@ -804,11 +760,6 @@ msgstr "ユーザ"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
 msgstr "予測照会"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
-msgid "Virtual Available At Date"
-msgstr "バーチャル利用可能日時"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id

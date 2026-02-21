@@ -7,17 +7,17 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 09:03+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 12:40+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/sale_stock/"
-"nl/>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"sale_stock/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,11 +96,6 @@ msgid "<strong>Incoterm</strong>"
 msgstr "<strong>Incoterm</strong>"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
-msgid "A storable product is a product for which you manage stock."
-msgstr "Een houdbaar product is een product waarvan je de voorraad beheert."
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be "
@@ -125,7 +120,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr "Wizard overgelopen orders"
+msgstr "Wizard overlopende orders"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -141,7 +136,7 @@ msgstr "Specifieke routes toepassen"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Zo snel mogelijk, met backorders"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -162,17 +157,6 @@ msgid "Available in stock"
 msgstr "Beschikbaar in voorraad"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Blue: Not Delivered/Started\n"
-"            Orange: Partially Delivered\n"
-"            Green: Fully Delivered"
-msgstr ""
-"Blauw: Niet geleverd/gestart\n"
-"            Oranje: Gedeeltelijk Geleverd\n"
-"            Groen: Volledig geleverd"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "Kies om een verkooporderregel specifieke route toe te kennen."
@@ -180,7 +164,7 @@ msgstr "Kies om een verkooporderregel specifieke route toe te kennen."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -221,11 +205,6 @@ msgstr "Levering"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Leveringen"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
-msgid "Delivery Status"
-msgstr "Afleverstatus"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -269,7 +248,7 @@ msgstr "Weergavenaam"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr "Toon aantal widget"
+msgstr "Widget voor aantal weergeven"
 
 #. module: sale_stock
 #. odoo-python
@@ -313,7 +292,7 @@ msgstr "Verwachte levering"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr "Prognose datum verwacht"
+msgstr "Voorspelling verwachte datum"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -325,11 +304,6 @@ msgstr "Voorspelde voorraad"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
 msgstr "Gratis aantal vandaag"
-
-#. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
-msgid "Fully Delivered"
-msgstr "Volledig geleverd"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -381,7 +355,7 @@ msgstr "Details Incoterm"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Voorraadroute"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -392,6 +366,7 @@ msgstr "is MTO"
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr ""
+"Het geeft aan of de goederen in één keer of gedeeltelijk geleverd worden"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -485,7 +460,6 @@ msgid "Not Available"
 msgstr "Niet beschikbaar"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
 msgstr "Niet geleverd"
@@ -512,7 +486,6 @@ msgid "On"
 msgstr "Op"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Partially Delivered"
 msgstr "Gedeeltelijk geleverd"
@@ -526,11 +499,6 @@ msgstr "Product"
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
-msgid "Qty Available Today"
-msgstr "Aantal vandaag beschikbaar"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -662,11 +630,6 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Plan levering eerder om vertragingen te voorkomen"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
-msgid "Scheduled Date"
-msgstr "Geplande datum"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr "Beveiligingstijd"
@@ -692,7 +655,6 @@ msgid "Shipping Status"
 msgstr "Verzendstatus"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Started"
 msgstr "Gestart"
@@ -750,8 +712,8 @@ msgid ""
 "document."
 msgstr ""
 "Het afleveradres is gewijzigd op de verkooporder <br/>\n"
-" Van \"<strong>\" %(old_address)s\"</strong> naar <strong>\"%"
-"(new_address)s\"</strong>,\n"
+" Van \"<strong>\" %(old_address)s\"</strong> naar "
+"<strong>\"%(new_address)s\"</strong>,\n"
 " Je moet waarschijnlijk de partner in dit document bijwerken."
 
 #. module: sale_stock
@@ -781,11 +743,6 @@ msgid "This product is replenished on demand."
 msgstr "Dit voorraad van product wordt op aanvraag aangevuld."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
-msgid "Track Inventory"
-msgstr "Voorraad bijhouden"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Verplaatsing"
@@ -809,12 +766,7 @@ msgstr "Gebruiker"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
-msgstr "Bekijk prognose"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
-msgid "Virtual Available At Date"
-msgstr "Virtueel beschikbaar op"
+msgstr "Voorspelling bekijken"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id

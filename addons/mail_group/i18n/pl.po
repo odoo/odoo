@@ -4,15 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-12-11 15:57+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-07 14:38+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "mail_group/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -25,17 +25,17 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "#Członkowie"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "#Wiadomości"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "#Do sprawdzenia"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -48,6 +48,8 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    Rozpocznij rozmowę, wysyłając wiadomość e-mail na adres"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -76,8 +78,8 @@ msgstr ""
 "                Zgłosiłeś chęć zapisania się na listę mailingową <strong t-"
 "out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                Aby potwierdzić, odwiedź poniższy link: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                Aby potwierdzić, odwiedź poniższy link: <strong t-if=\"ctx."
+"get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
 "                Jeśli to pomyłka lub nie prosiłeś o tę akcję, zignoruj tę "
@@ -107,8 +109,8 @@ msgstr ""
 "                Poprosiłeś o opuszczenie listy mailingowej. <strong t-"
 "out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                Aby potwierdzić, odwiedź poniższy link: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                Aby potwierdzić, odwiedź poniższy link: <strong t-if=\"ctx."
+"get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
 "                Jeśli to pomyłka lub nie prosiłeś o tę akcję, zignoruj tę "
@@ -121,8 +123,8 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-"
-"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object."
+"mail_group_id.name\"/> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
@@ -566,11 +568,6 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-msgid "Discard"
-msgstr "Odrzuć"
-
-#. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
@@ -674,7 +671,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "Grupy"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -962,7 +959,7 @@ msgstr "Wiadomości wymagające działania"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "Moderuj"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1124,7 +1121,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "Ups, nie ma tu żadnych wiadomości."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1318,7 +1315,7 @@ msgstr "Szukaj lista moderacji"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "Wybierz użytkowników"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1359,7 +1356,7 @@ msgstr "Wyślij email"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "Wyślij wytyczne do nowych członków"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1611,7 +1608,7 @@ msgstr "np. \"Newsletter\""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "np. „Ta grupa dotyczy ...”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1621,7 +1618,7 @@ msgstr "np. mojafirma.pl"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "np. „Proszę być uprzejmym i ...”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1646,7 +1643,7 @@ msgstr "wiadomości / miesiąc"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "wiadomości do przejrzenia"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short

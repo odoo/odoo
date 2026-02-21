@@ -3,23 +3,23 @@
 # * auth_signup
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-11-18 14:05+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-09 16:28+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/auth_signup/es_419/>\n"
+"odoo-s19-1/auth_signup/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -30,6 +30,11 @@ msgid ""
 "        You may change your password by following this link which will "
 "remain valid during"
 msgstr ""
+",<br/><br/>\n"
+"                                Alguien solicitó restablecer la contraseña "
+"de la cuenta vinculada a este correo.\n"
+"                                Puedes cambiar tu contraseña con este "
+"enlace, solo es válido durante"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -43,12 +48,11 @@ msgid ""
 "                        To gain access to your account, you can use the "
 "following link:\n"
 "                        <div style=\"margin: 32px 0px 32px 0px;\">\n"
-"                            <a t-attf-href=\"/web/login?"
-"auth_login={{object.email}}\" t-attf-style=\"background-color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
-"8px 16px; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
-"font-size:13px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object."
+"email}}\" t-attf-style=\"background-color: {{object.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -60,6 +64,30 @@ msgid ""
 "                        </t>\n"
 "                    </t>"
 msgstr ""
+"<t>\n"
+"                        Apreciable <t t-out=\"object.name or ''\">Marc Demo</"
+"t>,<br/><br/>\n"
+"                        Tu cuenta se creó con éxito.<br/>\n"
+"                        Tu correo para iniciar sesión es <strong><t t-"
+"out=\"object.email or ''\">mark.brown23@ejemplo.com</t></strong><br/>\n"
+"                        Usa el enlace a continuación para acceder a tu "
+"cuenta:\n"
+"                        <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object."
+"email}}\" t-attf-style=\"background-color: {{object.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"                                Ir a mi cuenta\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Gracias,<br/>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -87,6 +115,28 @@ msgid ""
 "company's portal.</t>\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                Apreciable <t t-out=\"object.name or ''\">Marc Demo</t>,<br/"
+"> <br/>\n"
+"                ¡Te damos la bienvenida al portal de <t t-out=\"object."
+"company_id.name\">TuEmpresa</t>!<br/><br/>\n"
+"                Te creamos una cuneta con el inicio de sesión a "
+"continuación: <t t-out=\"object.login\">demo</t><br/><br/>\n"
+"                Haz clic en el botón de abajo para seleccionar una "
+"contraseña y activar tu cuenta.\n"
+"                <div style=\"margin: 16px 0px 16px 0px; text-align: center;"
+"\">\n"
+"                    <a t-att-href=\"object.partner_id._get_signup_url()\" t-"
+"attf-style=\"display: inline-block; padding: 10px; text-decoration: none; "
+"font-size: 12px; background-color: {{object.company_id.email_secondary_color "
+"or '#875A7B'}}; color: {{object.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">\n"
+"                        <strong>Activar tu cuenta</strong>\n"
+"                    </a>\n"
+"                </div>\n"
+"                <t t-out=\"ctx.get('welcome_message') or ''\">Te damos la "
+"bienvenida al portal de nuestra empresa.</t>\n"
+"            </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -105,28 +155,63 @@ msgid ""
 "        Accept invitation\n"
 "    </a>\n"
 "</div>\n"
-"<b>  This link will remain valid during <t t-"
-"out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
-"or 144)//24\"/> days </b> <br/>\n"
+"<b>  This link will remain valid during <t t-out=\"(object.env['ir."
+"config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') or "
+"144)//24\"/> days </b> <br/>\n"
 "<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
 "Your Odoo domain is: <b><a t-att-href=\"website_url\" t-out=\"website_url or "
 "''\">http://yourcompany.odoo.com</a></b><br/>\n"
-"Your sign in email is: <b><a t-attf-href=\"/web/login?"
-"login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
-"''\">mark.brown23@example.com</a></b><br/><br/>\n"
+"Your sign in email is: <b><a t-attf-href=\"/web/login?login={{ object."
+"email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark."
+"brown23@example.com</a></b><br/><br/>\n"
 "Never heard of Odoo? It’s an all-in-one business software loved by 12+ "
 "million users. It will considerably improve your experience at work and "
 "increase your productivity.\n"
 "<br/><br/>\n"
 "Have a look at the <a href=\"https://www.odoo.com/page/tour?"
-"utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo Tour</a> to "
-"discover the tool.\n"
+"utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: {{object."
+"company_id.email_secondary_color or '#875A7B'}};\">Odoo Tour</a> to discover "
+"the tool.\n"
 "<br/><br/>\n"
 "Enjoy Odoo!<br/>\n"
 "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Hola, <t t-out=\"object.name or ''\">Marc Demo</t>:<br/><br/>\n"
+"Recibiste una invitación de <t t-out=\"object.create_uid.name or "
+"''\">OdooBot</t> de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t> "
+"para conectarte a Odoo.\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"        Aceptar invitación\n"
+"    </a>\n"
+"</div>\n"
+"<b>  Este enlace será válido durante <t t-out=\"(object.env['ir."
+"config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') or "
+"144)//24\"/> días </b> <br/>\n"
+"<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
+"Tu dominio de Odoo es: <b><a t-att-href=\"website_url\" t-out=\"website_url "
+"or ''\">http://tuempresa.odoo.com</a></b><br/>\n"
+"Tu correo de inicio de sesión es: <b><a t-attf-href=\"/web/login?"
+"login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
+"''\">mark.brown23@ejemplo.com</a></b><br/><br/>\n"
+"¿No sabes qué es Odoo? Es un software de gestión en empresarial integrado "
+"usado por más de 12 millones de usuarios. Mejorará de gran manera tu "
+"experiencia en el trabajo y aumentará tu productividad.\n"
+"<br/><br/>\n"
+"Mira nuestros <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;"
+"utm_medium=auth\" t-attf-style=\"color: {{object.company_id."
+"email_secondary_color or '#875A7B'}};\">App tours</a> para aprender más "
+"sobre nuestra herramienta.\n"
+"<br/><br/>\n"
+"¡Disfruta Odoo!<br/>\n"
+"--<br/>El equipo de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>\n"
+"            </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -147,6 +232,21 @@ msgid ""
 "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Hola, <t t-out=\"object.name or ''\">Mitchell Admin</t>:<br/> <br/>\n"
+"Agregaste a los usuarios a continuación a tu base de datos, pero no se han "
+"registrado:\n"
+"<ul>\n"
+"    <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"        <li t-out=\"invited_user or ''\">demo@ejemplo.com</li>\n"
+"    </t>\n"
+"</ul>\n"
+"Envíales un mensaje para que puedan acceder a tu base de datos y puedan "
+"comenzar a trabajar contigo.\n"
+"<br/><br/>\n"
+"¡Ten un buen día!<br/>\n"
+"--<br/>El equipo de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>\n"
+"            </t>"
 
 #. module: auth_signup
 #. odoo-python
@@ -208,6 +308,12 @@ msgstr "Confirmado"
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
+
+#. module: auth_signup
+#. odoo-javascript
+#: code:addons/auth_signup/static/src/components/signup.xml:0
+msgid "Copy Reset Password Link"
+msgstr ""
 
 #. module: auth_signup
 #. odoo-python
@@ -302,6 +408,9 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "        Thanks,"
 msgstr ""
+"Si tu no realizaste la solicitud, puedes ignorar este correo electrónico.<br/"
+"><br/>\n"
+"                                Gracias,"
 
 #. module: auth_signup
 #. odoo-python
@@ -323,6 +432,12 @@ msgstr "Juan Pérez"
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "Permita que sus clientes inicien sesión para ver sus documentos"
+
+#. module: auth_signup
+#. odoo-javascript
+#: code:addons/auth_signup/static/src/components/signup.js:0
+msgid "Link copied to clipboard!"
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -356,6 +471,12 @@ msgstr "No se proporcionó ningún inicio de sesión."
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
 msgstr "Por invitación"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "Only administrators can generate reset password link."
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -561,7 +682,7 @@ msgstr "Usuarios: notificar sobre usuarios no registrados"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Welcome to Odoo"
-msgstr ""
+msgstr "Te damos la bienvenida a Odoo"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -576,10 +697,16 @@ msgstr "No puede realizar esta acción en un usuario archivado."
 
 #. module: auth_signup
 #. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "You cannot perform this action on your own user."
+msgstr ""
+
+#. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "Tu cuenta"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.portal_set_password_email

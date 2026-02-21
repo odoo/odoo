@@ -7,27 +7,22 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 13:03+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-01-16 14:24+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_mass_mailing/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
-msgid "<font class=\"text-white\">|</font>"
-msgstr "<font class=\"text-white\">|</font>"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_benefits_popup
@@ -71,6 +66,9 @@ msgid ""
 "                                        <span class=\"s_website_form_mark\"> "
 "*</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">E-Mail</span>\n"
+"                                        <span class=\"s_website_form_mark\"> "
+"*</span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -99,6 +97,9 @@ msgid ""
 "                                        <span class=\"s_website_form_mark\"> "
 "*</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Name</span>\n"
+"                                        <span class=\"s_website_form_mark\"> "
+"*</span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -116,6 +117,9 @@ msgid ""
 "                                        <span class=\"s_website_form_mark\"> "
 "*</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Unsere Mailinglisten</span>\n"
+"                                        <span class=\"s_website_form_mark\"> "
+"*</span>"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -155,20 +159,10 @@ msgid "Close"
 msgstr "Schließen"
 
 #. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_res_company
-msgid "Company"
-msgstr ""
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
 msgstr "Kontakt"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
-msgid "Display Name"
-msgstr "Anzeigename"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -216,11 +210,6 @@ msgstr ""
 "unseres Unternehmens direkt in Ihren Posteingang."
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
-msgid "ID"
-msgstr "ID"
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "John Smith"
@@ -257,7 +246,7 @@ msgstr "Newsletter"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
 msgid "Newsletter Aside"
-msgstr ""
+msgstr "Newsletter daneben"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
@@ -293,13 +282,13 @@ msgstr "Newsletter-Pop-up"
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_translation_option_plugin.js:0
 msgid "Newsletter block"
-msgstr ""
+msgstr "Newsletter-Baustein"
 
 #. module: website_mass_mailing
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_translation_option_plugin.js:0
 msgid "Newsletter popup"
-msgstr ""
+msgstr "Newsletter-Pop-up"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -319,14 +308,15 @@ msgstr "Keine"
 
 #. module: website_mass_mailing
 #. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/interactions/subscribe_list_missing_error.xml:0
+msgid "Pick one or remove this block."
+msgstr ""
+
+#. module: website_mass_mailing
+#. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.xml:0
 msgid "Placeholder"
 msgstr "Platzhalter"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
-msgid "Popup"
-msgstr "Pop-up"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -349,7 +339,7 @@ msgstr "Abonnieren"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 msgid "Subscribe for updates, offers <br/>and insights!"
-msgstr ""
+msgstr "Abonnieren Sie Updates, Angebote, <br/>en und Einblicke!"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -387,6 +377,12 @@ msgstr "Danke für die Registrierung!"
 #: code:addons/website_mass_mailing/controllers/main.py:0
 msgid "Thanks for subscribing!"
 msgstr "Vielen Dank für Ihr Abonnement!"
+
+#. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/interactions/subscribe_list_missing_error.xml:0
+msgid "This block is not linked to an active Newsletter."
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
@@ -478,3 +474,6 @@ msgid ""
 "promotional, email, subscription, subscribe, mailing-list, news, grid, "
 "image, picture"
 msgstr ""
+"Aktualisierungen, Zusammenfassung, Mitteilung, Ankündigungen, "
+"Benachrichtigungen, Kommunikation, Werbung, E-Mail, Abonnement, abonnieren, "
+"Mailingliste, Nachrichten, Raster, Bild, Foto"

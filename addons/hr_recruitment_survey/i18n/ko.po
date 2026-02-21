@@ -7,21 +7,22 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 04:39+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-31 12:26+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_recruitment_survey/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -46,8 +47,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-"
-"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"            Please answer the interview for <t t-out=\"format_date(object."
+"deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            We wish you good luck! Thank you in advance for your "
@@ -76,8 +77,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            인터뷰에 대한 답변은 <t t-out=\"format_date(object.deadline)"
-"\">[deadline date]</t>까지 등록해 주세요.<br/><br/>\n"
+"            인터뷰에 대한 답변은 <t t-out=\"format_date(object."
+"deadline)\">[deadline date]</t>까지 등록해 주세요.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            좋은 결과 있으시길 기원합니다. 참여해 주셔서 감사합니다.\n"
@@ -101,6 +102,11 @@ msgstr ""
 "                        <span class=\"o_stat_text\">인터뷰</span>"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.survey_survey_view_form
+msgid "<span class=\"o_stat_text\">Jobs</span>"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
 msgstr "본인 소개"
@@ -108,12 +114,12 @@ msgstr "본인 소개"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_current_user
 msgid "Accessible By Current User"
-msgstr ""
+msgstr "현재 사용자 액세스 가능"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_interviewer_user
 msgid "Accessible By Interviewer User"
-msgstr ""
+msgstr "면접위원 사용자 액세스 가능"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -128,17 +134,17 @@ msgstr "새로운 설문 조사 추가하기"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__emails
 msgid "Additional emails"
-msgstr ""
+msgstr "추가 이메일"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__all_surveys_are_recruitment
 msgid "All Surveys Are Recruitment"
-msgstr ""
+msgstr "모든 설문이 채용 목적입니다"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__deadline
 msgid "Answer deadline"
-msgstr ""
+msgstr "설문 마감 시한"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
@@ -160,12 +166,12 @@ msgstr "채용 지원"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "첨부 파일"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__author_id
 msgid "Author"
-msgstr ""
+msgstr "작성자"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body_has_template_value
@@ -175,7 +181,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "본문 편집 가능"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -190,17 +196,17 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body
 msgid "Contents"
-msgstr ""
+msgstr "내용"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "작성자"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_date
 msgid "Created on"
-msgstr ""
+msgstr "작성일"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -224,12 +230,12 @@ msgstr "학력 사항"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_partner_ids
 msgid "Existing Partner"
-msgstr ""
+msgstr "기존 파트너"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_emails
 msgid "Existing emails"
-msgstr ""
+msgstr "기존 이메일"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
@@ -249,12 +255,12 @@ msgstr "무료 주차, 체육관 이용과 같은 특전 얻기"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_mode
 msgid "Handle existing"
-msgstr ""
+msgstr "다음 기존 항목 처리:"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__has_many_applicants
 msgid "Has Many Applicants"
-msgstr ""
+msgstr "지원자 다수 여부"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
@@ -274,7 +280,7 @@ msgstr "차, 커피, 문구류 등 무료 제공"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__hide_url
 msgid "Hide Url"
-msgstr ""
+msgstr "URL 숨기기"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -312,13 +318,13 @@ msgstr "면접 양식: %s"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation"
-msgstr ""
+msgstr "면접 초대"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation: %(survey_name)s"
-msgstr ""
+msgstr "면접 초대: %(survey_name)s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -335,6 +341,17 @@ msgstr "면접"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__is_mail_template_editor
 msgid "Is Editor"
+msgstr "편집자 여부"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "Job"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__job_count
+msgid "Job Count"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -351,22 +368,22 @@ msgstr "지식센터"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__lang
 msgid "Language"
-msgstr ""
+msgstr "사용 언어"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "최근 업데이트:"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "최근 업데이트 날짜:"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "메일 템플릿"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
@@ -395,7 +412,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__mail_server_id
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "발신 메일 서버"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -449,7 +466,7 @@ msgstr "본인에 대해 좀 더 자세히 알려주세요: 주로 하는 활동
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__partner_ids
 msgid "Recipients"
-msgstr ""
+msgstr "수신인"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
@@ -462,19 +479,25 @@ msgid "Recruitment Form"
 msgstr "채용 양식"
 
 #. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "Related Jobs"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "렌더링 모델"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
 msgid "Require Login"
-msgstr ""
+msgstr "로그인 필요"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_text
 msgid "Resend Comment"
-msgstr ""
+msgstr "댓글 다시 보내기"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
@@ -489,7 +512,7 @@ msgstr "면접 보고서 보기"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__send_email
 msgid "Send Email"
-msgstr ""
+msgstr "이메일 보내기"
 
 #. module: hr_recruitment_survey
 #: model:ir.actions.server,name:hr_recruitment_survey.action_applicant_send_interview
@@ -500,23 +523,23 @@ msgstr "인터뷰 전송"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_tree_view_job_inherit
 msgid "Send Interviews"
-msgstr ""
+msgstr "면접 요청 보내기"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send interviews"
-msgstr ""
+msgstr "면접 요청 보내기"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__single_survey_id
 msgid "Single Survey"
-msgstr ""
+msgstr "단일 설문조사"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__subject
 msgid "Subject"
-msgstr ""
+msgstr "제목"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -530,7 +553,7 @@ msgstr "설문 조사"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_access_mode
 msgid "Survey Access Mode"
-msgstr ""
+msgstr "설문조사 액세스 모드"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
@@ -540,7 +563,7 @@ msgstr "설문조사 유형"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_start_url
 msgid "Survey URL"
-msgstr ""
+msgstr "설문조사 URL"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -550,7 +573,7 @@ msgstr "설문 조사 사용자 입력"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_ids
 msgid "Surveys"
-msgstr ""
+msgstr "설문 조사"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
@@ -596,7 +619,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_can_signup
 msgid "Users can signup"
-msgstr ""
+msgstr "회원 가입 가능"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -643,3 +666,9 @@ msgid ""
 msgstr ""
 "채용을 위한 설문조사를 만들 수 있습니다. 간편하게 인터뷰를 디자인하고,\n"
 "                초대를 보내고, 결과를 분석하세요."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_survey.py:0
+msgid "id"
+msgstr ""

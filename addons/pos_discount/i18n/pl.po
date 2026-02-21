@@ -9,15 +9,15 @@
 # Martin Trigaux, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-10-21 14:23+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-15 09:59+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_discount/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -26,17 +26,17 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Amount of global discounts</strong>:"
-msgstr ""
+msgstr "<strong>Suma globalnych rabatów</strong>:"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Number of global discounts</strong>:"
-msgstr ""
+msgstr "<strong>Liczba globalnych rabatów</strong>:"
 
 #. module: pos_discount
 #. odoo-python
@@ -45,13 +45,14 @@ msgid ""
 "A discount product is needed to use the Global Discount feature. Go to Point "
 "of Sale > Configuration > Settings to set it."
 msgstr ""
-"Przeceniony produkt jest wymagany do użycia Globalnej Przeceny. Idź do Punkt "
-"Sprzedaży > Konfiguracja > Ustawienia aby go skonfigurować."
+"Aby skorzystać z funkcji Globalnego rabatu, potrzebny jest produkt objęty "
+"rabatem. Aby go ustawić, przejdź do Punktu Sprzedaży > Konfiguracja > "
+"Ustawienia."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr "Pozwól kasjerowi dać upusty na całe zamówienie."
+msgstr "Pozwól kasjerowi udzielać rabatów na całe zamówienie."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
@@ -60,10 +61,11 @@ msgstr "Ustawienia konfiguracji"
 
 #. module: pos_discount
 #. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
-msgstr "Upust"
+msgstr "Zniżka"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
@@ -71,8 +73,6 @@ msgid "Discount %"
 msgstr "Zniżka %"
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "Discount Percentage"
@@ -104,18 +104,18 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "No discount product found"
-msgstr "Nie znaleziono produktu z upustem."
+msgstr "Nie znaleziono produktu ze zniżką"
 
 #. module: pos_discount
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "O kurcze!"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr "Upusty dla zamówienia"
+msgstr "Zniżki na zamówienia"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
@@ -125,7 +125,7 @@ msgstr "Konfiguracja punktu sprzedaży"
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_report_point_of_sale_report_saledetails
 msgid "Point of Sale Details"
-msgstr ""
+msgstr "Szczegóły dotyczące punktu sprzedaży"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
@@ -151,16 +151,17 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
 msgstr ""
-"Produkt z upustem wygląda na niepopprawnie skonfigurowany. Upewnij się że "
-"jest oflagowany jako 'do sprzedaży' i 'dostępny w punkcie sprzedaży'."
+"Produkt objęty rabatem wydaje się być nieprawidłowo skonfigurowany. Upewnij "
+"się, że jest on oznaczony jako „Można sprzedać” i „Dostępny w Punkcie "
+"Sprzedaży”."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
-msgstr "Produkt użyty do zastosowania upustu na bilecie."
+msgstr "Produkt użyty do zastosowania zniżki na zgłoszeniu."
 
 #. module: pos_discount
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "You cannot edit a discount line."
-msgstr ""
+msgstr "Nie można edytować wiersza zniżki."
