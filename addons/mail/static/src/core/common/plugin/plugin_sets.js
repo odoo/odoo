@@ -6,6 +6,7 @@ import { HintPlugin } from "@html_editor/main/hint_plugin";
 import { InlineCodePlugin } from "@html_editor/main/inline_code";
 import { LinkPastePlugin } from "@html_editor/main/link/link_paste_plugin";
 import { LinkPlugin } from "@html_editor/main/link/link_plugin";
+import { ListPlugin } from "@html_editor/main/list/list_plugin";
 import { ShortCutPlugin } from "@html_editor/core/shortcut_plugin";
 import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
@@ -23,6 +24,7 @@ export const MAIL_CORE_PLUGINS = [
     InlineCodePlugin,
     LinkPastePlugin,
     LinkPlugin,
+    ListPlugin,
     MailComposerPlugin,
     MentionPlugin,
     ProtectedNodePlugin,
