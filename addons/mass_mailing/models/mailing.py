@@ -229,6 +229,7 @@ class MailingMailing(models.Model):
     clicks_ratio = fields.Float(compute="_compute_clicks_ratio", string="Number of Clicks")
     link_trackers_count = fields.Integer(compute="_compute_link_trackers_count", string="Link Trackers Count")
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
+    is_template = fields.Boolean(default=False, copy=True)
     # UX
     next_departure_is_past = fields.Boolean(compute="_compute_next_departure")
     warning_message = fields.Char(
@@ -598,13 +599,49 @@ class MailingMailing(models.Model):
     # ACTIONS
     # ------------------------------------------------------
 
-    def action_duplicate(self):
-        self.ensure_one()
-        if mass_mailing_copy := self.copy():
+    def action_use_template(self):
+        """
+        <p>
+        Create a copy of the template and set it as a mailing (no longer a template) ready to be used.
+        </p>
+        <p>
+        The template is removed from Favorites to avoid duplicates in the Templates view, however the user
+        can set it back to Favorites so that it appears in the Templates view.
+        </p>"""
+        if mass_mailing_copy := self._create_mailing_from_template(self):
+            res_context = dict(self.env.context)
+            res_context['default_is_template'] = 0
+            res_context['default_favorite'] = 0
             return {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mailing.mailing',
+                'res_id': mass_mailing_copy.id,
+                'context': res_context,
+                }
+        return False
+
+    def _create_mailing_from_template(self, mass_mailing_template):
+        mass_mailing_template.ensure_one()
+        if mass_mailing := mass_mailing_template.copy():
+            mass_mailing.favorite = False
+            mass_mailing.is_template = False
+            return mass_mailing
+        return False
+
+    def action_duplicate(self):
+        self.ensure_one()
+        if mass_mailing_copy := self.copy():
+            mass_mailing_copy.subject += " - Copy"
+            form_view_ref = False
+            if self.is_template:
+                form_view_ref = self.env.ref('mass_mailing.mailing_templates_view_form', False).id
+                mass_mailing_copy.favorite = True
+            return {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mailing.mailing',
+                'views': [(form_view_ref, 'form')],
                 'res_id': mass_mailing_copy.id,
                 'context': dict(self.env.context),
             }
