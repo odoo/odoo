@@ -4391,6 +4391,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice_1.journal_id.id, invoices_duplicate[0]['journal_id'])
         self.assertEqual(invoice_2.journal_id.id, invoices_duplicate[1]['journal_id'])
 
+    def test_invoice_copy_not_is_modified(self):
+        # Create is an api.model method, and shouldn't modify self even if set.
+        invoice = self.init_invoice('in_invoice', products=self.product_a + self.product_b, post=True)
+        invoice.copy()
+        self.assertFalse(invoice.is_manually_modified)
+
     def test_before_initial_rate(self):
         def invoice(date):
             return self.init_invoice(
