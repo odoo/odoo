@@ -508,6 +508,19 @@ class CustomerPortal(Controller):
 
         return json.dumps(feedback_dict)
 
+    @http.route('/my/profile/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
+    def save_edited_profile(self, user_id, image_1920):
+        """ Save the edited profile image.
+
+        :param int user_id: The identifier of the user whose profile is being edited.
+        :param str image_1920: The new profile image in base64 format.
+        :return: Boolean indicating whether the write operation was successful.
+        :rtype: bool
+        """
+        if (user_id != request.env.user.id):
+            raise UserError(_("You cannot edit another user's profile."))
+        return request.env.user.write({"image_1920": image_1920})
+
     def _create_or_update_address(
         self,
         partner_sudo,
