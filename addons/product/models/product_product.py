@@ -142,6 +142,16 @@ class ProductProduct(models.Model):
         store=False,
     )
 
+    _positive_weight = models.Constraint(
+        'CHECK(weight>=0.0)',
+        'Product weight should be non-negative.'
+    )
+
+    _positive_volume = models.Constraint(
+        'CHECK(volume>=0.0)',
+        'Product volume should be non-negative.'
+    )
+
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:

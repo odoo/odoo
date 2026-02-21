@@ -2161,3 +2161,63 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertFalse(pack2.quant_ids)
         self.assertEqual(pack2.location_id, self.stock_location)
         self.assertEqual(pack2.company_id, self.stock_location.company_id)
+
+    def test_package_computed_weight(self):
+        """ Checks that the package weight is correctly computed based on its base_weight if exists
+        and the quant_ids weights inside it.
+        """
+        pack_type = self.env['stock.package.type'].create({
+            'name': 'BOX',
+            'base_weight': 0.5,
+        })
+        pack = self.env['stock.package'].create({
+            'name': 'PACK1',
+            'package_type_id': pack_type.id,
+        })
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'weight': 3.0,
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'is_storable': True,
+            'weight': 5.0,
+        })
+        self.env['stock.quant']._update_available_quantity(product_a, self.stock_location, 2, package_id=pack)
+        self.env['stock.quant']._update_available_quantity(product_b, self.stock_location, 3, package_id=pack)
+        self.assertEqual(pack.weight, 0.5 + 2 * 3 + 3 * 5, "The package should weigh the sum of its quant_ids and its base_weight.")
+
+    def test_package_computed_volume(self):
+        """ Checks that the package volume is correctly computed based on its base_weight if exists,
+        otherwise, it's based on the quant_ids volumes inside it.
+        """
+        # dimensions in mm by default
+        pack_type = self.env['stock.package.type'].create({
+            'name': 'BOX',
+            'packaging_length': 2000,
+            'width': 3000,
+            'height': 4000,
+        })
+        pack = self.env['stock.package'].create({
+            'name': 'PACK1',
+            'package_type_id': pack_type.id,
+        })
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'volume': 3.0,
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'is_storable': True,
+            'volume': 5.0,
+        })
+        self.env['stock.quant']._update_available_quantity(product_a, self.stock_location, 2, package_id=pack)
+        self.env['stock.quant']._update_available_quantity(product_b, self.stock_location, 3, package_id=pack)
+
+        # volume is in m3 by default
+        self.assertEqual(pack.volume, 24, "The package's volume should be the volume of the package_type.")
+
+        pack.package_type_id = False
+        self.assertEqual(pack.volume, 2 * 3 + 3 * 5, "The package's volume should be the volume of the quant_ids.")

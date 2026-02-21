@@ -77,6 +77,10 @@ class StockMoveLine(models.Model):
                 'batch_id': wave.id,
                 'scheduled_date': picking.scheduled_date,
             })[0]
+            if 'shipping_weight' in picking_to_wave_vals:
+                del picking_to_wave_vals['shipping_weight']
+            if 'shipping_volume' in picking_to_wave_vals:
+                del picking_to_wave_vals['shipping_volume']
             split_pickings_ids.add(picking.id)
             for move, move_lines in line_by_move.items():
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]
