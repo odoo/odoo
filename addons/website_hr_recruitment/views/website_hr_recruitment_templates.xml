@@ -751,7 +751,7 @@
                 <t t-foreach="count_per_filter.items()" t-as="filter_item">
                     <t t-set="selection" t-value="filter_item[0]"/>
                     <t t-set="count" t-value="filter_item[1]"/>
-                    <t t-if="selection=='all'">
+                    <t t-if="isinstance(selection, str) and selection=='all'">
                         <a t-attf-href="/jobs?#{all_arg}&amp;#{non_filter_params}"
                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between#{'' if selected_filter or is_unset_selected else ' active'}">
                             All <t t-out="filter_label"/><span t-attf-class="badge pagination text-bg-primary ms-2" t-out="count"/>
@@ -807,7 +807,7 @@
                     <li t-foreach="count_per_filter.items()" t-as="filter_item" class="list-group-item px-0 border-0">
                         <t t-set="selection" t-value="filter_item[0]"/>
                         <t t-set="count" t-value="filter_item[1]"/>
-                        <t t-if="selection=='all'">
+                        <t t-if="isinstance(selection, str) and selection=='all'">
                             <a t-attf-href="/jobs?#{all_arg}&amp;#{non_filter_params}"
                             class="d-flex align-items-center justify-content-between text-reset text-decoration-none">
                                 <div class="form-check flex-basis-100">
