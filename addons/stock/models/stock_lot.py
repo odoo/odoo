@@ -208,11 +208,29 @@ class StockLot(models.Model):
         return vals_list
 
     @api.depends('quant_ids', 'quant_ids.quantity')
+    @api.depends_context('owner_id', 'package_id', 'to_date', 'location', 'warehouse_id', 'allowed_company_ids')
     def _product_qty(self):
-        for lot in self:
-            # We only care for the quants in internal or transit locations.
-            quants = lot.quant_ids.filtered(lambda q: q.location_id.usage == 'internal' or (q.location_id.usage == 'transit' and q.location_id.company_id))
-            lot.product_qty = sum(quants.mapped('quantity'))
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self.env['product.product']._get_domain_locations()
+        owner_id = self.env.context.get('owner_id')
+        package_id = self.env.context.get('package_id')
+        to_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        dates_in_the_past = to_date and to_date < fields.Datetime.now()
+        domain_quant = Domain([('lot_id', 'in', self.ids)]) & domain_quant_loc
+        if owner_id is not None:
+            domain_quant &= Domain([('owner_id', '=', owner_id)])
+        if package_id is not None:
+            domain_quant &= Domain([('package_id', '=', package_id)])
+        quant_qty_by_lot = dict(self.env['stock.quant']._read_group(domain_quant, ['lot_id'], ['quantity:sum']))
+        if not dates_in_the_past:
+            for lot in self:
+                lot.qty_available = quant_qty_by_lot.get(lot.id, 0.0)
+        else:
+            # If the date is in the past, we need to adjust the quantity on hand with the moves that happened after that date.
+            domain_lot_done = Domain([('lot_id', 'in', self.ids), ('state', '=', 'done'), ('date', '>', to_date)])
+            move_in_qty_by_lot = dict(self.env['stock.move.line']._read_group(domain_move_in_loc & domain_lot_done, ['lot_id'], ['quantity_product_uom:sum']))
+            move_out_qty_by_lot = dict(self.env['stock.move.line']._read_group(domain_move_out_loc & domain_lot_done, ['lot_id'], ['quantity_product_uom:sum']))
+            for lot in self:
+                lot.qty_available = quant_qty_by_lot.get(lot.id, 0.0) - move_in_qty_by_lot.get(lot, 0.0) + move_out_qty_by_lot.get(lot, 0.0)
 
     def _search_product_qty(self, operator, value):
         op = PY_OPERATORS.get(operator)
@@ -225,7 +243,7 @@ class StockLot(models.Model):
         domain = [
             ('lot_id', '!=', False),
             '|', ('location_id.usage', '=', 'internal'),
-            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', '!=', False)
+            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', 'in', self.env.companies.ids)
         ]
         lots_w_qty = self.env['stock.quant']._read_group(domain=domain, groupby=['lot_id'], aggregates=['quantity:sum'], having=[('quantity:sum', '!=', 0)])
         ids = []

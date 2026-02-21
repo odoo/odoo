@@ -620,12 +620,17 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
     def test_fifo_avg_cost_fallback_zero_valued_qty(self):
         self.product.standard_price = 42.0
-        move = self._make_in_move(self.product, 1)
-        self._make_out_move(self.product, 1)
-        move.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
-        self.assertEqual(move._get_valued_qty(), 0.0)
-        self.product.invalidate_recordset(['total_value', 'avg_cost'])
-        self.product._compute_value()
+        move_in = self._make_in_move(self.product, 1)
+        move_out = self._make_out_move(self.product, 1)
+        move_in.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.assertEqual(move_in._get_valued_qty(), 0.0)
+        # The valued quantity is -1 since the out doesn't have an owner.
+        self.product.invalidate_recordset(['total_value', 'qty_available'])
+        self.assertEqual(self.product.total_value, -42.0)
+        self.assertEqual(self.product._with_valuation_context().qty_available, -1)
+
+        move_out.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.product.invalidate_recordset(['total_value', 'qty_available'])
         self.assertEqual(self.product.total_value, 0.0)
         self.assertEqual(self.product.avg_cost, 42.0)
 
