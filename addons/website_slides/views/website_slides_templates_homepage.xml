@@ -337,15 +337,15 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" class="card w-100 h-100 text-decoration-none" t-att-data-publish="channel.website_published and 'on' or 'off'">
+    <div class="card w-100 h-100 text-decoration-none" t-att-data-publish="channel.website_published and 'on' or 'off'">
         <t t-if="not channel.website_published" t-call="website.unpublished_badge"/>
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-        <div>
+        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
             <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
-        </div>
+        </a>
         <div class="card-body">
-            <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
+            <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" class="o_line_clamp card-title h6" t-field="channel.name"/>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="o_line_clamp small" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
@@ -382,7 +382,7 @@
                 <small><t t-out="channel.total_slides"/> steps</small>
             </t>
         </div>
-    </a>
+    </div>
 </template>
 
 <template id="course_card_information" name='Course Information'>
