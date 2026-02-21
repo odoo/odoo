@@ -176,6 +176,15 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _pre_dispatch(cls, rule, arguments):
+        if request.is_frontend:
+            # Ensure model-bound route arguments have the correct
+            # website context to apply website-specific record rules
+            # during access checks.
+            website = request.env['website'].get_current_website()
+            for key, val in list(arguments.items()):
+                if isinstance(val, models.BaseModel):
+                    arguments[key] = val.with_context(website_id=website.id)
+
         super()._pre_dispatch(rule, arguments)
 
         for record in arguments.values():
