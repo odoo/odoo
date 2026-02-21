@@ -26,6 +26,8 @@
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                 <field name="active" widget="boolean_toggle"/>
                                 <field name="sequence" groups="base.group_no_one"/>
+                                <field name="apply_to_group" invisible="redirect_type == '308'"/>
+                                <field name="user_group_ids" string="Groups" widget="many2many_tags" invisible="redirect_type == '308' or apply_to_group not in ('in_group','not_in_group')"/>
                             </group>
                         </group>
                     </sheet>

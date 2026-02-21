@@ -362,6 +362,37 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
+    @http.route(['/rewrite/conditional_redirect'], type='http', auth="public", website=True, multilang=False, sitemap=False, readonly=True)
+    def conditional_redirect(self, original_endpoint=None, **kwargs):
+        """
+        Controller that acts as a middleware to apply conditional 404 rewrite rules.
+        It checks user roles against a '404' rewrite rule and returns a
+        404 Not Found page if the conditions are met.
+        """
+        original_path = request.httprequest.path
+        domain = [
+            ('redirect_type', '=', '404'),
+            ('url_from', '=', original_path),
+            request.website.website_domain()
+        ]
+        redirect_rule = request.env['website.rewrite'].sudo().search(domain, limit=1)
+        # If no 404 rule is found for this path, proceed to the original endpoint.
+        if not redirect_rule:
+            return original_endpoint(**kwargs)
+
+        user_groups = request.env.user.group_ids
+        apply_to = redirect_rule.apply_to_group or 'all_users'
+        rule_groups = redirect_rule.user_group_ids
+        # Determine if the 404 rule should be applied to the current user.
+        should_apply_rule = (
+            apply_to == 'all_users' or
+            (apply_to == 'in_group' and user_groups & rule_groups) or
+            (apply_to == 'not_in_group' and not (user_groups & rule_groups))
+        )
+        if should_apply_rule:
+            raise request.not_found("Page not found")
+        return original_endpoint(**kwargs)
+
     @http.route(['/website/configurator', '/website/configurator/<int:step>'], type='http', auth="user", website=True, multilang=False)
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
