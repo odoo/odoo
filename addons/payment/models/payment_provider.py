@@ -189,6 +189,8 @@ class PaymentProvider(models.Model):
     show_cancel_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     require_currency = fields.Boolean(compute='_compute_view_configuration_fields')
 
+    _check_company_domain = models.check_company_domain_parent_of
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('code')
