@@ -4,6 +4,7 @@ import contextvars
 import copy
 import enum
 import logging
+import math
 import os
 import threading
 import time
@@ -739,7 +740,7 @@ class IrCron(models.Model):
             return True
         return self.write({'active': active})
 
-    def _trigger(self, at: datetime | Iterable[datetime] | None = None):
+    def _trigger(self, at: datetime | Iterable[datetime] | None = None, *, coalesce: int = 0):
         """
         Schedule a cron job to be executed soon independently of its
         ``nextcall`` field value.
@@ -756,6 +757,9 @@ class IrCron(models.Model):
         :param at:
             When to execute the cron, at one or several moments in time
             instead of as soon as possible.
+        :param coalesce: coalescing window, in minutes, every trigger
+            is shifted to the end of the window, this allows limiting
+            the number or frequency of wakeups for less pressing triggers
         :return: the created triggers records
         """
         if at is None:
@@ -766,6 +770,14 @@ class IrCron(models.Model):
             at_list = list(at)
             assert all(isinstance(at, datetime) for at in at_list)
 
+        if coalesce:
+            factor = coalesce * 60
+            at_list = [
+                datetime.fromtimestamp(
+                    math.ceil(dt.timestamp() / factor) * factor,
+                )
+                for dt in at_list
+            ]
         return self._trigger_list(at_list)
 
     def _trigger_list(self, at_list: list[datetime]):
