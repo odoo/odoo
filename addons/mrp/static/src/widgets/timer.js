@@ -14,11 +14,16 @@ function formatMinutes(value) {
     if (isNegative) {
         value = Math.abs(value);
     }
-    let min = Math.floor(value);
+    let hour = Math.floor(value / 60);
+    let min = Math.floor(value % 60);
     let sec = Math.round((value % 1) * 60);
-    sec = `${sec}`.padStart(2, "0");
-    min = `${min}`.padStart(2, "0");
-    return `${isNegative ? "-" : ""}${min}:${sec}`;
+    sec = `${sec}`.padStart(1, "0");
+    min = `${min}`.padStart(1, "0");
+    if (hour > 0) {
+        hour = `${hour}`.padStart(1, "0");
+        return `${isNegative ? "-" : ""}${hour}h ${min}m ${sec}s`;
+    }
+    return `${isNegative ? "-" : ""}${min}m ${sec}s`;
 }
 
 export class MrpTimer extends Component {

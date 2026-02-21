@@ -285,7 +285,6 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if production.state == "done":
             return self._get_finished_operation_data(production, level, current_index)
         currency = (production.company_id or self.env.company).currency_id
-        operation_uom = _("Minutes")
         operations = []
         total_expected_time = 0.0
         total_current_time = 0.0
@@ -322,7 +321,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'state': workorder.state,
                 'formatted_state': self._format_state(workorder),
                 'quantity': workorder.duration_expected if float_is_zero(wo_duration, precision_digits=2) else wo_duration,
-                'uom_name': operation_uom,
+                'uom_name': "",
                 'production_id': production.id,
                 'unit_cost': mo_cost / (workorder.duration_expected or 1),
                 'mo_cost': mo_cost,
@@ -352,7 +351,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'bom_cost': total_bom_cost,
                 'real_cost': total_real_cost,
                 'real_cost_decorator': self._get_comparison_decorator(total_expected_cost, total_real_cost, 0.01) if self._is_production_started(production) else False,
-                'uom_name': operation_uom,
+                'uom_name': "",
                 'currency_id': currency.id,
                 'currency': currency,
             },
@@ -375,7 +374,6 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _get_finished_operation_data(self, production, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id
-        done_operation_uom = _("Hours")
         operations = []
         total_duration = total_duration_expected = total_cost = total_mo_cost = 0
         total_bom_cost = False
@@ -395,9 +393,10 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             operations.append({
                 'level': level,
                 'index': f"{current_index}W{index}",
+                'model': workorder._name,
                 'name': f"{workorder.workcenter_id.display_name}: {workorder.display_name}",
                 'quantity': duration,
-                'uom_name': done_operation_uom,
+                'uom_name': "",
                 'uom_precision': 4,
                 'unit_cost': hourly_cost,
                 'mo_cost': currency.round(mo_cost),
@@ -418,7 +417,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'bom_cost': total_bom_cost,
                 'real_cost': total_cost,
                 'real_cost_decorator': self._get_comparison_decorator(total_mo_cost, total_cost, currency.rounding),
-                'uom_name': done_operation_uom,
+                'uom_name': "",
                 'currency_id': currency.id,
                 'currency': currency,
             },

@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat, formatDuration, formatMonetary } from "@web/views/fields/formatters";
 import { Component } from "@odoo/owl";
 
 export class BomOverviewLine extends Component {
@@ -29,7 +29,7 @@ export class BomOverviewLine extends Component {
         this.actionService = useService("action");
         this.ormService = useService("orm");
         this.formatFloat = formatFloat;
-        this.formatFloatTime = formatFloatTime;
+        this.formatDuration = formatDuration;
         this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
     }
 

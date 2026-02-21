@@ -74,8 +74,8 @@
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="uom_id" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom" optional="show"/>
-                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="hide"/>
-                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="hide"/>
+                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total expected duration" optional="hide"/>
+                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total real duration" optional="hide"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state"
                            decoration-success="state in ('done', 'to_close')"
@@ -644,9 +644,9 @@
                 <pivot string="Manufacturing Orders" sample="1">
                     <field name="date_start" type="row"/>
                     <field name="duration_expected" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
-                    <field name="duration_expected" type="measure" string="Expected Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="duration_expected" type="measure" string="Expected Duration" groups="mrp.group_mrp_routings"/>
                     <field name="duration" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
-                    <field name="duration" type="measure" string="Real Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="duration" type="measure" string="Real Duration" groups="mrp.group_mrp_routings"/>
                     <field name="qty_producing" type="measure" string="Quantity Produced"/>
                     <field name="backorder_sequence" invisible="1"/>
                     <field name="product_uom_qty" invisible="1"/>
@@ -661,9 +661,9 @@
                 <graph string="Manufacturing Orders" stacked="0" sample="1">
                     <field name="date_finished"/>
                     <field name="duration_expected" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
-                    <field name="duration_expected" type="measure" string="Expected Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="duration_expected" type="measure" string="Expected Duration" groups="mrp.group_mrp_routings"/>
                     <field name="duration" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
-                    <field name="duration" type="measure" string="Real Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="duration" type="measure" string="Real Duration" groups="mrp.group_mrp_routings"/>
                     <field name="qty_producing" string="Quantity Produced"/>
                     <field name="backorder_sequence" invisible="1"/>
                     <field name="product_uom_qty" invisible="1"/>

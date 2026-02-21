@@ -1,4 +1,4 @@
-import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat, formatDuration, formatMonetary } from "@web/views/fields/formatters";
 import { Component } from "@odoo/owl";
 
 export class BomOverviewSpecialLine extends Component {
@@ -25,7 +25,7 @@ export class BomOverviewSpecialLine extends Component {
 
     setup() {
         this.formatFloat = formatFloat;
-        this.formatFloatTime = formatFloatTime;
+        this.formatDuration = formatDuration;
         this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
     }
 

@@ -32,9 +32,8 @@ class MrpRoutingWorkcenter(models.Model):
     time_computed_on = fields.Char('Computed on last', compute='_compute_time_computed_on')
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60, tracking=True,
-        help="Time in minutes:"
-        "- In fixed mode, time used"
-        "- In computed mode, supposed first time when there aren't any work orders yet")
+        help="Default operation time. Base unit in minutes.\n"
+             "If you are in the computed duration mode, enter an estimate since there aren't any work orders yet.")
     time_cycle = fields.Float('Cycles', compute="_compute_time_cycle")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
