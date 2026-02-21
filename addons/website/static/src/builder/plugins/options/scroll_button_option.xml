@@ -5,8 +5,10 @@
     <BuilderRow label="this.state.heightLabel">
         <BuilderButtonGroup action="'scrollButtonSectionHeightClass'">
             <BuilderButton id="'minheight_auto_opt'" actionParam="''" title.translate="Fit content">Auto</BuilderButton>
-            <BuilderButton actionParam="'o_half_screen_height'" title.translate="Half screen">50%</BuilderButton>
+            <BuilderButton actionParam="'o_three_quarter_height'" title.translate="75% of the screen">75%</BuilderButton>
             <BuilderButton id="'full_height_opt'" actionParam="'o_full_screen_height'" title.translate="Full screen">100%</BuilderButton>
+            <!-- A snippet can have .o_half_screen_height, but we don't want to offer it as an option -->
+            <BuilderButton actionParam="'o_half_screen_height'" className="'d-none'">50%</BuilderButton>
         </BuilderButtonGroup>
     </BuilderRow>
 

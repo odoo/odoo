@@ -21,7 +21,7 @@ registerWebsitePreviewTour(
         // a widgets_start_request is triggered.
         {
             content: "Hover an option which has a preview",
-            trigger: "[data-action-param='o_half_screen_height']",
+            trigger: "[data-action-param='o_three_quarter_height']",
             run: "hover",
         },
         {
@@ -37,7 +37,7 @@ registerWebsitePreviewTour(
                 // should not be *necessary* to simulate those for the editor
                 // flow to make some sense.
                 const previousAnchor = document.querySelector(
-                    "[data-action-param='o_half_screen_height']"
+                    "[data-action-param='o_three_quarter_height']"
                 );
                 previousAnchor.dispatchEvent(new Event("mouseout"));
                 previousAnchor.dispatchEvent(new Event("mouseleave"));
