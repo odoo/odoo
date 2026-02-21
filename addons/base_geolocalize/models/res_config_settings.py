@@ -19,3 +19,8 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='base_geolocalize.google_map_api_key',
         help="Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
     )
+    geoloc_provider_googlemap_signing_secret = fields.Char(
+        string='Google Map API Signing Secret',
+        config_parameter='base_geolocalize.google_map_api_signing_secret',
+        help="Visit https://developers.google.com/maps/digital-signature for more information."
+    )
