@@ -11,16 +11,15 @@ class AccountAnalyticAccount(models.Model):
 
     @api.depends('line_ids')
     def _compute_purchase_order_count(self):
+        plan_column_names = self._get_all_plan_column_names()
+
         for account in self:
-            account.purchase_order_count = self.env['purchase.order'].search_count([
-                ('order_line.invoice_lines.analytic_line_ids.account_id', '=', account.id)
-            ])
+            account.purchase_order_count = self.env['purchase.order'].search_count(self._get_domains_for_po_search(plan_column_names, account.id))
 
     def action_view_purchase_orders(self):
         self.ensure_one()
-        purchase_orders = self.env['purchase.order'].search([
-            ('order_line.invoice_lines.analytic_line_ids.account_id', '=', self.id)
-        ])
+        domains = self._get_domains_for_po_search(self._get_all_plan_column_names(), self.id)
+        purchase_orders = self.env['purchase.order'].search(domains)
         result = {
             "type": "ir.actions.act_window",
             "res_model": "purchase.order",
@@ -32,3 +31,13 @@ class AccountAnalyticAccount(models.Model):
             result['view_mode'] = 'form'
             result['res_id'] = purchase_orders.id
         return result
+
+    def _get_all_plan_column_names(self):
+        return ['order_line.invoice_lines.analytic_line_ids.' + plan._column_name() for plan in self.env['account.analytic.plan'].search([])]
+
+    def _get_domains_for_po_search(self, plan_column_names, account_id):
+        domains = []
+        if len(plan_column_names) > 0:
+            domains.extend('|' for _ in range(len(plan_column_names) - 1))
+            domains.extend((pcn, '=', account_id) for pcn in plan_column_names)
+        return domains
