@@ -1351,3 +1351,20 @@ class TestAccountMove(AccountTestInvoicingCommon):
         }])
         move.line_ids.account_id = shared_account
         move.action_post()
+
+    def test_journal_entry_analytic_distribution_search_is_set(self):
+        """
+            Verify searching on analytic_distribution with 'is set', 'is not set'.
+        """
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan'})
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': "Test Account",
+            'plan_id': analytic_plan.id,
+        })
+        self.assertFalse(self.env['account.move.line'].search([('analytic_distribution', '!=', False)]))
+        self.test_move.line_ids[0].write({'analytic_distribution': {str(analytic_account.id): 100}})
+        self.assertEqual(
+            self.env['account.move.line'].search([('analytic_distribution', '!=', False)]),
+            self.test_move.line_ids[0],
+            ""
+        )
