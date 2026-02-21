@@ -38,8 +38,6 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         if not grouping_key:
             return
 
-        grouping_key['scheme_id'] = 'GST'
-
         # A business not registered for GST cannot issue tax invoices.
         # In this case, the tax category code should be O (Outside scope of tax).
         # See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code
@@ -64,18 +62,29 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_identifying_the_a_nz_billing_specialisation
         document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
 
-    def _get_party_node(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        party_node = super()._get_party_node(vals)
-        commercial_partner = vals['partner'].commercial_partner_id
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        # EXTENDS
+        super()._ubl_add_party_legal_entity_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
 
-        party_node['cac:PartyTaxScheme'][0]['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
-
-        # In both cases the scheme must be set to a value that comes from the eas.
         if commercial_partner.country_code in ('AU', 'NZ'):
-            party_node['cac:PartyLegalEntity']['cbc:CompanyID']['schemeID'] = commercial_partner.peppol_eas
-
-        return party_node
+            if commercial_partner.vat and commercial_partner.vat != '/':
+                vals['party_node']['cac:PartyLegalEntity'] = [{
+                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:CompanyID': {
+                        '_text': commercial_partner.vat,
+                        'schemeID': '0151' if commercial_partner.country_code == 'AU' else '0088',
+                    },
+                }]
+            elif commercial_partner.peppol_eas and commercial_partner.peppol_endpoint:
+                vals['party_node']['cac:PartyLegalEntity'] = [{
+                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:CompanyID': {
+                        '_text': commercial_partner.peppol_endpoint,
+                        'schemeID': commercial_partner.peppol_eas,
+                    },
+                }]
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
