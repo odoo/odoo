@@ -10,6 +10,7 @@
                         <i t-if="state.file.isPdf" class="fa fa-file-text" role="img" title="PDF file"/>
                         <i t-if="state.file.isText" class="fa fa-file-text" role="img" title="Text file"/>
                         <i t-if="state.file.isVideo" class="fa fa-video-camera" role="img" title="Video"/>
+                        <i t-if="state.file.isAudio" class="fa fa-file-audio" role="img" title="Audio"/>
                     </div>
                     <div class="d-flex align-items-center ms-4 overflow-auto">
                         <span class="text-truncate" t-out="state.file.displayName"/>
@@ -39,6 +40,10 @@
                     <video t-if="state.file.isVideo" class="o-FileViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': ui.isSmall }" t-on-click.stop="" controls="controls">
                         <source t-att-data-type="state.file.mimetype" t-att-src="state.file.defaultSource"/>
                     </video>
+                    <audio t-if="state.file.isAudio" class="w-75"
+                        t-att-class="{ 'w-100': ui.isSmall }" t-on-click.stop="" controls="controls" autoplay="1">
+                        <source t-att-data-type="state.file.mimetype" t-att-src="state.file.defaultSource"/>
+                    </audio>
                 </div>
                 <div t-if="state.file.isImage" class="position-absolute bottom-0 d-flex" role="toolbar">
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="zoomIn" title="Zoom In (+)" role="button">
