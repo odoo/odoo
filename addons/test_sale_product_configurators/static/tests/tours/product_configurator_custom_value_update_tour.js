@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_custom_value_
         ...configuratorTourUtils.saveConfigurator(),
         tourUtils.checkSOLDescriptionContains("Customizable Desk (TEST) (Custom, White)", "Legs: Custom: 123"),
         ...stepUtils.saveForm(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, White)", "Legs: Custom: 123"),
+        ...tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, White)", "Legs: Custom: 123"),
         tourUtils.editConfiguration(),
         configuratorTourUtils.setCustomAttribute("Customizable Desk (TEST)", "Legs", "123456"),
         ...configuratorTourUtils.saveConfigurator(),

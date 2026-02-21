@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountLabelTextField">
+        <t t-if="props.readonly">
+            <span style="white-space: pre-wrap" t-esc="props.record.data[props.name] or ''"/>
+        </t>
+        <t t-else="">
+            <div class="o_account_label_text dropdown" t-ref="div">
+                <div class="d-flex align-items-start">
+                    <textarea
+                        class="o_input flex-grow-1"
+                        t-att-id="props.id"
+                        t-att-placeholder="props.placeholder"
+                        t-att-rows="rowCount"
+                        t-ref="textarea"
+                        t-on-blur="onBlur"
+                        t-on-input="onLabelInput"
+                    />
+                    <button t-if="productId"
+                        class="o_external_button btn btn-link text-action px-1 flex-shrink-0"
+                        type="button"
+                        tabindex="-1"
+                        draggable="false"
+                        aria-label="Internal link"
+                        data-tooltip="Internal link"
+                        t-on-click="openProduct">
+                        <i class="oi oi-arrow-right"/>
+                    </button>
+                </div>
+                <ul t-if="state.showDropdown and state.suggestions.length"
+                    class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show"
+                    role="menu"
+                    t-ref="dropdownList">
+                    <li t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion[0]"
+                        class="o-autocomplete--dropdown-item ui-menu-item d-block">
+                        <a class="dropdown-item ui-menu-item-wrapper text-truncate" href="#"
+                            role="option"
+                            t-on-pointerdown.prevent=""
+                            t-on-click.prevent="() => this.selectProduct(suggestion)"
+                            t-esc="suggestion[1]"/>
+                    </li>
+                </ul>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="account.AccountLabelSectionAndNoteText">
+        <t t-component="componentToUse" t-props="props"/>
+    </t>
+
+</templates>

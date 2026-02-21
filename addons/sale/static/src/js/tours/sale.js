@@ -2,6 +2,7 @@ import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import { accountTourUtils } from "@account/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("sale_tour", {
     url: "/odoo",
@@ -44,6 +45,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".ui-menu-item > a:contains('Agrolait')",
             run: "click",
         },
+        ...accountTourUtils.showProductColumn(),
         {
             trigger: ".o_field_x2many_list_row_add > button",
             content: _t("Click here to add some products or services to your quotation."),

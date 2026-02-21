@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Aluminium, White)"))',
         },
         ...configuratorTourUtils.saveConfigurator(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Aluminium, White)", ""),
+        ...tourUtils.editLineMatching("Customizable Desk (TEST) (Aluminium, White)", ""),
         tourUtils.editConfiguration(),
         {
             // check updated legs
@@ -47,11 +47,11 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             trigger: 'div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Custom, Black)")',
         },
         ...configuratorTourUtils.saveConfigurator(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: nice custom value"),
+        ...tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: nice custom value"),
         tourUtils.editConfiguration(),
         configuratorTourUtils.setCustomAttribute("Customizable Desk", "Legs", "another nice custom value"),
         ...configuratorTourUtils.saveConfigurator(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: another nice custom value"),
+        ...tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: another nice custom value"),
         tourUtils.editConfiguration(),
         {
             trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) td>div[name="ptal"]:has(div>label:contains("Legs")) label:has(span:contains("Steel")) ~ input',

@@ -56,6 +56,11 @@
                         </setting>
                     </block>
                     <block title="Quotations &amp; Orders" name="quotation_order_setting_container">
+                        <setting id="sale_product_mode"
+                                 string="Mandatory product on Quotations / Orders"
+                                 help="Do you mainly use descriptions, or pre-defined products?">
+                            <field name="sale_order_mandatory_product" class="o_light_label"/>
+                        </setting>
                         <setting id="online_signature" company_dependent="1"
                                  documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
                                  help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">

@@ -273,9 +273,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         xml_attachment = self.get_purchase_xml(line_vals)
         self.displace_prdct.active = False
         so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
-        with self.assertRaises(UserError):
-            # Raise user error if line does not have product set
-            so.action_confirm()
+        so.action_confirm()
         line_vals[0]['product_id'] = False
         line_vals[0]['product_uom_id'] = line_vals[0].pop('uom_id')
         # Should set other values properly

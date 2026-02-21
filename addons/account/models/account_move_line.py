@@ -1022,7 +1022,10 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            if line.product_id:
+                line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            else:
+                line.allowed_uom_ids = self.env['uom.uom'].search([])
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -1108,11 +1111,15 @@ class AccountMoveLine(models.Model):
             # Out invoice.
             filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
             tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
+            if not tax_ids and self.env.context.get('from_invoice_tab'):
+                tax_ids = self.company_id.account_sale_tax_id
 
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
             tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+            if not tax_ids and self.env.context.get('from_invoice_tab'):
+                tax_ids = self.company_id.account_purchase_tax_id
 
         elif self.env.context.get('account_default_taxes'):
             tax_ids = self.account_id.tax_ids

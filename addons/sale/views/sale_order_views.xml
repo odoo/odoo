@@ -573,6 +573,7 @@
                             readonly="state == 'cancel' or locked"
                             aggregated_fields="price_subtotal,price_total"
                             options="{'hide_composition': True, 'hide_prices': True, 'subsections': True}"
+                            context="{'from_order_line_tab': True}"
                         >
                             <form>
                                 <field name="technical_price_unit" invisible="1"/>
@@ -742,7 +743,7 @@
                                     optional="show"
                                     widget="sol_product_many2one"
                                     placeholder="Type to find a product..."/>
-                                <field name="name" widget="sol_text" optional="show"/>
+                                <field name="name" widget="sol_label_text" optional="show"/>
                                 <field
                                     name="analytic_distribution"
                                     widget="analytic_distribution"
@@ -1078,6 +1079,27 @@
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
             </filter>
+        </field>
+    </record>
+
+    <record id="view_order_form_free_text" model="ir.ui.view">
+        <field name="name">sale.order.form.free.text</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Form: product_id not required -->
+            <xpath expr="//form//group//field[@name='product_id']" position="attributes">
+                <attribute name="required">0</attribute>
+            </xpath>
+            <!-- List: product_id not required -->
+            <xpath expr="//list//field[@name='product_id']" position="attributes">
+                <attribute name="required">0</attribute>
+            </xpath>
+            <!-- List: product_template_id not required, hidden by default -->
+            <xpath expr="//list//field[@name='product_template_id']" position="attributes">
+                <attribute name="required">0</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
         </field>
     </record>
 

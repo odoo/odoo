@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 import { markup } from "@odoo/owl";
+import { accountTourUtils } from "@account/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
@@ -725,6 +726,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 // Create a quotation
 ...stepUtils.statusbarButtonsSteps('New Quotation', markup(_t('<p><b>Create a quotation</p>'))),
+...accountTourUtils.showProductColumn(),
 {
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > button",

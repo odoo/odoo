@@ -1,4 +1,4 @@
-import { addSectionFromProductCatalog } from "@account/js/tours/tour_utils";
+import { accountTourUtils } from "@account/js/tours/tour_utils";
 import { productCatalog, purchaseForm } from "./tour_helper";
 import { registry } from "@web/core/registry";
 
@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("test_add_section_from_product_catalog_o
     steps: () => [
         ...purchaseForm.createNewPO(),
         ...purchaseForm.selectVendor("Test Vendor"),
-        ...addSectionFromProductCatalog(),
+        ...accountTourUtils.addSectionFromProductCatalog(),
     ],
 });
 

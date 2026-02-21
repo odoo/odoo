@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_pricelist_tou
         },
         {
             content: "verify SO final price included",
-            trigger: 'span[name="amount_total"]:contains("1,437.00")',
+            trigger: 'span[name="amount_total"]:contains("1,445.55")',
             run: "click",
         },
         ...stepUtils.saveForm()
