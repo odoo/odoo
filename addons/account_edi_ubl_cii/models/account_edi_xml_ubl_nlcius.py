@@ -75,6 +75,38 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         discount_node['cbc:BaseAmount'] = None
         return discount_node
 
+    def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_supplier_party_identification_nodes(vals)
+        nodes = vals['party_node']['cac:PartyIdentification']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.peppol_endpoint:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': None,
+                },
+            })
+
+    def _ubl_add_accounting_customer_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_customer_party_identification_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if (
+            commercial_partner.country_code == 'NL'
+            and commercial_partner.peppol_endpoint
+        ):
+            vals['party_node']['cac:PartyIdentification'] = [{
+                'cbc:ID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': commercial_partner.peppol_eas if commercial_partner.peppol_eas in ('0106', '0190') else None,
+                },
+            }]
+
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_payment_means_nodes(document_node, vals)
@@ -84,11 +116,3 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
             payment_means_node['cbc:PaymentMeansCode']['name'] = None
         if 'listID' in payment_means_node['cbc:PaymentMeansCode']:
             payment_means_node['cbc:PaymentMeansCode']['listID'] = None
-
-    def _get_address_node(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        address_node = super()._get_address_node(vals)
-        # [BR-NL-28] The use of a country subdivision (cac:AccountingCustomerParty/cac:Party/cac:PostalAddress
-        # /cbc:CountrySubentity) is not recommended
-        address_node['cbc:CountrySubentity'] = None
-        return address_node
