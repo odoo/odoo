@@ -21,6 +21,7 @@
 
 .o_search_panel {
     --treeEntry-padding-h: #{map-get($spacers, 3)};
+    --treeEntry-padding-v: calc(#{map-get($spacers, 2)} + #{map-get($spacers, 1)});
 
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
@@ -35,6 +36,11 @@
 
     .o_search_panel_counter {
         font-variant-numeric: tabular-nums;
+    }
+
+    .list-group-item {
+        --list-group-item-padding-y: #{map-get($spacers, 1)};
+        --list-group-item-padding-x: 0;
     }
 }
 

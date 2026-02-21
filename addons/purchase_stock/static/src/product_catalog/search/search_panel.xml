@@ -14,24 +14,26 @@
         </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
             <t t-if="displaySuggest">
-                <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-                <t t-if="suggest.suggestToggle.isOn">
-                    <div class="o_suggest_feature">
-                        <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
-                        <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
-                        <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
-                    </div>
-                </t>
+                <section class="pb-4 mt-4 border-bottom">
+                    <t t-call="PurchaseSuggest.SearchPanel.Header"/>
+                    <t t-if="suggest.suggestToggle.isOn">
+                        <div class="o_suggest_feature">
+                            <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
+                            <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
+                            <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
+                        </div>
+                    </t>
+                </section>
             </t>
         </xpath>
     </t>
     <!-- ───────────────── Header ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.Header">
-        <div name="search_panel_suggestion" class="d-flex pt-4 mt-3">
-            <header class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
+        <header name="search_panel_suggestion" class="d-flex ps-2">
+            <div class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
                 <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
                 <b class="me-2">Suggest</b>
-            </header>
+            </div>
             <div class="d-flex align-items-center ms-auto">
                 <div name="search-suggest-toggle" class="form-check form-switch mb-0">
                     <input
@@ -43,12 +45,12 @@
                     />
                 </div>
             </div>
-        </div>
+        </header>
     </t>
     <!-- ───────────────── “Replenish for X day(s)” ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.DaysInput">
-        <div class="d-flex align-items-center ms-2 pt-2">
-            <span class="me-2 fw-bold">Replenish for</span>
+        <div class="ms-2 mt-2 fw-bold">Replenish for</div>
+        <div class="d-flex ms-1 me-2 pt-2">
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
                 t-att-value="suggest.numberOfDays"
                 t-on-input="onDaysInput"
@@ -58,7 +60,7 @@
     </t>
     <!-- ───────────────── “Based on … × %” ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.BasedOn">
-        <div class="d-inline-flex align-items-center ms-2 mt-2 fw-bold">Based on</div>
+        <div class="ms-2 mt-2 fw-bold">Based on</div>
         <div class="d-inline-flex align-items-center ms-1 me-2">
             <div class="o_TimePeriodSelectionField">
                 <TimePeriodSelectionField t-props="timePeriodProps"/>
@@ -73,11 +75,12 @@
     </t>
     <!-- ───────────────── Footer ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.Footer">
-        <div class="d-flex align-items-center mt-3 ms-2">
-            <div class="text-info fw-bold">
-                <span name="suggest_total"><t t-out="estimatedSuggestPrice"/></span>
+        <div class="mt-3 mx-2">
+            <div class="d-flex justify-content-between fw-bold">
+                <span>Total</span>
+                <span name="suggest_total" class="text-info"><t t-out="estimatedSuggestPrice"/></span>
             </div>
-            <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="addAllProducts">
+            <button name="suggest_add_all" class="btn btn-sm btn-primary w-100 mt-2" t-on-click="addAllProducts">
                 Add All
             </button>
         </div>
