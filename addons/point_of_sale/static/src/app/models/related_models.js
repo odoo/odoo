@@ -1,7 +1,6 @@
 import { toRaw } from "@odoo/owl";
 import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
-import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { recursiveSerialization } from "./utils/recursive_serialization";
 
@@ -136,12 +135,12 @@ function processModelDefs(modelDefs) {
     return [inverseMap, modelDefs];
 }
 
-export class Base extends WithLazyGetterTrap {
+export class Base {
     constructor({ model, traps, dynamicModels }) {
-        super({ traps });
         this.model = model;
         this._dynamicModels = dynamicModels;
         this._indexMaps = {};
+        return new Proxy(this, { ...traps });
     }
     get models() {
         return this.model.models;
