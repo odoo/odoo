@@ -88,6 +88,18 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         holiday.with_user(SUPERUSER_ID).action_refuse()
         self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of linked timesheets should be zero, since the leave is refused.')
 
+        # Ensure timesheets generated from a time off are deleted when the leave is removed
+        holiday.with_user(SUPERUSER_ID).action_approve()
+        timesheets = holiday.timesheet_ids
+        self.assertEqual(
+            len(timesheets),
+            holiday.number_of_days,
+            'Number of generated timesheets should be the same as the leave duration'
+        )
+
+        holiday.with_user(SUPERUSER_ID).unlink()
+        self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
+
         company = self.env['res.company'].create({"name": "new company"})
         self.empl_employee.write({
             "company_id": company.id,
