@@ -955,6 +955,7 @@ class IrActionsReport(models.Model):
                     for res_id in res_ids_wo_stream:
                         individual_collected_stream = self._render_qweb_pdf_prepare_streams(report_ref=report_ref, data=data, res_ids=[res_id])
                         collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
+                    return collected_streams
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
