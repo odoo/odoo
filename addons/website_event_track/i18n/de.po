@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-02-13 09:18+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-20 17:16+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "website_event_track/de/>\n"
@@ -78,15 +78,6 @@ msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 Tipps und Tricks zur Holzbearbeitung für Anfänger"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Startseite</a>"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
 msgstr "<b>E-Mail</b>:"
@@ -144,7 +135,7 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Hallo <t t-out=\"object.partner_id.name or object.partner_name or "
+"    Guten Tag <t t-out=\"object.partner_id.name or object.partner_name or "
 "''\">Brandon Freeman</t>,<br/>\n"
 "    wir freuen uns Ihnen mitteilen zu können, dass Ihr Vorschlag <t t-"
 "out=\"object.name or ''\">Alles über diese Veranstaltung</t> eingegangen ist "
@@ -713,8 +704,8 @@ msgstr ""
 "                            <tr><td valign=\"top\" style=\"font-size: 14px;"
 "\">\n"
 "                                <div>\n"
-"                                    Hallo<t t-if=\"not user_id.is_public\" t-"
-"out=\"' ' + user_id.name\"/>,\n"
+"                                    Guten Tag<t t-if=\"not "
+"user_id.is_public\" t-out=\"' ' + user_id.name\"/>,\n"
 "                                    <br/><br/>\n"
 "                                    Sie haben kürzlich Interesse für die "
 "folgende Veranstaltung gezeigt:\n"
@@ -1858,15 +1849,8 @@ msgstr "Anstehende Aktivitäten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
-"Bereiten Sie sich vor und\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">melden Sie sich jetzt für Ihre bevorzugten Vorträge "
-"an.</a>"
+msgid "Get prepared and"
+msgstr "Bereiten Sie sich vor und"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1917,6 +1901,11 @@ msgstr "Hoch"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "Sehr hoch"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Homepage"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3658,6 +3647,12 @@ msgid "minutes after Track start"
 msgstr "Minuten nach Beitragsbeginn"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "melden Sie sich jetzt zu Ihren Lieblings-Talks an."
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "beginnt in"
@@ -3666,6 +3661,23 @@ msgstr "beginnt in"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "beginnt am"
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Startseite</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "Bereiten Sie sich vor und\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">melden Sie sich jetzt für Ihre bevorzugten "
+#~ "Vorträge an.</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3758,14 +3770,8 @@ msgstr "beginnt am"
 #~ msgid "Filter Tracks..."
 #~ msgstr "Filter Tracks ..."
 
-#~ msgid "Get prepared and"
-#~ msgstr "Bereiten Sie sich vor und"
-
 #~ msgid "Group By"
 #~ msgstr "Gruppieren nach"
-
-#~ msgid "Home page"
-#~ msgstr "Homepage"
 
 #~ msgid "No results found"
 #~ msgstr "Keine Ergebnisse gefunden"
@@ -3831,9 +3837,6 @@ msgstr "beginnt am"
 #~ "interessant und für die\n"
 #~ "Zuhörerschaft hilfreich ist, wird sie für das\n"
 #~ "Programm in Betracht gezogen."
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "melden Sie sich jetzt zu Ihren Lieblings-Talks an."
 
 #~ msgid "search."
 #~ msgstr "Suche."

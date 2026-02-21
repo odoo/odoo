@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
-"PO-Revision-Date: 2026-02-13 07:42+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-20 09:20+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ko/>\n"
@@ -9773,7 +9773,7 @@ msgstr "세금 포함 총 가격:"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr "총 부가가치세:"
 
@@ -10091,10 +10091,15 @@ msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "부가가치세"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "VAT:"
+msgstr "VAT :"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10375,6 +10380,14 @@ msgid ""
 "(config)s'."
 msgstr ""
 "'%(picking_type)s'는 POS 설정 '%(config)s'에서 사용되므로 보관할 수 없습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10755,7 +10768,7 @@ msgstr "이 카테고리에 해당합니다."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "included"
-msgstr ""
+msgstr "포함 사항"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10863,9 +10876,6 @@ msgstr "사용"
 #~ "다음 주문은 통합 청구서를 생성할 수 없습니다. 해당 주문에 대한 청구서를 발"
 #~ "행할 수 없습니다.\n"
 #~ "%s"
-
-#~ msgid "VAT:"
-#~ msgstr "VAT :"
 
 #~ msgid "Ok"
 #~ msgstr "확인"

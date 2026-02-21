@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
-"PO-Revision-Date: 2026-02-11 16:32+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-20 11:54+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/es/>\n"
@@ -5240,7 +5240,7 @@ msgstr "Necesita un cliente para facturar"
 msgid ""
 "Need loss account for the following journals to post the lost amount: %s\n"
 msgstr ""
-"Necesita una cuenta de pérdidas para para publicar el importe perdido en los "
+"Se necesita una cuenta de pérdidas para publicar el importe perdido en los "
 "siguientes diarios: %s\n"
 
 #. module: point_of_sale
@@ -5432,8 +5432,7 @@ msgstr "Sin número de serie/lote existente"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No invoice journal configured for this POS session."
-msgstr ""
-"No hay ningún diario de facturación configurado para esta sesión de TPV."
+msgstr "No hay ningún diario de facturación configurado en esta sesión de PdV."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5675,9 +5674,9 @@ msgid ""
 "Online payment, delivery payment, terminal payment, and methods that require "
 "customer identification are not supported for fast payment validation."
 msgstr ""
-"El pago en línea, el pago a la entrega, el pago en terminal y los métodos "
-"que requieren la identificación del cliente no son compatibles con la "
-"validación rápida de pagos."
+"El pago en línea, el pago en el momento de la entrega, el pago en terminal y "
+"los métodos que requieren la identificación del cliente no son compatibles "
+"con la validación rápida de pagos."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8979,7 +8978,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "The Ticket Number should be at least 12 characters long."
-msgstr "El número de ticket debe tener al menos 12 caracteres."
+msgstr "El número del ticket debe tener al menos 12 caracteres."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9023,7 +9022,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
-msgstr "La empresa debe tener un país fiscal establecido."
+msgstr "La empresa debe tener un país fiscal definido."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9251,7 +9250,7 @@ msgstr "El importe pagado es diferente al importe total del pedido."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The paper is empty, please load paper into the printer"
-msgstr "El papel está vacío, por favor, carga papel en la impresora"
+msgstr "No hay papel; por favor, carga papel en la impresora"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9988,7 +9987,7 @@ msgstr "Precio total con impuestos incluidos:"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr "IVA total:"
 
@@ -10312,10 +10311,15 @@ msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "NIF"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "VAT:"
+msgstr "NIF:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10612,6 +10616,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot change the payment of a printed order."
 msgstr "No puede cambiar el pago de un pedido impreso."
@@ -10654,8 +10666,8 @@ msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
 msgstr ""
-"No se puede eliminar un cliente que tiene pedidos de venta en el TPV. Sin "
-"embargo, se puede archivar."
+"No puedes eliminar un cliente que tenga pedidos en el punto de venta. Sin "
+"embargo, puedes archivarlo."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11012,7 +11024,7 @@ msgstr "en esta categoría."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "included"
-msgstr ""
+msgstr "incluido"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11131,9 +11143,6 @@ msgstr "usando"
 #~ "los siguientes pedidos.\n"
 #~ "\n"
 #~ "%s"
-
-#~ msgid "VAT:"
-#~ msgstr "NIF:"
 
 #~ msgid "Ok"
 #~ msgstr "Aceptar"
