@@ -2699,8 +2699,14 @@ var SnippetsMenu = Widget.extend({
                 }
                 resolve(null);
             }).then(async editorToEnable => {
-                if (!previewMode && this._enabledEditorHierarchy[0] === editorToEnable
-                        || ifInactiveOptions && this._enabledEditorHierarchy.includes(editorToEnable)) {
+                if (editorToEnable && editorToEnable.$target && !editorToEnable.$target.closest('body').length) {
+                    await new Promise(requestAnimationFrame);
+                    if (!editorToEnable.$target.closest('body').length) {
+                        return null;
+                    }
+                }
+
+                if (this._enabledEditorHierarchy[0] === editorToEnable || ifInactiveOptions && this._enabledEditorHierarchy.includes(editorToEnable)) {
                     return editorToEnable;
                 }
 
