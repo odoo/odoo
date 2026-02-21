@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         service_policies = [
             # (service_policy, string)
             ('ordered_prepaid', _('Prepaid/Fixed Price')),
-            ('delivered_manual', _('Based on Delivered Quantity (Manual)')),
+            ('delivered_manual', _('Based on Delivered (Manual)')),
         ]
 
         if self.env['res.groups']._is_feature_enabled('project.group_project_milestone'):

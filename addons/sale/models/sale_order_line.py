@@ -101,6 +101,16 @@ class SaleOrderLine(models.Model):
         domain=lambda self: self._fields['product_id']._description_domain(self.env),
     )
 
+    product_template_invoice_policy = fields.Selection(
+        related='product_template_id.invoice_policy',
+        string="Product Invoice Policy",
+    )
+
+    product_template_service_type = fields.Selection(
+        related='product_template_id.service_type',
+        string="Product Service Type",
+    )
+
     product_template_attribute_value_ids = fields.Many2many(
         related='product_id.product_template_attribute_value_ids',
         depends=['product_id'])
@@ -238,6 +248,12 @@ class SaleOrderLine(models.Model):
         default=0.0,
         digits='Product Unit',
         store=True, readonly=False, copy=False)
+    qty_delivered_percent = fields.Float(
+        string="% Delivered",
+        compute='_compute_qty_delivered_percent',
+        inverse='_inverse_qty_delivered_percent',
+        readonly=False, copy=False,
+    )
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
@@ -953,6 +969,22 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             if not so_line.qty_delivered or so_line in delivered_qties:
                 so_line.qty_delivered = delivered_qties[so_line]
+
+    @api.depends(
+        'qty_delivered',
+        'product_uom_qty',
+        )
+    def _compute_qty_delivered_percent(self):
+        for line in self:
+            if line.product_uom_qty:
+                line.qty_delivered_percent = 100 * (line.qty_delivered / line.product_uom_qty)
+            else:
+                line.qty_delivered_percent = 100
+
+    @api.onchange('qty_delivered_percent')
+    def _inverse_qty_delivered_percent(self):
+        for line in self:
+            line.qty_delivered = (line.qty_delivered_percent * line.product_uom_qty) / 100
 
     @api.depends('qty_delivered')
     @api.depends_context('accrual_entry_date')
