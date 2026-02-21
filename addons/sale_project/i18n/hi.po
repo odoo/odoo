@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 08:11+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 17:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/"
 "sale_project/hi/>\n"
@@ -46,13 +46,6 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Orders"
-msgstr ""
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
-msgid ""
-"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale_project
@@ -99,6 +92,11 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"प्रॉडक्ट कॉन्फ़िगरेशन के अनुसार, डिलीवर की गई मात्रा को ऑटोमैटिक तरीके से कैलकुलेट करें:\n"
+"  - मैन्युअल: मात्रा को लाइन पर मैन्युअल रूप से सेट करें\n"
+"  - एनालिटिक फ्रॉम एक्सपेंसेस: जितने खर्चे दर्ज किए गए हैं, उनकी कुल संख्या ही डिलीवरी मात्रा होगी\n"
+"  - टाइमशीट: मात्रा इस सेल लाइन से जुड़े टास्क पर दर्ज किए गए घंटों का योग है\n"
+"  - स्टॉक मूव्स: मात्रा पुष्टि की गई पिकिंग से आती है\n"
 
 #. module: sale_project
 #. odoo-python
@@ -649,11 +647,12 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
-"सेल्स ऑर्डर आइटम जिसमें इस टास्क पर बिताया गया समय जोड़ा जाएगा, ताकि आपके ग्राहक को इनवॉइस भेजा जा सके.\n"
-"डिफ़ॉल्ट रूप से प्रोजेक्ट पर सेट किया गया सेल्स ऑर्डर आइटम चुना जाएगा. उसकी अनुपस्थिति में, अंतिम प्रीपेड सेल्स "
-"ऑर्डर आइटम जिसमें समय बचा है, उपयोग किया जाएगा.\n"
-"इस टास्क को नॉन-बिलेबल बनाने के लिए सेल्स ऑर्डर आइटम को हटा दें. आप हर टाइमशीट एंट्री के सेल्स ऑर्डर "
-"आइटम को व्यक्तिगत रूप से बदल या हटा भी सकते हैं।"
+"सेल्स ऑर्डर आइटम जिसमें इस टास्क पर बिताया गया समय जोड़ा जाएगा, ताकि आपके ग्राहक को "
+"इनवॉइस भेजा जा सके.\n"
+"डिफ़ॉल्ट रूप से प्रोजेक्ट पर सेट किया गया सेल्स ऑर्डर आइटम चुना जाएगा. उसकी अनुपस्थिति में, "
+"अंतिम प्रीपेड सेल्स ऑर्डर आइटम जिसमें समय बचा है, उपयोग किया जाएगा.\n"
+"इस टास्क को नॉन-बिलेबल बनाने के लिए सेल्स ऑर्डर आइटम को हटा दें. आप हर टाइमशीट एंट्री के "
+"सेल्स ऑर्डर आइटम को व्यक्तिगत रूप से बदल या हटा भी सकते हैं।"
 
 #. module: sale_project
 #. odoo-javascript
@@ -685,8 +684,9 @@ msgid ""
 "It can be modified on each task and timesheet entry individually if "
 "necessary."
 msgstr ""
-"सेल्स ऑर्डर आइटम जिसे इस प्रोजेक्ट के टास्क और टाइमशीट पर डिफ़ॉल्ट रूप से चुना जाएगा, सिवाय इसके कि टाइमशी"
-"ट पर सेट कर्मचारी स्पष्ट रूप से प्रोजेक्ट पर किसी अन्य सेल्स ऑर्डर आइटम से जुड़ा हो. \n"
+"सेल्स ऑर्डर आइटम जिसे इस प्रोजेक्ट के टास्क और टाइमशीट पर डिफ़ॉल्ट रूप से चुना जाएगा, "
+"सिवाय इसके कि टाइमशीट पर सेट कर्मचारी स्पष्ट रूप से प्रोजेक्ट पर किसी अन्य सेल्स ऑर्डर "
+"आइटम से जुड़ा हो. \n"
 "ज़रूरत पड़ने पर इसे हर टास्क और टाइमशीट एंट्री पर अलग-अलग बदला जा सकता है।"
 
 #. module: sale_project
@@ -856,6 +856,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom
 msgid "Unit of Measure"
 msgstr "माप की इकाई"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+msgid "Values set here are company-specific."
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count
