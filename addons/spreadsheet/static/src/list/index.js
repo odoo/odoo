@@ -56,6 +56,7 @@ inverseCommandRegistry
     .add("UPDATE_ODOO_LIST", identity)
     .add("RE_INSERT_ODOO_LIST", identity)
     .add("RENAME_ODOO_LIST", identity)
-    .add("REMOVE_ODOO_LIST", identity);
+    .add("REMOVE_ODOO_LIST", identity)
+    .add("DUPLICATE_ODOO_LIST", identity);
 
 export { ListCorePlugin, ListUIPlugin };

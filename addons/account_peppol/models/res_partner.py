@@ -39,6 +39,9 @@ class ResPartner(models.Model):
 
     @api.onchange('invoice_edi_format', 'peppol_endpoint', 'peppol_eas')
     def _onchange_verify_peppol_status(self):
+        if not self.commercial_partner_id:
+            # avoid issue when commercial_partner_id is on the view
+            self._compute_commercial_partner()
         self.button_account_peppol_check_partner_endpoint()
 
     # -------------------------------------------------------------------------
