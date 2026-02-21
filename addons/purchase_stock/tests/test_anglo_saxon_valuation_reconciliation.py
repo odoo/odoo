@@ -103,15 +103,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         # Return the goods and refund the invoice
         with freeze_time('2018-01-13'):
-            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-                active_ids=picking.ids, active_id=picking.ids[0], active_model='stock.picking'))
-            stock_return_picking = stock_return_picking_form.save()
-            stock_return_picking.product_return_moves.quantity = 1.0
-            stock_return_picking_action = stock_return_picking.action_create_returns()
-            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+            return_pick = picking._create_return()
+            return_pick.move_ids.product_uom_qty = 1.0
             return_pick.action_assign()
-            return_pick.move_ids.quantity = 1
-            return_pick.move_ids.picked = True
             return_pick._action_done()
 
         # Refund the invoice
@@ -473,14 +467,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         # create return
         picking = purchase_order.picking_ids[0]
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.write({'quantity': 1000.0})
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_line_ids.write({'quantity': 1000})
+        return_pick = picking._create_return()
+        return_pick.move_ids.product_uom_qty = 1000.0
+        return_pick.action_assign()
         return_pick.button_validate()
 
         # create vendor bill

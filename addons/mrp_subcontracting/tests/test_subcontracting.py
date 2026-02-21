@@ -118,10 +118,9 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(avail_qty_finished, 1)
 
         # Ensure returns to subcontractor location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking_receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
+        return_picking = picking_receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_confirm()
         self.assertEqual(len(return_picking), 1)
         self.assertEqual(return_picking.move_ids.location_dest_id, self.subcontractor_partner1.property_stock_subcontractor)
 
@@ -973,10 +972,10 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
         # Ensure returns to subcontractor location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking_receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
+        return_picking = picking_receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_confirm()
+        return_picking.action_assign()
         self.assertEqual(len(return_picking), 1)
         self.assertEqual(return_picking.location_dest_id, supplier_location)
         self.assertEqual(return_picking.location_id, stock_location)

@@ -256,13 +256,9 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(po.order_line.qty_received, 2)
 
         # return 1 x P_finished to the stock location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
-        with return_form.product_return_moves.edit(0) as line:
-            line.quantity = 1.0
-        return_wizard = return_form.save()
-        delivery_return01 = return_wizard._create_return()
-        delivery_return01.move_line_ids.quantity = 1.0
-        delivery_return01.move_ids.picked = True
+        delivery_return01 = delivery._create_return()
+        delivery_return01.move_ids[0].product_uom_qty = 1.0
+        delivery_return01.action_assign()
         delivery_return01.location_dest_id = self.warehouse.lot_stock_id
         delivery_return01.button_validate()
 
@@ -271,14 +267,10 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(po.order_line.qty_received, 2, 'One product has been returned to the stock location, so we should still consider it as received')
 
         # return 1 x P_finished to the supplier location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
-        with return_form.product_return_moves.edit(0) as line:
-            line.quantity = 1.0
-        return_wizard = return_form.save()
-        delivery_return02 = return_wizard._create_return()
+        delivery_return02 = delivery._create_return()
+        delivery_return02.move_ids[0].product_uom_qty = 1.0
         delivery_return02.location_dest_id = dropship_picking_type.default_location_src_id
-        delivery_return02.move_line_ids.quantity = 1.0
-        delivery_return02.move_ids.picked = True
+        delivery_return02.action_assign()
         delivery_return02.button_validate()
 
         self.assertEqual(delivery_return02.state, 'done')

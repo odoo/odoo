@@ -574,21 +574,10 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(len(po.picking_ids), 2)
 
         # Create a partial return
-        stock_return_picking_form = Form(
-            self.env['stock.return.picking'].with_context(
-                active_ids=first_picking.ids,
-                active_id=first_picking.ids[0],
-                active_model='stock.picking'
-            )
-        )
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 2.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick = first_picking._create_return()
+        return_pick.move_ids.product_uom_qty = 2.0
         return_pick.action_assign()
-        return_pick.move_ids.quantity = 2
-        return_pick.move_ids.picked = True
-        return_pick._action_done()
+        return_pick.button_validate()
 
         self.assertEqual(po.order_line.qty_received, 3)
 
@@ -757,27 +746,14 @@ class TestCreatePicking(ProductVariantsCommon):
 
         self.assertEqual(po.order_line.qty_received, 10)
 
-        stock_return_picking_form = Form(
-            self.env['stock.return.picking'].with_context(
-                active_ids=second_picking.ids,
-                active_id=second_picking.ids[0],
-                active_model='stock.picking'
-            )
-        )
-        stock_return_picking_form.product_return_moves._records[0]['quantity'] = 2
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick = second_picking._create_return()
+        return_pick.move_ids.product_uom_qty = 2
         return_pick.action_assign()
         return_pick.location_dest_id = vendor_returns_loc
-        return_pick.move_ids.quantity = 2
-        return_pick.move_ids.picked = True
-        return_pick._action_done()
+        return_pick.button_validate()
         push_pick = return_pick.move_ids.move_dest_ids.picking_id
         push_pick.action_assign()
-        push_pick.move_ids.quantity = 2
-        push_pick.move_ids.picked = True
-        push_pick._action_done()
+        push_pick.button_validate()
 
         self.assertEqual(po.order_line.qty_received, 8)
         self.assertEqual(push_pick.partner_id, po.partner_id)
@@ -803,15 +779,14 @@ class TestCreatePicking(ProductVariantsCommon):
         })
         stock_picking.button_validate()
 
-        stock_return_picking = self.env['stock.return.picking'].with_context(
-            active_ids=stock_picking.ids, active_id=stock_picking.ids[0], active_model='stock.picking').create({})
-
-        stock_return_picking.product_return_moves.quantity = 1.0
-        res = stock_return_picking.action_create_exchanges()
-        exchange_return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking = stock_picking._create_return()
+        return_picking.move_ids.product_uom_qty = 1.0
+        return_picking.action_assign()
+        return_picking.action_exchange()
+        exchange_return_picking = return_picking.return_ids
 
         self.assertTrue(exchange_return_picking)
-        self.assertEqual(exchange_return_picking.origin, 'Return of ' + stock_picking.name)
+        self.assertEqual(exchange_return_picking.origin, 'Return of ' + return_picking.name)
 
     def test_po_with_return_for_exchange_shows_3_transfers(self):
         po = self.env['purchase.order'].create(self.po_vals)
@@ -820,12 +795,10 @@ class TestCreatePicking(ProductVariantsCommon):
         stock_picking = po.picking_ids
         stock_picking.button_validate()
 
-        return_picking_wizard = self.env['stock.return.picking'].with_context(
-            active_ids=stock_picking.ids, active_id=stock_picking.id, active_model='stock.picking'
-        ).create({})
-
-        return_picking_wizard.product_return_moves.quantity = 1.0
-        return_picking_wizard.action_create_exchanges()
+        return_picking = stock_picking._create_return()
+        return_picking.move_ids.product_uom_qty = 1.0
+        return_picking.action_assign()
+        return_picking.action_exchange()
 
         self.assertEqual(
             po.incoming_picking_count, 3,

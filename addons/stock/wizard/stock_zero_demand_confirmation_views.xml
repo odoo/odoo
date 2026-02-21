@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_zero_demand_confirmation" model="ir.ui.view">
+        <field name="name">stock.zero.demand.confirmation</field>
+        <field name="model">stock.zero.demand.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Zero Demand Warning">
+                <p>
+                    Some moves have zero demand quantity.
+                </p>
+                <p>
+                    Are you sure you want to proceed this transfer with moves that have no demand?
+                </p>
+                <footer>
+                    <button name="process" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

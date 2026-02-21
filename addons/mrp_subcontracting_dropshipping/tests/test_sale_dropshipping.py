@@ -108,12 +108,9 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         for case in ['return', 'deliver again']:
             delivered_before_case = 1.0 if case == 'return' else 0.0
             delivered_after_case = 0.0 if case == 'return' else 1.0
-            return_form = Form(self.env['stock.return.picking'].with_context(active_ids=[picking.id], active_id=picking.id, active_model='stock.picking'))
-            with return_form.product_return_moves.edit(0) as line_form:
-                line_form.quantity = 1.0
-            return_wizard = return_form.save()
-            action = return_wizard.action_create_returns()
-            picking = self.env['stock.picking'].browse(action['res_id'])
+            picking = picking._create_return()
+            picking.move_ids[0].product_uom_qty = 1.0
+            picking.action_assign()
             self.assertEqual(sale_order.order_line.qty_delivered, delivered_before_case, "Incorrect delivered qty for case '%s'" % case)
 
             picking.button_validate()
@@ -166,14 +163,9 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 2/4")
 
         # Create a return of picking01 (with both components)
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking01.id, active_model='stock.picking'))
-        wizard = return_form.save()
-        wizard.product_return_moves.write({'quantity': 2.0})
-        res = wizard.action_create_returns()
-        return01 = self.env['stock.picking'].browse(res['res_id'])
-
-        return01.move_ids.quantity = 2
-        return01.move_ids.picked = True
+        return01 = picking01._create_return()
+        return01.move_ids.product_uom_qty = 2.0
+        return01.action_assign()
         return01.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 0/4")
 
@@ -190,26 +182,16 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 2/4")
 
         # Create a return of return01 (with 1 component)
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=return01.id, active_model='stock.picking'))
-        wizard = return_form.save()
-        wizard.product_return_moves.write({'quantity': 1.0})
-        res = wizard.action_create_returns()
-        picking04 = self.env['stock.picking'].browse(res['res_id'])
-
-        picking04.move_ids.quantity = 1
-        picking04.move_ids.picked = True
+        picking04 = return01._create_return()
+        picking04.move_ids.product_uom_qty = 1.0
+        picking04.action_assign()
         picking04.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 3/4")
 
         # Create a second return of return01 (with 1 component, the last one)
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=return01.id, active_model='stock.picking'))
-        wizard = return_form.save()
-        wizard.product_return_moves.write({'quantity': 1.0})
-        res = wizard.action_create_returns()
-        picking04 = self.env['stock.picking'].browse(res['res_id'])
-
-        picking04.move_ids.quantity = 1
-        picking04.move_ids.picked = True
+        picking04 = return01._create_return()
+        picking04.move_ids.product_uom_qty = 1.0
+        picking04.action_assign()
         picking04.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 1, "Delivered components: 4/4")
 

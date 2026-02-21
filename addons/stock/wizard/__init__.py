@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import product_label_layout
-from . import stock_picking_return
 from . import stock_inventory_conflict
 from . import stock_inventory_warning
 from . import stock_inventory_adjustment_name
@@ -19,3 +18,4 @@ from . import stock_request_count
 from . import stock_replenishment_info
 from . import stock_quant_relocate
 from . import stock_put_in_pack
+from . import stock_zero_demand_confirmation

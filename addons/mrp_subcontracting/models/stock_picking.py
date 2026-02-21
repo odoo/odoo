@@ -39,6 +39,19 @@ class StockPicking(models.Model):
             if any(move.is_subcontract and move.product_id.tracking in ['lot', 'serial'] for move in picking.move_ids):
                 picking.show_lots_text = False
 
+    def _prepare_return_move_default_values(self, move_id):
+        vals = super()._prepare_return_move_default_values(move_id)
+        if move_id.is_subcontract:
+            vals['location_dest_id'] = self.partner_id.with_company(self.company_id).property_stock_subcontractor.id
+        vals['is_subcontract'] = False
+        return vals
+
+    def _prepare_return_picking_default_values(self):
+        vals = super()._prepare_return_picking_default_values()
+        if all(move_id.quantity > 0 and move_id.is_subcontract for move_id in self.move_ids):
+            vals['location_dest_id'] = self.partner_id.with_company(self.company_id).property_stock_subcontractor.id
+        return vals
+
     # -------------------------------------------------------------------------
     # Action methods
     # -------------------------------------------------------------------------

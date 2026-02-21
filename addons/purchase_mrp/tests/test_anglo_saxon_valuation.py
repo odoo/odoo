@@ -152,12 +152,9 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
                 with kit_form.bom_line_ids.edit(1) as line:
                     line.cost_share = 70
 
-        wizard_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-        wizard = wizard_form.save()
-        wizard.product_return_moves.quantity = 1
-        action = wizard.action_create_returns()
-        return_picking = self.env["stock.picking"].browse(action["res_id"])
-        return_picking.move_ids.move_line_ids.quantity = 1
+        return_picking = delivery._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
 
         self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
