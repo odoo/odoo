@@ -121,7 +121,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
             if number is None and partner:
-                number = partner._sms_get_recipients_info()[partner.id]['sanitized']
+                number = partner._mail_get_recipients_info()[partner.id]['sanitized']
             # trace
             status = recipient_info.get('trace_status', 'outgoing')
             failure_type = recipient_info['failure_type'] if status in ('error', 'cancel', 'bounce') else None

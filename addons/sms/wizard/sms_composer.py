@@ -110,7 +110,7 @@ class SmsComposer(models.TransientModel):
 
             records = composer._get_records()
             if records:
-                res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.comment_single_recipient)
+                res = records._mail_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.comment_single_recipient)
                 composer.recipient_valid_count = len([rid for rid, rvalues in res.items() if rvalues['sanitized']])
                 composer.recipient_invalid_count = len([rid for rid, rvalues in res.items() if not rvalues['sanitized']])
             else:
@@ -127,7 +127,7 @@ class SmsComposer(models.TransientModel):
                 continue
             records.ensure_one()
             # If the composer was opened with a specific field use that, otherwise get the partner's
-            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.number_field_name)
+            res = records._mail_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.number_field_name)
             if not composer.recipient_single_number_itf:
                 composer.recipient_single_number_itf = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.number_field_name:
@@ -142,7 +142,7 @@ class SmsComposer(models.TransientModel):
                 composer.recipient_single_number = ''
                 continue
             records.ensure_one()
-            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
+            res = records._mail_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             composer.recipient_single_description = res[records.id]['partner'].name or records._mail_get_partners()[records[0].id].display_name
             composer.recipient_single_number = res[records.id]['sanitized'] or res[records.id]['number'] or ''
 
@@ -309,7 +309,7 @@ class SmsComposer(models.TransientModel):
         return done_ids
 
     def _prepare_recipient_values(self, records):
-        recipients_info = records._sms_get_recipients_info(force_field=self.number_field_name)
+        recipients_info = records._mail_get_recipients_info(force_field=self.number_field_name)
         return recipients_info
 
     def _prepare_body_values(self, records):
