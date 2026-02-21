@@ -4,7 +4,7 @@ try:
 except ImportError:
     phonenumbers = None
 
-from odoo import _, api, fields, models, modules
+from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -160,7 +160,7 @@ class NemhandelRegistration(models.TransientModel):
             # the client side is rolled back and the edi user is deleted on the client side
             # but remains on the proxy side.
             # it is important to keep these two in sync, so commit before activating.
-            if not modules.module.current_test:
+            if self._can_commit():
                 self.env.cr.commit()
 
         self.edi_user_id._check_user_on_alternative_service()

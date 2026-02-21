@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, fields, models, modules, tools, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -235,7 +235,7 @@ class AccountEdiProxyClientUser(models.Model):
                 if uuid_to_ack := vals_to_ack.get('uuid'):
                     uuids_to_ack.append(uuid_to_ack)
 
-            if not (modules.module.current_test or tools.config['test_enable']):
+            if self._can_commit():
                 self.env.cr.commit()
             if uuids_to_ack:
                 edi_user._call_nemhandel_proxy(
@@ -351,7 +351,7 @@ class AccountEdiProxyClientUser(models.Model):
             # so that the invoices are acknowledged
             self._cron_nemhandel_get_message_status()
             self._cron_nemhandel_get_new_documents()
-            if not tools.config['test_enable'] and not modules.module.current_test:
+            if self._can_commit():
                 self.env.cr.commit()
 
         if self.company_id.l10n_dk_nemhandel_proxy_state != 'not_registered':

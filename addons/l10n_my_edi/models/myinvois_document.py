@@ -564,13 +564,12 @@ class MyInvoisDocument(models.Model):
 
         return error_map.get(error['reference'], self.env._("An unexpected error has occurred."))
 
-    @staticmethod
-    def _can_commit():
+    def _can_commit(self):
         """ Helper to know if we can commit the current transaction or not.
 
         :returns: True if commit is acceptable, False otherwise.
         """
-        return not config['test_enable'] and not modules.module.current_test
+        return not config['test_enable'] and not modules.module.current_test and not self.env.context.get('commit_forbidden', False)
 
     def _get_mail_thread_data_attachments(self):
         res = super()._get_mail_thread_data_attachments()

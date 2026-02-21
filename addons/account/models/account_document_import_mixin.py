@@ -17,16 +17,16 @@ from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 _logger = logging.getLogger(__name__)
 
 
-def _can_commit():
+def _can_commit(env):
     """ Helper to know if we can commit the current transaction or not.
 
     :returns: True if commit is acceptable, False otherwise.
     """
-    return not modules.module.current_test
+    return not modules.module.current_test and not env.context.get('commit_forbidden', False)
 
 
 @contextmanager
-def rollbackable_transaction(cr):
+def rollbackable_transaction(env):
     """ A savepoint-less commit/rollback context manager.
 
     Commits the cursor, then executes the code inside the context manager, then tries to commit again.
@@ -41,7 +41,8 @@ def rollbackable_transaction(cr):
 
     :raise: an Exception if an error was caught and the transaction was rolled back.
     """
-    if not _can_commit():
+    cr = env.cr
+    if not _can_commit(env):
         yield
         return
 
