@@ -28,8 +28,12 @@ export const computeComboItems = (
     for (const conf of childLineConf) {
         const comboItem = conf.combo_item_id;
         const combo = comboItem.combo_id;
-        let priceUnit = ProductPrice.round((combo.base_price * parentLstPrice) / originalTotal);
-        remainingTotal -= priceUnit * conf.qty;
+        const parentCoef = conf.parentQty || 1;
+        let priceUnit = ProductPrice.round(
+            (combo.base_price * parentLstPrice * parentCoef) / originalTotal
+        );
+        remainingTotal -= (priceUnit * conf.qty) / parentCoef;
+
         if (conf === childLineConf[childLineConf.length - 1]) {
             priceUnit += remainingTotal;
             remainingTotal = 0;
