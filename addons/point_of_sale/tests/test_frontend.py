@@ -2396,6 +2396,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order.amount_total, 2.80, "The total amount should be rounded to 2 decimals")
         self.assertEqual(order.amount_return, 0, "The return amount should be rounded to 2 decimals")
 
+    def test_offline_barcode_not_in_pos(self):
+        """
+        Tests that an unwanted error is not thrown when trying to scan a barcode while offline
+        for a product that is not in the PoS.
+        """
+        self.wall_shelf.available_in_pos = False
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_offline_barcode_not_in_pos', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
