@@ -157,10 +157,11 @@ export class CustomizeWebsitePlugin extends Plugin {
                 this.variablesToCustomize[variable] = nullValue;
             }
         }
-        await this.debouncedSCSSVariablesCusto(nullValue);
-        if (reloadBundles) {
-            await this.reloadBundles();
-        }
+        this.debouncedSCSSVariablesCusto(nullValue).then(() => {
+            if (reloadBundles) {
+                this.reloadBundles();
+            }
+        });
     }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
         const variables = this.variablesToCustomize;
@@ -201,10 +202,11 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }
         this.colorsToCustomize = Object.assign(this.colorsToCustomize, finalColors);
-        await this.debouncedSCSSColorsCusto(url, nullValue);
-        if (reloadBundles) {
-            await this.reloadBundles();
-        }
+        this.debouncedSCSSColorsCusto(url, nullValue).then(() => {
+            if (reloadBundles) {
+                this.reloadBundles();
+            }
+        });
     }
     debouncedSCSSColorsCusto = debounce(async (url, nullValue) => {
         const colors = this.colorsToCustomize;
@@ -217,8 +219,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         });
         await this.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
     }
-    reloadBundles = debounce(this._reloadBundles.bind(this), 0);
-    async _reloadBundles() {
+    async reloadBundles() {
         const bundles = await rpc("/website/theme_customize_bundle_reload");
         const allLinksIframeEls = [];
         const proms = [];
