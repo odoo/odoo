@@ -3,6 +3,7 @@
 
 from . import test_frontend
 from . import self_order_common_test
+from . import test_res_config_settings
 from . import test_self_order_mobile
 from . import test_self_order_kiosk
 from . import test_self_order_attribute
