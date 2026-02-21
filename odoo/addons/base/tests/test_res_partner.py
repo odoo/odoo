@@ -816,6 +816,26 @@ class TestPartnerAddressCompany(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+    def test_update_account_holder_name(self):
+        """ Test that account holder name updates with partner name only if they were same """
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        bank_account = self.env['res.partner.bank'].create({
+            'acc_number': '123456789',
+            'partner_id': partner.id,
+        })
+
+        self.assertEqual(bank_account.acc_holder_name, 'Test Partner', "Account holder name should match partner name initially")
+
+        partner.name = 'Test Partner Updated'
+        self.assertEqual(bank_account.acc_holder_name, 'Test Partner Updated', "Account holder name should update when partner name changes if they matched")
+
+        # Change account holder name manually, then check if acc_holder_name changes as well or no
+        bank_account.acc_holder_name = 'Specific Account Holder'
+        partner.name = 'Test Partner Updated Again'
+
+        self.assertEqual(bank_account.acc_holder_name, 'Specific Account Holder',
+                         "Account holder name should NOT update if it was manually changed first (different from partner name)")
+
     def test_accessibility_of_company_partner_from_branch(self):
         """ Check accessibility of company partner from branch. """
         company = self.env['res.company'].create({'name': 'company'})

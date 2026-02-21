@@ -38,11 +38,6 @@ class TestUsersHttp(HttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(bank_account.acc_holder_name, 'Partner A Holder')
 
-        # request 2: request with changed partner name
-        response2 = self.url_open(url='/my/account', data={**common_data, 'name': 'Partner New Name', 'csrf_token': Request.csrf_token(self)})
-        self.assertEqual(response2.status_code, 200)
-        self.assertEqual(bank_account.acc_holder_name, 'Partner New Name')
-
     def test_deactivate_portal_user(self):
         # Create a portal user with data which should be removed on deactivation
         login = 'portal_user'
