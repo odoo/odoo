@@ -4483,3 +4483,43 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_refuse()
             self.env['hr.leave']._cancel_invalid_leaves()
             self.assertEqual(leave.state, 'cancel')
+
+    def test_timeoff_allocation_with_unused_accrual_lost(self):
+        """
+        Create an accrual plan:
+           * Set the accrued gain time to "At the start of the accrual period"
+           * Set the carry-over time to "At the start of the year"
+        Create a milestone:
+           * Set the number of accrued days to 1
+           * Set the accrual frequency to "monthly" and
+            the carry over to "None.Accrued time reset to 0"
+        Create an allocation:
+           * Set the start date to 2025-01-01
+           * Set the accrual plan to the one created above
+        Use future allocations to see the number of days accrued on
+        2026-02-01(feb). It should be 2.
+        """
+        with freeze_time('2025-01-01'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'accrued_gain_time': 'start',
+                'level_ids': [Command.create({
+                    'start_count': 0,
+                    'frequency': 'monthly',
+                    'action_with_unused_accruals': 'lost',
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'date_from': '2025-01-01',
+                'allocation_type': 'accrual',
+                'number_of_days': 0,
+                'already_accrued': False,
+            })
+            allocation.action_validate()
+        with freeze_time('2026-02-01'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 2)

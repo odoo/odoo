@@ -570,6 +570,8 @@ class HolidaysAllocation(models.Model):
                     # If the days were accrued on the carryover period, then apply the carryover policy
                     if accrued and last_carryover_date <= allocation.nextcall <= carryover_period_end:
                         if carryover_level.action_with_unused_accruals in ['lost', 'maximum']:
+                            if allocation.nextcall == carryover_date:
+                                carryover_date = allocation._get_carryover_date(nextcall)
                             allocation.last_executed_carryover_date = carryover_date
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
