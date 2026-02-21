@@ -1533,22 +1533,6 @@ describe("link in contenteditable=false", () => {
 });
 
 describe("upload file via link popover", () => {
-    test("should display upload button when url input is empty", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>");
-        execCommand(editor, "openLinkTools");
-        await waitFor(".o-we-linkpopover");
-        // Upload button should be visible
-        expect("button i[class='fa fa-upload']").toHaveCount(1);
-        await click(".o_we_href_input_link");
-        await press("a");
-        await animationFrame();
-        // Upload button should NOT be visible
-        expect("button i[class='fa fa-upload']").toHaveCount(0);
-        await press("Backspace");
-        await animationFrame();
-        // Upload button should be visible again
-        expect("button i[class='fa fa-upload']").toHaveCount(1);
-    });
     const patchUpload = (editor) => {
         const mockedUploadPromise = new Promise((resolve) => {
             patchWithCleanup(editor.services.uploadLocalFiles, {
