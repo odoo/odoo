@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _prepare_stock_moves(self, picking):
+    def _prepare_stock_moves(self, picking=False):
         res = super()._prepare_stock_moves(picking)
         for re in res:
             if self.sale_line_id and re.get('location_final_id'):

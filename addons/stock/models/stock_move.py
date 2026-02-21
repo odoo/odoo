@@ -1391,8 +1391,9 @@ Please change the quantity done or the rounding precision in your settings.""",
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
-        if self.partner_id and not self.reference_ids:
-            domain += [('partner_id', '=', self.partner_id.id)]
+        if self.partner_id:
+            picking_partner_id = self.env.context.get('move_picking_partner_id', self.partner_id.id)
+            domain += [('partner_id', '=', picking_partner_id)]
         return domain
 
     def _search_picking_for_assignation(self):
@@ -1525,12 +1526,13 @@ Please change the quantity done or the rounding precision in your settings.""",
             'origin': origin,
             'company_id': self.mapped('company_id').id,
             'user_id': False,
-            'partner_id': partner,
+            'partner_id': self.env.context.get('move_picking_partner_id', partner),
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,
         }
         if self.location_dest_id.ids:
             vals['location_dest_id'] = self.location_dest_id.id
+
         return vals
 
     def _should_be_assigned(self):
