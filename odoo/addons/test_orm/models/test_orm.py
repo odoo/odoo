@@ -1206,6 +1206,7 @@ class TestOrmTransient_Model(models.TransientModel):
 class TestOrmAttachment(models.Model):
     _name = 'test_orm.attachment'
     _description = 'Attachment'
+    _override_search_all = True
 
     res_model = fields.Char(required=True)
     res_id = fields.Integer(required=True)
@@ -1215,13 +1216,6 @@ class TestOrmAttachment(models.Model):
     def _compute_name(self):
         for rec in self:
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
-
-    # override those methods for many2many search
-    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
-        return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
-
-    def _check_access(self, operation):
-        return super()._check_access(operation)
 
     # DLE P55: `test_cache_invalidation`
     def modified(self, fnames, *args, **kwargs):
