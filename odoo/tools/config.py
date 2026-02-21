@@ -253,9 +253,21 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", type='path', my_default='',
                          help="Launch a python test file.")
+<<<<<<< 2f980679a545045e34af8a4175f8b29071529253
         group.add_option("--test-enable", dest='test_enable', action="store_true",
                          help="Enable unit tests. Implies --stop-after-init")
         group.add_option("--test-tags", dest="test_tags",
+||||||| 0ebe2eaee2539c4f5087a74a7d3d7bb75126c923
+        group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
+                         dest='test_enable',
+                         help="Enable unit tests.")
+        group.add_option("--test-tags", dest="test_tags",
+=======
+        group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
+                         dest='test_enable',
+                         help="Enable unit tests.")
+        group.add_option("-t", "--test-tags", dest="test_tags",
+>>>>>>> d8cf40c31023ee740501a8fb3c8ef2238b691e09
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
                          "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
