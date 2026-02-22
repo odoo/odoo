@@ -54,6 +54,12 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'time_type': 'other',
         })
 
+        self.hr_leave_type_half_day = self.env['hr.leave.type'].sudo().create({
+            'name': 'Time Off Type (half day)',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+        })
+
         # HR Officer allocates some leaves to the employee 1
         self.Requests = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
         self.Allocations = self.env['hr.leave.allocation'].with_context(mail_create_nolog=True, mail_notrack=True)
@@ -368,15 +374,52 @@ class TestTimesheetHolidays(TestCommonTimesheet):
                                                         "should be 10 hours")
 
     def test_timeoff_validation_fully_flexible_employee(self):
-        self.empl_employee.resource_calendar_id = False
+        """
+        Test timesheet generation for fully flexible employees with
+        'half-day' leave types to ensure multi-day requests are
+        distributed correctly across days.
+        """
+        self.empl_employee.resource_calendar_id.flexible_hours = True
 
-        time_off = self.Requests.with_user(self.user_employee).create({
-            'name': 'Test Fully Flexible Employee Validation',
-            'employee_id': self.empl_employee.id,
-            'holiday_status_id': self.hr_leave_type_with_ts.id,
-            'request_date_from': datetime(2025, 8, 12),
-            'request_date_to': datetime(2025, 8, 12)
-        })
+        # Create 3 scenarios: Full Day, Single Half Day, and Multi-Day
+        time_off, time_off_half_day, time_off_multi_day = self.Requests.with_user(self.user_employee).create([
+            {
+                'name': 'Test Full Day (Flexible)',
+                'employee_id': self.empl_employee.id,
+                'holiday_status_id': self.hr_leave_type_half_day.id,
+                'request_date_from': datetime(2026, 2, 9),
+                'request_date_to': datetime(2026, 2, 9),
+            },
+            {
+                'name': 'Test Single Half Day (Flexible)',
+                'employee_id': self.empl_employee.id,
+                'holiday_status_id': self.hr_leave_type_half_day.id,
+                'request_date_from': datetime(2026, 2, 10),
+                'request_date_to': datetime(2026, 2, 10),
+                'request_date_from_period': 'am',
+                'request_date_to_period': 'am',
+            },
+            {
+                'name': 'Test Multi-Day (Flexible)',
+                'employee_id': self.empl_employee.id,
+                'holiday_status_id': self.hr_leave_type_half_day.id,
+                'request_date_from': datetime(2026, 2, 11),
+                'request_date_to': datetime(2026, 2, 12),
+            }]
+        )
+
+        # 1. Validate Full Day: Should result in 1 timesheet entry of 8 hours
         time_off.with_user(SUPERUSER_ID)._action_validate()
-
+        self.assertEqual(len(time_off.timesheet_ids), 1, "Should have 1 entry for a single full day.")
+        self.assertEqual(time_off.timesheet_ids.unit_amount, 8.0)
         self.assertEqual(time_off.state, 'validate', "The time off for a fully flexible employee should be validated")
+
+        # 2. Validate Single Half Day: Should result in 1 timesheet entry of 4 hours
+        time_off_half_day.with_user(SUPERUSER_ID)._action_validate()
+        self.assertEqual(len(time_off_half_day.timesheet_ids), 1, "Should have 1 entry for a single half day.")
+        self.assertEqual(time_off_half_day.timesheet_ids.unit_amount, 4.0)
+
+        # 3. Validate Multi-Day: Should result in 2 timesheet entries of 8 hours each (Total 16)
+        time_off_multi_day.with_user(SUPERUSER_ID)._action_validate()
+        self.assertEqual(len(time_off_multi_day.timesheet_ids), 2, "Should have 2 entries for a 2-day request.")
+        self.assertEqual(sum(time_off_multi_day.timesheet_ids.mapped('unit_amount')), 16.0)
