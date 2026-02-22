@@ -58,8 +58,8 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         return self._export_invoice_new(invoice)
 
     def _export_invoice_constraints_new(self, invoice, vals):
-        # EXTENDS account.edi.xml.ubl_20
-        constraints = super()._export_invoice_constraints(invoice, vals)
+        # EXTENDS account.edi.xml.ubl_21
+        constraints = super()._export_invoice_constraints_new(invoice, vals)
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]

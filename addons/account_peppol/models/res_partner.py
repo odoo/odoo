@@ -301,15 +301,4 @@ class ResPartner(models.Model):
 
         edi_identification = f"{peppol_eas}:{peppol_endpoint}".lower()
         participant_info = self._peppol_lookup_participant(edi_identification)
-        if participant_info is None:
-            return 'not_valid'
-        else:
-            is_participant_on_network = self._check_peppol_participant_exists(participant_info, edi_identification)
-            if is_participant_on_network:
-                is_valid_format = self._check_document_type_support(participant_info, invoice_edi_format)
-                if is_valid_format:
-                    return 'valid'
-                else:
-                    return 'not_valid_format'
-            else:
-                return 'not_valid'
+        return self._check_peppol_verification_state(edi_identification, invoice_edi_format, participant_info)
