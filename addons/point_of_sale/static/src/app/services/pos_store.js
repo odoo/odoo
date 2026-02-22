@@ -8,6 +8,7 @@ import {
     Counter,
     orderUsageUTCtoLocalUtil,
     getTimeUtil,
+    getDisplayQrCodeDataUrl,
 } from "@point_of_sale/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -2366,7 +2367,7 @@ export class PosStore extends WithLazyGetterTrap {
         payment.setPaymentStatus("waiting");
         let qr;
         try {
-            qr = await this.data.call("pos.payment.method", "get_qr_code", [
+            qr = await this.data.call("pos.payment.method", "get_qr_code_url", [
                 [payment.payment_method_id.id],
                 payment.amount,
                 payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
@@ -2394,7 +2395,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
         payment.qrPaymentData = {
             amount: this.env.utils.formatCurrency(payment.amount),
-            qrCode: qr,
+            qrCode: getDisplayQrCodeDataUrl(qr),
             paymentMethod: payment.payment_method_id,
         };
         return await ask(
