@@ -175,6 +175,59 @@ $line-height-truncate: 1.5em;
         margin-left: auto;
         margin-right: auto;
     }
+
+    // Ugly hack to restore all the card-X properties as they are not in a .card anymore
+    // Note: .o_wslides_course_card is used as a selector for <a> tags as they come with that class
+    .o_wslides_course_card_container:has(.card-text a) {
+        --card-cap-padding-x: #{$card-cap-padding-x};
+        --card-cap-padding-y: #{$card-cap-padding-y};
+        --card-spacer-x: #{$card-spacer-x};
+        --card-spacer-y: #{$card-spacer-y};
+        --card-cap-bg: #{$card-cap-bg};
+        --card-border-width: #{$card-border-width};
+        --card-border-color: #{$card-border-color};
+        --card-inner-border-radius: #{$card-inner-border-radius};
+
+        flex-direction: column;
+
+        // Link wrapping the course cover
+        > .o_wslides_course_card {
+            --card-border-radius: #{$card-border-radius} #{$card-border-radius} 0 0;
+
+            height: auto !important;
+            border-bottom: 0;
+        }
+
+        // Link wrapping the course title + unpublished badge
+        .card-body > .o_wslides_course_card {
+            display: inline;
+            border: 0;
+            height: auto !important;
+        }
+
+        // Links in the description field
+        .o_wslides_description_short .o_wslides_course_card {
+            display: inline;
+            border: 0;
+        }
+
+        .card-body {
+            border-width: 0 var(--card-border-width) 0 var(--card-border-width) !important;
+
+            // Restore card-body/card-footer properties as they're not in a .card anymore
+            &, & + .card-footer {
+                border: var(--card-border-width) solid var(--card-border-color);
+            }
+
+            // Hide empty links rendered above/inside the description field
+            // except those wrapped in a <p> tag
+            .card-text, .o_wslides_description_short {
+                > .o_wslides_course_card, .o_wslides_course_card:empty {
+                    display: none;
+                }
+            }
+        }
+    }
 }
 
 // Courses Card
