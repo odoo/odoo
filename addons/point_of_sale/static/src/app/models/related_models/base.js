@@ -1,10 +1,18 @@
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
-import { deepImmutable, clone, RAW_SYMBOL } from "./utils";
+import { deepImmutable, RAW_SYMBOL } from "./utils";
 import { toRaw } from "@odoo/owl";
 const { DateTime } = luxon;
 
+function rawValueConverter(value) {
+    if (value instanceof Set) {
+        return Array.from(value);
+    }
+    return value;
+}
+
 export class Base extends WithLazyGetterTrap {
     static excludedLazyGetters = ["id", "models"];
+    static enableLazyGetters = true;
 
     constructor({ model, raw }) {
         super({});
@@ -25,7 +33,7 @@ export class Base extends WithLazyGetterTrap {
     }
 
     get raw() {
-        return deepImmutable(clone(this[RAW_SYMBOL]), "Raw data cannot be modified");
+        return deepImmutable(this[RAW_SYMBOL], "Raw data cannot be modified", rawValueConverter);
     }
 
     /**

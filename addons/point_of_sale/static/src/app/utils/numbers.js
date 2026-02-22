@@ -28,6 +28,8 @@ function invertMethod(method) {
 }
 
 export class AbstractNumbers extends Base {
+    static enableLazyGetters = false;
+
     get precision() {
         return Math.pow(10, -2);
     }

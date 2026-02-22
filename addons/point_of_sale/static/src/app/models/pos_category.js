@@ -3,6 +3,7 @@ import { Base } from "./related_models";
 
 export class PosCategory extends Base {
     static pythonModel = "pos.category";
+    static excludedLazyGetters = ["hasProductsToShow"];
 
     getAllChildren() {
         const children = [this];
@@ -32,11 +33,24 @@ export class PosCategory extends Base {
     }
     get associatedProducts() {
         const allCategoryIds = this.getAllChildren().map((cat) => cat.id);
-        const products = allCategoryIds.flatMap(
-            (catId) => this.models["product.template"].getBy("pos_categ_ids", catId) || []
-        );
-        // Remove duplicates since owl doesn't like them.
-        return Array.from(new Set(products));
+        const seen = new Set();
+        const products = [];
+
+        const productTemplateModel = this.models["product.template"].toRaw();
+        for (const catId of allCategoryIds) {
+            const catProducts = productTemplateModel.getBy("pos_categ_ids", catId);
+            if (!catProducts) {
+                continue;
+            }
+            for (const product of catProducts) {
+                if (!seen.has(product.id)) {
+                    seen.add(product.id);
+                    products.push(product);
+                }
+            }
+        }
+
+        return products;
     }
 
     get hasProductsToShow() {

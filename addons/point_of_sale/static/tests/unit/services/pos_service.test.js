@@ -287,8 +287,8 @@ describe("pos_store.js", () => {
 
         const productA = store.models["product.product"].get(5);
         const productB = store.models["product.product"].get(6);
-        productA.parentPosCategIds = [1];
-        productB.parentPosCategIds = [2];
+        productA.pos_categ_ids = [1];
+        productB.pos_categ_ids = [2];
 
         const currentOrderChange = {
             new: [
