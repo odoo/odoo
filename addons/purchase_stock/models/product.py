@@ -142,9 +142,12 @@ class ProductProduct(models.Model):
         """
         warehouse_id = self.env.context.get('warehouse_id')
         if not warehouse_id:
-            return Domain.OR([
-                [('location_dest_usage', 'in', ['customer', 'production'])],
-                [('location_final_id.usage', 'in', ['customer', 'production'])],
+            return Domain.AND([
+                Domain.OR([
+                    [('location_dest_usage', 'in', ['customer', 'production'])],
+                    [('location_final_id.usage', 'in', ['customer', 'production'])],
+                ]),
+                [('move_dest_ids', '=', False)]
             ])
         else:
             return Domain.AND([
@@ -153,7 +156,8 @@ class ProductProduct(models.Model):
                     [('location_dest_id.warehouse_id', '!=', warehouse_id)],
                     [('location_final_id.warehouse_id', '!=', warehouse_id)]
                 ]),  # includes moves going to customer or production
-                [('location_dest_id.usage', '!=', 'inventory')]  # exclude scrap
+                [('location_dest_id.usage', '!=', 'inventory')],  # exclude scrap
+                [('move_dest_ids', '=', False)]
             ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
