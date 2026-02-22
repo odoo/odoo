@@ -191,7 +191,6 @@ class TestMessageValues(MailCommon):
         self.assertEqual(len(message.sudo().notification_ids), 1)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
         self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)
-        self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
         record._message_update_content(
@@ -222,7 +221,6 @@ class TestMessageValues(MailCommon):
         self.flush_tracking()
         tracking_message = record.message_ids[0]
         self.assertFalse(tracking_message.attachment_ids)
-        self.assertTrue(is_html_empty(tracking_message.body))
         self.assertFalse(tracking_message.subtype_id.description)
         self.assertFalse(tracking_message.sudo()._filter_empty(), 'Has tracking values')
         with self.assertRaises(UserError, msg='Tracking values prevent from updating content'):

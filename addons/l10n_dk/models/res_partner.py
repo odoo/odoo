@@ -1,7 +1,6 @@
 import logging
 import requests
 from hashlib import md5
-from markupsafe import Markup
 from urllib import parse
 
 from odoo import _, api, fields, models
@@ -28,6 +27,7 @@ class ResPartner(models.Model):
         ],
         string='Nemhandel endpoint verification',
         company_dependent=True,
+        tracking=True,
     )
 
     nemhandel_identifier_type = fields.Selection(
@@ -183,36 +183,6 @@ class ResPartner(models.Model):
 
         return decoded_response.get('result')
 
-    def _l10n_dk_nemhandel_log_verification_state_update(self, company, old_value, new_value):
-        # log the update of the nemhandel verification state
-        # we do this instead of regular tracking because of the customized message
-        # and because we want to log the change for every company in the db
-        if old_value == new_value:
-            return
-
-        nemhandel_verification_state_field = self._fields['nemhandel_verification_state']
-        selection_values = dict(nemhandel_verification_state_field.selection)
-        old_label = selection_values[old_value] if old_value else False  # get translated labels
-        new_label = selection_values[new_value] if new_value else False
-
-        body = Markup("""
-            <ul>
-                <li>
-                    <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
-                    <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                    <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                    <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({field})</span>
-                    <span class='o-mail-Message-trackingCompany ms-1 fst-italic text-muted'>({company})</span>
-                </li>
-            </ul>
-        """).format(
-            old=old_label,
-            new=new_label,
-            field=nemhandel_verification_state_field.string,
-            company=company.display_name,
-        )
-        self._message_log(body=body)
-
     @api.model
     def _check_nemhandel_participant_exists(self, participant_info, edi_identification):
         service_href = ''
@@ -281,12 +251,10 @@ class ResPartner(models.Model):
             company = self.env.company
 
         self_partner = self.with_company(company)
-        old_value = self_partner.nemhandel_verification_state
         self_partner.nemhandel_verification_state = self._get_nemhandel_verification_state(self_partner.invoice_edi_format)
         if self_partner.nemhandel_verification_state == 'valid' and not self_partner.invoice_sending_method:
             self_partner.invoice_sending_method = 'nemhandel'
 
-        self._l10n_dk_nemhandel_log_verification_state_update(company, old_value, self_partner.nemhandel_verification_state)
         return False
 
     @handle_demo

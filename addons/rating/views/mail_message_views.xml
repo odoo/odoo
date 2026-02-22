@@ -5,7 +5,7 @@
         <field name="model">mail.message</field>
         <field name="inherit_id" ref="mail.mail_message_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='page_tracking']" position="after">
+            <xpath expr="//page[@name='recipients']" position="after">
                 <page string="Ratings" name="page_rating">
                     <field name="rating_ids"/>
                 </page>

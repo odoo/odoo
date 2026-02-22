@@ -38,19 +38,6 @@
 </t>
 </ul>
 
-<t t-if="milestones['updated']">
-<t t-if="milestones['last_update_date']">Since <t t-out="milestones['last_update_date']" t-options='{"widget": "date"}'/> (last project update), </t>
-<t t-if="len(milestones['updated']) > 1">the deadline for the following milestones has been updated:</t>
-<t t-else="">the deadline for the following milestone has been updated:</t>
-<ul>
-<t t-foreach="milestones['updated']" t-as="milestone">
-<li>
-<t t-out="milestone['name']"/> (<t t-out="milestone['old_value']" t-options='{"widget": "date"}'/> =&gt; <t t-out="milestone['new_value']"  t-options='{"widget": "date"}'/>)
-</li>
-</t>
-</ul>
-</t>
-
 <t t-if="milestones['created']">
 <t t-if="len(milestones['created']) > 1">The following milestones have been added:</t>
 <t t-else="">The following milestone has been added:</t>

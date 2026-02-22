@@ -5,7 +5,6 @@ import { MailTestMultiCompanyRead } from "@test_mail/../tests/mock_server/models
 import { MailTestProperties } from "@test_mail/../tests/mock_server/models/mail_test_properties";
 import { MailTestSimpleMainAttachment } from "./mock_server/models/mail_test_simple_main_attachment";
 import { MailTestSimple } from "@test_mail/../tests/mock_server/models/mail_test_simple";
-import { MailTestTrackAll } from "@test_mail/../tests/mock_server/models/mail_test_track_all";
 import { defineModels, defineParams } from "@web/../tests/web_test_helpers";
 
 export const testMailModels = {
@@ -16,7 +15,6 @@ export const testMailModels = {
     MailTestProperties,
     MailTestSimpleMainAttachment,
     MailTestSimple,
-    MailTestTrackAll,
 };
 
 export function defineTestMailModels() {

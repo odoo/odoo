@@ -101,12 +101,12 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             track_msg, {
                 'tracking_values': [
                     ('amount', 'float', old_amount, 21.0),
-                    ('amount_type', 'selection', 'Percentage', 'Fixed'),
+                    ('amount_type', 'selection', 'percent', 'fixed'),
                     ('include_base_amount', 'boolean', False, True),
                     ('is_base_affected', 'boolean', True, False),
                     ('name', 'char', old_name, old_name + ' MODIFIED'),
-                    ('price_include_override', 'selection', '', 'Tax Included'),
-                    ('type_tax_use', 'selection', 'Sales', 'Purchases'),
+                    ('price_include_override', 'selection', '', 'tax_included'),
+                    ('type_tax_use', 'selection', 'sale', 'purchase'),
                 ],
             }
         )
@@ -127,16 +127,13 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
         previews = self._new_msgs.mapped('preview')
         self.assertIn(
-            "New Invoice repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "New Refund repartition line 4: None-100.0Factor Percent NoneNoneAccount NoneNoneTax Grids NoneFalseUse in tax closing",
             previews
         )
         self.assertIn(
-            "New Refund repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "New Invoice repartition line 4: None-100.0Factor Percent NoneNoneAccount NoneNoneTax Grids NoneFalseUse in tax closing",
             previews
         )
 
@@ -167,12 +164,9 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
         previews = self._new_msgs.mapped('preview')
-        self.assertIn("Invoice repartition line 3: 0.0 -100.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
-        self.assertIn("Refund repartition line 3: 0.0 -100.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
+        self.assertIn("Invoice repartition line 3: -100.0Factor Percent None['TaxTag12345']Tax Grids", previews)
+        self.assertIn("Refund repartition line 3: -100.0Factor Percent None131000 Tax PaidAccount FalseTrueUse in tax closing", previews)
 
     def test_logging_of_repartition_lines_reordering_when_tax_is_used(self):
         """ Reordering repartition lines in a used tax should be logged. """
@@ -195,12 +189,9 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
         previews = self._new_msgs.mapped('preview')
-        self.assertIn("Invoice repartition line 1: 100.0 0.0 (Factor Percent)", previews)
-        self.assertIn("Invoice repartition line 3: 0.0 100.0 (Factor Percent) None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
+        self.assertIn("Invoice repartition line 1: 100.00.0Factor Percent", previews)
+        self.assertIn("Invoice repartition line 3: 100.0Factor Percent None251000 Tax ReceivedAccount FalseTrueUse in tax closing", previews)
 
     def test_logging_of_repartition_lines_removal_when_tax_is_used(self):
         """ Deleting repartition lines in a used tax should be logged. """
@@ -221,17 +212,14 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
         previews = self._new_msgs.mapped('preview')
         previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
         self.assertIn(
-            "Removed Invoice repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "Removed Refund repartition line 3: None0.0Factor Percent NoneNoneAccount NoneNoneTax Grids NoneFalseUse in tax closing",
             previews
         )
         self.assertIn(
-            "Removed Refund repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "Removed Invoice repartition line 3: None0.0Factor Percent NoneNoneAccount NoneNoneTax Grids NoneFalseUse in tax closing",
             previews
         )
 

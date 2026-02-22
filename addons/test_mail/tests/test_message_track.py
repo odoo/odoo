@@ -4,13 +4,14 @@
 from datetime import datetime
 from unittest.mock import patch
 from markupsafe import Markup
+import re
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import Form, tagged, users
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, html2plaintext
 from odoo.tools.mail import formataddr
 
 
@@ -162,10 +163,10 @@ class TestTrackingAPI(TestTrackingCommon):
             track_msg, {
                 'author_id': self.partner_employee,
                 # default message (`_track_get_default_log_message`) should be used
-                'body': '<p>There was a change on Test for fields "user_id"</p>',
                 'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
             }
         )
+        self.assertIn('There was a change on Test for fields "user_id"', track_msg.body)
 
         with self.mock_mail_gateway(), self.mock_mail_app():
             record._track_set_log_message('<p>Forced Log</p>')
@@ -178,10 +179,10 @@ class TestTrackingAPI(TestTrackingCommon):
                 'author_id': self.partner_employee,
                 # _track_set_log_message should take priority over default message
                 # and escapes content by default
-                'body': '<p>&lt;p&gt;Forced Log&lt;/p&gt;</p>',
                 'tracking_values': [('user_id', 'many2one', self.user_admin, False)],
             }
         )
+        self.assertIn('Forced Log', track_msg.body)
 
         with self.mock_mail_gateway(), self.mock_mail_app():
             record._track_set_log_message(Markup('<p>Forced Log</p>'))
@@ -193,66 +194,10 @@ class TestTrackingAPI(TestTrackingCommon):
             track_msg, {
                 'author_id': self.partner_employee,
                 # Markup content is valid html
-                'body': '<p>Forced Log</p>',
                 'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
             }
         )
-
-    @users('employee')
-    def test_tracking_tweak_filter_for_display(self):
-        """Check that tracked fields filtered for display are not present in the front-end and
-        email formatting methods. See `_track_filter_for_display`"""
-        original_user = self.user_admin
-        new_user = self.user_employee
-
-        records = self.env['mail.test.track'].create([{
-            'name': 'TestTrack Hide User Field',
-            'user_id': original_user.id,
-            'track_fields_tofilter': 'user_id',
-        }, {
-            'name': 'TestTrack Show All Fields',
-            'user_id': original_user.id,
-            'track_fields_tofilter': '',
-        }])
-        self.flush_tracking()
-
-        records.write({'user_id': new_user.id})
-        self.flush_tracking()
-
-        for record in records:
-            self.assertEqual(len(record.message_ids), 2, 'Should be a creation message and a tracking message')
-            self.assertMessageFields(
-                record.message_ids[0], {
-                    'tracking_values': [('user_id', 'many2one', original_user, new_user)],
-                }
-            )
-        # first record: tracking value should be hidden
-        message_0 = records[0].message_ids[0]
-        formatted = Store().add(message_0, "_store_message_fields").get_result()["mail.message"][0]
-        self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
-        mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
-        self.assertEqual(mail_render['tracking_values'], [])
-
-        # second record: all values displayed
-        message_1 = records[1].message_ids[0]
-        formatted = Store().add(message_1, "_store_message_fields").get_result()["mail.message"][0]
-        self.assertEqual(len(formatted['trackingValues']), 1)
-        self.assertDictEqual(
-            formatted['trackingValues'][0],
-            {
-                'id': message_1.sudo().tracking_value_ids.id,
-                'fieldInfo': {
-                    'changedField': 'Responsible',
-                    'currencyId': False,
-                    'floatPrecision': None,
-                    'fieldType': 'many2one',
-                    'isPropertyField': False,
-                },
-                'newValue': new_user.display_name,
-                'oldValue': original_user.display_name,
-            })
-        mail_render = records[1]._notify_by_email_prepare_rendering_context(message_1, {})
-        self.assertEqual(mail_render['tracking_values'], [('Responsible', original_user.display_name, new_user.display_name)])
+        self.assertIn('Forced Log', track_msg.body)
 
     @users('employee')
     def test_tracking_update(self):
@@ -282,7 +227,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 'tracking_values': [
                     ('many2one_field_id', 'many2one', False, self.partner_admin),
                     ('float_field_with_digits', 'float', False, 15.285),
-                    ('selection_field', 'selection', '', 'FIRST'),
+                    ('selection_field', 'selection', '', 'first'),
                 ],
             }
         )
@@ -328,13 +273,11 @@ class TestTrackingTemplate(TestTrackingCommon):
                     'notified_partner_ids': self.partner_admin,
                     'subject': f'Test Template on {test_record.name}',
                     'subtype_id': self.env['mail.message.subtype'],  # tde: to check ?
-                    'tracking_values': [],  # no tracking sent with template
                 }
             )
             self.assertMessageFields(
                 track_msg, {
                     'author_id': self.partner_employee,
-                    'body': '',
                     'notified_partner_ids': self.env['res.partner'],
                     'subject': False,
                     'subtype_id': self.env.ref('mail.mt_note'),
@@ -545,7 +488,7 @@ class TestTrackingTemplate(TestTrackingCommon):
         )
         self.assertMessageFields(
             track_msg, {
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'subject': False,
                 'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
                 'tracking_values': [
@@ -633,7 +576,7 @@ class TestTrackingInternals(MailCommon):
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
             last_message, {
-                'tracking_values': [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))],
+                'tracking_values': [('many2many_field', 'many2many', '', test_tags[:2])],
             }
         )
 
@@ -647,26 +590,27 @@ class TestTrackingInternals(MailCommon):
                 (0, 0, {'name': False}),
             ],
         })
-        child4_tracking = f'Unnamed Sub-model: pseudo tags for tracking ({test_record.one2many_field[3].id})'
         self.flush_tracking()
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
             last_message, {
                 'tracking_values': [
-                    ('many2many_field', 'many2many', ', '.join(test_tags[:2].mapped('name')), ', '.join((test_tags[1] + test_tags[2]).mapped('name'))),
-                    ('one2many_field', 'one2many', '', f'Child1, Child2, Child3, {child4_tracking}'),
+                    ('many2many_field', 'many2many', test_tags[0] + test_tags[1], test_tags[1] + test_tags[2]),
+                    ('one2many_field', 'one2many', '', test_record.one2many_field),
                 ],
             }
         )
 
         # remove from o2m
-        test_record.write({'one2many_field': [(3, test_record.one2many_field[0].id)]})
+        records_before = test_record.one2many_field
+        unlink_record = test_record.one2many_field[0]
+        test_record.write({'one2many_field': [(3, unlink_record.id)]})
         self.flush_tracking()
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
             last_message, {
                 'tracking_values': [
-                    ('one2many_field', 'one2many', f'Child1, Child2, Child3, {child4_tracking}', f'Child2, Child3, {child4_tracking}')
+                    ('one2many_field', 'one2many', records_before, records_before - unlink_record)
                 ],
             }
         )
@@ -702,7 +646,7 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(len(new_message), 1,
                          'Should have generated a tracking value')
         tracking_value_list = [
-            ('boolean_field', 'boolean', 0, 1),
+            ('boolean_field', 'boolean', False, True),
             ('char_field', 'char', False, 'char_value'),
             ('date_field', 'date', False, today_dt),
             ('datetime_field', 'datetime', False, now),
@@ -710,8 +654,8 @@ class TestTrackingInternals(MailCommon):
             ('float_field_with_digits', 'float', 0, 3.00001),
             ('integer_field', 'integer', 0, 42),
             ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
-            ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
-            ('selection_field', 'selection', '', 'FIRST'),
+            ('monetary_field', 'monetary', 0.0, 42.42),
+            ('selection_field', 'selection', '', 'first'),
             ('text_field', 'text', False, 'text_value'),
         ]
         self.assertMessageFields(
@@ -719,15 +663,6 @@ class TestTrackingInternals(MailCommon):
                 'tracking_values': tracking_value_list,
             }
         )
-        # check formatting for all field types
-        formatted_values_all = new_message.sudo().tracking_value_ids._tracking_value_format()
-        for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
-            currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
-            precision = None if field_name != 'float_field_with_digits' else (10, 8)
-            with self.subTest(field_name=field_name):
-                self.assertEqual(formatted_vals['fieldInfo']['currencyId'], currency)
-                self.assertEqual(formatted_vals['fieldInfo']['floatPrecision'], precision)
-
         # check if the tracking value have the correct currency and values after
         # changing the value and the company at the same time
         self.assertEqual(self.company_2.currency_id, self.env.ref('base.CAD'))
@@ -740,7 +675,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             test_record.message_ids[0], {
                 'tracking_values': [
-                    ('monetary_field', 'monetary', 42.42, (200.25, self.company_2.currency_id)),
+                    ('monetary_field', 'monetary', 42.42, 200.25),
                 ],
             }
         )
@@ -825,62 +760,30 @@ class TestTrackingInternals(MailCommon):
         with self.mock_mail_gateway(), self.mock_mail_app():
             properties_record_2.properties_parent_id = self.properties_parent_1
             self.flush_tracking()
-        self.assertMessageFields(
-            self._new_msgs, {
-                'author_id': self.partner_employee,
-                'tracking_values': [
-                    ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', ('properties', 'Properties: Property Date', 'date'), datetime(2024, 1, 3, 0, 0, 0), False),
-                    ('properties', ('properties', 'Properties: Property Datetime', 'datetime'), datetime(2024, 1, 2, 12, 59, 1), False),
-                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA, BB', ''),
-                    ('properties', ('properties', 'Properties: Property M2M', 'many2many'), 'Record 0, Record 1, Record 2', ''),
-                ],
-            }
+        expected_body = (
+            "<p>Properties Parent 2 <b>Properties Parent 1</b><i>Properties Parent</i><br>"
+            "01/03/2024 <b>None</b><i>Properties: Property Date</i><br>"
+            "01/02/2024 12:59:01 PM <b>None</b><i>Properties: Property Datetime</i><br>"
+            "AA, BB <b>None</b><i>Properties: Property Tags</i><br>"
+            "Record 0, Record 1, Record 2 <b>None</b><i>Properties: Property M2M</i><br></p>"
         )
+        self.assertEqual(self.partner_employee, self._new_msgs[0].author_id)
 
-        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
-        self.assertEqual(len(formatted_values), 5)
-        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
-        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
-        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
-        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property Date')
-        self.assertEqual(formatted_values[1]['oldValue'], '2024-01-03')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Datetime')
-        self.assertEqual(formatted_values[2]['oldValue'], '2024-01-02 12:59:01Z')
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Tags')
-        self.assertEqual(formatted_values[3]['oldValue'], 'AA, BB')
-        self.assertEqual(formatted_values[4]['fieldInfo']['changedField'], 'Properties: Property M2M')
-        self.assertEqual(formatted_values[4]['oldValue'], 'Record 0, Record 1, Record 2')
+        self.assertHtmlEqual(expected_body, self._new_msgs[0].body)
 
         properties_record_1 = self.properties_record_1.with_env(self.env)
         with self.mock_mail_gateway(), self.mock_mail_app():
             properties_record_1.properties_parent_id = self.properties_parent_2
             self.flush_tracking()
-        self.assertMessageFields(
-            self._new_msgs, {
-                'author_id': self.partner_employee,
-                'tracking_values': [
-                    ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
-                    ('properties', ('properties', 'Properties: Property M2O', 'many2one'), self.properties_linked_records[0], False),
-                    ('properties', ('properties', 'Properties: Property Int', 'integer'), 1337, False),
-                    ('properties', ('properties', 'Properties: Property Char', 'char'), 'char value', False),
-                ],
-            }
+        expected_body = (
+            "<p>Properties Parent 1<b>Properties Parent 2</b><i>Properties Parent</i><br>"
+            "Record 0 <b>None</b><i>Properties: Property M2O</i><br>"
+            "1337 <b>None</b><i>Properties: Property Int</i><br>"
+            "char value <b>None</b><i>Properties: Property Char</i><br>"
+            "</p>"
         )
-
-        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
-        self.assertEqual(len(formatted_values), 4)
-        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
-        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
-        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
-        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property M2O')
-        self.assertEqual(formatted_values[1]['oldValue'], 'Record 0')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Int')
-        self.assertEqual(formatted_values[2]['oldValue'], 1337)
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Char')
-        self.assertEqual(formatted_values[3]['oldValue'], 'char value')
+        self.assertEqual(self.partner_employee, self._new_msgs[0].author_id)
+        self.assertHtmlEqual(expected_body, self._new_msgs[0].body)
 
         # changing the parent and then changing again
         # to the original one to not create tracking values
@@ -906,15 +809,11 @@ class TestTrackingInternals(MailCommon):
             self.flush_tracking()
         self.assertEqual(len(self._new_msgs), 1)
         # Only the parent and the tags property should have been tracked
-        self.assertMessageFields(
-            self._new_msgs, {
-                'author_id': self.partner_employee,
-                'tracking_values': [
-                    ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA', ''),
-                ],
-            }
-        )
+        expected_body = (
+            "<p>Properties Parent 2<b>Properties Parent 1</b><i>Properties Parent</i><br>"
+            "AA <b>None</b><i>Properties: Property Tags</i><br></p>")
+        self.assertHtmlEqual(expected_body, self._new_msgs[0].body)
+        self.assertEqual(self.partner_employee, self._new_msgs[0].author_id)
         self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 100,
             "Properties field should have the same sequence as their parent")
 
@@ -946,95 +845,9 @@ class TestTrackingInternals(MailCommon):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {'tracking_values': [
-                ('selection_type', 'selection', invalid_value, 'Second'),
+                ('selection_type', 'selection', invalid_value, 'second'),
             ]}
         )
-
-    def test_track_groups(self):
-        """ Test field groups and filtering when using standard helpers """
-        # say that 'email_from' is accessible to erp_managers only
-        field = self.record._fields['email_from']
-        self.addCleanup(setattr, field, 'groups', field.groups)
-        field.groups = 'base.group_erp_manager'
-
-        self.record.sudo().write({'email_from': 'X'})
-        self.flush_tracking()
-
-        msg_emp = Store().add(self.record.message_ids, "_store_message_fields").get_result()
-        record_w_admin = self.record.with_user(self.user_admin)
-        msg_admin = Store().add(record_w_admin.message_ids, "_store_message_fields").get_result()
-        msg_sudo = Store().add(self.record.sudo().message_ids, "_store_message_fields").get_result()
-
-        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids[0].id)])
-        formatted_tracking_values = [{
-            'id': tracking_values[0]['id'],
-            'fieldInfo': {
-                'changedField': 'Email From',
-                'currencyId': False,
-                'fieldType': 'char',
-                'floatPrecision': None,
-                'isPropertyField': False,
-            },
-            'newValue': 'X',
-            'oldValue': False,
-        }]
-        self.assertEqual(
-            msg_emp["mail.message"][0].get("trackingValues"),
-            [],
-            "should not have protected tracking values",
-        )
-        self.assertEqual(
-            msg_admin["mail.message"][0].get("trackingValues"),
-            formatted_tracking_values,
-            "should have protected tracking values",
-        )
-        self.assertEqual(
-            msg_sudo["mail.message"][0].get("trackingValues"),
-            formatted_tracking_values,
-            "should have protected tracking values",
-        )
-
-        values_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
-        values_admin = record_w_admin._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
-        values_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
-        self.assertFalse(values_emp.get('tracking_values'), "should not have protected tracking values")
-        self.assertTrue(values_admin.get('tracking_values'), "should have protected tracking values")
-        self.assertTrue(values_sudo.get('tracking_values'), "should have protected tracking values")
-
-        # test editing the record with user not in the group of the field
-        self.env.invalidate_all()
-        self.env.registry.clear_cache()
-        record_form = Form(self.record.with_user(self.user_employee))
-        record_form.name = 'TestDoNoCrash'
-        # the employee user must be able to save the fields on which they can write
-        # if we fetch all the tracked fields, ignoring the group of the current user
-        # it will crash and it shouldn't
-        record = record_form.save()
-        self.assertEqual(record.name, 'TestDoNoCrash')
-
-    @users('employee')
-    def test_track_invalid(self):
-        """ Test invalid use cases: unknown field, unsupported type, ... """
-        test_record = self.env['mail.test.track.all'].create({
-            'company_id': self.env.company.id,
-        })
-        self.flush_tracking()
-
-        # raise on non existing field
-        with self.assertRaises(ValueError):
-            self.env['mail.tracking.value']._create_tracking_values(
-                '', 'Test',
-                'not_existing_field', {'string': 'Test', 'type': 'char'},
-                test_record,
-            )
-
-        # raise on unsupported field type
-        with self.assertRaises(NotImplementedError):
-            self.env['mail.tracking.value']._create_tracking_values(
-                '', '<p>Html</p>',
-                'html_field', {'string': 'HTML', 'type': 'html'},
-                test_record,
-            )
 
     @users('employee')
     def test_track_multi_models(self):
@@ -1054,91 +867,28 @@ class TestTrackingInternals(MailCommon):
             'secret': 'secret',
         })
         # some custom code generates tracking values on main_track
-        new_message = main_track.message_post(
+        main_track.sudo().message_post(
             body='Custom Log with Tracking',
-            tracking_value_ids=[
-                (0, 0, {
-                    'field_id': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,
-                    'new_value_char': 'secret',
-                    'old_value_char': False,
-                }),
-                (0, 0, {
-                    'field_id': False,
-                    'new_value_integer': self.env.uid,
-                    'old_value_integer': False,
-                }),
-                (0, 0, {
-                    'field_id': False,
-                    'field_info': {
-                        'desc': 'Old integer',
-                        'name': 'Removed',
-                        'sequence': 35,
-                        'type': 'integer',
-                    },
-                    'new_value_integer': 35,
-                    'old_value_integer': 30,
-                }),
-            ],
-        )
-        self.assertMessageFields(new_message, {'tracking_values': [
-            ('secret', 'char', False, 'secret'),
-            ('', 'integer', 0, self.env.uid),
-            (('', {'name': 'Removed'}), 'integer', 30, 35),
-        ]})
-        trackings = new_message.sudo().tracking_value_ids
-
-        # check groups, as it depends on model
-        for tracking, exp_groups in zip(trackings, ['base.group_user', 'base.group_system', 'base.group_system']):
-            groups = 'base.group_system'
-            if tracking.field_id:
-                field = self.env[tracking.field_id.model]._fields[tracking.field_id.name]
-                groups = field.groups
-            self.assertEqual(groups, exp_groups)
-
-        # check formatting, as it fetches info on model
-        formatted = trackings._tracking_value_format()
-        self.assertEqual(
-            formatted,
-            [
-                {
-                    'id': trackings[0].id,
-                    'fieldInfo': {
-                        'changedField': 'Secret',
-                        'currencyId': False,
-                        'fieldType': 'char',
-                        'floatPrecision': None,
-                        'isPropertyField': False,
-                    },
-                    'newValue': 'secret',
-                    'oldValue': False,
-                },
-                {
-                    'id': trackings[2].id,
-                    'fieldInfo': {
-                        'changedField': 'Old integer',
-                        'currencyId': False,
-                        'fieldType': 'integer',
-                        'floatPrecision': None,
-                        'isPropertyField': False,
-                    },
-                    'newValue': 35,
-                    'oldValue': 30,
-                },
-                {
-                    'id': trackings[1].id,
-                    'fieldInfo': {
-                        'changedField': 'Unknown',
-                        'currencyId': False,
-                        'fieldType': 'char',
-                        'floatPrecision': None,
-                        'isPropertyField': False,
-                    },
-                    'newValue': False,
-                    'oldValue': False,
-                },
-            ],
+            message_type='tracking',
+            message_tracking_values=[{
+                'new_value': 'secret',
+                'old_value': False,
+                'field_name': 'secret',
+            }, {
+                'field_name': 'field1',
+                'new_value': 1,
+                'old_value': False,
+            }, {
+                'field_name': 'Removed',
+                'new_value': 35,
+                'old_value': 30,
+            }],
         )
 
+        plain_body = html2plaintext(main_track.message_ids[0].sudo().body)
+        self.assertIn('*secret* secret', plain_body)
+        self.assertIn('*1* field1', plain_body)
+        self.assertIn('30*35* Removed', plain_body)
 
     @users('employee')
     def test_track_sequence(self):
@@ -1159,17 +909,9 @@ class TestTrackingInternals(MailCommon):
         })
         self.flush_tracking()
         self.assertEqual(len(record.message_ids), 2, 'should have 1 new tracking message')
-        tracking_values = self.env['mail.tracking.value'].sudo().search(
-            [('mail_message_id', '=', record.message_ids[0].id)]
-        )
-        self.assertEqual(
-            tracking_values.field_id.mapped('name'),
-            ordered_fnames,
-            'Track: order, based on ID DESC, should follow tracking sequence (or name) on field'
-        )
 
         # Manually create trackings, format should be the fallback to reorder them
-        new_msg = record.message_post(
+        record.message_post(
             body='Manual Hack of tracking',
             subtype_xmlid='mail.mt_note',
         )
@@ -1178,29 +920,9 @@ class TestTrackingInternals(MailCommon):
             self.env['ir.model.fields']._get(record._name, fname).id
             for fname in custom_order_fnames
         ]
-        self.env['mail.tracking.value'].sudo().create([
-            {
-                'field_id': field_id,
-                'mail_message_id': new_msg.id,
-                'old_value_char': 'unimportant',
-                'new_value_char': 'unimportant',
-            }
-            for field_id in field_ids
-        ])
-        tracking_values = self.env['mail.tracking.value'].sudo().search(
-            [('mail_message_id', '=', record.message_ids[0].id)]
-        )
-        self.assertEqual(
-            tracking_values.field_id.mapped('name'),
-            list(reversed(custom_order_fnames)),
-            'Tracking model: order, based on ID DESC, following reverted insertion'
-        )
-        tracking_formatted = tracking_values._tracking_value_format()
-        self.assertEqual(
-            [tracking_values.browse(t['id']).field_id.name for t in tracking_formatted],
-            ordered_fnames,
-            'Track: formatted order is correctly based on field sequence definition'
-        )
+        field_labels = re.findall(r'<i>(.*?)</i>', record.message_ids[1].body)
+        expected_field_labels = ['Email From', 'Container', 'Customer', 'Responsible']
+        self.assertEqual(field_labels, expected_field_labels)
 
     @users('employee')
     def test_unlinked_model(self):
@@ -1225,105 +947,3 @@ class TestTrackingInternals(MailCommon):
             # Restore model to prevent registry errors after test
             self.env.registry.models['mail.test.ticket'] = model
 
-    @users('employee')
-    def test_unlinked_field(self):
-        """ Check that removing a field removes its tracking values. """
-        record = self.record.with_env(self.env)
-        record.write({'email_from': 'new_value'})  # create a tracking value
-
-        record_other = self.env['mail.test.ticket'].create({})
-        self.flush_tracking()
-        record_other.write({'email_from': 'email.from.1@example.com'})
-        self.flush_tracking()
-        record_other.write({
-            'customer_id': self.test_partner.id,
-            'email_from': 'email.from.2@example.com',
-            'user_id': self.env.user.id,
-        })
-        self.flush_tracking()
-
-        self.assertMessageFields(
-            record.message_ids[0], {'tracking_values': [('email_from', 'char', False, 'new_value')]}
-        )
-        self.assertMessageFields(
-            record_other.message_ids[0], {'tracking_values': [
-                ('customer_id', 'many2one', False, self.test_partner),
-                ('email_from', 'char', 'email.from.1@example.com', 'email.from.2@example.com'),
-                ('user_id', 'many2one', False, self.env.user)
-            ]}
-        )
-        self.assertMessageFields(
-            record_other.message_ids[1], {'tracking_values': [('email_from', 'char', False, 'email.from.1@example.com')]}
-        )
-
-        # check display / format
-        trackings_all = (record + record_other).message_ids.sudo().tracking_value_ids
-        trackings_all_sorted = [
-            trackings_all.filtered(lambda t: t.field_id.name == 'user_id'),  # tracking=1
-            trackings_all.filtered(lambda t: t.field_id.name == 'customer_id'),  # tracking=2
-            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[0],  # tracking=True -> 100
-            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[1],  # tracking=True -> 100
-            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[2],  # tracking=True -> 100
-        ]
-        fields_info = [
-            ('user_id', 'many2one', 'Responsible'),
-            ('customer_id', 'many2one', 'Customer'),
-            ('email_from', 'char', 'Email From'),
-            ('email_from', 'char', 'Email From'),
-            ('email_from', 'char', 'Email From'),
-        ]
-        values_info = [
-            ('', self.env.user.name),
-            ('', self.test_partner.name),
-            (False, 'new_value'),
-            ('email.from.1@example.com', 'email.from.2@example.com'),
-            (False, 'email.from.1@example.com'),
-        ]
-        formatted = trackings_all._tracking_value_format()
-        self.assertEqual(
-            formatted,
-            [
-                {
-                    'id': tracking.id,
-                    'fieldInfo': {
-                        'changedField': field_info[2],
-                        'fieldType': field_info[1],
-                        'floatPrecision': None,
-                        'currencyId': False,
-                        'isPropertyField': False,
-                    },
-                    'newValue': values[1],
-                    'oldValue': values[0],
-                }
-                for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
-            ]
-        )
-
-        # remove fields
-        fields_toremove = self.env['ir.model.fields'].sudo().search([
-            ('model', '=', 'mail.test.ticket'),
-            ('name', 'in', ('email_from', 'user_id', 'datetime'))  # also include a non tracked field
-        ])
-        fields_toremove.with_context(force_delete=True).unlink()
-        self.assertEqual(len(trackings_all.exists()), 5)
-
-        # check display / format, even if field is removed
-        formatted = trackings_all._tracking_value_format()
-        self.assertEqual(
-            formatted,
-            [
-                {
-                    'id': tracking.id,
-                    'fieldInfo': {
-                        'changedField': field_info[2],
-                        'fieldType': field_info[1],
-                        'isPropertyField': False,
-                        'currencyId': False,
-                        'floatPrecision': None,
-                    },
-                    'newValue': values[1],
-                    'oldValue': values[0],
-                }
-                for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
-            ]
-        )

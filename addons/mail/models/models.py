@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.fields import Domain
-from odoo.tools import parse_contact_from_email, OrderedSet
+from odoo.tools import parse_contact_from_email, format_datetime, format_date, format_amount, OrderedSet
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 import logging
@@ -253,18 +253,17 @@ class Base(models.AbstractModel):
         :param dict initial_values: dict of initial values for each updated
           fields;
 
-        :return: a tuple (changes, tracking_value_ids) where
+        :return: a tuple (changes, message_tracking_values) where
           changes: set of updated column names; contains onchange tracked fields
           that changed;
-          tracking_value_ids: a list of ORM (0, 0, values) commands to create
-          ``mail.tracking.value`` records;
+          message_tracking_values: a list values
 
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
         if len(self) > 1:
             raise ValueError(f"Expected empty or single record: {self}")
         updated = set()
-        tracking_value_ids = []
+        update_vals_list = []
 
         fields_track_info = self._mail_track_order_fields(tracked_fields)
         for col_name, _sequence in fields_track_info:
@@ -288,25 +287,27 @@ class Base(models.AbstractModel):
                     continue
 
                 updated.add(col_name)
-                tracking_value_ids.extend(
-                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
-                        property_, col_name, tracked_fields[col_name], self,
-                    )]
-                    # Show the properties in the same order as in the definition
-                    for property_ in initial_value[::-1]
-                    if property_['type'] not in ('separator', 'html') and property_.get('value')
-                )
+                for property_ in initial_value[::-1]:
+                    if property_['type'] not in ('separator', 'html') and property_.get('value'):
+                        merged_col_info = tracked_fields[col_name] | {
+                            'type': property_['type'],
+                            'selection': property_.get('selection'),
+                            'string': "%s: %s" % (tracked_fields[col_name]['string'], property_['string']),
+                        }
+
+                        value = property_.get('value', False)
+
+                        if value and property_['type'] == 'tags':
+                            value = [t for t in property_.get('tags', []) if t[0] in value]
+                        tracking_values = self._prepare_tracking_vals(value, False, col_name, merged_col_info)
+                        update_vals_list.append(tracking_values)
                 continue
 
             updated.add(col_name)
-            tracking_value_ids.append(
-                [0, 0, self.env['mail.tracking.value']._create_tracking_values(
-                    initial_value, new_value,
-                    col_name, tracked_fields[col_name],
-                    self
-                )])
+            tracking_data = self._prepare_tracking_vals(initial_value, new_value, col_name, tracked_fields[col_name])
+            update_vals_list.append(tracking_data)
 
-        return updated, tracking_value_ids
+        return updated, update_vals_list
 
     def _mail_track_order_fields(self, tracked_fields):
         """ Order tracking, based on sequence found on field definition. When
@@ -943,3 +944,127 @@ class Base(models.AbstractModel):
             None,
             (self[tz_field] for tz_field in ('date_tz', 'tz', 'timezone') if tz_field in self)
         ), None)
+
+    # move the tracking model to model
+    def _prepare_tracking_vals(self, initial_value, new_value, col_name, col_info):
+        """ Prepare values to create a mail.tracking.value. It prepares old and
+        new value according to the field type.
+
+        :param initial_value: field value before the change, could be text, int,
+          date, datetime, ...;
+        :param new_value: field value after the change, could be text, int,
+          date, datetime, ...;
+        :param str col_name: technical field name, column name (e.g. 'user_id);
+        :param dict col_info: result of fields_get(col_name);
+        :return: a dict values valid for 'mail tracking value' creation;
+        """
+        field = self.env['ir.model.fields']._get(self._name, col_name)
+        if not field:
+            raise ValueError(f'Unknown field {col_name} on model {self._name}')
+
+        values = {'field_id': field.id, 'fieldinfo': col_info}
+
+        if col_info['type'] in {'integer', 'float', 'char', 'text'}:
+            values.update({
+                'old_value': initial_value or self.env._('None'),
+                'new_value': new_value or self.env._('None'),
+            })
+        elif col_info['type'] == 'monetary':
+            currency = self.env['res.currency'].browse(self[col_info['currency_field']].id)
+            if currency:
+                if initial_value in (None, False):
+                    initial_value = 0
+                if new_value in (None, False):
+                    new_value = 0
+                values.update({
+                    'old_value': format_amount(self.env, initial_value, currency),
+                    'new_value': format_amount(self.env, new_value, currency),
+                })
+            else:
+                values.update({
+                    'old_value': initial_value,
+                    'new_value': new_value,
+                })
+        elif col_info['type'] == 'datetime':
+            tz = self.env.user.tz or self.env.company.tz
+            values.update({
+                'old_value': format_datetime(self.env, initial_value, tz=tz) if initial_value else self.env._('None'),
+                'new_value': format_datetime(self.env, new_value, tz=tz or self.env.company.tz) if new_value else self.env._('None'),
+            })
+        elif col_info['type'] == 'date':
+            values.update({
+                'old_value': format_date(self.env, initial_value) if initial_value else self.env._('None'),
+                'new_value': format_date(self.env, new_value) if new_value else self.env._('None'),
+            })
+        elif col_info['type'] == 'boolean':
+            values.update({
+                'old_value': initial_value or self.env._('False'),
+                'new_value': new_value or self.env._('False'),
+            })
+        elif col_info['type'] == 'selection':
+            values.update({
+                'old_value': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or 'None',
+                'new_value': new_value and dict(col_info['selection']).get(new_value, new_value) or 'None',
+            })
+        elif col_info['type'] == 'many2one':
+            # Can be:
+            # - False value
+            # - recordset, in case of standard field
+            # - (id, display name), in case of properties (read format)
+            if not initial_value:
+                initial_value = (0, '')
+            elif isinstance(initial_value, models.BaseModel):
+                initial_value = (initial_value.id, initial_value.display_name)
+
+            if not new_value:
+                new_value = (0, '')
+            elif isinstance(new_value, models.BaseModel):
+                new_value = (new_value.id, new_value.display_name)
+
+            values.update({
+                'old_value': initial_value[1] or self.env._('None'),
+                'new_value': new_value[1] or self.env._('None'),
+            })
+        elif col_info['type'] in {'one2many', 'many2many', 'tags'}:
+            # Can be:
+            # - False value
+            # - recordset, in case of standard field
+            # - [(id, display name), ...], in case of properties (read format)
+            model_name = self.env['ir.model']._get(field.relation).display_name
+            if not initial_value:
+                old_value_char = ''
+            elif isinstance(initial_value, models.BaseModel):
+                old_value_char = ', '.join(
+                    value.display_name or self.env._(
+                        'Unnamed %(record_model_name)s (%(record_id)s)',
+                        record_model_name=model_name, record_id=value.id
+                    )
+                    for value in initial_value
+                )
+            else:
+                old_value_char = ', '.join(value[1] for value in initial_value)
+            if not new_value:
+                new_value_char = ''
+            elif isinstance(new_value, models.BaseModel):
+                new_value_char = ', '.join(
+                    value.display_name or self.env._(
+                        'Unnamed %(record_model_name)s (%(record_id)s)',
+                        record_model_name=model_name, record_id=value.id
+                    )
+                    for value in new_value
+                )
+            else:
+                new_value_char = ', '.join(value[1] for value in new_value)
+
+            values.update({
+                'old_value': old_value_char or self.env._('None'),
+                'new_value': new_value_char or self.env._('None'),
+            })
+        else:
+            raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
+        values.update({
+            'company_name': self.env.company.name if col_info.get('company_dependent') else False,
+            'field_name': self.env['mail.thread']._get_field_string(col_info),
+        })
+
+        return values

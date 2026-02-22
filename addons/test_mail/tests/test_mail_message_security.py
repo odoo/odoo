@@ -813,17 +813,16 @@ class TestMailMessageAccess(MessageAccessCommon):
             res_id=self.record_public.id,
             subtype_id=self.ref('mail.mt_comment'),
         ))
+
+        tracking_body = self.env['mail.thread']._messages_format_tracking([{'field_name': 'name', 'new_value': 'Tracked', 'old_value': ''}])
+        body = 'Public Comment with Trackings' + tracking_body
+
         msg_record_public_with_tracking = self.env['mail.message'].create(dict(base_msg_vals,
-            body='Public Comment with Trackings',
-            message_type='notification',
+            body=body,
+            message_type='tracking',
             model=self.record_public._name,
             res_id=self.record_public.id,
             subtype_id=self.ref('mail.mt_comment'),
-            tracking_value_ids=[(0, 0, {
-                'field_id': self.env['ir.model.fields']._get('mail.test.access', 'name').id,
-                'new_value_char': 'Tracked',
-                'old_value_char': False,
-            })],
         ))
         msg_record_public_internal = self.env['mail.message'].create(dict(base_msg_vals,
             body='Internal Comment on Public',

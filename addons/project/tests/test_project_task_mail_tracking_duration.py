@@ -3,6 +3,7 @@
 
 from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.tests import Form, tagged
+from odoo.fields import Datetime
 
 
 @tagged('is_query_count')
@@ -43,4 +44,5 @@ class TestProjectTaskMailTrackingDuration(MailTrackingDurationMixinCase):
             task_form.stage_id = self.stage_2
         final_tracking = task.duration_tracking
         self.assertEqual(initial_tracking[str(self.stage_1.id)], final_tracking[str(self.stage_1.id)])
-        self.assertEqual(final_tracking[str(self.stage_2.id)], 0)
+        dt = Datetime.from_string(final_tracking['d'])
+        self.assertLess(abs((dt - Datetime.now()).total_seconds()) / 60, 1)

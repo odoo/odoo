@@ -936,7 +936,7 @@ class TestLeadLost(TestCrmCommon):
                 'tracking_values': [
                     ('active', 'boolean', True, False),
                     ('lost_reason_id', 'many2one', False, self.lost_reason),
-                    ('won_status', 'selection', 'Pending', 'Lost'),
+                    ('won_status', 'selection', 'pending', 'lost'),
                 ],
             }
         )
@@ -970,14 +970,14 @@ class TestLeadLost(TestCrmCommon):
             self.assertTrue(lost_message)
             self.assertMessageFields(
                 lost_message, {
-                    'body': f'<div style="margin-bottom:4px"><p>Lost Comment:</p>{feedback_str}<br></div>',
                     'tracking_values': [
                         ('active', 'boolean', True, False),
                         ('lost_reason_id', 'many2one', False, self.lost_reason),
-                        ('won_status', 'selection', 'Pending', 'Lost'),
+                        ('won_status', 'selection', 'pending', 'lost'),
                     ],
                 }
             )
+            self.assertIn('Lost Comment: I cannot find it. It was in my closet and pouf, disappeared.', lost_message.preview)
 
     @users('user_sales_salesman')
     @mute_logger('odoo.addons.base.models')

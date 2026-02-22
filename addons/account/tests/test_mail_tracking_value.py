@@ -35,13 +35,9 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
         new_value = account_move.invoice_line_ids.account_id
 
         tracking_msg = self._new_msgs
-        self.assertMessageFields(
-            tracking_msg, {
-                'tracking_values': [
-                    ('account_id', 'many2one', old_value, new_value),
-                ],
-            }
-        )
+        # account_id belongs to account.move.line (messsage model us account.move). Since assertTracking accesses
+        # the model field from the message, `assertMessageFields` is not used here.
+        self.assertIn('%s%s' % (old_value.display_name, new_value.display_name), tracking_msg.preview)
 
     @users('admin')
     def test_invite_follower_account_moves(self):

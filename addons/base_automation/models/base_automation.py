@@ -1018,7 +1018,7 @@ class BaseAutomation(models.Model):
                 message_sudo = message.sudo().with_context(active_test=False)
                 if "__action_done"  in self.env.context or message_sudo.is_internal or message_sudo.subtype_id.internal:
                     return message
-                if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification'):
+                if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification', 'tracking'):
                     return message
 
                 # always execute actions when the author is a customer
