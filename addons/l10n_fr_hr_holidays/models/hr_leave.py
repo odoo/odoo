@@ -154,8 +154,12 @@ class HrLeave(models.Model):
                     while not leave.resource_calendar_id._works_on_date(date_start):
                         date_start += relativedelta(days=1)
                     extended_date_end = date_end
-                    while not company_cal._works_on_date(extended_date_end + relativedelta(days=1)):
-                        extended_date_end += relativedelta(days=1)
+                    if not leave.resource_calendar_id.is_fulltime:
+                        if date_end.weekday() < 6 and not leave.resource_calendar_id._works_on_date(date_end + relativedelta(days=1)):
+                            date_end += relativedelta(days=1)
+                    else:
+                        while not leave.resource_calendar_id._works_on_date(extended_date_end + relativedelta(days=1)):
+                            extended_date_end += relativedelta(days=1)
                     # Count number of days in company calendar
                     current = date_start.date()
                     end_date = extended_date_end.date()
@@ -164,7 +168,7 @@ class HrLeave(models.Model):
                         if current in holidays_days_list:
                             current += relativedelta(days=1)
                             continue
-                        if company_cal._works_on_date(current):
+                        if (leave.resource_calendar_id.is_fulltime and leave.resource_calendar_id._works_on_date(current)) or (not leave.resource_calendar_id.is_fulltime and current.weekday() < 6):
                             legal_days += 1.0
                         current += relativedelta(days=1)
                     standard_duration = super()._get_durations(resource_calendar=resource_calendar)

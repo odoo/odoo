@@ -581,3 +581,51 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave.date_from.date(), date(2026, 1, 12))
         self.assertEqual(leave.date_to.date(), date(2026, 1, 12))
         self.assertEqual(leave.number_of_hours, 8.0, 'Duration should be 8 hours (one working day)')
+
+    def test_employee_partial_time_holidays(self):
+        """checks that days off are correctly computed for employees with partial time schedules.
+        Law can be found here: https://code.travail.gouv.fr/fiche-service-public/quelle-est-lincidence-sur-les-droits-a-conges-payes-dun-salarie-a-temps-partiel"""
+        part_time_calendar = self.env['resource.calendar'].create({
+            'name': 'Part Time Calendar',
+            'company_id': self.company.id,
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'})]
+        })
+        self.time_off_type.request_unit = 'day'
+        self.employee.resource_calendar_id = part_time_calendar
+        leave_0 = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id':  self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-02-16 00:00:00',
+            'request_date_to': '2026-02-17 23:59:59',
+        })
+        self.assertEqual(leave_0.duration_display, "3 days")
+
+        leave_1 = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id':  self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-02-26 00:00:00',
+            'request_date_to': '2026-02-27 23:59:59',
+        })
+        self.assertEqual(leave_1.duration_display, "3 days")
+        leave_2 = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id':  self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-03-02 00:00:00',
+            'request_date_to': '2026-03-08 23:59:59',
+        })
+        self.assertEqual(leave_2.duration_display, "6 days")
