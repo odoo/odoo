@@ -46,8 +46,11 @@ class CardCampaign(models.Model):
     post_suggestion = fields.Text(help="Description below the card and default text when sharing on X")
     preview_record_ref = fields.Reference(string="Preview On", selection="_get_model_selection", required=True)
     tag_ids = fields.Many2many('card.campaign.tag', string='Tags')
+
     target_url = fields.Char(string='Post Link')
-    target_url_click_count = fields.Integer(related="link_tracker_id.count")
+    target_url_click_count = fields.Integer(compute="_compute_target_url_click_count")
+    target_url_dyn = fields.Boolean(string='Dynamic Post Link', help="Use model website_url field for each card, or campaign post link if not available")
+    show_target_url_dyn = fields.Boolean(compute='_compute_show_target_url_dyn')
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
 
@@ -107,6 +110,16 @@ class CardCampaign(models.Model):
             if status in ('shared', 'visited'):
                 campaign.card_click_count += card_count
             campaign.card_count += card_count
+
+    @api.depends('res_model')
+    def _compute_show_target_url_dyn(self):
+        for record in self:
+            record.show_target_url_dyn = 'website_url' in record.env[record.res_model]._fields
+
+    @api.depends('card_ids.target_url_click_count', 'link_tracker_id.count')
+    def _compute_target_url_click_count(self):
+        for record in self:
+            record.target_url_click_count = sum(record.card_ids.mapped('target_url_click_count')) + record.link_tracker_id.count
 
     @api.model
     def _get_render_fields(self):
