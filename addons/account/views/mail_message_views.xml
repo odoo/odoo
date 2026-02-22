@@ -61,6 +61,7 @@
         <field name="res_model">mail.message</field>
         <field name="view_id" ref="view_message_tree_audit_log"/>
         <field name="view_mode">list</field>
+        <field name="context">{'force_search_count': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">This is the Audit Trail Report</p>
             <div>Make sure you first activate the audit trail in the accounting settings</div>
