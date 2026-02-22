@@ -5519,7 +5519,7 @@ class BaseModel(metaclass=MetaModel):
             else:
                 (key, comparator, value) = leaf
                 if comparator in ('child_of', 'parent_of'):
-                    stack.append(set(self.search([('id', 'in', self.ids), leaf], order='id')._ids))
+                    stack.append(set(self.with_context(active_test=False).search([('id', 'in', self.ids), leaf], order='id')._ids))
                     continue
 
                 if key.endswith('.id'):
