@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="pos_owlybook.properties">
+        <div t-if="warning" class="alert alert-warning mb-0" role="alert">
+            <t t-esc="warning"/>
+        </div>
+        <div class="table-responsive o_owlybook_bottom_bar">
+            <table class="table table-sm table-hover table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Property Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="properties" t-as="property" t-key="property">
+                        <tr>
+                            <td>
+                                <t t-call="pos_owlybook.properties.name"/>
+                            </td>
+                            <td t-esc="propertyType(property_value)"/>
+                            <td>
+                                <t t-call="pos_owlybook.properties.input"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="pos_owlybook.properties.input">
+        <t t-set="propType" t-value="propertyType(property_value)"/>
+        <t t-set="propValue" t-value="formatValue(propType, property_value.value)"/>
+        <t t-if="propType === 'Boolean'">
+            <input t-att-disabled="isDisabled(property_value)" class="o_input align-middle" t-att-checked="propValue" type="checkbox" t-on-change="(ev) => this.onChange(property_value, ev.target.checked)"/>
+        </t>
+        <t t-elif="property_value.choices">
+            <div class="w-50">
+                <SelectMenu
+                    value="propValue"
+                    choices="property_value.choices"
+                    onSelect="(value) => this.onChange(property_value, value)"
+                    searchable="property_value.length > 8"
+                />
+            </div>
+        </t>
+        <t t-elif="propType === 'String'">
+            <input t-att-disabled="isDisabled(property_value)" class="o_input w-50 o_outline" t-att-value="propValue" t-on-input="(ev) => this.onChange(property_value, ev.target.value)"/>
+        </t>
+        <t t-elif="propType === 'Number'">
+            <input t-att-disabled="isDisabled(property_value)" class="o_input w-50 o_outline" t-att-value="propValue" t-on-change="(ev) => this.onChange(property_value, ev.target.value)"/>
+        </t>
+        <t t-elif="propType === 'Object'">
+            <t t-if="propValue">
+                <ObjectRenderer object="propValue" name="property"/>
+            </t>
+            <t t-else="">
+                undefined
+            </t>
+        </t>
+        <t t-elif="propType === 'Array'">
+            <t t-if="propValue">
+                <ObjectRenderer object="propValue" name="property"/>
+            </t>
+            <t t-else="">
+                undefined
+            </t>
+        </t>
+        <t t-elif="propType === 'Function'">
+            <t t-esc="propValue?.name"/>
+        </t>
+        <t t-else="">
+            <input t-att-disabled="1" class="o_input w-50"/>
+        </t>
+        <i t-if="property_value.value !== undefined and !property_value.choices and !isDisabled(property_value) and isDeleteBtnEnabled" t-on-click="(ev) => this.onChange(property_value, '')" class="fa fa-times ms-1 o_delete align-middle" aria-hidden="true"/>
+    </t>
+
+    <t t-name="pos_owlybook.properties.name">
+        <t t-esc="property"/>
+        <t t-if="!property_value.optional"><span>*</span></t>
+        <i class="fa fa-question-circle-o ps-2 owlybook_tooltip" t-if="property_value.help" t-att-data-tooltip="property_value.help"/>
+    </t>
+</templates>
