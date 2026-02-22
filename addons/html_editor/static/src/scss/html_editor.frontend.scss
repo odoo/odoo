@@ -238,3 +238,12 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         calc(var(--box-border-bottom-right-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-right-width, 0px)))
         calc(var(--box-border-bottom-left-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-left-width, 0px)));
 }
+
+// Needed to prevent the emoji picker from inheriting theme colors
+.o-EmojiPicker {
+    --EmojiPicker-background-color: white;
+    --EmojiPicker-font-size: 1rem;
+    --EmojiPicker-emoji-font-size: 1.5rem;
+    --EmojiPicker-text-color: #{rgba(black, $o-opacity-muted)};
+    --EmojiPicker-input-color: black;
+}
