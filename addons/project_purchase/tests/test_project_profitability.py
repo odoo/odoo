@@ -1019,3 +1019,43 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 },
             },
         )
+
+    def test_partial_billing_profitability(self):
+        """Test profitability calculation when a purchase order is partially billed with a downpayment."""
+        purchase_order = self.env['purchase.order'].create({
+            'name': "PO with Downpayment",
+            'partner_id': self.partner_a.id,
+            'project_id': self.project.id,
+            'order_line': [Command.create({
+                'analytic_distribution': {self.analytic_account.id: 100},
+                'product_id': self.product_order.id,
+                'product_qty': 1,
+                'price_unit': 100.0,
+            })],
+        })
+        purchase_order.button_confirm()
+        # Create a partial vendor bill (downpayment) of 30
+        vendor_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': datetime.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_order.id,
+                'quantity': 1,
+                'price_unit': 30.0,
+                'analytic_distribution': {self.analytic_account.id: 100},
+            })],
+        })
+        vendor_bill.action_post()
+        # Add the bill as downpayment to the purchase order
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        action = match_lines.action_add_to_po()
+        wizard = self.env['bill.to.po.wizard'].with_context({**action['context'], 'active_ids': match_lines.ids}) \
+            .create({'purchase_order_id': purchase_order.id})
+        wizard.action_add_downpayment()
+        items = self.project._get_profitability_items(with_action=False)['costs']
+
+        self.assertDictEqual(items['total'], {
+            'billed': -30.0,
+            'to_bill': -70.0,
+        })
