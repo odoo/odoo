@@ -85,7 +85,7 @@ class HrLeaveReportCalendar(models.Model):
     def _compute_display_name(self):
         if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
             for record in self:
-                record.display_name = record.name.removeprefix(f"{record.employee_id.name}: ")
+                record.display_name = record.name.removeprefix(f"{record.employee_id.name} ")
         else:
             super()._compute_display_name()
 
@@ -99,7 +99,7 @@ class HrLeaveReportCalendar(models.Model):
             leave.name = leave.employee_id.name
             if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 # Include the time off type name
-                leave.name += f" {leave.leave_id.work_entry_type_id.name}"
+                leave.name += f" {leave.leave_id.work_entry_type_id.display_code or leave.leave_id.work_entry_type_id.name}"
             # Include the time off duration.
             leave.name += f": {leave.sudo().leave_id.duration_display}"
 
