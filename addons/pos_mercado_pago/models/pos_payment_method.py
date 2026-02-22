@@ -1,4 +1,5 @@
 import logging
+import hashlib
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
@@ -35,41 +36,94 @@ class PosPaymentMethod(models.Model):
         """
         Triggered in debug mode when the user wants to force the "PDV" mode.
         It calls the Mercado Pago API to set the terminal mode to "PDV".
+        Uses the terminals API: PATCH /terminals/v1/setup
+        Reference: https://www.mercadopago.com.ar/developers/es/reference/in-person-payments/point/terminals/update-operation-mode/patch
         """
         self._check_special_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
         _logger.info('Calling Mercado Pago to force the terminal mode to "PDV"')
 
-        mode = {"operating_mode": "PDV"}
-        resp = mercado_pago.call_mercado_pago("patch", f"/point/integration-api/devices/{self.mp_id_point_smart_complet}", mode)
-        if resp.get("operating_mode") != "PDV":
+        payload = {
+            "terminals": [
+                {
+                    "id": self.mp_id_point_smart_complet,
+                    "operating_mode": "PDV"
+                }
+            ]
+        }
+        
+        # Use the terminals API endpoint
+        resp = mercado_pago.call_mercado_pago("patch", "/terminals/v1/setup", payload)
+        
+        # Check if the response contains the updated terminals
+        if 'terminals' in resp and len(resp['terminals']) > 0:
+            if resp['terminals'][0].get("operating_mode") != "PDV":
+                raise UserError(_("Unexpected Mercado Pago response: %s", resp))
+            _logger.debug("Successfully set the terminal mode to 'PDV'.")
+        else:
             raise UserError(_("Unexpected Mercado Pago response: %s", resp))
-        _logger.debug("Successfully set the terminal mode to 'PDV'.")
+        
         return None
 
-    def mp_payment_intent_create(self, infos):
+    def _prepare_mp_order_payload(self, infos):
         """
-        Called from frontend for creating a payment intent in Mercado Pago
+        Prepare the order payload for Mercado Pago Point API.
+        This method can be inherited to customize the payload structure.
+        
+        :param infos: Dictionary containing order information from frontend
+        :return: Dictionary with the order payload
+        """
+        return {
+            "type": "point",
+            "external_reference": infos.get("external_reference"),
+            "expiration_time": "PT16M", 
+            "transactions": {
+                "payments": [
+                    {
+                        "amount": f"{infos.get('amount', 0) / 100.0:.2f}"
+                    }
+                ]
+            },
+            "config": {
+                "point": {
+                    "terminal_id": self.mp_id_point_smart_complet,
+                    "print_on_terminal": "seller_ticket",
+                    "ticket_number": infos.get("ticket_number")
+                },
+                "payment_method": {
+                    "default_type": infos.get("card_type")
+                }
+            },
+            "description": f"Point of Sale payment - {infos.get('external_reference')}",
+        }
+
+    def mp_order_create(self, infos):
+        """
+        Called from frontend for creating an order in Mercado Pago Point
         """
         self._check_special_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
-        # Call Mercado Pago for payment intend creation
-        resp = mercado_pago.call_mercado_pago("post", f"/point/integration-api/devices/{self.mp_id_point_smart_complet}/payment-intents", infos)
-        _logger.debug("mp_payment_intent_create(), response from Mercado Pago: %s", resp)
+        
+        order_payload = self._prepare_mp_order_payload(infos)        
+        idempotency_key = hashlib.sha256(str(order_payload).encode()).hexdigest()
+        resp = mercado_pago.call_mercado_pago("post", "/v1/orders", order_payload, idempotency_key=idempotency_key)
+        _logger.debug("mp_order_create(), response from Mercado Pago: %s", resp)
         return resp
 
-    def mp_payment_intent_get(self, payment_intent_id):
+    def mp_order_get(self, order_id):
         """
-        Called from frontend to get the last payment intend from Mercado Pago
+        Called from frontend to get the order status from Mercado Pago Point
+        Uses the Orders API: GET /v1/orders/{id}
+        Reference: https://www.mercadopago.com.ar/developers/es/reference/in-person-payments/point/orders/get-order/get
         """
         self._check_special_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
-        # Call Mercado Pago for payment intend status
-        resp = mercado_pago.call_mercado_pago("get", f"/point/integration-api/payment-intents/{payment_intent_id}", {})
-        _logger.debug("mp_payment_intent_get(), response from Mercado Pago: %s", resp)
+        # Call Mercado Pago for order status using Orders API
+        resp = mercado_pago.call_mercado_pago("get", f"/v1/orders/{order_id}", {})
+        _logger.debug("mp_order_get(), response from Mercado Pago: %s", resp)
         return resp
 
     def mp_get_payment_status(self, payment_id):
@@ -84,29 +138,31 @@ class PosPaymentMethod(models.Model):
         _logger.debug("mp_get_payment_status(), response from Mercado Pago: %s", resp)
         return resp
 
-    def mp_payment_intent_cancel(self, payment_intent_id):
+    def mp_order_cancel(self, order_id):
         """
-        Called from frontend to cancel a payment intent in Mercado Pago
+        Called from frontend to cancel an order in Mercado Pago Point
+        Uses the Orders API: /v1/orders/{order_id}/cancel
         """
         self._check_special_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
-        # Call Mercado Pago for payment intend cancelation
-        resp = mercado_pago.call_mercado_pago("delete", f"/point/integration-api/devices/{self.mp_id_point_smart_complet}/payment-intents/{payment_intent_id}", {})
-        _logger.debug("mp_payment_intent_cancel(), response from Mercado Pago: %s", resp)
+        
+        idempotency_key = hashlib.sha256(str(order_id).encode()).hexdigest()        
+        resp = mercado_pago.call_mercado_pago("post", f"/v1/orders/{order_id}/cancel", {}, idempotency_key=idempotency_key)
+        _logger.debug("mp_order_cancel(), response from Mercado Pago: %s", resp)
         return resp
 
     def _find_terminal(self, token, point_smart):
         mercado_pago = MercadoPagoPosRequest(token)
-        data = mercado_pago.call_mercado_pago("get", "/point/integration-api/devices", {})
-        if 'devices' in data:
-            # Search for a device id that contains the serial number entered by the user
-            found_device = next((device for device in data['devices'] if point_smart in device['id']), None)
+        data = mercado_pago.call_mercado_pago("get", "/terminals/v1/list", {})
+        if 'data' in data and 'terminals' in data['data']:
+            # Search for a terminal id that contains the serial number entered by the user
+            found_terminal = next((terminal for terminal in data['data']['terminals'] if point_smart in terminal['id']), None)
 
-            if not found_device:
+            if not found_terminal:
                 raise UserError(_("The terminal serial number is not registered on Mercado Pago"))
 
-            return found_device.get('id', '')
+            return found_terminal.get('id', '')
         else:
             raise UserError(_("Please verify your production user token as it was rejected"))
 
