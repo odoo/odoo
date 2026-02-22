@@ -98,7 +98,7 @@
                                 <field name="bom_id" invisible="mo_id and not mo_bom_id" readonly="mo_id or state == 'done'" required="not mo_id" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty" readonly="has_tracking == 'serial' or state == 'done'"/>
+                                    <field name="product_qty" readonly="has_tracking == 'serial' or state == 'done'" force_save="1"/>
                                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom" readonly="mo_id or state == 'done'" force_save="1"/>
                                 </div>
                             </group>
@@ -107,7 +107,11 @@
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" invisible="has_tracking not in ['lot', 'serial']" readonly="state == 'done'" required="has_tracking in ['lot', 'serial']" groups="stock.group_production_lot" force_save="1"/>
+                                <label for="lot_ids" invisible="has_tracking not in ['lot', 'serial']"/>
+                                <div class="o_row" invisible="has_tracking not in ['lot', 'serial']">
+                                    <field name="lot_ids" widget="many2many_tags" readonly="state == 'done' or has_tracking == 'lot' and lot_ids" required="has_tracking in ['lot', 'serial']" options="{'on_tag_click': 'open_form'}" groups="stock.group_production_lot" force_save="1"/>
+                                    <button name="action_clear_lots" string="Clear" type="object" class="btn btn-secondary" invisible="state == 'done' or not lot_ids"/>
+                                </div>
                                 <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
                             </group>
                         </group>
@@ -133,16 +137,20 @@
                                 <field name="bom_id" invisible="1" readonly="state == 'done'"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty" readonly="has_tracking == 'serial'"/>
+                                    <field name="product_qty" readonly="has_tracking == 'serial'" force_save="1"/>
                                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom" readonly="mo_id" force_save="1"/>
+                                </div>
+                                <field name="has_tracking" invisible="1"/>
+                                <label for="lot_ids" invisible="has_tracking not in ['lot', 'serial']"/>
+                                <div class="o_row">
+                                    <field name="lot_ids" widget="many2many_tags" invisible="has_tracking not in ['lot', 'serial']" required="has_tracking in ['lot', 'serial']" readonly="has_tracking == 'lot'" options="{'on_tag_click': 'open_form'}" groups="stock.group_production_lot"/>
+                                    <button name="action_clear_lots" string="Clear" type="object" class="btn btn-secondary" invisible="has_tracking != 'serial' or not lot_ids" context="{'return_wizard': True}"/>
                                 </div>
                             </group>
                             <group>
                                 <field name="mo_id" invisible="1" readonly="state == 'done'"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
-                                <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" invisible="has_tracking not in ['lot', 'serial']" required="has_tracking in ['lot', 'serial']" groups="stock.group_production_lot"/>
                                 <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             </group>
                         </group>
@@ -165,7 +173,7 @@
                     <field name="product_id" readonly="state == 'done'"/>
                     <field name="bom_id" readonly="state == 'done'"/>
                     <field name="mo_id" readonly="state == 'done'"/>
-                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                     <field name="product_qty" readonly="state == 'done'"/>
                     <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state == 'done'"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
