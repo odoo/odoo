@@ -21,9 +21,6 @@ export class MOListViewDropdown extends BadgeField {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.workorderState = useState({
-            state: this.props.record.data.state,
-        });
         this.colorIcons = {
             "blocked": "text-bg-warning",
             "ready": "text-bg-secondary",

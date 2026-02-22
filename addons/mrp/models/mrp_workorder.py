@@ -470,14 +470,14 @@ class MrpWorkorder(models.Model):
         if self.date_start and self.workcenter_id:
             self.date_finished = self._calculate_date_finished()
 
-    def _calculate_date_finished(self, date_start=False, new_workcenter=False, compute_leaves=False):
+    def _calculate_date_finished(self, date_start=False, new_workcenter=False):
         workcenter = new_workcenter or self.workcenter_id
         if not workcenter.resource_calendar_id:
             duration_in_seconds = self.duration_expected * 60
             return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
-            compute_leaves=compute_leaves, domain=[('count_as', 'in', ['absence', 'working_time'])]
+            compute_leaves=True, domain=[('count_as', 'in', ['absence', 'working_time'])]
         )
 
     @api.onchange('date_finished')
@@ -586,7 +586,7 @@ class MrpWorkorder(models.Model):
         for production in self.mapped("production_id"):
             production._link_workorders_and_moves()
 
-    def _plan_workorders(self, from_date=False, alternative=True):
+    def _action_plan(self, from_date=False, alternative=True):
         """Plan or replan a set of manufacturing workorders
 
         :param from_date: An optional `datetime` object. If provided, The planning will start from
@@ -601,18 +601,13 @@ class MrpWorkorder(models.Model):
         if not workorders_to_plan:
             return
         # we need to keep the order of the workorder before removing the start date
-        wo_list = list(workorders_to_plan)
         done_wo = set()
-        workorders_to_plan.leave_id.unlink()
-        workorders_to_plan.write({
-            'date_start': False,
-            'date_finished': False,
-        })
-        for wo in wo_list:
+        workorders_to_plan.action_unplan()
+        for wo in workorders_to_plan:
             if wo.id in done_wo:
                 continue
             date_start = max(from_date or datetime.now(), datetime.now())
-            wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo)._plan_workorders(from_date=from_date)
+            wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo)._action_plan(from_date=from_date)
             done_wo.update(wo.blocked_by_workorder_ids.ids)
             if wo.blocked_by_workorder_ids and wo.blocked_by_workorder_ids[-1].date_finished:
                 date_start = wo.blocked_by_workorder_ids[-1].date_finished
@@ -626,8 +621,6 @@ class MrpWorkorder(models.Model):
             best_date_finished = datetime.max
             vals = {}
             for workcenter in workcenters:
-                if not alternative and workcenter != wo.workcenter_id:
-                    continue
                 if not workcenter.resource_calendar_id:
                     raise UserError(self.env._('There is no defined calendar on workcenter %s.', workcenter.name))
                 # Compute theoretical duration
@@ -807,7 +800,7 @@ class MrpWorkorder(models.Model):
                 ('date_finished', '!=', False),
             ])
         date = max(min([wo.date_start for wo in workorders if wo.date_start], default=datetime.min), datetime.now())
-        workorders._plan_workorders(from_date=date, alternative=False)
+        workorders._action_plan(from_date=date, alternative=False)
         return True
 
     def action_select_mo_to_plan(self):
@@ -978,7 +971,7 @@ class MrpWorkorder(models.Model):
         date_to_plan_on = max((wo.leave_id.date_to for wo in self.blocked_by_workorder_ids if wo.leave_id), default=datetime.now())
         if self.env.context.get('date_to_plan_on'):
             date_to_plan_on = fields.Datetime.from_string(self.env.context.get('date_to_plan_on'))
-        self._plan_workorders(from_date=date_to_plan_on, alternative=False)
+        self._action_plan(from_date=date_to_plan_on, alternative=False)
 
     def action_unplan(self):
         self.leave_id.unlink()
