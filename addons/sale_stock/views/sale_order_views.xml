@@ -5,6 +5,7 @@
         <field name="name">sale.order.form.sale.stock</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <button name="action_view_invoice" position="before">
                 <button
@@ -22,28 +23,19 @@
                 <attribute name="groups"></attribute><!-- Remove the res.group on the group and set it on the field directly-->
                 <attribute name="string">Delivery</attribute>
             </group>
-            <label for="commitment_date" position="before">
+            <field name="incoterm_location" position="after">
                 <field name="warehouse_id" options="{'no_create': True}" force_save="1" readonly="state == 'sale'"/>
                 <field name="picking_policy" required="True" readonly="state not in ['draft', 'sent']"/>
-            </label>
-            <div name="commitment_date_div" position="replace">
-                <div class="o_row">
-                    <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
-                    <field name="commitment_date" options="{'placeholder_field': 'expected_date'}"/>
-                    <field
-                        name="delivery_status"
-                        class="oe_inline"
-                        invisible="state != 'sale'"
-                        decoration-success="delivery_status == 'full'"
-                        decoration-warning="delivery_status == 'partial'"
-                        decoration-info="delivery_status in ['pending', 'started']"
-                        widget="badge"/>
-                </div>
+            </field>
+            <div name="commitment_date_div" position="after">
                 <field name="effective_date" invisible="not effective_date"/>
             </div>
-            <xpath expr="//page[@name='other_information']//field[@name='commitment_date']" position="after">
+            <field name="commitment_date" position="attributes">
+                <attribute name="options">{'placeholder_field': 'expected_date'}</attribute>
+            </field>
+            <field name='commitment_date' position="after">
                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" invisible="not show_json_popover"/>
-            </xpath>
+            </field>
             <xpath expr="//field[@name='order_line']//form//field[@name='analytic_distribution']" position="before">
                 <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location" options="{'no_create': True}"/>
             </xpath>

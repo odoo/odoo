@@ -4,6 +4,7 @@
     <record id="view_order_form_with_carrier" model="ir.ui.view">
         <field name="name">delivery.sale.order.form.view.with_carrier</field>
         <field name="model">sale.order</field>
+        <field name="priority">30</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <header position="inside">
@@ -33,9 +34,9 @@
             <xpath expr="//field[@name='order_line']/list" position="attributes">
                 <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator="or"/>
             </xpath>
-            <label for="commitment_date" position="before">
+            <field name="incoterm_location" position="after">
                 <field name="shipping_weight" readonly="True"/>
-            </label>
+            </field>
         </field>
     </record>
 

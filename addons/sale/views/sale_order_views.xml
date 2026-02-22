@@ -562,7 +562,20 @@
                             name="payment_term_id"
                             placeholder="Immediate"
                             options="{'no_open': True, 'no_create': True}"/>
-                    </group>
+                        <label for="commitment_date" invisible="state == 'draft'"/>
+                        <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
+                        <div name="commitment_date_div" class="o_row align-items-center">
+                            <field name="commitment_date" readonly="state == 'cancel' or locked"/>
+                            <field
+                                name="delivery_status"
+                                widget="badge"
+                                decoration-success="delivery_status == 'full'"
+                                decoration-warning="delivery_status == 'partial'"
+                                decoration-info="delivery_status in ['pending', 'started']"
+                                invisible="state != 'sale'"
+                            />
+                        </div>
+                   </group>
                 </group>
                 <notebook>
                     <page string="Order Lines" name="order_lines">
@@ -971,12 +984,6 @@
                             <group name="sale_shipping" string="Shipping">
                                 <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="incoterm_location"/>
-                                <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
-                                <label for="commitment_date" string="Promised Delivery" invisible="state =='draft'"/>
-                                <div name="commitment_date_div" class="o_row">
-                                    <field name="commitment_date" readonly="state == 'cancel' or locked"/>
-                                </div>
-                                <field name="delivery_status" invisible="state != 'sale'"/>
                             </group>
                             <group name="sale_reporting" string="Tracking">
                                 <field name="origin"/>
