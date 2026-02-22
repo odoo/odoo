@@ -938,6 +938,9 @@ export class PosStore extends WithLazyGetterTrap {
             options,
             configure
         );
+        if (!pack_lot_ids) {
+            return;
+        }
 
         // Handle price unit
         this.handlePriceUnit(values, order, vals.price_unit);
