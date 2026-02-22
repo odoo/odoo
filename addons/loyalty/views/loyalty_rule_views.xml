@@ -28,7 +28,7 @@
                             <field name="product_category_id"/>
                             <field name="product_tag_id"/>
                         </group>
-                        <group invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
+                        <group name="rule_points_group" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
                             <separator string="Point(s)" colspan="2"/>
                             <span colspan="2" invisible="program_type != 'coupons'">Grant the amount of coupon points defined as the coupon value</span>
                             <label for="reward_point_amount" string="Grant" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"/>
