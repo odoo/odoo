@@ -421,6 +421,13 @@ class TestUsers2(TransactionCase):
             UserForm.email = "foo@bar.com"
         self.assertEqual(my_user.email, "foo@bar.com")
 
+    def test_etc_gmt_offsets(self):
+        """Etc/GMT±n should produce the correct GMT offset."""
+        for tz, expected in (('Etc/GMT+2', '+0200'), ('Etc/GMT-2', '-0200')):
+            with self.subTest(tz=tz):
+                self.user_employee.tz = tz
+                self.assertEqual(self.user_employee.tz_offset, expected)
+
 
 @tagged('post_install', '-at_install', 'res_groups')
 class TestUsersGroupWarning(TransactionCase):
