@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.Many2ManyBinaryField">
+    <t t-name="web.Many2OneBinaryField">
         <Many2XBinary
             name="props.name"
             readonly="props.readonly"
             record="props.record"
-            className="props.className"
-            multiUpload="true"
-            numberOfFiles="props.numberOfFiles"
+            numberOfFiles="1"
             acceptedFileExtensions="props.acceptedFileExtensions"
-            files="files"
+            className="props.className"
+            files="file"
             onFileUploaded.bind="onFileUploaded"
             onFileRemove.bind="onFileRemove"
         />
