@@ -14,7 +14,12 @@
                             <span id="title_ar" t-translation="off">الفاتورة الضريبية</span>
                         </t>
                         <t t-else="">
-                            <span name="title">Tax Invoice</span>
+                            <t t-if="order.user_id.partner_id.lang != 'ar_001'">
+                                <span name="title" t-translation="off">Tax Invoice</span>
+                            </t>
+                            <t t-else="">
+                                <span name="title" t-translation="off">الفاتورة الضريبية</span>
+                            </t>
                         </t>
                     </t>
                     <t t-else="">
@@ -23,7 +28,12 @@
                             <span name="title_simplified_ar" t-translation="off">فاتورة ضريبية مبسطة</span>
                         </t>
                         <t t-else="">
-                            <span name="title_simplified">Simplified Tax Invoice</span>
+                            <t t-if="order.user_id.partner_id.lang != 'ar_001'">
+                                <span name="title_simplified" t-translation="off">Simplified Tax Invoice</span>
+                            </t>
+                            <t t-else="">
+                                <span name="title_simplified" t-translation="off">فاتورة ضريبية مبسطة</span>
+                            </t>
                         </t>
                     </t>
                 </div>
