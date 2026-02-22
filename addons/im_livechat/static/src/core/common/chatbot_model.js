@@ -241,18 +241,15 @@ export class Chatbot extends Record {
         if (!answer?.redirect_link) {
             return true;
         }
-        let isRedirecting = false;
-        if (answer.redirect_link && URL.canParse(answer.redirect_link, window.location.href)) {
-            const url = new URL(window.location.href);
-            const nextURL = new URL(answer.redirect_link, window.location.href);
-            isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
-        }
+        const currentURL = new URL(window.location.href);
+        const nextURL = new URL(answer.redirect_link, window.location.href);
+        const isRedirecting =
+            currentURL.origin !== nextURL.origin || currentURL.pathname !== nextURL.pathname;
         const redirects = JSON.parse(
             expirableStorage.getItem("im_livechat.chatbot_redirect") ?? "[]"
         );
-        const targetURL = new URL(answer.redirect_link, window.location.origin);
         const redirectionAlreadyDone =
-            targetURL.href === location.href || redirects.includes(message.id);
+            nextURL.href === currentURL.href || redirects.includes(message.id);
         redirects.push(message.id);
         const ONE_DAY_TTL = 60 * 60 * 24;
         expirableStorage.setItem(
@@ -261,7 +258,11 @@ export class Chatbot extends Record {
             ONE_DAY_TTL
         );
         if (!redirectionAlreadyDone) {
-            browser.location.assign(answer.redirect_link);
+            if (isRedirecting) {
+                browser.open(nextURL.href, "_blank");
+            } else {
+                browser.location.assign(nextURL.href);
+            }
         } else if (this.store.env.services.ui.isSmall) {
             await this.store.chatHub.initPromise;
             this.channel_id.channel.chatWindow?.fold();
