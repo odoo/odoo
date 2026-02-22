@@ -222,9 +222,9 @@ class TestComposerForm(TestMailComposer):
         composer_form.template_id = template_1
         self.assertEqual(len(composer_form.attachment_ids), 4)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
-        self.assertEqual(len(report_attachments), 2)
+        self.assertEqual(len(report_attachments), 4)
         tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
-        self.assertEqual(tpl_attachments, template_1_attachments)
+        self.assertFalse(tpl_attachments, "template attchment shouldn't be used directly")
 
         # change template: 0 static (attachment_ids) and 1 dynamic (report)
         composer_form.template_id = template_2
@@ -238,9 +238,9 @@ class TestComposerForm(TestMailComposer):
         composer_form.template_id = template_1
         self.assertEqual(len(composer_form.attachment_ids), 4)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
-        self.assertEqual(len(report_attachments), 2)
+        self.assertEqual(len(report_attachments), 4)
         tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
-        self.assertEqual(tpl_attachments, template_1_attachments)
+        self.assertFalse(tpl_attachments, "template attchment shouldn't be used directly (2)")
 
         # reset template
         composer_form.template_id = self.env['mail.template']
@@ -589,9 +589,9 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(len(composer.attachment_ids), 5)
                     for attach in attachs:
-                        self.assertIn(attach, composer.attachment_ids)
+                        self.assertNotIn(attach, composer.attachment_ids, "Template attachment should be copied, not used directly.")
                     generated = composer.attachment_ids - attachs
-                    self.assertEqual(len(generated), 2, 'MailComposer: should have 2 additional attachments for reports')
+                    self.assertEqual(len(generated), 5, 'MailComposer: should have 5 additional attachments for reports')
                     self.assertEqual(
                         sorted(generated.mapped('name')),
                         sorted([f'TestReport for {self.test_record.name}.html', f'TestReport2 for {self.test_record.name}.html']))
