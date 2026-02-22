@@ -353,3 +353,57 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         self.assertEqual(self.env['mail.mail'].sudo().search([
             ('email_to', '=', 'test_survey_invite_with_template_attachment@odoo.gov')
         ]).attachment_ids, mail_template.attachment_ids)
+
+    def test_survey_invite_mixed_langs(self):
+        """ Test that survey invitations are sent in the correct language when recipients have different languages. """
+
+        self.env['res.lang'].sudo()._activate_lang('nl_NL')
+
+        partner_en, partner_nl = self.env['res.partner'].create([
+            {
+                'name': 'Partner EN',
+                'email': 'partner_en@example.com',
+                'lang': 'en_US',
+            },
+            {
+                'name': 'Partner NL',
+                'email': 'partner_nl@example.com',
+                'lang': 'nl_NL',
+            },
+        ])
+
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env['ir.model']._get('survey.user_input').id,
+            'subject': 'English Subject',
+            'body_html': '<p>English Body</p>',
+            'lang': '{{ object.partner_id.lang }}',
+        })
+        template.with_context(lang='nl_NL').write({
+            'subject': 'Dutch Subject',
+            'body_html': '<p>Dutch Body</p>',
+        })
+
+        with self.with_user('survey_manager'):
+            Invite = self.env['survey.invite']
+            invite = Invite.create({
+                'survey_id': self.survey.id,
+                'partner_ids': [Command.set((partner_en + partner_nl).ids)],
+                'template_id': template.id,
+            })
+
+            with self.mock_mail_gateway():
+                invite.action_invite()
+
+        self.assertEqual(len(self._new_mails), 2)
+
+        mail_en = self._new_mails.filtered(lambda m: partner_en in m.recipient_ids)
+        mail_nl = self._new_mails.filtered(lambda m: partner_nl in m.recipient_ids)
+
+        self.assertTrue(mail_en, "Email should be sent to Partner EN")
+        self.assertTrue(mail_nl, "Email should be sent to Partner NL")
+
+        self.assertIn('English Subject', mail_en.subject)
+        self.assertIn('English Body', mail_en.body_html)
+        self.assertIn('Dutch Subject', mail_nl.subject)
+        self.assertIn('Dutch Body', mail_nl.body_html)
