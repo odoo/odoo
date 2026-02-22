@@ -100,6 +100,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.clickOrderline("Coca-Cola"),
             SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
             SplitBillScreen.clickPay(),
+            Chrome.waitRequest(),
             PaymentScreen.clickBack(),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.selectOrder("-0002"),
