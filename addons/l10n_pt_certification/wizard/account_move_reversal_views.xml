@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_reversal_inherit_pt" model="ir.ui.view">
+            <field name="name">account.move.reversal.form.inherit.pt</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="model">account.move.reversal</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reason']" position="attributes">
+                    <attribute name="required">country_code == 'PT'</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

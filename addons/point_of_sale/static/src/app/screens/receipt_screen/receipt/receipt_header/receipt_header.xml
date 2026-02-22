@@ -7,16 +7,18 @@
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
                 <!-- contact address -->
-                <div t-if="props.data.company.name" t-esc="props.data.company.name" />
-                <t t-if="props.data.company.phone">
-                    <div>Tel:<t t-esc="props.data.company.phone" /></div>
-                </t>
-                <t t-if="props.data.company.vat">
-                    <div t-esc="vatText"/>
-                </t>
-                <div t-if="props.data.company.email" t-esc="props.data.company.email" />
-                <div t-if="props.data.company.website" t-esc="props.data.company.website" />
-                <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
+                <div id="pos-receipt-contact-company-info">
+                    <div t-if="props.data.company.name" t-esc="props.data.company.name" />
+                    <t t-if="props.data.company.phone">
+                        <div>Tel:<t t-esc="props.data.company.phone" /></div>
+                    </t>
+                    <t t-if="props.data.company.vat">
+                        <div t-esc="vatText"/>
+                    </t>
+                    <div t-if="props.data.company.email" t-esc="props.data.company.email" />
+                    <div t-if="props.data.company.website" t-esc="props.data.company.website" />
+                    <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
+                </div>
                 <div t-if="props.data.cashier" class="cashier">
                     <div>--------------------------------</div>
                     <div t-esc="props.data.cashier" />
