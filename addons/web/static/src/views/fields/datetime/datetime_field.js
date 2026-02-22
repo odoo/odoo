@@ -1,4 +1,4 @@
-import { Component, onWillRender, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillRender, status, useEffect, useRef, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -9,6 +9,7 @@ import { exprToBoolean } from "@web/core/utils/strings";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 const { DateTime } = luxon;
 
@@ -163,6 +164,7 @@ export class DateTimeField extends Component {
         const dateTimePicker = useDateTimePicker({
             target: "root",
             showSeconds: this.props.showSeconds,
+            createPopover: usePopover,
             get pickerProps() {
                 return getPickerProps();
             },
@@ -190,7 +192,12 @@ export class DateTimeField extends Component {
                 }
 
                 if (Object.keys(toUpdate).length) {
-                    await this.props.record.update(toUpdate);
+                    try {
+                        await this.props.record.update(toUpdate);
+                    }catch{
+                        // record.update may reject after component destruction while awaiting the update
+                        if (status(this) === "destroyed") return;
+                    }
                 }
             },
         });

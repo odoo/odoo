@@ -1,4 +1,4 @@
-import { after, expect, test } from "@odoo/hoot";
+import { after, expect, press, test } from "@odoo/hoot";
 import {
     click,
     edit,
@@ -19,12 +19,16 @@ import {
     defineModels,
     defineParams,
     fields,
+    getService,
     models,
     mountView,
+    mountWithCleanup,
     onRpc,
     contains,
 } from "@web/../tests/web_test_helpers";
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
+import { WebClient } from "@web/webclient/webclient";
+import { delay } from "@web/core/utils/concurrency";
 
 class Partner extends models.Model {
     date = fields.Date({ string: "A date", searchable: true });
@@ -687,4 +691,46 @@ test("list datetime: column widths (numeric format)", async () => {
         "partner,1",
     ]);
     expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 144, 616]);
+});
+
+test("datetime picker should close when navigating back", async () => {
+    Partner._fields.name = fields.Char();
+    Partner._fields.datetime = fields.Datetime({ string: "A datetime" });
+    Partner._records = [{ id: 1, datetime: "2024-03-01 00:00:00" }];
+    Partner._views = {
+        list: `
+            <list>
+                <field name="datetime"/>
+            </list>
+        `,
+        form: `
+            <form>
+                <field name="datetime"/>
+            </form>
+        `,
+        search: `<search/>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partners",
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+    });
+    expect(".o_list_view").toHaveCount(1);
+    await click(".o_data_row:eq(0) .o_data_cell");
+    await animationFrame();
+    expect(".o_form_view_container").toHaveCount(1);
+    await animationFrame();
+    await click(".o_field_datetime button");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+    await delay(1000);
+    await press("alt+b");
+    await delay(5000);
+    expect(".o_datetime_picker").toHaveCount(0);
 });
