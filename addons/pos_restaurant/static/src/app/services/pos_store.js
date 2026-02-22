@@ -626,8 +626,15 @@ patch(PosStore.prototype, {
                 currentOrder.update({ table_id: table });
                 this.selectedOrderUuid = currentOrder.uuid;
             } else {
-                this.addNewOrder({ table_id: table });
+                currentOrder = this.addNewOrder({ table_id: table });
             }
+        }
+
+        // Make an empty table assignment visible to other devices.
+        // Only sync if there's no existing synced order for this table to avoid conflicts.
+        if (currentOrder && currentOrder.lines.length === 0 && !currentOrder.isSynced) {
+            this.addPendingOrder([currentOrder.id]);
+            await this.syncAllOrders({ orders: [currentOrder], force: true });
         }
     },
     async editFloatingOrderName(order) {

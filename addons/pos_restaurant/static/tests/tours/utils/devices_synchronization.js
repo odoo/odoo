@@ -30,6 +30,17 @@ const notify = async () => {
     ]);
 };
 
+export function waitForDataFromServer() {
+    return [
+        {
+            trigger: "body",
+            run: async () => {
+                await posmodel.deviceSync.readDataFromServer();
+            },
+        },
+    ];
+}
+
 const getLineData = (product, order, quantity) => ({
     name: product.display_name,
     order_id: order.id,
