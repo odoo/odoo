@@ -75,7 +75,11 @@ def _configure_stock_account_company_data(env):
         ChartTemplate = env['account.chart.template'].with_company(company)
         template_code = company.chart_template
         res_company_data = ChartTemplate._get_stock_account_res_company(template_code)
-        account_account_data = ChartTemplate._get_stock_account_account(template_code)
+        account_account_data = {
+            xmlid: vals
+            for xmlid, vals in ChartTemplate._get_stock_account_account(template_code).items()
+            if ChartTemplate.ref(xmlid, raise_if_not_found=False)
+        }
         ChartTemplate._load_data({
             'res.company': res_company_data,
             'account.account': account_account_data,
