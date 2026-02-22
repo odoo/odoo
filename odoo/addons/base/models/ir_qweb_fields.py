@@ -363,7 +363,7 @@ class IrQwebFieldSelection(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
-        return escape(options['selection'][value] or '')
+        return escape(options['selection'].get(value, value) or '')
 
     @api.model
     def record_to_html(self, record, field_name, options):
