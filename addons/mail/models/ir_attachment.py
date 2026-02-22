@@ -118,3 +118,6 @@ class IrAttachment(models.Model):
     def _get_thumbnail_token(self):
         self.ensure_one()
         return limited_field_access_token(self, "thumbnail", scope="binary")
+
+    def _allow_thumbnail(self):
+        return self.mimetype == "application/pdf"
