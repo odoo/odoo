@@ -137,7 +137,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
     }
 
     getEditableArea() {
-        return this.$wysiwygEditable.find(':o_editable').add(this.$editables);
+        return this.$wysiwygEditable.find(':o_editable').add(this.$editables).add(this.$wysiwygEditable.find(savableSelector));
     }
 
     _editableElements() {
@@ -164,7 +164,17 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
         attrs.forEach((attr) => {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
+            const $attr = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]');
+            const attrEdit = $attr.filter(':empty, input, select, textarea, img');
+            const attrRestore = $attr.not(attrEdit);
+            attrRestore.each(function () {
+                const $node = $(this);
+                const match = $node.attr(attr).match(translationRegex);
+                $node.attr(attr, match[2]);
+                if (attr === 'value') {
+                    $node[0].value = match[2];
+                }
+            });
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
@@ -280,7 +290,11 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 sticky: false,
             });
         };
+        const elementsToSkip = ".carousel-control-prev, .carousel-control-next";
         for (const translationEl of $editable) {
+            if (translationEl.closest(elementsToSkip)) {
+                continue;
+            }
             if (translationEl.closest('.o_not_editable')) {
                 translationEl.addEventListener('click', (ev) => {
                     ev.stopPropagation();
