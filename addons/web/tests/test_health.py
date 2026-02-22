@@ -31,3 +31,29 @@ class TestWebController(HttpCase):
             payload = response.json()
             self.assertEqual(payload['status'], 'fail')
             self.assertEqual(payload['db_server_status'], False)
+
+
+@tagged('-at_install', 'post_install')
+class TestCloc(HttpCase):
+    def test_cloc_user_space(self):
+        action = self.env["ir.actions.server"].create({
+            "name": "test cloc user space",
+            "model_id": self.env["ir.model"]._get("res.partner").id,
+            "state": "code",
+            "code": "action = {}"
+        })
+        self.start_tour("/odoo?debug=1", "test_cloc_user_space", login="admin")
+
+        result = self.make_jsonrpc_request("/web/cloc")
+        self.assertDictEqual(result, {
+            'records': [{
+                'all_lines': 1,
+                'billable': True,
+                'code_lines': 1,
+                'display_name': 'test cloc user space',
+                'id': action.id,
+                'model': 'ir.actions.server',
+                'module': 'odoo/studio'}],
+            'total_billable': 1,
+            'total_lines': 1
+        })

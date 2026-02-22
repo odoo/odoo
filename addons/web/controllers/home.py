@@ -12,6 +12,7 @@ from odoo.http.router import db_list
 from odoo.http.session import authenticate, check, touch, update_session_token
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import LazyTranslate, _, config, hmac
+from odoo.tools.cloc import Cloc
 
 from .utils import (
     _get_login_redirect_url,
@@ -177,6 +178,14 @@ class Home(Controller):
             update_session_token(request.session, request.env)
 
         return request.redirect(self._login_redirect(uid))
+
+    @route("/web/cloc", type="jsonrpc", auth="user")
+    def cloc_report(self):
+        if self.env.user._is_admin():
+            c = Cloc()
+            c.count_env(self.env(su=True))
+            return c.report_as_dict()
+        return {}
 
     @route('/web/health', type='http', auth='none', save_session=False)
     def health(self, db_server_status=False):
