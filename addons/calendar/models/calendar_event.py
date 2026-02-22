@@ -191,7 +191,10 @@ class CalendarEvent(models.Model):
     stop_date = fields.Date(
         'End Date', store=True, tracking=True,
         compute='_compute_dates', inverse='_inverse_dates')
+    display_start = fields.Char(compute='_compute_display_start')
+    display_stop = fields.Char(compute='_compute_display_stop')
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
+    display_duration = fields.Float('Display Duration', compute='_compute_display_duration')
     # linked document
     res_id = fields.Many2oneReference('Document ID', model_field='res_model')
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
@@ -392,6 +395,24 @@ class CalendarEvent(models.Model):
             else:
                 meeting.start_date = False
                 meeting.stop_date = False
+
+    @api.depends('allday', 'start')
+    def _compute_display_start(self):
+        for event in self:
+            event.display_start = self._get_display_date(event.allday, event.start)
+
+    @api.depends('allday', 'stop')
+    def _compute_display_stop(self):
+        for event in self:
+            event.display_stop = self._get_display_date(event.allday, event.stop)
+
+    @api.depends('stop_date', 'start_date', 'allday')
+    def _compute_display_duration(self):
+        for event in self:
+            if event.allday:
+                event.display_duration = ((event.stop_date - event.start_date).days + 1) * 24
+            else:
+                event.display_duration = event.duration
 
     @api.depends('stop', 'start')
     def _compute_duration(self):
@@ -1705,6 +1726,30 @@ class CalendarEvent(models.Model):
         :returns: The summary to include in calendar exports
         """
         return self.name or ''
+
+    @api.model
+    def _get_display_date(self, allday, date_time):
+        """
+        Returns a string representing the formatted date and time in the user's timezone,
+        according to the user's preferences for date and time formats.
+        If allday is True, returns date only; otherwise, returns date and time.
+        """
+        timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+
+        # get date/time format according to context
+        format_date, format_time = self._get_date_formats()
+
+        # convert date and time into user timezone
+        self_tz = self.with_context(tz=timezone)
+        date = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(date_time))
+
+        # convert into string the date and time, using user formats
+        to_text = pycompat.to_text
+        date_str = to_text(date.strftime(format_date))
+        time_str = to_text(date.strftime(format_time))
+        if allday:
+            return date_str
+        return "%s %s" % (date_str, time_str)
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):

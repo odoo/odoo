@@ -89,6 +89,39 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(str(event.start), '2018-10-16 08:00:00')
         self.assertEqual(str(event.stop), '2018-10-18 18:00:00')
 
+    def test_event_display_time_fields(self):
+        event = self.CalendarEvent.create({
+            'name': 'Coucou',
+            'start': "2018-10-16 10:00:00",
+            'stop': "2018-10-16 12:30:00",
+        })
+        self.assertEqual(event.display_start, "10/16/2018 12:00:00")
+        self.assertEqual(event.display_stop, "10/16/2018 14:30:00")
+        self.assertEqual(event.display_duration, 2.5)
+        event.write({
+            'duration': 3
+        })
+        self.assertEqual(event.display_start, "10/16/2018 12:00:00")
+        self.assertEqual(event.display_stop, "10/16/2018 15:00:00")
+        self.assertEqual(event.display_duration, 3)
+
+    def test_allday_event_display_time_fields(self):
+        event = self.CalendarEvent.create({
+            'name': 'All Day',
+            'start_date': "2018-10-16",
+            'stop_date': "2018-10-18",
+            'allday': True,
+        })
+        self.assertEqual(event.display_start, "10/16/2018")
+        self.assertEqual(event.display_stop, "10/18/2018")
+        self.assertEqual(event.display_duration, 72)
+        event.write({
+            'stop_date': "2018-10-17"
+        })
+        self.assertEqual(event.display_start, "10/16/2018")
+        self.assertEqual(event.display_stop, "10/17/2018")
+        self.assertEqual(event.display_duration, 48)
+
     def test_recurring_around_dst(self):
         m = self.CalendarEvent.create({
             'name': "wheee",
