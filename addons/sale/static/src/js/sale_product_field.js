@@ -189,9 +189,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             'product.template',
             'get_single_product_variant',
             [this.props.record.data.product_template_id[0]],
-            {
-                context: this.context,
-            }
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {

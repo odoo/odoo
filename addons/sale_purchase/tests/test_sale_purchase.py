@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
 
@@ -408,3 +408,24 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(so.order_line.tax_id, self.company_data['default_tax_sale'])
         so.action_confirm()
         self.assertEqual(so.order_line.purchase_line_ids.taxes_id, self.company_data['default_tax_purchase'])
+
+    def test_sol_description(self):
+        """
+        Ensure the SOL description is correctly set when vendor product name
+        and code are present
+        """
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_vendor_service.id,
+                'product_code': 'P123',
+                'product_name': 'Name1',
+            })]
+        })
+        with Form(self.env['sale.order']) as order:
+            order.partner_id = self.partner_vendor_service
+            with order.order_line.new() as line:
+                line.product_id = test_product
+                self.assertEqual(line.name, "[P123] Name1")
+        order = order.save()
+        self.assertEqual(order.order_line.name, "[P123] Name1")

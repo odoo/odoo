@@ -402,8 +402,10 @@ class SaleOrderLine(models.Model):
           the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
         """
         self.ensure_one()
+        seller = self.product_id._select_seller(quantity=self.product_uom_qty, partner_id=self.order_id.partner_id, params={'order_id': self.order_id})
+        product_ctx = {'seller_id': seller.id, 'lang': self.order_id._get_lang()}
         description = (
-            self.product_id.get_product_multiline_description_sale()
+            self.product_id.with_context(product_ctx).get_product_multiline_description_sale()
             + self._get_sale_order_line_multiline_description_variants()
         )
         if self.linked_line_id and not self.combo_item_id:
@@ -487,7 +489,7 @@ class SaleOrderLine(models.Model):
     def _compute_translated_product_name(self):
         for line in self:
             line.translated_product_name = line.product_id.with_context(
-                lang=line.order_id._get_lang(),
+                lang=line.order_id._get_lang(), partner_id=None
             ).display_name
 
     @api.depends('display_type', 'product_id', 'product_packaging_qty')
